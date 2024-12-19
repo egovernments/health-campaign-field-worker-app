@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'attributes.dart';
@@ -36,8 +36,8 @@ class AttributesSearchModelMapper
   static String? _$code(AttributesSearchModel v) => v.code;
   static const Field<AttributesSearchModel, String> _f$code =
       Field('code', _$code, opt: true);
-  static String? _$isActive(AttributesSearchModel v) => v.isActive;
-  static const Field<AttributesSearchModel, String> _f$isActive =
+  static bool? _$isActive(AttributesSearchModel v) => v.isActive;
+  static const Field<AttributesSearchModel, bool> _f$isActive =
       Field('isActive', _$isActive, opt: true);
   static bool? _$required(AttributesSearchModel v) => v.required;
   static const Field<AttributesSearchModel, bool> _f$required =
@@ -136,10 +136,8 @@ mixin AttributesSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttributesSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as AttributesSearchModel, other));
+    return AttributesSearchModelMapper.ensureInitialized()
+        .equalsValue(this as AttributesSearchModel, other);
   }
 
   @override
@@ -167,7 +165,7 @@ abstract class AttributesSearchModelCopyWith<
       String? referenceId,
       String? tenantId,
       String? code,
-      String? isActive,
+      bool? isActive,
       bool? required,
       String? regex,
       int? order,
@@ -270,8 +268,8 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
   static List<String>? _$values(AttributesModel v) => v.values;
   static const Field<AttributesModel, List<String>> _f$values =
       Field('values', _$values, opt: true);
-  static String? _$isActive(AttributesModel v) => v.isActive;
-  static const Field<AttributesModel, String> _f$isActive =
+  static bool? _$isActive(AttributesModel v) => v.isActive;
+  static const Field<AttributesModel, bool> _f$isActive =
       Field('isActive', _$isActive, opt: true);
   static bool? _$required(AttributesModel v) => v.required;
   static const Field<AttributesModel, bool> _f$required =
@@ -388,10 +386,8 @@ mixin AttributesModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttributesModelMapper.ensureInitialized()
-                .isValueEqual(this as AttributesModel, other));
+    return AttributesModelMapper.ensureInitialized()
+        .equalsValue(this as AttributesModel, other);
   }
 
   @override
@@ -429,7 +425,7 @@ abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
       String? tenantId,
       String? code,
       List<String>? values,
-      String? isActive,
+      bool? isActive,
       bool? required,
       String? regex,
       int? order,
@@ -634,10 +630,8 @@ mixin AttributesAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttributesAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as AttributesAdditionalFields, other));
+    return AttributesAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as AttributesAdditionalFields, other);
   }
 
   @override

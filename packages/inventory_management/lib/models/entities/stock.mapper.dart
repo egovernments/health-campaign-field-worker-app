@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'stock.dart';
@@ -176,10 +176,8 @@ mixin StockSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            StockSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as StockSearchModel, other));
+    return StockSearchModelMapper.ensureInitialized()
+        .equalsValue(this as StockSearchModel, other);
   }
 
   @override
@@ -522,10 +520,8 @@ mixin StockModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            StockModelMapper.ensureInitialized()
-                .isValueEqual(this as StockModel, other));
+    return StockModelMapper.ensureInitialized()
+        .equalsValue(this as StockModel, other);
   }
 
   @override
@@ -779,10 +775,8 @@ mixin StockAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            StockAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as StockAdditionalFields, other));
+    return StockAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as StockAdditionalFields, other);
   }
 
   @override

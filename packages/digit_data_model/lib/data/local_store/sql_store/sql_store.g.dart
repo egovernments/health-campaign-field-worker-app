@@ -20618,9 +20618,12 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   static const VerificationMeta _beneficiaryTypeMeta =
       const VerificationMeta('beneficiaryType');
   @override
-  late final GeneratedColumn<String> beneficiaryType = GeneratedColumn<String>(
-      'beneficiary_type', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumnWithTypeConverter<BeneficiaryType?, int>
+      beneficiaryType = GeneratedColumn<int>(
+              'beneficiary_type', aliasedName, true,
+              type: DriftSqlType.int, requiredDuringInsert: false)
+          .withConverter<BeneficiaryType?>(
+              $TargetTable.$converterbeneficiaryTypen);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -20745,12 +20748,7 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
-    if (data.containsKey('beneficiary_type')) {
-      context.handle(
-          _beneficiaryTypeMeta,
-          beneficiaryType.isAcceptableOrUnknown(
-              data['beneficiary_type']!, _beneficiaryTypeMeta));
-    }
+    context.handle(_beneficiaryTypeMeta, const VerificationResult.success());
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -20798,8 +20796,9 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
-      beneficiaryType: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}beneficiary_type']),
+      beneficiaryType: $TargetTable.$converterbeneficiaryTypen.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.int, data['${effectivePrefix}beneficiary_type'])),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -20809,6 +20808,13 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   $TargetTable createAlias(String alias) {
     return $TargetTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<BeneficiaryType, int, int>
+      $converterbeneficiaryType =
+      const EnumIndexConverter<BeneficiaryType>(BeneficiaryType.values);
+  static JsonTypeConverter2<BeneficiaryType?, int?, int?>
+      $converterbeneficiaryTypen =
+      JsonTypeConverter2.asNullable($converterbeneficiaryType);
 }
 
 class TargetData extends DataClass implements Insertable<TargetData> {
@@ -20828,7 +20834,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final String? beneficiaryType;
+  final BeneficiaryType? beneficiaryType;
   final String? additionalFields;
   const TargetData(
       {required this.id,
@@ -20899,7 +20905,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       map['row_version'] = Variable<int>(rowVersion);
     }
     if (!nullToAbsent || beneficiaryType != null) {
-      map['beneficiary_type'] = Variable<String>(beneficiaryType);
+      map['beneficiary_type'] = Variable<int>(
+          $TargetTable.$converterbeneficiaryTypen.toSql(beneficiaryType));
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -20986,7 +20993,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
-      beneficiaryType: serializer.fromJson<String?>(json['beneficiaryType']),
+      beneficiaryType: $TargetTable.$converterbeneficiaryTypen
+          .fromJson(serializer.fromJson<int?>(json['beneficiaryType'])),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -21010,7 +21018,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
-      'beneficiaryType': serializer.toJson<String?>(beneficiaryType),
+      'beneficiaryType': serializer.toJson<int?>(
+          $TargetTable.$converterbeneficiaryTypen.toJson(beneficiaryType)),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -21032,7 +21041,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
           Value<String?> tenantId = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> beneficiaryType = const Value.absent(),
+          Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       TargetData(
         id: id ?? this.id,
@@ -21163,7 +21172,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
-  final Value<String?> beneficiaryType;
+  final Value<BeneficiaryType?> beneficiaryType;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const TargetCompanion({
@@ -21225,7 +21234,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
     Expression<String>? tenantId,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
-    Expression<String>? beneficiaryType,
+    Expression<int>? beneficiaryType,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -21271,7 +21280,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
-      Value<String?>? beneficiaryType,
+      Value<BeneficiaryType?>? beneficiaryType,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return TargetCompanion(
@@ -21349,7 +21358,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
     if (beneficiaryType.present) {
-      map['beneficiary_type'] = Variable<String>(beneficiaryType.value);
+      map['beneficiary_type'] = Variable<int>(
+          $TargetTable.$converterbeneficiaryTypen.toSql(beneficiaryType.value));
     }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
@@ -25205,9 +25215,12 @@ class $AttributesTable extends Attributes
   static const VerificationMeta _isActiveMeta =
       const VerificationMeta('isActive');
   @override
-  late final GeneratedColumn<String> isActive = GeneratedColumn<String>(
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
       'is_active', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_active" IN (0, 1))'));
   static const VerificationMeta _requiredMeta =
       const VerificationMeta('required');
   @override
@@ -25488,7 +25501,7 @@ class $AttributesTable extends Attributes
       values: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}values']),
       isActive: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}is_active']),
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_active']),
       required: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}required']),
       regex: attachedDatabase.typeMapping
@@ -25537,7 +25550,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
   final String? tenantId;
   final String? code;
   final String? values;
-  final String? isActive;
+  final bool? isActive;
   final bool? required;
   final String? regex;
   final int? order;
@@ -25600,7 +25613,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       map['values'] = Variable<String>(values);
     }
     if (!nullToAbsent || isActive != null) {
-      map['is_active'] = Variable<String>(isActive);
+      map['is_active'] = Variable<bool>(isActive);
     }
     if (!nullToAbsent || required != null) {
       map['required'] = Variable<bool>(required);
@@ -25730,7 +25743,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       code: serializer.fromJson<String?>(json['code']),
       values: serializer.fromJson<String?>(json['values']),
-      isActive: serializer.fromJson<String?>(json['isActive']),
+      isActive: serializer.fromJson<bool?>(json['isActive']),
       required: serializer.fromJson<bool?>(json['required']),
       regex: serializer.fromJson<String?>(json['regex']),
       order: serializer.fromJson<int?>(json['order']),
@@ -25761,7 +25774,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       'tenantId': serializer.toJson<String?>(tenantId),
       'code': serializer.toJson<String?>(code),
       'values': serializer.toJson<String?>(values),
-      'isActive': serializer.toJson<String?>(isActive),
+      'isActive': serializer.toJson<bool?>(isActive),
       'required': serializer.toJson<bool?>(required),
       'regex': serializer.toJson<String?>(regex),
       'order': serializer.toJson<int?>(order),
@@ -25788,7 +25801,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           Value<String?> tenantId = const Value.absent(),
           Value<String?> code = const Value.absent(),
           Value<String?> values = const Value.absent(),
-          Value<String?> isActive = const Value.absent(),
+          Value<bool?> isActive = const Value.absent(),
           Value<bool?> required = const Value.absent(),
           Value<String?> regex = const Value.absent(),
           Value<int?> order = const Value.absent(),
@@ -25943,7 +25956,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
   final Value<String?> tenantId;
   final Value<String?> code;
   final Value<String?> values;
-  final Value<String?> isActive;
+  final Value<bool?> isActive;
   final Value<bool?> required;
   final Value<String?> regex;
   final Value<int?> order;
@@ -26020,7 +26033,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     Expression<String>? tenantId,
     Expression<String>? code,
     Expression<String>? values,
-    Expression<String>? isActive,
+    Expression<bool>? isActive,
     Expression<bool>? required,
     Expression<String>? regex,
     Expression<int>? order,
@@ -26076,7 +26089,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       Value<String?>? tenantId,
       Value<String?>? code,
       Value<String?>? values,
-      Value<String?>? isActive,
+      Value<bool?>? isActive,
       Value<bool?>? required,
       Value<String?>? regex,
       Value<int?>? order,
@@ -26144,7 +26157,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       map['values'] = Variable<String>(values.value);
     }
     if (isActive.present) {
-      map['is_active'] = Variable<String>(isActive.value);
+      map['is_active'] = Variable<bool>(isActive.value);
     }
     if (required.present) {
       map['required'] = Variable<bool>(required.value);
@@ -36940,6 +36953,13 @@ class $SideEffectTable extends SideEffect
   late final GeneratedColumn<String> taskClientReferenceId =
       GeneratedColumn<String>('task_client_reference_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _projectBeneficiaryClientReferenceIdMeta =
+      const VerificationMeta('projectBeneficiaryClientReferenceId');
+  @override
+  late final GeneratedColumn<String> projectBeneficiaryClientReferenceId =
+      GeneratedColumn<String>(
+          'project_beneficiary_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _reAttemptsMeta =
       const VerificationMeta('reAttempts');
   @override
@@ -37049,6 +37069,7 @@ class $SideEffectTable extends SideEffect
         id,
         projectId,
         taskClientReferenceId,
+        projectBeneficiaryClientReferenceId,
         reAttempts,
         symptoms,
         auditCreatedBy,
@@ -37088,6 +37109,13 @@ class $SideEffectTable extends SideEffect
           _taskClientReferenceIdMeta,
           taskClientReferenceId.isAcceptableOrUnknown(
               data['task_client_reference_id']!, _taskClientReferenceIdMeta));
+    }
+    if (data.containsKey('project_beneficiary_client_reference_id')) {
+      context.handle(
+          _projectBeneficiaryClientReferenceIdMeta,
+          projectBeneficiaryClientReferenceId.isAcceptableOrUnknown(
+              data['project_beneficiary_client_reference_id']!,
+              _projectBeneficiaryClientReferenceIdMeta));
     }
     if (data.containsKey('re_attempts')) {
       context.handle(
@@ -37197,6 +37225,9 @@ class $SideEffectTable extends SideEffect
       taskClientReferenceId: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}task_client_reference_id']),
+      projectBeneficiaryClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}project_beneficiary_client_reference_id']),
       reAttempts: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}re_attempts']),
       symptoms: attachedDatabase.typeMapping
@@ -37242,6 +37273,7 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
   final String? id;
   final String? projectId;
   final String? taskClientReferenceId;
+  final String? projectBeneficiaryClientReferenceId;
   final int? reAttempts;
   final String? symptoms;
   final String? auditCreatedBy;
@@ -37262,6 +37294,7 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
       {this.id,
       this.projectId,
       this.taskClientReferenceId,
+      this.projectBeneficiaryClientReferenceId,
       this.reAttempts,
       this.symptoms,
       this.auditCreatedBy,
@@ -37289,6 +37322,10 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
     }
     if (!nullToAbsent || taskClientReferenceId != null) {
       map['task_client_reference_id'] = Variable<String>(taskClientReferenceId);
+    }
+    if (!nullToAbsent || projectBeneficiaryClientReferenceId != null) {
+      map['project_beneficiary_client_reference_id'] =
+          Variable<String>(projectBeneficiaryClientReferenceId);
     }
     if (!nullToAbsent || reAttempts != null) {
       map['re_attempts'] = Variable<int>(reAttempts);
@@ -37348,6 +37385,10 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
       taskClientReferenceId: taskClientReferenceId == null && nullToAbsent
           ? const Value.absent()
           : Value(taskClientReferenceId),
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaryClientReferenceId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(projectBeneficiaryClientReferenceId),
       reAttempts: reAttempts == null && nullToAbsent
           ? const Value.absent()
           : Value(reAttempts),
@@ -37405,6 +37446,8 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
       projectId: serializer.fromJson<String?>(json['projectId']),
       taskClientReferenceId:
           serializer.fromJson<String?>(json['taskClientReferenceId']),
+      projectBeneficiaryClientReferenceId: serializer
+          .fromJson<String?>(json['projectBeneficiaryClientReferenceId']),
       reAttempts: serializer.fromJson<int?>(json['reAttempts']),
       symptoms: serializer.fromJson<String?>(json['symptoms']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
@@ -37432,6 +37475,8 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
       'projectId': serializer.toJson<String?>(projectId),
       'taskClientReferenceId':
           serializer.toJson<String?>(taskClientReferenceId),
+      'projectBeneficiaryClientReferenceId':
+          serializer.toJson<String?>(projectBeneficiaryClientReferenceId),
       'reAttempts': serializer.toJson<int?>(reAttempts),
       'symptoms': serializer.toJson<String?>(symptoms),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
@@ -37455,6 +37500,8 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
           {Value<String?> id = const Value.absent(),
           Value<String?> projectId = const Value.absent(),
           Value<String?> taskClientReferenceId = const Value.absent(),
+          Value<String?> projectBeneficiaryClientReferenceId =
+              const Value.absent(),
           Value<int?> reAttempts = const Value.absent(),
           Value<String?> symptoms = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
@@ -37477,6 +37524,10 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
         taskClientReferenceId: taskClientReferenceId.present
             ? taskClientReferenceId.value
             : this.taskClientReferenceId,
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaryClientReferenceId.present
+                ? projectBeneficiaryClientReferenceId.value
+                : this.projectBeneficiaryClientReferenceId,
         reAttempts: reAttempts.present ? reAttempts.value : this.reAttempts,
         symptoms: symptoms.present ? symptoms.value : this.symptoms,
         auditCreatedBy:
@@ -37519,6 +37570,8 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
           ..write('id: $id, ')
           ..write('projectId: $projectId, ')
           ..write('taskClientReferenceId: $taskClientReferenceId, ')
+          ..write(
+              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
           ..write('reAttempts: $reAttempts, ')
           ..write('symptoms: $symptoms, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -37544,6 +37597,7 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
       id,
       projectId,
       taskClientReferenceId,
+      projectBeneficiaryClientReferenceId,
       reAttempts,
       symptoms,
       auditCreatedBy,
@@ -37567,6 +37621,8 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
           other.id == this.id &&
           other.projectId == this.projectId &&
           other.taskClientReferenceId == this.taskClientReferenceId &&
+          other.projectBeneficiaryClientReferenceId ==
+              this.projectBeneficiaryClientReferenceId &&
           other.reAttempts == this.reAttempts &&
           other.symptoms == this.symptoms &&
           other.auditCreatedBy == this.auditCreatedBy &&
@@ -37589,6 +37645,7 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
   final Value<String?> id;
   final Value<String?> projectId;
   final Value<String?> taskClientReferenceId;
+  final Value<String?> projectBeneficiaryClientReferenceId;
   final Value<int?> reAttempts;
   final Value<String?> symptoms;
   final Value<String?> auditCreatedBy;
@@ -37610,6 +37667,7 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
     this.id = const Value.absent(),
     this.projectId = const Value.absent(),
     this.taskClientReferenceId = const Value.absent(),
+    this.projectBeneficiaryClientReferenceId = const Value.absent(),
     this.reAttempts = const Value.absent(),
     this.symptoms = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -37632,6 +37690,7 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
     this.id = const Value.absent(),
     this.projectId = const Value.absent(),
     this.taskClientReferenceId = const Value.absent(),
+    this.projectBeneficiaryClientReferenceId = const Value.absent(),
     this.reAttempts = const Value.absent(),
     this.symptoms = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -37654,6 +37713,7 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
     Expression<String>? id,
     Expression<String>? projectId,
     Expression<String>? taskClientReferenceId,
+    Expression<String>? projectBeneficiaryClientReferenceId,
     Expression<int>? reAttempts,
     Expression<String>? symptoms,
     Expression<String>? auditCreatedBy,
@@ -37677,6 +37737,9 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
       if (projectId != null) 'project_id': projectId,
       if (taskClientReferenceId != null)
         'task_client_reference_id': taskClientReferenceId,
+      if (projectBeneficiaryClientReferenceId != null)
+        'project_beneficiary_client_reference_id':
+            projectBeneficiaryClientReferenceId,
       if (reAttempts != null) 're_attempts': reAttempts,
       if (symptoms != null) 'symptoms': symptoms,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
@@ -37703,6 +37766,7 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
       {Value<String?>? id,
       Value<String?>? projectId,
       Value<String?>? taskClientReferenceId,
+      Value<String?>? projectBeneficiaryClientReferenceId,
       Value<int?>? reAttempts,
       Value<String?>? symptoms,
       Value<String?>? auditCreatedBy,
@@ -37725,6 +37789,9 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
       projectId: projectId ?? this.projectId,
       taskClientReferenceId:
           taskClientReferenceId ?? this.taskClientReferenceId,
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaryClientReferenceId ??
+              this.projectBeneficiaryClientReferenceId,
       reAttempts: reAttempts ?? this.reAttempts,
       symptoms: symptoms ?? this.symptoms,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
@@ -37757,6 +37824,10 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
     if (taskClientReferenceId.present) {
       map['task_client_reference_id'] =
           Variable<String>(taskClientReferenceId.value);
+    }
+    if (projectBeneficiaryClientReferenceId.present) {
+      map['project_beneficiary_client_reference_id'] =
+          Variable<String>(projectBeneficiaryClientReferenceId.value);
     }
     if (reAttempts.present) {
       map['re_attempts'] = Variable<int>(reAttempts.value);
@@ -37818,6 +37889,8 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
           ..write('id: $id, ')
           ..write('projectId: $projectId, ')
           ..write('taskClientReferenceId: $taskClientReferenceId, ')
+          ..write(
+              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
           ..write('reAttempts: $reAttempts, ')
           ..write('symptoms: $symptoms, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -39131,6 +39204,7 @@ class LocalizationCompanion extends UpdateCompanion<LocalizationData> {
 
 abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e) : super(e);
+  _$LocalSqlDataStoreManager get managers => _$LocalSqlDataStoreManager(this);
   late final $AttendanceRegisterTable attendanceRegister =
       $AttendanceRegisterTable(this);
   late final $AttendanceTable attendance = $AttendanceTable(this);
@@ -39326,4 +39400,15772 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         referralProjectbeneficiaryclientref,
         localizationModule
       ];
+}
+
+typedef $$AttendanceRegisterTableInsertCompanionBuilder
+    = AttendanceRegisterCompanion Function({
+  Value<String?> id,
+  required String tenantId,
+  required String registerNumber,
+  required String name,
+  required String referenceId,
+  required String serviceCode,
+  required String status,
+  Value<int?> startDate,
+  Value<int?> endDate,
+  Value<String?> additionalFields,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int> rowid,
+});
+typedef $$AttendanceRegisterTableUpdateCompanionBuilder
+    = AttendanceRegisterCompanion Function({
+  Value<String?> id,
+  Value<String> tenantId,
+  Value<String> registerNumber,
+  Value<String> name,
+  Value<String> referenceId,
+  Value<String> serviceCode,
+  Value<String> status,
+  Value<int?> startDate,
+  Value<int?> endDate,
+  Value<String?> additionalFields,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int> rowid,
+});
+
+class $$AttendanceRegisterTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $AttendanceRegisterTable,
+    AttendanceRegisterData,
+    $$AttendanceRegisterTableFilterComposer,
+    $$AttendanceRegisterTableOrderingComposer,
+    $$AttendanceRegisterTableProcessedTableManager,
+    $$AttendanceRegisterTableInsertCompanionBuilder,
+    $$AttendanceRegisterTableUpdateCompanionBuilder> {
+  $$AttendanceRegisterTableTableManager(
+      _$LocalSqlDataStore db, $AttendanceRegisterTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$AttendanceRegisterTableFilterComposer(ComposerState(db, table)),
+          orderingComposer: $$AttendanceRegisterTableOrderingComposer(
+              ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$AttendanceRegisterTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String> tenantId = const Value.absent(),
+            Value<String> registerNumber = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> referenceId = const Value.absent(),
+            Value<String> serviceCode = const Value.absent(),
+            Value<String> status = const Value.absent(),
+            Value<int?> startDate = const Value.absent(),
+            Value<int?> endDate = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AttendanceRegisterCompanion(
+            id: id,
+            tenantId: tenantId,
+            registerNumber: registerNumber,
+            name: name,
+            referenceId: referenceId,
+            serviceCode: serviceCode,
+            status: status,
+            startDate: startDate,
+            endDate: endDate,
+            additionalFields: additionalFields,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            required String tenantId,
+            required String registerNumber,
+            required String name,
+            required String referenceId,
+            required String serviceCode,
+            required String status,
+            Value<int?> startDate = const Value.absent(),
+            Value<int?> endDate = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AttendanceRegisterCompanion.insert(
+            id: id,
+            tenantId: tenantId,
+            registerNumber: registerNumber,
+            name: name,
+            referenceId: referenceId,
+            serviceCode: serviceCode,
+            status: status,
+            startDate: startDate,
+            endDate: endDate,
+            additionalFields: additionalFields,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$AttendanceRegisterTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$LocalSqlDataStore,
+        $AttendanceRegisterTable,
+        AttendanceRegisterData,
+        $$AttendanceRegisterTableFilterComposer,
+        $$AttendanceRegisterTableOrderingComposer,
+        $$AttendanceRegisterTableProcessedTableManager,
+        $$AttendanceRegisterTableInsertCompanionBuilder,
+        $$AttendanceRegisterTableUpdateCompanionBuilder> {
+  $$AttendanceRegisterTableProcessedTableManager(super.$state);
+}
+
+class $$AttendanceRegisterTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $AttendanceRegisterTable> {
+  $$AttendanceRegisterTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get registerNumber => $state.composableBuilder(
+      column: $state.table.registerNumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get serviceCode => $state.composableBuilder(
+      column: $state.table.serviceCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get startDate => $state.composableBuilder(
+      column: $state.table.startDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get endDate => $state.composableBuilder(
+      column: $state.table.endDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$AttendanceRegisterTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $AttendanceRegisterTable> {
+  $$AttendanceRegisterTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get registerNumber => $state.composableBuilder(
+      column: $state.table.registerNumber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get serviceCode => $state.composableBuilder(
+      column: $state.table.serviceCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get startDate => $state.composableBuilder(
+      column: $state.table.startDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get endDate => $state.composableBuilder(
+      column: $state.table.endDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$AttendanceTableInsertCompanionBuilder = AttendanceCompanion Function({
+  Value<String?> id,
+  Value<String?> clientReferenceId,
+  required String tenantId,
+  required String registerId,
+  required String individualId,
+  Value<int?> time,
+  Value<String?> status,
+  Value<String?> type,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<bool?> uploadToServer,
+  Value<int> rowid,
+});
+typedef $$AttendanceTableUpdateCompanionBuilder = AttendanceCompanion Function({
+  Value<String?> id,
+  Value<String?> clientReferenceId,
+  Value<String> tenantId,
+  Value<String> registerId,
+  Value<String> individualId,
+  Value<int?> time,
+  Value<String?> status,
+  Value<String?> type,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<bool?> uploadToServer,
+  Value<int> rowid,
+});
+
+class $$AttendanceTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $AttendanceTable,
+    AttendanceData,
+    $$AttendanceTableFilterComposer,
+    $$AttendanceTableOrderingComposer,
+    $$AttendanceTableProcessedTableManager,
+    $$AttendanceTableInsertCompanionBuilder,
+    $$AttendanceTableUpdateCompanionBuilder> {
+  $$AttendanceTableTableManager(_$LocalSqlDataStore db, $AttendanceTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$AttendanceTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$AttendanceTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$AttendanceTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> clientReferenceId = const Value.absent(),
+            Value<String> tenantId = const Value.absent(),
+            Value<String> registerId = const Value.absent(),
+            Value<String> individualId = const Value.absent(),
+            Value<int?> time = const Value.absent(),
+            Value<String?> status = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<bool?> uploadToServer = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AttendanceCompanion(
+            id: id,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            registerId: registerId,
+            individualId: individualId,
+            time: time,
+            status: status,
+            type: type,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            uploadToServer: uploadToServer,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> clientReferenceId = const Value.absent(),
+            required String tenantId,
+            required String registerId,
+            required String individualId,
+            Value<int?> time = const Value.absent(),
+            Value<String?> status = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<bool?> uploadToServer = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AttendanceCompanion.insert(
+            id: id,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            registerId: registerId,
+            individualId: individualId,
+            time: time,
+            status: status,
+            type: type,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            uploadToServer: uploadToServer,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$AttendanceTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $AttendanceTable,
+    AttendanceData,
+    $$AttendanceTableFilterComposer,
+    $$AttendanceTableOrderingComposer,
+    $$AttendanceTableProcessedTableManager,
+    $$AttendanceTableInsertCompanionBuilder,
+    $$AttendanceTableUpdateCompanionBuilder> {
+  $$AttendanceTableProcessedTableManager(super.$state);
+}
+
+class $$AttendanceTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $AttendanceTable> {
+  $$AttendanceTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get registerId => $state.composableBuilder(
+      column: $state.table.registerId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get time => $state.composableBuilder(
+      column: $state.table.time,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get uploadToServer => $state.composableBuilder(
+      column: $state.table.uploadToServer,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$AttendanceTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $AttendanceTable> {
+  $$AttendanceTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get registerId => $state.composableBuilder(
+      column: $state.table.registerId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get time => $state.composableBuilder(
+      column: $state.table.time,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get uploadToServer => $state.composableBuilder(
+      column: $state.table.uploadToServer,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$AttendeeTableInsertCompanionBuilder = AttendeeCompanion Function({
+  Value<String?> id,
+  required String tenantId,
+  required String registerId,
+  required String individualId,
+  Value<int?> status,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<int?> enrollmentDate,
+  Value<int?> denrollmentDate,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$AttendeeTableUpdateCompanionBuilder = AttendeeCompanion Function({
+  Value<String?> id,
+  Value<String> tenantId,
+  Value<String> registerId,
+  Value<String> individualId,
+  Value<int?> status,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<int?> enrollmentDate,
+  Value<int?> denrollmentDate,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$AttendeeTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $AttendeeTable,
+    AttendeeData,
+    $$AttendeeTableFilterComposer,
+    $$AttendeeTableOrderingComposer,
+    $$AttendeeTableProcessedTableManager,
+    $$AttendeeTableInsertCompanionBuilder,
+    $$AttendeeTableUpdateCompanionBuilder> {
+  $$AttendeeTableTableManager(_$LocalSqlDataStore db, $AttendeeTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$AttendeeTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$AttendeeTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$AttendeeTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String> tenantId = const Value.absent(),
+            Value<String> registerId = const Value.absent(),
+            Value<String> individualId = const Value.absent(),
+            Value<int?> status = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<int?> enrollmentDate = const Value.absent(),
+            Value<int?> denrollmentDate = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AttendeeCompanion(
+            id: id,
+            tenantId: tenantId,
+            registerId: registerId,
+            individualId: individualId,
+            status: status,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            enrollmentDate: enrollmentDate,
+            denrollmentDate: denrollmentDate,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            required String tenantId,
+            required String registerId,
+            required String individualId,
+            Value<int?> status = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<int?> enrollmentDate = const Value.absent(),
+            Value<int?> denrollmentDate = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AttendeeCompanion.insert(
+            id: id,
+            tenantId: tenantId,
+            registerId: registerId,
+            individualId: individualId,
+            status: status,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            enrollmentDate: enrollmentDate,
+            denrollmentDate: denrollmentDate,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$AttendeeTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $AttendeeTable,
+    AttendeeData,
+    $$AttendeeTableFilterComposer,
+    $$AttendeeTableOrderingComposer,
+    $$AttendeeTableProcessedTableManager,
+    $$AttendeeTableInsertCompanionBuilder,
+    $$AttendeeTableUpdateCompanionBuilder> {
+  $$AttendeeTableProcessedTableManager(super.$state);
+}
+
+class $$AttendeeTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $AttendeeTable> {
+  $$AttendeeTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get registerId => $state.composableBuilder(
+      column: $state.table.registerId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get enrollmentDate => $state.composableBuilder(
+      column: $state.table.enrollmentDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get denrollmentDate => $state.composableBuilder(
+      column: $state.table.denrollmentDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$AttendeeTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $AttendeeTable> {
+  $$AttendeeTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get registerId => $state.composableBuilder(
+      column: $state.table.registerId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get enrollmentDate => $state.composableBuilder(
+      column: $state.table.enrollmentDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get denrollmentDate => $state.composableBuilder(
+      column: $state.table.denrollmentDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$AddressTableInsertCompanionBuilder = AddressCompanion Function({
+  Value<String?> id,
+  Value<String?> relatedClientReferenceId,
+  Value<String?> doorNo,
+  Value<double?> latitude,
+  Value<double?> longitude,
+  Value<double?> locationAccuracy,
+  Value<String?> addressLine1,
+  Value<String?> addressLine2,
+  Value<String?> landmark,
+  Value<String?> city,
+  Value<String?> pincode,
+  Value<String?> buildingName,
+  Value<String?> street,
+  Value<String?> boundaryType,
+  Value<String?> boundary,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> localityBoundaryCode,
+  Value<String?> localityBoundaryName,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<AddressType?> type,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$AddressTableUpdateCompanionBuilder = AddressCompanion Function({
+  Value<String?> id,
+  Value<String?> relatedClientReferenceId,
+  Value<String?> doorNo,
+  Value<double?> latitude,
+  Value<double?> longitude,
+  Value<double?> locationAccuracy,
+  Value<String?> addressLine1,
+  Value<String?> addressLine2,
+  Value<String?> landmark,
+  Value<String?> city,
+  Value<String?> pincode,
+  Value<String?> buildingName,
+  Value<String?> street,
+  Value<String?> boundaryType,
+  Value<String?> boundary,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> localityBoundaryCode,
+  Value<String?> localityBoundaryName,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<AddressType?> type,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$AddressTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $AddressTable,
+    Addres,
+    $$AddressTableFilterComposer,
+    $$AddressTableOrderingComposer,
+    $$AddressTableProcessedTableManager,
+    $$AddressTableInsertCompanionBuilder,
+    $$AddressTableUpdateCompanionBuilder> {
+  $$AddressTableTableManager(_$LocalSqlDataStore db, $AddressTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$AddressTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$AddressTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$AddressTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> relatedClientReferenceId = const Value.absent(),
+            Value<String?> doorNo = const Value.absent(),
+            Value<double?> latitude = const Value.absent(),
+            Value<double?> longitude = const Value.absent(),
+            Value<double?> locationAccuracy = const Value.absent(),
+            Value<String?> addressLine1 = const Value.absent(),
+            Value<String?> addressLine2 = const Value.absent(),
+            Value<String?> landmark = const Value.absent(),
+            Value<String?> city = const Value.absent(),
+            Value<String?> pincode = const Value.absent(),
+            Value<String?> buildingName = const Value.absent(),
+            Value<String?> street = const Value.absent(),
+            Value<String?> boundaryType = const Value.absent(),
+            Value<String?> boundary = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> localityBoundaryCode = const Value.absent(),
+            Value<String?> localityBoundaryName = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<AddressType?> type = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AddressCompanion(
+            id: id,
+            relatedClientReferenceId: relatedClientReferenceId,
+            doorNo: doorNo,
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
+            addressLine1: addressLine1,
+            addressLine2: addressLine2,
+            landmark: landmark,
+            city: city,
+            pincode: pincode,
+            buildingName: buildingName,
+            street: street,
+            boundaryType: boundaryType,
+            boundary: boundary,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            localityBoundaryCode: localityBoundaryCode,
+            localityBoundaryName: localityBoundaryName,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            type: type,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> relatedClientReferenceId = const Value.absent(),
+            Value<String?> doorNo = const Value.absent(),
+            Value<double?> latitude = const Value.absent(),
+            Value<double?> longitude = const Value.absent(),
+            Value<double?> locationAccuracy = const Value.absent(),
+            Value<String?> addressLine1 = const Value.absent(),
+            Value<String?> addressLine2 = const Value.absent(),
+            Value<String?> landmark = const Value.absent(),
+            Value<String?> city = const Value.absent(),
+            Value<String?> pincode = const Value.absent(),
+            Value<String?> buildingName = const Value.absent(),
+            Value<String?> street = const Value.absent(),
+            Value<String?> boundaryType = const Value.absent(),
+            Value<String?> boundary = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> localityBoundaryCode = const Value.absent(),
+            Value<String?> localityBoundaryName = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<AddressType?> type = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AddressCompanion.insert(
+            id: id,
+            relatedClientReferenceId: relatedClientReferenceId,
+            doorNo: doorNo,
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
+            addressLine1: addressLine1,
+            addressLine2: addressLine2,
+            landmark: landmark,
+            city: city,
+            pincode: pincode,
+            buildingName: buildingName,
+            street: street,
+            boundaryType: boundaryType,
+            boundary: boundary,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            localityBoundaryCode: localityBoundaryCode,
+            localityBoundaryName: localityBoundaryName,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            type: type,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$AddressTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $AddressTable,
+    Addres,
+    $$AddressTableFilterComposer,
+    $$AddressTableOrderingComposer,
+    $$AddressTableProcessedTableManager,
+    $$AddressTableInsertCompanionBuilder,
+    $$AddressTableUpdateCompanionBuilder> {
+  $$AddressTableProcessedTableManager(super.$state);
+}
+
+class $$AddressTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $AddressTable> {
+  $$AddressTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get relatedClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.relatedClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get doorNo => $state.composableBuilder(
+      column: $state.table.doorNo,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get addressLine1 => $state.composableBuilder(
+      column: $state.table.addressLine1,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get addressLine2 => $state.composableBuilder(
+      column: $state.table.addressLine2,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get landmark => $state.composableBuilder(
+      column: $state.table.landmark,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get city => $state.composableBuilder(
+      column: $state.table.city,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get pincode => $state.composableBuilder(
+      column: $state.table.pincode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get buildingName => $state.composableBuilder(
+      column: $state.table.buildingName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get street => $state.composableBuilder(
+      column: $state.table.street,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get boundaryType => $state.composableBuilder(
+      column: $state.table.boundaryType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get boundary => $state.composableBuilder(
+      column: $state.table.boundary,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get localityBoundaryCode => $state.composableBuilder(
+      column: $state.table.localityBoundaryCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get localityBoundaryName => $state.composableBuilder(
+      column: $state.table.localityBoundaryName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<AddressType?, AddressType, int> get type =>
+      $state.composableBuilder(
+          column: $state.table.type,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$AddressTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $AddressTable> {
+  $$AddressTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get relatedClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.relatedClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get doorNo => $state.composableBuilder(
+      column: $state.table.doorNo,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get addressLine1 => $state.composableBuilder(
+      column: $state.table.addressLine1,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get addressLine2 => $state.composableBuilder(
+      column: $state.table.addressLine2,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get landmark => $state.composableBuilder(
+      column: $state.table.landmark,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get city => $state.composableBuilder(
+      column: $state.table.city,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get pincode => $state.composableBuilder(
+      column: $state.table.pincode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get buildingName => $state.composableBuilder(
+      column: $state.table.buildingName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get street => $state.composableBuilder(
+      column: $state.table.street,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get boundaryType => $state.composableBuilder(
+      column: $state.table.boundaryType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get boundary => $state.composableBuilder(
+      column: $state.table.boundary,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get localityBoundaryCode => $state.composableBuilder(
+      column: $state.table.localityBoundaryCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get localityBoundaryName => $state.composableBuilder(
+      column: $state.table.localityBoundaryName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$NameTableInsertCompanionBuilder = NameCompanion Function({
+  Value<String?> id,
+  Value<String?> individualClientReferenceId,
+  Value<String?> givenName,
+  Value<String?> familyName,
+  Value<String?> otherNames,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$NameTableUpdateCompanionBuilder = NameCompanion Function({
+  Value<String?> id,
+  Value<String?> individualClientReferenceId,
+  Value<String?> givenName,
+  Value<String?> familyName,
+  Value<String?> otherNames,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$NameTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $NameTable,
+    NameData,
+    $$NameTableFilterComposer,
+    $$NameTableOrderingComposer,
+    $$NameTableProcessedTableManager,
+    $$NameTableInsertCompanionBuilder,
+    $$NameTableUpdateCompanionBuilder> {
+  $$NameTableTableManager(_$LocalSqlDataStore db, $NameTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$NameTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$NameTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$NameTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> individualClientReferenceId = const Value.absent(),
+            Value<String?> givenName = const Value.absent(),
+            Value<String?> familyName = const Value.absent(),
+            Value<String?> otherNames = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              NameCompanion(
+            id: id,
+            individualClientReferenceId: individualClientReferenceId,
+            givenName: givenName,
+            familyName: familyName,
+            otherNames: otherNames,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> individualClientReferenceId = const Value.absent(),
+            Value<String?> givenName = const Value.absent(),
+            Value<String?> familyName = const Value.absent(),
+            Value<String?> otherNames = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              NameCompanion.insert(
+            id: id,
+            individualClientReferenceId: individualClientReferenceId,
+            givenName: givenName,
+            familyName: familyName,
+            otherNames: otherNames,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$NameTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $NameTable,
+    NameData,
+    $$NameTableFilterComposer,
+    $$NameTableOrderingComposer,
+    $$NameTableProcessedTableManager,
+    $$NameTableInsertCompanionBuilder,
+    $$NameTableUpdateCompanionBuilder> {
+  $$NameTableProcessedTableManager(super.$state);
+}
+
+class $$NameTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $NameTable> {
+  $$NameTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualClientReferenceId => $state
+      .composableBuilder(
+          column: $state.table.individualClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get givenName => $state.composableBuilder(
+      column: $state.table.givenName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get familyName => $state.composableBuilder(
+      column: $state.table.familyName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get otherNames => $state.composableBuilder(
+      column: $state.table.otherNames,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$NameTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $NameTable> {
+  $$NameTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.individualClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get givenName => $state.composableBuilder(
+      column: $state.table.givenName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get familyName => $state.composableBuilder(
+      column: $state.table.familyName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get otherNames => $state.composableBuilder(
+      column: $state.table.otherNames,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$BoundaryTableInsertCompanionBuilder = BoundaryCompanion Function({
+  Value<String?> code,
+  Value<String?> name,
+  Value<String?> label,
+  Value<String?> latitude,
+  Value<String?> longitude,
+  Value<String?> materializedPath,
+  Value<String?> auditCreatedBy,
+  Value<int?> boundaryNum,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int> rowid,
+});
+typedef $$BoundaryTableUpdateCompanionBuilder = BoundaryCompanion Function({
+  Value<String?> code,
+  Value<String?> name,
+  Value<String?> label,
+  Value<String?> latitude,
+  Value<String?> longitude,
+  Value<String?> materializedPath,
+  Value<String?> auditCreatedBy,
+  Value<int?> boundaryNum,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int> rowid,
+});
+
+class $$BoundaryTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $BoundaryTable,
+    BoundaryData,
+    $$BoundaryTableFilterComposer,
+    $$BoundaryTableOrderingComposer,
+    $$BoundaryTableProcessedTableManager,
+    $$BoundaryTableInsertCompanionBuilder,
+    $$BoundaryTableUpdateCompanionBuilder> {
+  $$BoundaryTableTableManager(_$LocalSqlDataStore db, $BoundaryTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$BoundaryTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$BoundaryTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$BoundaryTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> code = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> label = const Value.absent(),
+            Value<String?> latitude = const Value.absent(),
+            Value<String?> longitude = const Value.absent(),
+            Value<String?> materializedPath = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> boundaryNum = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              BoundaryCompanion(
+            code: code,
+            name: name,
+            label: label,
+            latitude: latitude,
+            longitude: longitude,
+            materializedPath: materializedPath,
+            auditCreatedBy: auditCreatedBy,
+            boundaryNum: boundaryNum,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> code = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> label = const Value.absent(),
+            Value<String?> latitude = const Value.absent(),
+            Value<String?> longitude = const Value.absent(),
+            Value<String?> materializedPath = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> boundaryNum = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              BoundaryCompanion.insert(
+            code: code,
+            name: name,
+            label: label,
+            latitude: latitude,
+            longitude: longitude,
+            materializedPath: materializedPath,
+            auditCreatedBy: auditCreatedBy,
+            boundaryNum: boundaryNum,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$BoundaryTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $BoundaryTable,
+    BoundaryData,
+    $$BoundaryTableFilterComposer,
+    $$BoundaryTableOrderingComposer,
+    $$BoundaryTableProcessedTableManager,
+    $$BoundaryTableInsertCompanionBuilder,
+    $$BoundaryTableUpdateCompanionBuilder> {
+  $$BoundaryTableProcessedTableManager(super.$state);
+}
+
+class $$BoundaryTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $BoundaryTable> {
+  $$BoundaryTableFilterComposer(super.$state);
+  ColumnFilters<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get label => $state.composableBuilder(
+      column: $state.table.label,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get materializedPath => $state.composableBuilder(
+      column: $state.table.materializedPath,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get boundaryNum => $state.composableBuilder(
+      column: $state.table.boundaryNum,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$BoundaryTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $BoundaryTable> {
+  $$BoundaryTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get label => $state.composableBuilder(
+      column: $state.table.label,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get materializedPath => $state.composableBuilder(
+      column: $state.table.materializedPath,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get boundaryNum => $state.composableBuilder(
+      column: $state.table.boundaryNum,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$DocumentTableInsertCompanionBuilder = DocumentCompanion Function({
+  Value<String?> id,
+  Value<String?> documentType,
+  Value<String?> fileStoreId,
+  Value<String?> documentUid,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$DocumentTableUpdateCompanionBuilder = DocumentCompanion Function({
+  Value<String?> id,
+  Value<String?> documentType,
+  Value<String?> fileStoreId,
+  Value<String?> documentUid,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$DocumentTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $DocumentTable,
+    DocumentData,
+    $$DocumentTableFilterComposer,
+    $$DocumentTableOrderingComposer,
+    $$DocumentTableProcessedTableManager,
+    $$DocumentTableInsertCompanionBuilder,
+    $$DocumentTableUpdateCompanionBuilder> {
+  $$DocumentTableTableManager(_$LocalSqlDataStore db, $DocumentTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$DocumentTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$DocumentTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$DocumentTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> documentType = const Value.absent(),
+            Value<String?> fileStoreId = const Value.absent(),
+            Value<String?> documentUid = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              DocumentCompanion(
+            id: id,
+            documentType: documentType,
+            fileStoreId: fileStoreId,
+            documentUid: documentUid,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> documentType = const Value.absent(),
+            Value<String?> fileStoreId = const Value.absent(),
+            Value<String?> documentUid = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              DocumentCompanion.insert(
+            id: id,
+            documentType: documentType,
+            fileStoreId: fileStoreId,
+            documentUid: documentUid,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$DocumentTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $DocumentTable,
+    DocumentData,
+    $$DocumentTableFilterComposer,
+    $$DocumentTableOrderingComposer,
+    $$DocumentTableProcessedTableManager,
+    $$DocumentTableInsertCompanionBuilder,
+    $$DocumentTableUpdateCompanionBuilder> {
+  $$DocumentTableProcessedTableManager(super.$state);
+}
+
+class $$DocumentTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $DocumentTable> {
+  $$DocumentTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get documentType => $state.composableBuilder(
+      column: $state.table.documentType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get fileStoreId => $state.composableBuilder(
+      column: $state.table.fileStoreId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get documentUid => $state.composableBuilder(
+      column: $state.table.documentUid,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$DocumentTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $DocumentTable> {
+  $$DocumentTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get documentType => $state.composableBuilder(
+      column: $state.table.documentType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get fileStoreId => $state.composableBuilder(
+      column: $state.table.fileStoreId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get documentUid => $state.composableBuilder(
+      column: $state.table.documentUid,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$FacilityTableInsertCompanionBuilder = FacilityCompanion Function({
+  required String id,
+  Value<bool?> isPermanent,
+  Value<String?> usage,
+  Value<int?> storageCapacity,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<String?> name,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$FacilityTableUpdateCompanionBuilder = FacilityCompanion Function({
+  Value<String> id,
+  Value<bool?> isPermanent,
+  Value<String?> usage,
+  Value<int?> storageCapacity,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<String?> name,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$FacilityTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $FacilityTable,
+    FacilityData,
+    $$FacilityTableFilterComposer,
+    $$FacilityTableOrderingComposer,
+    $$FacilityTableProcessedTableManager,
+    $$FacilityTableInsertCompanionBuilder,
+    $$FacilityTableUpdateCompanionBuilder> {
+  $$FacilityTableTableManager(_$LocalSqlDataStore db, $FacilityTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$FacilityTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$FacilityTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$FacilityTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> id = const Value.absent(),
+            Value<bool?> isPermanent = const Value.absent(),
+            Value<String?> usage = const Value.absent(),
+            Value<int?> storageCapacity = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FacilityCompanion(
+            id: id,
+            isPermanent: isPermanent,
+            usage: usage,
+            storageCapacity: storageCapacity,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            name: name,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String id,
+            Value<bool?> isPermanent = const Value.absent(),
+            Value<String?> usage = const Value.absent(),
+            Value<int?> storageCapacity = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FacilityCompanion.insert(
+            id: id,
+            isPermanent: isPermanent,
+            usage: usage,
+            storageCapacity: storageCapacity,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            name: name,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$FacilityTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $FacilityTable,
+    FacilityData,
+    $$FacilityTableFilterComposer,
+    $$FacilityTableOrderingComposer,
+    $$FacilityTableProcessedTableManager,
+    $$FacilityTableInsertCompanionBuilder,
+    $$FacilityTableUpdateCompanionBuilder> {
+  $$FacilityTableProcessedTableManager(super.$state);
+}
+
+class $$FacilityTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $FacilityTable> {
+  $$FacilityTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isPermanent => $state.composableBuilder(
+      column: $state.table.isPermanent,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get usage => $state.composableBuilder(
+      column: $state.table.usage,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get storageCapacity => $state.composableBuilder(
+      column: $state.table.storageCapacity,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$FacilityTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $FacilityTable> {
+  $$FacilityTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isPermanent => $state.composableBuilder(
+      column: $state.table.isPermanent,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get usage => $state.composableBuilder(
+      column: $state.table.usage,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get storageCapacity => $state.composableBuilder(
+      column: $state.table.storageCapacity,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ProductTableInsertCompanionBuilder = ProductCompanion Function({
+  Value<String?> id,
+  Value<String?> type,
+  Value<String?> name,
+  Value<String?> manufacturer,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ProductTableUpdateCompanionBuilder = ProductCompanion Function({
+  Value<String?> id,
+  Value<String?> type,
+  Value<String?> name,
+  Value<String?> manufacturer,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ProductTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ProductTable,
+    ProductData,
+    $$ProductTableFilterComposer,
+    $$ProductTableOrderingComposer,
+    $$ProductTableProcessedTableManager,
+    $$ProductTableInsertCompanionBuilder,
+    $$ProductTableUpdateCompanionBuilder> {
+  $$ProductTableTableManager(_$LocalSqlDataStore db, $ProductTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ProductTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ProductTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$ProductTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> manufacturer = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProductCompanion(
+            id: id,
+            type: type,
+            name: name,
+            manufacturer: manufacturer,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> manufacturer = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProductCompanion.insert(
+            id: id,
+            type: type,
+            name: name,
+            manufacturer: manufacturer,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ProductTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $ProductTable,
+    ProductData,
+    $$ProductTableFilterComposer,
+    $$ProductTableOrderingComposer,
+    $$ProductTableProcessedTableManager,
+    $$ProductTableInsertCompanionBuilder,
+    $$ProductTableUpdateCompanionBuilder> {
+  $$ProductTableProcessedTableManager(super.$state);
+}
+
+class $$ProductTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ProductTable> {
+  $$ProductTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get manufacturer => $state.composableBuilder(
+      column: $state.table.manufacturer,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ProductTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ProductTable> {
+  $$ProductTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get manufacturer => $state.composableBuilder(
+      column: $state.table.manufacturer,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ProductVariantTableInsertCompanionBuilder = ProductVariantCompanion
+    Function({
+  required String id,
+  Value<String?> productId,
+  Value<String?> sku,
+  Value<String?> variation,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ProductVariantTableUpdateCompanionBuilder = ProductVariantCompanion
+    Function({
+  Value<String> id,
+  Value<String?> productId,
+  Value<String?> sku,
+  Value<String?> variation,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ProductVariantTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ProductVariantTable,
+    ProductVariantData,
+    $$ProductVariantTableFilterComposer,
+    $$ProductVariantTableOrderingComposer,
+    $$ProductVariantTableProcessedTableManager,
+    $$ProductVariantTableInsertCompanionBuilder,
+    $$ProductVariantTableUpdateCompanionBuilder> {
+  $$ProductVariantTableTableManager(
+      _$LocalSqlDataStore db, $ProductVariantTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ProductVariantTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ProductVariantTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ProductVariantTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> id = const Value.absent(),
+            Value<String?> productId = const Value.absent(),
+            Value<String?> sku = const Value.absent(),
+            Value<String?> variation = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProductVariantCompanion(
+            id: id,
+            productId: productId,
+            sku: sku,
+            variation: variation,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String id,
+            Value<String?> productId = const Value.absent(),
+            Value<String?> sku = const Value.absent(),
+            Value<String?> variation = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProductVariantCompanion.insert(
+            id: id,
+            productId: productId,
+            sku: sku,
+            variation: variation,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ProductVariantTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $ProductVariantTable,
+    ProductVariantData,
+    $$ProductVariantTableFilterComposer,
+    $$ProductVariantTableOrderingComposer,
+    $$ProductVariantTableProcessedTableManager,
+    $$ProductVariantTableInsertCompanionBuilder,
+    $$ProductVariantTableUpdateCompanionBuilder> {
+  $$ProductVariantTableProcessedTableManager(super.$state);
+}
+
+class $$ProductVariantTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ProductVariantTable> {
+  $$ProductVariantTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get productId => $state.composableBuilder(
+      column: $state.table.productId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get sku => $state.composableBuilder(
+      column: $state.table.sku,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get variation => $state.composableBuilder(
+      column: $state.table.variation,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ProductVariantTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ProductVariantTable> {
+  $$ProductVariantTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get productId => $state.composableBuilder(
+      column: $state.table.productId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get sku => $state.composableBuilder(
+      column: $state.table.sku,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get variation => $state.composableBuilder(
+      column: $state.table.variation,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ProjectTableInsertCompanionBuilder = ProjectCompanion Function({
+  Value<String?> projectType,
+  required String id,
+  Value<String?> projectTypeId,
+  Value<String?> projectNumber,
+  Value<String?> subProjectTypeId,
+  Value<bool?> isTaskEnabled,
+  Value<String?> parent,
+  required String name,
+  Value<String?> department,
+  Value<String?> description,
+  Value<String?> referenceId,
+  Value<String?> projectHierarchy,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int?> startDate,
+  Value<int?> endDate,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ProjectTableUpdateCompanionBuilder = ProjectCompanion Function({
+  Value<String?> projectType,
+  Value<String> id,
+  Value<String?> projectTypeId,
+  Value<String?> projectNumber,
+  Value<String?> subProjectTypeId,
+  Value<bool?> isTaskEnabled,
+  Value<String?> parent,
+  Value<String> name,
+  Value<String?> department,
+  Value<String?> description,
+  Value<String?> referenceId,
+  Value<String?> projectHierarchy,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int?> startDate,
+  Value<int?> endDate,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ProjectTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ProjectTable,
+    ProjectData,
+    $$ProjectTableFilterComposer,
+    $$ProjectTableOrderingComposer,
+    $$ProjectTableProcessedTableManager,
+    $$ProjectTableInsertCompanionBuilder,
+    $$ProjectTableUpdateCompanionBuilder> {
+  $$ProjectTableTableManager(_$LocalSqlDataStore db, $ProjectTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ProjectTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ProjectTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$ProjectTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> projectType = const Value.absent(),
+            Value<String> id = const Value.absent(),
+            Value<String?> projectTypeId = const Value.absent(),
+            Value<String?> projectNumber = const Value.absent(),
+            Value<String?> subProjectTypeId = const Value.absent(),
+            Value<bool?> isTaskEnabled = const Value.absent(),
+            Value<String?> parent = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String?> department = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
+            Value<String?> projectHierarchy = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int?> startDate = const Value.absent(),
+            Value<int?> endDate = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectCompanion(
+            projectType: projectType,
+            id: id,
+            projectTypeId: projectTypeId,
+            projectNumber: projectNumber,
+            subProjectTypeId: subProjectTypeId,
+            isTaskEnabled: isTaskEnabled,
+            parent: parent,
+            name: name,
+            department: department,
+            description: description,
+            referenceId: referenceId,
+            projectHierarchy: projectHierarchy,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            startDate: startDate,
+            endDate: endDate,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> projectType = const Value.absent(),
+            required String id,
+            Value<String?> projectTypeId = const Value.absent(),
+            Value<String?> projectNumber = const Value.absent(),
+            Value<String?> subProjectTypeId = const Value.absent(),
+            Value<bool?> isTaskEnabled = const Value.absent(),
+            Value<String?> parent = const Value.absent(),
+            required String name,
+            Value<String?> department = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
+            Value<String?> projectHierarchy = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int?> startDate = const Value.absent(),
+            Value<int?> endDate = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectCompanion.insert(
+            projectType: projectType,
+            id: id,
+            projectTypeId: projectTypeId,
+            projectNumber: projectNumber,
+            subProjectTypeId: subProjectTypeId,
+            isTaskEnabled: isTaskEnabled,
+            parent: parent,
+            name: name,
+            department: department,
+            description: description,
+            referenceId: referenceId,
+            projectHierarchy: projectHierarchy,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            startDate: startDate,
+            endDate: endDate,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ProjectTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $ProjectTable,
+    ProjectData,
+    $$ProjectTableFilterComposer,
+    $$ProjectTableOrderingComposer,
+    $$ProjectTableProcessedTableManager,
+    $$ProjectTableInsertCompanionBuilder,
+    $$ProjectTableUpdateCompanionBuilder> {
+  $$ProjectTableProcessedTableManager(super.$state);
+}
+
+class $$ProjectTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ProjectTable> {
+  $$ProjectTableFilterComposer(super.$state);
+  ColumnFilters<String> get projectType => $state.composableBuilder(
+      column: $state.table.projectType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectTypeId => $state.composableBuilder(
+      column: $state.table.projectTypeId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectNumber => $state.composableBuilder(
+      column: $state.table.projectNumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get subProjectTypeId => $state.composableBuilder(
+      column: $state.table.subProjectTypeId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isTaskEnabled => $state.composableBuilder(
+      column: $state.table.isTaskEnabled,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get parent => $state.composableBuilder(
+      column: $state.table.parent,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get department => $state.composableBuilder(
+      column: $state.table.department,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectHierarchy => $state.composableBuilder(
+      column: $state.table.projectHierarchy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get startDate => $state.composableBuilder(
+      column: $state.table.startDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get endDate => $state.composableBuilder(
+      column: $state.table.endDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ProjectTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ProjectTable> {
+  $$ProjectTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get projectType => $state.composableBuilder(
+      column: $state.table.projectType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectTypeId => $state.composableBuilder(
+      column: $state.table.projectTypeId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectNumber => $state.composableBuilder(
+      column: $state.table.projectNumber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get subProjectTypeId => $state.composableBuilder(
+      column: $state.table.subProjectTypeId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isTaskEnabled => $state.composableBuilder(
+      column: $state.table.isTaskEnabled,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get parent => $state.composableBuilder(
+      column: $state.table.parent,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get department => $state.composableBuilder(
+      column: $state.table.department,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectHierarchy => $state.composableBuilder(
+      column: $state.table.projectHierarchy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get startDate => $state.composableBuilder(
+      column: $state.table.startDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get endDate => $state.composableBuilder(
+      column: $state.table.endDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ProjectBeneficiaryTableInsertCompanionBuilder
+    = ProjectBeneficiaryCompanion Function({
+  Value<String?> id,
+  Value<String?> projectId,
+  Value<String?> beneficiaryId,
+  Value<String?> tag,
+  Value<String?> beneficiaryClientReferenceId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  required int dateOfRegistration,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ProjectBeneficiaryTableUpdateCompanionBuilder
+    = ProjectBeneficiaryCompanion Function({
+  Value<String?> id,
+  Value<String?> projectId,
+  Value<String?> beneficiaryId,
+  Value<String?> tag,
+  Value<String?> beneficiaryClientReferenceId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int> dateOfRegistration,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ProjectBeneficiaryTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ProjectBeneficiaryTable,
+    ProjectBeneficiaryData,
+    $$ProjectBeneficiaryTableFilterComposer,
+    $$ProjectBeneficiaryTableOrderingComposer,
+    $$ProjectBeneficiaryTableProcessedTableManager,
+    $$ProjectBeneficiaryTableInsertCompanionBuilder,
+    $$ProjectBeneficiaryTableUpdateCompanionBuilder> {
+  $$ProjectBeneficiaryTableTableManager(
+      _$LocalSqlDataStore db, $ProjectBeneficiaryTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ProjectBeneficiaryTableFilterComposer(ComposerState(db, table)),
+          orderingComposer: $$ProjectBeneficiaryTableOrderingComposer(
+              ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ProjectBeneficiaryTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> beneficiaryId = const Value.absent(),
+            Value<String?> tag = const Value.absent(),
+            Value<String?> beneficiaryClientReferenceId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int> dateOfRegistration = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectBeneficiaryCompanion(
+            id: id,
+            projectId: projectId,
+            beneficiaryId: beneficiaryId,
+            tag: tag,
+            beneficiaryClientReferenceId: beneficiaryClientReferenceId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            dateOfRegistration: dateOfRegistration,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> beneficiaryId = const Value.absent(),
+            Value<String?> tag = const Value.absent(),
+            Value<String?> beneficiaryClientReferenceId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            required int dateOfRegistration,
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectBeneficiaryCompanion.insert(
+            id: id,
+            projectId: projectId,
+            beneficiaryId: beneficiaryId,
+            tag: tag,
+            beneficiaryClientReferenceId: beneficiaryClientReferenceId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            dateOfRegistration: dateOfRegistration,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ProjectBeneficiaryTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$LocalSqlDataStore,
+        $ProjectBeneficiaryTable,
+        ProjectBeneficiaryData,
+        $$ProjectBeneficiaryTableFilterComposer,
+        $$ProjectBeneficiaryTableOrderingComposer,
+        $$ProjectBeneficiaryTableProcessedTableManager,
+        $$ProjectBeneficiaryTableInsertCompanionBuilder,
+        $$ProjectBeneficiaryTableUpdateCompanionBuilder> {
+  $$ProjectBeneficiaryTableProcessedTableManager(super.$state);
+}
+
+class $$ProjectBeneficiaryTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ProjectBeneficiaryTable> {
+  $$ProjectBeneficiaryTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get beneficiaryId => $state.composableBuilder(
+      column: $state.table.beneficiaryId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tag => $state.composableBuilder(
+      column: $state.table.tag,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get beneficiaryClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.beneficiaryClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get dateOfRegistration => $state.composableBuilder(
+      column: $state.table.dateOfRegistration,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ProjectBeneficiaryTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ProjectBeneficiaryTable> {
+  $$ProjectBeneficiaryTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get beneficiaryId => $state.composableBuilder(
+      column: $state.table.beneficiaryId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tag => $state.composableBuilder(
+      column: $state.table.tag,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get beneficiaryClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.beneficiaryClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get dateOfRegistration => $state.composableBuilder(
+      column: $state.table.dateOfRegistration,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ProjectFacilityTableInsertCompanionBuilder = ProjectFacilityCompanion
+    Function({
+  required String id,
+  required String facilityId,
+  required String projectId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ProjectFacilityTableUpdateCompanionBuilder = ProjectFacilityCompanion
+    Function({
+  Value<String> id,
+  Value<String> facilityId,
+  Value<String> projectId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ProjectFacilityTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ProjectFacilityTable,
+    ProjectFacilityData,
+    $$ProjectFacilityTableFilterComposer,
+    $$ProjectFacilityTableOrderingComposer,
+    $$ProjectFacilityTableProcessedTableManager,
+    $$ProjectFacilityTableInsertCompanionBuilder,
+    $$ProjectFacilityTableUpdateCompanionBuilder> {
+  $$ProjectFacilityTableTableManager(
+      _$LocalSqlDataStore db, $ProjectFacilityTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ProjectFacilityTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ProjectFacilityTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ProjectFacilityTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> id = const Value.absent(),
+            Value<String> facilityId = const Value.absent(),
+            Value<String> projectId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectFacilityCompanion(
+            id: id,
+            facilityId: facilityId,
+            projectId: projectId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String id,
+            required String facilityId,
+            required String projectId,
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectFacilityCompanion.insert(
+            id: id,
+            facilityId: facilityId,
+            projectId: projectId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ProjectFacilityTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $ProjectFacilityTable,
+    ProjectFacilityData,
+    $$ProjectFacilityTableFilterComposer,
+    $$ProjectFacilityTableOrderingComposer,
+    $$ProjectFacilityTableProcessedTableManager,
+    $$ProjectFacilityTableInsertCompanionBuilder,
+    $$ProjectFacilityTableUpdateCompanionBuilder> {
+  $$ProjectFacilityTableProcessedTableManager(super.$state);
+}
+
+class $$ProjectFacilityTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ProjectFacilityTable> {
+  $$ProjectFacilityTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get facilityId => $state.composableBuilder(
+      column: $state.table.facilityId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ProjectFacilityTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ProjectFacilityTable> {
+  $$ProjectFacilityTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get facilityId => $state.composableBuilder(
+      column: $state.table.facilityId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ProjectProductVariantTableInsertCompanionBuilder
+    = ProjectProductVariantCompanion Function({
+  required String productVariantId,
+  Value<String?> type,
+  Value<bool?> isBaseUnitVariant,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ProjectProductVariantTableUpdateCompanionBuilder
+    = ProjectProductVariantCompanion Function({
+  Value<String> productVariantId,
+  Value<String?> type,
+  Value<bool?> isBaseUnitVariant,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ProjectProductVariantTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ProjectProductVariantTable,
+    ProjectProductVariantData,
+    $$ProjectProductVariantTableFilterComposer,
+    $$ProjectProductVariantTableOrderingComposer,
+    $$ProjectProductVariantTableProcessedTableManager,
+    $$ProjectProductVariantTableInsertCompanionBuilder,
+    $$ProjectProductVariantTableUpdateCompanionBuilder> {
+  $$ProjectProductVariantTableTableManager(
+      _$LocalSqlDataStore db, $ProjectProductVariantTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer: $$ProjectProductVariantTableFilterComposer(
+              ComposerState(db, table)),
+          orderingComposer: $$ProjectProductVariantTableOrderingComposer(
+              ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ProjectProductVariantTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> productVariantId = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            Value<bool?> isBaseUnitVariant = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectProductVariantCompanion(
+            productVariantId: productVariantId,
+            type: type,
+            isBaseUnitVariant: isBaseUnitVariant,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String productVariantId,
+            Value<String?> type = const Value.absent(),
+            Value<bool?> isBaseUnitVariant = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectProductVariantCompanion.insert(
+            productVariantId: productVariantId,
+            type: type,
+            isBaseUnitVariant: isBaseUnitVariant,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ProjectProductVariantTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$LocalSqlDataStore,
+        $ProjectProductVariantTable,
+        ProjectProductVariantData,
+        $$ProjectProductVariantTableFilterComposer,
+        $$ProjectProductVariantTableOrderingComposer,
+        $$ProjectProductVariantTableProcessedTableManager,
+        $$ProjectProductVariantTableInsertCompanionBuilder,
+        $$ProjectProductVariantTableUpdateCompanionBuilder> {
+  $$ProjectProductVariantTableProcessedTableManager(super.$state);
+}
+
+class $$ProjectProductVariantTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ProjectProductVariantTable> {
+  $$ProjectProductVariantTableFilterComposer(super.$state);
+  ColumnFilters<String> get productVariantId => $state.composableBuilder(
+      column: $state.table.productVariantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isBaseUnitVariant => $state.composableBuilder(
+      column: $state.table.isBaseUnitVariant,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ComposableFilter projectResourceRefs(
+      ComposableFilter Function($$ProjectResourceTableFilterComposer f) f) {
+    final $$ProjectResourceTableFilterComposer composer =
+        $state.composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.productVariantId,
+            referencedTable: $state.db.projectResource,
+            getReferencedColumn: (t) => t.resource,
+            builder: (joinBuilder, parentComposers) =>
+                $$ProjectResourceTableFilterComposer(ComposerState($state.db,
+                    $state.db.projectResource, joinBuilder, parentComposers)));
+    return f(composer);
+  }
+}
+
+class $$ProjectProductVariantTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ProjectProductVariantTable> {
+  $$ProjectProductVariantTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get productVariantId => $state.composableBuilder(
+      column: $state.table.productVariantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isBaseUnitVariant => $state.composableBuilder(
+      column: $state.table.isBaseUnitVariant,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ProjectResourceTableInsertCompanionBuilder = ProjectResourceCompanion
+    Function({
+  Value<String?> id,
+  Value<String?> projectId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  required String resource,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ProjectResourceTableUpdateCompanionBuilder = ProjectResourceCompanion
+    Function({
+  Value<String?> id,
+  Value<String?> projectId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String> resource,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ProjectResourceTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ProjectResourceTable,
+    ProjectResourceData,
+    $$ProjectResourceTableFilterComposer,
+    $$ProjectResourceTableOrderingComposer,
+    $$ProjectResourceTableProcessedTableManager,
+    $$ProjectResourceTableInsertCompanionBuilder,
+    $$ProjectResourceTableUpdateCompanionBuilder> {
+  $$ProjectResourceTableTableManager(
+      _$LocalSqlDataStore db, $ProjectResourceTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ProjectResourceTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ProjectResourceTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ProjectResourceTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String> resource = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectResourceCompanion(
+            id: id,
+            projectId: projectId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            resource: resource,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            required String resource,
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectResourceCompanion.insert(
+            id: id,
+            projectId: projectId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            resource: resource,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ProjectResourceTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $ProjectResourceTable,
+    ProjectResourceData,
+    $$ProjectResourceTableFilterComposer,
+    $$ProjectResourceTableOrderingComposer,
+    $$ProjectResourceTableProcessedTableManager,
+    $$ProjectResourceTableInsertCompanionBuilder,
+    $$ProjectResourceTableUpdateCompanionBuilder> {
+  $$ProjectResourceTableProcessedTableManager(super.$state);
+}
+
+class $$ProjectResourceTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ProjectResourceTable> {
+  $$ProjectResourceTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  $$ProjectProductVariantTableFilterComposer get resource {
+    final $$ProjectProductVariantTableFilterComposer composer =
+        $state.composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.resource,
+            referencedTable: $state.db.projectProductVariant,
+            getReferencedColumn: (t) => t.productVariantId,
+            builder: (joinBuilder, parentComposers) =>
+                $$ProjectProductVariantTableFilterComposer(ComposerState(
+                    $state.db,
+                    $state.db.projectProductVariant,
+                    joinBuilder,
+                    parentComposers)));
+    return composer;
+  }
+}
+
+class $$ProjectResourceTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ProjectResourceTable> {
+  $$ProjectResourceTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  $$ProjectProductVariantTableOrderingComposer get resource {
+    final $$ProjectProductVariantTableOrderingComposer composer =
+        $state.composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.resource,
+            referencedTable: $state.db.projectProductVariant,
+            getReferencedColumn: (t) => t.productVariantId,
+            builder: (joinBuilder, parentComposers) =>
+                $$ProjectProductVariantTableOrderingComposer(ComposerState(
+                    $state.db,
+                    $state.db.projectProductVariant,
+                    joinBuilder,
+                    parentComposers)));
+    return composer;
+  }
+}
+
+typedef $$ProjectStaffTableInsertCompanionBuilder = ProjectStaffCompanion
+    Function({
+  required String id,
+  Value<String?> staffId,
+  Value<String?> userId,
+  Value<String?> projectId,
+  Value<String?> channel,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int?> startDate,
+  Value<int?> endDate,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ProjectStaffTableUpdateCompanionBuilder = ProjectStaffCompanion
+    Function({
+  Value<String> id,
+  Value<String?> staffId,
+  Value<String?> userId,
+  Value<String?> projectId,
+  Value<String?> channel,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int?> startDate,
+  Value<int?> endDate,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ProjectStaffTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ProjectStaffTable,
+    ProjectStaffData,
+    $$ProjectStaffTableFilterComposer,
+    $$ProjectStaffTableOrderingComposer,
+    $$ProjectStaffTableProcessedTableManager,
+    $$ProjectStaffTableInsertCompanionBuilder,
+    $$ProjectStaffTableUpdateCompanionBuilder> {
+  $$ProjectStaffTableTableManager(
+      _$LocalSqlDataStore db, $ProjectStaffTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ProjectStaffTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ProjectStaffTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ProjectStaffTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> id = const Value.absent(),
+            Value<String?> staffId = const Value.absent(),
+            Value<String?> userId = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> channel = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int?> startDate = const Value.absent(),
+            Value<int?> endDate = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectStaffCompanion(
+            id: id,
+            staffId: staffId,
+            userId: userId,
+            projectId: projectId,
+            channel: channel,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            startDate: startDate,
+            endDate: endDate,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String id,
+            Value<String?> staffId = const Value.absent(),
+            Value<String?> userId = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> channel = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int?> startDate = const Value.absent(),
+            Value<int?> endDate = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectStaffCompanion.insert(
+            id: id,
+            staffId: staffId,
+            userId: userId,
+            projectId: projectId,
+            channel: channel,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            startDate: startDate,
+            endDate: endDate,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ProjectStaffTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $ProjectStaffTable,
+    ProjectStaffData,
+    $$ProjectStaffTableFilterComposer,
+    $$ProjectStaffTableOrderingComposer,
+    $$ProjectStaffTableProcessedTableManager,
+    $$ProjectStaffTableInsertCompanionBuilder,
+    $$ProjectStaffTableUpdateCompanionBuilder> {
+  $$ProjectStaffTableProcessedTableManager(super.$state);
+}
+
+class $$ProjectStaffTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ProjectStaffTable> {
+  $$ProjectStaffTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get staffId => $state.composableBuilder(
+      column: $state.table.staffId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get channel => $state.composableBuilder(
+      column: $state.table.channel,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get startDate => $state.composableBuilder(
+      column: $state.table.startDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get endDate => $state.composableBuilder(
+      column: $state.table.endDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ProjectStaffTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ProjectStaffTable> {
+  $$ProjectStaffTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get staffId => $state.composableBuilder(
+      column: $state.table.staffId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get channel => $state.composableBuilder(
+      column: $state.table.channel,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get startDate => $state.composableBuilder(
+      column: $state.table.startDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get endDate => $state.composableBuilder(
+      column: $state.table.endDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ProjectTypeTableInsertCompanionBuilder = ProjectTypeCompanion
+    Function({
+  Value<String?> id,
+  Value<String?> name,
+  Value<String?> code,
+  Value<String?> group,
+  Value<BeneficiaryType?> beneficiaryType,
+  Value<String?> eligibilityCriteria,
+  Value<String?> taskProcedure,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ProjectTypeTableUpdateCompanionBuilder = ProjectTypeCompanion
+    Function({
+  Value<String?> id,
+  Value<String?> name,
+  Value<String?> code,
+  Value<String?> group,
+  Value<BeneficiaryType?> beneficiaryType,
+  Value<String?> eligibilityCriteria,
+  Value<String?> taskProcedure,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ProjectTypeTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ProjectTypeTable,
+    ProjectTypeData,
+    $$ProjectTypeTableFilterComposer,
+    $$ProjectTypeTableOrderingComposer,
+    $$ProjectTypeTableProcessedTableManager,
+    $$ProjectTypeTableInsertCompanionBuilder,
+    $$ProjectTypeTableUpdateCompanionBuilder> {
+  $$ProjectTypeTableTableManager(
+      _$LocalSqlDataStore db, $ProjectTypeTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ProjectTypeTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ProjectTypeTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ProjectTypeTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> code = const Value.absent(),
+            Value<String?> group = const Value.absent(),
+            Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
+            Value<String?> eligibilityCriteria = const Value.absent(),
+            Value<String?> taskProcedure = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectTypeCompanion(
+            id: id,
+            name: name,
+            code: code,
+            group: group,
+            beneficiaryType: beneficiaryType,
+            eligibilityCriteria: eligibilityCriteria,
+            taskProcedure: taskProcedure,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> code = const Value.absent(),
+            Value<String?> group = const Value.absent(),
+            Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
+            Value<String?> eligibilityCriteria = const Value.absent(),
+            Value<String?> taskProcedure = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProjectTypeCompanion.insert(
+            id: id,
+            name: name,
+            code: code,
+            group: group,
+            beneficiaryType: beneficiaryType,
+            eligibilityCriteria: eligibilityCriteria,
+            taskProcedure: taskProcedure,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ProjectTypeTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $ProjectTypeTable,
+    ProjectTypeData,
+    $$ProjectTypeTableFilterComposer,
+    $$ProjectTypeTableOrderingComposer,
+    $$ProjectTypeTableProcessedTableManager,
+    $$ProjectTypeTableInsertCompanionBuilder,
+    $$ProjectTypeTableUpdateCompanionBuilder> {
+  $$ProjectTypeTableProcessedTableManager(super.$state);
+}
+
+class $$ProjectTypeTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ProjectTypeTable> {
+  $$ProjectTypeTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get group => $state.composableBuilder(
+      column: $state.table.group,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<BeneficiaryType?, BeneficiaryType, int>
+      get beneficiaryType => $state.composableBuilder(
+          column: $state.table.beneficiaryType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get eligibilityCriteria => $state.composableBuilder(
+      column: $state.table.eligibilityCriteria,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get taskProcedure => $state.composableBuilder(
+      column: $state.table.taskProcedure,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ProjectTypeTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ProjectTypeTable> {
+  $$ProjectTypeTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get group => $state.composableBuilder(
+      column: $state.table.group,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get beneficiaryType => $state.composableBuilder(
+      column: $state.table.beneficiaryType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get eligibilityCriteria => $state.composableBuilder(
+      column: $state.table.eligibilityCriteria,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get taskProcedure => $state.composableBuilder(
+      column: $state.table.taskProcedure,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$IndividualTableInsertCompanionBuilder = IndividualCompanion Function({
+  Value<String?> id,
+  Value<String?> individualId,
+  Value<String?> userId,
+  Value<String?> userUuid,
+  Value<String?> dateOfBirth,
+  Value<String?> mobileNumber,
+  Value<String?> altContactNumber,
+  Value<String?> email,
+  Value<String?> fatherName,
+  Value<String?> husbandName,
+  Value<String?> photo,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<BloodGroup?> bloodGroup,
+  Value<Gender?> gender,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$IndividualTableUpdateCompanionBuilder = IndividualCompanion Function({
+  Value<String?> id,
+  Value<String?> individualId,
+  Value<String?> userId,
+  Value<String?> userUuid,
+  Value<String?> dateOfBirth,
+  Value<String?> mobileNumber,
+  Value<String?> altContactNumber,
+  Value<String?> email,
+  Value<String?> fatherName,
+  Value<String?> husbandName,
+  Value<String?> photo,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<BloodGroup?> bloodGroup,
+  Value<Gender?> gender,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$IndividualTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $IndividualTable,
+    IndividualData,
+    $$IndividualTableFilterComposer,
+    $$IndividualTableOrderingComposer,
+    $$IndividualTableProcessedTableManager,
+    $$IndividualTableInsertCompanionBuilder,
+    $$IndividualTableUpdateCompanionBuilder> {
+  $$IndividualTableTableManager(_$LocalSqlDataStore db, $IndividualTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$IndividualTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$IndividualTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$IndividualTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> individualId = const Value.absent(),
+            Value<String?> userId = const Value.absent(),
+            Value<String?> userUuid = const Value.absent(),
+            Value<String?> dateOfBirth = const Value.absent(),
+            Value<String?> mobileNumber = const Value.absent(),
+            Value<String?> altContactNumber = const Value.absent(),
+            Value<String?> email = const Value.absent(),
+            Value<String?> fatherName = const Value.absent(),
+            Value<String?> husbandName = const Value.absent(),
+            Value<String?> photo = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<BloodGroup?> bloodGroup = const Value.absent(),
+            Value<Gender?> gender = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              IndividualCompanion(
+            id: id,
+            individualId: individualId,
+            userId: userId,
+            userUuid: userUuid,
+            dateOfBirth: dateOfBirth,
+            mobileNumber: mobileNumber,
+            altContactNumber: altContactNumber,
+            email: email,
+            fatherName: fatherName,
+            husbandName: husbandName,
+            photo: photo,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            bloodGroup: bloodGroup,
+            gender: gender,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> individualId = const Value.absent(),
+            Value<String?> userId = const Value.absent(),
+            Value<String?> userUuid = const Value.absent(),
+            Value<String?> dateOfBirth = const Value.absent(),
+            Value<String?> mobileNumber = const Value.absent(),
+            Value<String?> altContactNumber = const Value.absent(),
+            Value<String?> email = const Value.absent(),
+            Value<String?> fatherName = const Value.absent(),
+            Value<String?> husbandName = const Value.absent(),
+            Value<String?> photo = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<BloodGroup?> bloodGroup = const Value.absent(),
+            Value<Gender?> gender = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              IndividualCompanion.insert(
+            id: id,
+            individualId: individualId,
+            userId: userId,
+            userUuid: userUuid,
+            dateOfBirth: dateOfBirth,
+            mobileNumber: mobileNumber,
+            altContactNumber: altContactNumber,
+            email: email,
+            fatherName: fatherName,
+            husbandName: husbandName,
+            photo: photo,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            bloodGroup: bloodGroup,
+            gender: gender,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$IndividualTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $IndividualTable,
+    IndividualData,
+    $$IndividualTableFilterComposer,
+    $$IndividualTableOrderingComposer,
+    $$IndividualTableProcessedTableManager,
+    $$IndividualTableInsertCompanionBuilder,
+    $$IndividualTableUpdateCompanionBuilder> {
+  $$IndividualTableProcessedTableManager(super.$state);
+}
+
+class $$IndividualTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $IndividualTable> {
+  $$IndividualTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userUuid => $state.composableBuilder(
+      column: $state.table.userUuid,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get dateOfBirth => $state.composableBuilder(
+      column: $state.table.dateOfBirth,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get mobileNumber => $state.composableBuilder(
+      column: $state.table.mobileNumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get altContactNumber => $state.composableBuilder(
+      column: $state.table.altContactNumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get email => $state.composableBuilder(
+      column: $state.table.email,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get fatherName => $state.composableBuilder(
+      column: $state.table.fatherName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get husbandName => $state.composableBuilder(
+      column: $state.table.husbandName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get photo => $state.composableBuilder(
+      column: $state.table.photo,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<BloodGroup?, BloodGroup, int> get bloodGroup =>
+      $state.composableBuilder(
+          column: $state.table.bloodGroup,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<Gender?, Gender, int> get gender =>
+      $state.composableBuilder(
+          column: $state.table.gender,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$IndividualTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $IndividualTable> {
+  $$IndividualTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userUuid => $state.composableBuilder(
+      column: $state.table.userUuid,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get dateOfBirth => $state.composableBuilder(
+      column: $state.table.dateOfBirth,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get mobileNumber => $state.composableBuilder(
+      column: $state.table.mobileNumber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get altContactNumber => $state.composableBuilder(
+      column: $state.table.altContactNumber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get email => $state.composableBuilder(
+      column: $state.table.email,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get fatherName => $state.composableBuilder(
+      column: $state.table.fatherName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get husbandName => $state.composableBuilder(
+      column: $state.table.husbandName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get photo => $state.composableBuilder(
+      column: $state.table.photo,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get bloodGroup => $state.composableBuilder(
+      column: $state.table.bloodGroup,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get gender => $state.composableBuilder(
+      column: $state.table.gender,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$IdentifierTableInsertCompanionBuilder = IdentifierCompanion Function({
+  Value<String?> id,
+  Value<String?> identifierType,
+  Value<String?> identifierId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$IdentifierTableUpdateCompanionBuilder = IdentifierCompanion Function({
+  Value<String?> id,
+  Value<String?> identifierType,
+  Value<String?> identifierId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$IdentifierTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $IdentifierTable,
+    IdentifierData,
+    $$IdentifierTableFilterComposer,
+    $$IdentifierTableOrderingComposer,
+    $$IdentifierTableProcessedTableManager,
+    $$IdentifierTableInsertCompanionBuilder,
+    $$IdentifierTableUpdateCompanionBuilder> {
+  $$IdentifierTableTableManager(_$LocalSqlDataStore db, $IdentifierTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$IdentifierTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$IdentifierTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$IdentifierTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> identifierType = const Value.absent(),
+            Value<String?> identifierId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              IdentifierCompanion(
+            id: id,
+            identifierType: identifierType,
+            identifierId: identifierId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> identifierType = const Value.absent(),
+            Value<String?> identifierId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              IdentifierCompanion.insert(
+            id: id,
+            identifierType: identifierType,
+            identifierId: identifierId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$IdentifierTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $IdentifierTable,
+    IdentifierData,
+    $$IdentifierTableFilterComposer,
+    $$IdentifierTableOrderingComposer,
+    $$IdentifierTableProcessedTableManager,
+    $$IdentifierTableInsertCompanionBuilder,
+    $$IdentifierTableUpdateCompanionBuilder> {
+  $$IdentifierTableProcessedTableManager(super.$state);
+}
+
+class $$IdentifierTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $IdentifierTable> {
+  $$IdentifierTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get identifierType => $state.composableBuilder(
+      column: $state.table.identifierType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get identifierId => $state.composableBuilder(
+      column: $state.table.identifierId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$IdentifierTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $IdentifierTable> {
+  $$IdentifierTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get identifierType => $state.composableBuilder(
+      column: $state.table.identifierType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get identifierId => $state.composableBuilder(
+      column: $state.table.identifierId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$StockTableInsertCompanionBuilder = StockCompanion Function({
+  Value<String?> id,
+  Value<String?> tenantId,
+  Value<String?> facilityId,
+  Value<String?> productVariantId,
+  Value<String?> referenceId,
+  Value<String?> referenceIdType,
+  Value<String?> transactingPartyId,
+  Value<String?> transactingPartyType,
+  Value<String?> quantity,
+  Value<String?> waybillNumber,
+  Value<String?> receiverId,
+  Value<String?> receiverType,
+  Value<String?> senderId,
+  Value<String?> senderType,
+  Value<int?> dateOfEntry,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> transactionType,
+  Value<String?> transactionReason,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$StockTableUpdateCompanionBuilder = StockCompanion Function({
+  Value<String?> id,
+  Value<String?> tenantId,
+  Value<String?> facilityId,
+  Value<String?> productVariantId,
+  Value<String?> referenceId,
+  Value<String?> referenceIdType,
+  Value<String?> transactingPartyId,
+  Value<String?> transactingPartyType,
+  Value<String?> quantity,
+  Value<String?> waybillNumber,
+  Value<String?> receiverId,
+  Value<String?> receiverType,
+  Value<String?> senderId,
+  Value<String?> senderType,
+  Value<int?> dateOfEntry,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> transactionType,
+  Value<String?> transactionReason,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$StockTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $StockTable,
+    StockData,
+    $$StockTableFilterComposer,
+    $$StockTableOrderingComposer,
+    $$StockTableProcessedTableManager,
+    $$StockTableInsertCompanionBuilder,
+    $$StockTableUpdateCompanionBuilder> {
+  $$StockTableTableManager(_$LocalSqlDataStore db, $StockTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$StockTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$StockTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$StockTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> facilityId = const Value.absent(),
+            Value<String?> productVariantId = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
+            Value<String?> referenceIdType = const Value.absent(),
+            Value<String?> transactingPartyId = const Value.absent(),
+            Value<String?> transactingPartyType = const Value.absent(),
+            Value<String?> quantity = const Value.absent(),
+            Value<String?> waybillNumber = const Value.absent(),
+            Value<String?> receiverId = const Value.absent(),
+            Value<String?> receiverType = const Value.absent(),
+            Value<String?> senderId = const Value.absent(),
+            Value<String?> senderType = const Value.absent(),
+            Value<int?> dateOfEntry = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> transactionType = const Value.absent(),
+            Value<String?> transactionReason = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              StockCompanion(
+            id: id,
+            tenantId: tenantId,
+            facilityId: facilityId,
+            productVariantId: productVariantId,
+            referenceId: referenceId,
+            referenceIdType: referenceIdType,
+            transactingPartyId: transactingPartyId,
+            transactingPartyType: transactingPartyType,
+            quantity: quantity,
+            waybillNumber: waybillNumber,
+            receiverId: receiverId,
+            receiverType: receiverType,
+            senderId: senderId,
+            senderType: senderType,
+            dateOfEntry: dateOfEntry,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            transactionType: transactionType,
+            transactionReason: transactionReason,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> facilityId = const Value.absent(),
+            Value<String?> productVariantId = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
+            Value<String?> referenceIdType = const Value.absent(),
+            Value<String?> transactingPartyId = const Value.absent(),
+            Value<String?> transactingPartyType = const Value.absent(),
+            Value<String?> quantity = const Value.absent(),
+            Value<String?> waybillNumber = const Value.absent(),
+            Value<String?> receiverId = const Value.absent(),
+            Value<String?> receiverType = const Value.absent(),
+            Value<String?> senderId = const Value.absent(),
+            Value<String?> senderType = const Value.absent(),
+            Value<int?> dateOfEntry = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> transactionType = const Value.absent(),
+            Value<String?> transactionReason = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              StockCompanion.insert(
+            id: id,
+            tenantId: tenantId,
+            facilityId: facilityId,
+            productVariantId: productVariantId,
+            referenceId: referenceId,
+            referenceIdType: referenceIdType,
+            transactingPartyId: transactingPartyId,
+            transactingPartyType: transactingPartyType,
+            quantity: quantity,
+            waybillNumber: waybillNumber,
+            receiverId: receiverId,
+            receiverType: receiverType,
+            senderId: senderId,
+            senderType: senderType,
+            dateOfEntry: dateOfEntry,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            transactionType: transactionType,
+            transactionReason: transactionReason,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$StockTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $StockTable,
+    StockData,
+    $$StockTableFilterComposer,
+    $$StockTableOrderingComposer,
+    $$StockTableProcessedTableManager,
+    $$StockTableInsertCompanionBuilder,
+    $$StockTableUpdateCompanionBuilder> {
+  $$StockTableProcessedTableManager(super.$state);
+}
+
+class $$StockTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $StockTable> {
+  $$StockTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get facilityId => $state.composableBuilder(
+      column: $state.table.facilityId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get productVariantId => $state.composableBuilder(
+      column: $state.table.productVariantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get referenceIdType => $state.composableBuilder(
+      column: $state.table.referenceIdType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get transactingPartyId => $state.composableBuilder(
+      column: $state.table.transactingPartyId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get transactingPartyType => $state.composableBuilder(
+      column: $state.table.transactingPartyType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get quantity => $state.composableBuilder(
+      column: $state.table.quantity,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get waybillNumber => $state.composableBuilder(
+      column: $state.table.waybillNumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get receiverId => $state.composableBuilder(
+      column: $state.table.receiverId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get receiverType => $state.composableBuilder(
+      column: $state.table.receiverType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get senderId => $state.composableBuilder(
+      column: $state.table.senderId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get senderType => $state.composableBuilder(
+      column: $state.table.senderType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get dateOfEntry => $state.composableBuilder(
+      column: $state.table.dateOfEntry,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get transactionType => $state.composableBuilder(
+      column: $state.table.transactionType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get transactionReason => $state.composableBuilder(
+      column: $state.table.transactionReason,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$StockTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $StockTable> {
+  $$StockTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get facilityId => $state.composableBuilder(
+      column: $state.table.facilityId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get productVariantId => $state.composableBuilder(
+      column: $state.table.productVariantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get referenceIdType => $state.composableBuilder(
+      column: $state.table.referenceIdType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get transactingPartyId => $state.composableBuilder(
+      column: $state.table.transactingPartyId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get transactingPartyType => $state.composableBuilder(
+      column: $state.table.transactingPartyType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get quantity => $state.composableBuilder(
+      column: $state.table.quantity,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get waybillNumber => $state.composableBuilder(
+      column: $state.table.waybillNumber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get receiverId => $state.composableBuilder(
+      column: $state.table.receiverId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get receiverType => $state.composableBuilder(
+      column: $state.table.receiverType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get senderId => $state.composableBuilder(
+      column: $state.table.senderId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get senderType => $state.composableBuilder(
+      column: $state.table.senderType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get dateOfEntry => $state.composableBuilder(
+      column: $state.table.dateOfEntry,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get transactionType => $state.composableBuilder(
+      column: $state.table.transactionType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get transactionReason => $state.composableBuilder(
+      column: $state.table.transactionReason,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$StockReconciliationTableInsertCompanionBuilder
+    = StockReconciliationCompanion Function({
+  Value<String?> id,
+  Value<String?> tenantId,
+  Value<String?> facilityId,
+  Value<String?> productVariantId,
+  Value<String?> referenceId,
+  Value<String?> referenceIdType,
+  Value<int?> physicalCount,
+  Value<int?> calculatedCount,
+  Value<String?> commentsOnReconciliation,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  required int dateOfReconciliation,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$StockReconciliationTableUpdateCompanionBuilder
+    = StockReconciliationCompanion Function({
+  Value<String?> id,
+  Value<String?> tenantId,
+  Value<String?> facilityId,
+  Value<String?> productVariantId,
+  Value<String?> referenceId,
+  Value<String?> referenceIdType,
+  Value<int?> physicalCount,
+  Value<int?> calculatedCount,
+  Value<String?> commentsOnReconciliation,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int> dateOfReconciliation,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$StockReconciliationTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $StockReconciliationTable,
+    StockReconciliationData,
+    $$StockReconciliationTableFilterComposer,
+    $$StockReconciliationTableOrderingComposer,
+    $$StockReconciliationTableProcessedTableManager,
+    $$StockReconciliationTableInsertCompanionBuilder,
+    $$StockReconciliationTableUpdateCompanionBuilder> {
+  $$StockReconciliationTableTableManager(
+      _$LocalSqlDataStore db, $StockReconciliationTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer: $$StockReconciliationTableFilterComposer(
+              ComposerState(db, table)),
+          orderingComposer: $$StockReconciliationTableOrderingComposer(
+              ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$StockReconciliationTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> facilityId = const Value.absent(),
+            Value<String?> productVariantId = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
+            Value<String?> referenceIdType = const Value.absent(),
+            Value<int?> physicalCount = const Value.absent(),
+            Value<int?> calculatedCount = const Value.absent(),
+            Value<String?> commentsOnReconciliation = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int> dateOfReconciliation = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              StockReconciliationCompanion(
+            id: id,
+            tenantId: tenantId,
+            facilityId: facilityId,
+            productVariantId: productVariantId,
+            referenceId: referenceId,
+            referenceIdType: referenceIdType,
+            physicalCount: physicalCount,
+            calculatedCount: calculatedCount,
+            commentsOnReconciliation: commentsOnReconciliation,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            dateOfReconciliation: dateOfReconciliation,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> facilityId = const Value.absent(),
+            Value<String?> productVariantId = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
+            Value<String?> referenceIdType = const Value.absent(),
+            Value<int?> physicalCount = const Value.absent(),
+            Value<int?> calculatedCount = const Value.absent(),
+            Value<String?> commentsOnReconciliation = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            required int dateOfReconciliation,
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              StockReconciliationCompanion.insert(
+            id: id,
+            tenantId: tenantId,
+            facilityId: facilityId,
+            productVariantId: productVariantId,
+            referenceId: referenceId,
+            referenceIdType: referenceIdType,
+            physicalCount: physicalCount,
+            calculatedCount: calculatedCount,
+            commentsOnReconciliation: commentsOnReconciliation,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            dateOfReconciliation: dateOfReconciliation,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$StockReconciliationTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$LocalSqlDataStore,
+        $StockReconciliationTable,
+        StockReconciliationData,
+        $$StockReconciliationTableFilterComposer,
+        $$StockReconciliationTableOrderingComposer,
+        $$StockReconciliationTableProcessedTableManager,
+        $$StockReconciliationTableInsertCompanionBuilder,
+        $$StockReconciliationTableUpdateCompanionBuilder> {
+  $$StockReconciliationTableProcessedTableManager(super.$state);
+}
+
+class $$StockReconciliationTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $StockReconciliationTable> {
+  $$StockReconciliationTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get facilityId => $state.composableBuilder(
+      column: $state.table.facilityId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get productVariantId => $state.composableBuilder(
+      column: $state.table.productVariantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get referenceIdType => $state.composableBuilder(
+      column: $state.table.referenceIdType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get physicalCount => $state.composableBuilder(
+      column: $state.table.physicalCount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get calculatedCount => $state.composableBuilder(
+      column: $state.table.calculatedCount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get commentsOnReconciliation =>
+      $state.composableBuilder(
+          column: $state.table.commentsOnReconciliation,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get dateOfReconciliation => $state.composableBuilder(
+      column: $state.table.dateOfReconciliation,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$StockReconciliationTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $StockReconciliationTable> {
+  $$StockReconciliationTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get facilityId => $state.composableBuilder(
+      column: $state.table.facilityId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get productVariantId => $state.composableBuilder(
+      column: $state.table.productVariantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get referenceIdType => $state.composableBuilder(
+      column: $state.table.referenceIdType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get physicalCount => $state.composableBuilder(
+      column: $state.table.physicalCount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get calculatedCount => $state.composableBuilder(
+      column: $state.table.calculatedCount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get commentsOnReconciliation =>
+      $state.composableBuilder(
+          column: $state.table.commentsOnReconciliation,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get dateOfReconciliation => $state.composableBuilder(
+      column: $state.table.dateOfReconciliation,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$TargetTableInsertCompanionBuilder = TargetCompanion Function({
+  required String id,
+  Value<String?> clientReferenceId,
+  Value<double?> totalNo,
+  Value<double?> targetNo,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<BeneficiaryType?> beneficiaryType,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$TargetTableUpdateCompanionBuilder = TargetCompanion Function({
+  Value<String> id,
+  Value<String?> clientReferenceId,
+  Value<double?> totalNo,
+  Value<double?> targetNo,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<BeneficiaryType?> beneficiaryType,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$TargetTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $TargetTable,
+    TargetData,
+    $$TargetTableFilterComposer,
+    $$TargetTableOrderingComposer,
+    $$TargetTableProcessedTableManager,
+    $$TargetTableInsertCompanionBuilder,
+    $$TargetTableUpdateCompanionBuilder> {
+  $$TargetTableTableManager(_$LocalSqlDataStore db, $TargetTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$TargetTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$TargetTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$TargetTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> id = const Value.absent(),
+            Value<String?> clientReferenceId = const Value.absent(),
+            Value<double?> totalNo = const Value.absent(),
+            Value<double?> targetNo = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TargetCompanion(
+            id: id,
+            clientReferenceId: clientReferenceId,
+            totalNo: totalNo,
+            targetNo: targetNo,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            beneficiaryType: beneficiaryType,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String id,
+            Value<String?> clientReferenceId = const Value.absent(),
+            Value<double?> totalNo = const Value.absent(),
+            Value<double?> targetNo = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TargetCompanion.insert(
+            id: id,
+            clientReferenceId: clientReferenceId,
+            totalNo: totalNo,
+            targetNo: targetNo,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            beneficiaryType: beneficiaryType,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$TargetTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $TargetTable,
+    TargetData,
+    $$TargetTableFilterComposer,
+    $$TargetTableOrderingComposer,
+    $$TargetTableProcessedTableManager,
+    $$TargetTableInsertCompanionBuilder,
+    $$TargetTableUpdateCompanionBuilder> {
+  $$TargetTableProcessedTableManager(super.$state);
+}
+
+class $$TargetTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $TargetTable> {
+  $$TargetTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get totalNo => $state.composableBuilder(
+      column: $state.table.totalNo,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get targetNo => $state.composableBuilder(
+      column: $state.table.targetNo,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<BeneficiaryType?, BeneficiaryType, int>
+      get beneficiaryType => $state.composableBuilder(
+          column: $state.table.beneficiaryType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$TargetTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $TargetTable> {
+  $$TargetTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get totalNo => $state.composableBuilder(
+      column: $state.table.totalNo,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get targetNo => $state.composableBuilder(
+      column: $state.table.targetNo,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get beneficiaryType => $state.composableBuilder(
+      column: $state.table.beneficiaryType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ServiceTableInsertCompanionBuilder = ServiceCompanion Function({
+  Value<String?> id,
+  required String clientId,
+  Value<String?> serviceDefId,
+  Value<bool?> isActive,
+  Value<String?> accountId,
+  Value<String?> additionalDetails,
+  Value<String?> createdAt,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ServiceTableUpdateCompanionBuilder = ServiceCompanion Function({
+  Value<String?> id,
+  Value<String> clientId,
+  Value<String?> serviceDefId,
+  Value<bool?> isActive,
+  Value<String?> accountId,
+  Value<String?> additionalDetails,
+  Value<String?> createdAt,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ServiceTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ServiceTable,
+    ServiceData,
+    $$ServiceTableFilterComposer,
+    $$ServiceTableOrderingComposer,
+    $$ServiceTableProcessedTableManager,
+    $$ServiceTableInsertCompanionBuilder,
+    $$ServiceTableUpdateCompanionBuilder> {
+  $$ServiceTableTableManager(_$LocalSqlDataStore db, $ServiceTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ServiceTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ServiceTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$ServiceTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String> clientId = const Value.absent(),
+            Value<String?> serviceDefId = const Value.absent(),
+            Value<bool?> isActive = const Value.absent(),
+            Value<String?> accountId = const Value.absent(),
+            Value<String?> additionalDetails = const Value.absent(),
+            Value<String?> createdAt = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ServiceCompanion(
+            id: id,
+            clientId: clientId,
+            serviceDefId: serviceDefId,
+            isActive: isActive,
+            accountId: accountId,
+            additionalDetails: additionalDetails,
+            createdAt: createdAt,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            required String clientId,
+            Value<String?> serviceDefId = const Value.absent(),
+            Value<bool?> isActive = const Value.absent(),
+            Value<String?> accountId = const Value.absent(),
+            Value<String?> additionalDetails = const Value.absent(),
+            Value<String?> createdAt = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ServiceCompanion.insert(
+            id: id,
+            clientId: clientId,
+            serviceDefId: serviceDefId,
+            isActive: isActive,
+            accountId: accountId,
+            additionalDetails: additionalDetails,
+            createdAt: createdAt,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ServiceTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $ServiceTable,
+    ServiceData,
+    $$ServiceTableFilterComposer,
+    $$ServiceTableOrderingComposer,
+    $$ServiceTableProcessedTableManager,
+    $$ServiceTableInsertCompanionBuilder,
+    $$ServiceTableUpdateCompanionBuilder> {
+  $$ServiceTableProcessedTableManager(super.$state);
+}
+
+class $$ServiceTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ServiceTable> {
+  $$ServiceTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientId => $state.composableBuilder(
+      column: $state.table.clientId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get serviceDefId => $state.composableBuilder(
+      column: $state.table.serviceDefId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isActive => $state.composableBuilder(
+      column: $state.table.isActive,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get accountId => $state.composableBuilder(
+      column: $state.table.accountId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalDetails => $state.composableBuilder(
+      column: $state.table.additionalDetails,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get createdAt => $state.composableBuilder(
+      column: $state.table.createdAt,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ServiceTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ServiceTable> {
+  $$ServiceTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientId => $state.composableBuilder(
+      column: $state.table.clientId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get serviceDefId => $state.composableBuilder(
+      column: $state.table.serviceDefId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isActive => $state.composableBuilder(
+      column: $state.table.isActive,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get accountId => $state.composableBuilder(
+      column: $state.table.accountId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalDetails => $state.composableBuilder(
+      column: $state.table.additionalDetails,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get createdAt => $state.composableBuilder(
+      column: $state.table.createdAt,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ServiceAttributesTableInsertCompanionBuilder
+    = ServiceAttributesCompanion Function({
+  Value<String?> attributeCode,
+  Value<String?> value,
+  Value<String?> dataType,
+  Value<String?> referenceId,
+  Value<String?> additionalDetails,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ServiceAttributesTableUpdateCompanionBuilder
+    = ServiceAttributesCompanion Function({
+  Value<String?> attributeCode,
+  Value<String?> value,
+  Value<String?> dataType,
+  Value<String?> referenceId,
+  Value<String?> additionalDetails,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ServiceAttributesTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ServiceAttributesTable,
+    ServiceAttribute,
+    $$ServiceAttributesTableFilterComposer,
+    $$ServiceAttributesTableOrderingComposer,
+    $$ServiceAttributesTableProcessedTableManager,
+    $$ServiceAttributesTableInsertCompanionBuilder,
+    $$ServiceAttributesTableUpdateCompanionBuilder> {
+  $$ServiceAttributesTableTableManager(
+      _$LocalSqlDataStore db, $ServiceAttributesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ServiceAttributesTableFilterComposer(ComposerState(db, table)),
+          orderingComposer: $$ServiceAttributesTableOrderingComposer(
+              ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ServiceAttributesTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> attributeCode = const Value.absent(),
+            Value<String?> value = const Value.absent(),
+            Value<String?> dataType = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
+            Value<String?> additionalDetails = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ServiceAttributesCompanion(
+            attributeCode: attributeCode,
+            value: value,
+            dataType: dataType,
+            referenceId: referenceId,
+            additionalDetails: additionalDetails,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> attributeCode = const Value.absent(),
+            Value<String?> value = const Value.absent(),
+            Value<String?> dataType = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
+            Value<String?> additionalDetails = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ServiceAttributesCompanion.insert(
+            attributeCode: attributeCode,
+            value: value,
+            dataType: dataType,
+            referenceId: referenceId,
+            additionalDetails: additionalDetails,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ServiceAttributesTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$LocalSqlDataStore,
+        $ServiceAttributesTable,
+        ServiceAttribute,
+        $$ServiceAttributesTableFilterComposer,
+        $$ServiceAttributesTableOrderingComposer,
+        $$ServiceAttributesTableProcessedTableManager,
+        $$ServiceAttributesTableInsertCompanionBuilder,
+        $$ServiceAttributesTableUpdateCompanionBuilder> {
+  $$ServiceAttributesTableProcessedTableManager(super.$state);
+}
+
+class $$ServiceAttributesTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ServiceAttributesTable> {
+  $$ServiceAttributesTableFilterComposer(super.$state);
+  ColumnFilters<String> get attributeCode => $state.composableBuilder(
+      column: $state.table.attributeCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get value => $state.composableBuilder(
+      column: $state.table.value,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get dataType => $state.composableBuilder(
+      column: $state.table.dataType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalDetails => $state.composableBuilder(
+      column: $state.table.additionalDetails,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ServiceAttributesTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ServiceAttributesTable> {
+  $$ServiceAttributesTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get attributeCode => $state.composableBuilder(
+      column: $state.table.attributeCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get value => $state.composableBuilder(
+      column: $state.table.value,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get dataType => $state.composableBuilder(
+      column: $state.table.dataType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalDetails => $state.composableBuilder(
+      column: $state.table.additionalDetails,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ServiceDefinitionTableInsertCompanionBuilder
+    = ServiceDefinitionCompanion Function({
+  Value<String?> id,
+  Value<String?> tenantId,
+  Value<String?> code,
+  Value<bool?> isActive,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ServiceDefinitionTableUpdateCompanionBuilder
+    = ServiceDefinitionCompanion Function({
+  Value<String?> id,
+  Value<String?> tenantId,
+  Value<String?> code,
+  Value<bool?> isActive,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ServiceDefinitionTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ServiceDefinitionTable,
+    ServiceDefinitionData,
+    $$ServiceDefinitionTableFilterComposer,
+    $$ServiceDefinitionTableOrderingComposer,
+    $$ServiceDefinitionTableProcessedTableManager,
+    $$ServiceDefinitionTableInsertCompanionBuilder,
+    $$ServiceDefinitionTableUpdateCompanionBuilder> {
+  $$ServiceDefinitionTableTableManager(
+      _$LocalSqlDataStore db, $ServiceDefinitionTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ServiceDefinitionTableFilterComposer(ComposerState(db, table)),
+          orderingComposer: $$ServiceDefinitionTableOrderingComposer(
+              ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ServiceDefinitionTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> code = const Value.absent(),
+            Value<bool?> isActive = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ServiceDefinitionCompanion(
+            id: id,
+            tenantId: tenantId,
+            code: code,
+            isActive: isActive,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> code = const Value.absent(),
+            Value<bool?> isActive = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ServiceDefinitionCompanion.insert(
+            id: id,
+            tenantId: tenantId,
+            code: code,
+            isActive: isActive,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ServiceDefinitionTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$LocalSqlDataStore,
+        $ServiceDefinitionTable,
+        ServiceDefinitionData,
+        $$ServiceDefinitionTableFilterComposer,
+        $$ServiceDefinitionTableOrderingComposer,
+        $$ServiceDefinitionTableProcessedTableManager,
+        $$ServiceDefinitionTableInsertCompanionBuilder,
+        $$ServiceDefinitionTableUpdateCompanionBuilder> {
+  $$ServiceDefinitionTableProcessedTableManager(super.$state);
+}
+
+class $$ServiceDefinitionTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ServiceDefinitionTable> {
+  $$ServiceDefinitionTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isActive => $state.composableBuilder(
+      column: $state.table.isActive,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ServiceDefinitionTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ServiceDefinitionTable> {
+  $$ServiceDefinitionTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isActive => $state.composableBuilder(
+      column: $state.table.isActive,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$LocalityTableInsertCompanionBuilder = LocalityCompanion Function({
+  required String code,
+  Value<String?> name,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$LocalityTableUpdateCompanionBuilder = LocalityCompanion Function({
+  Value<String> code,
+  Value<String?> name,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$LocalityTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $LocalityTable,
+    LocalityData,
+    $$LocalityTableFilterComposer,
+    $$LocalityTableOrderingComposer,
+    $$LocalityTableProcessedTableManager,
+    $$LocalityTableInsertCompanionBuilder,
+    $$LocalityTableUpdateCompanionBuilder> {
+  $$LocalityTableTableManager(_$LocalSqlDataStore db, $LocalityTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$LocalityTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$LocalityTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$LocalityTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> code = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              LocalityCompanion(
+            code: code,
+            name: name,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String code,
+            Value<String?> name = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              LocalityCompanion.insert(
+            code: code,
+            name: name,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$LocalityTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $LocalityTable,
+    LocalityData,
+    $$LocalityTableFilterComposer,
+    $$LocalityTableOrderingComposer,
+    $$LocalityTableProcessedTableManager,
+    $$LocalityTableInsertCompanionBuilder,
+    $$LocalityTableUpdateCompanionBuilder> {
+  $$LocalityTableProcessedTableManager(super.$state);
+}
+
+class $$LocalityTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $LocalityTable> {
+  $$LocalityTableFilterComposer(super.$state);
+  ColumnFilters<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$LocalityTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $LocalityTable> {
+  $$LocalityTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$StaffTableInsertCompanionBuilder = StaffCompanion Function({
+  Value<String?> id,
+  required String tenantId,
+  required String registerId,
+  required String userId,
+  Value<int?> enrollmentDate,
+  Value<int?> denrollmentDate,
+  Value<int> rowid,
+});
+typedef $$StaffTableUpdateCompanionBuilder = StaffCompanion Function({
+  Value<String?> id,
+  Value<String> tenantId,
+  Value<String> registerId,
+  Value<String> userId,
+  Value<int?> enrollmentDate,
+  Value<int?> denrollmentDate,
+  Value<int> rowid,
+});
+
+class $$StaffTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $StaffTable,
+    StaffData,
+    $$StaffTableFilterComposer,
+    $$StaffTableOrderingComposer,
+    $$StaffTableProcessedTableManager,
+    $$StaffTableInsertCompanionBuilder,
+    $$StaffTableUpdateCompanionBuilder> {
+  $$StaffTableTableManager(_$LocalSqlDataStore db, $StaffTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$StaffTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$StaffTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$StaffTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String> tenantId = const Value.absent(),
+            Value<String> registerId = const Value.absent(),
+            Value<String> userId = const Value.absent(),
+            Value<int?> enrollmentDate = const Value.absent(),
+            Value<int?> denrollmentDate = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              StaffCompanion(
+            id: id,
+            tenantId: tenantId,
+            registerId: registerId,
+            userId: userId,
+            enrollmentDate: enrollmentDate,
+            denrollmentDate: denrollmentDate,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            required String tenantId,
+            required String registerId,
+            required String userId,
+            Value<int?> enrollmentDate = const Value.absent(),
+            Value<int?> denrollmentDate = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              StaffCompanion.insert(
+            id: id,
+            tenantId: tenantId,
+            registerId: registerId,
+            userId: userId,
+            enrollmentDate: enrollmentDate,
+            denrollmentDate: denrollmentDate,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$StaffTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $StaffTable,
+    StaffData,
+    $$StaffTableFilterComposer,
+    $$StaffTableOrderingComposer,
+    $$StaffTableProcessedTableManager,
+    $$StaffTableInsertCompanionBuilder,
+    $$StaffTableUpdateCompanionBuilder> {
+  $$StaffTableProcessedTableManager(super.$state);
+}
+
+class $$StaffTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $StaffTable> {
+  $$StaffTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get registerId => $state.composableBuilder(
+      column: $state.table.registerId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get enrollmentDate => $state.composableBuilder(
+      column: $state.table.enrollmentDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get denrollmentDate => $state.composableBuilder(
+      column: $state.table.denrollmentDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$StaffTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $StaffTable> {
+  $$StaffTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get registerId => $state.composableBuilder(
+      column: $state.table.registerId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userId => $state.composableBuilder(
+      column: $state.table.userId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get enrollmentDate => $state.composableBuilder(
+      column: $state.table.enrollmentDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get denrollmentDate => $state.composableBuilder(
+      column: $state.table.denrollmentDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$AttributesTableInsertCompanionBuilder = AttributesCompanion Function({
+  Value<String?> id,
+  Value<String?> dataType,
+  Value<String?> referenceId,
+  Value<String?> tenantId,
+  Value<String?> code,
+  Value<String?> values,
+  Value<bool?> isActive,
+  Value<bool?> required,
+  Value<String?> regex,
+  Value<int?> order,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<String?> additionalDetails,
+  Value<int> rowid,
+});
+typedef $$AttributesTableUpdateCompanionBuilder = AttributesCompanion Function({
+  Value<String?> id,
+  Value<String?> dataType,
+  Value<String?> referenceId,
+  Value<String?> tenantId,
+  Value<String?> code,
+  Value<String?> values,
+  Value<bool?> isActive,
+  Value<bool?> required,
+  Value<String?> regex,
+  Value<int?> order,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<String?> additionalDetails,
+  Value<int> rowid,
+});
+
+class $$AttributesTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $AttributesTable,
+    Attribute,
+    $$AttributesTableFilterComposer,
+    $$AttributesTableOrderingComposer,
+    $$AttributesTableProcessedTableManager,
+    $$AttributesTableInsertCompanionBuilder,
+    $$AttributesTableUpdateCompanionBuilder> {
+  $$AttributesTableTableManager(_$LocalSqlDataStore db, $AttributesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$AttributesTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$AttributesTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$AttributesTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> dataType = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> code = const Value.absent(),
+            Value<String?> values = const Value.absent(),
+            Value<bool?> isActive = const Value.absent(),
+            Value<bool?> required = const Value.absent(),
+            Value<String?> regex = const Value.absent(),
+            Value<int?> order = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<String?> additionalDetails = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AttributesCompanion(
+            id: id,
+            dataType: dataType,
+            referenceId: referenceId,
+            tenantId: tenantId,
+            code: code,
+            values: values,
+            isActive: isActive,
+            required: required,
+            regex: regex,
+            order: order,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            additionalDetails: additionalDetails,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> dataType = const Value.absent(),
+            Value<String?> referenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> code = const Value.absent(),
+            Value<String?> values = const Value.absent(),
+            Value<bool?> isActive = const Value.absent(),
+            Value<bool?> required = const Value.absent(),
+            Value<String?> regex = const Value.absent(),
+            Value<int?> order = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<String?> additionalDetails = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AttributesCompanion.insert(
+            id: id,
+            dataType: dataType,
+            referenceId: referenceId,
+            tenantId: tenantId,
+            code: code,
+            values: values,
+            isActive: isActive,
+            required: required,
+            regex: regex,
+            order: order,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            additionalDetails: additionalDetails,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$AttributesTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $AttributesTable,
+    Attribute,
+    $$AttributesTableFilterComposer,
+    $$AttributesTableOrderingComposer,
+    $$AttributesTableProcessedTableManager,
+    $$AttributesTableInsertCompanionBuilder,
+    $$AttributesTableUpdateCompanionBuilder> {
+  $$AttributesTableProcessedTableManager(super.$state);
+}
+
+class $$AttributesTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $AttributesTable> {
+  $$AttributesTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get dataType => $state.composableBuilder(
+      column: $state.table.dataType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get values => $state.composableBuilder(
+      column: $state.table.values,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isActive => $state.composableBuilder(
+      column: $state.table.isActive,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get required => $state.composableBuilder(
+      column: $state.table.required,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get regex => $state.composableBuilder(
+      column: $state.table.regex,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get order => $state.composableBuilder(
+      column: $state.table.order,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalDetails => $state.composableBuilder(
+      column: $state.table.additionalDetails,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$AttributesTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $AttributesTable> {
+  $$AttributesTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get dataType => $state.composableBuilder(
+      column: $state.table.dataType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get referenceId => $state.composableBuilder(
+      column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get values => $state.composableBuilder(
+      column: $state.table.values,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isActive => $state.composableBuilder(
+      column: $state.table.isActive,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get required => $state.composableBuilder(
+      column: $state.table.required,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get regex => $state.composableBuilder(
+      column: $state.table.regex,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get order => $state.composableBuilder(
+      column: $state.table.order,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalDetails => $state.composableBuilder(
+      column: $state.table.additionalDetails,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$PgrServiceTableInsertCompanionBuilder = PgrServiceCompanion Function({
+  required bool active,
+  required String clientReferenceId,
+  Value<String?> id,
+  required String tenantId,
+  required String serviceCode,
+  required String description,
+  Value<String?> serviceRequestId,
+  Value<String?> accountId,
+  required PgrServiceApplicationStatus applicationStatus,
+  Value<String?> source,
+  Value<String?> auditCreatedBy,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required bool isDeleted,
+  required int rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$PgrServiceTableUpdateCompanionBuilder = PgrServiceCompanion Function({
+  Value<bool> active,
+  Value<String> clientReferenceId,
+  Value<String?> id,
+  Value<String> tenantId,
+  Value<String> serviceCode,
+  Value<String> description,
+  Value<String?> serviceRequestId,
+  Value<String?> accountId,
+  Value<PgrServiceApplicationStatus> applicationStatus,
+  Value<String?> source,
+  Value<String?> auditCreatedBy,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool> isDeleted,
+  Value<int> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$PgrServiceTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $PgrServiceTable,
+    PgrServiceData,
+    $$PgrServiceTableFilterComposer,
+    $$PgrServiceTableOrderingComposer,
+    $$PgrServiceTableProcessedTableManager,
+    $$PgrServiceTableInsertCompanionBuilder,
+    $$PgrServiceTableUpdateCompanionBuilder> {
+  $$PgrServiceTableTableManager(_$LocalSqlDataStore db, $PgrServiceTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$PgrServiceTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$PgrServiceTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$PgrServiceTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<bool> active = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> id = const Value.absent(),
+            Value<String> tenantId = const Value.absent(),
+            Value<String> serviceCode = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<String?> serviceRequestId = const Value.absent(),
+            Value<String?> accountId = const Value.absent(),
+            Value<PgrServiceApplicationStatus> applicationStatus =
+                const Value.absent(),
+            Value<String?> source = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool> isDeleted = const Value.absent(),
+            Value<int> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PgrServiceCompanion(
+            active: active,
+            clientReferenceId: clientReferenceId,
+            id: id,
+            tenantId: tenantId,
+            serviceCode: serviceCode,
+            description: description,
+            serviceRequestId: serviceRequestId,
+            accountId: accountId,
+            applicationStatus: applicationStatus,
+            source: source,
+            auditCreatedBy: auditCreatedBy,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required bool active,
+            required String clientReferenceId,
+            Value<String?> id = const Value.absent(),
+            required String tenantId,
+            required String serviceCode,
+            required String description,
+            Value<String?> serviceRequestId = const Value.absent(),
+            Value<String?> accountId = const Value.absent(),
+            required PgrServiceApplicationStatus applicationStatus,
+            Value<String?> source = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required bool isDeleted,
+            required int rowVersion,
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PgrServiceCompanion.insert(
+            active: active,
+            clientReferenceId: clientReferenceId,
+            id: id,
+            tenantId: tenantId,
+            serviceCode: serviceCode,
+            description: description,
+            serviceRequestId: serviceRequestId,
+            accountId: accountId,
+            applicationStatus: applicationStatus,
+            source: source,
+            auditCreatedBy: auditCreatedBy,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$PgrServiceTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $PgrServiceTable,
+    PgrServiceData,
+    $$PgrServiceTableFilterComposer,
+    $$PgrServiceTableOrderingComposer,
+    $$PgrServiceTableProcessedTableManager,
+    $$PgrServiceTableInsertCompanionBuilder,
+    $$PgrServiceTableUpdateCompanionBuilder> {
+  $$PgrServiceTableProcessedTableManager(super.$state);
+}
+
+class $$PgrServiceTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $PgrServiceTable> {
+  $$PgrServiceTableFilterComposer(super.$state);
+  ColumnFilters<bool> get active => $state.composableBuilder(
+      column: $state.table.active,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get serviceCode => $state.composableBuilder(
+      column: $state.table.serviceCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get serviceRequestId => $state.composableBuilder(
+      column: $state.table.serviceRequestId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get accountId => $state.composableBuilder(
+      column: $state.table.accountId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<PgrServiceApplicationStatus,
+          PgrServiceApplicationStatus, int>
+      get applicationStatus => $state.composableBuilder(
+          column: $state.table.applicationStatus,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get source => $state.composableBuilder(
+      column: $state.table.source,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$PgrServiceTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $PgrServiceTable> {
+  $$PgrServiceTableOrderingComposer(super.$state);
+  ColumnOrderings<bool> get active => $state.composableBuilder(
+      column: $state.table.active,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get serviceCode => $state.composableBuilder(
+      column: $state.table.serviceCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get serviceRequestId => $state.composableBuilder(
+      column: $state.table.serviceRequestId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get accountId => $state.composableBuilder(
+      column: $state.table.accountId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get applicationStatus => $state.composableBuilder(
+      column: $state.table.applicationStatus,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get source => $state.composableBuilder(
+      column: $state.table.source,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$PgrComplainantTableInsertCompanionBuilder = PgrComplainantCompanion
+    Function({
+  Value<int?> id,
+  required String clientReferenceId,
+  required String complaintClientReferenceId,
+  Value<String?> userName,
+  Value<String?> name,
+  Value<String?> type,
+  Value<String?> mobileNumber,
+  Value<String?> emailId,
+  required String tenantId,
+  Value<String?> uuid,
+  required bool active,
+  Value<String?> auditCreatedBy,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required bool isDeleted,
+  required int rowVersion,
+  Value<int> rowid,
+});
+typedef $$PgrComplainantTableUpdateCompanionBuilder = PgrComplainantCompanion
+    Function({
+  Value<int?> id,
+  Value<String> clientReferenceId,
+  Value<String> complaintClientReferenceId,
+  Value<String?> userName,
+  Value<String?> name,
+  Value<String?> type,
+  Value<String?> mobileNumber,
+  Value<String?> emailId,
+  Value<String> tenantId,
+  Value<String?> uuid,
+  Value<bool> active,
+  Value<String?> auditCreatedBy,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool> isDeleted,
+  Value<int> rowVersion,
+  Value<int> rowid,
+});
+
+class $$PgrComplainantTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $PgrComplainantTable,
+    PgrComplainantData,
+    $$PgrComplainantTableFilterComposer,
+    $$PgrComplainantTableOrderingComposer,
+    $$PgrComplainantTableProcessedTableManager,
+    $$PgrComplainantTableInsertCompanionBuilder,
+    $$PgrComplainantTableUpdateCompanionBuilder> {
+  $$PgrComplainantTableTableManager(
+      _$LocalSqlDataStore db, $PgrComplainantTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$PgrComplainantTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$PgrComplainantTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$PgrComplainantTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int?> id = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String> complaintClientReferenceId = const Value.absent(),
+            Value<String?> userName = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            Value<String?> mobileNumber = const Value.absent(),
+            Value<String?> emailId = const Value.absent(),
+            Value<String> tenantId = const Value.absent(),
+            Value<String?> uuid = const Value.absent(),
+            Value<bool> active = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool> isDeleted = const Value.absent(),
+            Value<int> rowVersion = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PgrComplainantCompanion(
+            id: id,
+            clientReferenceId: clientReferenceId,
+            complaintClientReferenceId: complaintClientReferenceId,
+            userName: userName,
+            name: name,
+            type: type,
+            mobileNumber: mobileNumber,
+            emailId: emailId,
+            tenantId: tenantId,
+            uuid: uuid,
+            active: active,
+            auditCreatedBy: auditCreatedBy,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int?> id = const Value.absent(),
+            required String clientReferenceId,
+            required String complaintClientReferenceId,
+            Value<String?> userName = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            Value<String?> mobileNumber = const Value.absent(),
+            Value<String?> emailId = const Value.absent(),
+            required String tenantId,
+            Value<String?> uuid = const Value.absent(),
+            required bool active,
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required bool isDeleted,
+            required int rowVersion,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PgrComplainantCompanion.insert(
+            id: id,
+            clientReferenceId: clientReferenceId,
+            complaintClientReferenceId: complaintClientReferenceId,
+            userName: userName,
+            name: name,
+            type: type,
+            mobileNumber: mobileNumber,
+            emailId: emailId,
+            tenantId: tenantId,
+            uuid: uuid,
+            active: active,
+            auditCreatedBy: auditCreatedBy,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$PgrComplainantTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $PgrComplainantTable,
+    PgrComplainantData,
+    $$PgrComplainantTableFilterComposer,
+    $$PgrComplainantTableOrderingComposer,
+    $$PgrComplainantTableProcessedTableManager,
+    $$PgrComplainantTableInsertCompanionBuilder,
+    $$PgrComplainantTableUpdateCompanionBuilder> {
+  $$PgrComplainantTableProcessedTableManager(super.$state);
+}
+
+class $$PgrComplainantTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $PgrComplainantTable> {
+  $$PgrComplainantTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get complaintClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.complaintClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userName => $state.composableBuilder(
+      column: $state.table.userName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get mobileNumber => $state.composableBuilder(
+      column: $state.table.mobileNumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get emailId => $state.composableBuilder(
+      column: $state.table.emailId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get uuid => $state.composableBuilder(
+      column: $state.table.uuid,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get active => $state.composableBuilder(
+      column: $state.table.active,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$PgrComplainantTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $PgrComplainantTable> {
+  $$PgrComplainantTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get complaintClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.complaintClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userName => $state.composableBuilder(
+      column: $state.table.userName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get mobileNumber => $state.composableBuilder(
+      column: $state.table.mobileNumber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get emailId => $state.composableBuilder(
+      column: $state.table.emailId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get uuid => $state.composableBuilder(
+      column: $state.table.uuid,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get active => $state.composableBuilder(
+      column: $state.table.active,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$UserTableInsertCompanionBuilder = UserCompanion Function({
+  Value<String?> id,
+  Value<String?> userName,
+  Value<String?> salutation,
+  Value<String?> name,
+  Value<String?> gender,
+  Value<String?> mobileNumber,
+  Value<String?> emailId,
+  Value<String?> altContactNumber,
+  Value<String?> pan,
+  Value<String?> aadhaarNumber,
+  Value<String?> permanentAddress,
+  Value<String?> permanentCity,
+  Value<String?> permanentPinCode,
+  Value<String?> correspondenceAddress,
+  Value<String?> correspondenceCity,
+  Value<String?> correspondencePinCode,
+  Value<String?> alternatemobilenumber,
+  Value<bool?> active,
+  Value<String?> locale,
+  Value<String?> type,
+  Value<bool?> accountLocked,
+  Value<int?> accountLockedDate,
+  Value<String?> fatherOrHusbandName,
+  Value<String?> relationship,
+  Value<String?> signature,
+  Value<String?> bloodGroup,
+  Value<String?> photo,
+  Value<String?> identificationMark,
+  Value<int?> createdBy,
+  Value<String?> lastModifiedBy,
+  Value<String?> tenantId,
+  Value<String?> uuid,
+  Value<String?> createdDate,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$UserTableUpdateCompanionBuilder = UserCompanion Function({
+  Value<String?> id,
+  Value<String?> userName,
+  Value<String?> salutation,
+  Value<String?> name,
+  Value<String?> gender,
+  Value<String?> mobileNumber,
+  Value<String?> emailId,
+  Value<String?> altContactNumber,
+  Value<String?> pan,
+  Value<String?> aadhaarNumber,
+  Value<String?> permanentAddress,
+  Value<String?> permanentCity,
+  Value<String?> permanentPinCode,
+  Value<String?> correspondenceAddress,
+  Value<String?> correspondenceCity,
+  Value<String?> correspondencePinCode,
+  Value<String?> alternatemobilenumber,
+  Value<bool?> active,
+  Value<String?> locale,
+  Value<String?> type,
+  Value<bool?> accountLocked,
+  Value<int?> accountLockedDate,
+  Value<String?> fatherOrHusbandName,
+  Value<String?> relationship,
+  Value<String?> signature,
+  Value<String?> bloodGroup,
+  Value<String?> photo,
+  Value<String?> identificationMark,
+  Value<int?> createdBy,
+  Value<String?> lastModifiedBy,
+  Value<String?> tenantId,
+  Value<String?> uuid,
+  Value<String?> createdDate,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$UserTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $UserTable,
+    UserData,
+    $$UserTableFilterComposer,
+    $$UserTableOrderingComposer,
+    $$UserTableProcessedTableManager,
+    $$UserTableInsertCompanionBuilder,
+    $$UserTableUpdateCompanionBuilder> {
+  $$UserTableTableManager(_$LocalSqlDataStore db, $UserTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$UserTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$UserTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$UserTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> userName = const Value.absent(),
+            Value<String?> salutation = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> gender = const Value.absent(),
+            Value<String?> mobileNumber = const Value.absent(),
+            Value<String?> emailId = const Value.absent(),
+            Value<String?> altContactNumber = const Value.absent(),
+            Value<String?> pan = const Value.absent(),
+            Value<String?> aadhaarNumber = const Value.absent(),
+            Value<String?> permanentAddress = const Value.absent(),
+            Value<String?> permanentCity = const Value.absent(),
+            Value<String?> permanentPinCode = const Value.absent(),
+            Value<String?> correspondenceAddress = const Value.absent(),
+            Value<String?> correspondenceCity = const Value.absent(),
+            Value<String?> correspondencePinCode = const Value.absent(),
+            Value<String?> alternatemobilenumber = const Value.absent(),
+            Value<bool?> active = const Value.absent(),
+            Value<String?> locale = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            Value<bool?> accountLocked = const Value.absent(),
+            Value<int?> accountLockedDate = const Value.absent(),
+            Value<String?> fatherOrHusbandName = const Value.absent(),
+            Value<String?> relationship = const Value.absent(),
+            Value<String?> signature = const Value.absent(),
+            Value<String?> bloodGroup = const Value.absent(),
+            Value<String?> photo = const Value.absent(),
+            Value<String?> identificationMark = const Value.absent(),
+            Value<int?> createdBy = const Value.absent(),
+            Value<String?> lastModifiedBy = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> uuid = const Value.absent(),
+            Value<String?> createdDate = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UserCompanion(
+            id: id,
+            userName: userName,
+            salutation: salutation,
+            name: name,
+            gender: gender,
+            mobileNumber: mobileNumber,
+            emailId: emailId,
+            altContactNumber: altContactNumber,
+            pan: pan,
+            aadhaarNumber: aadhaarNumber,
+            permanentAddress: permanentAddress,
+            permanentCity: permanentCity,
+            permanentPinCode: permanentPinCode,
+            correspondenceAddress: correspondenceAddress,
+            correspondenceCity: correspondenceCity,
+            correspondencePinCode: correspondencePinCode,
+            alternatemobilenumber: alternatemobilenumber,
+            active: active,
+            locale: locale,
+            type: type,
+            accountLocked: accountLocked,
+            accountLockedDate: accountLockedDate,
+            fatherOrHusbandName: fatherOrHusbandName,
+            relationship: relationship,
+            signature: signature,
+            bloodGroup: bloodGroup,
+            photo: photo,
+            identificationMark: identificationMark,
+            createdBy: createdBy,
+            lastModifiedBy: lastModifiedBy,
+            tenantId: tenantId,
+            uuid: uuid,
+            createdDate: createdDate,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> userName = const Value.absent(),
+            Value<String?> salutation = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> gender = const Value.absent(),
+            Value<String?> mobileNumber = const Value.absent(),
+            Value<String?> emailId = const Value.absent(),
+            Value<String?> altContactNumber = const Value.absent(),
+            Value<String?> pan = const Value.absent(),
+            Value<String?> aadhaarNumber = const Value.absent(),
+            Value<String?> permanentAddress = const Value.absent(),
+            Value<String?> permanentCity = const Value.absent(),
+            Value<String?> permanentPinCode = const Value.absent(),
+            Value<String?> correspondenceAddress = const Value.absent(),
+            Value<String?> correspondenceCity = const Value.absent(),
+            Value<String?> correspondencePinCode = const Value.absent(),
+            Value<String?> alternatemobilenumber = const Value.absent(),
+            Value<bool?> active = const Value.absent(),
+            Value<String?> locale = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            Value<bool?> accountLocked = const Value.absent(),
+            Value<int?> accountLockedDate = const Value.absent(),
+            Value<String?> fatherOrHusbandName = const Value.absent(),
+            Value<String?> relationship = const Value.absent(),
+            Value<String?> signature = const Value.absent(),
+            Value<String?> bloodGroup = const Value.absent(),
+            Value<String?> photo = const Value.absent(),
+            Value<String?> identificationMark = const Value.absent(),
+            Value<int?> createdBy = const Value.absent(),
+            Value<String?> lastModifiedBy = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> uuid = const Value.absent(),
+            Value<String?> createdDate = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UserCompanion.insert(
+            id: id,
+            userName: userName,
+            salutation: salutation,
+            name: name,
+            gender: gender,
+            mobileNumber: mobileNumber,
+            emailId: emailId,
+            altContactNumber: altContactNumber,
+            pan: pan,
+            aadhaarNumber: aadhaarNumber,
+            permanentAddress: permanentAddress,
+            permanentCity: permanentCity,
+            permanentPinCode: permanentPinCode,
+            correspondenceAddress: correspondenceAddress,
+            correspondenceCity: correspondenceCity,
+            correspondencePinCode: correspondencePinCode,
+            alternatemobilenumber: alternatemobilenumber,
+            active: active,
+            locale: locale,
+            type: type,
+            accountLocked: accountLocked,
+            accountLockedDate: accountLockedDate,
+            fatherOrHusbandName: fatherOrHusbandName,
+            relationship: relationship,
+            signature: signature,
+            bloodGroup: bloodGroup,
+            photo: photo,
+            identificationMark: identificationMark,
+            createdBy: createdBy,
+            lastModifiedBy: lastModifiedBy,
+            tenantId: tenantId,
+            uuid: uuid,
+            createdDate: createdDate,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$UserTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $UserTable,
+    UserData,
+    $$UserTableFilterComposer,
+    $$UserTableOrderingComposer,
+    $$UserTableProcessedTableManager,
+    $$UserTableInsertCompanionBuilder,
+    $$UserTableUpdateCompanionBuilder> {
+  $$UserTableProcessedTableManager(super.$state);
+}
+
+class $$UserTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $UserTable> {
+  $$UserTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userName => $state.composableBuilder(
+      column: $state.table.userName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get salutation => $state.composableBuilder(
+      column: $state.table.salutation,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get gender => $state.composableBuilder(
+      column: $state.table.gender,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get mobileNumber => $state.composableBuilder(
+      column: $state.table.mobileNumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get emailId => $state.composableBuilder(
+      column: $state.table.emailId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get altContactNumber => $state.composableBuilder(
+      column: $state.table.altContactNumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get pan => $state.composableBuilder(
+      column: $state.table.pan,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get aadhaarNumber => $state.composableBuilder(
+      column: $state.table.aadhaarNumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get permanentAddress => $state.composableBuilder(
+      column: $state.table.permanentAddress,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get permanentCity => $state.composableBuilder(
+      column: $state.table.permanentCity,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get permanentPinCode => $state.composableBuilder(
+      column: $state.table.permanentPinCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get correspondenceAddress => $state.composableBuilder(
+      column: $state.table.correspondenceAddress,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get correspondenceCity => $state.composableBuilder(
+      column: $state.table.correspondenceCity,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get correspondencePinCode => $state.composableBuilder(
+      column: $state.table.correspondencePinCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get alternatemobilenumber => $state.composableBuilder(
+      column: $state.table.alternatemobilenumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get active => $state.composableBuilder(
+      column: $state.table.active,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get locale => $state.composableBuilder(
+      column: $state.table.locale,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get accountLocked => $state.composableBuilder(
+      column: $state.table.accountLocked,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get accountLockedDate => $state.composableBuilder(
+      column: $state.table.accountLockedDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get fatherOrHusbandName => $state.composableBuilder(
+      column: $state.table.fatherOrHusbandName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get relationship => $state.composableBuilder(
+      column: $state.table.relationship,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get signature => $state.composableBuilder(
+      column: $state.table.signature,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get bloodGroup => $state.composableBuilder(
+      column: $state.table.bloodGroup,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get photo => $state.composableBuilder(
+      column: $state.table.photo,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get identificationMark => $state.composableBuilder(
+      column: $state.table.identificationMark,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get createdBy => $state.composableBuilder(
+      column: $state.table.createdBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get lastModifiedBy => $state.composableBuilder(
+      column: $state.table.lastModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get uuid => $state.composableBuilder(
+      column: $state.table.uuid,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get createdDate => $state.composableBuilder(
+      column: $state.table.createdDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$UserTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $UserTable> {
+  $$UserTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userName => $state.composableBuilder(
+      column: $state.table.userName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get salutation => $state.composableBuilder(
+      column: $state.table.salutation,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get gender => $state.composableBuilder(
+      column: $state.table.gender,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get mobileNumber => $state.composableBuilder(
+      column: $state.table.mobileNumber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get emailId => $state.composableBuilder(
+      column: $state.table.emailId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get altContactNumber => $state.composableBuilder(
+      column: $state.table.altContactNumber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get pan => $state.composableBuilder(
+      column: $state.table.pan,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get aadhaarNumber => $state.composableBuilder(
+      column: $state.table.aadhaarNumber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get permanentAddress => $state.composableBuilder(
+      column: $state.table.permanentAddress,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get permanentCity => $state.composableBuilder(
+      column: $state.table.permanentCity,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get permanentPinCode => $state.composableBuilder(
+      column: $state.table.permanentPinCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get correspondenceAddress => $state.composableBuilder(
+      column: $state.table.correspondenceAddress,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get correspondenceCity => $state.composableBuilder(
+      column: $state.table.correspondenceCity,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get correspondencePinCode => $state.composableBuilder(
+      column: $state.table.correspondencePinCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get alternatemobilenumber => $state.composableBuilder(
+      column: $state.table.alternatemobilenumber,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get active => $state.composableBuilder(
+      column: $state.table.active,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get locale => $state.composableBuilder(
+      column: $state.table.locale,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get accountLocked => $state.composableBuilder(
+      column: $state.table.accountLocked,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get accountLockedDate => $state.composableBuilder(
+      column: $state.table.accountLockedDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get fatherOrHusbandName => $state.composableBuilder(
+      column: $state.table.fatherOrHusbandName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get relationship => $state.composableBuilder(
+      column: $state.table.relationship,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get signature => $state.composableBuilder(
+      column: $state.table.signature,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get bloodGroup => $state.composableBuilder(
+      column: $state.table.bloodGroup,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get photo => $state.composableBuilder(
+      column: $state.table.photo,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get identificationMark => $state.composableBuilder(
+      column: $state.table.identificationMark,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get createdBy => $state.composableBuilder(
+      column: $state.table.createdBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get lastModifiedBy => $state.composableBuilder(
+      column: $state.table.lastModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get uuid => $state.composableBuilder(
+      column: $state.table.uuid,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get createdDate => $state.composableBuilder(
+      column: $state.table.createdDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$DownsyncTableInsertCompanionBuilder = DownsyncCompanion Function({
+  Value<String?> locality,
+  Value<String?> projectId,
+  Value<int?> offset,
+  Value<int?> limit,
+  Value<int?> lastSyncedTime,
+  Value<int?> totalCount,
+  Value<String?> boundaryName,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$DownsyncTableUpdateCompanionBuilder = DownsyncCompanion Function({
+  Value<String?> locality,
+  Value<String?> projectId,
+  Value<int?> offset,
+  Value<int?> limit,
+  Value<int?> lastSyncedTime,
+  Value<int?> totalCount,
+  Value<String?> boundaryName,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$DownsyncTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $DownsyncTable,
+    DownsyncData,
+    $$DownsyncTableFilterComposer,
+    $$DownsyncTableOrderingComposer,
+    $$DownsyncTableProcessedTableManager,
+    $$DownsyncTableInsertCompanionBuilder,
+    $$DownsyncTableUpdateCompanionBuilder> {
+  $$DownsyncTableTableManager(_$LocalSqlDataStore db, $DownsyncTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$DownsyncTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$DownsyncTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$DownsyncTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> locality = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<int?> offset = const Value.absent(),
+            Value<int?> limit = const Value.absent(),
+            Value<int?> lastSyncedTime = const Value.absent(),
+            Value<int?> totalCount = const Value.absent(),
+            Value<String?> boundaryName = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              DownsyncCompanion(
+            locality: locality,
+            projectId: projectId,
+            offset: offset,
+            limit: limit,
+            lastSyncedTime: lastSyncedTime,
+            totalCount: totalCount,
+            boundaryName: boundaryName,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> locality = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<int?> offset = const Value.absent(),
+            Value<int?> limit = const Value.absent(),
+            Value<int?> lastSyncedTime = const Value.absent(),
+            Value<int?> totalCount = const Value.absent(),
+            Value<String?> boundaryName = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              DownsyncCompanion.insert(
+            locality: locality,
+            projectId: projectId,
+            offset: offset,
+            limit: limit,
+            lastSyncedTime: lastSyncedTime,
+            totalCount: totalCount,
+            boundaryName: boundaryName,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$DownsyncTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $DownsyncTable,
+    DownsyncData,
+    $$DownsyncTableFilterComposer,
+    $$DownsyncTableOrderingComposer,
+    $$DownsyncTableProcessedTableManager,
+    $$DownsyncTableInsertCompanionBuilder,
+    $$DownsyncTableUpdateCompanionBuilder> {
+  $$DownsyncTableProcessedTableManager(super.$state);
+}
+
+class $$DownsyncTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $DownsyncTable> {
+  $$DownsyncTableFilterComposer(super.$state);
+  ColumnFilters<String> get locality => $state.composableBuilder(
+      column: $state.table.locality,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get offset => $state.composableBuilder(
+      column: $state.table.offset,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get limit => $state.composableBuilder(
+      column: $state.table.limit,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get lastSyncedTime => $state.composableBuilder(
+      column: $state.table.lastSyncedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get totalCount => $state.composableBuilder(
+      column: $state.table.totalCount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get boundaryName => $state.composableBuilder(
+      column: $state.table.boundaryName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$DownsyncTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $DownsyncTable> {
+  $$DownsyncTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get locality => $state.composableBuilder(
+      column: $state.table.locality,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get offset => $state.composableBuilder(
+      column: $state.table.offset,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get limit => $state.composableBuilder(
+      column: $state.table.limit,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get lastSyncedTime => $state.composableBuilder(
+      column: $state.table.lastSyncedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get totalCount => $state.composableBuilder(
+      column: $state.table.totalCount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get boundaryName => $state.composableBuilder(
+      column: $state.table.boundaryName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$DownsyncCriteriaTableInsertCompanionBuilder
+    = DownsyncCriteriaCompanion Function({
+  Value<String?> locality,
+  Value<String?> tenantId,
+  Value<int?> offset,
+  Value<int?> limit,
+  Value<String?> projectId,
+  Value<int?> lastSyncedTime,
+  Value<int?> totalCount,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$DownsyncCriteriaTableUpdateCompanionBuilder
+    = DownsyncCriteriaCompanion Function({
+  Value<String?> locality,
+  Value<String?> tenantId,
+  Value<int?> offset,
+  Value<int?> limit,
+  Value<String?> projectId,
+  Value<int?> lastSyncedTime,
+  Value<int?> totalCount,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$DownsyncCriteriaTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $DownsyncCriteriaTable,
+    DownsyncCriteriaData,
+    $$DownsyncCriteriaTableFilterComposer,
+    $$DownsyncCriteriaTableOrderingComposer,
+    $$DownsyncCriteriaTableProcessedTableManager,
+    $$DownsyncCriteriaTableInsertCompanionBuilder,
+    $$DownsyncCriteriaTableUpdateCompanionBuilder> {
+  $$DownsyncCriteriaTableTableManager(
+      _$LocalSqlDataStore db, $DownsyncCriteriaTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$DownsyncCriteriaTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$DownsyncCriteriaTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$DownsyncCriteriaTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> locality = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> offset = const Value.absent(),
+            Value<int?> limit = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<int?> lastSyncedTime = const Value.absent(),
+            Value<int?> totalCount = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              DownsyncCriteriaCompanion(
+            locality: locality,
+            tenantId: tenantId,
+            offset: offset,
+            limit: limit,
+            projectId: projectId,
+            lastSyncedTime: lastSyncedTime,
+            totalCount: totalCount,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> locality = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> offset = const Value.absent(),
+            Value<int?> limit = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<int?> lastSyncedTime = const Value.absent(),
+            Value<int?> totalCount = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              DownsyncCriteriaCompanion.insert(
+            locality: locality,
+            tenantId: tenantId,
+            offset: offset,
+            limit: limit,
+            projectId: projectId,
+            lastSyncedTime: lastSyncedTime,
+            totalCount: totalCount,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$DownsyncCriteriaTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$LocalSqlDataStore,
+        $DownsyncCriteriaTable,
+        DownsyncCriteriaData,
+        $$DownsyncCriteriaTableFilterComposer,
+        $$DownsyncCriteriaTableOrderingComposer,
+        $$DownsyncCriteriaTableProcessedTableManager,
+        $$DownsyncCriteriaTableInsertCompanionBuilder,
+        $$DownsyncCriteriaTableUpdateCompanionBuilder> {
+  $$DownsyncCriteriaTableProcessedTableManager(super.$state);
+}
+
+class $$DownsyncCriteriaTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $DownsyncCriteriaTable> {
+  $$DownsyncCriteriaTableFilterComposer(super.$state);
+  ColumnFilters<String> get locality => $state.composableBuilder(
+      column: $state.table.locality,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get offset => $state.composableBuilder(
+      column: $state.table.offset,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get limit => $state.composableBuilder(
+      column: $state.table.limit,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get lastSyncedTime => $state.composableBuilder(
+      column: $state.table.lastSyncedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get totalCount => $state.composableBuilder(
+      column: $state.table.totalCount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$DownsyncCriteriaTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $DownsyncCriteriaTable> {
+  $$DownsyncCriteriaTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get locality => $state.composableBuilder(
+      column: $state.table.locality,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get offset => $state.composableBuilder(
+      column: $state.table.offset,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get limit => $state.composableBuilder(
+      column: $state.table.limit,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get lastSyncedTime => $state.composableBuilder(
+      column: $state.table.lastSyncedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get totalCount => $state.composableBuilder(
+      column: $state.table.totalCount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$HFReferralTableInsertCompanionBuilder = HFReferralCompanion Function({
+  Value<String?> id,
+  Value<String?> tenantId,
+  Value<String?> name,
+  Value<String?> projectId,
+  Value<String?> projectFacilityId,
+  Value<String?> symptomSurveyId,
+  Value<String?> beneficiaryId,
+  Value<String?> referralCode,
+  Value<String?> nationalLevelId,
+  Value<String?> symptom,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$HFReferralTableUpdateCompanionBuilder = HFReferralCompanion Function({
+  Value<String?> id,
+  Value<String?> tenantId,
+  Value<String?> name,
+  Value<String?> projectId,
+  Value<String?> projectFacilityId,
+  Value<String?> symptomSurveyId,
+  Value<String?> beneficiaryId,
+  Value<String?> referralCode,
+  Value<String?> nationalLevelId,
+  Value<String?> symptom,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$HFReferralTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $HFReferralTable,
+    HFReferralData,
+    $$HFReferralTableFilterComposer,
+    $$HFReferralTableOrderingComposer,
+    $$HFReferralTableProcessedTableManager,
+    $$HFReferralTableInsertCompanionBuilder,
+    $$HFReferralTableUpdateCompanionBuilder> {
+  $$HFReferralTableTableManager(_$LocalSqlDataStore db, $HFReferralTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$HFReferralTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$HFReferralTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$HFReferralTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> projectFacilityId = const Value.absent(),
+            Value<String?> symptomSurveyId = const Value.absent(),
+            Value<String?> beneficiaryId = const Value.absent(),
+            Value<String?> referralCode = const Value.absent(),
+            Value<String?> nationalLevelId = const Value.absent(),
+            Value<String?> symptom = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HFReferralCompanion(
+            id: id,
+            tenantId: tenantId,
+            name: name,
+            projectId: projectId,
+            projectFacilityId: projectFacilityId,
+            symptomSurveyId: symptomSurveyId,
+            beneficiaryId: beneficiaryId,
+            referralCode: referralCode,
+            nationalLevelId: nationalLevelId,
+            symptom: symptom,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> projectFacilityId = const Value.absent(),
+            Value<String?> symptomSurveyId = const Value.absent(),
+            Value<String?> beneficiaryId = const Value.absent(),
+            Value<String?> referralCode = const Value.absent(),
+            Value<String?> nationalLevelId = const Value.absent(),
+            Value<String?> symptom = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HFReferralCompanion.insert(
+            id: id,
+            tenantId: tenantId,
+            name: name,
+            projectId: projectId,
+            projectFacilityId: projectFacilityId,
+            symptomSurveyId: symptomSurveyId,
+            beneficiaryId: beneficiaryId,
+            referralCode: referralCode,
+            nationalLevelId: nationalLevelId,
+            symptom: symptom,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$HFReferralTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $HFReferralTable,
+    HFReferralData,
+    $$HFReferralTableFilterComposer,
+    $$HFReferralTableOrderingComposer,
+    $$HFReferralTableProcessedTableManager,
+    $$HFReferralTableInsertCompanionBuilder,
+    $$HFReferralTableUpdateCompanionBuilder> {
+  $$HFReferralTableProcessedTableManager(super.$state);
+}
+
+class $$HFReferralTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $HFReferralTable> {
+  $$HFReferralTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectFacilityId => $state.composableBuilder(
+      column: $state.table.projectFacilityId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get symptomSurveyId => $state.composableBuilder(
+      column: $state.table.symptomSurveyId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get beneficiaryId => $state.composableBuilder(
+      column: $state.table.beneficiaryId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get referralCode => $state.composableBuilder(
+      column: $state.table.referralCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get nationalLevelId => $state.composableBuilder(
+      column: $state.table.nationalLevelId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get symptom => $state.composableBuilder(
+      column: $state.table.symptom,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$HFReferralTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $HFReferralTable> {
+  $$HFReferralTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectFacilityId => $state.composableBuilder(
+      column: $state.table.projectFacilityId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get symptomSurveyId => $state.composableBuilder(
+      column: $state.table.symptomSurveyId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get beneficiaryId => $state.composableBuilder(
+      column: $state.table.beneficiaryId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get referralCode => $state.composableBuilder(
+      column: $state.table.referralCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get nationalLevelId => $state.composableBuilder(
+      column: $state.table.nationalLevelId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get symptom => $state.composableBuilder(
+      column: $state.table.symptom,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$HouseholdTableInsertCompanionBuilder = HouseholdCompanion Function({
+  Value<String?> id,
+  Value<int?> memberCount,
+  Value<double?> latitude,
+  Value<double?> longitude,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$HouseholdTableUpdateCompanionBuilder = HouseholdCompanion Function({
+  Value<String?> id,
+  Value<int?> memberCount,
+  Value<double?> latitude,
+  Value<double?> longitude,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$HouseholdTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $HouseholdTable,
+    HouseholdData,
+    $$HouseholdTableFilterComposer,
+    $$HouseholdTableOrderingComposer,
+    $$HouseholdTableProcessedTableManager,
+    $$HouseholdTableInsertCompanionBuilder,
+    $$HouseholdTableUpdateCompanionBuilder> {
+  $$HouseholdTableTableManager(_$LocalSqlDataStore db, $HouseholdTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$HouseholdTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$HouseholdTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$HouseholdTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<int?> memberCount = const Value.absent(),
+            Value<double?> latitude = const Value.absent(),
+            Value<double?> longitude = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HouseholdCompanion(
+            id: id,
+            memberCount: memberCount,
+            latitude: latitude,
+            longitude: longitude,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<int?> memberCount = const Value.absent(),
+            Value<double?> latitude = const Value.absent(),
+            Value<double?> longitude = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HouseholdCompanion.insert(
+            id: id,
+            memberCount: memberCount,
+            latitude: latitude,
+            longitude: longitude,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$HouseholdTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $HouseholdTable,
+    HouseholdData,
+    $$HouseholdTableFilterComposer,
+    $$HouseholdTableOrderingComposer,
+    $$HouseholdTableProcessedTableManager,
+    $$HouseholdTableInsertCompanionBuilder,
+    $$HouseholdTableUpdateCompanionBuilder> {
+  $$HouseholdTableProcessedTableManager(super.$state);
+}
+
+class $$HouseholdTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $HouseholdTable> {
+  $$HouseholdTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get memberCount => $state.composableBuilder(
+      column: $state.table.memberCount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$HouseholdTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $HouseholdTable> {
+  $$HouseholdTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get memberCount => $state.composableBuilder(
+      column: $state.table.memberCount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$HouseholdMemberTableInsertCompanionBuilder = HouseholdMemberCompanion
+    Function({
+  Value<String?> id,
+  Value<String?> householdId,
+  Value<String?> householdClientReferenceId,
+  Value<String?> individualId,
+  Value<String?> individualClientReferenceId,
+  required bool isHeadOfHousehold,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$HouseholdMemberTableUpdateCompanionBuilder = HouseholdMemberCompanion
+    Function({
+  Value<String?> id,
+  Value<String?> householdId,
+  Value<String?> householdClientReferenceId,
+  Value<String?> individualId,
+  Value<String?> individualClientReferenceId,
+  Value<bool> isHeadOfHousehold,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$HouseholdMemberTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $HouseholdMemberTable,
+    HouseholdMemberData,
+    $$HouseholdMemberTableFilterComposer,
+    $$HouseholdMemberTableOrderingComposer,
+    $$HouseholdMemberTableProcessedTableManager,
+    $$HouseholdMemberTableInsertCompanionBuilder,
+    $$HouseholdMemberTableUpdateCompanionBuilder> {
+  $$HouseholdMemberTableTableManager(
+      _$LocalSqlDataStore db, $HouseholdMemberTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$HouseholdMemberTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$HouseholdMemberTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$HouseholdMemberTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> householdId = const Value.absent(),
+            Value<String?> householdClientReferenceId = const Value.absent(),
+            Value<String?> individualId = const Value.absent(),
+            Value<String?> individualClientReferenceId = const Value.absent(),
+            Value<bool> isHeadOfHousehold = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HouseholdMemberCompanion(
+            id: id,
+            householdId: householdId,
+            householdClientReferenceId: householdClientReferenceId,
+            individualId: individualId,
+            individualClientReferenceId: individualClientReferenceId,
+            isHeadOfHousehold: isHeadOfHousehold,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> householdId = const Value.absent(),
+            Value<String?> householdClientReferenceId = const Value.absent(),
+            Value<String?> individualId = const Value.absent(),
+            Value<String?> individualClientReferenceId = const Value.absent(),
+            required bool isHeadOfHousehold,
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HouseholdMemberCompanion.insert(
+            id: id,
+            householdId: householdId,
+            householdClientReferenceId: householdClientReferenceId,
+            individualId: individualId,
+            individualClientReferenceId: individualClientReferenceId,
+            isHeadOfHousehold: isHeadOfHousehold,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$HouseholdMemberTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $HouseholdMemberTable,
+    HouseholdMemberData,
+    $$HouseholdMemberTableFilterComposer,
+    $$HouseholdMemberTableOrderingComposer,
+    $$HouseholdMemberTableProcessedTableManager,
+    $$HouseholdMemberTableInsertCompanionBuilder,
+    $$HouseholdMemberTableUpdateCompanionBuilder> {
+  $$HouseholdMemberTableProcessedTableManager(super.$state);
+}
+
+class $$HouseholdMemberTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $HouseholdMemberTable> {
+  $$HouseholdMemberTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get householdId => $state.composableBuilder(
+      column: $state.table.householdId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get householdClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.householdClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualClientReferenceId => $state
+      .composableBuilder(
+          column: $state.table.individualClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isHeadOfHousehold => $state.composableBuilder(
+      column: $state.table.isHeadOfHousehold,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$HouseholdMemberTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $HouseholdMemberTable> {
+  $$HouseholdMemberTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get householdId => $state.composableBuilder(
+      column: $state.table.householdId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get householdClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.householdClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.individualClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isHeadOfHousehold => $state.composableBuilder(
+      column: $state.table.isHeadOfHousehold,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$TaskTableInsertCompanionBuilder = TaskCompanion Function({
+  Value<String?> id,
+  Value<String?> projectId,
+  Value<String?> projectBeneficiaryId,
+  Value<String?> projectBeneficiaryClientReferenceId,
+  Value<String?> createdBy,
+  Value<String?> status,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int?> plannedStartDate,
+  Value<int?> plannedEndDate,
+  Value<int?> actualStartDate,
+  Value<int?> actualEndDate,
+  Value<int?> createdDate,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$TaskTableUpdateCompanionBuilder = TaskCompanion Function({
+  Value<String?> id,
+  Value<String?> projectId,
+  Value<String?> projectBeneficiaryId,
+  Value<String?> projectBeneficiaryClientReferenceId,
+  Value<String?> createdBy,
+  Value<String?> status,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<int?> plannedStartDate,
+  Value<int?> plannedEndDate,
+  Value<int?> actualStartDate,
+  Value<int?> actualEndDate,
+  Value<int?> createdDate,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$TaskTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $TaskTable,
+    TaskData,
+    $$TaskTableFilterComposer,
+    $$TaskTableOrderingComposer,
+    $$TaskTableProcessedTableManager,
+    $$TaskTableInsertCompanionBuilder,
+    $$TaskTableUpdateCompanionBuilder> {
+  $$TaskTableTableManager(_$LocalSqlDataStore db, $TaskTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$TaskTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$TaskTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$TaskTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> projectBeneficiaryId = const Value.absent(),
+            Value<String?> projectBeneficiaryClientReferenceId =
+                const Value.absent(),
+            Value<String?> createdBy = const Value.absent(),
+            Value<String?> status = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int?> plannedStartDate = const Value.absent(),
+            Value<int?> plannedEndDate = const Value.absent(),
+            Value<int?> actualStartDate = const Value.absent(),
+            Value<int?> actualEndDate = const Value.absent(),
+            Value<int?> createdDate = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TaskCompanion(
+            id: id,
+            projectId: projectId,
+            projectBeneficiaryId: projectBeneficiaryId,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
+            createdBy: createdBy,
+            status: status,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            plannedStartDate: plannedStartDate,
+            plannedEndDate: plannedEndDate,
+            actualStartDate: actualStartDate,
+            actualEndDate: actualEndDate,
+            createdDate: createdDate,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> projectBeneficiaryId = const Value.absent(),
+            Value<String?> projectBeneficiaryClientReferenceId =
+                const Value.absent(),
+            Value<String?> createdBy = const Value.absent(),
+            Value<String?> status = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<int?> plannedStartDate = const Value.absent(),
+            Value<int?> plannedEndDate = const Value.absent(),
+            Value<int?> actualStartDate = const Value.absent(),
+            Value<int?> actualEndDate = const Value.absent(),
+            Value<int?> createdDate = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TaskCompanion.insert(
+            id: id,
+            projectId: projectId,
+            projectBeneficiaryId: projectBeneficiaryId,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
+            createdBy: createdBy,
+            status: status,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            plannedStartDate: plannedStartDate,
+            plannedEndDate: plannedEndDate,
+            actualStartDate: actualStartDate,
+            actualEndDate: actualEndDate,
+            createdDate: createdDate,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$TaskTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $TaskTable,
+    TaskData,
+    $$TaskTableFilterComposer,
+    $$TaskTableOrderingComposer,
+    $$TaskTableProcessedTableManager,
+    $$TaskTableInsertCompanionBuilder,
+    $$TaskTableUpdateCompanionBuilder> {
+  $$TaskTableProcessedTableManager(super.$state);
+}
+
+class $$TaskTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $TaskTable> {
+  $$TaskTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectBeneficiaryId => $state.composableBuilder(
+      column: $state.table.projectBeneficiaryId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectBeneficiaryClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.projectBeneficiaryClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get createdBy => $state.composableBuilder(
+      column: $state.table.createdBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get plannedStartDate => $state.composableBuilder(
+      column: $state.table.plannedStartDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get plannedEndDate => $state.composableBuilder(
+      column: $state.table.plannedEndDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get actualStartDate => $state.composableBuilder(
+      column: $state.table.actualStartDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get actualEndDate => $state.composableBuilder(
+      column: $state.table.actualEndDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get createdDate => $state.composableBuilder(
+      column: $state.table.createdDate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$TaskTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $TaskTable> {
+  $$TaskTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectBeneficiaryId => $state.composableBuilder(
+      column: $state.table.projectBeneficiaryId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectBeneficiaryClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.projectBeneficiaryClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get createdBy => $state.composableBuilder(
+      column: $state.table.createdBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get plannedStartDate => $state.composableBuilder(
+      column: $state.table.plannedStartDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get plannedEndDate => $state.composableBuilder(
+      column: $state.table.plannedEndDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get actualStartDate => $state.composableBuilder(
+      column: $state.table.actualStartDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get actualEndDate => $state.composableBuilder(
+      column: $state.table.actualEndDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get createdDate => $state.composableBuilder(
+      column: $state.table.createdDate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$TaskResourceTableInsertCompanionBuilder = TaskResourceCompanion
+    Function({
+  required String clientReferenceId,
+  Value<String?> taskclientReferenceId,
+  Value<String?> taskId,
+  Value<String?> id,
+  Value<String?> productVariantId,
+  Value<String?> quantity,
+  Value<bool?> isDelivered,
+  Value<String?> deliveryComment,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$TaskResourceTableUpdateCompanionBuilder = TaskResourceCompanion
+    Function({
+  Value<String> clientReferenceId,
+  Value<String?> taskclientReferenceId,
+  Value<String?> taskId,
+  Value<String?> id,
+  Value<String?> productVariantId,
+  Value<String?> quantity,
+  Value<bool?> isDelivered,
+  Value<String?> deliveryComment,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$TaskResourceTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $TaskResourceTable,
+    TaskResourceData,
+    $$TaskResourceTableFilterComposer,
+    $$TaskResourceTableOrderingComposer,
+    $$TaskResourceTableProcessedTableManager,
+    $$TaskResourceTableInsertCompanionBuilder,
+    $$TaskResourceTableUpdateCompanionBuilder> {
+  $$TaskResourceTableTableManager(
+      _$LocalSqlDataStore db, $TaskResourceTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$TaskResourceTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$TaskResourceTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$TaskResourceTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> taskclientReferenceId = const Value.absent(),
+            Value<String?> taskId = const Value.absent(),
+            Value<String?> id = const Value.absent(),
+            Value<String?> productVariantId = const Value.absent(),
+            Value<String?> quantity = const Value.absent(),
+            Value<bool?> isDelivered = const Value.absent(),
+            Value<String?> deliveryComment = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TaskResourceCompanion(
+            clientReferenceId: clientReferenceId,
+            taskclientReferenceId: taskclientReferenceId,
+            taskId: taskId,
+            id: id,
+            productVariantId: productVariantId,
+            quantity: quantity,
+            isDelivered: isDelivered,
+            deliveryComment: deliveryComment,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String clientReferenceId,
+            Value<String?> taskclientReferenceId = const Value.absent(),
+            Value<String?> taskId = const Value.absent(),
+            Value<String?> id = const Value.absent(),
+            Value<String?> productVariantId = const Value.absent(),
+            Value<String?> quantity = const Value.absent(),
+            Value<bool?> isDelivered = const Value.absent(),
+            Value<String?> deliveryComment = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TaskResourceCompanion.insert(
+            clientReferenceId: clientReferenceId,
+            taskclientReferenceId: taskclientReferenceId,
+            taskId: taskId,
+            id: id,
+            productVariantId: productVariantId,
+            quantity: quantity,
+            isDelivered: isDelivered,
+            deliveryComment: deliveryComment,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$TaskResourceTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $TaskResourceTable,
+    TaskResourceData,
+    $$TaskResourceTableFilterComposer,
+    $$TaskResourceTableOrderingComposer,
+    $$TaskResourceTableProcessedTableManager,
+    $$TaskResourceTableInsertCompanionBuilder,
+    $$TaskResourceTableUpdateCompanionBuilder> {
+  $$TaskResourceTableProcessedTableManager(super.$state);
+}
+
+class $$TaskResourceTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $TaskResourceTable> {
+  $$TaskResourceTableFilterComposer(super.$state);
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get taskclientReferenceId => $state.composableBuilder(
+      column: $state.table.taskclientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get taskId => $state.composableBuilder(
+      column: $state.table.taskId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get productVariantId => $state.composableBuilder(
+      column: $state.table.productVariantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get quantity => $state.composableBuilder(
+      column: $state.table.quantity,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDelivered => $state.composableBuilder(
+      column: $state.table.isDelivered,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get deliveryComment => $state.composableBuilder(
+      column: $state.table.deliveryComment,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$TaskResourceTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $TaskResourceTable> {
+  $$TaskResourceTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get taskclientReferenceId => $state.composableBuilder(
+      column: $state.table.taskclientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get taskId => $state.composableBuilder(
+      column: $state.table.taskId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get productVariantId => $state.composableBuilder(
+      column: $state.table.productVariantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get quantity => $state.composableBuilder(
+      column: $state.table.quantity,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDelivered => $state.composableBuilder(
+      column: $state.table.isDelivered,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get deliveryComment => $state.composableBuilder(
+      column: $state.table.deliveryComment,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$SideEffectTableInsertCompanionBuilder = SideEffectCompanion Function({
+  Value<String?> id,
+  Value<String?> projectId,
+  Value<String?> taskClientReferenceId,
+  Value<String?> projectBeneficiaryClientReferenceId,
+  Value<int?> reAttempts,
+  Value<String?> symptoms,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$SideEffectTableUpdateCompanionBuilder = SideEffectCompanion Function({
+  Value<String?> id,
+  Value<String?> projectId,
+  Value<String?> taskClientReferenceId,
+  Value<String?> projectBeneficiaryClientReferenceId,
+  Value<int?> reAttempts,
+  Value<String?> symptoms,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$SideEffectTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $SideEffectTable,
+    SideEffectData,
+    $$SideEffectTableFilterComposer,
+    $$SideEffectTableOrderingComposer,
+    $$SideEffectTableProcessedTableManager,
+    $$SideEffectTableInsertCompanionBuilder,
+    $$SideEffectTableUpdateCompanionBuilder> {
+  $$SideEffectTableTableManager(_$LocalSqlDataStore db, $SideEffectTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$SideEffectTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$SideEffectTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$SideEffectTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> taskClientReferenceId = const Value.absent(),
+            Value<String?> projectBeneficiaryClientReferenceId =
+                const Value.absent(),
+            Value<int?> reAttempts = const Value.absent(),
+            Value<String?> symptoms = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SideEffectCompanion(
+            id: id,
+            projectId: projectId,
+            taskClientReferenceId: taskClientReferenceId,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
+            reAttempts: reAttempts,
+            symptoms: symptoms,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> taskClientReferenceId = const Value.absent(),
+            Value<String?> projectBeneficiaryClientReferenceId =
+                const Value.absent(),
+            Value<int?> reAttempts = const Value.absent(),
+            Value<String?> symptoms = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SideEffectCompanion.insert(
+            id: id,
+            projectId: projectId,
+            taskClientReferenceId: taskClientReferenceId,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
+            reAttempts: reAttempts,
+            symptoms: symptoms,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$SideEffectTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $SideEffectTable,
+    SideEffectData,
+    $$SideEffectTableFilterComposer,
+    $$SideEffectTableOrderingComposer,
+    $$SideEffectTableProcessedTableManager,
+    $$SideEffectTableInsertCompanionBuilder,
+    $$SideEffectTableUpdateCompanionBuilder> {
+  $$SideEffectTableProcessedTableManager(super.$state);
+}
+
+class $$SideEffectTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $SideEffectTable> {
+  $$SideEffectTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get taskClientReferenceId => $state.composableBuilder(
+      column: $state.table.taskClientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectBeneficiaryClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.projectBeneficiaryClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get reAttempts => $state.composableBuilder(
+      column: $state.table.reAttempts,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get symptoms => $state.composableBuilder(
+      column: $state.table.symptoms,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$SideEffectTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $SideEffectTable> {
+  $$SideEffectTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get taskClientReferenceId => $state.composableBuilder(
+      column: $state.table.taskClientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectBeneficiaryClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.projectBeneficiaryClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get reAttempts => $state.composableBuilder(
+      column: $state.table.reAttempts,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get symptoms => $state.composableBuilder(
+      column: $state.table.symptoms,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$ReferralTableInsertCompanionBuilder = ReferralCompanion Function({
+  Value<String?> id,
+  Value<String?> projectId,
+  Value<String?> projectBeneficiaryClientReferenceId,
+  Value<String?> referrerId,
+  Value<String?> recipientType,
+  Value<String?> recipientId,
+  Value<String?> reasons,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  required String clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$ReferralTableUpdateCompanionBuilder = ReferralCompanion Function({
+  Value<String?> id,
+  Value<String?> projectId,
+  Value<String?> projectBeneficiaryClientReferenceId,
+  Value<String?> referrerId,
+  Value<String?> recipientType,
+  Value<String?> recipientId,
+  Value<String?> reasons,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
+  Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$ReferralTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $ReferralTable,
+    ReferralData,
+    $$ReferralTableFilterComposer,
+    $$ReferralTableOrderingComposer,
+    $$ReferralTableProcessedTableManager,
+    $$ReferralTableInsertCompanionBuilder,
+    $$ReferralTableUpdateCompanionBuilder> {
+  $$ReferralTableTableManager(_$LocalSqlDataStore db, $ReferralTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ReferralTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ReferralTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ReferralTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> projectBeneficiaryClientReferenceId =
+                const Value.absent(),
+            Value<String?> referrerId = const Value.absent(),
+            Value<String?> recipientType = const Value.absent(),
+            Value<String?> recipientId = const Value.absent(),
+            Value<String?> reasons = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ReferralCompanion(
+            id: id,
+            projectId: projectId,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
+            referrerId: referrerId,
+            recipientType: recipientType,
+            recipientId: recipientId,
+            reasons: reasons,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> projectId = const Value.absent(),
+            Value<String?> projectBeneficiaryClientReferenceId =
+                const Value.absent(),
+            Value<String?> referrerId = const Value.absent(),
+            Value<String?> recipientType = const Value.absent(),
+            Value<String?> recipientId = const Value.absent(),
+            Value<String?> reasons = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ReferralCompanion.insert(
+            id: id,
+            projectId: projectId,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
+            referrerId: referrerId,
+            recipientType: recipientType,
+            recipientId: recipientId,
+            reasons: reasons,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
+            isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$ReferralTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $ReferralTable,
+    ReferralData,
+    $$ReferralTableFilterComposer,
+    $$ReferralTableOrderingComposer,
+    $$ReferralTableProcessedTableManager,
+    $$ReferralTableInsertCompanionBuilder,
+    $$ReferralTableUpdateCompanionBuilder> {
+  $$ReferralTableProcessedTableManager(super.$state);
+}
+
+class $$ReferralTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $ReferralTable> {
+  $$ReferralTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectBeneficiaryClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.projectBeneficiaryClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get referrerId => $state.composableBuilder(
+      column: $state.table.referrerId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get recipientType => $state.composableBuilder(
+      column: $state.table.recipientType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get recipientId => $state.composableBuilder(
+      column: $state.table.recipientId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get reasons => $state.composableBuilder(
+      column: $state.table.reasons,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ReferralTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $ReferralTable> {
+  $$ReferralTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectBeneficiaryClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.projectBeneficiaryClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get referrerId => $state.composableBuilder(
+      column: $state.table.referrerId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get recipientType => $state.composableBuilder(
+      column: $state.table.recipientType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get recipientId => $state.composableBuilder(
+      column: $state.table.recipientId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get reasons => $state.composableBuilder(
+      column: $state.table.reasons,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$LocalizationTableInsertCompanionBuilder = LocalizationCompanion
+    Function({
+  required String locale,
+  required String code,
+  required String message,
+  required String module,
+  Value<int> rowid,
+});
+typedef $$LocalizationTableUpdateCompanionBuilder = LocalizationCompanion
+    Function({
+  Value<String> locale,
+  Value<String> code,
+  Value<String> message,
+  Value<String> module,
+  Value<int> rowid,
+});
+
+class $$LocalizationTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $LocalizationTable,
+    LocalizationData,
+    $$LocalizationTableFilterComposer,
+    $$LocalizationTableOrderingComposer,
+    $$LocalizationTableProcessedTableManager,
+    $$LocalizationTableInsertCompanionBuilder,
+    $$LocalizationTableUpdateCompanionBuilder> {
+  $$LocalizationTableTableManager(
+      _$LocalSqlDataStore db, $LocalizationTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$LocalizationTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$LocalizationTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$LocalizationTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> locale = const Value.absent(),
+            Value<String> code = const Value.absent(),
+            Value<String> message = const Value.absent(),
+            Value<String> module = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              LocalizationCompanion(
+            locale: locale,
+            code: code,
+            message: message,
+            module: module,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String locale,
+            required String code,
+            required String message,
+            required String module,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              LocalizationCompanion.insert(
+            locale: locale,
+            code: code,
+            message: message,
+            module: module,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$LocalizationTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $LocalizationTable,
+    LocalizationData,
+    $$LocalizationTableFilterComposer,
+    $$LocalizationTableOrderingComposer,
+    $$LocalizationTableProcessedTableManager,
+    $$LocalizationTableInsertCompanionBuilder,
+    $$LocalizationTableUpdateCompanionBuilder> {
+  $$LocalizationTableProcessedTableManager(super.$state);
+}
+
+class $$LocalizationTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $LocalizationTable> {
+  $$LocalizationTableFilterComposer(super.$state);
+  ColumnFilters<String> get locale => $state.composableBuilder(
+      column: $state.table.locale,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get message => $state.composableBuilder(
+      column: $state.table.message,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get module => $state.composableBuilder(
+      column: $state.table.module,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$LocalizationTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $LocalizationTable> {
+  $$LocalizationTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get locale => $state.composableBuilder(
+      column: $state.table.locale,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get code => $state.composableBuilder(
+      column: $state.table.code,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get message => $state.composableBuilder(
+      column: $state.table.message,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get module => $state.composableBuilder(
+      column: $state.table.module,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+class _$LocalSqlDataStoreManager {
+  final _$LocalSqlDataStore _db;
+  _$LocalSqlDataStoreManager(this._db);
+  $$AttendanceRegisterTableTableManager get attendanceRegister =>
+      $$AttendanceRegisterTableTableManager(_db, _db.attendanceRegister);
+  $$AttendanceTableTableManager get attendance =>
+      $$AttendanceTableTableManager(_db, _db.attendance);
+  $$AttendeeTableTableManager get attendee =>
+      $$AttendeeTableTableManager(_db, _db.attendee);
+  $$AddressTableTableManager get address =>
+      $$AddressTableTableManager(_db, _db.address);
+  $$NameTableTableManager get name => $$NameTableTableManager(_db, _db.name);
+  $$BoundaryTableTableManager get boundary =>
+      $$BoundaryTableTableManager(_db, _db.boundary);
+  $$DocumentTableTableManager get document =>
+      $$DocumentTableTableManager(_db, _db.document);
+  $$FacilityTableTableManager get facility =>
+      $$FacilityTableTableManager(_db, _db.facility);
+  $$ProductTableTableManager get product =>
+      $$ProductTableTableManager(_db, _db.product);
+  $$ProductVariantTableTableManager get productVariant =>
+      $$ProductVariantTableTableManager(_db, _db.productVariant);
+  $$ProjectTableTableManager get project =>
+      $$ProjectTableTableManager(_db, _db.project);
+  $$ProjectBeneficiaryTableTableManager get projectBeneficiary =>
+      $$ProjectBeneficiaryTableTableManager(_db, _db.projectBeneficiary);
+  $$ProjectFacilityTableTableManager get projectFacility =>
+      $$ProjectFacilityTableTableManager(_db, _db.projectFacility);
+  $$ProjectProductVariantTableTableManager get projectProductVariant =>
+      $$ProjectProductVariantTableTableManager(_db, _db.projectProductVariant);
+  $$ProjectResourceTableTableManager get projectResource =>
+      $$ProjectResourceTableTableManager(_db, _db.projectResource);
+  $$ProjectStaffTableTableManager get projectStaff =>
+      $$ProjectStaffTableTableManager(_db, _db.projectStaff);
+  $$ProjectTypeTableTableManager get projectType =>
+      $$ProjectTypeTableTableManager(_db, _db.projectType);
+  $$IndividualTableTableManager get individual =>
+      $$IndividualTableTableManager(_db, _db.individual);
+  $$IdentifierTableTableManager get identifier =>
+      $$IdentifierTableTableManager(_db, _db.identifier);
+  $$StockTableTableManager get stock =>
+      $$StockTableTableManager(_db, _db.stock);
+  $$StockReconciliationTableTableManager get stockReconciliation =>
+      $$StockReconciliationTableTableManager(_db, _db.stockReconciliation);
+  $$TargetTableTableManager get target =>
+      $$TargetTableTableManager(_db, _db.target);
+  $$ServiceTableTableManager get service =>
+      $$ServiceTableTableManager(_db, _db.service);
+  $$ServiceAttributesTableTableManager get serviceAttributes =>
+      $$ServiceAttributesTableTableManager(_db, _db.serviceAttributes);
+  $$ServiceDefinitionTableTableManager get serviceDefinition =>
+      $$ServiceDefinitionTableTableManager(_db, _db.serviceDefinition);
+  $$LocalityTableTableManager get locality =>
+      $$LocalityTableTableManager(_db, _db.locality);
+  $$StaffTableTableManager get staff =>
+      $$StaffTableTableManager(_db, _db.staff);
+  $$AttributesTableTableManager get attributes =>
+      $$AttributesTableTableManager(_db, _db.attributes);
+  $$PgrServiceTableTableManager get pgrService =>
+      $$PgrServiceTableTableManager(_db, _db.pgrService);
+  $$PgrComplainantTableTableManager get pgrComplainant =>
+      $$PgrComplainantTableTableManager(_db, _db.pgrComplainant);
+  $$UserTableTableManager get user => $$UserTableTableManager(_db, _db.user);
+  $$DownsyncTableTableManager get downsync =>
+      $$DownsyncTableTableManager(_db, _db.downsync);
+  $$DownsyncCriteriaTableTableManager get downsyncCriteria =>
+      $$DownsyncCriteriaTableTableManager(_db, _db.downsyncCriteria);
+  $$HFReferralTableTableManager get hFReferral =>
+      $$HFReferralTableTableManager(_db, _db.hFReferral);
+  $$HouseholdTableTableManager get household =>
+      $$HouseholdTableTableManager(_db, _db.household);
+  $$HouseholdMemberTableTableManager get householdMember =>
+      $$HouseholdMemberTableTableManager(_db, _db.householdMember);
+  $$TaskTableTableManager get task => $$TaskTableTableManager(_db, _db.task);
+  $$TaskResourceTableTableManager get taskResource =>
+      $$TaskResourceTableTableManager(_db, _db.taskResource);
+  $$SideEffectTableTableManager get sideEffect =>
+      $$SideEffectTableTableManager(_db, _db.sideEffect);
+  $$ReferralTableTableManager get referral =>
+      $$ReferralTableTableManager(_db, _db.referral);
+  $$LocalizationTableTableManager get localization =>
+      $$LocalizationTableTableManager(_db, _db.localization);
 }

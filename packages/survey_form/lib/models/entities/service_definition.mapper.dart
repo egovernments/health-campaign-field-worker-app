@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'service_definition.dart';
@@ -116,10 +116,8 @@ mixin ServiceDefinitionSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ServiceDefinitionSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as ServiceDefinitionSearchModel, other));
+    return ServiceDefinitionSearchModelMapper.ensureInitialized()
+        .equalsValue(this as ServiceDefinitionSearchModel, other);
   }
 
   @override
@@ -331,10 +329,8 @@ mixin ServiceDefinitionModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ServiceDefinitionModelMapper.ensureInitialized()
-                .isValueEqual(this as ServiceDefinitionModel, other));
+    return ServiceDefinitionModelMapper.ensureInitialized()
+        .equalsValue(this as ServiceDefinitionModel, other);
   }
 
   @override
@@ -553,11 +549,8 @@ mixin ServiceDefinitionAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ServiceDefinitionAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(
-                    this as ServiceDefinitionAdditionalFields, other));
+    return ServiceDefinitionAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as ServiceDefinitionAdditionalFields, other);
   }
 
   @override

@@ -19,7 +19,7 @@ class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
   final VoidCallback? secondaryAction;
   final String? secondaryLabel;
 
-  AttendanceAcknowledgementPage({
+  const AttendanceAcknowledgementPage({
     super.key,
     super.appLocalizations,
     required this.label,
@@ -60,22 +60,20 @@ class _AttendanceAcknowledgementPageState
                   i18.acknowledgementSuccess.acknowledgementDescriptionText,
                 ),
             actions: [
-              Button(
+              DigitButton(
                 label: widget.actionLabel ?? '',
-                onPressed: widget.action ?? (){},
-                type: ButtonType.primary,
-                size: ButtonSize.large,
+                onPressed: widget.action ?? () {},
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large,
                 mainAxisSize: MainAxisSize.max,
               ),
-              Button(
-                type: ButtonType.secondary,
-                size: ButtonSize.large,
+              DigitButton(
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large,
                 label: widget.secondaryLabel ?? '',
-                onPressed: widget.secondaryAction ?? (){},
+                onPressed: widget.secondaryAction ?? () {},
               ),
-
-            ]
-        ),
+            ]),
       ],
     ));
   }

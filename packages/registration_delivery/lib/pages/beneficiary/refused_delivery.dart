@@ -38,8 +38,6 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
 
   @override
   void initState() {
-    final registrationState = context.read<HouseholdOverviewBloc>().state;
-
     super.initState();
   }
 
@@ -57,7 +55,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
               BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
                 builder: (context, registrationState) {
                   return ScrollableContent(
-                    enableFixedButton: true,
+                    enableFixedDigitButton: true,
                     header: const Column(
                       children: [
                         BackNavigationHelpHeaderWidget(
@@ -67,197 +65,194 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                       ],
                     ),
                     footer: DigitCard(
-                      margin: const EdgeInsets.only(top: spacer2),
-                      padding:
-                          const EdgeInsets.all(spacer2),
-                      children: [
-                        Button(
-                          label: localizations.translate(
-                            i18.householdLocation.actionLabel,
-                          ),
-                          type: ButtonType.primary,
-                          size: ButtonSize.large,
-                          mainAxisSize: MainAxisSize.max,
-                          onPressed: () {
-                          form.markAllAsTouched();
+                        margin: const EdgeInsets.only(top: spacer2),
+                        padding: const EdgeInsets.all(spacer2),
+                        children: [
+                          DigitButton(
+                            label: localizations.translate(
+                              i18.householdLocation.actionLabel,
+                            ),
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () {
+                              form.markAllAsTouched();
 
-                          if (form.control(_reasonOfRefusal).value == null) {
-                            setState(() {
-                              form
-                                  .control(_reasonOfRefusal)
-                                  .setErrors({'': true});
-                            });
-                          }
+                              if (form.control(_reasonOfRefusal).value ==
+                                  null) {
+                                setState(() {
+                                  form
+                                      .control(_reasonOfRefusal)
+                                      .setErrors({'': true});
+                                });
+                              }
 
-                          if (!form.valid) return;
+                              if (!form.valid) return;
 
-                          final reasonOfRefusal =
-                              form.control(_reasonOfRefusal).value;
+                              final reasonOfRefusal =
+                                  form.control(_reasonOfRefusal).value;
 
-                          final refusalComment =
-                              form.control(_deliveryCommentKey).value;
+                              final refusalComment =
+                                  form.control(_deliveryCommentKey).value;
 
-                          final projectBeneficiary =
-                              RegistrationDeliverySingleton().beneficiaryType !=
-                                      BeneficiaryType.individual
-                                  ? [
-                                      registrationState.householdMemberWrapper
-                                          .projectBeneficiaries?.first
-                                    ]
-                                  : registrationState.householdMemberWrapper
-                                      .projectBeneficiaries
-                                      ?.where(
-                                        (element) =>
-                                            element
-                                                .beneficiaryClientReferenceId ==
-                                            registrationState.selectedIndividual
-                                                ?.clientReferenceId,
-                                      )
-                                      .toList();
+                              final projectBeneficiary =
+                                  RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
+                                          BeneficiaryType.individual
+                                      ? [
+                                          registrationState
+                                              .householdMemberWrapper
+                                              .projectBeneficiaries
+                                              ?.first
+                                        ]
+                                      : registrationState.householdMemberWrapper
+                                          .projectBeneficiaries
+                                          ?.where(
+                                            (element) =>
+                                                element
+                                                    .beneficiaryClientReferenceId ==
+                                                registrationState
+                                                    .selectedIndividual
+                                                    ?.clientReferenceId,
+                                          )
+                                          .toList();
 
-                          // Determine the status based on the reason of refusal
-                          String status;
-                          if (reasonOfRefusal ==
-                              Status.beneficiaryRefused.toValue()) {
-                            status = Status.beneficiaryRefused.toValue();
-                          } else {
-                            status = Status.administeredFailed.toValue();
-                          }
-                          final oldTask =
-                              RegistrationDeliverySingleton().beneficiaryType !=
+                              // Determine the status based on the reason of refusal
+                              String status;
+                              if (reasonOfRefusal ==
+                                  Status.beneficiaryRefused.toValue()) {
+                                status = Status.beneficiaryRefused.toValue();
+                              } else {
+                                status = Status.administeredFailed.toValue();
+                              }
+                              final oldTask = RegistrationDeliverySingleton()
+                                          .beneficiaryType !=
                                       BeneficiaryType.individual
                                   ? registrationState
                                       .householdMemberWrapper.tasks?.last
                                   : null;
 
-                          context.read<DeliverInterventionBloc>().add(
-                                DeliverInterventionSubmitEvent(
-                                  navigateToSummary: true,
-                                  householdMemberWrapper:
-                                      registrationState.householdMemberWrapper,
-                                  task: _getTaskModel(
-                                      oldTask,
-                                      projectBeneficiary
-                                          ?.first?.clientReferenceId,
-                                      status,
-                                      reasonOfRefusal,
-                                      refusalComment,
-                                      registrationState.householdMemberWrapper
-                                          .members?.first.address?.first),
-                                  isEditing: false,
-                                  boundaryModel:
-                                      RegistrationDeliverySingleton().boundary!,
-                                ),
-                              );
-                          context.router.push(DeliverySummaryRoute());
-                        },
-                      ),
-                      ]
-                    ),
+                              context.read<DeliverInterventionBloc>().add(
+                                    DeliverInterventionSubmitEvent(
+                                      navigateToSummary: true,
+                                      householdMemberWrapper: registrationState
+                                          .householdMemberWrapper,
+                                      task: _getTaskModel(
+                                          oldTask,
+                                          projectBeneficiary
+                                              ?.first?.clientReferenceId,
+                                          status,
+                                          reasonOfRefusal,
+                                          refusalComment,
+                                          registrationState
+                                              .householdMemberWrapper
+                                              .members
+                                              ?.first
+                                              .address
+                                              ?.first),
+                                      isEditing: false,
+                                      boundaryModel:
+                                          RegistrationDeliverySingleton()
+                                              .boundary!,
+                                    ),
+                                  );
+                              context.router.push(DeliverySummaryRoute());
+                            },
+                          ),
+                        ]),
                     slivers: [
                       SliverToBoxAdapter(
                         child: DigitCard(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(spacer2),
-                              child: Text(
-                                localizations.translate(
-                                  i18.deliverIntervention
-                                      .refusedDeliveryLabel,
-                                ),
-                                style: textTheme.headingXl,
-                              ),
+                          margin: const EdgeInsets.all(spacer2),
+                            children: [
+                          Text(
+                            localizations.translate(
+                              i18.deliverIntervention.refusedDeliveryLabel,
                             ),
-                            refusedDeliveryShowcaseData.dateOfVisit
-                                .buildWith(
-                              child: ReactiveWrapperField(
-                                formControlName: _dataOfRefusalKey,
-                                builder: (field)=> LabeledField(
-                                  label: localizations.translate(
-                                    i18.deliverIntervention
-                                        .refusedDeliveryVisitDateLabel,
+                            style: textTheme.headingXl,
+                          ),
+                          refusedDeliveryShowcaseData.dateOfVisit.buildWith(
+                            child: ReactiveWrapperField(
+                              formControlName: _dataOfRefusalKey,
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(
+                                  i18.deliverIntervention
+                                      .refusedDeliveryVisitDateLabel,
+                                ),
+                                child: DigitDateFormInput(
+                                  readOnly: true,
+                                  confirmText: localizations.translate(
+                                    i18.common.coreCommonOk,
                                   ),
-                                  child: DigitDateFormInput(
-                                    readOnly: true,
-                                    confirmText: localizations.translate(
-                                      i18.common.coreCommonOk,
-                                    ),
-                                    cancelText: localizations.translate(
-                                      i18.common.coreCommonCancel,
-                                    ),
-                                    initialValue: DateFormat('dd MMM yyyy')
-                                        .format(form.control(_dataOfRefusalKey).value),
+                                  cancelText: localizations.translate(
+                                    i18.common.coreCommonCancel,
                                   ),
+                                  initialValue: DateFormat('dd MMM yyyy')
+                                      .format(form
+                                          .control(_dataOfRefusalKey)
+                                          .value),
                                 ),
                               ),
                             ),
-                            refusedDeliveryShowcaseData.reasonOfRefusal
-                                .buildWith(
-                              child: SelectionCard<String>(
-                                title: localizations.translate(
-                                  i18.deliverIntervention
-                                      .reasonForRefusalLabel,
-                                ),
-                                isRequired: true,
-                                width: MediaQuery.of(context).size.width *
-                                    .36,
-                                allowMultipleSelection: false,
-                                options: RegistrationDeliverySingleton()
-                                        .refusalReasons ??
-                                    [],
-                                onSelectionChanged: (value) {
-                                  form
-                                      .control(_reasonOfRefusal)
-                                      .markAsTouched();
-                                  setState(() {
-                                    if (value.isNotEmpty) {
+                          ),
+                          refusedDeliveryShowcaseData.reasonOfRefusal.buildWith(
+                            child: SelectionCard<String>(
+                              title: localizations.translate(
+                                i18.deliverIntervention.reasonForRefusalLabel,
+                              ),
+                              showParentContainer: true,
+                              isRequired: true,
+                              width: MediaQuery.of(context).size.width * .34,
+                              allowMultipleSelection: false,
+                              options: RegistrationDeliverySingleton()
+                                      .refusalReasons ??
+                                  [],
+                              onSelectionChanged: (value) {
+                                form.control(_reasonOfRefusal).markAsTouched();
+                                setState(() {
+                                  if (value.isNotEmpty) {
+                                    form.control(_reasonOfRefusal).value =
+                                        value.first;
+                                  } else {
+                                    form.control(_reasonOfRefusal).value = null;
+                                    setState(() {
                                       form
                                           .control(_reasonOfRefusal)
-                                          .value = value.first;
-                                    } else {
-                                      form
+                                          .setErrors({'': true});
+                                    });
+                                  }
+                                });
+                              },
+                              valueMapper: (value) {
+                                return localizations
+                                    .translate('REASON_${value.toString()}');
+                              },
+                              errorMessage: form
                                           .control(_reasonOfRefusal)
-                                          .value = null;
-                                      setState(() {
-                                        form
-                                            .control(_reasonOfRefusal)
-                                            .setErrors({'': true});
-                                      });
-                                    }
-                                  });
-                                },
-                                valueMapper: (value) {
-                                  return localizations.translate(
-                                      'REASON_${value.toString()}');
-                                },
-                                errorMessage: form
-                                            .control(_reasonOfRefusal)
-                                            .hasErrors &&
-                                        form
-                                            .control(_reasonOfRefusal)
-                                            .touched
-                                    ? localizations.translate(
-                                        i18.common.corecommonRequired)
-                                    : null,
-                              ),
+                                          .hasErrors &&
+                                      form.control(_reasonOfRefusal).touched
+                                  ? localizations
+                                      .translate(i18.common.corecommonRequired)
+                                  : null,
                             ),
-                            refusedDeliveryShowcaseData.comments.buildWith(
-                              child: ReactiveWrapperField(
-                                formControlName: _deliveryCommentKey,
-                                builder: (field)=> LabeledField(
-                                  label: localizations.translate(i18
-                                      .deliverIntervention
-                                      .reasonForRefusalCommentLabel),
-                                  child: DigitTextFormInput(
-                                    onChange: (value){
-                                      form.control(_deliveryCommentKey).value=value;
-                                    },
-                                  ),
+                          ),
+                          refusedDeliveryShowcaseData.comments.buildWith(
+                            child: ReactiveWrapperField(
+                              formControlName: _deliveryCommentKey,
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(i18
+                                    .deliverIntervention
+                                    .reasonForRefusalCommentLabel),
+                                child: DigitTextFormInput(
+                                  onChange: (value) {
+                                    form.control(_deliveryCommentKey).value =
+                                        value;
+                                  },
                                 ),
                               ),
                             ),
-                          ]
-                        ),
+                          ),
+                        ]),
                       ),
                     ],
                   );

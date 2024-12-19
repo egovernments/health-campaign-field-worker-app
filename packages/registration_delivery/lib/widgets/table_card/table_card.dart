@@ -1,4 +1,5 @@
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 
 class DigitTableCard extends StatelessWidget {
@@ -27,16 +28,15 @@ class DigitTableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LabelValueList(
-        labelFlex: 6,
-        maxLines: 2,
-        items: element.keys
-            .map((e)=>LabelValuePair(
-            label: e,
-            value: element[e].toString(),
-
-        )
-        ).toList(),
+    return LabelValueSummary(
+      padding: EdgeInsets.all(0),
+      items: element.keys
+          .map((e) => LabelValueItem(
+                label: e,
+                value: element[e].toString(),
+        labelFlex: 5,
+              ))
+          .toList(),
     );
   }
 }
