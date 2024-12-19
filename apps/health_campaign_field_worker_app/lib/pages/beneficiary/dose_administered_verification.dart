@@ -1,4 +1,6 @@
+import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
@@ -34,8 +36,12 @@ class DoseAdministeredVerificationPage extends LocalizedStatefulWidget {
 
 class _DoseAdministeredVerificationPageState
     extends LocalizedState<DoseAdministeredVerificationPage> {
-  bool doseAdministered = true;
-  bool formSubmitted = false;
+  List<String> informationBullets = [
+    i18.deliverIntervention.informationBulletOne,
+    i18.deliverIntervention.informationBulletTwo,
+    i18.deliverIntervention.informationBulletThree,
+    i18.deliverIntervention.informationBulletFour,
+  ];
 
   final clickedStatus = ValueNotifier<bool>(false);
 
@@ -107,7 +113,7 @@ class _DoseAdministeredVerificationPageState
                                           ),
                                         );
                                     context.router.popAndPush(
-                                        BeneficiaryAcknowledgementRoute(
+                                        CustomBeneficiaryAcknowledgementRoute(
                                             enableViewHousehold: true));
                                   }
                                 },
@@ -168,6 +174,7 @@ class _DoseAdministeredVerificationPageState
                                 {},
                                 theme,
                               ),
+                              ...getbulletPoints(informationBullets, theme),
                             ],
                           ),
                         ],
@@ -269,6 +276,17 @@ class _DoseAdministeredVerificationPageState
     }
 
     return spans;
+  }
+
+// Info : return information bullet points
+  List<Widget> getbulletPoints(
+      List<String> informationBullets, ThemeData theme) {
+    return informationBullets
+        .map((e) => Padding(
+              padding: const EdgeInsets.fromLTRB(kPadding * 2.5, 0, 0, 0),
+              child: _buildTextRow(localizations.translate(e), {}, theme),
+            ))
+        .toList();
   }
 
   FormGroup buildForm(BuildContext context) {

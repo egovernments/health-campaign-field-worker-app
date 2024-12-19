@@ -56,7 +56,7 @@ class CustomResourceBeneficiaryCardState
                 fetched: (productVariants) {
                   return CustomDigitReactiveDropdown(
                     label: '${localizations.translate(
-                      i18_local.deliverIntervention.memberCountText,
+                      i18.deliverIntervention.deliverInterventionResourceLabel,
                     )}*',
                     readOnly: true,
                     menuItems: productVariants,
@@ -79,8 +79,7 @@ class CustomResourceBeneficiaryCardState
             label: localizations.translate(
               i18.deliverIntervention.quantityDistributedLabel,
             ),
-            minimum: 0,
-            maximum: 3,
+            minimum: 1,
             buttonWidth: 50,
           ),
           SizedBox(

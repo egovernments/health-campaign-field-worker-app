@@ -48,7 +48,9 @@ class CustomClosedHouseholdSummaryPageState
       return Scaffold(
           body: ScrollableContent(
               enableFixedButton: true,
-              header: const BackNavigationHelpHeaderWidget(),
+              header: const BackNavigationHelpHeaderWidget(
+                showHelp: false,
+              ),
               footer: DigitCard(
                 margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                 padding:
@@ -131,27 +133,6 @@ class CustomClosedHouseholdSummaryPageState
                           ),
                         ]),
                   ),
-                  BlocBuilder<DigitScannerBloc, DigitScannerState>(
-                      builder: (context, state) {
-                    if (state.qrCodes.isNotEmpty) {
-                      return DigitCard(
-                        child: LabelValueList(
-                          heading: localizations.translate(i18.closeHousehold
-                              .closeHouseholdVoucherSummaryLabel),
-                          withDivider: false,
-                          items: [
-                            LabelValuePair(
-                              label: localizations.translate(i18.closeHousehold
-                                  .closeHouseholdVoucherCodeLabel),
-                              value: state.qrCodes.first,
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
-                  }),
                 ],
               ),
             )

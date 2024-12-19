@@ -40,6 +40,8 @@ import '../widgets/localized.dart';
 import '../widgets/progress_indicator/custom_beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
+import 'reports/beneficiary/custom_distribution_summary_report_details.dart';
+import 'reports/beneficiary/custom_enumeration_summary_report_details.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
@@ -98,7 +100,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
 
     //[TODO: Add below roles to enum]
-    if (!roles.contains(RolesType.distributor.toValue())) {
+    if (!(roles.contains(RolesType.distributor.toValue()) ||
+        roles.contains(RolesType.registrar.toValue()))) {
       skipProgressBar = true;
     }
 
@@ -411,6 +414,24 @@ class _HomePageState extends LocalizedState<HomePage> {
                 }
               },
             );
+          },
+        ),
+      ),
+      i18.home.viewSummaryReportsLabel:
+          homeShowcaseData.summaryReport.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.viewSummaryReportsLabel,
+          onPressed: () {
+            if (context.isDistributor) {
+              context.router.push(
+                CustomDistributionSummaryReportDetailsRoute(),
+              );
+            } else {
+              context.router.push(
+                CustomEumerationSummaryReportDetailsRoute(),
+              );
+            }
           },
         ),
       ),

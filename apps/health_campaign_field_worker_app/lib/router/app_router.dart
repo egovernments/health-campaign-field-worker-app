@@ -11,8 +11,10 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/localization/app_localization.dart';
+import '../blocs/summary_reports/custom_enumeration_summary_report.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
+import '../pages/beneficiary_registration/custom_beneficiary_acknowledgement.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
@@ -34,6 +36,10 @@ import '../pages/beneficiary/custom_household_overview.dart';
 import '../pages/closed/custom_closed_household_summary.dart';
 import '../pages/beneficiary/custom_deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered_verification.dart';
+import '../pages/closed/custom_closed_household_details.dart';
+import '../pages/reports/beneficiary/custom_enumeration_summary_report_details.dart';
+import '../pages/reports/beneficiary/custom_distribution_summary_report_details.dart';
+
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -86,6 +92,10 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                 page: ClosedHouseholdDetailsRoute.page,
                 path: 'closed-household-details',
+              ),
+              AutoRoute(
+                page: CustomClosedHouseholdDetailsRoute.page,
+                path: 'custom-closed-household-details',
                 initial: true,
               ),
               AutoRoute(
@@ -242,6 +252,10 @@ class AppRouter extends _$AppRouter {
                     page: BeneficiaryAcknowledgementRoute.page,
                     path: 'beneficiary-acknowledgement',
                   ),
+                  AutoRoute(
+                    page: CustomBeneficiaryAcknowledgementRoute.page,
+                    path: 'custom-beneficiary-acknowledgement',
+                  )
                 ],
               ),
               AutoRoute(
@@ -309,6 +323,16 @@ class AppRouter extends _$AppRouter {
                 ],
               ),
             ]),
+
+        //Enumeration and distribution Summary reports
+        AutoRoute(
+          page: CustomEumerationSummaryReportDetailsRoute.page,
+          path: 'custom-enumeration-report',
+        ),
+        AutoRoute(
+          page: CustomDistributionSummaryReportDetailsRoute.page,
+          path: 'custom-distribution-report',
+        ),
 
         AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
 

@@ -14,6 +14,7 @@ import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
+import '../utils/i18_key_constants.dart' as i18Local;
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/widgets/vision_detector_views/detector_view.dart';
 
@@ -23,6 +24,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
   final int quantity;
   final bool isGS1code;
   final bool isEditEnabled;
+  final bool manualEnabled;
 
   const CustomDigitScannerPage({
     super.key,
@@ -31,6 +33,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
     required this.isGS1code,
     this.singleValue = false,
     this.isEditEnabled = false,
+    this.manualEnabled = true,
   });
 
   @override
@@ -55,6 +58,8 @@ class _CustomDigitScannerPageState
   bool flashStatus = false;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   static const _manualCodeFormKey = 'manualCode';
+
+  RegExp pattern = RegExp(r'^2025-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}$');
 
   @override
   void initState() {
@@ -226,6 +231,18 @@ class _CustomDigitScannerPageState
                                     context,
                                     localizations,
                                     widget.quantity,
+                                  );
+                                } else if (state.qrCodes.length >
+                                    widget.quantity) {
+                                  await DigitToast.show(
+                                    context,
+                                    options: DigitToastOptions(
+                                      localizations.translate(i18Local
+                                          .deliverIntervention
+                                          .bednetScanMoreThanCount),
+                                      true,
+                                      theme,
+                                    ),
                                   );
                                 } else {
                                   final bloc = context.read<DigitScannerBloc>();
@@ -445,22 +462,34 @@ class _CustomDigitScannerPageState
                                     } else {
                                       final bloc =
                                           context.read<DigitScannerBloc>();
-                                      codes.add(form
+                                      String code = form
                                           .control(_manualCodeFormKey)
-                                          .value);
-                                      bloc.add(
-                                        DigitScannerEvent.handleScanner(
-                                          barCode: state.barCodes,
-                                          qrCode: codes,
-                                        ),
-                                      );
-                                      if (widget.isGS1code &&
-                                          result.length < widget.quantity) {
-                                        DigitScannerUtils().buildDialog(
-                                          context,
-                                          localizations,
-                                          widget.quantity,
+                                          .value;
+                                      if (pattern.hasMatch(code)) {
+                                        codes.add(form
+                                            .control(_manualCodeFormKey)
+                                            .value);
+                                        bloc.add(
+                                          DigitScannerEvent.handleScanner(
+                                            barCode: state.barCodes,
+                                            qrCode: codes,
+                                          ),
                                         );
+                                      } else {
+                                        await handleErrorWrapper(
+                                          i18Local.deliverIntervention
+                                              .scanValidResource,
+                                        );
+                                      }
+                                      if (context.mounted) {
+                                        if (widget.isGS1code &&
+                                            result.length < widget.quantity) {
+                                          DigitScannerUtils().buildDialog(
+                                            context,
+                                            localizations,
+                                            widget.quantity,
+                                          );
+                                        }
                                       }
 
                                       setState(() {
@@ -486,12 +515,13 @@ class _CustomDigitScannerPageState
                                   const SizedBox(
                                     height: kPadding * 2,
                                   ),
-                                  DigitTextFormField(
-                                    formControlName: _manualCodeFormKey,
-                                    label: localizations.translate(
-                                      i18.scanner.resourceCode,
+                                  if (widget.manualEnabled)
+                                    DigitTextFormField(
+                                      formControlName: _manualCodeFormKey,
+                                      label: localizations.translate(
+                                        i18.scanner.resourceCode,
+                                      ),
                                     ),
-                                  ),
                                 ],
                               ),
                             );

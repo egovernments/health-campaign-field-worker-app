@@ -1,12 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_components/widgets/atoms/digit_stepper.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,9 +19,9 @@ import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
-import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_card.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/beneficiary/custom_resource_beneficiary_card.dart';
 import '../../widgets/localized.dart';
@@ -52,6 +51,8 @@ class CustomDeliverInterventionPageState
   static const _doseAdministrationKey = 'doseAdministered';
   final clickedStatus = ValueNotifier<bool>(false);
   var bednetCount = 0;
+  var bednetScanned = 0;
+  static const _qrCodesKey = "qrCodes";
 
   // Variable to track dose administration status
   bool doseAdministered = false;
@@ -69,12 +70,14 @@ class CustomDeliverInterventionPageState
   }
 
   Future<void> handleCapturedLocationState(
-      LocationState locationState,
-      BuildContext context,
-      DeliverInterventionState deliverInterventionState,
-      FormGroup form,
-      HouseholdMemberWrapper householdMember,
-      ProjectBeneficiaryModel projectBeneficiary) async {
+    LocationState locationState,
+    BuildContext context,
+    DeliverInterventionState deliverInterventionState,
+    FormGroup form,
+    HouseholdMemberWrapper householdMember,
+    ProjectBeneficiaryModel projectBeneficiary,
+    List<String> codes,
+  ) async {
     final lat = locationState.latitude;
     final long = locationState.longitude;
     context.read<DeliverInterventionBloc>().add(
@@ -94,6 +97,7 @@ class CustomDeliverInterventionPageState
                 address: householdMember.members?.first.address?.first,
                 latitude: lat,
                 longitude: long,
+                codes: codes,
               ),
               isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
                       RegistrationDeliverySingleton().beneficiaryType ==
@@ -109,12 +113,14 @@ class CustomDeliverInterventionPageState
   }
 
   void handleLocationState(
-      LocationState locationState,
-      BuildContext context,
-      DeliverInterventionState deliverInterventionState,
-      FormGroup form,
-      HouseholdMemberWrapper householdMember,
-      ProjectBeneficiaryModel projectBeneficiary) {
+    LocationState locationState,
+    BuildContext context,
+    DeliverInterventionState deliverInterventionState,
+    FormGroup form,
+    HouseholdMemberWrapper householdMember,
+    ProjectBeneficiaryModel projectBeneficiary,
+    List<String> codes,
+  ) {
     if (context.mounted) {
       DigitComponentsUtils().showLocationCapturingDialog(
           context,
@@ -130,7 +136,8 @@ class CustomDeliverInterventionPageState
             deliverInterventionState,
             form,
             householdMember,
-            projectBeneficiary);
+            projectBeneficiary,
+            codes);
       });
     }
   }
@@ -153,8 +160,9 @@ class CustomDeliverInterventionPageState
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
-          bednetCount =
-              (householdMemberWrapper.household?.memberCount ?? 0 / 2.0).ceil();
+          final memberCount =
+              householdMemberWrapper.household?.memberCount ?? 0;
+          bednetCount = (memberCount / 2).round();
 
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
@@ -205,19 +213,6 @@ class CustomDeliverInterventionPageState
                                       productVariantId: r.productVariantId))
                                   .toList();
 
-                      final int numberOfDoses = (RegistrationDeliverySingleton()
-                                  .projectType
-                                  ?.cycles
-                                  ?.isNotEmpty ==
-                              true)
-                          ? (RegistrationDeliverySingleton()
-                                  .projectType
-                                  ?.cycles?[deliveryInterventionState.cycle - 1]
-                                  .deliveries
-                                  ?.length) ??
-                              0
-                          : 0;
-
                       if ((productVariants ?? []).isEmpty && context.mounted) {
                         SchedulerBinding.instance.addPostFrameCallback((_) {
                           DigitToast.show(
@@ -245,344 +240,475 @@ class CustomDeliverInterventionPageState
                                   return productVariants;
                                 },
                               );
+                              return BlocBuilder<DigitScannerBloc,
+                                      DigitScannerState>(
+                                  builder: (context, scannerState) {
+                                return ReactiveFormBuilder(
+                                  form: () => buildForm(
+                                    context,
+                                    productVariants,
+                                    variant,
+                                  ),
+                                  builder: (context, form, child) {
+                                    return ScrollableContent(
+                                      enableFixedButton: true,
+                                      footer: BlocBuilder<
+                                          DeliverInterventionBloc,
+                                          DeliverInterventionState>(
+                                        builder: (context, state) {
+                                          return DigitCard(
+                                            margin: const EdgeInsets.fromLTRB(
+                                                0, kPadding, 0, 0),
+                                            padding: const EdgeInsets.fromLTRB(
+                                                kPadding, 0, kPadding, 0),
+                                            child: ValueListenableBuilder(
+                                              valueListenable: clickedStatus,
+                                              builder:
+                                                  (context, bool isClicked, _) {
+                                                return BlocBuilder<LocationBloc,
+                                                        LocationState>(
+                                                    builder: (context,
+                                                        locationState) {
+                                                  return DigitElevatedButton(
+                                                    onPressed: isClicked
+                                                        ? null
+                                                        : () async {
+                                                            bednetScanned =
+                                                                scannerState
+                                                                    .qrCodes
+                                                                    .length;
+                                                            final deliveredProducts =
+                                                                ((form.control(_resourceDeliveredKey)
+                                                                            as FormArray)
+                                                                        .value
+                                                                    as List<
+                                                                        ProductVariantModel?>);
+                                                            final hasEmptyResources =
+                                                                hasEmptyOrNullResources(
+                                                                    deliveredProducts);
+                                                            final hasZeroQuantity =
+                                                                hasEmptyOrZeroQuantity(
+                                                                    form);
+                                                            final hasDuplicates =
+                                                                hasDuplicateResources(
+                                                                    deliveredProducts,
+                                                                    form);
 
-                              return ReactiveFormBuilder(
-                                form: () => buildForm(
-                                  context,
-                                  productVariants,
-                                  variant,
-                                ),
-                                builder: (context, form, child) {
-                                  return ScrollableContent(
-                                    enableFixedButton: true,
-                                    footer: BlocBuilder<DeliverInterventionBloc,
-                                        DeliverInterventionState>(
-                                      builder: (context, state) {
-                                        return DigitCard(
-                                          margin: const EdgeInsets.fromLTRB(
-                                              0, kPadding, 0, 0),
-                                          padding: const EdgeInsets.fromLTRB(
-                                              kPadding, 0, kPadding, 0),
-                                          child: ValueListenableBuilder(
-                                            valueListenable: clickedStatus,
-                                            builder:
-                                                (context, bool isClicked, _) {
-                                              return BlocBuilder<LocationBloc,
-                                                      LocationState>(
-                                                  builder:
-                                                      (context, locationState) {
-                                                return DigitElevatedButton(
-                                                  onPressed: isClicked
-                                                      ? null
-                                                      : () async {
-                                                          final deliveredProducts =
-                                                              ((form.control(_resourceDeliveredKey)
-                                                                          as FormArray)
-                                                                      .value
-                                                                  as List<
-                                                                      ProductVariantModel?>);
-                                                          final hasEmptyResources =
-                                                              hasEmptyOrNullResources(
-                                                                  deliveredProducts);
-                                                          final hasZeroQuantity =
-                                                              hasEmptyOrZeroQuantity(
-                                                                  form);
-                                                          final hasDuplicates =
-                                                              hasDuplicateResources(
-                                                                  deliveredProducts,
-                                                                  form);
-
-                                                          if (hasEmptyResources) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceDeliveredValidation),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
-                                                          } else if (hasDuplicates) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceDuplicateValidation),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
-                                                          } else if (hasZeroQuantity) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceCannotBeZero),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
-                                                          } else {
-                                                            final shouldSubmit =
-                                                                await DigitDialog
-                                                                    .show<bool>(
-                                                              context,
-                                                              options:
-                                                                  DigitDialogOptions(
-                                                                titleText:
-                                                                    localizations
-                                                                        .translate(
-                                                                  i18.deliverIntervention
-                                                                      .dialogTitle,
+                                                            if (hasEmptyResources) {
+                                                              await DigitToast
+                                                                  .show(
+                                                                context,
+                                                                options:
+                                                                    DigitToastOptions(
+                                                                  localizations
+                                                                      .translate(i18
+                                                                          .deliverIntervention
+                                                                          .resourceDeliveredValidation),
+                                                                  true,
+                                                                  theme,
                                                                 ),
-                                                                contentText:
-                                                                    localizations
-                                                                        .translate(
-                                                                  i18.deliverIntervention
-                                                                      .dialogContent,
+                                                              );
+                                                            } else if (hasDuplicates) {
+                                                              await DigitToast
+                                                                  .show(
+                                                                context,
+                                                                options:
+                                                                    DigitToastOptions(
+                                                                  localizations
+                                                                      .translate(i18
+                                                                          .deliverIntervention
+                                                                          .resourceDuplicateValidation),
+                                                                  true,
+                                                                  theme,
                                                                 ),
-                                                                primaryAction:
-                                                                    DigitDialogActions(
-                                                                  label: localizations
-                                                                      .translate(
-                                                                    i18.common
-                                                                        .coreCommonSubmit,
+                                                              );
+                                                            } else if (hasZeroQuantity) {
+                                                              await DigitToast
+                                                                  .show(
+                                                                context,
+                                                                options:
+                                                                    DigitToastOptions(
+                                                                  localizations
+                                                                      .translate(i18
+                                                                          .deliverIntervention
+                                                                          .resourceCannotBeZero),
+                                                                  true,
+                                                                  theme,
+                                                                ),
+                                                              );
+                                                            }
+                                                            // info : show dialog stating less bednet scanned then the permissible count
+                                                            else if (bednetScanned <
+                                                                bednetCount) {
+                                                              await DigitToast
+                                                                  .show(
+                                                                context,
+                                                                options:
+                                                                    DigitToastOptions(
+                                                                  localizations
+                                                                      .translate(i18Local
+                                                                          .deliverIntervention
+                                                                          .bednetScanLessThanCount),
+                                                                  true,
+                                                                  theme,
+                                                                ),
+                                                              );
+                                                            }
+                                                            // info : show dialog stating more bednet scanned then the permissible count
+                                                            else if (bednetScanned >
+                                                                bednetCount) {
+                                                              await DigitToast
+                                                                  .show(
+                                                                context,
+                                                                options:
+                                                                    DigitToastOptions(
+                                                                  localizations
+                                                                      .translate(i18Local
+                                                                          .deliverIntervention
+                                                                          .bednetScanMoreThanCount),
+                                                                  true,
+                                                                  theme,
+                                                                ),
+                                                              );
+                                                            } else {
+                                                              final shouldSubmit =
+                                                                  await DigitDialog
+                                                                      .show<
+                                                                          bool>(
+                                                                context,
+                                                                options:
+                                                                    DigitDialogOptions(
+                                                                  titleText:
+                                                                      localizations
+                                                                          .translate(
+                                                                    i18.deliverIntervention
+                                                                        .dialogTitle,
                                                                   ),
-                                                                  action:
-                                                                      (context) {
-                                                                    clickedStatus
-                                                                            .value =
-                                                                        true;
-                                                                    Navigator
-                                                                        .of(
+                                                                  contentText:
+                                                                      localizations
+                                                                          .translate(
+                                                                    i18.deliverIntervention
+                                                                        .dialogContent,
+                                                                  ),
+                                                                  primaryAction:
+                                                                      DigitDialogActions(
+                                                                    label: localizations
+                                                                        .translate(
+                                                                      i18.common
+                                                                          .coreCommonSubmit,
+                                                                    ),
+                                                                    action:
+                                                                        (context) {
+                                                                      clickedStatus
+                                                                              .value =
+                                                                          true;
+                                                                      Navigator
+                                                                          .of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true,
+                                                                      ).pop(
+                                                                          true);
+                                                                    },
+                                                                  ),
+                                                                  secondaryAction:
+                                                                      DigitDialogActions(
+                                                                    label: localizations
+                                                                        .translate(
+                                                                      i18.common
+                                                                          .coreCommonCancel,
+                                                                    ),
+                                                                    action: (context) =>
+                                                                        Navigator
+                                                                            .of(
                                                                       context,
                                                                       rootNavigator:
                                                                           true,
-                                                                    ).pop(true);
-                                                                  },
-                                                                ),
-                                                                secondaryAction:
-                                                                    DigitDialogActions(
-                                                                  label: localizations
-                                                                      .translate(
-                                                                    i18.common
-                                                                        .coreCommonCancel,
+                                                                    ).pop(false),
                                                                   ),
-                                                                  action: (context) =>
-                                                                      Navigator
-                                                                          .of(
-                                                                    context,
-                                                                    rootNavigator:
-                                                                        true,
-                                                                  ).pop(false),
                                                                 ),
-                                                              ),
-                                                            );
-                                                            if ((shouldSubmit ??
-                                                                    false) &&
-                                                                context
-                                                                    .mounted) {
-                                                              context
-                                                                  .read<
-                                                                      LocationBloc>()
-                                                                  .add(
-                                                                      const LoadLocationEvent());
-                                                              handleLocationState(
-                                                                locationState,
-                                                                context,
-                                                                deliveryInterventionState,
-                                                                form,
-                                                                householdMemberWrapper,
-                                                                projectBeneficiary!
-                                                                    .first,
                                                               );
+                                                              if ((shouldSubmit ??
+                                                                      false) &&
+                                                                  context
+                                                                      .mounted) {
+                                                                context
+                                                                    .read<
+                                                                        LocationBloc>()
+                                                                    .add(
+                                                                        const LoadLocationEvent());
+                                                                handleLocationState(
+                                                                  locationState,
+                                                                  context,
+                                                                  deliveryInterventionState,
+                                                                  form,
+                                                                  householdMemberWrapper,
+                                                                  projectBeneficiary!
+                                                                      .first,
+                                                                  scannerState
+                                                                      .qrCodes,
+                                                                );
+                                                              }
                                                             }
-                                                          }
-                                                        },
-                                                  child: Center(
-                                                    child: Text(
-                                                      localizations.translate(
-                                                        i18.common
-                                                            .coreCommonSubmit,
+                                                          },
+                                                    child: Center(
+                                                      child: Text(
+                                                        localizations.translate(
+                                                          i18.common
+                                                              .coreCommonSubmit,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                );
-                                              });
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    header: const Column(children: [
-                                      BackNavigationHelpHeaderWidget(
-                                        showHelp: false,
+                                                  );
+                                                });
+                                              },
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    ]),
-                                    children: [
-                                      Column(
-                                        children: [
-                                          DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliveryDetailsLabel,
+                                      header: const Column(children: [
+                                        BackNavigationHelpHeaderWidget(
+                                          showHelp: false,
+                                        ),
+                                      ]),
+                                      children: [
+                                        Column(
+                                          children: [
+                                            DigitCard(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .deliveryDetailsLabel,
+                                                    ),
+                                                    style: theme.textTheme
+                                                        .headlineLarge,
                                                   ),
-                                                  style: theme
-                                                      .textTheme.headlineLarge,
-                                                ),
-                                                DigitTableCard(
-                                                  element: {
-                                                    localizations.translate(i18Local
-                                                            .deliverIntervention
-                                                            .memberCountText):
-                                                        householdMemberWrapper
-                                                                .household
-                                                                ?.memberCount ??
-                                                            localizations
-                                                                .translate(i18
-                                                                    .common
-                                                                    .coreCommonNA),
-                                                    localizations.translate(i18Local
-                                                            .deliverIntervention
-                                                            .bednetCountText):
-                                                        bednetCount,
-                                                  },
-                                                ),
-                                                ..._controllers.map((e) =>
-                                                    CustomResourceBeneficiaryCard(
-                                                      form: form,
-                                                      cardIndex: _controllers
-                                                          .indexOf(e),
-                                                      totalItems:
-                                                          _controllers.length,
-                                                      onDelete: (index) {
-                                                        (form.control(
-                                                          _resourceDeliveredKey,
-                                                        ) as FormArray)
-                                                            .removeAt(
-                                                          index,
-                                                        );
-                                                        (form.control(
-                                                          _quantityDistributedKey,
-                                                        ) as FormArray)
-                                                            .removeAt(
-                                                          index,
-                                                        );
-                                                        _controllers.removeAt(
-                                                          index,
-                                                        );
-                                                        setState(() {
-                                                          _controllers;
-                                                        });
-                                                      },
-                                                    )),
-                                                Padding(
+                                                  DigitTableCard(
+                                                    element: {
+                                                      localizations.translate(i18Local
+                                                              .deliverIntervention
+                                                              .memberCountText):
+                                                          householdMemberWrapper
+                                                                  .household
+                                                                  ?.memberCount ??
+                                                              localizations
+                                                                  .translate(i18
+                                                                      .common
+                                                                      .coreCommonNA),
+                                                      localizations.translate(i18Local
+                                                              .deliverIntervention
+                                                              .bednetCountText):
+                                                          bednetCount,
+                                                    },
+                                                  ),
+                                                  ..._controllers.map((e) =>
+                                                      CustomResourceBeneficiaryCard(
+                                                        form: form,
+                                                        cardIndex: _controllers
+                                                            .indexOf(e),
+                                                        totalItems:
+                                                            _controllers.length,
+                                                        onDelete: (index) {
+                                                          (form.control(
+                                                            _resourceDeliveredKey,
+                                                          ) as FormArray)
+                                                              .removeAt(
+                                                            index,
+                                                          );
+                                                          (form.control(
+                                                            _quantityDistributedKey,
+                                                          ) as FormArray)
+                                                              .removeAt(
+                                                            index,
+                                                          );
+                                                          _controllers.removeAt(
+                                                            index,
+                                                          );
+                                                          setState(() {
+                                                            _controllers;
+                                                          });
+                                                        },
+                                                      )),
+                                                  Padding(
                                                     padding: const EdgeInsets
                                                         .fromLTRB(kPadding,
                                                         kPadding, kPadding, 0),
-                                                    child:
-                                                        DigitOutlineIconButton(
-                                                      buttonStyle:
-                                                          OutlinedButton
-                                                              .styleFrom(
-                                                        shape:
-                                                            const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.zero,
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const CustomDigitScannerPage(
-                                                              quantity: 1,
-                                                              isGS1code: false,
-                                                              singleValue: true,
+                                                    child: scannerState
+                                                            .qrCodes.isNotEmpty
+                                                        ? Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              SizedBox(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    3,
+                                                                child: Text(
+                                                                  localizations
+                                                                      .translate(
+                                                                    i18.deliverIntervention
+                                                                        .voucherCode,
+                                                                  ),
+                                                                  style: theme
+                                                                      .textTheme
+                                                                      .headlineSmall,
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                  bottom:
+                                                                      kPadding *
+                                                                          2,
+                                                                ),
+                                                                child:
+                                                                    IconButton(
+                                                                  color: theme
+                                                                      .colorScheme
+                                                                      .secondary,
+                                                                  icon: const Icon(
+                                                                      Icons
+                                                                          .edit),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .push(
+                                                                      //[TODO: Add the route to auto_route]
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                CustomDigitScannerPage(
+                                                                          quantity:
+                                                                              bednetCount,
+                                                                          isGS1code:
+                                                                              true,
+                                                                          singleValue:
+                                                                              bednetCount < 2,
+                                                                          isEditEnabled:
+                                                                              true,
+                                                                          manualEnabled:
+                                                                              false,
+                                                                        ),
+                                                                        settings:
+                                                                            const RouteSettings(name: '/qr-scanner'),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ],
+
+                                                            // ignore: no-empty-block
+                                                          )
+                                                        : DigitOutlineIconButton(
+                                                            buttonStyle:
+                                                                OutlinedButton
+                                                                    .styleFrom(
+                                                              shape:
+                                                                  const RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .zero,
+                                                              ),
                                                             ),
-                                                            settings:
-                                                                const RouteSettings(
-                                                                    name:
-                                                                        '/qr-scanner'),
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .push(
+                                                                // [TODO: Add the route to auto_route]
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          CustomDigitScannerPage(
+                                                                    quantity:
+                                                                        bednetCount,
+                                                                    isGS1code:
+                                                                        true,
+                                                                    singleValue:
+                                                                        bednetCount <
+                                                                            2,
+                                                                    isEditEnabled:
+                                                                        true,
+                                                                    manualEnabled:
+                                                                        false,
+                                                                  ),
+                                                                  settings:
+                                                                      const RouteSettings(
+                                                                          name:
+                                                                              '/qr-scanner'),
+                                                                ),
+                                                              );
+                                                            },
+                                                            icon: Icons.qr_code,
+                                                            label: localizations
+                                                                .translate(
+                                                              i18.individualDetails
+                                                                  .linkVoucherToIndividual,
+                                                            ),
                                                           ),
-                                                        );
-                                                      },
-                                                      icon: Icons.qr_code,
-                                                      label: localizations
-                                                          .translate(
-                                                        i18.deliverIntervention
-                                                            .scannerLabel,
-                                                      ),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliveryCommentHeading,
                                                   ),
-                                                  style: theme
-                                                      .textTheme.headlineLarge,
-                                                ),
-                                                DigitReactiveSearchDropdown<
-                                                    String>(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliveryCommentLabel,
-                                                  ),
-                                                  form: form,
-                                                  menuItems:
-                                                      RegistrationDeliverySingleton()
-                                                          .deliveryCommentOptions!
-                                                          .map((e) {
-                                                    return localizations
-                                                        .translate(e);
-                                                  }).toList()
-                                                        ..sort((a, b) =>
-                                                            a.compareTo(b)),
-                                                  formControlName:
-                                                      _deliveryCommentKey,
-                                                  valueMapper: (value) => value,
-                                                  emptyText: localizations
-                                                      .translate(i18
-                                                          .common.noMatchFound),
-                                                )
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                                            DigitCard(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .deliveryCommentHeading,
+                                                    ),
+                                                    style: theme.textTheme
+                                                        .headlineLarge,
+                                                  ),
+                                                  DigitReactiveSearchDropdown<
+                                                      String>(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .deliveryCommentLabel,
+                                                    ),
+                                                    form: form,
+                                                    menuItems:
+                                                        RegistrationDeliverySingleton()
+                                                            .deliveryCommentOptions!
+                                                            .map((e) {
+                                                      return localizations
+                                                          .translate(e);
+                                                    }).toList()
+                                                          ..sort((a, b) =>
+                                                              a.compareTo(b)),
+                                                    formControlName:
+                                                        _deliveryCommentKey,
+                                                    valueMapper: (value) =>
+                                                        value,
+                                                    emptyText: localizations
+                                                        .translate(i18.common
+                                                            .noMatchFound),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              });
                             },
                           );
                         },
@@ -662,6 +788,7 @@ class CustomDeliverInterventionPageState
     AddressModel? address,
     double? latitude,
     double? longitude,
+    List<String>? codes,
   }) {
     // Initialize task with oldTask if available, or create a new one
     var task = oldTask;
@@ -765,6 +892,11 @@ class CustomDeliverInterventionPageState
             AdditionalField(
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,
+            ),
+          if (codes != null && codes.isNotEmpty)
+            AdditionalField(
+              _qrCodesKey,
+              codes.join(Constants.comma),
             ),
         ],
       ),

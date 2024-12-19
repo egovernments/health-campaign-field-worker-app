@@ -21,5 +21,7 @@ enum RolesType {
   registrar,
   @MappableValue("ATTENDANCE_STAFF")
   attendanceStaff,
+  @MappableValue("COMMUNITY_DISTRIBUTOR")
+  communityDistributor,
   ;
 }

@@ -1,4 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:closed_household/closed_household.dart';
+import 'package:digit_components/utils/app_logger.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:collection/collection.dart';
@@ -16,8 +18,11 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
+import '../firebase_options.dart';
 import 'environment_config.dart';
 import 'utils.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 
 class Constants {
   late Future<Isar> _isar;
@@ -74,6 +79,11 @@ class Constants {
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
   static const String intTwo = '2';
+  static const String comma = ',';
+  static const String bednetDistributed = 'BednetDistributed';
+  static const String projectBeneficiary = 'ProjectBeneficiary';
+  static const String household = 'Household';
+  static const String closedHousehold = 'ClosedHousehold';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -131,8 +141,16 @@ class Constants {
     final appConfigs = await isar.appConfigurations.where().findAll();
     final config = appConfigs.firstOrNull;
 
-    final enableCrashlytics =
-        config?.firebaseConfig?.enableCrashlytics ?? false;
+    final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ?? true;
+
+    if (enableCrashlytics) {
+      firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
+        onErrorMessage: (value) {
+          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+        },
+      );
+    }
 
     _version = version;
   }
@@ -242,6 +260,7 @@ class Constants {
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
 
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+    ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 

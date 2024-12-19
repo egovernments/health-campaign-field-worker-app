@@ -176,49 +176,6 @@ class SideBar extends StatelessWidget {
               );
             },
           ),
-          BlocBuilder<UserBloc, UserState>(builder: (ctx, state) {
-            return DigitIconTile(
-              title: AppLocalizations.of(context).translate(
-                i18.common.coreCommonProfile,
-              ),
-              icon: Icons.person,
-              onPressed: () async {
-                final connectivityResult =
-                    await (Connectivity().checkConnectivity());
-                final isOnline =
-                    connectivityResult == ConnectivityResult.wifi ||
-                        connectivityResult == ConnectivityResult.mobile;
-
-                if (isOnline) {
-                  if (context.mounted) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.router.push(ProfileRoute());
-                  }
-                } else {
-                  if (context.mounted) {
-                    DigitDialog.show(
-                      context,
-                      options: DigitDialogOptions(
-                        titleText: AppLocalizations.of(context).translate(
-                          i18.common.connectionLabel,
-                        ),
-                        contentText: AppLocalizations.of(context).translate(
-                          i18.common.connectionContent,
-                        ),
-                        primaryAction: DigitDialogActions(
-                          label: AppLocalizations.of(context).translate(
-                            i18.common.coreCommonOk,
-                          ),
-                          action: (ctx) =>
-                              Navigator.of(context, rootNavigator: true).pop(),
-                        ),
-                      ),
-                    );
-                  }
-                }
-              },
-            );
-          }),
           if (isDistributor)
             DigitIconTile(
               title: AppLocalizations.of(context).translate(

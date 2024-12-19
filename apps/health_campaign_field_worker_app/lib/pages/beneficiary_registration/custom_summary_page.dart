@@ -82,7 +82,9 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
           return ScrollableContent(
               enableFixedButton: true,
               header: Column(children: [
-                const BackNavigationHelpHeaderWidget(),
+                const BackNavigationHelpHeaderWidget(
+                  showHelp: false,
+                ),
                 Padding(
                   padding:
                       const EdgeInsets.only(bottom: kPadding, left: kPadding),
@@ -217,7 +219,7 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                         child: LabelValueList(
                             heading: localizations.translate(i18
                                 .individualDetails.individualsDetailsLabelText),
-                            withDivider: true,
+                            withDivider: false,
                             items: [
                               LabelValuePair(
                                 label: localizations.translate(

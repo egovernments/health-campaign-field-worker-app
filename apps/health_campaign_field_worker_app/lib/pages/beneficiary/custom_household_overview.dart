@@ -13,12 +13,12 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
 import 'package:registration_delivery/models/entities/status.dart' as regStatus;
+import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
 
-import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/action_card/action_card.dart';
@@ -76,11 +76,13 @@ class _HouseholdOverviewPageState
                             .read<SearchHouseholdsBloc>()
                             .add(const SearchHouseholdsEvent.clear());
                       },
+                      showHelp: false,
                     ),
                     enableFixedButton: true,
                     footer: Offstage(
                       offstage: beneficiaryType == BeneficiaryType.individual ||
-                          isOutsideProjectDateRange(),
+                          isOutsideProjectDateRange() ||
+                          context.isRegistrar,
                       child: BlocBuilder<ServiceDefinitionBloc,
                           ServiceDefinitionState>(
                         builder: (context, serviceDefinitionState) =>
@@ -94,43 +96,7 @@ class _HouseholdOverviewPageState
                             child: state.householdMemberWrapper.tasks
                                         ?.lastOrNull?.status ==
                                     Status.administeredSuccess.toValue()
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: kPadding),
-                                    child: DigitOutLineButton(
-                                      label: localizations.translate(
-                                        i18.memberCard
-                                            .deliverDetailsUpdateLabel,
-                                      ),
-                                      onPressed: state.householdMemberWrapper
-                                                  .tasks?.lastOrNull?.status ==
-                                              Status.administeredSuccess
-                                                  .toValue()
-                                          ? null
-                                          : () {
-                                              serviceDefinitionState.when(
-                                                  empty: () {},
-                                                  isloading: () {},
-                                                  serviceDefinitionFetch:
-                                                      (value, model) {
-                                                    if (value
-                                                        .where((element) => element
-                                                            .code
-                                                            .toString()
-                                                            .contains(
-                                                                '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
-                                                        .toList()
-                                                        .isEmpty) {
-                                                      context.router.push(
-                                                        DeliverInterventionRoute(),
-                                                      );
-                                                    } else {
-                                                      navigateToChecklist(ctx);
-                                                    }
-                                                  });
-                                            },
-                                    ),
-                                  )
+                                ? const Offstage()
                                 : DigitElevatedButton(
                                     onPressed: (state.householdMemberWrapper
                                                         .projectBeneficiaries ??
@@ -257,13 +223,14 @@ class _HouseholdOverviewPageState
                                           localizations.translate(
                                             i18.householdLocation
                                                 .administrationAreaFormLabel,
-                                          ): state
-                                              .householdMemberWrapper
-                                              .headOfHousehold
-                                              ?.address
-                                              ?.first
-                                              .locality
-                                              ?.code,
+                                          ): localizations.translate(state
+                                                  .householdMemberWrapper
+                                                  .headOfHousehold
+                                                  ?.address
+                                                  ?.first
+                                                  .locality
+                                                  ?.code ??
+                                              i18.common.coreCommonNA),
                                           localizations.translate(
                                             i18.deliverIntervention
                                                 .memberCountText,

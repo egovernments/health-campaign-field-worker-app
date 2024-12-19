@@ -152,6 +152,21 @@ extension ContextUtilityExtensions on BuildContext {
     return false;
   }
 
+  bool get isDistributor {
+    try {
+      bool communityDistributor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.distributor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return communityDistributor;
+    } catch (_) {
+      return false;
+    }
+  }
+
   List<UserRoleModel> get loggedInUserRoles {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(

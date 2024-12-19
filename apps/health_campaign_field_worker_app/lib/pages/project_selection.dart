@@ -50,6 +50,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
             const BackNavigationHelpHeaderWidget(
               showBackNavigation: false,
               showLogoutCTA: true,
+              showHelp: false,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(

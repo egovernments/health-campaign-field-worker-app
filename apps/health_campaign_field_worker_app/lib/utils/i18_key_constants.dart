@@ -30,6 +30,7 @@ const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
 const selectChecklistShowcase = SelectChecklistShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
+const inventoryReportDetails = InventoryReportDetails();
 
 const checklistDataShowcase = ChecklistDataShowcase();
 const checklistListShowcase = ChecklistListShowcase();
@@ -47,17 +48,17 @@ class MemberCard {
 class HouseholdOverView {
   const HouseholdOverView();
 
-  String get householdOverViewActionText => "HOUSEHOLD_OVERVIEW_ACTION_TEXT";
+  String get householdOverViewActionText => "HOUSEHOLD_OVER_VIEW_ACTION_TEXT";
 
   String get householdOverViewEditLabel => "HOUSEHOLD_OVERVIEW_EDIT_LABEL";
 
   String get householdOverViewEditIconText =>
       "HOUSEHOLD_OVERVIEW_EDIT_ICON_BUTTON";
 
-  String get householdOverViewLabel => "HOUSEHOLD_OVERVIEW_LABEL";
+  String get householdOverViewLabel => "HOUSEHOLD_OVER_VIEW_LABEL";
 
   String get householdOverViewHouseholdHeadNameLabel =>
-      "HOUSEHOLD_OVERVIEW_HOUSEHOLD_HEAD_NAME_LABEL";
+      "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL";
 
   String get householdOverViewActionCardTitle =>
       "HOUSEHOLD_OVERVIEW_PRIMARY_ACTION_CARD_TITLE";
@@ -87,6 +88,13 @@ class DeliverIntervention {
   String get healthTalkGivenOnSPAQ =>
       'DELIVER_INTERVENTION_DOSE_HEALTH_TALK_GIVEN_SPAQ';
   String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
+  String get bednetScanLessThanCount => 'NET_SCANNED_LESS_THAN_COUNT_LABEL';
+  String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
+  String get informationBulletOne => 'INFORMATION_BULLET_ONE';
+  String get informationBulletTwo => 'INFORMATION_BULLET_TWO';
+  String get informationBulletThree => 'INFORMATION_BULLET_THREE';
+  String get informationBulletFour => 'INFORMATION_BULLET_FOUR';
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
 }
 
 class Common {
@@ -158,6 +166,7 @@ class Common {
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
+  String get min3CharsRequired => 'MIN_REQUIRED_3';
 
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
@@ -632,7 +641,7 @@ class ForgotPassword {
 class Home {
   const Home();
 
-  String get closedHouseHoldLabel => 'CLOSED_HOUSEHOLD_LABEL';
+  String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
@@ -665,6 +674,7 @@ class Home {
   String get db => 'HOME_DB_LABEL';
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
+  String get viewSummaryReportsLabel => 'VIEW_SUMMARY_REPORTS_LABEL';
 }
 
 class AcknowledgementSuccess {
@@ -867,6 +877,38 @@ class StockReconciliationShowcase {
   }
 }
 
+class InventoryReportDetails {
+  const InventoryReportDetails();
+
+  String get dateLabel {
+    return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
+  }
+
+  String get householdRegisteredLabel {
+    return 'ENUMERATION_SUMMARY_HOUSEHOLD_REGISTERED_LABEL';
+  }
+
+  String get projectBeneficiaryRegisteredLabel {
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_LABEL';
+  }
+
+  String get closedHouseholdRegisteredLabel {
+    return 'ENUMERATION_SUMMARY_PROJECT_BENEFICIARY_REGISTERED_LABEL';
+  }
+
+  String get householdDistributedLabel {
+    return 'DISTRIBUTION_SUMMARY_HOUSEHOLD_DISTRIBUTED_LABEL';
+  }
+
+  String get projectBeneficiaryImpactedLabel {
+    return 'DISTRIBUTION_SUMMARY_PROJECT_BENEFICIARY_IMPACTED_LABEL';
+  }
+
+  String get bednetDistributedLabel {
+    return 'DISTRIBUTION_SUMMARY_BEDNET_DISTRIBUTED_LABEL';
+  }
+}
+
 class StockDetailsReturnedShowcase {
   const StockDetailsReturnedShowcase();
 
@@ -1022,6 +1064,13 @@ class IndividualDetails {
   String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
 
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
+  String get scanVoucherAndLinkToIndividual =>
+      'SCAN_AND_LINK_VOUCHER_TO_INDIVIDUAL';
+
+  String get individualNameValidation => "VALID_INDIVIDUAL_NAME";
+
+  String get voucherCodeScanMoreThanLimit =>
+      "VOUCHER_CODE_SCAN_MORE_THAN_LIMIT";
 }
 
 class BeneficiaryDetails {

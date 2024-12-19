@@ -108,7 +108,9 @@ class CustomHouseholdLocationPageState
               enableFixedButton: true,
               header: const Column(
                 children: [
-                  BackNavigationHelpHeaderWidget(),
+                  BackNavigationHelpHeaderWidget(
+                    showHelp: false,
+                  ),
                 ],
               ),
               footer: DigitCard(

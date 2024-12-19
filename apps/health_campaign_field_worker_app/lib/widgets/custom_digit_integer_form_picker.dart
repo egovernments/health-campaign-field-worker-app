@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class CustomDigitIntegerFormPicker extends StatelessWidget {
@@ -48,23 +49,27 @@ class CustomDigitIntegerFormPicker extends StatelessWidget {
         child: IntrinsicHeight(
           child: Row(
             children: [
-              _buildButton(context,
+              _buildButton(context, readOnly,
                   border: Border(
                     left: _borderSide,
                     bottom: _borderSide,
                     top: _borderSide,
                   ),
-                  icon: Icons.remove, onPressed: () {
-                minimum != null
-                    ? form.control(formControlName).value > minimum ||
-                            form.control(formControlName).value == null
-                        ? form.control(formControlName).value -= 1
-                        : 1
-                    : form.control(formControlName).value -= 1;
-                if (onChange != null) {
-                  onChange!();
-                }
-              }),
+                  icon: Icons.remove,
+                  onPressed: readOnly
+                      ? () {}
+                      : () {
+                          minimum != null
+                              ? form.control(formControlName).value > minimum ||
+                                      form.control(formControlName).value ==
+                                          null
+                                  ? form.control(formControlName).value -= 1
+                                  : 1
+                              : form.control(formControlName).value -= 1;
+                          if (onChange != null) {
+                            onChange!();
+                          }
+                        }),
               Expanded(
                 child: SizedBox(
                   height: kPadding * 5,
@@ -74,12 +79,27 @@ class CustomDigitIntegerFormPicker extends StatelessWidget {
                     formControlName: formControlName,
                     decoration: InputDecoration(
                       labelText: hint,
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: readOnly
+                              ? const Color.fromARGB(255, 255, 255, 255)
+                              : Colors
+                                  .black, // Change border color on focus based on readOnly
+                        ),
+                      ),
+                      filled: true, // Always fill the background color
+                      fillColor: readOnly
+                          ? const Color.fromARGB(255, 255, 255, 255)
+                          : Colors
+                              .white, // Grayed-out background when readOnly is true
                     ),
                     keyboardType: TextInputType.number,
+                    style:
+                        TextStyle(color: readOnly ? Colors.grey : Colors.black),
                   ),
                 ),
               ),
-              _buildButton(context,
+              _buildButton(context, readOnly,
                   border: Border(
                     right: _borderSide,
                     bottom: _borderSide,
@@ -105,7 +125,8 @@ class CustomDigitIntegerFormPicker extends StatelessWidget {
   }
 
   Widget _buildButton(
-    BuildContext context, {
+    BuildContext context,
+    bool readOnly, {
     required Border border,
     required IconData icon,
     VoidCallback? onPressed,
@@ -115,7 +136,9 @@ class CustomDigitIntegerFormPicker extends StatelessWidget {
         height: kPadding * 5,
         child: Material(
           shape: border,
-          color: Theme.of(context).colorScheme.background,
+          color: readOnly
+              ? Colors.white
+              : Theme.of(context).colorScheme.background,
           child: InkWell(onTap: onPressed, child: Icon(icon)),
         ),
       );
