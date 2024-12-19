@@ -9,6 +9,7 @@ on:
 jobs:
   build-apk:
     runs-on: ubuntu-latest
+    environment: QA  # Reference the QA environment
 
     steps:
       - name: Checkout code
@@ -34,6 +35,10 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
+      - name: Print Environment Variables
+        run: |
+          echo "BASE_URL=${{ vars.BASE_URL }}"
+
       - name: Create .env file
         run: |
           echo "BASE_URL=${{ vars.BASE_URL }}" >> apps/health_campaign_field_worker_app/.env
@@ -54,17 +59,17 @@ jobs:
           ls -l apps/health_campaign_field_worker_app/.env
           cat apps/health_campaign_field_worker_app/.env
 
-      - name: Run APK build script
-        env:
-          BUILD_CONFIG: release   # or profile depending on your choice
-        run: bash ./tools/generate-apk.sh
+      # - name: Run APK build script
+      #   env:
+      #     BUILD_CONFIG: release   # or profile depending on your choice
+      #   run: bash ./tools/generate-apk.sh
 
-      # Archive the APK as a build artifact so it can be downloaded
-      - name: Upload APKs
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-release-apk
-          path: apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk/app-release.apk
+      # # Archive the APK as a build artifact so it can be downloaded
+      # - name: Upload APKs
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: app-release-apk
+      #     path: apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk/app-release.apk
 
       - name: Upload .env as artifact
         uses: actions/upload-artifact@v3
