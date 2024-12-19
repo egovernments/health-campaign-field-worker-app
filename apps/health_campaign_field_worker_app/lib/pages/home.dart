@@ -420,7 +420,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.viewSummaryReportsLabel:
           homeShowcaseData.summaryReport.buildWith(
         child: HomeItemCard(
-          icon: Icons.announcement,
+          icon: Icons.book,
           label: i18.home.viewSummaryReportsLabel,
           onPressed: () {
             if (context.isDistributor) {
@@ -469,7 +469,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
-          homeShowcaseData.closedHouseHold.showcaseKey
+          homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.viewSummaryReportsLabel:
+          homeShowcaseData.summaryReport.showcaseKey
     };
 
     final homeItemsLabel = <String>[
@@ -484,7 +486,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.syncDataLabel,
       i18.home.db,
-      i18.home.closedHouseHoldLabel
+      i18.home.closedHouseHoldLabel,
+      i18.home.viewSummaryReportsLabel
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -493,12 +496,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db ||
-            element == i18.home.closedHouseHoldLabel)
+            element == i18.home.db)
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db || f != i18.home.closedHouseHoldLabel)
+        .where((f) => f != i18.home.db)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
