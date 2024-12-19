@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'project.dart';
@@ -47,6 +47,9 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
   static String? _$tenantId(ProjectSearchModel v) => v.tenantId;
   static const Field<ProjectSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static String? _$projectType(ProjectSearchModel v) => v.projectType;
+  static const Field<ProjectSearchModel, String> _f$projectType =
+      Field('projectType', _$projectType, opt: true);
   static int? _$startDate(ProjectSearchModel v) => v.startDate;
   static const Field<ProjectSearchModel, int> _f$startDate =
       Field('startDate', _$startDate, opt: true);
@@ -81,6 +84,7 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
     #department: _f$department,
     #referenceId: _f$referenceId,
     #tenantId: _f$tenantId,
+    #projectType: _f$projectType,
     #startDate: _f$startDate,
     #endDate: _f$endDate,
     #boundaryCode: _f$boundaryCode,
@@ -111,6 +115,7 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
         department: data.dec(_f$department),
         referenceId: data.dec(_f$referenceId),
         tenantId: data.dec(_f$tenantId),
+        projectType: data.dec(_f$projectType),
         startDate: data.dec(_f$startDate),
         endDate: data.dec(_f$endDate),
         boundaryCode: data.dec(_f$boundaryCode));
@@ -151,10 +156,8 @@ mixin ProjectSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as ProjectSearchModel, other));
+    return ProjectSearchModelMapper.ensureInitialized()
+        .equalsValue(this as ProjectSearchModel, other);
   }
 
   @override
@@ -184,6 +187,7 @@ abstract class ProjectSearchModelCopyWith<$R, $In extends ProjectSearchModel,
       String? department,
       String? referenceId,
       String? tenantId,
+      String? projectType,
       int? startDate,
       int? endDate,
       String? boundaryCode});
@@ -210,6 +214,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
           Object? department = $none,
           Object? referenceId = $none,
           Object? tenantId = $none,
+          Object? projectType = $none,
           Object? startDate = $none,
           Object? endDate = $none,
           Object? boundaryCode = $none}) =>
@@ -223,6 +228,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
         if (department != $none) #department: department,
         if (referenceId != $none) #referenceId: referenceId,
         if (tenantId != $none) #tenantId: tenantId,
+        if (projectType != $none) #projectType: projectType,
         if (startDate != $none) #startDate: startDate,
         if (endDate != $none) #endDate: endDate,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
@@ -240,6 +246,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
           department: data.get(#department, or: $value.department),
           referenceId: data.get(#referenceId, or: $value.referenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
+          projectType: data.get(#projectType, or: $value.projectType),
           startDate: data.get(#startDate, or: $value.startDate),
           endDate: data.get(#endDate, or: $value.endDate),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
@@ -316,6 +323,9 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
   static List<TargetModel>? _$targets(ProjectModel v) => v.targets;
   static const Field<ProjectModel, List<TargetModel>> _f$targets =
       Field('targets', _$targets, opt: true);
+  static String? _$projectType(ProjectModel v) => v.projectType;
+  static const Field<ProjectModel, String> _f$projectType =
+      Field('projectType', _$projectType, opt: true);
   static List<DocumentModel>? _$documents(ProjectModel v) => v.documents;
   static const Field<ProjectModel, List<DocumentModel>> _f$documents =
       Field('documents', _$documents, opt: true);
@@ -366,6 +376,7 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
     #rowVersion: _f$rowVersion,
     #address: _f$address,
     #targets: _f$targets,
+    #projectType: _f$projectType,
     #documents: _f$documents,
     #additionalDetails: _f$additionalDetails,
     #startDate: _f$startDate,
@@ -406,6 +417,7 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
         rowVersion: data.dec(_f$rowVersion),
         address: data.dec(_f$address),
         targets: data.dec(_f$targets),
+        projectType: data.dec(_f$projectType),
         documents: data.dec(_f$documents),
         additionalDetails: data.dec(_f$additionalDetails),
         startDate: data.dec(_f$startDate),
@@ -448,10 +460,8 @@ mixin ProjectModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectModelMapper.ensureInitialized()
-                .isValueEqual(this as ProjectModel, other));
+    return ProjectModelMapper.ensureInitialized()
+        .equalsValue(this as ProjectModel, other);
   }
 
   @override
@@ -502,6 +512,7 @@ abstract class ProjectModelCopyWith<$R, $In extends ProjectModel, $Out>
       int? rowVersion,
       AddressModel? address,
       List<TargetModel>? targets,
+      String? projectType,
       List<DocumentModel>? documents,
       ProjectAdditionalDetails? additionalDetails,
       int? startDate,
@@ -573,6 +584,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
           Object? rowVersion = $none,
           Object? address = $none,
           Object? targets = $none,
+          Object? projectType = $none,
           Object? documents = $none,
           Object? additionalDetails = $none,
           Object? startDate = $none,
@@ -599,6 +611,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (address != $none) #address: address,
         if (targets != $none) #targets: targets,
+        if (projectType != $none) #projectType: projectType,
         if (documents != $none) #documents: documents,
         if (additionalDetails != $none) #additionalDetails: additionalDetails,
         if (startDate != $none) #startDate: startDate,
@@ -631,6 +644,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       address: data.get(#address, or: $value.address),
       targets: data.get(#targets, or: $value.targets),
+      projectType: data.get(#projectType, or: $value.projectType),
       documents: data.get(#documents, or: $value.documents),
       additionalDetails:
           data.get(#additionalDetails, or: $value.additionalDetails),
@@ -732,10 +746,8 @@ mixin ProjectAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as ProjectAdditionalFields, other));
+    return ProjectAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as ProjectAdditionalFields, other);
   }
 
   @override
@@ -865,10 +877,8 @@ mixin ProjectAdditionalDetailsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectAdditionalDetailsMapper.ensureInitialized()
-                .isValueEqual(this as ProjectAdditionalDetails, other));
+    return ProjectAdditionalDetailsMapper.ensureInitialized()
+        .equalsValue(this as ProjectAdditionalDetails, other);
   }
 
   @override

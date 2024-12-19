@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:complaints/complaints.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
@@ -18,6 +19,7 @@ import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
@@ -183,13 +185,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
-          LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
-        create: (_) => PgrServiceLocalRepository(
-          sql,
-          PgrServiceOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
           LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
         create: (_) => HouseholdMemberLocalRepository(
           sql,
@@ -275,6 +270,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       // INFO Need to add packages here
+
+      RepositoryProvider<
+          LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
+        create: (_) => PgrServiceLocalRepository(
+          sql,
+          PgrServiceOpLogManager(isar),
+        ),
+      ),
     ];
   }
 
@@ -396,14 +399,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        if (value == DataModelType.complaints)
-          RepositoryProvider<
-              RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
-            create: (_) => PgrServiceRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
+
         if (value == DataModelType.user)
           RepositoryProvider<RemoteRepository<UserModel, UserSearchModel>>(
             create: (_) => UserRemoteRepository(
@@ -502,6 +498,15 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                 LocationTrackerRemoteRepository(dio, actionMap: actions),
           ),
         // INFO Need to add packages here
+
+        if (value == DataModelType.complaints)
+          RepositoryProvider<
+              RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
+            create: (_) => PgrServiceRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
       ]);
     }
 

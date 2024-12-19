@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/blocs/app_localization.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
 import 'package:referral_reconciliation/widgets/localized.dart';
 
@@ -35,6 +35,7 @@ class _ReferralReconProjectFacilitySelectionPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     final BorderSide borderSide = BorderSide(
       color: theme.colorScheme.outline,
       width: 1.0,
@@ -48,7 +49,7 @@ class _ReferralReconProjectFacilitySelectionPageState
           body: ReactiveFormConsumer(
             builder: (context, form, _) {
               final filteredProjectFacilities =
-                  (widget.projectFacilities ?? []).isNotEmpty
+                  (widget.projectFacilities).isNotEmpty
                       ? widget.projectFacilities.where((element) {
                           final query =
                               form.control(_facilityName).value as String?;
@@ -72,33 +73,44 @@ class _ReferralReconProjectFacilitySelectionPageState
                     child: Container(
                       color: Colors.white,
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: kPadding * 2,
-                          right: kPadding * 2,
+                        padding: EdgeInsets.only(
+                          left: theme.spacerTheme.spacer2 * 2,
+                          right: theme.spacerTheme.spacer2 * 2,
                         ),
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(kPadding),
+                              padding:
+                                  EdgeInsets.all(theme.spacerTheme.spacer2),
                               child: Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
                                   localizations.translate(
                                     i18.common.projectFacilitySearchHeaderLabel,
                                   ),
-                                  style: theme.textTheme.displayMedium,
+                                  style: textTheme.headingXl,
                                   textAlign: TextAlign.left,
                                 ),
                               ),
                             ),
-                            const DigitTextFormField(
-                              suffix: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.search),
-                              ),
-                              label: '',
-                              formControlName: _facilityName,
-                            ),
+                            ReactiveWrapperField<String>(
+                                formControlName: _facilityName,
+                                builder: (field) {
+                                  return LabeledField(
+                                    label: '',
+                                    child: DigitSearchFormInput(
+                                      onChange: (val) => {
+                                        form
+                                            .control(_facilityName)
+                                            .markAsTouched(),
+                                        form.control(_facilityName).value = val,
+                                      },
+                                      initialValue:
+                                          form.control(_facilityName).value ??
+                                              "",
+                                    ),
+                                  );
+                                }),
                           ],
                         ),
                       ),
@@ -116,7 +128,7 @@ class _ReferralReconProjectFacilitySelectionPageState
                           child: Container(
                             margin: const EdgeInsets.only(left: 8, right: 8),
                             decoration: BoxDecoration(
-                              color: DigitTheme.instance.colors.alabasterWhite,
+                              color: theme.colorTheme.paper.secondary,
                               border: Border(
                                 top: index == 0 ? borderSide : BorderSide.none,
                                 bottom: (filteredProjectFacilities != null &&
@@ -134,14 +146,13 @@ class _ReferralReconProjectFacilitySelectionPageState
                                 Navigator.of(context).pop(projectFacility);
                               },
                               child: Container(
-                                margin: const EdgeInsets.only(
-                                  top: kPadding,
-                                  left: kPadding,
-                                  right: kPadding,
+                                margin: EdgeInsets.only(
+                                  top: theme.spacerTheme.spacer2,
+                                  left: theme.spacerTheme.spacer2,
+                                  right: theme.spacerTheme.spacer2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color:
-                                      DigitTheme.instance.colors.alabasterWhite,
+                                  color: DigitTheme.instance.colors.transparent,
                                   border: Border(
                                     bottom: BorderSide(
                                       //                   <--- left side
@@ -151,10 +162,10 @@ class _ReferralReconProjectFacilitySelectionPageState
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: kPadding * 2,
-                                    bottom: kPadding * 2,
-                                    top: kPadding * 2,
+                                  padding: EdgeInsets.only(
+                                    left: theme.spacerTheme.spacer2 * 2,
+                                    bottom: theme.spacerTheme.spacer2 * 2,
+                                    top: theme.spacerTheme.spacer2 * 2,
                                   ),
                                   child: Text(projectFacility != null
                                       ? localizations.translate(

@@ -222,16 +222,65 @@ class HouseholdOverviewBloc
     HouseholdOverviewEmitter emit,
   ) async {
     // Delete the household from the repository.
+    final HouseholdModel? existingHousehold =
+        (await householdRepository.search(HouseholdSearchModel(
+      clientReferenceId: [event.householdModel.clientReferenceId],
+    )))
+            .firstOrNull;
     await householdRepository.delete(
       event.householdModel.copyWith(
-        rowVersion: event.householdModel.rowVersion,
+        id: existingHousehold?.id,
+        rowVersion: existingHousehold?.rowVersion ?? 1,
+        nonRecoverableError: existingHousehold?.nonRecoverableError ?? false,
       ),
     );
 
     // Iterate through individual members of the household.
     for (final i in event.members) {
-      // Delete the individual from the repository.
-      await individualRepository.delete(i);
+// Delete the individual from the repository.
+      final IndividualModel? existingIndividual =
+          (await individualRepository.search(IndividualSearchModel(
+        clientReferenceId: [i.clientReferenceId],
+      )))
+              .firstOrNull;
+      await individualRepository.delete(i.copyWith(
+        id: existingIndividual?.id,
+        rowVersion: existingIndividual?.rowVersion ?? 1,
+        nonRecoverableError: existingIndividual?.nonRecoverableError ?? false,
+      ));
+      if (event.projectBeneficiaryType == BeneficiaryType.individual) {
+        // Search for project beneficiary associated with the deleted individual.
+        final projectBeneficiaries = await projectBeneficiaryRepository.search(
+          ProjectBeneficiarySearchModel(
+            beneficiaryClientReferenceId: [
+              i.clientReferenceId,
+            ],
+          ),
+        );
+        // Delete the associated project beneficiaries.
+        for (final projectBeneficiary in projectBeneficiaries) {
+          await projectBeneficiaryRepository.delete(
+            projectBeneficiary.copyWith(
+              rowVersion: projectBeneficiary.rowVersion,
+              clientAuditDetails: (projectBeneficiary
+                              .clientAuditDetails?.createdBy !=
+                          null &&
+                      projectBeneficiary.clientAuditDetails?.createdTime !=
+                          null)
+                  ? ClientAuditDetails(
+                      createdBy:
+                          projectBeneficiary.clientAuditDetails!.createdBy,
+                      createdTime:
+                          projectBeneficiary.clientAuditDetails!.createdTime,
+                      lastModifiedBy:
+                          projectBeneficiary.clientAuditDetails!.lastModifiedBy,
+                      lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                    )
+                  : null,
+            ),
+          );
+        }
+      }
 
       // Search for household members associated with the deleted individual.
       final householdMember =
@@ -250,12 +299,23 @@ class HouseholdOverviewBloc
       }
     }
 
-    // Delete the project beneficiary associated with the household.
-    await projectBeneficiaryRepository.delete(
-      event.projectBeneficiaryModel.copyWith(
-        rowVersion: event.projectBeneficiaryModel.rowVersion,
-      ),
-    );
+    if (BeneficiaryType.household == event.projectBeneficiaryType) {
+      // Delete the project beneficiary associated with the household.
+      final ProjectBeneficiaryModel? existingProjectBeneficiary =
+          (await projectBeneficiaryRepository
+                  .search(ProjectBeneficiarySearchModel(
+        clientReferenceId: [event.projectBeneficiaryModel.clientReferenceId],
+      )))
+              .firstOrNull;
+      await projectBeneficiaryRepository.delete(
+        event.projectBeneficiaryModel.copyWith(
+          id: existingProjectBeneficiary?.id,
+          rowVersion: existingProjectBeneficiary?.rowVersion ?? 1,
+          nonRecoverableError:
+              existingProjectBeneficiary?.nonRecoverableError ?? false,
+        ),
+      );
+    }
   }
 
   // This function handles the deletion of an individual from a household.
@@ -263,9 +323,48 @@ class HouseholdOverviewBloc
     HouseholdOverviewDeleteIndividualEvent event,
     HouseholdOverviewEmitter emit,
   ) async {
-    // Delete the individual from the repository.
-    await individualRepository.delete(event.individualModel);
-
+// Delete the individual from the repository.
+    final IndividualModel? existingIndividual =
+        (await individualRepository.search(IndividualSearchModel(
+      clientReferenceId: [event.individualModel.clientReferenceId],
+    )))
+            .firstOrNull;
+    await individualRepository.delete(event.individualModel.copyWith(
+      id: existingIndividual?.id,
+      rowVersion: existingIndividual?.rowVersion ?? 1,
+      nonRecoverableError: existingIndividual?.nonRecoverableError ?? false,
+    ));
+    if (event.projectBeneficiaryType == BeneficiaryType.individual) {
+      // Search for project beneficiary associated with the deleted individual.
+      final projectBeneficiaries = await projectBeneficiaryRepository.search(
+        ProjectBeneficiarySearchModel(
+          beneficiaryClientReferenceId: [
+            event.individualModel.clientReferenceId,
+          ],
+        ),
+      );
+      // Delete the associated project beneficiaries.
+      for (final projectBeneficiary in projectBeneficiaries) {
+        await projectBeneficiaryRepository.delete(
+          projectBeneficiary.copyWith(
+            rowVersion: projectBeneficiary.rowVersion,
+            clientAuditDetails: (projectBeneficiary
+                            .clientAuditDetails?.createdBy !=
+                        null &&
+                    projectBeneficiary.clientAuditDetails?.createdTime != null)
+                ? ClientAuditDetails(
+                    createdBy: projectBeneficiary.clientAuditDetails!.createdBy,
+                    createdTime:
+                        projectBeneficiary.clientAuditDetails!.createdTime,
+                    lastModifiedBy:
+                        projectBeneficiary.clientAuditDetails!.lastModifiedBy,
+                    lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                  )
+                : null,
+          ),
+        );
+      }
+    }
     // Search for household members associated with the deleted individual.
     final householdMembers = await householdMemberRepository.search(
       HouseholdMemberSearchModel(

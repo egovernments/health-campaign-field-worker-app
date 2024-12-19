@@ -1,3 +1,9 @@
+## 1.0.3
+
+* Updated digit_data_model to latest version
+* Updated flutter version to 3.22
+* Migrated to digit_ui_components
+
 ## 1.0.1+1
 
 * Updated digit_data_model, digit_components and registration_delivery

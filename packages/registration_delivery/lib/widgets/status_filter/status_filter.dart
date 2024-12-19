@@ -1,9 +1,8 @@
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_scanner/widgets/localized.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-import '../../utils/i18_key_constants.dart' as i18;
 
 import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -46,19 +45,19 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
         children: isLoading
             ? [
                 Padding(
-                  padding: const EdgeInsets.only(top: kPadding * 2),
+                  padding: const EdgeInsets.only(top: spacer2 * 2),
                   child: Icon(
                     Icons.autorenew,
-                    color: const DigitColors().burningOrange,
-                    size: kPadding * 4,
+                    color: DigitTheme.instance.colorScheme.primary,
+                    size: spacer2 * 4,
                   ),
                 ),
-                const SizedBox(height: kPadding * 2),
+                const SizedBox(height: spacer2 * 2),
                 Center(
                   child: Text(
                     localizations.translate(i18.common.coreCommonLoadingText),
-                    style: theme.textTheme.headlineSmall
-                        ?.copyWith(color: const DigitColors().burningOrange),
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                        color: DigitTheme.instance.colorScheme.primary),
                   ),
                 )
               ]
@@ -67,21 +66,23 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                   children: [
                     if (widget.titleIcon != null) ...[
                       Padding(
-                        padding: const EdgeInsets.all(kPadding),
+                        padding: const EdgeInsets.all(spacer2),
                         child: widget.titleIcon!,
                       ),
                     ],
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: kPadding),
-                        child: Text(
-                          widget.titleText!,
-                          textAlign: TextAlign.left,
-                          style: DigitTheme
-                              .instance.mobileTheme.textTheme.headlineMedium,
+                    if (widget.titleText != null)
+                      Expanded(
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.symmetric(vertical: spacer2),
+                          child: Text(
+                            widget.titleText!,
+                            textAlign: TextAlign.left,
+                            style: DigitTheme
+                                .instance.mobileTheme.textTheme.headlineMedium,
+                          ),
                         ),
                       ),
-                    ),
                     if (widget.isCloseIcon)
                       InkWell(
                         onTap: () => Navigator.of(context).pop(),
@@ -90,8 +91,8 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(kPadding),
-                  child: SelectionBox<Status>(
+                  padding: const EdgeInsets.all(spacer2),
+                  child: SelectionCard<Status>(
                     options: getFilters() ?? [],
                     allowMultipleSelection: false,
                     equalWidthOptions: true,
@@ -102,58 +103,59 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                       });
                     },
                     valueMapper: (value) {
-                      return localizations
-                          .translate(value.toValue().toString());
+                      return localizations.translate(value ==
+                              Status.administeredSuccess
+                          ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${value.toValue().toString()}'
+                          : value.toValue().toString());
                     },
                   ),
                 ),
                 const SizedBox(
-                  height: kPadding,
+                  height: spacer2,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: kPadding),
+                  padding: const EdgeInsets.symmetric(horizontal: spacer2),
                   child: Row(
                     mainAxisAlignment:
                         MainAxisAlignment.spaceEvenly, // Adjust button spacing
                     children: [
                       Expanded(
-                        child: DigitOutLineButton(
+                        child: DigitButton(
                             label: localizations.translate(
                               i18.searchBeneficiary.clearFilter,
                             ),
-                            onPressed: selectedButtons.isEmpty
-                                ? null
-                                : () {
-                                    setState(() {
-                                      selectedButtons.clear();
-                                    });
-                                  }),
+                            isDisabled: selectedButtons.isEmpty,
+                            type: DigitButtonType.secondary,
+                            size: DigitButtonSize.medium,
+                            onPressed: () {
+                              setState(() {
+                                selectedButtons.clear();
+                              });
+                            }),
                       ),
                       const SizedBox(
-                        width: kPadding,
+                        width: spacer2,
                       ),
                       Expanded(
-                        child: DigitElevatedButton(
-                            onPressed: selectedButtons.isEmpty
-                                ? null
-                                : () {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    var selected = selectedButtons
-                                        .map((e) => e.name)
-                                        .toList();
+                        child: DigitButton(
+                          label: localizations.translate(
+                            i18.searchBeneficiary.applyFilter,
+                          ),
+                          isDisabled: selectedButtons.isEmpty,
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.medium,
+                          onPressed: () {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            var selected =
+                                selectedButtons.map((e) => e.name).toList();
 
-                                    Future.delayed(const Duration(seconds: 1),
-                                        () {
-                                      Navigator.pop(context, selected);
-                                    });
-                                  },
-                            child: Text(
-                              localizations.translate(
-                                i18.searchBeneficiary.applyFilter,
-                              ),
-                            )),
+                            Future.delayed(const Duration(seconds: 1), () {
+                              Navigator.pop(context, selected);
+                            });
+                          },
+                        ),
                       ),
                     ],
                   ),

@@ -7,7 +7,6 @@ const home = Home();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
-const checklist = Checklist();
 const complaints = Complaints();
 const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
@@ -24,12 +23,12 @@ const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
 const stockDetailsReceiptShowcase = StockDetailsReceiptShowcase();
 const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
-const selectChecklistShowcase = SelectChecklistShowcase();
+const selectSurveyFormShowcase = SelectSurveyFormShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
 
-const checklistDataShowcase = ChecklistDataShowcase();
-const checklistListShowcase = ChecklistListShowcase();
+const surveyFormDataShowcase = SurveyFormDataShowcase();
+const surveyFormListShowcase = SurveyFormListShowcase();
 const complaintTypeShowcase = ComplaintTypeShowcase();
 const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
@@ -181,7 +180,7 @@ class HomeShowcase {
     return 'SUPERVISOR_HOME_SHOWCASE_PROGRESS_BAR';
   }
 
-  String get supervisorMyChecklist {
+  String get supervisorMySurveyForm {
     return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
   }
 
@@ -347,16 +346,16 @@ class Login {
   String get actionLabel => 'LOGIN_ACTION_LABEL';
 }
 
-class SelectChecklistShowcase {
-  const SelectChecklistShowcase();
+class SelectSurveyFormShowcase {
+  const SelectSurveyFormShowcase();
 
-  String get selectChecklist {
+  String get selectSurveyForm {
     return 'SELECT_CHECKLIST_SHOWCASE_SELECT_CHECKLIST';
   }
 }
 
-class ChecklistDataShowcase {
-  const ChecklistDataShowcase();
+class SurveyFormDataShowcase {
+  const SurveyFormDataShowcase();
 
   String get date {
     return 'CHECKLIST_DATA_SHOWCASE_DATE';
@@ -367,8 +366,8 @@ class ChecklistDataShowcase {
   }
 }
 
-class ChecklistListShowcase {
-  const ChecklistListShowcase();
+class SurveyFormListShowcase {
+  const SurveyFormListShowcase();
 
   String get open {
     return 'CHECKLIST_LIST_SHOWCASE_OPEN';
@@ -511,47 +510,6 @@ class ComplaintsInboxShowcase {
   }
 }
 
-class Checklist {
-  const Checklist();
-
-  String get checklist => 'CHECKLIST';
-
-  String get checklistlabel => 'CHECKLIST_LABEL';
-
-  String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';
-
-  String get checklistViewActionLabel => 'CHECKLIST_VIEW_ACTION_LABEL';
-
-  String get checklistDetailLabel => 'CHECKLIST_DETAILS_LABEL';
-
-  String get checklistDialogLabel => 'CHECKLIST_DIALOG_LABEL';
-
-  String get checklistDialogDescription => 'CHECKLIST_DIALOG_DESCRITPTION';
-
-  String get checklistDialogPrimaryAction => 'CHECKLIST_DIALOG_PRIMARY_ACTION';
-
-  String get checklistDialogSecondaryAction =>
-      'CHECKLIST_DIALOG_SECONDARY_ACTION';
-
-  String get checklistdate => 'CHECKLIST_DATE';
-
-  String get checklistReasonRequiredError => 'CHECKLIST_REASON_REQUIRED_ERROR';
-
-  String get notSelectedKey => 'NOT_SELECTED';
-
-  String get checklistBackDialogLabel => 'CHECKLIST_BACK_DIALOG_LABEL';
-
-  String get checklistBackDialogDescription =>
-      'CHECKLIST_BACK_DIALOG_DESCRITPTION';
-
-  String get checklistBackDialogPrimaryAction =>
-      'CHECKLIST_BACK_DIALOG_PRIMARY_ACTION';
-
-  String get checklistBackDialogSecondaryAction =>
-      'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
-
-  String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
-}
 
 class ForgotPassword {
   const ForgotPassword();
@@ -592,7 +550,7 @@ class Home {
 
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 
-  String get myCheckList => 'MY_CHECK_LIST_LABEL';
+  String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
 
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
 

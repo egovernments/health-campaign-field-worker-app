@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:flutter/material.dart';
+import '../../models/privacy_policy_model.dart';
 import '../../theme/digit_theme.dart';
 import '../localized.dart';
 import 'privacy_notice_expand_component.dart';
@@ -44,20 +45,24 @@ class FullPageDialogState extends LocalizedState<FullPageDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: kPadding*3, left: 0),
-                            child: Text(
-                              localizations.translate(widget.privacyPolicy.header ?? ''),
-                              maxLines: 3,
-                              style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                                color: const DigitColors().woodsmokeBlack,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width*.7,
+                              child: Text(
+                                localizations.translate(widget.privacyPolicy.header ?? ''),
+                                maxLines: 3,
+                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                  color: const DigitColors().woodsmokeBlack,
+                                ),
                               ),
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.zero,
+                            padding: const EdgeInsets.only(top: kPadding),
                             child: InkWell(
                               onTap: () {
                                 Navigator.of(context).pop();

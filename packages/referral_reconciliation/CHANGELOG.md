@@ -1,7 +1,17 @@
+## 1.0.3
+
+* Upgrade to Flutter 3.22
+* Updated digit_data_model, survey_form to latest version
+* Migrated to digit_ui_components
+
 ## 1.0.2+2
 
 * Updated digit_components, digit_data_model
 * Service model additionalDetails objectType changes in checklist
+
+## 1.0.3-dev.1
+
+* Integrated with survey_form package
 
 ## 1.0.2+1
 

@@ -1,8 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
@@ -17,14 +19,14 @@ import 'beneficiary_card.dart';
 
 class ViewBeneficiaryCard extends LocalizedStatefulWidget {
   final HouseholdMemberWrapper householdMember;
-  final VoidCallback? onOpenPressed;
+  final VoidCallback onOpenPressed;
   final double? distance;
 
   const ViewBeneficiaryCard({
     super.key,
     super.appLocalizations,
     required this.householdMember,
-    this.onOpenPressed,
+    required this.onOpenPressed,
     this.distance,
   });
 
@@ -58,28 +60,32 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     final theme = Theme.of(context);
 
     final headerList = [
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.beneficiaryHeader),
-        cellKey: 'beneficiary',
+      DigitTableColumn(
+        header:
+            localizations.translate(i18.beneficiaryDetails.beneficiaryHeader),
+        cellValue: 'beneficiary',
+        isFrozen: true,
       ),
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.deliveryHeader),
-        cellKey: 'delivery',
+      DigitTableColumn(
+        header: localizations.translate(i18.beneficiaryDetails.deliveryHeader),
+        cellValue: 'delivery',
       ),
-      TableHeader(
-        localizations.translate(i18.individualDetails.ageLabelText),
-        cellKey: 'age',
+      DigitTableColumn(
+        header: localizations.translate(i18.individualDetails.ageLabelText),
+        cellValue: 'age',
       ),
-      TableHeader(
-        localizations.translate(i18.common.coreCommonGender),
-        cellKey: 'gender',
+      DigitTableColumn(
+        header: localizations.translate(i18.common.coreCommonGender),
+        cellValue: 'gender',
       ),
     ];
-    final filteredHeaderList = RegistrationDeliverySingleton()
-                .beneficiaryType !=
-            BeneficiaryType.individual
-        ? headerList.where((element) => element.cellKey != 'delivery').toList()
-        : headerList;
+    final filteredHeaderList =
+        RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? headerList
+                .where((element) => element.cellValue != 'delivery')
+                .toList()
+            : headerList;
     final currentCycle =
         RegistrationDeliverySingleton().projectType?.cycles?.firstWhereOrNull(
               (e) =>
@@ -142,16 +148,11 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         ).months;
 
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-          DigitDOBAge(
+          DigitDOBAgeConvertor(
             years: ageInYears,
             months: ageInMonths,
           ),
           RegistrationDeliverySingleton().projectType,
-          (taskData ?? []).isNotEmpty ? taskData?.last : null,
-          sideEffects,
-        );
-        final isSideEffectRecorded = recordedSideEffect(
-          currentCycle,
           (taskData ?? []).isNotEmpty ? taskData?.last : null,
           sideEffects,
         );
@@ -164,7 +165,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         final isStatusReset = checkStatus(taskData, currentCycle);
 
         final rowTableData = [
-          TableData(
+          DigitTableData(
             [
               e.name?.givenName ?? '--',
               (e.name?.familyName?.trim().isNotEmpty ?? false)
@@ -173,7 +174,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             ].whereNotNull().join(' '),
             cellKey: 'beneficiary',
           ),
-          TableData(
+          DigitTableData(
             getTableCellText(
               StatusKeys(
                 isNotEligible,
@@ -195,7 +196,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               ),
             ),
           ),
-          TableData(
+          DigitTableData(
             e.dateOfBirth == null
                 ? '--'
                 : '${DigitDateUtils.calculateAge(
@@ -211,7 +212,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   ).months} ${localizations.translate(i18.searchBeneficiary.monthsAbbr)}',
             cellKey: 'age',
           ),
-          TableData(
+          DigitTableData(
             e.gender?.name == null
                 ? '--'
                 : localizations
@@ -220,8 +221,8 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           ),
         ];
 
-        return TableDataRow(
-          RegistrationDeliverySingleton().beneficiaryType !=
+        return DigitTableRow(
+          tableRow: RegistrationDeliverySingleton().beneficiaryType !=
                   BeneficiaryType.individual
               ? rowTableData
                   .where((element) => element.cellKey != 'delivery')
@@ -250,7 +251,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     ).months;
 
     final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-      DigitDOBAge(
+      DigitDOBAgeConvertor(
         years: ageInYears,
         months: ageInMonths,
       ),
@@ -280,90 +281,78 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         t.projectBeneficiaryClientReferenceId ==
         projectBeneficiary?.clientReferenceId);
 
-    return DigitCard(
-      child: Column(
+    return DigitCard(margin: const EdgeInsets.all(spacer2), children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 1.8,
-                child: BeneficiaryCard(
-                  description: [
-                    householdMember.household?.address?.doorNo,
-                    householdMember.household?.address?.addressLine1,
-                    householdMember.household?.address?.addressLine2,
-                    householdMember.household?.address?.landmark,
-                    householdMember.household?.address?.city,
-                    householdMember.household?.address?.pincode,
-                  ].whereNotNull().take(2).join(' '),
-                  subtitle: widget.distance != null
-                      ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
-                      : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
-                  status: getStatus(
-                      tasks ?? [],
-                      householdMember.projectBeneficiaries ?? [],
-                      RegistrationDeliverySingleton().beneficiaryType ==
-                              BeneficiaryType.individual
-                          ? isNotEligible
-                          : false,
-                      isBeneficiaryRefused),
-                  title: [
-                    householdMember.headOfHousehold?.name?.givenName ??
-                        localizations.translate(i18.common.coreCommonNA),
-                    householdMember.headOfHousehold?.name?.familyName,
-                  ].whereNotNull().join(''),
-                ),
-              ),
-              Flexible(
-                child: DigitOutLineButton(
-                  buttonStyle: OutlinedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                  ),
-                  label:
-                      localizations.translate(i18.searchBeneficiary.iconLabel),
-                  onPressed: widget.onOpenPressed,
-                ),
-              ),
-            ],
-          ),
-          Offstage(
-            offstage: !isCardExpanded,
-            child: DigitTable(
-              headerList: filteredHeaderList,
-              tableData: tableData ?? [],
-              columnWidth: 130,
-              columnRowFixedHeight: 65,
-              height: householdMember.members?.length == 1
-                  ? 65 * 2
-                  : (householdMember.members?.length ?? 0) <= 4
-                      ? ((householdMember.members?.length ?? 0) + 1) * 65
-                      : 5 * 68,
-              scrollPhysics: (householdMember.members?.length ?? 0) <= 4
-                  ? const NeverScrollableScrollPhysics()
-                  : const ClampingScrollPhysics(),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 1.8,
+            child: BeneficiaryCard(
+              description: [
+                householdMember.household?.address?.doorNo,
+                householdMember.household?.address?.addressLine1,
+                householdMember.household?.address?.addressLine2,
+                householdMember.household?.address?.landmark,
+                householdMember.household?.address?.city,
+                householdMember.household?.address?.pincode,
+              ].whereNotNull().take(2).join(' '),
+              subtitle: widget.distance != null
+                  ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
+                  : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
+              status: getStatus(
+                  tasks ?? [],
+                  householdMember.projectBeneficiaries ?? [],
+                  RegistrationDeliverySingleton().beneficiaryType ==
+                          BeneficiaryType.individual
+                      ? isNotEligible
+                      : false,
+                  isBeneficiaryRefused),
+              title: [
+                householdMember.headOfHousehold?.name?.givenName ??
+                    localizations.translate(i18.common.coreCommonNA),
+                householdMember.headOfHousehold?.name?.familyName,
+              ].whereNotNull().join(''),
             ),
           ),
-          Container(
-            height: 24,
-            margin: const EdgeInsets.all(4),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              icon: Icon(
-                isCardExpanded
-                    ? Icons.keyboard_arrow_up
-                    : Icons.keyboard_arrow_down,
-                size: 24,
-              ),
-              onPressed: () => isCardExpanded = !isCardExpanded,
+          Flexible(
+            child: DigitButton(
+              label: localizations.translate(i18.searchBeneficiary.iconLabel),
+              onPressed: widget.onOpenPressed,
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.medium,
             ),
           ),
         ],
       ),
-    );
+      if (isCardExpanded)
+        Offstage(
+          offstage: !isCardExpanded,
+          child: DigitTable(
+            enableBorder: true,
+            showPagination: false,
+            showSelectedState: false,
+            columns: filteredHeaderList,
+            rows: tableData ?? [],
+          ),
+        ),
+      Container(
+        height: 24,
+        margin: const EdgeInsets.all(4),
+        child: Center(
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            icon: Icon(
+              isCardExpanded
+                  ? Icons.keyboard_arrow_up
+                  : Icons.keyboard_arrow_down,
+              size: 24,
+            ),
+            onPressed: () => isCardExpanded = !isCardExpanded,
+          ),
+        ),
+      ),
+    ]);
   }
 
   String getTableCellText(

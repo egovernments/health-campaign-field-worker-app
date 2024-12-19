@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'models.dart';
@@ -135,10 +135,8 @@ mixin ConfigModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ConfigModelMapper.ensureInitialized()
-                .isValueEqual(this as ConfigModel, other));
+    return ConfigModelMapper.ensureInitialized()
+        .equalsValue(this as ConfigModel, other);
   }
 
   @override
@@ -356,10 +354,8 @@ mixin EnumValuesMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            EnumValuesMapper.ensureInitialized()
-                .isValueEqual(this as EnumValues, other));
+    return EnumValuesMapper.ensureInitialized()
+        .equalsValue(this as EnumValues, other);
   }
 
   @override
@@ -528,10 +524,8 @@ mixin AttributeModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttributeModelMapper.ensureInitialized()
-                .isValueEqual(this as AttributeModel, other));
+    return AttributeModelMapper.ensureInitialized()
+        .equalsValue(this as AttributeModel, other);
   }
 
   @override
@@ -719,10 +713,8 @@ mixin TableReferenceModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TableReferenceModelMapper.ensureInitialized()
-                .isValueEqual(this as TableReferenceModel, other));
+    return TableReferenceModelMapper.ensureInitialized()
+        .equalsValue(this as TableReferenceModel, other);
   }
 
   @override

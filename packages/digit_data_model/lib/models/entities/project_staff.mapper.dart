@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'project_staff.dart';
@@ -136,10 +136,8 @@ mixin ProjectStaffSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectStaffSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as ProjectStaffSearchModel, other));
+    return ProjectStaffSearchModelMapper.ensureInitialized()
+        .equalsValue(this as ProjectStaffSearchModel, other);
   }
 
   @override
@@ -391,10 +389,8 @@ mixin ProjectStaffModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectStaffModelMapper.ensureInitialized()
-                .isValueEqual(this as ProjectStaffModel, other));
+    return ProjectStaffModelMapper.ensureInitialized()
+        .equalsValue(this as ProjectStaffModel, other);
   }
 
   @override
@@ -608,10 +604,8 @@ mixin ProjectStaffAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectStaffAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as ProjectStaffAdditionalFields, other));
+    return ProjectStaffAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as ProjectStaffAdditionalFields, other);
   }
 
   @override

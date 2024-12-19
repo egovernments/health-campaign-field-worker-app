@@ -19,6 +19,7 @@ class ProjectSearchModel extends EntitySearchModel
   final String? tenantId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
+  final String? projectType;
 
   ProjectSearchModel({
     this.id,
@@ -29,6 +30,7 @@ class ProjectSearchModel extends EntitySearchModel
     this.parent,
     this.department,
     this.referenceId,
+    this.projectType,
     this.tenantId,
     int? startDate,
     int? endDate,
@@ -53,6 +55,7 @@ class ProjectSearchModel extends EntitySearchModel
     this.department,
     this.referenceId,
     this.tenantId,
+    this.projectType,
     int? startDate,
     int? endDate,
     super.boundaryCode,
@@ -95,6 +98,7 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
   final ProjectAdditionalFields? additionalFields;
   @MappableField(key: 'additionalDetails')
   final ProjectAdditionalDetails? additionalDetails;
+  final String? projectType;
 
   ProjectModel({
     this.additionalFields,
@@ -114,6 +118,7 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
     this.rowVersion,
     this.address,
     this.targets,
+    this.projectType,
     this.documents,
     this.additionalDetails,
     int? startDate,
@@ -148,6 +153,7 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
       id: Value(id),
       projectTypeId: Value(projectTypeId),
       projectNumber: Value(projectNumber),
+      projectType: Value(projectType),
       subProjectTypeId: Value(subProjectTypeId),
       isTaskEnabled: Value(isTaskEnabled),
       parent: Value(parent),
@@ -178,7 +184,6 @@ class ProjectAdditionalFields extends AdditionalFields
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProjectAdditionalDetails with ProjectAdditionalDetailsMappable {
   final ProjectTypeModel? projectType;
-
 
   ProjectAdditionalDetails({
     this.projectType,

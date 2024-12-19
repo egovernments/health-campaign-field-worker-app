@@ -1,6 +1,7 @@
 import 'package:digit_components/theme/colors.dart';
 import 'package:flutter/material.dart';
 import '../../models/privacy_notice/privacy_notice_model.dart';
+import '../../models/privacy_policy_model.dart';
 import '../../theme/digit_theme.dart';
 import '../localized.dart';
 
@@ -149,12 +150,14 @@ class DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
         text: TextSpan(
           text: '$stepNumber. ',
           style: TextStyle(
+            color: const DigitColors().woodsmokeBlack,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
           children: [
             TextSpan(
               text: localizations.translate(descriptionText),
               style: TextStyle(
+                color: const DigitColors().woodsmokeBlack,
                 fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               ),
             ),

@@ -9,6 +9,5 @@ abstract class HouseholdMemberLocalBaseRepository
   @override
   DataModelType get type => DataModelType.householdMember;
 
-  @override
   TableInfo get table => sql.householdMember;
 }

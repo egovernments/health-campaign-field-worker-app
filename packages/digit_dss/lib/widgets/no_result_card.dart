@@ -1,5 +1,5 @@
 import 'package:attendance_management/utils/constants.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -20,7 +20,7 @@ class NoResultCard extends StatelessWidget {
     return Align(
         alignment: align,
         child: Padding(
-            padding: const EdgeInsets.all(kPadding),
+            padding: const EdgeInsets.all(spacer1),
             child: Column(
               children: [
                 SvgPicture.asset(noResultSvg),

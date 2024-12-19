@@ -2,8 +2,6 @@
 
 import 'package:digit_data_model/data_model.dart';
 
-import '../../../models/entities/user.dart';
-
 class UserRemoteRepository
     extends RemoteRepository<UserModel, UserSearchModel> {
   UserRemoteRepository(

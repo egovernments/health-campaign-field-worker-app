@@ -12,6 +12,5 @@ abstract class TaskLocalBaseRepository
   @override
   DataModelType get type => DataModelType.task;
 
-  @override
   TableInfo get table => sql.task;
 }

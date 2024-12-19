@@ -21,13 +21,6 @@ typedef ProjectResourceDataRepository
     = DataRepository<ProjectResourceModel, ProjectResourceSearchModel>;
 typedef ProjectStaffDataRepository
     = DataRepository<ProjectStaffModel, ProjectStaffSearchModel>;
-typedef ServiceDefinitionDataRepository
-    = DataRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>;
-typedef ServiceDataRepository
-    = DataRepository<ServiceModel, ServiceSearchModel>;
-typedef PgrServiceDataRepository
-    = DataRepository<PgrServiceModel, PgrServiceSearchModel>;
-
 typedef UserDataRepository = DataRepository<UserModel, UserSearchModel>;
 
 typedef StockDataRepository = DataRepository<StockModel, StockSearchModel>;

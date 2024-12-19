@@ -3,8 +3,10 @@ import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:closed_household/utils/extensions/extensions.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:location/location.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -20,6 +22,13 @@ class ClosedHouseholdWrapperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (_) {
+            return LocationBloc(location: Location())
+              ..add(const LoadLocationEvent());
+          },
+          lazy: false,
+        ),
         BlocProvider(
           create: (_) {
             return ClosedHouseholdBloc(
