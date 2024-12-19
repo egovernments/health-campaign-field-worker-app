@@ -480,6 +480,7 @@ class _CustomDigitScannerPageState
                                           i18Local.deliverIntervention
                                               .scanValidResource,
                                         );
+                                        return;
                                       }
                                       if (context.mounted) {
                                         if (widget.isGS1code &&
