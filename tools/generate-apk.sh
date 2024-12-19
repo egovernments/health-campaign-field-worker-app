@@ -55,7 +55,7 @@ cd "$APP_DIR" || exit
 
   mkdir -p outputs
   mv "$APP_DIR/build/app/outputs/flutter-apk/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
-done
+# done
 
 open outputs
 echo "APK generation complete."
