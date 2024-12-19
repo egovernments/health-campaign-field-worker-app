@@ -9,7 +9,7 @@ on:
 jobs:
   build-apk:
     runs-on: ubuntu-latest
-    environment: UAT
+    environment: QA
     
     steps:
       - name: Checkout code
