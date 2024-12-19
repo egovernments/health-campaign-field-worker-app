@@ -369,11 +369,6 @@ class CustomIndividualDetailsPageState
                                 "min3": (object) => localizations.translate(
                                       i18Local.common.min3CharsRequired,
                                     ),
-                                "validName": (object) =>
-                                    localizations.translate(
-                                      i18Local.individualDetails
-                                          .individualNameValidation,
-                                    )
                               },
                             ),
                           ),
@@ -696,7 +691,6 @@ class CustomIndividualDetailsPageState
           Validators.required,
           utilsLocal.CustomValidator.requiredMin3,
           Validators.maxLength(200),
-          utilsLocal.CustomValidator.validIndividualName,
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
       ),
