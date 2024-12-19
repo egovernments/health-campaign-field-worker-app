@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'target.dart';
@@ -93,10 +93,8 @@ mixin TargetSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TargetSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as TargetSearchModel, other));
+    return TargetSearchModelMapper.ensureInitialized()
+        .equalsValue(this as TargetSearchModel, other);
   }
 
   @override
@@ -185,8 +183,8 @@ class TargetModelMapper extends SubClassMapperBase<TargetModel> {
   static int? _$rowVersion(TargetModel v) => v.rowVersion;
   static const Field<TargetModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-  static String? _$beneficiaryType(TargetModel v) => v.beneficiaryType;
-  static const Field<TargetModel, String> _f$beneficiaryType =
+  static BeneficiaryType? _$beneficiaryType(TargetModel v) => v.beneficiaryType;
+  static const Field<TargetModel, BeneficiaryType> _f$beneficiaryType =
       Field('beneficiaryType', _$beneficiaryType, opt: true);
   static AuditDetails? _$auditDetails(TargetModel v) => v.auditDetails;
   static const Field<TargetModel, AuditDetails> _f$auditDetails =
@@ -274,10 +272,8 @@ mixin TargetModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TargetModelMapper.ensureInitialized()
-                .isValueEqual(this as TargetModel, other));
+    return TargetModelMapper.ensureInitialized()
+        .equalsValue(this as TargetModel, other);
   }
 
   @override
@@ -311,7 +307,7 @@ abstract class TargetModelCopyWith<$R, $In extends TargetModel, $Out>
       bool? nonRecoverableError,
       String? tenantId,
       int? rowVersion,
-      String? beneficiaryType,
+      BeneficiaryType? beneficiaryType,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -477,10 +473,8 @@ mixin TargetAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TargetAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as TargetAdditionalFields, other));
+    return TargetAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as TargetAdditionalFields, other);
   }
 
   @override

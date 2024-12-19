@@ -82,9 +82,7 @@ class AttendanceIndividualBloc
 
       checkResponse(filteredLogs ?? [], attendees, event);
     } catch (ex) {
-      String? error = ex as String;
-
-      emit(AttendanceIndividualState.error(error));
+      emit(AttendanceIndividualState.error(ex.toString()));
     }
   }
 
@@ -176,7 +174,10 @@ class AttendanceIndividualBloc
                                 "latitude": event.latitude,
                                 "longitude": event.longitude,
                               }
-                            : null),
+                            : {
+                                EnumValues.boundaryCode.toValue():
+                                    AttendanceSingleton().boundary?.code,
+                              }),
                 AttendanceLogModel(
                     individualId: e.individualId,
                     registerId: e.registerId,
@@ -196,11 +197,13 @@ class AttendanceIndividualBloc
                             ? {
                                 EnumValues.latitude.toValue(): event.latitude,
                                 EnumValues.longitude.toValue(): event.longitude,
-                                EnumValues.boundaryCode.toValue(): AttendanceSingleton().boundary?.code,
+                                EnumValues.boundaryCode.toValue():
+                                    AttendanceSingleton().boundary?.code,
                               }
                             : {
-                          EnumValues.boundaryCode.toValue(): AttendanceSingleton().boundary?.code,
-                        })
+                                EnumValues.boundaryCode.toValue():
+                                    AttendanceSingleton().boundary?.code,
+                              })
               ]);
             }
           });
@@ -406,6 +409,7 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
     required int limit,
     @Default(false) bool isSingleSession,
   }) = AttendanceIndividualLogSearchEvent;
+
   // Event for marking individual attendance
   const factory AttendanceIndividualEvent.individualAttendanceMark({
     @Default(0) int entryTime,
@@ -415,6 +419,7 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
     required String individualId,
     required String registerId,
   }) = AttendanceMarkEvent;
+
   // Event for saving attendance as draft
   const factory AttendanceIndividualEvent.saveAsDraft({
     required int entryTime,
@@ -436,10 +441,13 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
 @freezed
 class AttendanceIndividualState with _$AttendanceIndividualState {
   const AttendanceIndividualState._();
+
   // Initial state
   const factory AttendanceIndividualState.initial() = _Initial;
+
   // Loading state
   const factory AttendanceIndividualState.loading() = _Loading;
+
   // Loaded state with attendance data
   factory AttendanceIndividualState.loaded({
     List<AttendeeModel>? attendanceSearchModelList,
@@ -450,6 +458,7 @@ class AttendanceIndividualState with _$AttendanceIndividualState {
     @Default(10) int limitData,
     @Default(false) bool viewOnly,
   }) = _AttendanceRowModelLoaded;
+
   // Error state
   const factory AttendanceIndividualState.error(String? error) = _Error;
 }

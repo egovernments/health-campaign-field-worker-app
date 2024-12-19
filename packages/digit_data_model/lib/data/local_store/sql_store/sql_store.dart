@@ -6,7 +6,6 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:digit_components/digit_components.dart';
 
 import '../../../models/entities/address_type.dart';
 import '../../../models/entities/beneficiary_type.dart';
@@ -109,7 +108,74 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 5; // Increment schema version
+
+  @override
+  MigrationStrategy get migration =>
+      MigrationStrategy(
+        onUpgrade: (migrator, from, to) async {
+          if (from < 5) {
+            //Add column for projectType in Project Table
+            try {
+              await migrator.addColumn(project, project.projectType);
+            } catch (e) {}
+          }
+          if (from < 5) {
+            await customStatement('''
+        CREATE TABLE attributes_temp (
+          id TEXT,
+          dataType TEXT,
+          referenceId TEXT,
+          tenantId TEXT,
+          code TEXT,
+          values TEXT,
+          isActive BOOLEAN,
+          required BOOLEAN,
+          regex TEXT,
+          "order" INTEGER,
+          auditCreatedBy TEXT,
+          nonRecoverableError BOOLEAN DEFAULT 0,
+          auditCreatedTime INTEGER,
+          clientCreatedTime INTEGER,
+          clientModifiedBy TEXT,
+          clientCreatedBy TEXT,
+          clientModifiedTime INTEGER,
+          auditModifiedBy TEXT,
+          auditModifiedTime INTEGER,
+          isDeleted BOOLEAN DEFAULT 0,
+          rowVersion INTEGER,
+          additionalFields TEXT,
+          additionalDetails TEXT
+        );
+      ''');
+
+            // Step 2: Copy data from the old table to the new table
+            await customStatement('''
+        INSERT INTO attributes_temp (
+          id, dataType, referenceId, tenantId, code, values, isActive, required, regex, "order",
+          auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
+          clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+          auditModifiedTime, isDeleted, rowVersion, additionalFields, additionalDetails
+        )
+        SELECT 
+          id, dataType, referenceId, tenantId, code, values,
+          CASE isActive WHEN 'true' THEN 1 WHEN 'false' THEN 0 ELSE NULL END,
+          required, regex, "order",
+          auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
+          clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+          auditModifiedTime, isDeleted, rowVersion, additionalFields, additionalDetails
+        FROM attributes;
+      ''');
+
+            // Step 3: Drop the old table
+            await migrator.deleteTable('attributes');
+
+            // Step 4: Rename the new table to the old table's name
+            await customStatement(
+                'ALTER TABLE attributes_temp RENAME TO attributes;');
+          }
+        },
+      );
 
   /// The `_openConnection` method opens a connection to the database.
   /// It returns a `LazyDatabase` that opens the database when it is first accessed.
@@ -122,26 +188,6 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
       // Return a `NativeDatabase` that uses the file for storage.
       return NativeDatabase(file, logStatements: true, setup: (data) {});
-    });
-  }
-
-  @override
-  MigrationStrategy get migration {
-    return MigrationStrategy(onCreate: (Migrator m) async {
-      await m.createAll();
-    }, onUpgrade: (Migrator m, int from, int to) async {
-      if (from < 5) {
-        //Add column for projectType in Project Table
-        try {
-          AppLogger.instance.info('Applying migration $from to $to');
-          await m.addColumn(project, project.projectType);
-        } catch (e) {
-          AppLogger.instance.error(
-            title: 'migration',
-            message: e.toString(),
-          );
-        }
-      }
     });
   }
 }

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'project_beneficiary.dart';
@@ -183,10 +183,8 @@ mixin ProjectBeneficiarySearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectBeneficiarySearchModelMapper.ensureInitialized()
-                .isValueEqual(this as ProjectBeneficiarySearchModel, other));
+    return ProjectBeneficiarySearchModelMapper.ensureInitialized()
+        .equalsValue(this as ProjectBeneficiarySearchModel, other);
   }
 
   @override
@@ -516,10 +514,8 @@ mixin ProjectBeneficiaryModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectBeneficiaryModelMapper.ensureInitialized()
-                .isValueEqual(this as ProjectBeneficiaryModel, other));
+    return ProjectBeneficiaryModelMapper.ensureInitialized()
+        .equalsValue(this as ProjectBeneficiaryModel, other);
   }
 
   @override
@@ -748,11 +744,8 @@ mixin ProjectBeneficiaryAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectBeneficiaryAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(
-                    this as ProjectBeneficiaryAdditionalFields, other));
+    return ProjectBeneficiaryAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as ProjectBeneficiaryAdditionalFields, other);
   }
 
   @override

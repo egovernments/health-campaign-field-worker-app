@@ -8,7 +8,6 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../router/registration_delivery_router.gm.dart';
-import '../../utils/utils.dart';
 
 @RoutePage()
 class BeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {
@@ -27,7 +26,6 @@ class BeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {
 
 class BeneficiaryAcknowledgementPageState
     extends LocalizedState<BeneficiaryAcknowledgementPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,11 +34,11 @@ class BeneficiaryAcknowledgementPageState
         title: localizations
             .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
         actions: [
-          Button(
+          DigitButton(
               label: localizations.translate(
                 i18.householdDetails.viewHouseHoldDetailsAction,
               ),
-              onPressed: (){
+              onPressed: () {
                 final bloc = context.read<SearchBlocWrapper>();
 
                 context.router.popAndPush(
@@ -49,15 +47,14 @@ class BeneficiaryAcknowledgementPageState
                   ),
                 );
               },
-              type: ButtonType.primary,
-              size: ButtonSize.large
-          ),
-          Button(
-              label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
-              onPressed: ()=>context.router.maybePop(),
-              type: ButtonType.secondary,
-              size: ButtonSize.large
-          ),
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large),
+          DigitButton(
+              label: localizations
+                  .translate(i18.acknowledgementSuccess.actionLabelText),
+              onPressed: () => context.router.maybePop(),
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.large),
         ],
         description: localizations.translate(
           i18.acknowledgementSuccess.acknowledgementDescriptionText,

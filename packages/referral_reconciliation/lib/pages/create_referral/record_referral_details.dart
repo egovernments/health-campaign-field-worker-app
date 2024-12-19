@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/dropdown_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:survey_form/survey_form.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +12,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_record.dart';
@@ -63,6 +64,7 @@ class _RecordReferralDetailsPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return BlocBuilder<ReferralReconServiceDefinitionBloc,
         ReferralReconServiceDefinitionState>(
@@ -96,7 +98,7 @@ class _RecordReferralDetailsPageState
                             : null,
                       );
                       return ScrollableContent(
-                        enableFixedButton: true,
+                        enableFixedDigitButton: true,
                         header: const Column(children: [
                           BackNavigationHelpHeaderWidget(),
                         ]),
@@ -111,9 +113,9 @@ class _RecordReferralDetailsPageState
                                     ValueListenableBuilder(
                                       valueListenable: clickedStatus,
                                       builder: (context, bool isClicked, _) {
-                                        return Button(
-                                          size: ButtonSize.large,
-                                          type: ButtonType.primary,
+                                        return DigitButton(
+                                          size: DigitButtonSize.large,
+                                          type: DigitButtonType.primary,
                                           mainAxisSize: MainAxisSize.max,
                                           label: localizations
                                               .translate(recordState.mapOrNull(
@@ -316,6 +318,11 @@ class _RecordReferralDetailsPageState
                                                               HFReferralAdditionalFields(
                                                             version: 1,
                                                             fields: [
+                                                              AdditionalField(
+                                                                  "boundaryCode",
+                                                                  ReferralReconSingleton()
+                                                                      .boundary
+                                                                      ?.code),
                                                               if (hfCoordinator !=
                                                                       null &&
                                                                   hfCoordinator
@@ -433,9 +440,9 @@ class _RecordReferralDetailsPageState
                                       ValueListenableBuilder(
                                         valueListenable: clickedStatus,
                                         builder: (context, bool isClicked, _) {
-                                          return Button(
-                                            size: ButtonSize.large,
-                                            type: ButtonType.primary,
+                                          return DigitButton(
+                                            size: DigitButtonSize.large,
+                                            type: DigitButtonType.primary,
                                             mainAxisSize: MainAxisSize.max,
                                             label: localizations.translate(
                                                 recordState.mapOrNull(
@@ -663,6 +670,11 @@ class _RecordReferralDetailsPageState
                                                                 HFReferralAdditionalFields(
                                                               version: 1,
                                                               fields: [
+                                                                AdditionalField(
+                                                                    "boundaryCode",
+                                                                    ReferralReconSingleton()
+                                                                        .boundary
+                                                                        ?.code),
                                                                 if (hfCoordinator !=
                                                                         null &&
                                                                     hfCoordinator
@@ -799,7 +811,7 @@ class _RecordReferralDetailsPageState
                                                     .referralDetails,
                                               ),
                                               style:
-                                                  theme.textTheme.displayMedium,
+                                                 textTheme.headingXl,
                                             ),
                                           ),
                                         ],
@@ -1144,7 +1156,7 @@ class _RecordReferralDetailsPageState
                                                         "",
                                                     errorMessage:
                                                         field.errorText,
-                                                    radioButtons:
+                                                    radioDigitButtons:
                                                         ReferralReconSingleton()
                                                             .referralReasons
                                                             .map((r) {

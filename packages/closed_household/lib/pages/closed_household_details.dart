@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/closed_household.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
@@ -12,6 +12,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../router/closed_household_router.gm.dart';
+import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -55,6 +56,7 @@ class ClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -86,7 +88,7 @@ class ClosedHouseholdDetailsPageState
           child: BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
               builder: (context, state) {
             return ScrollableContent(
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               header: const Column(
                 children: [
                   BackNavigationHelpHeaderWidget(
@@ -95,147 +97,151 @@ class ClosedHouseholdDetailsPageState
                 ],
               ),
               footer: DigitCard(
-                padding: EdgeInsets.all(theme.spacerTheme.spacer2),
-                children: [
-                  BlocBuilder<LocationBloc, LocationState>(
-                  builder: (context, locationState) {
-                    return Button(
-                      size: ButtonSize.large,
-                      type: ButtonType.primary,
-                      mainAxisSize: MainAxisSize.max,
-                      onPressed: () {
-                        if(!form.valid && form
-                            .control(
-                          _householdHeadNameKey,)
-                            .value.length>0) {
-                          return;
-                        }
-                        final String? householdHeadName = form
-                            .control(_householdHeadNameKey)
-                            .value as String?;
+                  margin: const EdgeInsets.only(top: spacer2),
+                  children: [
+                    BlocBuilder<LocationBloc, LocationState>(
+                      builder: (context, locationState) {
+                        return DigitButton(
+                          size: DigitButtonSize.large,
+                          type: DigitButtonType.primary,
+                          mainAxisSize: MainAxisSize.max,
+                          onPressed: () {
+                            if (!form.valid &&
+                                form
+                                        .control(
+                                          _householdHeadNameKey,
+                                        )
+                                        .value
+                                        .length >
+                                    0) {
+                              return;
+                            }
+                            final String? householdHeadName = form
+                                .control(_householdHeadNameKey)
+                                .value as String?;
 
-                        context.read<ClosedHouseholdBloc>().add(
-                              ClosedHouseholdEvent.handleSummary(
-                                latitude: locationState.latitude!,
-                                longitude: locationState.longitude!,
-                                locationAccuracy: locationState.accuracy!,
-                                householdHeadName: householdHeadName != null &&
-                                        householdHeadName.trim().isNotEmpty
-                                    ? householdHeadName
-                                    : null,
-                              ),
-                            );
+                            context.read<ClosedHouseholdBloc>().add(
+                                  ClosedHouseholdEvent.handleSummary(
+                                    latitude: locationState.latitude!,
+                                    longitude: locationState.longitude!,
+                                    locationAccuracy: locationState.accuracy!,
+                                    householdHeadName: householdHeadName !=
+                                                null &&
+                                            householdHeadName.trim().isNotEmpty
+                                        ? householdHeadName
+                                        : null,
+                                  ),
+                                );
 
-                        context.router.push(ClosedHouseholdSummaryRoute());
-                      },
-                      label: localizations.translate(
+                            context.router.push(ClosedHouseholdSummaryRoute());
+                          },
+                          label: localizations.translate(
                             i18.common.coreCommonNext,
-                      ),
-                    );
-                  },
-                ),]
-              ),
+                          ),
+                        );
+                      },
+                    ),
+                  ]),
               slivers: [
                 SliverToBoxAdapter(
                   child: DigitCard(
-                    children: [
-                      DigitTextBlock(
-                        heading: localizations.translate(
-                          i18.closeHousehold.closeHouseHoldDetailLabel,
-                        ),
-                        headingStyle: theme.textTheme.displayMedium,
-                        description: localizations.translate(
-                          i18.closeHousehold.closeHouseHoldDetailDescLabel,
-                        ),
+                    margin: const EdgeInsets.all(spacer2),
+                      children: [
+                    DigitTextBlock(
+                      padding: const EdgeInsets.all(0),
+                      heading: localizations.translate(
+                        i18.closeHousehold.closeHouseHoldDetailLabel,
                       ),
-                      DigitCard(children: [
-                        ReactiveWrapperField<String>(
-                            formControlName:
-                            _administrationAreaKey,
-                            showErrors: (control) =>
-                            control.invalid &&
-                                control.touched,
-                            // Ensures error is shown if invalid and touched
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.closeHousehold.villageName,
-                                ),
-                                child: DigitTextFormInput(
-                                  errorMessage: field.errorText,
-                                  readOnly: true,
-                                  initialValue: form
-                                      .control(
-                                    _administrationAreaKey)
-                                      .value,
-                                ),
-                              );
-                            }),
-                        ReactiveWrapperField<double>(
-                            formControlName:
-                            _accuracyKey,
-                            showErrors: (control) =>
-                            control.invalid &&
-                                control.touched,
-                            // Ensures error is shown if invalid and touched
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.closeHousehold.accuracyLabel,
-                                ),
-                                child: DigitTextFormInput(
-                                  errorMessage: field.errorText,
-                                  readOnly: true,
-                                  initialValue: (form
-                                      .control(
-                                    _accuracyKey,)
-                                      .value).toString(),
-                                ),
-                              );
-                            }),
-                        ReactiveWrapperField<String>(
-                            validationMessages: {
-                              'maxLength': (_) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', maxLength.toString()),
-                              'minLength': (_) => localizations
-                                  .translate(i18.common.min2CharsRequired)
-                                  .replaceAll('{}', '2'),
-                            },
-                            formControlName:
-                            _householdHeadNameKey,
-                            showErrors: (control) =>
-                            control.invalid &&
-                                control.touched && control.value != '',
-                            // Ensures error is shown if invalid and touched
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.closeHousehold.headNameLabel,
-                                ),
-                                child: DigitTextFormInput(
-                                  maxLength: 64,
-                                  charCount: true,
-                                  onChange: (val) => {
-                                    form
+                      headingStyle: textTheme.headingXl,
+                      description: localizations.translate(
+                        i18.closeHousehold.closeHouseHoldDetailDescLabel,
+                      ),
+                    ),
+                      ReactiveWrapperField<String>(
+                          formControlName: _administrationAreaKey,
+                          showErrors: (control) =>
+                              control.invalid && control.touched,
+                          // Ensures error is shown if invalid and touched
+                          builder: (field) {
+                            return LabeledField(
+                              label: localizations.translate(
+                                i18.closeHousehold.villageName,
+                              ),
+                              child: DigitTextFormInput(
+                                errorMessage: field.errorText,
+                                readOnly: true,
+                                initialValue:
+                                    form.control(_administrationAreaKey).value,
+                              ),
+                            );
+                          }),
+                      ReactiveWrapperField<double>(
+                          formControlName: _accuracyKey,
+                          showErrors: (control) =>
+                              control.invalid && control.touched,
+                          // Ensures error is shown if invalid and touched
+                          builder: (field) {
+                            return LabeledField(
+                              label: localizations.translate(
+                                i18.closeHousehold.accuracyLabel,
+                              ),
+                              child: DigitTextFormInput(
+                                errorMessage: field.errorText,
+                                readOnly: true,
+                                initialValue: (form
                                         .control(
-                                      _householdHeadNameKey,)
-                                        .markAsTouched(),
-                                    form
-                                        .control(
-                                      _householdHeadNameKey,)
-                                        .value = val,
-                                  },
-                                  errorMessage: field.errorText,
-                                  initialValue: form
+                                          _accuracyKey,
+                                        )
+                                        .value)
+                                    .toString(),
+                              ),
+                            );
+                          }),
+                      ReactiveWrapperField<String>(
+                          validationMessages: {
+                            'maxLength': (_) => localizations
+                                .translate(i18.common.maxCharsRequired)
+                                .replaceAll('{}', maxLength.toString()),
+                            'minLength': (_) => localizations
+                                .translate(i18.common.min2CharsRequired)
+                                .replaceAll('{}', '2'),
+                          },
+                          formControlName: _householdHeadNameKey,
+                          showErrors: (control) =>
+                              control.invalid &&
+                              control.touched &&
+                              control.value != '',
+                          // Ensures error is shown if invalid and touched
+                          builder: (field) {
+                            return LabeledField(
+                              label: localizations.translate(
+                                i18.closeHousehold.headNameLabel,
+                              ),
+                              child: DigitTextFormInput(
+                                maxLength: 64,
+                                charCount: true,
+                                onChange: (val) => {
+                                  form
                                       .control(
-                                    _householdHeadNameKey,)
-                                      .value,
-                                ),
-                              );
-                            }),
-                      ]),]
-                  ),
+                                        _householdHeadNameKey,
+                                      )
+                                      .markAsTouched(),
+                                  form
+                                      .control(
+                                        _householdHeadNameKey,
+                                      )
+                                      .value = val,
+                                },
+                                errorMessage: field.errorText,
+                                initialValue: form
+                                    .control(
+                                      _householdHeadNameKey,
+                                    )
+                                    .value,
+                              ),
+                            );
+                          }),
+                  ]),
                 ),
               ],
             );
@@ -255,6 +261,9 @@ class ClosedHouseholdDetailsPageState
       _householdHeadNameKey: FormControl<String>(
         value: null,
         validators: [
+          Validators.delegate(
+            CustomValidator.requiredMin,
+          ),
           Validators.maxLength(200),
           Validators.minLength(2),
         ],

@@ -35,6 +35,7 @@ class _ReferralReconProjectFacilitySelectionPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     final BorderSide borderSide = BorderSide(
       color: theme.colorScheme.outline,
       width: 1.0,
@@ -48,7 +49,7 @@ class _ReferralReconProjectFacilitySelectionPageState
           body: ReactiveFormConsumer(
             builder: (context, form, _) {
               final filteredProjectFacilities =
-                  (widget.projectFacilities ?? []).isNotEmpty
+                  (widget.projectFacilities).isNotEmpty
                       ? widget.projectFacilities.where((element) {
                           final query =
                               form.control(_facilityName).value as String?;
@@ -87,7 +88,7 @@ class _ReferralReconProjectFacilitySelectionPageState
                                   localizations.translate(
                                     i18.common.projectFacilitySearchHeaderLabel,
                                   ),
-                                  style: theme.textTheme.displayMedium,
+                                  style: textTheme.headingXl,
                                   textAlign: TextAlign.left,
                                 ),
                               ),
