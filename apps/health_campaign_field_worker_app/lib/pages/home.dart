@@ -101,8 +101,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     //[TODO: Add below roles to enum]
     if (!(roles.contains(RolesType.distributor.toValue()) ||
-        roles.contains(RolesType.registrar.toValue()) ||
-        roles.contains(RolesType.communityDistributor.toValue()))) {
+        roles.contains(RolesType.registrar.toValue()))) {
       skipProgressBar = true;
     }
 
@@ -366,25 +365,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
-      i18.home.viewSummaryReportsLabel:
-          homeShowcaseData.summaryReport.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.viewSummaryReportsLabel,
-          onPressed: () {
-            if (context.isCommunityDistributor) {
-              context.router.push(
-                CustomDistributionSummaryReportDetailsRoute(),
-              );
-            } else {
-              context.router.push(
-                CustomEumerationSummaryReportDetailsRoute(),
-              );
-            }
-          },
-        ),
-      ),
-
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
@@ -434,6 +414,24 @@ class _HomePageState extends LocalizedState<HomePage> {
                 }
               },
             );
+          },
+        ),
+      ),
+      i18.home.viewSummaryReportsLabel:
+          homeShowcaseData.summaryReport.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.viewSummaryReportsLabel,
+          onPressed: () {
+            if (context.isDistributor) {
+              context.router.push(
+                CustomDistributionSummaryReportDetailsRoute(),
+              );
+            } else {
+              context.router.push(
+                CustomEumerationSummaryReportDetailsRoute(),
+              );
+            }
           },
         ),
       ),

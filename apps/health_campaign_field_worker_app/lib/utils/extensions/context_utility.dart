@@ -152,13 +152,11 @@ extension ContextUtilityExtensions on BuildContext {
     return false;
   }
 
-  bool get isCommunityDistributor {
+  bool get isDistributor {
     try {
       bool communityDistributor = loggedInUserRoles
           .where(
-            (role) =>
-                role.code == RolesType.communityDistributor.toValue() ||
-                role.code == RolesType.distributor.toValue(),
+            (role) => role.code == RolesType.distributor.toValue(),
           )
           .toList()
           .isNotEmpty;

@@ -66,7 +66,7 @@ class CustomBeneficiaryProgressBarState
       999,
     );
     // Info : handles only registrar and distributor as , progress bar is enabled only for them currently,
-    if (context.isCommunityDistributor) {
+    if (context.isDistributor) {
       repository.listenToChanges(
         query: TaskSearchModel(
           projectId: projectId,
@@ -160,7 +160,7 @@ class CustomBeneficiaryProgressBarState
   @override
   Widget build(BuildContext context) {
     // Todo : verify this once as discussion going on
-    final target = context.isCommunityDistributor ? 325.0 : 50.0;
+    final target = context.isDistributor ? 325.0 : 50.0;
 
     return DigitCard(
       child: ProgressIndicatorContainer(
