@@ -59,8 +59,10 @@ jobs:
         env:
           BUILD_CONFIG: release   # or profile depending on your choice
         run: |
-          echo "Current working directory: $(pwd)"
           bash ./tools/generate-apk.sh
+          echo "Current working directory: $(pwd)"
+          echo "Listing all files at the current level:"
+          ls -l
 
       # Step 8: Verify APK path and upload artifacts
       - name: Check APK existence
