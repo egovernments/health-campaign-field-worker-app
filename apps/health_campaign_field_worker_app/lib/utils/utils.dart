@@ -64,21 +64,6 @@ class CustomValidator {
         : {'min3': true};
   }
 
-  static Map<String, dynamic>? validIndividualName(
-    AbstractControl<dynamic> control,
-  ) {
-    const pattern = r'^[a-zA-Z ]*$';
-
-    if (control.value == null || control.value.toString().trim().isEmpty) {
-      return null;
-    } else if (RegExp(pattern).hasMatch(control.value.toString())) {
-      return null;
-    } else if (control.value.toString().length < 3) {
-      return {'validName': true};
-    }
-    return {'validName': true};
-  }
-
   static Map<String, dynamic>? validMobileNumber(
     AbstractControl<dynamic> control,
   ) {

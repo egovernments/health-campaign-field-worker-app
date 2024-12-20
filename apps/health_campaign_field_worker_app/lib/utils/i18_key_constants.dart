@@ -30,6 +30,7 @@ const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
 const selectChecklistShowcase = SelectChecklistShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
+const inventoryReportDetails = InventoryReportDetails();
 
 const checklistDataShowcase = ChecklistDataShowcase();
 const checklistListShowcase = ChecklistListShowcase();
@@ -673,6 +674,7 @@ class Home {
   String get db => 'HOME_DB_LABEL';
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
+  String get viewSummaryReportsLabel => 'VIEW_SUMMARY_REPORTS_LABEL';
 }
 
 class AcknowledgementSuccess {
@@ -872,6 +874,38 @@ class StockReconciliationShowcase {
 
   String get comments {
     return 'STOCK_RECONCILIATION_SHOWCASE_COMMENTS';
+  }
+}
+
+class InventoryReportDetails {
+  const InventoryReportDetails();
+
+  String get dateLabel {
+    return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
+  }
+
+  String get householdRegisteredLabel {
+    return 'ENUMERATION_SUMMARY_HOUSEHOLD_REGISTERED_LABEL';
+  }
+
+  String get projectBeneficiaryRegisteredLabel {
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_LABEL';
+  }
+
+  String get closedHouseholdRegisteredLabel {
+    return 'ENUMERATION_SUMMARY_PROJECT_BENEFICIARY_REGISTERED_LABEL';
+  }
+
+  String get householdDistributedLabel {
+    return 'DISTRIBUTION_SUMMARY_HOUSEHOLD_DISTRIBUTED_LABEL';
+  }
+
+  String get projectBeneficiaryImpactedLabel {
+    return 'DISTRIBUTION_SUMMARY_PROJECT_BENEFICIARY_IMPACTED_LABEL';
+  }
+
+  String get bednetDistributedLabel {
+    return 'DISTRIBUTION_SUMMARY_BEDNET_DISTRIBUTED_LABEL';
   }
 }
 

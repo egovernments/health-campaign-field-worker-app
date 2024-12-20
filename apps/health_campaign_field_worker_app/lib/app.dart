@@ -10,12 +10,14 @@ import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
-import 'package:registration_delivery/data/repositories/oplog/oplog.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'blocs/summary_reports/custom_distribution_summary_report.dart';
+import 'blocs/summary_reports/custom_enumeration_summary_report.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
@@ -94,15 +96,6 @@ class MainApplicationState extends State<MainApplication>
 
               BlocProvider(
                 create: (_) {
-                  return DigitScannerBloc(
-                    const DigitScannerState(),
-                  );
-                },
-                lazy: false,
-              ),
-
-              BlocProvider(
-                create: (_) {
                   return LocationBloc(location: Location())
                     ..add(const LoadLocationEvent());
                 },
@@ -136,6 +129,26 @@ class MainApplicationState extends State<MainApplication>
                   boundaryRepository: ctx
                       .read<NetworkManager>()
                       .repository<BoundaryModel, BoundarySearchModel>(ctx),
+                ),
+              ),
+              BlocProvider(
+                create: (context) => CustomEnumerationSummaryReportBloc(
+                  householdRepository: context
+                      .repository<HouseholdModel, HouseholdSearchModel>(),
+                  taskRepository:
+                      context.repository<TaskModel, TaskSearchModel>(),
+                  projectBeneficiaryRepository: context.repository<
+                      ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
+                ),
+              ),
+              BlocProvider(
+                create: (context) => CustomDistributionSummaryReportBloc(
+                  householdRepository: context
+                      .repository<HouseholdModel, HouseholdSearchModel>(),
+                  taskRepository:
+                      context.repository<TaskModel, TaskSearchModel>(),
+                  projectBeneficiaryRepository: context.repository<
+                      ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
                 ),
               ),
             ],
