@@ -36,102 +36,108 @@ class CustomDistributionSummaryReportBloc extends Bloc<
     CustomDistributionSummaryReportLoadDataEvent event,
     CustomDistributionSummaryReportEmitter emit,
   ) async {
-    List<HouseholdModel> householdList = [];
-    List<ProjectBeneficiaryModel> projectBeneficiaryList = [];
-    List<TaskModel> successfulTaskList = [];
+    try {
+      List<HouseholdModel> householdList = [];
+      List<ProjectBeneficiaryModel> projectBeneficiaryList = [];
+      List<TaskModel> successfulTaskList = [];
 
-    final userId = event.userId;
+      final userId = event.userId;
 
-    //  read all closed household task from db which are created by userId
-    successfulTaskList =
-        await (taskRepository as CustomTaskLocalRepository).progressBarSearch(
-      TaskSearchModel(status: Status.administeredSuccess.toValue()),
-      userId,
-    );
+      //  read all closed household task from db which are created by userId
+      successfulTaskList =
+          await (taskRepository as CustomTaskLocalRepository).progressBarSearch(
+        TaskSearchModel(status: Status.administeredSuccess.toValue()),
+        userId,
+      );
 
-    Set<String> projectBeneficiaryClientReferenceIds = successfulTaskList
-        .map((e) => e.projectBeneficiaryClientReferenceId ?? "")
-        .toSet()
-        .where((element) => element.isNotEmpty)
-        .toSet();
+      Set<String> projectBeneficiaryClientReferenceIds = successfulTaskList
+          .map((e) => e.projectBeneficiaryClientReferenceId ?? "")
+          .toSet()
+          .where((element) => element.isNotEmpty)
+          .toSet();
 
-    //  read all projectBeneficiaries from db which are created by userId
-    projectBeneficiaryList = await (projectBeneficiaryRepository
-            as ProjectBeneficiaryLocalRepository)
-        .search(ProjectBeneficiarySearchModel(
+      //  read all projectBeneficiaries from db which are created by userId
+      projectBeneficiaryList = await (projectBeneficiaryRepository
+              as ProjectBeneficiaryLocalRepository)
+          .search(ProjectBeneficiarySearchModel(
+              tenantId: envConfig.variables.tenantId,
+              clientReferenceId:
+                  projectBeneficiaryClientReferenceIds.toList()));
+
+      Set<String> pbBeneficiaryClientReferenceIds = projectBeneficiaryList
+          .map((e) => e.beneficiaryClientReferenceId ?? "")
+          .toSet()
+          .where((element) => element.isNotEmpty)
+          .toSet();
+
+      //  read all households from db which are created by userId
+      householdList =
+          await (householdRepository as HouseholdLocalRepository).search(
+        HouseholdSearchModel(
             tenantId: envConfig.variables.tenantId,
-            clientReferenceId: projectBeneficiaryClientReferenceIds.toList()));
-
-    Set<String> pbBeneficiaryClientReferenceIds = projectBeneficiaryList
-        .map((e) => e.beneficiaryClientReferenceId ?? "")
-        .toSet()
-        .where((element) => element.isNotEmpty)
-        .toSet();
-
-    //  read all households from db which are created by userId
-    householdList =
-        await (householdRepository as HouseholdLocalRepository).search(
-      HouseholdSearchModel(
-          tenantId: envConfig.variables.tenantId,
-          clientReferenceId: pbBeneficiaryClientReferenceIds.toList()),
-    );
-
-    Map<String, List<HouseholdModel>> dateVsHouseholds = {};
-    Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiaries = {};
-    Map<String, List<TaskModel>> dateVsSuccessfulTasks = {};
-    Set<String> uniqueDates = {};
-
-    Map<String, int> dateVsHouseholdCount = {};
-    Map<String, int> dateVsBeneficiaryImpactedCount = {};
-    Map<String, int> dateVsBedNetDistributedCount = {};
-
-    for (var element in householdList) {
-      var dateKey = DigitDateUtils.getDateFromTimestamp(
-        element.clientAuditDetails!.createdTime,
+            clientReferenceId: pbBeneficiaryClientReferenceIds.toList()),
       );
 
-      dateVsHouseholds.putIfAbsent(dateKey, () => []).add(element);
-    }
+      Map<String, List<HouseholdModel>> dateVsHouseholds = {};
+      Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiaries =
+          {};
+      Map<String, List<TaskModel>> dateVsSuccessfulTasks = {};
+      Set<String> uniqueDates = {};
 
-    for (var element in successfulTaskList) {
-      var dateKey = DigitDateUtils.getDateFromTimestamp(
-        element.clientAuditDetails!.createdTime,
+      Map<String, int> dateVsHouseholdCount = {};
+      Map<String, int> dateVsBeneficiaryImpactedCount = {};
+      Map<String, int> dateVsBedNetDistributedCount = {};
+
+      for (var element in householdList) {
+        var dateKey = DigitDateUtils.getDateFromTimestamp(
+          element.clientAuditDetails!.createdTime,
+        );
+
+        dateVsHouseholds.putIfAbsent(dateKey, () => []).add(element);
+      }
+
+      for (var element in successfulTaskList) {
+        var dateKey = DigitDateUtils.getDateFromTimestamp(
+          element.clientAuditDetails!.createdTime,
+        );
+
+        dateVsSuccessfulTasks.putIfAbsent(dateKey, () => []).add(element);
+      }
+
+      // get a set of unique dates
+      getUniqueSetOfDates(
+        dateVsHouseholds,
+        dateVsProjectBeneficiaries,
+        dateVsSuccessfulTasks,
+        uniqueDates,
       );
 
-      dateVsSuccessfulTasks.putIfAbsent(dateKey, () => []).add(element);
+      // populate the day vs count for that day map
+      populateDateVsCountMap(dateVsHouseholds, dateVsHouseholdCount);
+      // populateDateVsCountMap(
+      //     dateVsProjectBeneficiaries, dateVsProjectBeneficiaryCount);
+      populateDateVsBednetDistributedMap(
+          dateVsSuccessfulTasks, dateVsBedNetDistributedCount);
+
+      populateDateVsBeneficiaryImpactedMap(
+          dateVsHouseholds, dateVsBeneficiaryImpactedCount);
+
+      Map<String, Map<String, int>> dateVsEntityVsCountMap = {};
+
+      popoulateDateVsEntityCountMap(
+        dateVsEntityVsCountMap,
+        dateVsHouseholdCount,
+        dateVsBeneficiaryImpactedCount,
+        dateVsBedNetDistributedCount,
+        uniqueDates,
+      );
+
+      emit(CustomDistributionSummaryReportSummaryDataState(
+        summaryData: dateVsEntityVsCountMap,
+      ));
+    } catch (e) {
+      emit(const CustomDistributionSummaryReportLoadingState());
     }
-
-    // get a set of unique dates
-    getUniqueSetOfDates(
-      dateVsHouseholds,
-      dateVsProjectBeneficiaries,
-      dateVsSuccessfulTasks,
-      uniqueDates,
-    );
-
-    // populate the day vs count for that day map
-    populateDateVsCountMap(dateVsHouseholds, dateVsHouseholdCount);
-    // populateDateVsCountMap(
-    //     dateVsProjectBeneficiaries, dateVsProjectBeneficiaryCount);
-    populateDateVsBednetDistributedMap(
-        dateVsSuccessfulTasks, dateVsBedNetDistributedCount);
-
-    populateDateVsBeneficiaryImpactedMap(
-        dateVsHouseholds, dateVsBeneficiaryImpactedCount);
-
-    Map<String, Map<String, int>> dateVsEntityVsCountMap = {};
-
-    popoulateDateVsEntityCountMap(
-      dateVsEntityVsCountMap,
-      dateVsHouseholdCount,
-      dateVsBeneficiaryImpactedCount,
-      dateVsBedNetDistributedCount,
-      uniqueDates,
-    );
-
-    emit(CustomDistributionSummaryReportSummaryDataState(
-      summaryData: dateVsEntityVsCountMap,
-    ));
   }
 
   void populateDateVsBeneficiaryImpactedMap(

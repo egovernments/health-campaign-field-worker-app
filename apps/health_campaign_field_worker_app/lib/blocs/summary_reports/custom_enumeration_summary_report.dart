@@ -35,109 +35,113 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     CustomEnumerationSummaryReportLoadDataEvent event,
     CustomEnumerationSummaryReportEmitter emit,
   ) async {
-    List<HouseholdModel> householdList = [];
-    List<ProjectBeneficiaryModel> projectBeneficiaryList = [];
-    List<TaskModel> closedHouseholdTaskList = [];
+    try {
+      List<HouseholdModel> householdList = [];
+      List<ProjectBeneficiaryModel> projectBeneficiaryList = [];
+      List<TaskModel> closedHouseholdTaskList = [];
 
-    final userId = event.userId;
+      final userId = event.userId;
 
-    //  read all households from db which are created by userId
-    householdList = await (householdRepository as HouseholdLocalRepository)
-        .search(HouseholdSearchModel(tenantId: envConfig.variables.tenantId),
-            userId);
+      //  read all households from db which are created by userId
+      householdList = await (householdRepository as HouseholdLocalRepository)
+          .search(HouseholdSearchModel(tenantId: envConfig.variables.tenantId),
+              userId);
 
-    //  read all projectBeneficiaries from db which are created by userId
-    projectBeneficiaryList = await (projectBeneficiaryRepository
-            as ProjectBeneficiaryLocalRepository)
-        .search(
-            ProjectBeneficiarySearchModel(
-                tenantId: envConfig.variables.tenantId),
-            userId);
-    //  read all closed household task from db which are created by userId
-    closedHouseholdTaskList =
-        await (taskRepository as CustomTaskLocalRepository).progressBarSearch(
-      TaskSearchModel(status: Status.closeHousehold.toValue()),
-      userId,
-    );
-
-    // get the closed household projectBeneficiaries
-    Set<String> projectBeneficiaryClientReferenceIds = closedHouseholdTaskList
-        .map((e) => e.projectBeneficiaryClientReferenceId ?? "")
-        .where((element) => element.isNotEmpty)
-        .toSet();
-
-    // closed household beneficiairy
-    Set<String?> filteredBeneficiariesClientRefId = {};
-    getClosedHouseholdProjectBeneficiary(projectBeneficiaryClientReferenceIds,
-        projectBeneficiaryList, filteredBeneficiariesClientRefId);
-
-    // filteredHouseholds list
-    List<HouseholdModel> filteredHouseholdsList = [];
-
-    // filter closed households from householdList
-
-    filteredHouseholds(householdList, filteredBeneficiariesClientRefId,
-        filteredHouseholdsList);
-
-    Map<String, List<HouseholdModel>> dateVsHousehold = {};
-    Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary = {};
-    Map<String, List<TaskModel>> dateVsClosedHouseholdTask = {};
-    Set<String> uniqueDates = {};
-
-    Map<String, int> dateVsHouseholdCount = {};
-    Map<String, int> dateVsProjectBeneficiaryCount = {};
-    Map<String, int> dateVsClosedHouseholdTaskCount = {};
-
-    for (var element in filteredHouseholdsList) {
-      var dateKey = DigitDateUtils.getDateFromTimestamp(
-        element.clientAuditDetails!.createdTime,
+      //  read all projectBeneficiaries from db which are created by userId
+      projectBeneficiaryList = await (projectBeneficiaryRepository
+              as ProjectBeneficiaryLocalRepository)
+          .search(
+              ProjectBeneficiarySearchModel(
+                  tenantId: envConfig.variables.tenantId),
+              userId);
+      //  read all closed household task from db which are created by userId
+      closedHouseholdTaskList =
+          await (taskRepository as CustomTaskLocalRepository).progressBarSearch(
+        TaskSearchModel(status: Status.closeHousehold.toValue()),
+        userId,
       );
 
-      dateVsHousehold.putIfAbsent(dateKey, () => []).add(element);
-    }
-    for (var element in projectBeneficiaryList) {
-      var dateKey = DigitDateUtils.getDateFromTimestamp(
-        element.clientAuditDetails!.createdTime,
+      // get the closed household projectBeneficiaries
+      Set<String> projectBeneficiaryClientReferenceIds = closedHouseholdTaskList
+          .map((e) => e.projectBeneficiaryClientReferenceId ?? "")
+          .where((element) => element.isNotEmpty)
+          .toSet();
+
+      // closed household beneficiairy
+      Set<String?> filteredBeneficiariesClientRefId = {};
+      getClosedHouseholdProjectBeneficiary(projectBeneficiaryClientReferenceIds,
+          projectBeneficiaryList, filteredBeneficiariesClientRefId);
+
+      // filteredHouseholds list
+      List<HouseholdModel> filteredHouseholdsList = [];
+
+      // filter closed households from householdList
+
+      filteredHouseholds(householdList, filteredBeneficiariesClientRefId,
+          filteredHouseholdsList);
+
+      Map<String, List<HouseholdModel>> dateVsHousehold = {};
+      Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary = {};
+      Map<String, List<TaskModel>> dateVsClosedHouseholdTask = {};
+      Set<String> uniqueDates = {};
+
+      Map<String, int> dateVsHouseholdCount = {};
+      Map<String, int> dateVsProjectBeneficiaryCount = {};
+      Map<String, int> dateVsClosedHouseholdTaskCount = {};
+
+      for (var element in filteredHouseholdsList) {
+        var dateKey = DigitDateUtils.getDateFromTimestamp(
+          element.clientAuditDetails!.createdTime,
+        );
+
+        dateVsHousehold.putIfAbsent(dateKey, () => []).add(element);
+      }
+      for (var element in projectBeneficiaryList) {
+        var dateKey = DigitDateUtils.getDateFromTimestamp(
+          element.clientAuditDetails!.createdTime,
+        );
+
+        dateVsProjectBeneficiary.putIfAbsent(dateKey, () => []).add(element);
+      }
+      for (var element in closedHouseholdTaskList) {
+        var dateKey = DigitDateUtils.getDateFromTimestamp(
+          element.clientAuditDetails!.createdTime,
+        );
+
+        dateVsClosedHouseholdTask.putIfAbsent(dateKey, () => []).add(element);
+      }
+
+      // get a set of unique dates
+      getUniqueSetOfDates(
+        dateVsHousehold,
+        dateVsProjectBeneficiary,
+        dateVsClosedHouseholdTask,
+        uniqueDates,
       );
 
-      dateVsProjectBeneficiary.putIfAbsent(dateKey, () => []).add(element);
-    }
-    for (var element in closedHouseholdTaskList) {
-      var dateKey = DigitDateUtils.getDateFromTimestamp(
-        element.clientAuditDetails!.createdTime,
+      // populate the day vs count for that day map
+      populateDateVsCountMap(dateVsHousehold, dateVsHouseholdCount);
+      populateDateVsCountMap(
+          dateVsProjectBeneficiary, dateVsProjectBeneficiaryCount);
+      populateDateVsCountMap(
+          dateVsClosedHouseholdTask, dateVsClosedHouseholdTaskCount);
+
+      Map<String, Map<String, int>> dateVsEntityVsCountMap = {};
+
+      popoulateDateVsEntityCountMap(
+        dateVsEntityVsCountMap,
+        dateVsHouseholdCount,
+        dateVsProjectBeneficiaryCount,
+        dateVsClosedHouseholdTaskCount,
+        uniqueDates,
       );
 
-      dateVsClosedHouseholdTask.putIfAbsent(dateKey, () => []).add(element);
+      emit(CustomEnumerationSummaryReportSummaryDataState(
+        summaryData: dateVsEntityVsCountMap,
+      ));
+    } catch (e) {
+      emit(const CustomEnumerationSummaryReportLoadingState());
     }
-
-    // get a set of unique dates
-    getUniqueSetOfDates(
-      dateVsHousehold,
-      dateVsProjectBeneficiary,
-      dateVsClosedHouseholdTask,
-      uniqueDates,
-    );
-
-    // populate the day vs count for that day map
-    populateDateVsCountMap(dateVsHousehold, dateVsHouseholdCount);
-    populateDateVsCountMap(
-        dateVsProjectBeneficiary, dateVsProjectBeneficiaryCount);
-    populateDateVsCountMap(
-        dateVsClosedHouseholdTask, dateVsClosedHouseholdTaskCount);
-
-    Map<String, Map<String, int>> dateVsEntityVsCountMap = {};
-
-    popoulateDateVsEntityCountMap(
-      dateVsEntityVsCountMap,
-      dateVsHouseholdCount,
-      dateVsProjectBeneficiaryCount,
-      dateVsClosedHouseholdTaskCount,
-      uniqueDates,
-    );
-
-    emit(CustomEnumerationSummaryReportSummaryDataState(
-      summaryData: dateVsEntityVsCountMap,
-    ));
   }
 
   void popoulateDateVsEntityCountMap(
@@ -186,6 +190,7 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     uniqueDates.addAll(dateVsClosedHouseholdTask.keys.toSet());
   }
 
+// todo optimize this
   void getClosedHouseholdProjectBeneficiary(
       Set<String> projectBeneficiaryClientReferenceIds,
       List<ProjectBeneficiaryModel> projectBeneficiaryList,
@@ -202,6 +207,7 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     }
   }
 
+// todo optimize this
   void filteredHouseholds(
       List<HouseholdModel> householdList,
       Set<String?> filteredBeneficiariesClientRefId,
