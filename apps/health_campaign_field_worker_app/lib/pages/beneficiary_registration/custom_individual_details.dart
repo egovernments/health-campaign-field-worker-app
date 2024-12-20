@@ -496,8 +496,8 @@ class CustomIndividualDetailsPageState
                                       Flexible(
                                         child: Text(
                                           overflow: TextOverflow.ellipsis,
-                                          localizations.translate(
-                                              state.qrCodes.toString()),
+                                          localizations
+                                              .translate(state.qrCodes.first),
                                         ),
                                       ),
                                       Padding(
