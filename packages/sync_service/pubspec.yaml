@@ -42,7 +42,7 @@ dev_dependencies:
   dart_mappable_builder:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
-      ref: 1.6-final-dev
+      ref: master
       path: ./packages/dart_mappable_builder
 
 # For information on the generic Dart part of this file, see the
