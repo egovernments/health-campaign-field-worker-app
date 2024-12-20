@@ -495,6 +495,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {
     final addressModel = state.mapOrNull(
+      create: (value) => value.addressModel,
       editHousehold: (value) => value.addressModel,
     );
 

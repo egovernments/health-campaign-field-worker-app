@@ -290,6 +290,7 @@ class _HouseholdOverviewPageState
                                           builder: (ctx) => ActionCard(
                                             actions: [
                                               Button(
+                                                capitalizeLetters: false,
                                                 prefixIcon: Icons.edit,
                                                 label: (RegistrationDeliverySingleton()
                                                             .householdType ==
