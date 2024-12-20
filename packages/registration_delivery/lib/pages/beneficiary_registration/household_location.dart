@@ -355,8 +355,13 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                               formControlName: _buildingNameKey,
                               validationMessages: {
                                 'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
+                                      i18.common.corecommonRequired,
                                     ),
+                                'sizeLessThan2': (_) => localizations
+                                    .translate(i18.common.min3CharsRequired),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', maxLength.toString()),
                               },
                               builder: (field) => LabeledField(
                                   label: localizations.translate(
@@ -368,6 +373,8 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                       form.control(_buildingNameKey).value =
                                           value;
                                     },
+                                    initialValue:
+                                        form.control(_buildingNameKey).value,
                                   )))),
                     householdLocationShowcaseData.addressLine1.buildWith(
                       child: ReactiveWrapperField(
@@ -530,9 +537,11 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
       ),
       if (RegistrationDeliverySingleton().householdType ==
           HouseholdType.community)
-        _buildingNameKey: FormControl<String>(
-          validators: [Validators.required],
-        ),
+        _buildingNameKey: FormControl<String>(validators: [
+          Validators.required,
+          CustomValidator.sizeLessThan2,
+          Validators.maxLength(64),
+        ], value: addressModel?.buildingName),
     });
   }
 }

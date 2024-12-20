@@ -28,6 +28,12 @@ class CustomValidator {
         : {'required': true};
   }
 
+  static Map<String, dynamic>? sizeLessThan2(AbstractControl<dynamic> control) {
+    return control.value != null && control.value.toString().length <= 2
+        ? {'sizeLessThan2': true}
+        : null;
+  }
+
   static Map<String, dynamic>? validMobileNumber(
     AbstractControl<dynamic> control,
   ) {

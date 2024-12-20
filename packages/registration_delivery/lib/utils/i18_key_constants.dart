@@ -91,6 +91,8 @@ class Common {
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 
+  String get min3CharsRequired => 'MIN_3_CHARS_REQUIRED';
+
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
   String get maxValue => 'MAX_VALUE_ALLOWED';
@@ -431,11 +433,15 @@ class HouseholdOverView {
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
 
+  String get clfOverViewEditLabel => 'CLF_OVER_VIEW_EDIT_ICON_LABEL';
+
   String get householdOverViewDeleteLabel =>
       'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
 
   String get householdOverViewEditIconText =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
+
+  String get clfOverViewEditIconText => 'CLF_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
 
   String get householdOverViewActionCardTitle =>
       'HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE';
@@ -484,6 +490,8 @@ class MemberCard {
   const MemberCard();
 
   String get assignAsHouseholdhead => 'MEMBER_CARD_ASSIGN_AS_HEAD';
+
+  String get assignAsClfhead => 'MEMBER_CARD_ASSIGN_AS_CLF';
 
   String get editIndividualDetails => 'MEMBER_CARD_EDIT_INDIVIDUAL_DETAILS';
 

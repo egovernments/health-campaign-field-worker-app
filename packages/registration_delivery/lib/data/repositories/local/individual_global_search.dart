@@ -346,26 +346,16 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                     .equalsExp(sql.individual.clientReferenceId))
         ])
           ..where(buildAnd([
-            if (params.householdType == HouseholdType.community)
-              sql.householdMember.isHeadOfHousehold.equals(true),
             sql.householdMember.householdClientReferenceId
                 .equalsExp(sql.household.clientReferenceId),
             filter == Status.registered.name
                 ? sql.projectBeneficiary.beneficiaryClientReferenceId
                     .isNotNull()
-                : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull()
+                : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull(),
+            if (params.householdClientReferenceId != null)
+              sql.householdMember.householdClientReferenceId
+                  .equals(params.householdClientReferenceId ?? '')
           ]));
-
-        if (params.householdClientReferenceId != null) {
-          selectQuery = selectQuery.join([
-            leftOuterJoin(
-                sql.householdMember,
-                sql.householdMember.individualClientReferenceId
-                    .equalsExp(sql.individual.clientReferenceId))
-          ])
-            ..where(sql.householdMember.householdClientReferenceId
-                .equals(params.householdClientReferenceId ?? ''));
-        }
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);

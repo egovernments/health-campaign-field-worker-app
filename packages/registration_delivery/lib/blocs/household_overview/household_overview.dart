@@ -363,7 +363,7 @@ class HouseholdOverviewBloc
 
         emit(state.copyWith(
           loading: false,
-          offset: individuals.isNotEmpty
+          offset: individuals.isNotEmpty && individuals.length == event.limit
               ? (event.offset ?? 0) + (event.limit ?? 10)
               : null,
           householdMemberWrapper: state.householdMemberWrapper.copyWith(
@@ -496,7 +496,8 @@ class HouseholdOverviewBloc
 
         emit(state.copyWith(
           loading: false,
-          offset: individualsList.isNotEmpty
+          offset: individualsList.isNotEmpty &&
+                  individualsList.length == event.limit
               ? (event.offset ?? 0) + (event.limit ?? 10)
               : null,
           householdMemberWrapper: state.householdMemberWrapper.copyWith(
@@ -601,7 +602,7 @@ class HouseholdOverviewBloc
 
         emit(state.copyWith(
           loading: false,
-          offset: individuals.isNotEmpty
+          offset: individuals.isNotEmpty && individuals.length == event.limit
               ? (event.offset ?? 0) + (event.limit ?? 10)
               : null,
           householdMemberWrapper: state.householdMemberWrapper.copyWith(
