@@ -53,8 +53,8 @@ cd "$APP_DIR" || exit
   build_apk
   cd ../../ || exit
 
-  mkdir -p outputs
-  mv "$APP_DIR/build/app/outputs/apk/release/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
+  # mkdir -p outputs
+  # mv "$APP_DIR/build/app/outputs/apk/release/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
 # done
 
 # open outputs
