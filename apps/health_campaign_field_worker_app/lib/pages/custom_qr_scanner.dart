@@ -469,6 +469,16 @@ class _CustomDigitScannerPageState
                                         codes.add(form
                                             .control(_manualCodeFormKey)
                                             .value);
+                                        // Info when quantity is provided and user enters more resource then replace the (only when quantity 1 rest cases this does not follow)
+                                        if ((widget.quantity == 1) &&
+                                            codes.length > widget.quantity &&
+                                            codes.isNotEmpty) {
+                                          codes = [
+                                            form
+                                                .control(_manualCodeFormKey)
+                                                .value
+                                          ];
+                                        }
                                         bloc.add(
                                           DigitScannerEvent.handleScanner(
                                             barCode: state.barCodes,
