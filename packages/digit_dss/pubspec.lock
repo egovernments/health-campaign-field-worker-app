@@ -365,7 +365,7 @@ packages:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.5"
+    version: "1.0.5+1"
   digit_firebase_services:
     dependency: "direct overridden"
     description:
