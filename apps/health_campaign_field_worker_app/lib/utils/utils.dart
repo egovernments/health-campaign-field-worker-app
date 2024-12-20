@@ -5,6 +5,8 @@ import 'package:attendance_management/attendance_management.dart'
 
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
+import 'package:registration_delivery/models/entities/status.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
@@ -417,6 +419,16 @@ int getSyncCount(List<OpLog> oplogs) {
   }).length;
 
   return count;
+}
+
+bool checkIfClosedHousehold(
+  List<TaskModel>? tasks,
+) {
+  final isClosedHousehold = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.closeHousehold.toValue());
+
+  return isClosedHousehold;
 }
 
 class LocalizationParams {
