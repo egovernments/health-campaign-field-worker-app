@@ -674,31 +674,15 @@ class CustomDeliverInterventionPageState
                                                     style: theme.textTheme
                                                         .headlineLarge,
                                                   ),
-                                                  DigitReactiveSearchDropdown<
-                                                      String>(
+                                                  DigitTextFormField(
+                                                    formControlName:
+                                                        _deliveryCommentKey,
                                                     label:
                                                         localizations.translate(
                                                       i18.deliverIntervention
                                                           .deliveryCommentLabel,
                                                     ),
-                                                    form: form,
-                                                    menuItems:
-                                                        RegistrationDeliverySingleton()
-                                                            .deliveryCommentOptions!
-                                                            .map((e) {
-                                                      return localizations
-                                                          .translate(e);
-                                                    }).toList()
-                                                          ..sort((a, b) =>
-                                                              a.compareTo(b)),
-                                                    formControlName:
-                                                        _deliveryCommentKey,
-                                                    valueMapper: (value) =>
-                                                        value,
-                                                    emptyText: localizations
-                                                        .translate(i18.common
-                                                            .noMatchFound),
-                                                  )
+                                                  ),
                                                 ],
                                               ),
                                             ),
