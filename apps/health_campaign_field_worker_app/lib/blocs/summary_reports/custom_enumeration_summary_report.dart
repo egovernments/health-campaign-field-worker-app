@@ -60,6 +60,25 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       userId,
     );
 
+    // get the closed household projectBeneficiaries
+    Set<String> projectBeneficiaryClientReferenceIds = closedHouseholdTaskList
+        .map((e) => e.projectBeneficiaryClientReferenceId ?? "")
+        .where((element) => element.isNotEmpty)
+        .toSet();
+
+    // closed household beneficiairy
+    Set<String?> filteredBeneficiariesClientRefId = {};
+    getClosedHouseholdProjectBeneficiary(projectBeneficiaryClientReferenceIds,
+        projectBeneficiaryList, filteredBeneficiariesClientRefId);
+
+    // filteredHouseholds list
+    List<HouseholdModel> filteredHouseholdsList = [];
+
+    // filter closed households from householdList
+
+    filteredHouseholds(householdList, filteredBeneficiariesClientRefId,
+        filteredHouseholdsList);
+
     Map<String, List<HouseholdModel>> dateVsHousehold = {};
     Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary = {};
     Map<String, List<TaskModel>> dateVsClosedHouseholdTask = {};
@@ -69,7 +88,7 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     Map<String, int> dateVsProjectBeneficiaryCount = {};
     Map<String, int> dateVsClosedHouseholdTaskCount = {};
 
-    for (var element in householdList) {
+    for (var element in filteredHouseholdsList) {
       var dateKey = DigitDateUtils.getDateFromTimestamp(
         element.clientAuditDetails!.createdTime,
       );
@@ -165,6 +184,34 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     uniqueDates.addAll(dateVsHousehold.keys.toSet());
     uniqueDates.addAll(dateVsProjectBeneficiary.keys.toSet());
     uniqueDates.addAll(dateVsClosedHouseholdTask.keys.toSet());
+  }
+
+  void getClosedHouseholdProjectBeneficiary(
+      Set<String> projectBeneficiaryClientReferenceIds,
+      List<ProjectBeneficiaryModel> projectBeneficiaryList,
+      Set<String?> filteredBeneficiariesClientRefId) {
+    if (projectBeneficiaryClientReferenceIds.isNotEmpty) {
+      for (var beneficiairy in projectBeneficiaryList) {
+        if (projectBeneficiaryClientReferenceIds
+                .contains(beneficiairy.clientReferenceId) &&
+            beneficiairy.beneficiaryClientReferenceId != null) {
+          filteredBeneficiariesClientRefId
+              .add(beneficiairy.beneficiaryClientReferenceId);
+        }
+      }
+    }
+  }
+
+  void filteredHouseholds(
+      List<HouseholdModel> householdList,
+      Set<String?> filteredBeneficiariesClientRefId,
+      List<HouseholdModel> filteredHouseholdsList) {
+    for (var household in householdList) {
+      if (!filteredBeneficiariesClientRefId
+          .contains(household.clientReferenceId)) {
+        filteredHouseholdsList.add(household);
+      }
+    }
   }
 
   Future<void> _handleLoadingEvent(

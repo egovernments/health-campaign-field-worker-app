@@ -40,9 +40,12 @@ class _CustomDistributionSummaryReportDetailsState
 
   void _loadData() {
     final bloc = BlocProvider.of<CustomDistributionSummaryReportBloc>(context);
-    bloc.add(CustomDistributionSummaryReportLoadDataEvent(
-      userId: context.loggedInUserUuid,
-    ));
+    bloc.add(const CustomDistributionSummaryReportLoadingEvent());
+    Future.delayed(const Duration(milliseconds: 500), () {
+      bloc.add(CustomDistributionSummaryReportLoadDataEvent(
+        userId: context.loggedInUserUuid,
+      ));
+    });
   }
 
   static const _householdKey = 'householdKey';
@@ -62,6 +65,12 @@ class _CustomDistributionSummaryReportDetailsState
       body: BlocBuilder<CustomDistributionSummaryReportBloc,
           CustomDistributionSummaryReportState>(
         builder: (context, customDistributionSumamryReportState) {
+          if (customDistributionSumamryReportState
+              is CustomDistributionSummaryReportLoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           return ScrollableContent(
             footer: Padding(
               padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
@@ -140,19 +149,22 @@ class _CustomDistributionSummaryReportDetailsState
                                   ),
                                   DigitGridCell(
                                     key: _householdKey,
-                                    value: entry.value[Constants.household]
-                                        .toString(),
+                                    value:
+                                        (entry.value[Constants.household] ?? 0)
+                                            .toString(),
                                   ),
                                   DigitGridCell(
                                     key: _projectBeneficiaryKey,
-                                    value: entry
-                                        .value[Constants.projectBeneficiary]
+                                    value: (entry.value[
+                                                Constants.projectBeneficiary] ??
+                                            0)
                                         .toString(),
                                   ),
                                   DigitGridCell(
                                     key: _bednetDistributedKey,
-                                    value: entry
-                                        .value[Constants.bednetDistributed]
+                                    value: (entry.value[
+                                                Constants.bednetDistributed] ??
+                                            0)
                                         .toString(),
                                   ),
                                 ],
