@@ -113,6 +113,11 @@ class CustomHouseHoldDetailsPageState
                         ) {
                           var household = householdModel;
                           household ??= HouseholdModel(
+                            // info setting lat long from address to household object
+                            latitude: addressModel?.latitude ??
+                                householdModel?.latitude,
+                            longitude: addressModel?.longitude ??
+                                householdModel?.longitude,
                             tenantId: RegistrationDeliverySingleton().tenantId,
                             clientReferenceId:
                                 householdModel?.clientReferenceId ??

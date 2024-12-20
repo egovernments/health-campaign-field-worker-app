@@ -40,6 +40,8 @@ import '../widgets/localized.dart';
 import '../widgets/progress_indicator/custom_beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
+import 'reports/beneficiary/custom_distribution_summary_report_details.dart';
+import 'reports/beneficiary/custom_enumeration_summary_report_details.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
@@ -99,8 +101,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     //[TODO: Add below roles to enum]
     if (!(roles.contains(RolesType.distributor.toValue()) ||
-        roles.contains(RolesType.registrar.toValue()) ||
-        roles.contains(RolesType.communityDistributor.toValue()))) {
+        roles.contains(RolesType.registrar.toValue()))) {
       skipProgressBar = true;
     }
 
@@ -416,6 +417,24 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.viewSummaryReportsLabel:
+          homeShowcaseData.summaryReport.buildWith(
+        child: HomeItemCard(
+          icon: Icons.book,
+          label: i18.home.viewSummaryReportsLabel,
+          onPressed: () {
+            if (context.isDistributor) {
+              context.router.push(
+                CustomDistributionSummaryReportDetailsRoute(),
+              );
+            } else {
+              context.router.push(
+                CustomEumerationSummaryReportDetailsRoute(),
+              );
+            }
+          },
+        ),
+      ),
       i18.home.db: homeShowcaseData.db.buildWith(
         child: HomeItemCard(
           icon: Icons.table_chart,
@@ -450,7 +469,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
-          homeShowcaseData.closedHouseHold.showcaseKey
+          homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.viewSummaryReportsLabel:
+          homeShowcaseData.summaryReport.showcaseKey
     };
 
     final homeItemsLabel = <String>[
@@ -465,7 +486,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.syncDataLabel,
       i18.home.db,
-      i18.home.closedHouseHoldLabel
+      i18.home.closedHouseHoldLabel,
+      i18.home.viewSummaryReportsLabel
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -474,12 +496,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db ||
-            element == i18.home.closedHouseHoldLabel)
+            element == i18.home.db)
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db || f != i18.home.closedHouseHoldLabel)
+        .where((f) => f != i18.home.db)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 

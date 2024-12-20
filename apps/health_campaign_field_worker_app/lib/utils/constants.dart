@@ -80,6 +80,10 @@ class Constants {
   static const String smallBraces = '()';
   static const String intTwo = '2';
   static const String comma = ',';
+  static const String bednetDistributed = 'BednetDistributed';
+  static const String projectBeneficiary = 'ProjectBeneficiary';
+  static const String household = 'Household';
+  static const String closedHousehold = 'ClosedHousehold';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

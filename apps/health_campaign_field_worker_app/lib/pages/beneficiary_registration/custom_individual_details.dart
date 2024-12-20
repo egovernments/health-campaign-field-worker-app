@@ -122,6 +122,20 @@ class CustomIndividualDetailsPageState
                             form.control(_genderKey).setErrors({'': true});
                           });
                         }
+                        final scannerBloc = context.read<DigitScannerBloc>();
+                        if (scannerBloc.state.qrCodes.isEmpty) {
+                          await DigitToast.show(
+                            context,
+                            options: DigitToastOptions(
+                              localizations.translate(
+                                i18Local.individualDetails
+                                    .scanVoucherAndLinkToIndividual,
+                              ),
+                              true,
+                              theme,
+                            ),
+                          );
+                        }
                         final userId =
                             RegistrationDeliverySingleton().loggedInUserUuid;
                         final projectId =
@@ -355,11 +369,6 @@ class CustomIndividualDetailsPageState
                                 "min3": (object) => localizations.translate(
                                       i18Local.common.min3CharsRequired,
                                     ),
-                                "validName": (object) =>
-                                    localizations.translate(
-                                      i18Local.individualDetails
-                                          .individualNameValidation,
-                                    )
                               },
                             ),
                           ),
@@ -682,7 +691,6 @@ class CustomIndividualDetailsPageState
           Validators.required,
           utilsLocal.CustomValidator.requiredMin3,
           Validators.maxLength(200),
-          utilsLocal.CustomValidator.validIndividualName,
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
       ),
