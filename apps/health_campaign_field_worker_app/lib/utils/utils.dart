@@ -1,5 +1,6 @@
 library app_utils;
 
+import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
 
@@ -108,8 +109,8 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult == ConnectivityResult.wifi ||
-      connectivityResult == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.first == ConnectivityResult.wifi ||
+      connectivityResult.first == ConnectivityResult.mobile;
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
@@ -392,6 +393,7 @@ initializeAllMappers() async {
     Future(() => registration_delivery_mappers.initializeMappers()),
     Future(() => inventory_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
+    Future(() => complaints_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
@@ -400,6 +402,7 @@ int getSyncCount(List<OpLog> oplogs) {
   int count = oplogs.where((element) {
     switch (element.entityType) {
       //add SyncCount case for package
+      case DataModelType.complaints:
       case DataModelType.household:
       case DataModelType.individual:
       case DataModelType.householdMember:

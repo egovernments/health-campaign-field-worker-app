@@ -1,3 +1,6 @@
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
+
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
@@ -57,19 +60,32 @@ class HomePage extends LocalizedStatefulWidget {
 class _HomePageState extends LocalizedState<HomePage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
+  late StreamSubscription<List<ConnectivityResult>> subscription;
 
   @override
   initState() {
     super.initState();
 
+    // subscription = Connectivity()
+    //     .onConnectivityChanged
+    //     .listen((ConnectivityResult resSyncBlocult) async {
+    //   var connectivityResult = await (Connectivity().checkConnectivity()).;
+
+    //   if (connectivityResult != ConnectivityResult.none) {
+    //     if (context.mounted) {
+    //       context
+    //           .read<SyncBloc>()
+    //           .add(SyncRefreshEvent(context.loggedInUserUuid));
+    //     }
+    //   }
+    // });
+
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
+          // context.syncRefresh();
           context
               .read<SyncBloc>()
               .add(SyncRefreshEvent(context.loggedInUserUuid));
@@ -319,6 +335,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
+      i18.home.fileComplaint:
+          homeShowcaseData.distributorFileComplaint.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.fileComplaint,
+          onPressed: () =>
+              context.router.push(const ComplaintsInboxWrapperRoute()),
+        ),
+      ),
+
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
@@ -435,6 +461,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+
       i18.home.db: homeShowcaseData.db.buildWith(
         child: HomeItemCard(
           icon: Icons.table_chart,
@@ -454,6 +481,9 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
+      i18.home.fileComplaint:
+          homeShowcaseData.distributorFileComplaint.showcaseKey,
+
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
 
@@ -474,6 +504,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
+      i18.home.fileComplaint,
+
       i18.home.manageAttendanceLabel,
 
       i18.home.manageStockLabel,
@@ -521,6 +553,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               localRepositories: [
                 // INFO : Need to add local repo of package Here
                 context.read<
+                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
+                context.read<
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
 
@@ -548,6 +583,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
+                context.read<
+                    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
                 context.read<
                     RemoteRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
@@ -586,6 +624,16 @@ void setPackagesSingleton(BuildContext context) {
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
         // INFO : Need to add singleton of package Here
+        ComplaintsSingleton().setInitialData(
+          tenantId: envConfig.variables.tenantId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          userMobileNumber: context.loggedInUser.mobileNumber,
+          loggedInUserName: context.loggedInUser.name,
+          complaintTypes:
+              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          userName: context.loggedInUser.name ?? '',
+        );
+
         AttendanceSingleton().setInitialData(
             projectId: context.projectId,
             loggedInIndividualId: context.loggedInIndividualId ?? "",

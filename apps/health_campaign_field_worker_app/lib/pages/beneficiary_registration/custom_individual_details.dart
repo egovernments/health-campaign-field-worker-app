@@ -694,9 +694,9 @@ class CustomIndividualDetailsPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          utilsLocal.CustomValidator.requiredMin3,
+          // utilsLocal.CustomValidator.requiredMin3,
           Validators.maxLength(200),
-          utilsLocal.CustomValidator.validIndividualName,
+          // utilsLocal.CustomValidator.validIndividualName,
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
       ),

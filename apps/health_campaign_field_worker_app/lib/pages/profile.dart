@@ -58,7 +58,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
         _mobileNumberKey: FormControl<String>(
           value: user?.mobileNumber,
           validators: [
-            CustomValidator.validMobileNumber,
+            // CustomValidator.validMobileNumber,
           ],
         ),
         _emailId: FormControl<String>(
@@ -130,11 +130,18 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                         builder: (ctx, state) {
                           return DigitElevatedButton(
                             onPressed: () async {
+                              // final connectivityResult =
+                              //     await (Connectivity().checkConnectivity());
+                              // final isOnline = connectivityResult.first ==
+                              //         ConnectivityResult.wifi ||
+                              //     connectivityResult.first ==
+                              //         ConnectivityResult.mobile;
+
                               final connectivityResult =
                                   await (Connectivity().checkConnectivity());
-                              final isOnline = connectivityResult ==
+                              final isOnline = connectivityResult.firstOrNull ==
                                       ConnectivityResult.wifi ||
-                                  connectivityResult ==
+                                  connectivityResult.firstOrNull ==
                                       ConnectivityResult.mobile;
 
                               if (!isOnline) {

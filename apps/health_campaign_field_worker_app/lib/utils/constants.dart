@@ -1,3 +1,4 @@
+import 'package:complaints/complaints.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:digit_components/utils/app_logger.dart';
@@ -131,6 +132,10 @@ class Constants {
         sql,
         AttendanceLogOpLogManager(isar),
       ),
+      PgrServiceLocalRepository(
+        sql,
+        PgrServiceOpLogManager(isar),
+      ),
     ];
   }
 
@@ -206,6 +211,8 @@ class Constants {
           AttendanceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.attendance)
           AttendanceLogRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.complaints)
+          PgrServiceRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
