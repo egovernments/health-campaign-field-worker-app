@@ -498,6 +498,12 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
       editHousehold: (value) => value.addressModel,
     );
 
+    final searchQuery = state.mapOrNull<String>(
+      create: (value) {
+        return value.searchQuery;
+      },
+    );
+
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
         value: localizations
@@ -537,11 +543,14 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
       ),
       if (RegistrationDeliverySingleton().householdType ==
           HouseholdType.community)
-        _buildingNameKey: FormControl<String>(validators: [
-          Validators.required,
-          CustomValidator.sizeLessThan2,
-          Validators.maxLength(64),
-        ], value: addressModel?.buildingName),
+        _buildingNameKey: FormControl<String>(
+          validators: [
+            Validators.required,
+            CustomValidator.sizeLessThan2,
+            Validators.maxLength(64),
+          ],
+          value: addressModel?.buildingName ?? searchQuery?.trim(),
+        ),
     });
   }
 }

@@ -493,3 +493,31 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
 
   return Status.registered.toValue();
 }
+
+String getStatus(String selectedFilter) {
+  final statusMap = {
+    Status.delivered.toValue(): Status.delivered,
+    Status.notAdministered.toValue(): Status.notAdministered,
+    Status.visited.toValue(): Status.visited,
+    Status.notVisited.toValue(): Status.notVisited,
+    Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+    Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+    Status.administeredSuccess.toValue(): Status.administeredSuccess,
+    Status.administeredFailed.toValue(): Status.administeredFailed,
+    Status.inComplete.toValue(): Status.inComplete,
+    Status.toAdminister.toValue(): Status.toAdminister,
+    Status.closeHousehold.toValue(): Status.closeHousehold,
+    Status.registered.toValue(): Status.registered,
+    Status.notRegistered.toValue(): Status.notRegistered,
+  };
+
+  var mappedStatus = statusMap.entries
+      .where((element) => element.value.name == selectedFilter)
+      .first
+      .key;
+  if (mappedStatus != null) {
+    return mappedStatus;
+  } else {
+    return selectedFilter;
+  }
+}

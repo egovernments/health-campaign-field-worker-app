@@ -397,9 +397,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
     return selectQuery.where(buildAnd([
       if (params.nameSearch != null)
-        buildOr([
-          sql.address.buildingName.contains(params.nameSearch!),
-        ]),
+        sql.address.buildingName.contains(params.nameSearch!),
     ]));
   }
 

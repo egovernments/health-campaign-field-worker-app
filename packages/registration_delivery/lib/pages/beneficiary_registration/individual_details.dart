@@ -354,6 +354,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                     Offstage(
                       offstage: !widget.isHeadOfHousehold,
                       child: DigitCheckbox(
+                        capitalizeFirstLetter: false,
                         label: (RegistrationDeliverySingleton().householdType ==
                                 HouseholdType.community)
                             ? localizations.translate(
@@ -783,7 +784,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           CustomValidator.requiredMin,
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery?.trim(),
+        value: individual?.name?.givenName ??
+            ((RegistrationDeliverySingleton().householdType ==
+                    HouseholdType.community)
+                ? null
+                : searchQuery?.trim()),
       ),
       _idTypeKey: FormControl<String>(
         value: individual?.identifiers?.firstOrNull?.identifierType,

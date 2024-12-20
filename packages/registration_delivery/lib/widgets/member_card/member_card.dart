@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
@@ -116,9 +117,14 @@ class MemberCard extends StatelessWidget {
                             actions: [
                               Button(
                                 prefixIcon: Icons.person,
-                                label: localizations.translate(
-                                  i18.memberCard.assignAsHouseholdhead,
-                                ),
+                                label: (RegistrationDeliverySingleton()
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? localizations.translate(
+                                        i18.memberCard.assignAsClfhead)
+                                    : localizations.translate(
+                                        i18.memberCard.assignAsHouseholdhead,
+                                      ),
                                 isDisabled: isHead ? true : false,
                                 onPressed: setAsHeadAction,
                                 type: ButtonType.secondary,
@@ -181,8 +187,7 @@ class MemberCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(left: spacer1, bottom: spacer2),
+                padding: const EdgeInsets.only(left: spacer1, bottom: spacer2),
                 child: Offstage(
                   offstage: beneficiaryType != BeneficiaryType.individual,
                   child: !isDelivered ||

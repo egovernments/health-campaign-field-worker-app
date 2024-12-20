@@ -1,8 +1,8 @@
 // Importing necessary packages and files.
 import 'dart:io';
 
-import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
@@ -110,7 +110,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   /// The `_openConnection` method opens a connection to the database.
   /// It returns a `LazyDatabase` that opens the database when it is first accessed.
@@ -132,7 +132,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       await m.createAll();
     }, onUpgrade: (Migrator m, int from, int to) async {
       //Add column for householdType for facility based campaign
-      if (from < 5) {
+      if (from < 6) {
         try {
           AppLogger.instance.info('Apply migration $from to $to');
           await m.addColumn(household, household.householdType);
