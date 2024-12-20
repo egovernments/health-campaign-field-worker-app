@@ -58,7 +58,22 @@ jobs:
       - name: Run APK build script
         env:
           BUILD_CONFIG: release   # or profile depending on your choice
-        run: bash ./tools/generate-apk.sh
+        run: |
+          echo "Current working directory: $(pwd)"
+          bash ./tools/generate-apk.sh
+
+      # Step 8: Verify APK path and upload artifacts
+      - name: Check APK existence
+        run: |
+          echo "Looking for APK file"
+          if [ -f apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk/app-release.apk ]; then
+            echo "APK found."
+          else
+            echo "APK not found in the expected path."
+            find . -name "app-release.apk"
+            exit 1
+          fi
+
 
       # Archive the APK as a build artifact so it can be downloaded
       - name: Upload APKs
