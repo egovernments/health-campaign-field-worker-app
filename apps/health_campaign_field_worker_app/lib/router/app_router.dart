@@ -37,6 +37,10 @@ import '../pages/closed/custom_closed_household_summary.dart';
 import '../pages/beneficiary/custom_deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered_verification.dart';
 import '../pages/closed/custom_closed_household_details.dart';
+import '../pages/inventory/custom_stock_details.dart';
+import '../pages/inventory/custom_warehouse_details.dart';
+import 'package:inventory_management/blocs/app_localization.dart';
+
 import '../pages/reports/beneficiary/custom_enumeration_summary_report_details.dart';
 import '../pages/reports/beneficiary/custom_distribution_summary_report_details.dart';
 
@@ -142,9 +146,24 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: WarehouseDetailsRoute.page,
               path: 'warehouse-details',
+            ),
+            AutoRoute(
+              page: CustomWarehouseDetailsRoute.page,
+              path: 'custom-warehouse-details',
               initial: true,
             ),
-            AutoRoute(page: StockDetailsRoute.page, path: 'details'),
+            AutoRoute(
+              page: StockDetailsRoute.page,
+              path: 'details',
+            ),
+            AutoRoute(
+              page: CustomStockDetailsRoute.page,
+              path: 'custom-details',
+            ),
+            RedirectRoute(
+              path: 'details',
+              redirectTo: 'custom-details',
+            ),
           ],
         ),
         AutoRoute(
