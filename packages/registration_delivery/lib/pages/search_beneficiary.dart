@@ -512,33 +512,7 @@ class _SearchBeneficiaryPageState
       blocWrapper.clearEvent();
     }
 
-    if (RegistrationDeliverySingleton().householdType ==
-        HouseholdType.community) {
-      if (isProximityEnabled ||
-          selectedFilters.isNotEmpty ||
-          searchController.text.isNotEmpty) {
-        blocWrapper.houseHoldGlobalSearchBloc
-            .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
-                globalSearchParams: GlobalSearchParameters(
-          isProximityEnabled: isProximityEnabled,
-          latitude: lat,
-          longitude: long,
-          projectId: RegistrationDeliverySingleton().projectId!,
-          maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-          filter: selectedFilters,
-          offset: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
-              : offset,
-          limit: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
-              : limit,
-          householdType: RegistrationDeliverySingleton().householdType,
-        )));
-      }
-    } else if (RegistrationDeliverySingleton().beneficiaryType ==
+    if (RegistrationDeliverySingleton().beneficiaryType ==
         BeneficiaryType.individual) {
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
