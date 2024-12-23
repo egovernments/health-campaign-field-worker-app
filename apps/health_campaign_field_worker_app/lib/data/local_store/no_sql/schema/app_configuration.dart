@@ -1,6 +1,7 @@
 import 'package:digit_dss/digit_dss.dart';
 import 'package:isar/isar.dart';
 
+import '../../../../models/app_config/app_config_model.dart';
 import '../../../../models/privacy_notice/privacy_notice_model.dart';
 
 part 'app_configuration.g.dart';
@@ -77,6 +78,9 @@ class AppConfiguration {
 
   @Name('SEARCH_HOUSEHOLD_FILTERS')
   late List<SearchHouseHoldFilters>? searchHouseHoldFilters;
+
+  @Name('SEARCH_CLF_FILTERS')
+  late List<SearchCLFFilters>? searchCLFFilters;
 
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
@@ -257,4 +261,3 @@ class SubDescription {
   late bool? isBold;
   late bool? isSpaceRequired;
 }
-

@@ -710,6 +710,9 @@ void setPackagesSingleton(BuildContext context) {
                   .map((e) => e.code)
                   .toList()
               : [],
+          searchCLFFilters: appConfiguration.searchCLFFilters != null
+              ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
+              : [],
           referralReasons:
               appConfiguration.referralReasons?.map((e) => e.code).toList(),
           houseStructureTypes:
