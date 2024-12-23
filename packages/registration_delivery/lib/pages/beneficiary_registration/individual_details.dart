@@ -504,6 +504,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                     .translate(i18.common.corecommonRequired)
                                 : null,
                             initialDate: before150Years,
+                            initialValue: getInitialDateValue(form),
                             onChangeOfFormControl: (value) {
                               if (value == null) {
                                 form.control(_dobKey).setErrors({'': true});
@@ -597,7 +598,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        // const SizedBox(height: spacer4),
                         if ((RegistrationDeliverySingleton().beneficiaryType ==
                                     BeneficiaryType.household &&
                                 widget.isHeadOfHousehold) ||
@@ -621,7 +622,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                           localizations.translate(
                                             i18.deliverIntervention.voucherCode,
                                           ),
-                                          style: theme.textTheme.headlineSmall,
+                                          style: textTheme.headingS,
                                         ),
                                       ),
                                       Flexible(
@@ -636,7 +637,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                           bottom: spacer2 * 2,
                                         ),
                                         child: IconButton(
-                                          color: theme.colorScheme.secondary,
+                                          color:
+                                              theme.colorTheme.primary.primary1,
                                           icon: const Icon(Icons.edit),
                                           onPressed: () {
                                             Navigator.of(context).push(
