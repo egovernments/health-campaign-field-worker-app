@@ -361,7 +361,7 @@ class RegistrationDeliverySingleton {
     required List<String>? deliveryCommentOptions,
     required List<String>? symptomsTypes,
     required List<String>? searchHouseHoldFilter,
-    searchCLFFilters,
+    required List<String>? searchCLFFilters,
     required List<String>? referralReasons,
     required List<String>? houseStructureTypes,
     required List<String>? refusalReasons,

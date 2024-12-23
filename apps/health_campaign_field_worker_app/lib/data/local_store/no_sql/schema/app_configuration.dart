@@ -1,8 +1,4 @@
-import 'package:digit_dss/digit_dss.dart';
 import 'package:isar/isar.dart';
-
-import '../../../../models/app_config/app_config_model.dart';
-import '../../../../models/privacy_notice/privacy_notice_model.dart';
 
 part 'app_configuration.g.dart';
 
@@ -178,6 +174,13 @@ class HouseholdDeletionReasonOptions {
 
 @embedded
 class SearchHouseHoldFilters {
+  late String name;
+  late String code;
+  late bool active;
+}
+
+@embedded
+class SearchCLFFilters {
   late String name;
   late String code;
   late bool active;
