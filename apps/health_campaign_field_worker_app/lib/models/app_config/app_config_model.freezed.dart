@@ -5247,6 +5247,179 @@ abstract class _SearchHouseHoldFilters implements SearchHouseHoldFilters {
       get copyWith => throw _privateConstructorUsedError;
 }
 
+SearchCLFFilters _$SearchCLFFiltersFromJson(Map<String, dynamic> json) {
+  return _SearchCLFFilters.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SearchCLFFilters {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+  bool get active => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SearchCLFFiltersCopyWith<SearchCLFFilters> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SearchCLFFiltersCopyWith<$Res> {
+  factory $SearchCLFFiltersCopyWith(
+          SearchCLFFilters value, $Res Function(SearchCLFFilters) then) =
+      _$SearchCLFFiltersCopyWithImpl<$Res, SearchCLFFilters>;
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class _$SearchCLFFiltersCopyWithImpl<$Res, $Val extends SearchCLFFilters>
+    implements $SearchCLFFiltersCopyWith<$Res> {
+  _$SearchCLFFiltersCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SearchCLFFiltersImplCopyWith<$Res>
+    implements $SearchCLFFiltersCopyWith<$Res> {
+  factory _$$SearchCLFFiltersImplCopyWith(_$SearchCLFFiltersImpl value,
+          $Res Function(_$SearchCLFFiltersImpl) then) =
+      __$$SearchCLFFiltersImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class __$$SearchCLFFiltersImplCopyWithImpl<$Res>
+    extends _$SearchCLFFiltersCopyWithImpl<$Res, _$SearchCLFFiltersImpl>
+    implements _$$SearchCLFFiltersImplCopyWith<$Res> {
+  __$$SearchCLFFiltersImplCopyWithImpl(_$SearchCLFFiltersImpl _value,
+      $Res Function(_$SearchCLFFiltersImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_$SearchCLFFiltersImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SearchCLFFiltersImpl implements _SearchCLFFilters {
+  _$SearchCLFFiltersImpl(
+      {required this.name, required this.code, required this.active});
+
+  factory _$SearchCLFFiltersImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SearchCLFFiltersImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+  @override
+  final bool active;
+
+  @override
+  String toString() {
+    return 'SearchCLFFilters(name: $name, code: $code, active: $active)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchCLFFiltersImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.active, active) || other.active == active));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code, active);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchCLFFiltersImplCopyWith<_$SearchCLFFiltersImpl> get copyWith =>
+      __$$SearchCLFFiltersImplCopyWithImpl<_$SearchCLFFiltersImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SearchCLFFiltersImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SearchCLFFilters implements SearchCLFFilters {
+  factory _SearchCLFFilters(
+      {required final String name,
+      required final String code,
+      required final bool active}) = _$SearchCLFFiltersImpl;
+
+  factory _SearchCLFFilters.fromJson(Map<String, dynamic> json) =
+      _$SearchCLFFiltersImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  bool get active;
+  @override
+  @JsonKey(ignore: true)
+  _$$SearchCLFFiltersImplCopyWith<_$SearchCLFFiltersImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 TransportTypes _$TransportTypesFromJson(Map<String, dynamic> json) {
   return _TransportTypes.fromJson(json);
 }
