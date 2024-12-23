@@ -108,7 +108,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
         height: kPadding * 5,
         child: Material(
           shape: border,
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
           child: InkWell(onTap: onPressed, child: Icon(icon)),
         ),
       );

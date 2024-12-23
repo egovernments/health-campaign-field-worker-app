@@ -52,11 +52,11 @@ class ReasonForDeletionPageState extends LocalizedState<ReasonForDeletionPage> {
                         );
                       }
 
-                      return Button(
+                      return DigitButton(
                         label: localizations
                             .translate(i18.householdLocation.actionLabel),
-                        type: ButtonType.primary,
-                        size: ButtonSize.large,
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
                         mainAxisSize: MainAxisSize.max,
                         onPressed: () {
                           if (form.valid) {

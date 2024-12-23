@@ -4,7 +4,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
-import 'package:registration_delivery/utils/utils.dart';
 
 class HouseholdMemberLocalRepository
     extends LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {

@@ -101,12 +101,12 @@ class _HouseholdOverviewPageState
                               .add(const SearchHouseholdsEvent.clear());
                         },
                       ),
-                      enableFixedButton: true,
+                      enableFixedDigitButton: true,
                       footer: DigitCard(
                           margin: const EdgeInsets.only(top: spacer2),
                           padding: const EdgeInsets.all(spacer2),
                           children: [
-                            Button(
+                            DigitButton(
                               mainAxisSize: MainAxisSize.max,
                               onPressed: () => addIndividual(
                                 context,
@@ -117,8 +117,8 @@ class _HouseholdOverviewPageState
                                     .householdOverViewAddActionText,
                               ),
                               prefixIcon: Icons.add_circle,
-                              type: ButtonType.secondary,
-                              size: ButtonSize.medium,
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.medium,
                             ),
                             Offstage(
                               offstage: beneficiaryType ==
@@ -138,7 +138,7 @@ class _HouseholdOverviewPageState
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       vertical: spacer2),
-                                              child: Button(
+                                              child: DigitButton(
                                                 label: localizations.translate(
                                                   i18.memberCard
                                                       .deliverDetailsUpdateLabel,
@@ -153,8 +153,8 @@ class _HouseholdOverviewPageState
                                                             .toValue()
                                                     ? true
                                                     : false,
-                                                type: ButtonType.secondary,
-                                                size: ButtonSize.large,
+                                                type: DigitButtonType.secondary,
+                                                size: DigitButtonSize.large,
                                                 mainAxisSize: MainAxisSize.max,
                                                 onPressed: () {
                                                   serviceDefinitionState.when(
@@ -187,13 +187,13 @@ class _HouseholdOverviewPageState
                                                 },
                                               ),
                                             )
-                                          : Button(
+                                          : DigitButton(
                                               label: localizations.translate(
                                                 i18.householdOverView
                                                     .householdOverViewActionText,
                                               ),
-                                              type: ButtonType.primary,
-                                              size: ButtonSize.large,
+                                              type: DigitButtonType.primary,
+                                              size: DigitButtonSize.large,
                                               mainAxisSize: MainAxisSize.max,
                                               isDisabled: (state.householdMemberWrapper
                                                                   .projectBeneficiaries ??
@@ -270,7 +270,7 @@ class _HouseholdOverviewPageState
                                     .isNotEmpty)
                                   Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Button(
+                                    child: DigitButton(
                                       onPressed: () {
                                         final projectId =
                                             RegistrationDeliverySingleton()
@@ -287,9 +287,9 @@ class _HouseholdOverviewPageState
                                         );
                                         showDialog(
                                           context: context,
-                                          builder: (ctx) => ActionCard(
+                                          builder: (ctx) => DigitActionCard(
                                             actions: [
-                                              Button(
+                                              DigitButton(
                                                 capitalizeLetters: false,
                                                 prefixIcon: Icons.edit,
                                                 label: (RegistrationDeliverySingleton()
@@ -302,8 +302,8 @@ class _HouseholdOverviewPageState
                                                         i18.householdOverView
                                                             .householdOverViewEditLabel,
                                                       ),
-                                                type: ButtonType.secondary,
-                                                size: ButtonSize.large,
+                                                type: DigitButtonType.secondary,
+                                                size: DigitButtonSize.large,
                                                 onPressed: () async {
                                                   Navigator.of(
                                                     context,
@@ -382,8 +382,8 @@ class _HouseholdOverviewPageState
                                               i18.householdOverView
                                                   .householdOverViewEditIconText,
                                             ),
-                                      type: ButtonType.tertiary,
-                                      size: ButtonSize.medium,
+                                      type: DigitButtonType.tertiary,
+                                      size: DigitButtonSize.medium,
                                       prefixIcon: Icons.edit,
                                       capitalizeLetters: false,
                                     ),
@@ -562,13 +562,14 @@ class _HouseholdOverviewPageState
                                                       padding:
                                                           const EdgeInsets.all(
                                                               spacer2),
-                                                      child: Button(
+                                                      child: DigitButton(
                                                         label:
                                                             getFilterIconNLabel()[
                                                                 'label'],
-                                                        size: ButtonSize.medium,
-                                                        type:
-                                                            ButtonType.tertiary,
+                                                        size: DigitButtonSize
+                                                            .medium,
+                                                        type: DigitButtonType
+                                                            .tertiary,
                                                         suffixIcon:
                                                             getFilterIconNLabel()[
                                                                 'icon'],
@@ -821,58 +822,64 @@ class _HouseholdOverviewPageState
                                           ).pop();
                                         },
                                         deleteMemberAction: () {
-                                          showPopup(
-                                              context: context,
-                                              title: localizations.translate(i18
-                                                  .householdOverView
-                                                  .householdOverViewActionCardTitle),
-                                              type: PopUpType.simple,
-                                              actions: [
-                                                Button(
-                                                    label: localizations
-                                                        .translate(i18
-                                                            .householdOverView
-                                                            .householdOverViewPrimaryActionLabel),
-                                                    onPressed: () {
-                                                      Navigator.of(
-                                                        context,
-                                                        rootNavigator: true,
-                                                      )
-                                                        ..pop()
-                                                        ..pop();
-                                                      context
-                                                          .read<
-                                                              HouseholdOverviewBloc>()
-                                                          .add(
-                                                            HouseholdOverviewEvent
-                                                                .selectedIndividual(
-                                                              individualModel:
-                                                                  e,
-                                                            ),
-                                                          );
-                                                      context.router.push(
-                                                        ReasonForDeletionRoute(
-                                                          isHousholdDelete:
-                                                              false,
-                                                        ),
-                                                      );
-                                                    },
-                                                    type: ButtonType.primary,
-                                                    size: ButtonSize.large),
-                                                Button(
-                                                    label: localizations
-                                                        .translate(i18
-                                                            .householdOverView
-                                                            .householdOverViewSecondaryActionLabel),
-                                                    onPressed: () {
-                                                      Navigator.of(
-                                                        context,
-                                                        rootNavigator: true,
-                                                      ).pop();
-                                                    },
-                                                    type: ButtonType.tertiary,
-                                                    size: ButtonSize.large)
-                                              ]);
+                                          showCustomPopup(
+                                            context: context,
+                                            builder: (BuildContext) => Popup(
+                                                title: localizations.translate(i18
+                                                    .householdOverView
+                                                    .householdOverViewActionCardTitle),
+                                                type: PopUpType.simple,
+                                                actions: [
+                                                  DigitButton(
+                                                      label: localizations
+                                                          .translate(i18
+                                                              .householdOverView
+                                                              .householdOverViewPrimaryActionLabel),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                          context,
+                                                          rootNavigator: true,
+                                                        )
+                                                          ..pop()
+                                                          ..pop();
+                                                        context
+                                                            .read<
+                                                                HouseholdOverviewBloc>()
+                                                            .add(
+                                                              HouseholdOverviewEvent
+                                                                  .selectedIndividual(
+                                                                individualModel:
+                                                                    e,
+                                                              ),
+                                                            );
+                                                        context.router.push(
+                                                          ReasonForDeletionRoute(
+                                                            isHousholdDelete:
+                                                                false,
+                                                          ),
+                                                        );
+                                                      },
+                                                      type: DigitButtonType
+                                                          .primary,
+                                                      size: DigitButtonSize
+                                                          .large),
+                                                  DigitButton(
+                                                      label: localizations
+                                                          .translate(i18
+                                                              .householdOverView
+                                                              .householdOverViewSecondaryActionLabel),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                          context,
+                                                          rootNavigator: true,
+                                                        ).pop();
+                                                      },
+                                                      type: DigitButtonType
+                                                          .tertiary,
+                                                      size:
+                                                          DigitButtonSize.large)
+                                                ]),
+                                          );
                                         },
                                         isNotEligible:
                                             RegistrationDeliverySingleton()
@@ -998,7 +1005,11 @@ class _HouseholdOverviewPageState
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
       textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()
+          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue() ==
+                  Status.administeredSuccess.toValue()
+              ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()}'
+              : getTaskStatus(state.householdMemberWrapper.tasks ?? [])
+                  .toValue()
           : Status.registered.toValue();
 
       color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false

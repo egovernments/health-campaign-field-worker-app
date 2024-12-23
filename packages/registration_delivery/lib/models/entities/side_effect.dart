@@ -48,6 +48,7 @@ class SideEffectModel extends EntityModel with SideEffectModelMappable {
   final String? id;
   final String? projectId;
   final String? taskClientReferenceId;
+  final String? projectBeneficiaryClientReferenceId;
   final int? reAttempts;
   final List<String>? symptoms;
   final bool? nonRecoverableError;
@@ -60,6 +61,7 @@ class SideEffectModel extends EntityModel with SideEffectModelMappable {
     this.additionalFields,
     this.id,
     this.projectId,
+    this.projectBeneficiaryClientReferenceId,
     this.taskClientReferenceId,
     this.reAttempts,
     this.symptoms,
@@ -93,6 +95,8 @@ class SideEffectModel extends EntityModel with SideEffectModelMappable {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
+      projectBeneficiaryClientReferenceId:
+          Value(projectBeneficiaryClientReferenceId),
     );
   }
 }

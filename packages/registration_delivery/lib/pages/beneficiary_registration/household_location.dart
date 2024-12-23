@@ -2,8 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -109,7 +110,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   : true;
             },
             child: ScrollableContent(
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               header: const Column(
                 children: [
                   BackNavigationHelpHeaderWidget(
@@ -124,12 +125,12 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   children: [
                     BlocBuilder<LocationBloc, LocationState>(
                       builder: (context, locationState) {
-                        return Button(
+                        return DigitButton(
                           label: localizations.translate(
                             i18.householdLocation.actionLabel,
                           ),
-                          type: ButtonType.primary,
-                          size: ButtonSize.large,
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () {
                             form.markAllAsTouched();
@@ -513,29 +514,31 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
       ),
       _addressLine1Key:
           FormControl<String>(value: addressModel?.addressLine1, validators: [
-        CustomValidator.requiredMin,
+        Validators.delegate(
+            (validator) => CustomValidator.requiredMin(validator)),
         Validators.maxLength(64),
       ]),
       _addressLine2Key: FormControl<String>(
         value: addressModel?.addressLine2,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(64),
         ],
       ),
       _landmarkKey:
           FormControl<String>(value: addressModel?.landmark, validators: [
-        CustomValidator.requiredMin,
+        Validators.delegate(
+            (validator) => CustomValidator.requiredMin(validator)),
         Validators.maxLength(64),
       ]),
       _postalCodeKey:
           FormControl<String>(value: addressModel?.pincode, validators: [
-        CustomValidator.requiredMin,
+        Validators.delegate(
+            (validator) => CustomValidator.requiredMin(validator)),
         Validators.maxLength(6),
       ]),
-      _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
-        CustomValidator.requiredMin,
-      ]),
+      _latKey: FormControl<double>(value: addressModel?.latitude),
       _lngKey: FormControl<double>(
         value: addressModel?.longitude,
       ),
@@ -547,7 +550,8 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
         _buildingNameKey: FormControl<String>(
           validators: [
             Validators.required,
-            CustomValidator.sizeLessThan2,
+            Validators.delegate(
+                (validator) => CustomValidator.sizeLessThan2(validator)),
             Validators.maxLength(64),
           ],
           value: addressModel?.buildingName ?? searchQuery?.trim(),

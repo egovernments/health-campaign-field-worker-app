@@ -30,19 +30,8 @@ void main() {
 
   // Grouping tests related to RecordStockBloc
   group('RecordStockBloc', () {
-    // Declaring variables for mock and bloc
-    late RecordStockBloc recordStockBloc;
-
     // Setting up the mock and the bloc for each test
-    setUp(() {
-      recordStockBloc = RecordStockBloc(
-        stockRepository: MockStockDataRepository(),
-        const RecordStockState.create(
-          entryType: InventoryReportConstants.entryType,
-          projectId: InventoryReportConstants.projectId,
-        ),
-      );
-    });
+    setUp(() {});
 
     // Test for saveWarehouseDetails event
     blocTest<RecordStockBloc, RecordStockState>(

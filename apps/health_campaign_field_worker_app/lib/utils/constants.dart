@@ -16,6 +16,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/entity_mapper.dart';
@@ -24,6 +25,8 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
+import '../data/sync_registry.dart';
+import '../data/sync_service_mapper.dart';
 import '../firebase_options.dart';
 import 'environment_config.dart';
 import 'utils.dart';
@@ -32,12 +35,15 @@ class Constants {
   late Future<Isar> _isar;
   late String _version;
   static final Constants _instance = Constants._();
+
   Constants._() {
     _isar = openIsar();
   }
+
   factory Constants() {
     return _instance;
   }
+
   Future initialize(version) async {
     await initializeAllMappers();
     setInitialDataOfPackages();
@@ -84,6 +90,9 @@ class Constants {
   static const String healthFacilitySurveyFormPrefix = 'HF_RF';
 
   static const String boundaryLocalizationPath = 'rainmaker-boundary-admin';
+
+  static RegExp mobileNumberRegExp =
+      RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -278,6 +287,15 @@ class Constants {
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
     LocationTrackerSingleton()
         .setTenantId(tenantId: envConfig.variables.tenantId);
+    SyncServiceSingleton().setData(
+      syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+      persistenceConfiguration: PersistenceConfiguration.offlineFirst,
+      entityMapper: SyncServiceMapper(),
+    );
+    SyncServiceSingleton().setRegistries(SyncServiceRegistry());
+    SyncServiceSingleton().registries?.registerSyncRegistries({
+      DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
+    });
   }
 }
 
@@ -287,6 +305,7 @@ final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 class KeyValue {
   String label;
   dynamic key;
+
   KeyValue(this.label, this.key);
 }
 
@@ -295,6 +314,7 @@ class StatusKeys {
   bool isBeneficiaryRefused;
   bool isBeneficiaryReferred;
   bool isStatusReset;
+
   StatusKeys(this.isNotEligible, this.isBeneficiaryRefused,
       this.isBeneficiaryReferred, this.isStatusReset);
 }
@@ -340,6 +360,7 @@ class DownloadBeneficiary {
   String? prefixLabel;
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
+
   DownloadBeneficiary({
     required this.title,
     required this.projectId,

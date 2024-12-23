@@ -59,6 +59,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     // final router = context.router;
 
     return BlocConsumer<ProjectFacilityBloc, ProjectFacilityState>(
@@ -88,7 +89,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                         return ReactiveFormBuilder(
                           form: () => buildForm(recordState, projectFacilities),
                           builder: (context, form, child) => ScrollableContent(
-                            enableFixedButton: true,
+                            enableFixedDigitButton: true,
                             header: const Column(children: [
                               BackNavigationHelpHeaderWidget(),
                             ]),
@@ -102,8 +103,8 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                   ValueListenableBuilder(
                                     valueListenable: clickedStatus,
                                     builder: (context, bool isClicked, _) {
-                                      return Button(
-                                        size: ButtonSize.large,
+                                      return DigitButton(
+                                        size: DigitButtonSize.large,
                                         label: localizations.translate(
                                           i18.common.coreCommonNext,
                                         ),
@@ -176,7 +177,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                             }
                                           }
                                         },
-                                        type: ButtonType.primary,
+                                        type: DigitButtonType.primary,
                                         mainAxisSize: MainAxisSize.max,
                                       );
                                     },
@@ -198,7 +199,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                                     .facilityDetails,
                                               ),
                                               style:
-                                                  theme.textTheme.displayMedium,
+                                                  textTheme.headingXl,
                                             ),
                                           ),
                                         ],

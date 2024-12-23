@@ -92,10 +92,11 @@ class LocationService : Service() {
         val intent = Intent("LocationUpdate")
         intent.putExtra("latitude", location.latitude)
         intent.putExtra("longitude", location.longitude)
+        intent.putExtra("accuracy", location.accuracy)
 
         sendBroadcast(intent)
 
-        Log.d("LocationSharing", "Location sent to MainActivity: Latitude ${location.latitude}, Longitude ${location.longitude}")
+        Log.d("LocationSharing", "Location sent to MainActivity: Latitude ${location.latitude}, Longitude ${location.longitude}, Accuracy ${location.accuracy}")
     }
 
     override fun onDestroy() {
@@ -129,8 +130,10 @@ class LocationService : Service() {
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
         val timestamp = System.currentTimeMillis()
-        val notificationContent = "Latitude: ${location.latitude}, Longitude: ${location.longitude},"
-        writeToFile("Latitude: ${location.latitude}, Longitude: ${location.longitude}, isSync: false, timestamp: $timestamp")
+        val notificationContent = "Latitude: ${location.latitude}, Longitude: ${location.longitude}, Accuracy: ${location.accuracy}"  // Include accuracy
+
+        // Write location and accuracy to file
+        writeToFile("Latitude: ${location.latitude}, Longitude: ${location.longitude}, Accuracy: ${location.accuracy}, isSync: false, timestamp: $timestamp")
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Location Service")

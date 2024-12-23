@@ -6,7 +6,8 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/widgets/atoms/dob_picker.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_dob_picker.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +98,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           },
           builder: (context, state) {
             return ScrollableContent(
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showHelp: false,
@@ -111,15 +112,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                     ValueListenableBuilder(
                       valueListenable: clickedStatus,
                       builder: (context, bool isClicked, _) {
-                        return Button(
+                        return DigitButton(
                           label: state.mapOrNull(
                                 editIndividual: (value) => localizations
                                     .translate(i18.common.coreCommonSave),
                               ) ??
                               localizations
                                   .translate(i18.common.coreCommonSubmit),
-                          type: ButtonType.primary,
-                          size: ButtonSize.large,
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
                             if (form.control(_dobKey).value == null) {
@@ -625,9 +626,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
                                 // ignore: no-empty-block
                               )
-                            : Button(
-                                type: ButtonType.secondary,
-                                size: ButtonSize.large,
+                            : DigitButton(
+                                type: DigitButtonType.secondary,
+                                size: DigitButtonSize.large,
                                 mainAxisSize: MainAxisSize.max,
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -781,7 +782,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin,
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ??
@@ -807,8 +809,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
-        CustomValidator.validMobileNumber,
-        CustomValidator.minPhoneNumValidation,
+        Validators.pattern(Constants.mobileNumberRegExp,
+            validationMessage:
+                localizations.translate(i18.common.coreCommonMobileNumber)),
         Validators.maxLength(10)
       ]),
     });
@@ -820,5 +823,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     return options?.map((e) => e).firstWhereOrNull(
           (element) => element.toLowerCase() == individual?.gender?.name,
         );
+  }
+
+  getInitialDateValue(FormGroup form) {
+    var date = form.control(_dobKey).value != null
+        ? DateFormat(Constants().dateTimeExtFormat)
+            .format(form.control(_dobKey).value)
+        : null;
+
+    return date;
   }
 }

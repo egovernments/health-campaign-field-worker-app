@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'pgr_complaints_response.dart';
@@ -98,10 +98,8 @@ mixin PgrServiceCreateResponseModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrServiceCreateResponseModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrServiceCreateResponseModel, other));
+    return PgrServiceCreateResponseModelMapper.ensureInitialized()
+        .equalsValue(this as PgrServiceCreateResponseModel, other);
   }
 
   @override
@@ -281,10 +279,8 @@ mixin PgrComplaintResponseModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrComplaintResponseModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrComplaintResponseModel, other));
+    return PgrComplaintResponseModelMapper.ensureInitialized()
+        .equalsValue(this as PgrComplaintResponseModel, other);
   }
 
   @override
@@ -507,10 +503,8 @@ mixin PgrServiceResponseModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrServiceResponseModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrServiceResponseModel, other));
+    return PgrServiceResponseModelMapper.ensureInitialized()
+        .equalsValue(this as PgrServiceResponseModel, other);
   }
 
   @override
@@ -763,10 +757,8 @@ mixin PgrComplainantResponseModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrComplainantResponseModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrComplainantResponseModel, other));
+    return PgrComplainantResponseModelMapper.ensureInitialized()
+        .equalsValue(this as PgrComplainantResponseModel, other);
   }
 
   @override

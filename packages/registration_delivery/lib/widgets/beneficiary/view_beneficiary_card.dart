@@ -338,12 +338,12 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 ),
               ),
               Flexible(
-                child: Button(
+                child: DigitButton(
                   label:
                       localizations.translate(i18.searchBeneficiary.iconLabel),
                   onPressed: widget.onOpenPressed,
-                  type: ButtonType.secondary,
-                  size: ButtonSize.medium,
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.medium,
                 ),
               ),
             ],

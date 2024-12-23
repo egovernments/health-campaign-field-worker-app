@@ -3,8 +3,8 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_chip.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
@@ -137,7 +137,7 @@ class _SearchBeneficiaryPageState
                               locationState.latitude != null
                                   ? Padding(
                                       padding: const EdgeInsets.all(spacer2),
-                                      child: CustomSwitch(
+                                      child: DigitSwitch(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         label: (RegistrationDeliverySingleton()
@@ -212,10 +212,10 @@ class _SearchBeneficiaryPageState
                                       alignment: Alignment.topLeft,
                                       child: Padding(
                                         padding: const EdgeInsets.all(spacer2),
-                                        child: Button(
+                                        child: DigitButton(
                                           label: getFilterIconNLabel()['label'],
-                                          size: ButtonSize.medium,
-                                          type: ButtonType.tertiary,
+                                          size: DigitButtonSize.medium,
+                                          type: DigitButtonType.tertiary,
                                           suffixIcon:
                                               getFilterIconNLabel()['icon'],
                                           onPressed: () => showFilterDialog(),
@@ -398,7 +398,7 @@ class _SearchBeneficiaryPageState
               margin: const EdgeInsets.only(top: spacer2),
               padding: const EdgeInsets.all(spacer2),
               children: [
-                Button(
+                DigitButton(
                   capitalizeLetters: false,
                   label: (RegistrationDeliverySingleton().householdType ==
                           HouseholdType.community)
@@ -408,8 +408,8 @@ class _SearchBeneficiaryPageState
                           i18.searchBeneficiary.beneficiaryAddActionLabel,
                         ),
                   mainAxisSize: MainAxisSize.max,
-                  type: ButtonType.primary,
-                  size: ButtonSize.large,
+                  type: DigitButtonType.primary,
+                  size: DigitButtonSize.large,
                   isDisabled: searchHouseholdsState.searchQuery != null &&
                           searchHouseholdsState.searchQuery!.isNotEmpty
                       ? false
@@ -429,10 +429,10 @@ class _SearchBeneficiaryPageState
                     blocWrapper.clearEvent();
                   },
                 ),
-                Button(
+                DigitButton(
                   capitalizeLetters: false,
-                  type: ButtonType.secondary,
-                  size: ButtonSize.large,
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.large,
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
                     blocWrapper.clearEvent();

@@ -5,6 +5,7 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recase/recase.dart';
@@ -79,7 +80,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
         },
         builder: (context, householdState) {
           return ScrollableContent(
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               header: Column(children: [
                 const BackNavigationHelpHeaderWidget(
                   showHelp: false,
@@ -107,15 +108,15 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                     ValueListenableBuilder(
                       valueListenable: clickedStatus,
                       builder: (context, bool isClicked, _) {
-                        return Button(
+                        return DigitButton(
                           label: householdState.mapOrNull(
                                 editIndividual: (value) => localizations
                                     .translate(i18.common.coreCommonSave),
                               ) ??
                               localizations
                                   .translate(i18.common.coreCommonSubmit),
-                          type: ButtonType.primary,
-                          size: ButtonSize.large,
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           isDisabled: isClicked ? true : false,
                           onPressed: () async {
@@ -150,7 +151,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                       i18.deliverIntervention.dialogContent,
                                     ),
                                     actions: [
-                                      Button(
+                                      DigitButton(
                                           label: localizations.translate(
                                             i18.common.coreCommonSubmit,
                                           ),
@@ -161,9 +162,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                               rootNavigator: true,
                                             ).pop(true);
                                           },
-                                          type: ButtonType.primary,
-                                          size: ButtonSize.large),
-                                      Button(
+                                          type: DigitButtonType.primary,
+                                          size: DigitButtonSize.large),
+                                      DigitButton(
                                           label: localizations.translate(
                                             i18.common.coreCommonCancel,
                                           ),
@@ -171,8 +172,8 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                                 context,
                                                 rootNavigator: true,
                                               ).pop(false),
-                                          type: ButtonType.secondary,
-                                          size: ButtonSize.large)
+                                          type: DigitButtonType.secondary,
+                                          size: DigitButtonSize.large)
                                     ],
                                   ),
                                 );
@@ -205,14 +206,13 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
-                            LabelValueList(
+                            LabelValueSummary(
+                                padding: EdgeInsets.zero,
                                 heading: localizations.translate(i18
                                     .householdLocation
                                     .householdLocationLabelText),
-                                labelFlex: 6,
-                                maxLines: 2,
                                 items: [
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(
                                           i18.householdLocation.villageLabel),
                                       value: householdState.householdModel
@@ -220,7 +220,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                           localizations.translate(
                                               i18.common.coreCommonNA),
                                       isInline: true),
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(i18
                                           .householdLocation.landmarkFormLabel),
                                       value: householdState.householdModel
@@ -235,12 +235,12 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                         DigitCard(
                             margin: const EdgeInsets.all(spacer2),
                             children: [
-                              LabelValueList(
+                              LabelValueSummary(
+                                  padding: EdgeInsets.zero,
                                   heading: localizations.translate(i18
                                       .householdDetails.householdDetailsLabel),
-                                  labelFlex: 6,
                                   items: [
-                                    LabelValuePair(
+                                    LabelValueItem(
                                         label: localizations.translate(i18
                                             .beneficiaryDetails.totalMembers),
                                         value: householdState
@@ -248,7 +248,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                                 .toString() ??
                                             '0',
                                         isInline: true),
-                                    LabelValuePair(
+                                    LabelValueItem(
                                         label: localizations.translate(i18
                                             .householdDetails
                                             .noOfPregnantWomenCountLabel),
@@ -264,7 +264,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                                 .toString() ??
                                             '0',
                                         isInline: true),
-                                    LabelValuePair(
+                                    LabelValueItem(
                                         label: localizations.translate(i18
                                             .householdDetails
                                             .noOfChildrenBelow5YearsLabel),
@@ -285,12 +285,12 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
-                            LabelValueList(
+                            LabelValueSummary(
+                                padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.houseDetailsLabel),
-                                labelFlex: 6,
                                 items: [
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(
                                           i18.householdDetails.noOfRoomsLabel),
                                       value: householdState.householdModel
@@ -304,7 +304,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                               .toString() ??
                                           '0',
                                       isInline: true),
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(
                                           i18.householdDetails.typeOfStructure),
                                       value: (householdState.householdModel
@@ -329,13 +329,13 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
-                            LabelValueList(
+                            LabelValueSummary(
+                                padding: EdgeInsets.zero,
                                 heading: localizations.translate(i18
                                     .individualDetails
                                     .individualsDetailsLabelText),
-                                labelFlex: 6,
                                 items: [
-                                  LabelValuePair(
+                                  LabelValueItem(
                                     label: localizations.translate(
                                         i18.individualDetails.nameLabelText),
                                     value: householdState.maybeWhen(
@@ -355,7 +355,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             localizations.translate(
                                                 i18.common.coreCommonNA)),
                                   ),
-                                  LabelValuePair(
+                                  LabelValueItem(
                                     label: localizations.translate(
                                         i18.individualDetails.dobLabelText),
                                     value: householdState.maybeWhen(
@@ -384,7 +384,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                                 : localizations.translate(
                                                     i18.common.coreCommonNA)),
                                   ),
-                                  LabelValuePair(
+                                  LabelValueItem(
                                     label: localizations.translate(
                                         i18.individualDetails.genderLabelText),
                                     value: householdState.maybeWhen(

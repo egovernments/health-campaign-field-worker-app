@@ -59,7 +59,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
         _mobileNumberKey: FormControl<String>(
           value: user?.mobileNumber,
           validators: [
-            CustomValidator.validMobileNumber,
+            Validators.pattern(Constants.mobileNumberRegExp,
+                validationMessage:
+                    localizations.translate(i18.common.coreCommonMobileNumber))
           ],
         ),
         _emailId: FormControl<String>(
@@ -147,9 +149,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                             onPressed: () async {
                               final connectivityResult =
                                   await (Connectivity().checkConnectivity());
-                              final isOnline = connectivityResult ==
+                              final isOnline = connectivityResult.firstOrNull ==
                                       ConnectivityResult.wifi ||
-                                  connectivityResult ==
+                                  connectivityResult.firstOrNull ==
                                       ConnectivityResult.mobile;
 
                               if (!isOnline) {
@@ -283,7 +285,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                                     .translate(e.code)),
                                                 formControlName: _genderKey,
                                               ))
-                                          .toList(),
+                                          ,
                                     ],
                                   );
                                 },

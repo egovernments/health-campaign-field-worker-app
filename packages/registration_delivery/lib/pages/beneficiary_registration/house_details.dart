@@ -81,7 +81,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                       BeneficiaryRegistrationState>(
                     builder: (context, registrationState) {
                       return ScrollableContent(
-                        enableFixedButton: true,
+                        enableFixedDigitButton: true,
                         header: const Column(
                           children: [
                             BackNavigationHelpHeaderWidget(
@@ -94,7 +94,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                             margin: const EdgeInsets.only(top: spacer2),
                             padding: const EdgeInsets.all(spacer2),
                             children: [
-                              Button(
+                              DigitButton(
                                 onPressed: () {
                                   form.markAllAsTouched();
                                   if (form
@@ -315,8 +315,8 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                     },
                                   );
                                 },
-                                type: ButtonType.primary,
-                                size: ButtonSize.large,
+                                type: DigitButtonType.primary,
+                                size: DigitButtonSize.large,
                                 mainAxisSize: MainAxisSize.max,
                                 label: (RegistrationDeliverySingleton()
                                             .householdType ==
