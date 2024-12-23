@@ -347,6 +347,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                               houseShowcaseData.typeOfStructure.buildWith(
                                 child: SelectionCard<String>(
                                   isRequired: true,
+                                  showParentContainer: true,
                                   title: localizations.translate(
                                       i18.householdDetails.typeOfStructure),
                                   equalWidthOptions: true,

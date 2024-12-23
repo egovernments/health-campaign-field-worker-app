@@ -107,7 +107,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
               ]),
               footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
-                  padding: const EdgeInsets.all(spacer2),
                   children: [
                     ValueListenableBuilder(
                       valueListenable: clickedStatus,
@@ -123,7 +122,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
-                            if (form.control(_dobKey).value == null) {
+                            final age = DigitDateUtils.calculateAge(
+                              form.control(_dobKey).value as DateTime,
+                            );
+                            if ((age.years == 0 && age.months == 0) ||
+                                age.years >= 150 && age.months > 0) {
                               form.control(_dobKey).setErrors({'': true});
                             }
                             if (form.control(_idTypeKey).value == null) {
@@ -173,6 +176,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 );
                                 final scannerBloc =
                                     context.read<DigitScannerBloc>();
+                                scannerBloc.add(
+                                  const DigitScannerEvent.handleScanner(),
+                                );
 
                                 if (scannerBloc.state.duplicate) {
                                   Toast.showToast(context,
@@ -185,6 +191,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   clickedStatus.value = true;
                                   final scannerBloc =
                                       context.read<DigitScannerBloc>();
+                                  scannerBloc.add(
+                                    const DigitScannerEvent.handleScanner(),
+                                  );
                                   bloc.add(
                                     BeneficiaryRegistrationSummaryEvent(
                                       projectId: projectId!,
@@ -207,6 +216,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               ) {
                                 final scannerBloc =
                                     context.read<DigitScannerBloc>();
+                                scannerBloc.add(
+                                  const DigitScannerEvent.handleScanner(),
+                                );
                                 final individual = _getIndividualModel(
                                   context,
                                   form: form,
@@ -273,7 +285,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 if (context.mounted) {
                                   final scannerBloc =
                                       context.read<DigitScannerBloc>();
-
+                                  scannerBloc.add(
+                                    const DigitScannerEvent.handleScanner(),
+                                  );
                                   if (scannerBloc.state.duplicate) {
                                     Toast.showToast(
                                       context,
@@ -315,343 +329,364 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                   ]),
               slivers: [
                 SliverToBoxAdapter(
-                  child: DigitCard(children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: spacer2),
-                      child: Text(
-                        localizations.translate(
-                          i18.individualDetails.individualsDetailsLabelText,
-                        ),
-                        style: textTheme.headingXl,
-                      ),
-                    ),
-                    individualDetailsShowcaseData.nameOfIndividual.buildWith(
-                      child: ReactiveWrapperField(
-                        formControlName: _individualNameKey,
-                        validationMessages: {
-                          'required': (object) => localizations.translate(
-                                '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                              ),
-                          'maxLength': (object) => localizations
-                              .translate(i18.common.maxCharsRequired)
-                              .replaceAll('{}', maxLength.toString()),
-                        },
-                        builder: (field) => LabeledField(
-                          label: localizations.translate(
-                            i18.individualDetails.nameLabelText,
+                  child: DigitCard(
+                      margin: const EdgeInsets.all(spacer2),
+                      children: [
+                        Text(
+                          localizations.translate(
+                            i18.individualDetails.individualsDetailsLabelText,
                           ),
-                          isRequired: true,
-                          child: DigitTextFormInput(
-                            initialValue:
-                                form.control(_individualNameKey).value,
-                            onChange: (value) {
-                              form.control(_individualNameKey).value = value;
+                          style: textTheme.headingXl,
+                        ),
+                        individualDetailsShowcaseData.nameOfIndividual
+                            .buildWith(
+                          child: ReactiveWrapperField(
+                            formControlName: _individualNameKey,
+                            validationMessages: {
+                              'required': (object) => localizations.translate(
+                                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                  ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
                             },
-                            errorMessage: field.errorText,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Offstage(
-                      offstage: !widget.isHeadOfHousehold,
-                      child: DigitCheckbox(
-                        capitalizeFirstLetter: false,
-                        label: (RegistrationDeliverySingleton().householdType ==
-                                HouseholdType.community)
-                            ? localizations.translate(
-                                i18.individualDetails.clfCheckboxLabelText)
-                            : localizations.translate(
-                                i18.individualDetails.checkboxLabelText,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.nameLabelText,
                               ),
-                        value: widget.isHeadOfHousehold,
-                        readOnly: widget.isHeadOfHousehold,
-                        onChanged: (_) {},
-                      ),
-                    ),
-                    ReactiveWrapperField(
-                      formControlName: _idTypeKey,
-                      validationMessages: {
-                        'required': (_) => localizations.translate(
-                              i18.common.corecommonRequired,
-                            ),
-                      },
-                      builder: (field) => LabeledField(
-                        label: localizations.translate(
-                          i18.individualDetails.idTypeLabelText,
-                        ),
-                        isRequired: true,
-                        child: DigitDropdown<String>(
-                          selectedOption:
-                              (form.control(_idTypeKey).value != null)
-                                  ? DropdownItem(
-                                      name: localizations.translate(
-                                          form.control(_idTypeKey).value),
-                                      code: form.control(_idTypeKey).value)
-                                  : const DropdownItem(name: '', code: ''),
-                          items: RegistrationDeliverySingleton()
-                              .idTypeOptions!
-                              .map(
-                                (e) => DropdownItem(
-                                    name: localizations.translate(e), code: e),
-                              )
-                              .toList(),
-                          onSelect: (value) {
-                            form.control(_idTypeKey).value = value.code;
-                            setState(() {
-                              if (value.code == 'DEFAULT') {
-                                form.control(_idNumberKey).value =
-                                    IdGen.i.identifier.toString();
-                              } else {
-                                form.control(_idNumberKey).value = null;
-                              }
-                            });
-                          },
-                          emptyItemText:
-                              localizations.translate(i18.common.noMatchFound),
-                          errorMessage: form.control(_idTypeKey).hasErrors
-                              ? localizations.translate(
-                                  i18.common.corecommonRequired,
-                                )
-                              : null,
-                        ),
-                      ),
-                    ),
-                    if (form.control(_idTypeKey).value != 'DEFAULT')
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ReactiveFormConsumer(
-                            builder: (context, formGroup, child) {
-                              return ReactiveWrapperField(
-                                formControlName: _idNumberKey,
-                                validationMessages: {
-                                  'required': (object) =>
-                                      localizations.translate(
-                                        '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                                      ),
+                              isRequired: true,
+                              child: DigitTextFormInput(
+                                initialValue:
+                                    form.control(_individualNameKey).value,
+                                onChange: (value) {
+                                  form.control(_individualNameKey).value =
+                                      value;
                                 },
-                                builder: (field) => LabeledField(
-                                  label: localizations.translate(
-                                    i18.individualDetails.idNumberLabelText,
+                                errorMessage: field.errorText,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Offstage(
+                          offstage: !widget.isHeadOfHousehold,
+                          child: DigitCheckbox(
+                            capitalizeFirstLetter: false,
+                            label: (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.community)
+                                ? localizations.translate(
+                                    i18.individualDetails.clfCheckboxLabelText)
+                                : localizations.translate(
+                                    i18.individualDetails.checkboxLabelText,
                                   ),
-                                  isRequired: form
-                                      .control(_idNumberKey)
-                                      .validators
-                                      .isNotEmpty,
-                                  child: DigitTextFormInput(
-                                    readOnly: form.control(_idTypeKey).value ==
-                                        'DEFAULT',
-                                    initialValue:
-                                        form.control(_idNumberKey).value,
-                                    onChange: (value) {
-                                      form.control(_idNumberKey).value = value;
-                                    },
-                                    errorMessage: field.errorText,
-                                  ),
+                            value: widget.isHeadOfHousehold,
+                            readOnly: widget.isHeadOfHousehold,
+                            onChanged: (_) {},
+                          ),
+                        ),
+                        ReactiveWrapperField(
+                          formControlName: _idTypeKey,
+                          validationMessages: {
+                            'required': (_) => localizations.translate(
+                                  i18.common.corecommonRequired,
                                 ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 4),
-                        ],
-                      ),
-                    if (form.control(_idTypeKey).value == 'DEFAULT')
-                      const SizedBox(
-                        height: spacer2,
-                      ),
-                    individualDetailsShowcaseData.dateOfBirth.buildWith(
-                      child: DigitDobPicker(
-                        datePickerFormControl: _dobKey,
-                        datePickerLabel: localizations.translate(
-                          i18.individualDetails.dobLabelText,
-                        ),
-                        ageFieldLabel: localizations.translate(
-                          i18.individualDetails.ageLabelText,
-                        ),
-                        yearsHintLabel: localizations.translate(
-                          i18.individualDetails.yearsHintText,
-                        ),
-                        monthsHintLabel: localizations.translate(
-                          i18.individualDetails.monthsHintText,
-                        ),
-                        separatorLabel: localizations.translate(
-                          i18.individualDetails.separatorLabelText,
-                        ),
-                        yearsAndMonthsErrMsg: localizations.translate(
-                          i18.individualDetails.yearsAndMonthsErrorText,
-                        ),
-                        errorMessage: form.control(_dobKey).hasErrors
-                            ? localizations
-                                .translate(i18.common.corecommonRequired)
-                            : null,
-                        initialDate: before150Years,
-                        onChangeOfFormControl: (value) {
-                          if (value != null) {
-                            setState(() {
-                              form.control(_dobKey).setErrors({'': false});
-                            });
-                          }
-                          // Handle changes to the control's value here
-                          form.control(_dobKey).value = value;
-                        },
-                        cancelText: localizations
-                            .translate(i18.common.coreCommonCancel),
-                        confirmText:
-                            localizations.translate(i18.common.coreCommonOk),
-                      ),
-                    ),
-                    SelectionCard<String>(
-                      isRequired: true,
-                      title: localizations.translate(
-                        i18.individualDetails.genderLabelText,
-                      ),
-                      allowMultipleSelection: false,
-                      width: 126,
-                      initialSelection: form.control(_genderKey).value != null
-                          ? [form.control(_genderKey).value]
-                          : [],
-                      options: RegistrationDeliverySingleton()
-                          .genderOptions!
-                          .map(
-                            (e) => e,
-                          )
-                          .toList(),
-                      onSelectionChanged: (value) {
-                        setState(() {
-                          if (value.isNotEmpty) {
-                            form.control(_genderKey).value = value.first;
-                          } else {
-                            form.control(_genderKey).value = null;
-                            setState(() {
-                              form.control(_genderKey).setErrors({'': true});
-                            });
-                          }
-                        });
-                      },
-                      valueMapper: (value) {
-                        return localizations.translate(value);
-                      },
-                      errorMessage: form.control(_genderKey).hasErrors
-                          ? localizations
-                              .translate(i18.common.corecommonRequired)
-                          : null,
-                    ),
-                    individualDetailsShowcaseData.mobile.buildWith(
-                      child: ReactiveWrapperField(
-                        formControlName: _mobileNumberKey,
-                        validationMessages: {
-                          'maxLength': (object) => localizations.translate(i18
-                              .individualDetails
-                              .mobileNumberLengthValidationMessage),
-                          'minLength': (object) => localizations.translate(i18
-                              .individualDetails
-                              .mobileNumberLengthValidationMessage),
-                        },
-                        builder: (field) => LabeledField(
-                          label: localizations.translate(
-                            i18.individualDetails.mobileNumberLabelText,
-                          ),
-                          child: DigitTextFormInput(
-                            keyboardType: TextInputType.number,
-                            maxLength: 10,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            initialValue: form.control(_mobileNumberKey).value,
-                            onChange: (value) {
-                              form.control(_mobileNumberKey).value = value;
-                            },
+                          },
+                          builder: (field) => LabeledField(
+                            label: localizations.translate(
+                              i18.individualDetails.idTypeLabelText,
+                            ),
+                            isRequired: true,
+                            child: DigitDropdown<String>(
+                              selectedOption:
+                                  (form.control(_idTypeKey).value != null)
+                                      ? DropdownItem(
+                                          name: localizations.translate(
+                                              form.control(_idTypeKey).value),
+                                          code: form.control(_idTypeKey).value)
+                                      : const DropdownItem(name: '', code: ''),
+                              items: RegistrationDeliverySingleton()
+                                  .idTypeOptions!
+                                  .map(
+                                    (e) => DropdownItem(
+                                        name: localizations.translate(e),
+                                        code: e),
+                                  )
+                                  .toList(),
+                              onSelect: (value) {
+                                form.control(_idTypeKey).value = value.code;
+                                setState(() {
+                                  if (value.code == 'DEFAULT') {
+                                    form.control(_idNumberKey).value =
+                                        IdGen.i.identifier.toString();
+                                  } else {
+                                    form.control(_idNumberKey).value = null;
+                                  }
+                                });
+                              },
+                              emptyItemText: localizations
+                                  .translate(i18.common.noMatchFound),
+                              errorMessage: form.control(_idTypeKey).hasErrors
+                                  ? localizations.translate(
+                                      i18.common.corecommonRequired,
+                                    )
+                                  : null,
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    if ((RegistrationDeliverySingleton().beneficiaryType ==
-                                BeneficiaryType.household &&
-                            widget.isHeadOfHousehold) ||
-                        (RegistrationDeliverySingleton().beneficiaryType ==
-                            BeneficiaryType.individual))
-                      BlocBuilder<DigitScannerBloc, DigitScannerState>(
-                        buildWhen: (p, c) {
-                          return true;
-                        },
-                        builder: (context, state) => state.qrCodes.isNotEmpty
-                            ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width / 3,
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.deliverIntervention.voucherCode,
-                                      ),
-                                      style: theme.textTheme.headlineSmall,
-                                    ),
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      overflow: TextOverflow.ellipsis,
-                                      localizations
-                                          .translate(state.qrCodes.last),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: spacer2 * 2,
-                                    ),
-                                    child: IconButton(
-                                      color: theme.colorScheme.secondary,
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          //[TODO: Add the route to auto_route]
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const DigitScannerPage(
-                                              quantity: 1,
-                                              isGS1code: false,
-                                              singleValue: true,
-                                              isEditEnabled: true,
-                                            ),
-                                            settings: const RouteSettings(
-                                                name: '/qr-scanner'),
+                        if (form.control(_idTypeKey).value != 'DEFAULT')
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ReactiveFormConsumer(
+                                builder: (context, formGroup, child) {
+                                  return ReactiveWrapperField(
+                                    formControlName: _idNumberKey,
+                                    validationMessages: {
+                                      'required': (object) =>
+                                          localizations.translate(
+                                            '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-
-                                // ignore: no-empty-block
-                              )
-                            : DigitButton(
-                                type: DigitButtonType.secondary,
-                                size: DigitButtonSize.large,
-                                mainAxisSize: MainAxisSize.max,
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    // [TODO: Add the route to auto_route]
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const DigitScannerPage(
-                                        quantity: 1,
-                                        isGS1code: false,
-                                        singleValue: true,
+                                    },
+                                    builder: (field) => LabeledField(
+                                      label: localizations.translate(
+                                        i18.individualDetails.idNumberLabelText,
                                       ),
-                                      settings: const RouteSettings(
-                                          name: '/qr-scanner'),
+                                      isRequired: form
+                                          .control(_idNumberKey)
+                                          .validators
+                                          .isNotEmpty,
+                                      child: DigitTextFormInput(
+                                        readOnly:
+                                            form.control(_idTypeKey).value ==
+                                                'DEFAULT',
+                                        initialValue:
+                                            form.control(_idNumberKey).value,
+                                        onChange: (value) {
+                                          form.control(_idNumberKey).value =
+                                              value;
+                                        },
+                                        errorMessage: field.errorText,
+                                      ),
                                     ),
                                   );
                                 },
-                                prefixIcon: Icons.qr_code,
-                                label: localizations.translate(
-                                  i18.individualDetails.linkVoucherToIndividual,
-                                ),
                               ),
-                      ),
-                  ]),
+                              const SizedBox(height: 4),
+                            ],
+                          ),
+                        if (form.control(_idTypeKey).value == 'DEFAULT')
+                          const SizedBox(
+                            height: spacer2,
+                          ),
+                        individualDetailsShowcaseData.dateOfBirth.buildWith(
+                          child: DigitDobPicker(
+                            datePickerFormControl: _dobKey,
+                            datePickerLabel: localizations.translate(
+                              i18.individualDetails.dobLabelText,
+                            ),
+                            ageFieldLabel: localizations.translate(
+                              i18.individualDetails.ageLabelText,
+                            ),
+                            yearsHintLabel: localizations.translate(
+                              i18.individualDetails.yearsHintText,
+                            ),
+                            monthsHintLabel: localizations.translate(
+                              i18.individualDetails.monthsHintText,
+                            ),
+                            separatorLabel: localizations.translate(
+                              i18.individualDetails.separatorLabelText,
+                            ),
+                            yearsAndMonthsErrMsg: localizations.translate(
+                              i18.individualDetails.yearsAndMonthsErrorText,
+                            ),
+                            errorMessage: form.control(_dobKey).hasErrors
+                                ? localizations
+                                    .translate(i18.common.corecommonRequired)
+                                : null,
+                            initialDate: before150Years,
+                            onChangeOfFormControl: (value) {
+                              if (value == null) {
+                                form.control(_dobKey).setErrors({'': true});
+                              } else {
+                                DigitDOBAgeConvertor age =
+                                    DigitDateUtils.calculateAge(value);
+                                if ((age.years == 0 && age.months == 0) ||
+                                    age.months > 11 ||
+                                    (age.years >= 150 && age.months >= 0)) {
+                                  form.control(_dobKey).setErrors({'': true});
+                                } else {
+                                  form.control(_dobKey).removeError('');
+                                }
+                              }
+                              // Handle changes to the control's value here
+                              form.control(_dobKey).value = value;
+                            },
+                            cancelText: localizations
+                                .translate(i18.common.coreCommonCancel),
+                            confirmText: localizations
+                                .translate(i18.common.coreCommonOk),
+                          ),
+                        ),
+                        SelectionCard<String>(
+                          isRequired: true,
+                          showParentContainer: true,
+                          title: localizations.translate(
+                            i18.individualDetails.genderLabelText,
+                          ),
+                          allowMultipleSelection: false,
+                          width: 126,
+                          initialSelection:
+                              form.control(_genderKey).value != null
+                                  ? [form.control(_genderKey).value]
+                                  : [],
+                          options: RegistrationDeliverySingleton()
+                              .genderOptions!
+                              .map(
+                                (e) => e,
+                              )
+                              .toList(),
+                          onSelectionChanged: (value) {
+                            setState(() {
+                              if (value.isNotEmpty) {
+                                form.control(_genderKey).value = value.first;
+                              } else {
+                                form.control(_genderKey).value = null;
+                                setState(() {
+                                  form
+                                      .control(_genderKey)
+                                      .setErrors({'': true});
+                                });
+                              }
+                            });
+                          },
+                          valueMapper: (value) {
+                            return localizations.translate(value);
+                          },
+                          errorMessage: form.control(_genderKey).hasErrors
+                              ? localizations
+                                  .translate(i18.common.corecommonRequired)
+                              : null,
+                        ),
+                        individualDetailsShowcaseData.mobile.buildWith(
+                          child: ReactiveWrapperField(
+                            formControlName: _mobileNumberKey,
+                            validationMessages: {
+                              'maxLength': (object) => localizations.translate(
+                                  i18.individualDetails
+                                      .mobileNumberLengthValidationMessage),
+                              'minLength': (object) => localizations.translate(
+                                  i18.individualDetails
+                                      .mobileNumberLengthValidationMessage),
+                            },
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.mobileNumberLabelText,
+                              ),
+                              child: DigitTextFormInput(
+                                keyboardType: TextInputType.number,
+                                maxLength: 10,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                initialValue:
+                                    form.control(_mobileNumberKey).value,
+                                onChange: (value) {
+                                  form.control(_mobileNumberKey).value = value;
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        if ((RegistrationDeliverySingleton().beneficiaryType ==
+                                    BeneficiaryType.household &&
+                                widget.isHeadOfHousehold) ||
+                            (RegistrationDeliverySingleton().beneficiaryType ==
+                                BeneficiaryType.individual))
+                          BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                            buildWhen: (p, c) {
+                              return true;
+                            },
+                            builder: (context, state) => state
+                                    .qrCodes.isNotEmpty
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3,
+                                        child: Text(
+                                          localizations.translate(
+                                            i18.deliverIntervention.voucherCode,
+                                          ),
+                                          style: theme.textTheme.headlineSmall,
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          localizations
+                                              .translate(state.qrCodes.last),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: spacer2 * 2,
+                                        ),
+                                        child: IconButton(
+                                          color: theme.colorScheme.secondary,
+                                          icon: const Icon(Icons.edit),
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              //[TODO: Add the route to auto_route]
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const DigitScannerPage(
+                                                  quantity: 1,
+                                                  isGS1code: false,
+                                                  singleValue: true,
+                                                  isEditEnabled: true,
+                                                ),
+                                                settings: const RouteSettings(
+                                                    name: '/qr-scanner'),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+
+                                    // ignore: no-empty-block
+                                  )
+                                : DigitButton(
+                                    type: DigitButtonType.secondary,
+                                    size: DigitButtonSize.large,
+                                    mainAxisSize: MainAxisSize.max,
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        // [TODO: Add the route to auto_route]
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const DigitScannerPage(
+                                            quantity: 1,
+                                            isGS1code: false,
+                                            singleValue: true,
+                                          ),
+                                          settings: const RouteSettings(
+                                              name: '/qr-scanner'),
+                                        ),
+                                      );
+                                    },
+                                    prefixIcon: Icons.qr_code,
+                                    label: localizations.translate(
+                                      i18.individualDetails
+                                          .linkVoucherToIndividual,
+                                    ),
+                                  ),
+                          ),
+                      ]),
                 ),
               ],
             );
