@@ -70,6 +70,7 @@ class HouseholdLocalRepository
 
             return HouseholdModel(
               id: household.id,
+              householdType: household.householdType,
               tenantId: household.tenantId,
               clientReferenceId: household.clientReferenceId,
               memberCount: household.memberCount,

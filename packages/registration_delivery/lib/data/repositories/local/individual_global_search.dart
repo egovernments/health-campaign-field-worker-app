@@ -183,7 +183,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 .equalsExp(sql.individual.clientReferenceId))
       ])
         ..where(buildAnd([
-          if (params.householdType == HouseholdType.community)
+          if (params.householdType == HouseholdType.community && params.householdClientReferenceId==null)
             sql.householdMember.isHeadOfHousehold.equals(true),
           sql.address.relatedClientReferenceId.isNotNull(),
           sql.individual.clientReferenceId.isNotNull(),
@@ -284,7 +284,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               sql.projectBeneficiary.beneficiaryClientReferenceId
                   .equalsExp(sql.household.clientReferenceId))
         ]).where(buildAnd([
-          if (params.householdType == HouseholdType.community)
+          if (params.householdType == HouseholdType.community && params.householdClientReferenceId==null)
             sql.householdMember.isHeadOfHousehold.equals(true),
           sql.household.householdType.equalsValue(params.householdType)
         ]));

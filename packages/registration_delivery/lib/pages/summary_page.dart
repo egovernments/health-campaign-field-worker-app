@@ -214,10 +214,10 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   LabelValueItem(
                                     label: localizations.translate(
                                         i18.householdLocation.villageLabel),
-                                    value: householdState.householdModel
-                                            ?.address?.locality?.code ??
-                                        localizations
-                                            .translate(i18.common.coreCommonNA),
+                                    value: localizations.translate(
+                                        householdState.householdModel?.address
+                                                ?.locality?.code ??
+                                            i18.common.coreCommonNA),
                                     isInline: true,
                                     labelFlex: 5,
                                   ),
@@ -366,6 +366,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             individualModel?.name?.givenName ??
                                             localizations.translate(
                                                 i18.common.coreCommonNA)),
+                                    labelFlex: 5,
                                   ),
                                   LabelValueItem(
                                     label: localizations.translate(

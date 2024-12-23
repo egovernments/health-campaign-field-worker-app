@@ -362,8 +362,14 @@ class _SearchBeneficiaryPageState
                                                       ? i.projectBeneficiaries
                                                           ?.lastOrNull
                                                       : null,
-                                              addressModel: i.headOfHousehold!
-                                                  .address!.lastOrNull!,
+                                              addressModel:
+                                                  (RegistrationDeliverySingleton()
+                                                              .householdType ==
+                                                          HouseholdType
+                                                              .community)
+                                                      ? i.household!.address!
+                                                      : i.headOfHousehold!
+                                                          .address!.lastOrNull!,
                                               headOfHousehold:
                                                   i.headOfHousehold),
                                     ),
