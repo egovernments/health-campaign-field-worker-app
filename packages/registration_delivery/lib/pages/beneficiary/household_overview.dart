@@ -16,8 +16,8 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -554,12 +554,7 @@ class _HouseholdOverviewPageState
                                         ),
                                         Column(
                                           children: [
-                                            RegistrationDeliverySingleton()
-                                                            .searchHouseHoldFilter !=
-                                                        null &&
-                                                    RegistrationDeliverySingleton()
-                                                        .searchHouseHoldFilter!
-                                                        .isNotEmpty
+                                            getFilters()
                                                 ? Align(
                                                     alignment:
                                                         Alignment.topLeft,
@@ -1095,5 +1090,47 @@ class _HouseholdOverviewPageState
 
       callReloadEvent(offset: 0, limit: 10);
     }
+  }
+
+  String getStatus(String selectedFilter) {
+    final statusMap = {
+      Status.delivered.toValue(): Status.delivered,
+      Status.notAdministered.toValue(): Status.notAdministered,
+      Status.visited.toValue(): Status.visited,
+      Status.notVisited.toValue(): Status.notVisited,
+      Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+      Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+      Status.administeredSuccess.toValue(): Status.administeredSuccess,
+      Status.administeredFailed.toValue(): Status.administeredFailed,
+      Status.inComplete.toValue(): Status.inComplete,
+      Status.toAdminister.toValue(): Status.toAdminister,
+      Status.closeHousehold.toValue(): Status.closeHousehold,
+      Status.registered.toValue(): Status.registered,
+      Status.notRegistered.toValue(): Status.notRegistered,
+    };
+
+    var mappedStatus = statusMap.entries
+        .where((element) => element.value.name == selectedFilter)
+        .first
+        .key;
+    if (mappedStatus != null) {
+      return mappedStatus;
+    } else {
+      return selectedFilter;
+    }
+  }
+
+  getFilters() {
+    bool hasFilters;
+    if (RegistrationDeliverySingleton().householdType ==
+        HouseholdType.community) {
+      hasFilters = RegistrationDeliverySingleton().searchCLFFilters != null &&
+          RegistrationDeliverySingleton().searchCLFFilters!.isNotEmpty;
+    } else {
+      hasFilters =
+          RegistrationDeliverySingleton().searchHouseHoldFilter != null &&
+              RegistrationDeliverySingleton().searchHouseHoldFilter!.isNotEmpty;
+    }
+    return hasFilters;
   }
 }

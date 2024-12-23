@@ -281,14 +281,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
-  cupertino_icons:
-    dependency: transitive
-    description:
-      name: cupertino_icons
-      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -338,13 +330,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.1"
-  digit_components:
-    dependency: "direct overridden"
-    description:
-      path: "../digit_components"
-      relative: true
-    source: path
-    version: "1.0.2+1"
   digit_ui_components:
     dependency: "direct main"
     description:
@@ -393,14 +378,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.15.0"
-  easy_stepper:
-    dependency: transitive
-    description:
-      name: easy_stepper
-      sha256: "77f3ab4ee3c867b5a2236bf712abb08fed2b1c533cf24cf3fcd46c2821072ffd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.2+1"
   fake_async:
     dependency: transitive
     description:
@@ -510,14 +487,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.13"
-  flutter_focus_watcher:
-    dependency: transitive
-    description:
-      name: flutter_focus_watcher
-      sha256: a72ee539ae0237961308a25839887ca93a0b1cb6f87b0d492b139c8fccff8e79
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -1021,22 +990,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  package_info_plus:
-    dependency: transitive
-    description:
-      name: package_info_plus
-      sha256: "88bc797f44a94814f2213db1c9bd5badebafdfb8290ca9f78d4b9ee2a3db4d79"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.1"
-  package_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: package_info_plus_platform_interface
-      sha256: "9bc8ba46813a4cc42c66ab781470711781940780fd8beddd0c3da62506d3a6c6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   path:
     dependency: "direct main"
     description:
@@ -1197,14 +1150,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  remove_emoji_input_formatter:
-    dependency: transitive
-    description:
-      name: remove_emoji_input_formatter
-      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+1"
   shelf:
     dependency: transitive
     description:

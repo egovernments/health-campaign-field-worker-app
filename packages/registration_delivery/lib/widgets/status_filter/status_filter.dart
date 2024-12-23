@@ -1,9 +1,9 @@
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-import '../../utils/i18_key_constants.dart' as i18;
 
 import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -176,9 +176,10 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
 
   getFilters() {
     var finalStatues = <Status>[];
-    finalStatues.addAll((RegistrationDeliverySingleton()
-                .searchHouseHoldFilter ??
-            [])
+    finalStatues.addAll((RegistrationDeliverySingleton().householdType ==
+                HouseholdType.community
+            ? RegistrationDeliverySingleton().searchCLFFilters ?? []
+            : RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
         .map((e) => Status.values.where((element) => element.toValue() == e))
         .expand((element) => element)
         .toList());

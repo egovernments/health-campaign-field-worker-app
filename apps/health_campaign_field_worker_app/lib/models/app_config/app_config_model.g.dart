@@ -477,6 +477,22 @@ Map<String, dynamic> _$$SearchHouseHoldFiltersImplToJson(
       'active': instance.active,
     };
 
+_$SearchCLFFiltersImpl _$$SearchCLFFiltersImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SearchCLFFiltersImpl(
+      name: json['name'] as String,
+      code: json['code'] as String,
+      active: json['active'] as bool,
+    );
+
+Map<String, dynamic> _$$SearchCLFFiltersImplToJson(
+        _$SearchCLFFiltersImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+      'active': instance.active,
+    };
+
 _$TransportTypesImpl _$$TransportTypesImplFromJson(Map<String, dynamic> json) =>
     _$TransportTypesImpl(
       name: json['name'] as String,

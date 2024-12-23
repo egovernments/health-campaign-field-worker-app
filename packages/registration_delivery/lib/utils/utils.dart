@@ -332,7 +332,7 @@ class RegistrationDeliverySingleton {
   List<String>? _householdMemberDeletionReasonOptions;
   List<String>? _deliveryCommentOptions;
   List<String>? _symptomsTypes;
-  List<String>? _searchHouseHoldFilter;
+  List<String>? _searchHouseHoldFilter, _searchCLFFilters;
   List<String>? _referralReasons;
   List<String>? _houseStructureTypes;
   List<String>? _refusalReasons;
@@ -361,6 +361,7 @@ class RegistrationDeliverySingleton {
     required List<String>? deliveryCommentOptions,
     required List<String>? symptomsTypes,
     required List<String>? searchHouseHoldFilter,
+    searchCLFFilters,
     required List<String>? referralReasons,
     required List<String>? houseStructureTypes,
     required List<String>? refusalReasons,
@@ -380,6 +381,7 @@ class RegistrationDeliverySingleton {
     _deliveryCommentOptions = deliveryCommentOptions;
     _symptomsTypes = symptomsTypes;
     _searchHouseHoldFilter = searchHouseHoldFilter;
+    _searchCLFFilters = searchCLFFilters;
     _referralReasons = referralReasons;
     _houseStructureTypes = houseStructureTypes;
     _refusalReasons = refusalReasons;
@@ -395,28 +397,50 @@ class RegistrationDeliverySingleton {
   }
 
   String? get tenantId => _tenantId;
+
   String? get loggedInUserUuid => _loggedInUserUuid;
+
   double? get maxRadius => _maxRadius;
+
   String? get projectId => _projectId;
+
   BeneficiaryType? get beneficiaryType => _beneficiaryType;
+
   ProjectTypeModel? get projectType => _projectType;
+
   ProjectModel? get selectedProject => _selectedProject;
+
   BoundaryModel? get boundary => _boundaryModel;
+
   PersistenceConfiguration? get persistenceConfiguration =>
       _persistenceConfiguration;
+
   List<String>? get genderOptions => _genderOptions;
+
   List<String>? get idTypeOptions => _idTypeOptions;
+
   List<String>? get householdDeletionReasonOptions =>
       _householdDeletionReasonOptions;
+
   List<String>? get householdMemberDeletionReasonOptions =>
       _householdMemberDeletionReasonOptions;
+
   List<String>? get deliveryCommentOptions => _deliveryCommentOptions;
+
   List<String>? get symptomsTypes => _symptomsTypes;
+
   List<String>? get searchHouseHoldFilter => _searchHouseHoldFilter;
+
+  List<String>? get searchCLFFilters => _searchCLFFilters;
+
   List<String>? get referralReasons => _referralReasons;
+
   List<String>? get houseStructureTypes => _houseStructureTypes;
+
   List<String>? get refusalReasons => _refusalReasons;
+
   UserModel? get loggedInUser => _loggedInUser;
+
   HouseholdType? get householdType => _householdType;
 }
 

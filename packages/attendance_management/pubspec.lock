@@ -362,13 +362,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.1"
-  digit_components:
-    dependency: "direct main"
-    description:
-      path: "../digit_components"
-      relative: true
-    source: path
-    version: "1.0.2+1"
   digit_data_model:
     dependency: "direct main"
     description:
