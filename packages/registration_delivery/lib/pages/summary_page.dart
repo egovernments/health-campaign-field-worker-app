@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
@@ -8,7 +7,6 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:recase/recase.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -233,63 +231,61 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   ),
                                 ]),
                           ]),
-                      if (RegistrationDeliverySingleton().householdType !=
-                          HouseholdType.community)
-                        DigitCard(
-                            margin: const EdgeInsets.all(spacer2),
-                            children: [
-                              LabelValueSummary(
-                                  padding: EdgeInsets.zero,
-                                  heading: localizations.translate(i18
-                                      .householdDetails.householdDetailsLabel),
-                                  items: [
-                                    LabelValueItem(
-                                      label: localizations.translate(
-                                          i18.beneficiaryDetails.totalMembers),
-                                      value: householdState
-                                              .householdModel?.memberCount
-                                              .toString() ??
-                                          '0',
-                                      isInline: true,
-                                      labelFlex: 5,
-                                    ),
-                                    LabelValueItem(
-                                      label: localizations.translate(i18
-                                          .householdDetails
-                                          .noOfPregnantWomenCountLabel),
-                                      value: householdState.householdModel
-                                              ?.additionalFields?.fields
-                                              .where((h) =>
-                                                  h.key ==
-                                                  AdditionalFieldsType
-                                                      .pregnantWomen
-                                                      .toValue())
-                                              .firstOrNull
-                                              ?.value
-                                              .toString() ??
-                                          '0',
-                                      isInline: true,
-                                      labelFlex: 5,
-                                    ),
-                                    LabelValueItem(
-                                      label: localizations.translate(i18
-                                          .householdDetails
-                                          .noOfChildrenBelow5YearsLabel),
-                                      value: householdState.householdModel
-                                              ?.additionalFields?.fields
-                                              .where((h) =>
-                                                  h.key ==
-                                                  AdditionalFieldsType.children
-                                                      .toValue())
-                                              .firstOrNull
-                                              ?.value
-                                              .toString() ??
-                                          '0',
-                                      isInline: true,
-                                      labelFlex: 5,
-                                    ),
-                                  ]),
-                            ]),
+                      DigitCard(
+                          margin: const EdgeInsets.all(spacer2),
+                          children: [
+                            LabelValueSummary(
+                                padding: EdgeInsets.zero,
+                                heading: localizations.translate(
+                                    i18.householdDetails.householdDetailsLabel),
+                                items: [
+                                  LabelValueItem(
+                                    label: localizations.translate(
+                                        i18.beneficiaryDetails.totalMembers),
+                                    value: householdState
+                                            .householdModel?.memberCount
+                                            .toString() ??
+                                        '0',
+                                    isInline: true,
+                                    labelFlex: 5,
+                                  ),
+                                  LabelValueItem(
+                                    label: localizations.translate(i18
+                                        .householdDetails
+                                        .noOfPregnantWomenCountLabel),
+                                    value: householdState.householdModel
+                                            ?.additionalFields?.fields
+                                            .where((h) =>
+                                                h.key ==
+                                                AdditionalFieldsType
+                                                    .pregnantWomen
+                                                    .toValue())
+                                            .firstOrNull
+                                            ?.value
+                                            .toString() ??
+                                        '0',
+                                    isInline: true,
+                                    labelFlex: 5,
+                                  ),
+                                  LabelValueItem(
+                                    label: localizations.translate(i18
+                                        .householdDetails
+                                        .noOfChildrenBelow5YearsLabel),
+                                    value: householdState.householdModel
+                                            ?.additionalFields?.fields
+                                            .where((h) =>
+                                                h.key ==
+                                                AdditionalFieldsType.children
+                                                    .toValue())
+                                            .firstOrNull
+                                            ?.value
+                                            .toString() ??
+                                        '0',
+                                    isInline: true,
+                                    labelFlex: 5,
+                                  ),
+                                ]),
+                          ]),
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
