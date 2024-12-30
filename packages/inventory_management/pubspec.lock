@@ -413,10 +413,9 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: "9862c4885465bb1942e36dc9b42596c201648db9b0f5ffb8ad768e2409fc2742"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_scanner"
+      relative: true
+    source: path
     version: "1.0.3+1"
   dio:
     dependency: transitive

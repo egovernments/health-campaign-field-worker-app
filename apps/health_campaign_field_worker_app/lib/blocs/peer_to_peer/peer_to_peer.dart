@@ -38,6 +38,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
   int totalCount = 0;
   String entityType = '';
   late Device connectedDevice;
+
   PeerToPeerBloc({
     required this.individualLocalRepository,
     required this.householdLocalRepository,
@@ -121,12 +122,6 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
                   totalCount: totalCount));
             }
           }
-
-          // Wait for final confirmation for the entity
-          await waitForConfirmation(
-            event.nearbyService,
-            confirmationType: "final",
-          );
 
           // Send final acknowledgment to all devices
           for (var device in event.connectedDevice) {
@@ -255,6 +250,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
             "message": "All entities received and processed successfully.",
           }),
         );
+        emit(const PeerToPeerState.dataReceived());
       }
     } catch (e) {
       debugPrint("Error processing received data: $e");
@@ -310,6 +306,7 @@ class PeerToPeerEvent with _$PeerToPeerEvent {
   const factory PeerToPeerEvent.dataTransfer(
       {required NearbyService nearbyService,
       required List<Device> connectedDevice}) = DataTransferEvent;
+
   const factory PeerToPeerEvent.dataReceiver(
       {required NearbyService nearbyService,
       required dynamic data}) = DataReceiverEvent;
