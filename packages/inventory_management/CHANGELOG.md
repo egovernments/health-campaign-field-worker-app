@@ -1,3 +1,7 @@
+## 1.0.3-dev.4
+
+* Added additional fields in stock search response
+
 ## 1.0.3-dev.3
 
 * Added _handleSetDateOfReconciliation event in stock_reconciliation_bloc

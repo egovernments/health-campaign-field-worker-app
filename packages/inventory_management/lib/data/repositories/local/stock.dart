@@ -94,6 +94,9 @@ class StockLocalRepository
           isDeleted: data.isDeleted,
           rowVersion: data.rowVersion,
           dateOfEntry: data.dateOfEntry,
+          additionalFields: data.additionalFields == null
+              ? null
+              : StockAdditionalFieldsMapper.fromJson(data.additionalFields),
           auditDetails: createdTime == null || createdBy == null
               ? null
               : AuditDetails(createdTime: createdTime, createdBy: createdBy),
