@@ -76,7 +76,8 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
       child: BlocListener<PeerToPeerBloc, PeerToPeerState>(
         listener: (context, state) {
           if (state is CompletedDataTransfer) {
-            context.router.push(AcknowledgementRoute());
+            context.router
+                .popAndPush(AcknowledgementRoute(isDataRecordSuccess: true));
           }
         },
         child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
@@ -129,8 +130,8 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                                       MediaQuery.of(context).size.height * 0.15,
                                   lineWidth: kPadding * 1.5,
                                   animation: true,
-                                  percent:
-                                      0, // Update this dynamically for progress
+                                  percent: 0,
+                                  // Update this dynamically for progress
                                   center: const Text(
                                     '0 %',
                                     style: TextStyle(
@@ -159,8 +160,8 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                                     MediaQuery.of(context).size.height * 0.15,
                                 lineWidth: kPadding * 1.5,
                                 animation: true,
-                                percent:
-                                    progress, // Update this dynamically for progress
+                                percent: progress,
+                                // Update this dynamically for progress
                                 center: Text(
                                   '${(progress * 100).toStringAsFixed(1)} %',
                                   style: const TextStyle(
@@ -178,7 +179,8 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  FileTransferAnimation(), // Add animation here
+                                  FileTransferAnimation(),
+                                  // Add animation here
                                 ],
                               ),
                               Wrap(spacing: 8.0, runSpacing: 4.0, children: [

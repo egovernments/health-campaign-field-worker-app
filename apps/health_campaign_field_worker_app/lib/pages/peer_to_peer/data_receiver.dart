@@ -22,6 +22,7 @@ import '../../widgets/showcase/showcase_wrappers.dart';
 class DataReceiverPage extends LocalizedStatefulWidget {
   final Device connectedDevice;
   final NearbyService nearbyService;
+
   const DataReceiverPage(
       {super.key, required this.connectedDevice, required this.nearbyService});
 
@@ -77,7 +78,8 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
         child: BlocListener<PeerToPeerBloc, PeerToPeerState>(
           listener: (context, state) {
             if (state is DataReceived) {
-              context.router.push(AcknowledgementRoute());
+              context.router
+                  .popAndPush(AcknowledgementRoute(isDataRecordSuccess: true));
             }
           },
           child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
@@ -135,8 +137,8 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                               0.15,
                                           lineWidth: kPadding * 1.5,
                                           animation: true,
-                                          percent:
-                                              0, // Update this dynamically for progress
+                                          percent: 0,
+                                          // Update this dynamically for progress
                                           center: const Text(
                                             '0 %',
                                             style: TextStyle(
@@ -156,7 +158,8 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            FileTransferAnimation(), // Add animation here
+                                            FileTransferAnimation(),
+                                            // Add animation here
                                           ],
                                         ),
                                         Wrap(
@@ -208,8 +211,8 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                                 0.15,
                                         lineWidth: kPadding * 1.5,
                                         animation: false,
-                                        percent:
-                                            progress, // Update this dynamically for progress
+                                        percent: progress,
+                                        // Update this dynamically for progress
                                         center: Text(
                                           '${(progress * 100).toStringAsFixed(1)} %',
                                           style: const TextStyle(
@@ -229,7 +232,8 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          FileTransferAnimation(), // Add animation here
+                                          FileTransferAnimation(),
+                                          // Add animation here
                                         ],
                                       ),
                                       Wrap(
