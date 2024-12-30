@@ -1,3 +1,7 @@
+## 1.0.4-dev.6-search-fix
+
+* Update of existing record fix before update for task, individual and household
+
 ## 1.0.4-dev.5-search-fix
 
 * Added facility name in facility local repo

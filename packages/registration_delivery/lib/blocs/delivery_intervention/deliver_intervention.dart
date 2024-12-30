@@ -39,7 +39,15 @@ class DeliverInterventionBloc
     try {
       if (event.isEditing) {
         if (!event.navigateToSummary) {
+          final TaskModel? existingTask =
+              (await taskRepository.search(TaskSearchModel(
+            clientReferenceId: [event.task.clientReferenceId],
+          )))
+                  .firstOrNull;
           await taskRepository.update(event.task.copyWith(
+            id: existingTask?.id,
+            rowVersion: existingTask?.rowVersion ?? 1,
+            nonRecoverableError: existingTask?.nonRecoverableError ?? false,
             clientAuditDetails: (event.task.clientAuditDetails?.createdBy !=
                         null &&
                     event.task.clientAuditDetails?.createdTime != null)
