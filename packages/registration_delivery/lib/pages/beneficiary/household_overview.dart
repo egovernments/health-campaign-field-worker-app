@@ -189,7 +189,7 @@ class _HouseholdOverviewPageState
                                           : DigitButton(
                                               label: localizations.translate(
                                                 i18.householdOverView
-                                                    .householdOverViewActionText,
+                                                    .householdOverViewEditLabel,
                                               ),
                                               type: DigitButtonType.primary,
                                               size: DigitButtonSize.large,
