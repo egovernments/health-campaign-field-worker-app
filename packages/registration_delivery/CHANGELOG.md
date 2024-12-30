@@ -1,6 +1,7 @@
 ## 1.0.4-dev.6-search-fix
 
 * Update of existing record fix before update for task, individual and household
+* Updated data_model to latest dev version with unique beneficiary id changes
 
 ## 1.0.4-dev.5-search-fix
 

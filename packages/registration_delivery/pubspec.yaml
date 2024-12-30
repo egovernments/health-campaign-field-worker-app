@@ -32,7 +32,7 @@ dependencies:
   digit_scanner: ^1.0.3+1
   gs1_barcode_parser: ^1.0.5
   auto_route: ^7.8.4
-  digit_data_model: ^1.0.4-dev.8-uniqueId
+  digit_data_model: ^1.0.4-dev.10-uniqueId
   package_info_plus: ^5.0.1
   digit_showcase: ^1.0.0
   collection: ^1.16.0

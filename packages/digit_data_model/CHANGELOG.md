@@ -1,3 +1,8 @@
+## 1.0.4-dev.10-uniqueId
+
+* Bug Fix:
+    * Updated syncRetryCount,syncRetryInterval and errorPath to dynamic
+
 ## 1.0.4-dev.9-uniqueId
 
 * Stock and facility related changes
