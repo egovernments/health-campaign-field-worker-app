@@ -1,3 +1,7 @@
+## 1.0.3-dev.5
+
+* Updated digit_data_model dev version
+
 ## 1.0.3-dev.4
 
 * Added additional fields in stock search response
