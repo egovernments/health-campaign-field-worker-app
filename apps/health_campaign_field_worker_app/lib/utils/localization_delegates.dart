@@ -1,3 +1,5 @@
+import 'package:complaints/blocs/localization/app_localization.dart'
+    as complaints_localization;
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
 import 'package:digit_scanner/blocs/app_localization.dart'
@@ -57,6 +59,10 @@ getAppLocalizationDelegates({
     closed_household_localization.ClosedHouseholdLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
-    )
+    ),
+    complaints_localization.ComplaintsLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
   ];
 }

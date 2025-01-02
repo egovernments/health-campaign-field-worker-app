@@ -2,7 +2,8 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:disk_space/disk_space.dart';
+import 'package:disk_space_update/disk_space_update.dart';
+// import 'package:disk_space/disk_space.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

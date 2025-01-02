@@ -3,6 +3,8 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/utils/date_utils.dart'
+    as DigitDOBAgeConvertor;
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
@@ -146,7 +148,7 @@ class CustomViewBeneficiaryCardState
         ).months;
 
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-          DigitDOBAge(
+          DigitDOBAgeConvertor.DigitDOBAgeConvertor(
             years: ageInYears,
             months: ageInMonths,
           ),
@@ -254,7 +256,7 @@ class CustomViewBeneficiaryCardState
     ).months;
 
     final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-      DigitDOBAge(
+      DigitDOBAgeConvertor.DigitDOBAgeConvertor(
         years: ageInYears,
         months: ageInMonths,
       ),

@@ -33,12 +33,16 @@ void main() {
   var homeFilePath = appRoot + '/pages/home.dart';
   var projectFilePath = appRoot + '/blocs/project/project.dart';
   var authenticatedFilePath = appRoot + '/pages/authenticated.dart';
-  var contextUtilityFilePath = appRoot + '/utils/extensions/context_utility.dart';
+  var contextUtilityFilePath =
+      appRoot + '/utils/extensions/context_utility.dart';
   var appFilePath = appRoot + '/app.dart';
+  var extensionFilePath = appRoot + '/utils/extensions/extensions.dart';
+
+  _updateExtensionFilePath(extensionFilePath);
 
   _updateAppFile(appFilePath);
 
-  // Initialise Boundarycode in checklistSingleton class
+  // Initialise Boundarycode in surveyFormSingleton class
   _updateContextUtilityFile(contextUtilityFilePath);
 
   // Add Imports and service definition repo
@@ -46,12 +50,11 @@ void main() {
 
   _addauthenticatedFilePath(authenticatedFilePath);
 
-
-  // Add checklist to home file
+  // Add surveyForm to home file
   _updateHome(homeFilePath);
 
-  // Add Checklist routes and import to the router file
-  _addchecklistRoutesAndImportToRouterFile(routerFilePath);
+  // Add surveyForm routes and import to the router file
+  _addSurveyFormRoutesAndImportToRouterFile(routerFilePath);
 
   // Add new case statements to the entity_mapper.dart file
   _updateEntityMapperFile(entityMapperFilePath);
@@ -60,11 +63,11 @@ void main() {
 
   _addRepoToNetworkManagerProviderWrapper(
       networkManagerProviderWrapperFilePath:
-      networkManagerProviderWrapperFilePath);
+          networkManagerProviderWrapperFilePath);
 
-  _addChecklistConstantsToConstantsFile(constantsFilePath: constantsFilePath);
+  _addSurveyFormConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
-  _addChecklistMapperToUtilsFile(utilsFilePath: utilsFilePath);
+  _addSurveyFormMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
   _formatFiles([
     homeFilePath,
@@ -78,7 +81,8 @@ void main() {
     projectFilePath,
     authenticatedFilePath,
     contextUtilityFilePath,
-    appFilePath
+    appFilePath,
+    extensionFilePath
   ]);
 }
 
@@ -89,30 +93,56 @@ void _formatFiles(List<String> filePaths) {
   }
 }
 
+void _updateExtensionFilePath(extensionFilePath) {
+  var importStatement = '''
+      import 'package:survey_form/utils/utils.dart';''';
+
+  // Check if the extension.dart file exists
+  var extensionFile = File(extensionFilePath);
+  if (!extensionFile.existsSync()) {
+    print('Error: project file does not exist at path: $extensionFilePath');
+    return;
+  }
+
+  // Read the authenticated.dart file
+  var extensionFileContent = extensionFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!extensionFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+    extensionFileContent = importStatement + '\n' + extensionFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  extensionFile.writeAsStringSync(extensionFileContent);
+}
+
 void _updateAppFile(appFilePath) {
   var importStatement = '''
-      import 'package:checklist/checklist.dart';''';
+      import 'package:survey_form/survey_form.dart';''';
 
-  var ServiceDefinitionRepository = '''serviceDefinitionRemoteRepository: ctx.read<
+  var ServiceDefinitionRepository =
+      '''serviceDefinitionRemoteRepository: ctx.read<
                                 RemoteRepository<ServiceDefinitionModel,
                                     ServiceDefinitionSearchModel>>(),
                             serviceDefinitionLocalRepository: ctx.read<
                                 LocalRepository<ServiceDefinitionModel,
                                     ServiceDefinitionSearchModel>>(),''';
 
-  // Check if the authenticated.dart file exists
+  // Check if the app.dart file exists
   var appFile = File(appFilePath);
   if (!appFile.existsSync()) {
     print('Error: project file does not exist at path: $appFilePath');
     return;
   }
 
-  // Read the authenticated.dart file
+  // Read the app.dart file
   var appFileContent = appFile.readAsStringSync();
 
   // Check if the import statement already exists and add it if not
-  if (!appFileContent
-      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+  if (!appFileContent.contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     appFileContent = importStatement + '\n' + appFileContent;
     print('The import statement was added.');
   } else {
@@ -126,13 +156,11 @@ void _updateAppFile(appFilePath) {
     var caseInsertionIndex = appFileContent.indexOf('ProjectBloc(');
     caseInsertionIndex += 'ProjectBloc('.length;
     if (caseInsertionIndex != -1) {
-      appFileContent =
-          appFileContent.substring(0, caseInsertionIndex) +
-              ServiceDefinitionRepository +
-              '\n' +
-              appFileContent.substring(caseInsertionIndex);
+      appFileContent = appFileContent.substring(0, caseInsertionIndex) +
+          ServiceDefinitionRepository +
+          '\n' +
+          appFileContent.substring(caseInsertionIndex);
       print('The new cases were added.');
-
     } else {
       print('Error: Could not find the insertion point.');
       return;
@@ -145,12 +173,14 @@ void _updateAppFile(appFilePath) {
 }
 
 void _updateContextUtilityFile(String contextUtilityFilepath) {
-  var checklistBoundary = '''ChecklistSingleton().setBoundary(boundary: selectedBoundary);''';
+  var surveyFormBoundary =
+      '''SurveyFormSingleton().setBoundary(boundary: selectedBoundary);''';
 
   // Check if the context_utility.dart file exists
   var contextUtilityFile = File(contextUtilityFilepath);
   if (!contextUtilityFile.existsSync()) {
-    print('Error: Context Utility file does not exist at path: $contextUtilityFilepath');
+    print(
+        'Error: Context Utility file does not exist at path: $contextUtilityFilepath');
     return;
   }
 
@@ -159,7 +189,7 @@ void _updateContextUtilityFile(String contextUtilityFilepath) {
 
   // Insert the data to be added
   contextUtilityFileContent = insertData(contextUtilityFileContent,
-      '// INFO: Set Boundary for packages', checklistBoundary);
+      '// INFO: Set Boundary for packages', surveyFormBoundary);
 
   // Write the updated content back to the context_utility.dart file
   contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
@@ -167,7 +197,7 @@ void _updateContextUtilityFile(String contextUtilityFilepath) {
 
 void _addauthenticatedFilePath(String authenticatedFilePath) {
   var importStatement = '''
-      import 'package:checklist/checklist.dart';''';
+      import 'package:survey_form/survey_form.dart';''';
 
   var providers = '''BlocProvider(
                         create: (_) => ServiceBloc(
@@ -190,7 +220,8 @@ void _addauthenticatedFilePath(String authenticatedFilePath) {
   // Check if the import statement already exists and add it if not
   if (!authenticatedFileContent
       .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-    authenticatedFileContent = importStatement + '\n' + authenticatedFileContent;
+    authenticatedFileContent =
+        importStatement + '\n' + authenticatedFileContent;
     print('The import statement was added.');
   } else {
     print('The import statement already exists.');
@@ -209,7 +240,6 @@ void _addauthenticatedFilePath(String authenticatedFilePath) {
               '\n' +
               authenticatedFileContent.substring(caseInsertionIndex);
       print('The new cases were added.');
-
     } else {
       print('Error: Could not find the insertion point.');
       return;
@@ -223,7 +253,7 @@ void _addauthenticatedFilePath(String authenticatedFilePath) {
 
 void _addprojectFilePath(String projectFilePath) {
   var importStatement = '''
-      import 'package:checklist/checklist.dart';''';
+      import 'package:survey_form/survey_form.dart';''';
 
   var ServicedefinitionRepo = '''/// Service Definition Repositories
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
@@ -231,10 +261,11 @@ void _addprojectFilePath(String projectFilePath) {
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionLocalRepository;''';
 
-  var projectBloc = '''// required this.serviceDefinitionRemoteRepository,
-  // required this.serviceDefinitionLocalRepository,''';
+  var projectBloc = '''required this.serviceDefinitionRemoteRepository,
+  required this.serviceDefinitionLocalRepository,''';
 
-  var loadServicedefinition = '''FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
+  var loadServicedefinition =
+      '''FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
     final configs = await isar.appConfigurations.where().findAll();
     final userObject = await localSecureStore.userRequestModel;
     List<String> codes = [];
@@ -281,8 +312,7 @@ void _addprojectFilePath(String projectFilePath) {
             syncError: ProjectSyncErrorType.serviceDefinitions,
           ),
         );
-      }
-    }''';
+      }''';
 
   // Check if the project.dart file exists
   var projectFile = File(projectFilePath);
@@ -307,14 +337,16 @@ void _addprojectFilePath(String projectFilePath) {
   if (!projectFileContent
       .contains(ServicedefinitionRepo.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the Service Definition Repo
-    var caseInsertionIndex = projectFileContent.indexOf('class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {');
-    caseInsertionIndex += 'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {'.length;
+    var caseInsertionIndex = projectFileContent.indexOf(
+        'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {');
+    caseInsertionIndex +=
+        'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {'.length;
     if (caseInsertionIndex != -1) {
-      projectFileContent =
-          projectFileContent.substring(0, caseInsertionIndex) +
-              ServicedefinitionRepo +
-              '\n' +
-              projectFileContent.substring(caseInsertionIndex);
+      projectFileContent = projectFileContent.substring(0, caseInsertionIndex) +
+          '\n' +
+          ServicedefinitionRepo +
+          '\n' +
+          projectFileContent.substring(caseInsertionIndex);
       print('The Service Definition repo were added.');
     } else {
       print('Error: Could not find the insertion point.');
@@ -325,17 +357,16 @@ void _addprojectFilePath(String projectFilePath) {
   }
 
   // Check if the Project Bloc already exist in the file
-  if (!projectFileContent
-      .contains(projectBloc.replaceAll(RegExp(r'\s'), ''))) {
+  if (!projectFileContent.contains(projectBloc.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the Project Bloc
     var caseInsertionIndex = projectFileContent.indexOf('ProjectBloc({');
     caseInsertionIndex += 'ProjectBloc({'.length;
     if (caseInsertionIndex != -1) {
-      projectFileContent =
-          projectFileContent.substring(0, caseInsertionIndex) +
-              projectBloc +
-              '\n' +
-              projectFileContent.substring(caseInsertionIndex);
+      projectFileContent = projectFileContent.substring(0, caseInsertionIndex) +
+          '\n' +
+          projectBloc +
+          '\n' +
+          projectFileContent.substring(caseInsertionIndex);
       print('The Project Bloc were added.');
     } else {
       print('Error: Could not find the insertion point.');
@@ -349,14 +380,16 @@ void _addprojectFilePath(String projectFilePath) {
   if (!projectFileContent
       .contains(loadServicedefinition.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the load service definition function
-    var caseInsertionIndex = projectFileContent.indexOf('class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {');
-    caseInsertionIndex += 'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {'.length;
+    var caseInsertionIndex = projectFileContent.indexOf(
+        'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {');
+    caseInsertionIndex +=
+        'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {'.length;
     if (caseInsertionIndex != -1) {
-      projectFileContent =
-          projectFileContent.substring(0, caseInsertionIndex) +
-              loadServicedefinition +
-              '\n' +
-              projectFileContent.substring(caseInsertionIndex);
+      projectFileContent = projectFileContent.substring(0, caseInsertionIndex) +
+          '\n' +
+          loadServicedefinition +
+          '\n' +
+          projectFileContent.substring(caseInsertionIndex);
       print('The load service definition function were added.');
     } else {
       print('Error: Could not find the insertion point.');
@@ -370,14 +403,15 @@ void _addprojectFilePath(String projectFilePath) {
   if (!projectFileContent
       .contains(loadfunctions.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the load function calling
-    var caseInsertionIndex = projectFileContent.indexOf('// INFO : Need to add project load functions');
+    var caseInsertionIndex = projectFileContent
+        .indexOf('// INFO : Need to add project load functions');
     caseInsertionIndex += '// INFO : Need to add project load functions'.length;
     if (caseInsertionIndex != -1) {
-      projectFileContent =
-          projectFileContent.substring(0, caseInsertionIndex) +
-              loadfunctions +
-              '\n' +
-              projectFileContent.substring(caseInsertionIndex);
+      projectFileContent = projectFileContent.substring(0, caseInsertionIndex) +
+          '\n' +
+          loadfunctions +
+          '\n' +
+          projectFileContent.substring(caseInsertionIndex);
       print('The load function calling were added.');
     } else {
       print('Error: Could not find the insertion point.');
@@ -393,33 +427,33 @@ void _addprojectFilePath(String projectFilePath) {
 
 void _updateHome(String homeFilePath) {
   var importStatement = '''
-      import 'package:checklist/checklist.dart';
-      import 'package:checklist/router/checklist_router.gm.dart';
+      import 'package:survey_form/survey_form.dart';
+      import 'package:survey_form/router/survey_form_router.gm.dart';
       ''';
 
   var homeItemsData = '''
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
+      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
-          customIcon: myChecklistSvg,
+          customIcon: mySurveyFormSvg,
           icon: Icons.checklist,
-          label: i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          label: i18.home.mySurveyForm,
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
   ''';
 
   var showCaseData = '''
-       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+       i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
   ''';
 
   var itemsLabel = '''
-        i18.home.myCheckList,
+        i18.home.mySurveyForm,
   ''';
 
   // Define the data to be added
   var singletonData = '''
-    ChecklistSingleton().setInitialData(
+    SurveyFormSingleton().setInitialData(
           projectId: context.projectId,
           projectName: context.selectedProject.name,
           loggedInIndividualId: context.loggedInIndividualId ?? '',
@@ -502,8 +536,7 @@ String insertData(String fileContent, String marker, String data) {
 
 void _updateEntityMapperFile(String entityMapperFilePath) {
   // Define the import statement and new case statements
-  var importStatement =
-      "import 'package:checklist/checklist.dart';";
+  var importStatement = "import 'package:survey_form/survey_form.dart';";
   var newCases = '''
       case "service":
         final entity = ServiceModelMapper.fromJson(entityString);
@@ -555,31 +588,32 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
   }
 }
 
-void _addchecklistRoutesAndImportToRouterFile(String routerFilePath) {
-  // Define the checklist route lines
-  var checklistRoutes = '''
-    // Checklist Route
+void _addSurveyFormRoutesAndImportToRouterFile(String routerFilePath) {
+  // Define the SurveyForm route lines
+  var surveyFormRoutes = '''
+    // SurveyForm Route
         AutoRoute(
-            page: ChecklistWrapperRoute.page,
-            path: 'checklist',
+            page: SurveyFormWrapperRoute.page,
+            path: 'surveyForm',
             children: [
               AutoRoute(
-                page: ChecklistRoute.page,
+                page: SurveyformRoute.page,
                 path: '',
               ),
               AutoRoute(
-                  page: ChecklistBoundaryViewRoute.page, path: 'view-boundary'),
-              AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
-              AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
+                  page: SurveyFormBoundaryViewRoute.page, path: 'view-boundary'),
+              AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+              AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+              AutoRoute(page: SurveyFormAcknowledgementRoute.page, path: 'surveyForm-acknowledgement'),
             ]),
   ''';
 
   // Define the import statement
   var importStatement1 =
-      "import 'package:checklist/router/checklist_router.dart';";
+      "import 'package:survey_form/router/survey_form_router.dart';";
   // Define the import statement
   var importStatement2 =
-      "import 'package:checklist/router/checklist_router.gm.dart';";
+      "import 'package:survey_form/router/survey_form_router.gm.dart';";
 
   // Check if the router file exists
   var routerFile = File(routerFilePath);
@@ -611,24 +645,24 @@ void _addchecklistRoutesAndImportToRouterFile(String routerFilePath) {
   } else {
     print('The import statement already exists.');
   }
-  // Check if the checklistRoute module already exists
+  // Check if the surveyFormRoute module already exists
   if (!routerFileContent
-      .contains('CheckListRoute'.replaceAll(RegExp(r'\s'), ''))) {
+      .contains('SurveyFormRoute'.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the module
     var moduleInsertionIndex = routerFileContent.indexOf('@AutoRouterConfig(');
     if (moduleInsertionIndex != -1) {
       var endOfModulesIndex =
-      routerFileContent.indexOf(']', moduleInsertionIndex);
+          routerFileContent.indexOf(']', moduleInsertionIndex);
       if (endOfModulesIndex != -1) {
         var modulesEndIndex =
-        routerFileContent.lastIndexOf(']', endOfModulesIndex);
+            routerFileContent.lastIndexOf(']', endOfModulesIndex);
         routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
-            'CheckListRoute,' +
+            'SurveyFormRoute,' +
             routerFileContent.substring(modulesEndIndex);
 
         // Write the updated content back to the project.dart file
         routerFile.writeAsStringSync(routerFileContent);
-        print('The CheckListRoute module was added.');
+        print('The SurveyFormRoute module was added.');
       } else {
         print('Error: Could not find the end of the modules list.');
         return;
@@ -638,42 +672,41 @@ void _addchecklistRoutesAndImportToRouterFile(String routerFilePath) {
       return;
     }
   } else {
-    print('The CheckListRoute module already exists.');
+    print('The SurveyFormRoute module already exists.');
   }
 
-  // Check if the checklist routes already exist in the file
+  // Check if the SurveyForm routes already exist in the file
   if (!routerFileContent
-      .contains(checklistRoutes.replaceAll(RegExp(r'\s'), ''))) {
+      .contains(surveyFormRoutes.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the routes
     var insertionIndex = routerFileContent
         .indexOf('// INFO : Need to add Router of package Here');
     if (insertionIndex != -1) {
       routerFileContent = routerFileContent.substring(0, insertionIndex) +
           '// INFO : Need to add Router of package Here\n' +
-          checklistRoutes +
+          surveyFormRoutes +
           routerFileContent.substring(insertionIndex +
               '// INFO : Need to add Router of package Here'.length);
-      print('The checklist routes were added.');
-
+      print('The surveyForm routes were added.');
     } else {
       print('Error: Could not find the insertion point.');
       return;
     }
   } else {
-    print('The checklist routes already exist.');
+    print('The surveyForm routes already exist.');
   }
   // Write the updated content back to the file
   routerFile.writeAsStringSync(routerFileContent);
 }
 
-void _addChecklistMapperToUtilsFile({required String utilsFilePath}) {
-  // Define the checklist related lines
-  var checklistImportStatement = [
-    '''import 'package:checklist/checklist.init.dart'
-    as checklist_mappers;'''
+void _addSurveyFormMapperToUtilsFile({required String utilsFilePath}) {
+  // Define the surveyForm related lines
+  var surveyFormImportStatement = [
+    '''import 'package:survey_form/survey_form.init.dart'
+    as surveyForm_mappers;'''
   ];
-  var checklistInitializationStatement =
-      "Future(() => checklist_mappers.initializeMappers()),";
+  var surveyFormInitializationStatement =
+      "Future(() => surveyForm_mappers.initializeMappers()),";
 
   // Check if the utils.dart file exists
   var utilsFile = File(utilsFilePath);
@@ -687,7 +720,7 @@ void _addChecklistMapperToUtilsFile({required String utilsFilePath}) {
   // Check if the import statement and delegate already exist in the file
   // If not, add them to the file
   if (!normalizedFileContent
-      .contains(checklistImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
+      .contains(surveyFormImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
     var libraryIndex = utilsFileContent.indexOf('library app_utils;');
     if (libraryIndex != -1) {
       var endOfLibrary = libraryIndex +
@@ -695,7 +728,7 @@ void _addChecklistMapperToUtilsFile({required String utilsFilePath}) {
           1;
       utilsFileContent = utilsFileContent.substring(0, endOfLibrary + 1) +
           '\n' +
-          checklistImportStatement[0] +
+          surveyFormImportStatement[0] +
           utilsFileContent.substring(endOfLibrary + 1);
       print('The import statement was added.');
     }
@@ -703,13 +736,13 @@ void _addChecklistMapperToUtilsFile({required String utilsFilePath}) {
     print('The import statement already exists.');
   }
 
-  if (!utilsFileContent.contains(checklistInitializationStatement)) {
-    // Add the checklist related initialization statement to the file
+  if (!utilsFileContent.contains(surveyFormInitializationStatement)) {
+    // Add the surveyForm related initialization statement to the file
     var initializeAllMappersIndex =
-    utilsFileContent.indexOf('initializeAllMappers() async {');
+        utilsFileContent.indexOf('initializeAllMappers() async {');
     if (initializeAllMappersIndex == -1) {
       print(
-          'Error: Could not find a place to insert the checklist initialization statement.');
+          'Error: Could not find a place to insert the survey form initialization statement.');
       return;
     }
     var endOfInitializeAllMappers = initializeAllMappersIndex +
@@ -718,28 +751,28 @@ void _addChecklistMapperToUtilsFile({required String utilsFilePath}) {
     utilsFileContent =
         utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
             '\n    ' +
-            checklistInitializationStatement +
+            surveyFormInitializationStatement +
             utilsFileContent.substring(endOfInitializeAllMappers - 1);
 
-    print('Checklist initialization statement added to utils.dart');
+    print('Survey Form initialization statement added to utils.dart');
   } else {
-    print('The checklist initialization statement already exists.');
+    print('The Survey Form initialization statement already exists.');
   }
 
   // Write the updated content back to the utils.dart file
   utilsFile.writeAsStringSync(utilsFileContent);
 }
 
-void _addChecklistConstantsToConstantsFile(
+void _addSurveyFormConstantsToConstantsFile(
     {required String constantsFilePath}) {
   // Define the import statements
   var importStatements = [
-    "import 'package:checklist/checklist.dart';",
+    "import 'package:survey_form/survey_form.dart';",
   ];
 
-  // Define the Checklist configuration
-  var ChecklistConfiguration = '''
-ChecklistSingleton().setTenantId(envConfig.variables.tenantId);
+  // Define the Survey Form configuration
+  var SurveyFormConfiguration = '''
+SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
   ''';
 
   // Define the local and remote repositories
@@ -775,11 +808,11 @@ if (value == DataModelType.service)
   // Read the constants.dart file
   var constantsFileContent = constantsFile.readAsStringSync();
 
-  // Normalize the whitespace in the file content and the checklist configuration
+  // Normalize the whitespace in the file content and the Survey Form configuration
   var normalizedFileContent =
-  constantsFileContent.replaceAll(RegExp(r'\s'), '');
-  var normalizedChecklistConfiguration =
-  ChecklistConfiguration.replaceAll(RegExp(r'\s'), '');
+      constantsFileContent.replaceAll(RegExp(r'\s'), '');
+  var normalizedSurveyFormConfiguration =
+      SurveyFormConfiguration.replaceAll(RegExp(r'\s'), '');
 
   // Check if the import statements already exist in the file
   for (var importStatement in importStatements) {
@@ -791,12 +824,12 @@ if (value == DataModelType.service)
     }
   }
 
-  // Check if the Checklist configuration already exists in the file
+  // Check if the Survey Form configuration already exists in the file
   // If not, add it to the file
-  if (!normalizedFileContent.contains(normalizedChecklistConfiguration)) {
-    // Find the setInitialDataOfPackages method and add the Checklist configuration inside it
+  if (!normalizedFileContent.contains(normalizedSurveyFormConfiguration)) {
+    // Find the setInitialDataOfPackages method and add the Survey Form configuration inside it
     var setInitialDataOfPackagesIndex =
-    constantsFileContent.indexOf('void setInitialDataOfPackages() {');
+        constantsFileContent.indexOf('void setInitialDataOfPackages() {');
     if (setInitialDataOfPackagesIndex != -1) {
       var endOfSetInitialDataOfPackages = setInitialDataOfPackagesIndex +
           constantsFileContent
@@ -805,15 +838,15 @@ if (value == DataModelType.service)
           1;
       constantsFileContent =
           constantsFileContent.substring(0, endOfSetInitialDataOfPackages - 1) +
-              '\n  $ChecklistConfiguration' +
+              '\n  $SurveyFormConfiguration' +
               constantsFileContent.substring(endOfSetInitialDataOfPackages - 1);
-      print('The checklist configuration was added.');
+      print('The Survey Form configuration was added.');
     }
   }
 
   // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
   var getLocalRepositoriesIndex =
-  constantsFileContent.indexOf('getLocalRepositories(');
+      constantsFileContent.indexOf('getLocalRepositories(');
   if (getLocalRepositoriesIndex != -1) {
     var endOfGetLocalRepositories = getLocalRepositoriesIndex +
         constantsFileContent.substring(getLocalRepositoriesIndex).indexOf(']') +
@@ -827,7 +860,7 @@ if (value == DataModelType.service)
   }
 
   var getRemoteRepositoriesIndex =
-  constantsFileContent.indexOf('getRemoteRepositories(');
+      constantsFileContent.indexOf('getRemoteRepositories(');
   if (getRemoteRepositoriesIndex != -1) {
     var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
         constantsFileContent
@@ -835,8 +868,8 @@ if (value == DataModelType.service)
             .indexOf('addAll(') +
         'addAll('.length;
     var endOfAddAll = constantsFileContent
-        .substring(endOfGetRemoteRepositories)
-        .indexOf(']') +
+            .substring(endOfGetRemoteRepositories)
+            .indexOf(']') +
         endOfGetRemoteRepositories;
     constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
         remoteRepository.join('\n') +
@@ -852,7 +885,7 @@ void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import 'package:checklist/checklist.dart';",
+    "import 'package:survey_form/survey_form.dart';",
   ];
   var localRepositories = [
     '''RepositoryProvider<
@@ -864,8 +897,8 @@ void _addRepoToNetworkManagerProviderWrapper(
           isar,
         ),
       ),
-    )'''
-        '''RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
+    ),
+    RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
       create: (_) => ServiceLocalRepository(
         sql,
         ServiceOpLogManager(isar),
@@ -873,8 +906,8 @@ void _addRepoToNetworkManagerProviderWrapper(
     )'''
   ];
 
-// Define the remote repositories of checklist
-  var remoteRepositoriesOfChecklist = [
+// Define the remote repositories of Survey Form
+  var remoteRepositoriesOfSurveyForm = [
     '''if (value == DataModelType.service)
     RepositoryProvider<
         RemoteRepository<ServiceModel, ServiceSearchModel>>(
@@ -882,8 +915,8 @@ void _addRepoToNetworkManagerProviderWrapper(
         dio,
         actionMap: actions,
       ),
-    ),''',
-    '''if (value == DataModelType.serviceDefinition)
+    ),
+    if (value == DataModelType.serviceDefinition)
       RepositoryProvider<
           RemoteRepository<ServiceDefinitionModel,
               ServiceDefinitionSearchModel>>(
@@ -891,14 +924,14 @@ void _addRepoToNetworkManagerProviderWrapper(
           dio,
           actionMap: actions,
         ),
-      ),'''
+      )'''
   ];
 
 // Read the network_manager_provider_wrapper.dart file
   var networkManagerProviderWrapperFile =
-  File(networkManagerProviderWrapperFilePath);
+      File(networkManagerProviderWrapperFilePath);
   var networkManagerProviderWrapperFileContent =
-  networkManagerProviderWrapperFile.readAsStringSync();
+      networkManagerProviderWrapperFile.readAsStringSync();
 
 // Find the last import statement in the file
   var lastImportIndex = networkManagerProviderWrapperFileContent
@@ -918,7 +951,7 @@ void _addRepoToNetworkManagerProviderWrapper(
         // Add the import statement after the last import
         networkManagerProviderWrapperFileContent =
             networkManagerProviderWrapperFileContent.substring(
-                0, endOfLastImport) +
+                    0, endOfLastImport) +
                 '\n' +
                 importStatement +
                 networkManagerProviderWrapperFileContent
@@ -930,17 +963,17 @@ void _addRepoToNetworkManagerProviderWrapper(
       }
     }
 
-    // Normalize the whitespace in the file content and the remote repository of Checklist
+    // Normalize the whitespace in the file content and the remote repository of Survey Form
     var normalizedFileContent =
-    networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
+        networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
 
 // Check if the local repository providers already exist in the file
     for (var repositoryProvider in localRepositories) {
-      var normalizedLocalRepositoryOfChecklist =
-      repositoryProvider.replaceAll(RegExp(r'\s'), '');
+      var normalizedLocalRepositoryOfSurveyForm =
+          repositoryProvider.replaceAll(RegExp(r'\s'), '');
 
       if (!normalizedFileContent
-          .contains(normalizedLocalRepositoryOfChecklist)) {
+          .contains(normalizedLocalRepositoryOfSurveyForm)) {
         // Add the local repository provider to the file
         networkManagerProviderWrapperFileContent =
             networkManagerProviderWrapperFileContent.replaceFirst(
@@ -951,26 +984,25 @@ void _addRepoToNetworkManagerProviderWrapper(
       }
     }
 
-// Check if the remote repository of checklist already exists in the file
-    for (var remoteRepositoryOfChecklist
-    in remoteRepositoriesOfChecklist) {
-      var normalizedRemoteRepositoryOfChecklist =
-      remoteRepositoryOfChecklist.replaceAll(RegExp(r'\s'), '');
+// Check if the remote repository of Survey Form already exists in the file
+    for (var remoteRepositoryOfSurveyForm in remoteRepositoriesOfSurveyForm) {
+      var normalizedRemoteRepositoryOfSurveyForm =
+          remoteRepositoryOfSurveyForm.replaceAll(RegExp(r'\s'), '');
 
       if (!normalizedFileContent
-          .contains(normalizedRemoteRepositoryOfChecklist)) {
-        // Add the remote repository of checklist to the _getRemoteRepositories method
+          .contains(normalizedRemoteRepositoryOfSurveyForm)) {
+        // Add the remote repository of Survey Form to the _getRemoteRepositories method
         var replacementString =
-        networkManagerProviderWrapperFileContent.contains(']);')
-            ? '  $remoteRepositoryOfChecklist,\n]);'
-            : '  $remoteRepositoryOfChecklist\n]);';
+            networkManagerProviderWrapperFileContent.contains(']);')
+                ? '  $remoteRepositoryOfSurveyForm,\n]);'
+                : '  $remoteRepositoryOfSurveyForm\n]);';
         networkManagerProviderWrapperFileContent =
             networkManagerProviderWrapperFileContent.replaceFirst(
                 ']);', replacementString);
         print(
-            'The remote repository of checklist was added: $remoteRepositoryOfChecklist');
+            'The remote repository of Survey Form was added: $remoteRepositoryOfSurveyForm');
       } else {
-        print('The remote repository of checklist already exists.');
+        print('The remote repository of Survey Form already exists.');
       }
     }
 
@@ -983,9 +1015,8 @@ void _addRepoToNetworkManagerProviderWrapper(
 void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Define the import statement and delegate for localization
   var importStatement =
-      "import 'package:checklist/blocs/app_localization.dart' as checklist_localization;";
-  var delegate =
-  '''checklist_localization.ChecklistLocalization.getDelegate(
+      "import 'package:survey_form/blocs/app_localization.dart' as surveyForm_localization;";
+  var delegate = '''surveyForm_localization.SurveyFormLocalization.getDelegate(
   LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
   appConfig.languages!,
   ),''';
@@ -993,23 +1024,23 @@ void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Read the localization delegates file
   var localizationDelegatesFile = File(localizationDelegatesFilePath);
   var localizationDelegatesFileContent =
-  localizationDelegatesFile.readAsStringSync();
+      localizationDelegatesFile.readAsStringSync();
 
   var normalizedFileContent =
-  localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
+      localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
 
   // Check if the import statement and delegate already exist in the file
   // If not, add them to the file
   if (!normalizedFileContent
       .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     localizationDelegatesFileContent =
-    '$importStatement\n$localizationDelegatesFileContent';
+        '$importStatement\n$localizationDelegatesFileContent';
     print('The import statement was added.');
   }
 
   if (!normalizedFileContent.contains(delegate.replaceAll(RegExp(r'\s'), ''))) {
     var lastDelegateIndex =
-    localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
+        localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
     if (lastDelegateIndex != -1) {
       localizationDelegatesFileContent =
           localizationDelegatesFileContent.substring(0, lastDelegateIndex + 1) +

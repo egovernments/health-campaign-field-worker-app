@@ -1,3 +1,4 @@
+import 'package:complaints/complaints.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -59,6 +60,10 @@ class EntityMapper extends EntityMapperListener {
 
       case "attendance":
         final entity = AttendanceLogModelMapper.fromJson(entityString);
+        return entity;
+
+      case "complaints":
+        final entity = PgrServiceModelMapper.fromJson(entityString);
         return entity;
 
       default:

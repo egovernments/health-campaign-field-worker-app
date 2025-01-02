@@ -689,7 +689,8 @@ class CustomIndividualDetailsPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          utilsLocal.CustomValidator.requiredMin3,
+          Validators.delegate((validator) =>
+              utilsLocal.CustomValidator.requiredMin3(validator)),
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
