@@ -6,7 +6,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:survey_form/survey_form.dart';
 
-
 class ServiceLocalRepository
     extends LocalRepository<ServiceModel, ServiceSearchModel> {
   ServiceLocalRepository(super.sql, super.opLogManager);
@@ -14,10 +13,10 @@ class ServiceLocalRepository
   // function to create a Service entity in the local database
   @override
   FutureOr<void> create(
-      ServiceModel entity, {
-        bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.singleCreate,
-      }) async {
+    ServiceModel entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.singleCreate,
+  }) async {
     return retryLocalCallOperation(() async {
       final serviceCompanion = entity.companion;
       final attributes = entity.attributes;
@@ -46,42 +45,29 @@ class ServiceLocalRepository
         serviceDefId: entity.serviceDefId,
         isActive: entity.isActive,
         accountId: entity.accountId,
-        additionalDetails: entity.additionalDetails,
         tenantId: entity.tenantId,
         isDeleted: entity.isDeleted,
         rowVersion: entity.rowVersion,
-        additionalFields: ServiceAdditionalFields(
-          version: 1,
-          fields: [
-            AdditionalField(
-              'clientCreatedTime',
-              DateTime.now().millisecondsSinceEpoch.toString(),
-            ),
-            AdditionalField(
-              'clientCreatedBy',
-              entity.auditDetails?.createdBy,
-            ),
-          ],
-        ),
+        additionalFields: entity.additionalFields,
         auditDetails: entity.auditDetails,
         clientAuditDetails: entity.clientAuditDetails,
         attributes: entity.attributes?.map((e) {
           return e.dataType == 'Number'
               ? e.copyWith(value: int.tryParse(e.value))
               : e.dataType == 'MultiValueList'
-              ? e.copyWith(
-            value: e.value.toString().split('.'),
-            additionalDetails: e.additionalDetails != null
-                ? {"value": e.additionalDetails}
-                : null,
-          )
-              : e.dataType == 'SingleValueList'
-              ? e.copyWith(
-            additionalDetails: e.additionalDetails != null
-                ? {"value": e.additionalDetails}
-                : null,
-          )
-              : e;
+                  ? e.copyWith(
+                      value: e.value.toString().split('.'),
+                      additionalDetails: e.additionalDetails != null
+                          ? {"value": e.additionalDetails}
+                          : null,
+                    )
+                  : e.dataType == 'SingleValueList'
+                      ? e.copyWith(
+                          additionalDetails: e.additionalDetails != null
+                              ? {"value": e.additionalDetails}
+                              : null,
+                        )
+                      : e;
         }).toList(),
       );
 
@@ -96,21 +82,21 @@ class ServiceLocalRepository
   //function to search Service entities corresponding to selected service definition from local database
   @override
   FutureOr<List<ServiceModel>> search(
-      ServiceSearchModel query,
-      ) async {
+    ServiceSearchModel query,
+  ) async {
     return retryLocalCallOperation<List<ServiceModel>>(() async {
       final selectQuery = sql.select(sql.service).join([]);
       final results = await (selectQuery
-        ..where(buildAnd([
-          if (query.id != null)
-            sql.service.serviceDefId.equals(
-              query.id!,
-            ),
-          if (query.clientId != null)
-            sql.service.clientId.equals(
-              query.clientId!,
-            ),
-        ])))
+            ..where(buildAnd([
+              if (query.id != null)
+                sql.service.serviceDefId.equals(
+                  query.id!,
+                ),
+              if (query.clientId != null)
+                sql.service.clientId.equals(
+                  query.clientId!,
+                ),
+            ])))
           .get();
 
       final List<ServiceModel> serviceList = [];
@@ -119,26 +105,29 @@ class ServiceLocalRepository
         final selectattributeQuery = sql.select(sql.serviceAttributes).join([]);
 
         final val = await (selectattributeQuery
-          ..where(buildAnd([
-            sql.serviceAttributes.referenceId.equals(
-              data.clientId,
-            ),
-          ])))
+              ..where(buildAnd([
+                sql.serviceAttributes.referenceId.equals(
+                  data.clientId,
+                ),
+              ])))
             .get();
         final res = val.map((e) {
           final attribute = e.readTableOrNull(sql.serviceAttributes);
           if (attribute != null) {
             return ServiceAttributesModel(
-              clientReferenceId: attribute.clientReferenceId,
-              attributeCode: attribute.attributeCode,
-              value: attribute.value,
-              referenceId: attribute.referenceId,
-              dataType: attribute.dataType,
-              additionalDetails: attribute.additionalDetails,
-              tenantId: attribute.tenantId,
-              isDeleted: attribute.isDeleted,
-              rowVersion: attribute.rowVersion,
-            );
+                clientReferenceId: attribute.clientReferenceId,
+                attributeCode: attribute.attributeCode,
+                value: attribute.value,
+                referenceId: attribute.referenceId,
+                dataType: attribute.dataType,
+                additionalDetails: attribute.additionalDetails,
+                tenantId: attribute.tenantId,
+                isDeleted: attribute.isDeleted,
+                rowVersion: attribute.rowVersion,
+                additionalFields: attribute.additionalFields != null
+                    ? ServiceAttributesAdditionalFieldsMapper.fromJson(
+                    attribute.additionalFields!)
+                    : null);
           }
         }).toList();
 

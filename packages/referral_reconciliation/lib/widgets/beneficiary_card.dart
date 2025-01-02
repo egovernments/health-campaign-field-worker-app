@@ -23,6 +23,7 @@ class ReferralBeneficiaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -32,7 +33,7 @@ class ReferralBeneficiaryCard extends StatelessWidget {
           padding: EdgeInsets.all(theme.spacerTheme.spacer2 / 2),
           child: Text(
             title,
-            style: theme.textTheme.headlineSmall,
+            style: textTheme.headingS,
           ),
         ),
         Offstage(
@@ -79,14 +80,14 @@ class ReferralBeneficiaryCard extends StatelessWidget {
           padding: EdgeInsets.all(theme.spacerTheme.spacer2 / 2),
           child: Text(
             subtitle,
-            style: theme.textTheme.bodyMedium,
+            style: textTheme.bodyS,
           ),
         ),
         Padding(
           padding: EdgeInsets.all(theme.spacerTheme.spacer2 / 2),
           child: Text(
             description,
-            style: theme.textTheme.bodySmall,
+            style: textTheme.bodyS,
           ),
         ),
       ],

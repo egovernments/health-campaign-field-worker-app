@@ -3,7 +3,6 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-import '../../utils/i18_key_constants.dart' as i18;
 
 import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -104,8 +103,10 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                       });
                     },
                     valueMapper: (value) {
-                      return localizations
-                          .translate(value.toValue().toString());
+                      return localizations.translate(value ==
+                              Status.administeredSuccess
+                          ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${value.toValue().toString()}'
+                          : value.toValue().toString());
                     },
                   ),
                 ),
@@ -119,13 +120,13 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                         MainAxisAlignment.spaceEvenly, // Adjust button spacing
                     children: [
                       Expanded(
-                        child: Button(
+                        child: DigitButton(
                             label: localizations.translate(
                               i18.searchBeneficiary.clearFilter,
                             ),
                             isDisabled: selectedButtons.isEmpty,
-                            type: ButtonType.secondary,
-                            size: ButtonSize.medium,
+                            type: DigitButtonType.secondary,
+                            size: DigitButtonSize.medium,
                             onPressed: () {
                               setState(() {
                                 selectedButtons.clear();
@@ -136,13 +137,13 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                         width: spacer2,
                       ),
                       Expanded(
-                        child: Button(
+                        child: DigitButton(
                           label: localizations.translate(
                             i18.searchBeneficiary.applyFilter,
                           ),
                           isDisabled: selectedButtons.isEmpty,
-                          type: ButtonType.primary,
-                          size: ButtonSize.medium,
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.medium,
                           onPressed: () {
                             setState(() {
                               isLoading = true;

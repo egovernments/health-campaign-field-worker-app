@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/utils/constants.dart';
 import 'package:inventory_management/widgets/localized.dart';
@@ -37,6 +39,7 @@ class InventoryFacilitySelectionPageState
       color: theme.colorScheme.outline,
       width: 1.0,
     );
+    final textTheme = theme.digitTextTheme(context);
 
     return SafeArea(
       child: ReactiveFormBuilder(
@@ -67,29 +70,31 @@ class InventoryFacilitySelectionPageState
                         color: Colors.white,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: kPadding * 2),
+                              horizontal: spacer4),
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(kPadding),
+                                padding: const EdgeInsets.all(spacer2),
                                 child: Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
                                     localizations.translate(
                                       i18.common.facilitySearchHeaderLabel,
                                     ),
-                                    style: theme.textTheme.displayMedium,
+                                    style: textTheme.headingXl,
                                     textAlign: TextAlign.left,
                                   ),
                                 ),
                               ),
-                              const DigitTextFormField(
-                                suffix: Padding(
-                                  padding: EdgeInsets.all(kPadding),
-                                  child: Icon(Icons.search),
-                                ),
-                                label: '',
-                                formControlName: _facilityName,
+                               ReactiveWrapperField(
+                                  formControlName: _facilityName,
+                                  builder: (field) {
+                                    return DigitSearchFormInput(
+                                      onChange: (value){
+                                        field.control.value = value;
+                                      },
+                                    );
+                                  }
                               ),
                             ],
                           ),
@@ -104,13 +109,12 @@ class InventoryFacilitySelectionPageState
                           return Container(
                             color: Colors.white,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: kPadding),
+                                horizontal: spacer2),
                             child: Container(
                               margin: const EdgeInsets.symmetric(
-                                  horizontal: kPadding),
+                                  horizontal: spacer2),
                               decoration: BoxDecoration(
-                                color:
-                                    DigitTheme.instance.colors.alabasterWhite,
+                                color:Theme.of(context).colorTheme.paper.secondary,
                                 border: Border(
                                   top:
                                       index == 0 ? borderSide : BorderSide.none,
@@ -126,10 +130,9 @@ class InventoryFacilitySelectionPageState
                                   Navigator.of(context).pop(facility);
                                 },
                                 child: Container(
-                                  margin: const EdgeInsets.all(kPadding),
+                                  margin: const EdgeInsets.all(spacer2),
                                   decoration: BoxDecoration(
-                                    color: DigitTheme
-                                        .instance.colors.alabasterWhite,
+                                    color: Theme.of(context).colorTheme.paper.secondary,
                                     border: Border(
                                       bottom: BorderSide(
                                         color: theme.colorScheme.outline,
@@ -138,7 +141,7 @@ class InventoryFacilitySelectionPageState
                                     ),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(kPadding * 2),
+                                    padding: const EdgeInsets.all(spacer4),
                                     child: Text(
                                       localizations.translate(
                                           '$facilityPrefix${facility.id}'),

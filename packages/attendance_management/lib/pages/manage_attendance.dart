@@ -7,6 +7,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -90,13 +91,13 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                           register.attendees?.length ?? 0,
                       localization.translate(i18.attendance.startDateLabel):
                           register.startDate != null
-                              ? AttendanceDateTimeManagement.getDateFromTimestamp(
-                                  register.startDate!)
+                              ? AttendanceDateTimeManagement
+                                  .getDateFromTimestamp(register.startDate!)
                               : localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.endDateLabel):
                           register.endDate != null
-                              ? AttendanceDateTimeManagement.getDateFromTimestamp(
-                                  register.endDate!)
+                              ? AttendanceDateTimeManagement
+                                  .getDateFromTimestamp(register.endDate!)
                               : localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.statusLabel):
                           register.endDate != null &&
@@ -174,7 +175,8 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                             children: [
                               Padding(
                                 padding:
-                                    EdgeInsets.all(theme.spacerTheme.spacer2).copyWith(
+                                    EdgeInsets.all(theme.spacerTheme.spacer2)
+                                        .copyWith(
                                   top: 2,
                                   left: theme.spacerTheme.spacer2 * 2,
                                 ),
@@ -197,8 +199,8 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                               ...list,
                               if (list.length > 1)
                                 PoweredByDigit(
-                                    version: AttendanceSingleton()
-                                        .appVersion), // Show here if more than one register
+                                    version: AttendanceSingleton().appVersion),
+                              // Show here if more than one register
                             ],
                           ),
                           registerLoading: () => const Center(
@@ -270,53 +272,52 @@ class RegisterCard extends StatelessWidget {
     var localization = AttendanceLocalization.of(context);
 
     return DigitCard(
-      padding: EdgeInsets.all(theme.spacerTheme.spacer2),
-      margin: EdgeInsets.all(theme.spacerTheme.spacer2),
-      children: [
-        LabelValueList(
-          labelFlex: theme.spacerTheme.spacer3.toInt(),
-          padding: EdgeInsets.all(theme.spacerTheme.spacer3),
-          items: data.keys.map((e) {
-            return LabelValuePair(label: e, value: data[e]?.toString() ?? '');
-          }).toList(),
-        ),
-        show
-            ? Button(
-                size: ButtonSize.large,
-                type: ButtonType.primary,
-                mainAxisSize: MainAxisSize.max,
-                label:
-                  AttendanceLocalization.of(context)
+        padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+        margin: EdgeInsets.all(theme.spacerTheme.spacer2),
+        children: [
+          LabelValueSummary(
+            padding: EdgeInsets.all(theme.spacerTheme.spacer3),
+            items: data.keys.map((e) {
+              return LabelValueItem(
+                  label: e, labelFlex: 5, value: data[e]?.toString() ?? '');
+            }).toList(),
+          ),
+          show
+              ? DigitButton(
+                  size: DigitButtonSize.large,
+                  type: DigitButtonType.primary,
+                  mainAxisSize: MainAxisSize.max,
+                  label: AttendanceLocalization.of(context)
                       .translate(i18.attendance.openRegister),
-                onPressed: () async {
-                  if (noOfAttendees == 0) {
-                    Toast.showToast(
-                      context,
-                      message: localization.translate(
-                          i18.attendance.noAttendeesEnrolledMessage),
-                      type: ToastType.error,
-                    );
-                  } else if (startDate != null &&
-                      startDate!.millisecondsSinceEpoch >
-                          DateTime.now().millisecondsSinceEpoch) {
-                    Toast.showToast(
-                      context,
-                      message: localization
-                          .translate(i18.attendance.registerNotStarted),
-                      type: ToastType.error,
-                    );
-                  } else {
-                    await context.router.push(
-                      AttendanceDateSessionSelectionRoute(
-                        registers: registers,
-                        registerID: registerId,
-                      ),
-                    );
-                    attendanceBloc.add(const AttendanceEvents.initial());
-                  }
-                },
-              )
-            : const Offstage(),]
-    );
+                  onPressed: () async {
+                    if (noOfAttendees == 0) {
+                      Toast.showToast(
+                        context,
+                        message: localization.translate(
+                            i18.attendance.noAttendeesEnrolledMessage),
+                        type: ToastType.error,
+                      );
+                    } else if (startDate != null &&
+                        startDate!.millisecondsSinceEpoch >
+                            DateTime.now().millisecondsSinceEpoch) {
+                      Toast.showToast(
+                        context,
+                        message: localization
+                            .translate(i18.attendance.registerNotStarted),
+                        type: ToastType.error,
+                      );
+                    } else {
+                      await context.router.push(
+                        AttendanceDateSessionSelectionRoute(
+                          registers: registers,
+                          registerID: registerId,
+                        ),
+                      );
+                      attendanceBloc.add(const AttendanceEvents.initial());
+                    }
+                  },
+                )
+              : const Offstage(),
+        ]);
   }
 }

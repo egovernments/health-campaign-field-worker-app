@@ -1,8 +1,8 @@
 import 'dart:async'; // Import the dart:async library for asynchronous operations
 import 'dart:convert'; // Import the dart:convert library for JSON encoding and decoding
 
-import 'package:digit_components/utils/app_logger.dart'; // Import the app_logger.dart file from the digit_components package
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_response.dart'; // Import the dashboard_response.dart file from the digit_dss package
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart'; // Import the dio package for HTTP client functionality
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart'; // Import the isar package for database management

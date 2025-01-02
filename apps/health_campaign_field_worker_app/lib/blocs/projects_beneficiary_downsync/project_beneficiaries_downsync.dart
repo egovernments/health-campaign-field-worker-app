@@ -4,16 +4,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:disk_space/disk_space.dart';
+import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
-import '../../data/network_manager.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../models/downsync/downsync.dart';
 import '../../utils/background_service.dart';
@@ -31,25 +31,22 @@ class BeneficiaryDownSyncBloc
       downSyncRemoteRepository;
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
       downSyncLocalRepository;
-  final NetworkManager networkManager;
   final BandwidthCheckRepository bandwidthCheckRepository;
   final LocalRepository<HouseholdModel, HouseholdSearchModel>
-      householdLocalRepository;
+  householdLocalRepository;
   final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-      householdMemberLocalRepository;
+  householdMemberLocalRepository;
   final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-      projectBeneficiaryLocalRepository;
+  projectBeneficiaryLocalRepository;
   final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
   final LocalRepository<SideEffectModel, SideEffectSearchModel>
-      sideEffectLocalRepository;
+  sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
       referralLocalRepository;
-
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
     required this.downSyncLocalRepository,
-    required this.networkManager,
     required this.bandwidthCheckRepository,
     required this.householdLocalRepository,
     required this.householdMemberLocalRepository,
@@ -161,9 +158,8 @@ class BeneficiaryDownSyncBloc
     // [TODO: Move the function DiskSpace.getFreeDiskSpace to utils
     diskSpace = await DiskSpace
         .getFreeDiskSpace; // Returns the device available space in MB
-    var serverData = (event.initialServerCount * 150 * 1);
     // diskSpace in MB * 1000 comparison with serverTotalCount * 150KB * Number of entities * 2
-    if ((diskSpace ?? 0) * 1000 < serverData) {
+    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 150 * 2)) {
       emit(const BeneficiaryDownSyncState.insufficientStorage());
     } else {
       try {
@@ -211,7 +207,9 @@ class BeneficiaryDownSyncBloc
             if (downSyncResults.isNotEmpty) {
               writeToFile(event.projectId, event.boundaryCode,
                   event.boundaryName, downSyncResults);
-              await networkManager
+              await SyncServiceSingleton()
+                  .entityMapper
+                  ?
                   .writeToEntityDB(event.boundaryCode, downSyncResults, [
                 individualLocalRepository,
                 householdLocalRepository,

@@ -39,7 +39,7 @@ class AttendanceDateTimeManagement {
   }
 
   static String getDateString(DateTime date) {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final DateFormat formatter = DateFormat('dd/MM/yyyy');
     return formatter.format(date);
   }
 

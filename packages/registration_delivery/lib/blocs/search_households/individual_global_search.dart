@@ -79,14 +79,14 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
           clientReferenceId:
               individualClientReferenceIds.map((e) => e.toString()).toList()));
 
-      final List<HouseholdMemberModel> householdMembers =
-          await fetchHouseholdMembersBulk(
+      householdMembersList = await fetchHouseholdMembersBulk(
         individualClientReferenceIds,
         null,
       );
 
-      final houseHoldIds =
-          householdMembers.map((e) => e.householdClientReferenceId!).toList();
+      final houseHoldIds = householdMembersList
+          .map((e) => e.householdClientReferenceId!)
+          .toList();
 
       householdList = await household.search(
         HouseholdSearchModel(
@@ -94,25 +94,31 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         ),
       );
 
-      var finalHouseholdMembersList = await fetchHouseholdMembersBulk(
-          null, householdList.map((e) => e.clientReferenceId).toList());
+      individualsList = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembersList
+              .map((e) => e.individualClientReferenceId.toString())
+              .toList(),
+        ),
+      );
 
-      individualsList = await individual.search(IndividualSearchModel(
-          clientReferenceId: finalHouseholdMembersList
-              .map((e) => e.individualClientReferenceId!)
-              .toList()));
-
-      projectBeneficiariesList = await projectBeneficiary.search(
-          ProjectBeneficiarySearchModel(
-              projectId: [RegistrationDeliverySingleton().projectId.toString()],
-              beneficiaryClientReferenceId:
-                  individualsList.map((e) => e.clientReferenceId).toList()));
+      individualClientReferenceIds = householdMembersList
+          .map((e) => e.individualClientReferenceId.toString())
+          .toList();
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
-              projectId: [RegistrationDeliverySingleton().projectId.toString()],
+              projectId: [
+            event.globalSearchParams.filter!.contains(Status.registered.name)
+                ? RegistrationDeliverySingleton().projectId.toString()
+                : ''
+          ],
               beneficiaryClientReferenceId:
                   individualClientReferenceIds.map((e) => e).toList()));
+
+      individualsList = await individual.search(
+        IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
+      );
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -122,7 +128,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       referralsList = tasksRelated[2];
 
       await _processHouseholdEntries(
-          finalHouseholdMembersList,
+          householdMembersList,
           householdList,
           individualsList,
           projectBeneficiariesList,
@@ -155,14 +161,6 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         null,
       );
 
-      final List<String> individualClientReferenceIds = householdMembersList
-          .map((e) => e.individualClientReferenceId.toString())
-          .toList();
-
-      individualsList = await individual.search(
-        IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
-      );
-
       late List<String> houseHoldClientReferenceIds = [];
 
       houseHoldClientReferenceIds = householdMembersList
@@ -173,19 +171,32 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         clientReferenceId: houseHoldClientReferenceIds,
       ));
 
-      var finalHouseholdMembersList = await fetchHouseholdMembersBulk(
-          null, householdList.map((e) => e.clientReferenceId).toList());
+      householdMembersList = await fetchHouseholdMembersBulk(
+        null,
+        houseHoldClientReferenceIds,
+      );
 
-      individualsList = await individual.search(IndividualSearchModel(
-          clientReferenceId: finalHouseholdMembersList
-              .map((e) => e.individualClientReferenceId!)
-              .toList()));
+      individualsList = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembersList
+              .map((e) => e.individualClientReferenceId.toString())
+              .toList(),
+        ),
+      );
+
+      final List<String> individualClientReferenceIds = householdMembersList
+          .map((e) => e.individualClientReferenceId.toString())
+          .toList();
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
-                  individualsList.map((e) => e.clientReferenceId).toList()));
+                  individualClientReferenceIds.map((e) => e).toList()));
+
+      individualsList = await individual.search(
+        IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
+      );
 
       finalResults.forEach((element) {
         taskList.add(element);
@@ -200,7 +211,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
 
       // Process household entries and add to containers
       await _processHouseholdEntries(
-        finalHouseholdMembersList,
+        householdMembersList,
         householdList,
         individualsList,
         projectBeneficiariesList,
@@ -221,7 +232,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
               individualClientReferenceIds.map((e) => e.toString()).toList()));
 
       // Search for individual results using the extracted IDs and search text.
-      final List<HouseholdMemberModel> householdMembers =
+      List<HouseholdMemberModel> householdMembers =
           await fetchHouseholdMembersBulk(
         individualClientReferenceIds,
         null,
@@ -233,19 +244,24 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
             .toList(),
       ));
 
-      var finalHouseholdMembersList = await fetchHouseholdMembersBulk(
-          null, householdList.map((e) => e.clientReferenceId).toList());
+      householdMembers = await fetchHouseholdMembersBulk(
+        null,
+        householdList.map((e) => e.clientReferenceId).toList(),
+      );
 
-      individualsList = await individual.search(IndividualSearchModel(
-          clientReferenceId: finalHouseholdMembersList
-              .map((e) => e.individualClientReferenceId!)
-              .toList()));
+      individualsList = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembers
+              .map((e) => e.individualClientReferenceId.toString())
+              .toList(),
+        ),
+      );
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
-                  individualsList.map((e) => e.clientReferenceId).toList()));
+                  individualClientReferenceIds.map((e) => e).toList()));
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -255,7 +271,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       referralsList = tasksRelated[2];
 
       await _processHouseholdEntries(
-          finalHouseholdMembersList,
+          householdMembers,
           householdList,
           individualsList,
           projectBeneficiariesList,
@@ -362,7 +378,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
     if (projectBeneficiariesList.isNotEmpty) {
       if (taskList.isEmpty) {
         taskList =
-            await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
+            await fetchTaskByProjectBeneficiary(projectBeneficiariesList);
       }
       sideEffectsList =
           await sideEffectDataRepository.search(SideEffectSearchModel(

@@ -3,15 +3,16 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:survey_form/survey_form.dart';
 
+import '../utils/constants.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
-import '../utils/i18_key_constants.dart' as i18;
-import '../utils/constants.dart';
 import '../widgets/no_result_card.dart';
 
 @RoutePage()
@@ -36,6 +37,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
         header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
+        enableFixedDigitButton: true,
         footer: BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
             return state.maybeWhen(
@@ -45,14 +47,13 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                     ? DigitCard(
                         cardType: CardType.primary,
                         margin: const EdgeInsets.only(top: spacer2),
-                        padding: const EdgeInsets.all(spacer2),
                         children: [
-                            Button(
+                            DigitButton(
                               mainAxisSize: MainAxisSize.max,
                               label: localizations
                                   .translate(i18.common.corecommonclose),
-                              type: ButtonType.primary,
-                              size: ButtonSize.large,
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large,
                               onPressed: () {
                                 context.read<ServiceBloc>().add(
                                       ServiceResetEvent(serviceList: value1),
@@ -77,14 +78,17 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                               ...serviceList
                                   .map((e) => e.serviceDefId != null
                                       ? Padding(
-                                        padding: const EdgeInsets.all(spacer2),
-                                        child: DigitCard(
-                                            cardType: CardType.primary,
-                                            children: [
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
+                                          child: DigitCard(
+                                              cardType: CardType.primary,
+                                              children: [
                                                 Align(
-                                                  alignment: Alignment.centerLeft,
+                                                  alignment:
+                                                      Alignment.centerLeft,
                                                   child: Text(
-                                                    DateFormat(Constants.SurveyFormPreviewDateFormat)
+                                                    DateFormat(Constants
+                                                            .SurveyFormPreviewDateFormat)
                                                         .format(
                                                       DateFormat(Constants
                                                               .defaultDateFormat)
@@ -107,13 +111,16 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                                         ),
                                                       ),
                                                     ),
-                                                    Button(
-                                                      label: localizations.translate(
+                                                    DigitButton(
+                                                      label: localizations
+                                                          .translate(
                                                         i18.searchBeneficiary
                                                             .iconLabel,
                                                       ),
-                                                      type: ButtonType.secondary,
-                                                      size: ButtonSize.medium,
+                                                      type: DigitButtonType
+                                                          .secondary,
+                                                      size: DigitButtonSize
+                                                          .medium,
                                                       onPressed: () {
                                                         context
                                                             .read<ServiceBloc>()
@@ -127,7 +134,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                                   ],
                                                 ),
                                               ]),
-                                      )
+                                        )
                                       : const Offstage())
                                   .toList(),
                             ],
@@ -152,64 +159,77 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                             item2,
                           ) {
                             return DigitCard(
-                              cardType: CardType.primary,
-                              children: [
-                                Column(
+                                cardType: CardType.primary,
                                 children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(spacer2),
-                                      child: Text(
-                                        localizations.translate(
-                                          item2?.code ?? '',
-                                        ),
-                                        style: textTheme.headingXl,
-                                      ),
-                                    ),
-                                  ),
-                                  ...(selectedService.attributes ?? [])
-                                      .where((a) =>
-                                          a.value !=
-                                              i18.surveyForm
-                                                  .notSelectedKey &&
-                                          a.value != '')
-                                      .map(
-                                        (e) => Padding(
-                                          padding: const EdgeInsets.all(spacer2),
-                                          child: Align(
-                                            alignment: AlignmentDirectional.topStart,
-                                            child: LabelValueList(
-                                                items: [
-                                                  LabelValuePair(
-                                                      label: localizations.translate(
-                                                        "${item2?.code ?? ''}.${e.attributeCode!}",
-                                                      ),
-                                                      value: e.dataType ==
-                                                          'SingleValueList'
-                                                          ? localizations
-                                                          .translate(
-                                                        'CORE_COMMON_${e.value.toString().toUpperCase()}',
-                                                      )
-                                                          : e.value??"",
-                                                      isInline: false,
-                                                  ),
-                                                  if(e.additionalDetails!='' && e.additionalDetails!=null)...[
-                                                    LabelValuePair(
-                                                      label: localizations.translate("${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",),
-                                                      value: localizations.translate(e.additionalDetails,),
-                                                      isInline: false,
-                                                      labelTextStyle: textTheme.bodyL,
-                                                    )
-                                                  ]
-                                                ]
+                                  Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
+                                          child: Text(
+                                            localizations.translate(
+                                              item2?.code ?? '',
                                             ),
+                                            style: textTheme.headingXl,
                                           ),
                                         ),
-                                  )
-                                ].toList(),
-                              ),]
-                            );
+                                      ),
+                                      ...(selectedService.attributes ?? [])
+                                          .where((a) =>
+                                              a.value !=
+                                                  i18.surveyForm
+                                                      .notSelectedKey &&
+                                              a.value != '')
+                                          .map(
+                                            (e) => Padding(
+                                              padding:
+                                                  const EdgeInsets.all(spacer2),
+                                              child: Align(
+                                                alignment: AlignmentDirectional
+                                                    .topStart,
+                                                child:
+                                                    LabelValueSummary(items: [
+                                                  LabelValueItem(
+                                                    label:
+                                                        localizations.translate(
+                                                      "${item2?.code ?? ''}.${e.attributeCode!}",
+                                                    ),
+                                                    value: e.dataType ==
+                                                            'SingleValueList'
+                                                        ? localizations
+                                                            .translate(
+                                                            '${item2?.code ?? ''}.${e.value.toString().toUpperCase()}',
+                                                          )
+                                                        : e.value ?? "",
+                                                    isInline: false,
+                                                  ),
+                                                  if (e.additionalDetails !=
+                                                          '' &&
+                                                      e.additionalDetails !=
+                                                          null) ...[
+                                                    LabelValueItem(
+                                                      label: localizations
+                                                          .translate(
+                                                        "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
+                                                      ),
+                                                      value: localizations
+                                                          .translate(
+                                                        e.additionalDetails,
+                                                      ),
+                                                      isInline: false,
+                                                      labelTextStyle:
+                                                          textTheme.bodyL,
+                                                    )
+                                                  ]
+                                                ]),
+                                              ),
+                                            ),
+                                          )
+                                    ].toList(),
+                                  ),
+                                ]);
                           },
                           orElse: () => const Offstage(),
                         );

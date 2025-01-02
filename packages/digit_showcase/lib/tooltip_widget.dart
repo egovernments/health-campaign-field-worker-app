@@ -452,7 +452,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                       TextButton(
                                         style: TextButton.styleFrom(
                                           foregroundColor:
-                                              theme.colorScheme.onBackground,
+                                              theme.colorScheme.surface,
                                           tapTargetSize:
                                               MaterialTapTargetSize.shrinkWrap,
                                         ),
@@ -535,7 +535,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
     final textPainter = TextPainter(
       text: TextSpan(text: text, style: style),
       maxLines: 1,
-      textScaleFactor: MediaQuery.of(context).textScaleFactor,
+      textScaler: MediaQuery.of(context).textScaler,
       textDirection: TextDirection.ltr,
     )..layout();
     return textPainter.size;

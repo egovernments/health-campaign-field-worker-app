@@ -19,8 +19,8 @@ import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
+import '../../widgets/localized.dart';
 
 @RoutePage()
 class SideEffectsPage extends LocalizedStatefulWidget {
@@ -85,12 +85,12 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                     margin: const EdgeInsets.only(top: spacer2),
                                     padding: const EdgeInsets.all(spacer2),
                                     children: [
-                                      Button(
+                                      DigitButton(
                                         label: localizations.translate(
                                           i18.common.coreCommonNext,
                                         ),
-                                        type: ButtonType.primary,
-                                        size: ButtonSize.large,
+                                        type: DigitButtonType.primary,
+                                        size: DigitButtonSize.large,
                                         mainAxisSize: MainAxisSize.max,
                                         onPressed: () async {
                                           if (symptomsValues.any((e) => e)) {
@@ -112,7 +112,7 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                       .dialogContent,
                                                 ),
                                                 actions: [
-                                                  Button(
+                                                  DigitButton(
                                                       label: localizations
                                                           .translate(
                                                         i18.common
@@ -144,11 +144,27 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                               SideEffectsSubmitEvent(
                                                                 SideEffectModel(
                                                                   id: null,
+                                                                  additionalFields:
+                                                                      SideEffectAdditionalFields(
+                                                                    version: 1,
+                                                                    fields: [
+                                                                      AdditionalField(
+                                                                          "boundaryCode",
+                                                                          RegistrationDeliverySingleton()
+                                                                              .boundary
+                                                                              ?.code),
+                                                                    ],
+                                                                  ),
                                                                   taskClientReferenceId:
                                                                       widget
                                                                           .tasks
                                                                           .last
                                                                           .clientReferenceId,
+                                                                  projectBeneficiaryClientReferenceId:
+                                                                      widget
+                                                                          .tasks
+                                                                          .last
+                                                                          .projectBeneficiaryClientReferenceId,
                                                                   projectId:
                                                                       RegistrationDeliverySingleton()
                                                                           .projectId,
@@ -199,9 +215,11 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                           rootNavigator: true,
                                                         ).pop(true);
                                                       },
-                                                      type: ButtonType.primary,
-                                                      size: ButtonSize.large),
-                                                  Button(
+                                                      type: DigitButtonType
+                                                          .primary,
+                                                      size: DigitButtonSize
+                                                          .large),
+                                                  DigitButton(
                                                       label: localizations
                                                           .translate(
                                                         i18.common
@@ -212,38 +230,16 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                             context,
                                                             rootNavigator: true,
                                                           ).pop(false),
-                                                      type:
-                                                          ButtonType.secondary,
-                                                      size: ButtonSize.large)
+                                                      type: DigitButtonType
+                                                          .secondary,
+                                                      size:
+                                                          DigitButtonSize.large)
                                                 ],
                                               ),
                                             );
 
                                             if (shouldSubmit ?? false) {
-                                              final reloadState = context.read<
-                                                  HouseholdOverviewBloc>();
-
-                                              Future.delayed(
-                                                const Duration(
-                                                    milliseconds: 500),
-                                                () {
-                                                  reloadState.add(
-                                                    HouseholdOverviewReloadEvent(
-                                                      projectId:
-                                                          RegistrationDeliverySingleton()
-                                                              .projectId!,
-                                                      projectBeneficiaryType:
-                                                          RegistrationDeliverySingleton()
-                                                              .beneficiaryType!,
-                                                    ),
-                                                  );
-                                                },
-                                              ).then((value) =>
-                                                  context.router.push(
-                                                    HouseholdAcknowledgementRoute(
-                                                      enableViewHousehold: true,
-                                                    ),
-                                                  ));
+                                              submitSideEffects();
                                             }
                                           } else {
                                             setState(() {
@@ -278,28 +274,33 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                               Column(
                                                 children: symptomTypesOptions
                                                     .mapIndexed(
-                                                      (i, e) => DigitCheckbox(
-                                                        label: localizations
-                                                            .translate(
-                                                          e.key,
+                                                      (i, e) => Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(spacer2),
+                                                        child: DigitCheckbox(
+                                                          label: localizations
+                                                              .translate(
+                                                            e.key,
+                                                          ),
+                                                          value:
+                                                              symptomsValues[i],
+                                                          onChanged: (value) {
+                                                            stateSetter(
+                                                              () {
+                                                                symptomsValues[
+                                                                        i] =
+                                                                    !symptomsValues[
+                                                                        i];
+                                                                symptomsSelected =
+                                                                    symptomsValues
+                                                                        .any(
+                                                                  (e) => e,
+                                                                );
+                                                              },
+                                                            );
+                                                          },
                                                         ),
-                                                        value:
-                                                            symptomsValues[i],
-                                                        onChanged: (value) {
-                                                          stateSetter(
-                                                            () {
-                                                              symptomsValues[
-                                                                      i] =
-                                                                  !symptomsValues[
-                                                                      i];
-                                                              symptomsSelected =
-                                                                  symptomsValues
-                                                                      .any(
-                                                                (e) => e,
-                                                              );
-                                                            },
-                                                          );
-                                                        },
                                                       ),
                                                     )
                                                     .toList(),
@@ -344,5 +345,26 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
         },
       ),
     );
+  }
+
+  void submitSideEffects() async {
+    final reloadState = context.read<HouseholdOverviewBloc>();
+
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () {
+        reloadState.add(
+          HouseholdOverviewReloadEvent(
+            projectId: RegistrationDeliverySingleton().projectId!,
+            projectBeneficiaryType:
+                RegistrationDeliverySingleton().beneficiaryType!,
+          ),
+        );
+      },
+    ).then((value) => context.router.push(
+          HouseholdAcknowledgementRoute(
+            enableViewHousehold: true,
+          ),
+        ));
   }
 }

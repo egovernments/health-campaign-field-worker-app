@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
+import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../../blocs/referral_recon_service_definition.dart';
@@ -23,6 +25,7 @@ import '../../widgets/localized.dart';
 @RoutePage()
 class ReferralReasonChecklistPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
+
   const ReferralReasonChecklistPage({
     super.key,
     this.referralClientRefId,
@@ -60,6 +63,7 @@ class _ReferralReasonChecklistPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return PopScope(
       canPop: false,
@@ -86,16 +90,16 @@ class _ReferralReasonChecklistPageState
               orElse: () => Text(state.runtimeType.toString()),
               serviceDefinitionFetch: (value) {
                 return ScrollableContent(
-                  enableFixedButton: true,
+                  enableFixedDigitButton: true,
                   footer: DigitCard(
                       cardType: CardType.primary,
                       padding: EdgeInsets.all(theme.spacerTheme.spacer2),
                       children: [
-                        Button(
-                          size: ButtonSize.large,
+                        DigitButton(
+                          size: DigitButtonSize.large,
                           label: localizations
                               .translate(i18.common.coreCommonSubmit),
-                          type: ButtonType.primary,
+                          type: DigitButtonType.primary,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
                             final router = context.router;
@@ -141,13 +145,13 @@ class _ReferralReasonChecklistPageState
                                       i18.checklist.checklistDialogDescription,
                                     ),
                                     actions: [
-                                      Button(
+                                      DigitButton(
                                         label: localizations.translate(
                                           i18.checklist
                                               .checklistDialogPrimaryAction,
                                         ),
-                                        type: ButtonType.primary,
-                                        size: ButtonSize.large,
+                                        type: DigitButtonType.primary,
+                                        size: DigitButtonSize.large,
                                         onPressed: () {
                                           List<ServiceAttributesModel>
                                               attributes = [];
@@ -193,35 +197,64 @@ class _ReferralReasonChecklistPageState
                                           context.read<ServiceBloc>().add(
                                                 ServiceCreateEvent(
                                                   serviceModel: ServiceModel(
-                                                    createdAt: DigitDateUtils
-                                                        .getDateFromTimestamp(
-                                                      DateTime.now()
-                                                          .toLocal()
-                                                          .millisecondsSinceEpoch,
-                                                      dateFormat:
-                                                          defaultDateTimeFormat,
-                                                    ),
-                                                    tenantId: value
-                                                        .selectedServiceDefinition!
-                                                        .tenantId,
-                                                    clientId: widget
-                                                        .referralClientRefId
-                                                        .toString(),
-                                                    serviceDefId: value
-                                                        .selectedServiceDefinition
-                                                        ?.id,
-                                                    attributes: attributes,
-                                                    rowVersion: 1,
-                                                    accountId:
-                                                        ReferralReconSingleton()
-                                                            .projectId,
-                                                    additionalDetails: {
-                                                      "boundaryCode":
+                                                      createdAt: DigitDateUtils
+                                                          .getDateFromTimestamp(
+                                                        DateTime.now()
+                                                            .toLocal()
+                                                            .millisecondsSinceEpoch,
+                                                        dateFormat:
+                                                            defaultDateTimeFormat,
+                                                      ),
+                                                      tenantId: value
+                                                          .selectedServiceDefinition!
+                                                          .tenantId,
+                                                      clientId: widget
+                                                          .referralClientRefId
+                                                          .toString(),
+                                                      serviceDefId: value
+                                                          .selectedServiceDefinition
+                                                          ?.id,
+                                                      attributes: attributes,
+                                                      rowVersion: 1,
+                                                      accountId:
                                                           ReferralReconSingleton()
-                                                              .boundary
-                                                              ?.code
-                                                    },
-                                                  ),
+                                                              .projectId,
+                                                      auditDetails:
+                                                          AuditDetails(
+                                                        createdBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      clientAuditDetails:
+                                                          ClientAuditDetails(
+                                                        createdBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      additionalFields:
+                                                          ServiceAdditionalFields(
+                                                              version: 1,
+                                                              fields: [
+                                                            AdditionalField(
+                                                                'boundaryCode',
+                                                                SurveyFormSingleton()
+                                                                    .boundary
+                                                                    ?.code)
+                                                          ])),
                                                 ),
                                               );
 
@@ -231,13 +264,13 @@ class _ReferralReasonChecklistPageState
                                           ).pop(true);
                                         },
                                       ),
-                                      Button(
+                                      DigitButton(
                                         label: localizations.translate(
                                           i18.checklist
                                               .checklistDialogSecondaryAction,
                                         ),
-                                        type: ButtonType.secondary,
-                                        size: ButtonSize.large,
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large,
                                         onPressed: () {
                                           Navigator.of(
                                             context,
@@ -266,7 +299,7 @@ class _ReferralReasonChecklistPageState
                             '${localizations.translate(
                               value.selectedServiceDefinition!.code.toString(),
                             )} ${localizations.translate(i18.checklist.checklist)}',
-                            style: theme.textTheme.displayMedium,
+                            style: textTheme.headingXl,
                             textAlign: TextAlign.left,
                           ),
                         ),
@@ -363,7 +396,7 @@ class _ReferralReasonChecklistPageState
                                         '${localizations.translate(
                                           '${value.selectedServiceDefinition?.code}.${e.code}',
                                         )} ${e.required == true ? '*' : ''}',
-                                        style: theme.textTheme.headlineSmall,
+                                        style: textTheme.headingS,
                                       ),
                                     ],
                                   ),
@@ -458,6 +491,7 @@ class _ReferralReasonChecklistPageState
     BuildContext context,
   ) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
@@ -490,7 +524,7 @@ class _ReferralReasonChecklistPageState
                 '${localizations.translate(
                   '${selectedServiceDefinition?.code}.${item.code}',
                 )} ${item.required == true ? '*' : ''}',
-                style: theme.textTheme.headlineSmall,
+                style: textTheme.headingS,
               ),
             ),
           ),
@@ -503,7 +537,7 @@ class _ReferralReasonChecklistPageState
                     child: Padding(
                       padding: EdgeInsets.only(left: theme.spacerTheme.spacer2),
                       child: RadioList(
-                        radioButtons: item.values != null
+                        radioDigitButtons: item.values != null
                             ? item.values!
                                 .where((e) => e != i18.checklist.notSelectedKey)
                                 .map((e) => RadioButtonModel(
@@ -579,7 +613,7 @@ class _ReferralReasonChecklistPageState
                             i18.common.corecommonRequired,
                           ),
                           style: TextStyle(
-                            color: theme.colorScheme.error,
+                            color: theme.colorTheme.alert.error,
                           ),
                         ),
                       ),
@@ -605,8 +639,6 @@ class _ReferralReasonChecklistPageState
         padding: const EdgeInsets.all(8.0),
         child: FormField<String>(
           validator: (value) {
-            print(value);
-            print(controller[index].text);
             // Custom validation logic
             if (((controller[index].text == '') && item.required == true)) {
               return localizations.translate("${item.code}_REQUIRED");
@@ -687,7 +719,7 @@ class _ReferralReasonChecklistPageState
                   '${localizations.translate(
                     '${selectedServiceDefinition?.code}.${item.code}',
                   )} ${item.required == true ? '*' : ''}',
-                  style: theme.textTheme.headlineSmall,
+                  style: textTheme.headingS,
                 ),
               ],
             ),
@@ -765,8 +797,8 @@ class _ReferralReasonChecklistPageState
                 : theme.colorTheme.paper.secondary,
             child: _buildChecklist(
               matchingChildItem,
-              initialAttributes?.indexOf(matchingChildItem) ??
-                  parentIndex, // Pass parentIndex here as we're building at the same level
+              initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
+              // Pass parentIndex here as we're building at the same level
               selectedServiceDefinition,
               context,
             ),

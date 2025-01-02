@@ -4,10 +4,8 @@ import 'inventory_router.gm.dart';
 
 @AutoRouterConfig.module()
 class InventoryRoute extends $InventoryRoute {
-  @override
   RouteType get defaultRouteType => const RouteType.material();
 
-  @override
   List<AutoRoute> routes = [
     AutoRoute(
       page: ManageStocksRoute.page,

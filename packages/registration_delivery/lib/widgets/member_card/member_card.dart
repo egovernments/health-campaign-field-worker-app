@@ -105,53 +105,56 @@ class MemberCard extends StatelessWidget {
                   Positioned(
                     child: Align(
                       alignment: Alignment.topRight,
-                      child: Button(
-                        isDisabled: (projectBeneficiaries ?? []).isEmpty,
-                        onPressed: () => showDialog(
-                          context: context,
-                          builder: (ctx) => ActionCard(
-                            onOutsideTap: () {
-                              Navigator.of(context, rootNavigator: true).pop();
-                            },
-                            actions: [
-                              Button(
-                                prefixIcon: Icons.person,
-                                label: localizations.translate(
-                                  i18.memberCard.assignAsHouseholdhead,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: spacer2),
+                        child: DigitButton(
+                          isDisabled: (projectBeneficiaries ?? []).isEmpty,
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (ctx) => DigitActionCard(
+                              onOutsideTap: () {
+                                Navigator.of(context, rootNavigator: true).pop();
+                              },
+                              actions: [
+                                DigitButton(
+                                  prefixIcon: Icons.person,
+                                  label: localizations.translate(
+                                    i18.memberCard.assignAsHouseholdhead,
+                                  ),
+                                  isDisabled: isHead ? true : false,
+                                  onPressed: setAsHeadAction,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
                                 ),
-                                isDisabled: isHead ? true : false,
-                                onPressed: setAsHeadAction,
-                                type: ButtonType.secondary,
-                                size: ButtonSize.large,
-                              ),
-                              Button(
-                                prefixIcon: Icons.edit,
-                                label: localizations.translate(
-                                  i18.memberCard.editIndividualDetails,
+                                DigitButton(
+                                  prefixIcon: Icons.edit,
+                                  label: localizations.translate(
+                                    i18.memberCard.editIndividualDetails,
+                                  ),
+                                  onPressed: editMemberAction,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
                                 ),
-                                onPressed: editMemberAction,
-                                type: ButtonType.secondary,
-                                size: ButtonSize.large,
-                              ),
-                              Button(
-                                prefixIcon: Icons.delete,
-                                label: localizations.translate(
-                                  i18.memberCard.deleteIndividualActionText,
+                                DigitButton(
+                                  prefixIcon: Icons.delete,
+                                  label: localizations.translate(
+                                    i18.memberCard.deleteIndividualActionText,
+                                  ),
+                                  isDisabled: isHead ? true : false,
+                                  onPressed: deleteMemberAction,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
                                 ),
-                                isDisabled: isHead ? true : false,
-                                onPressed: deleteMemberAction,
-                                type: ButtonType.secondary,
-                                size: ButtonSize.large,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
+                          label: localizations.translate(
+                            i18.memberCard.editDetails,
+                          ),
+                          prefixIcon: Icons.edit,
+                          type: DigitButtonType.tertiary,
+                          size: DigitButtonSize.medium,
                         ),
-                        label: localizations.translate(
-                          i18.memberCard.editDetails,
-                        ),
-                        prefixIcon: Icons.edit,
-                        type: ButtonType.tertiary,
-                        size: ButtonSize.medium,
                       ),
                     ),
                   ),
@@ -181,8 +184,7 @@ class MemberCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(left: spacer1, bottom: spacer2),
+                padding: const EdgeInsets.only(left: spacer1, bottom: spacer2),
                 child: Offstage(
                   offstage: beneficiaryType != BeneficiaryType.individual,
                   child: !isDelivered ||
@@ -191,7 +193,7 @@ class MemberCard extends StatelessWidget {
                           isBeneficiaryReferred
                       ? Align(
                           alignment: Alignment.centerLeft,
-                          child: Button(
+                          child: DigitButton(
                             prefixIcon: Icons.info_rounded,
                             label: localizations.translate(
                               isNotEligible
@@ -207,15 +209,15 @@ class MemberCard extends StatelessWidget {
                             ),
                             textColor: DigitTheme.instance.colorScheme.error,
                             iconColor: DigitTheme.instance.colorScheme.error,
-                            type: ButtonType.tertiary,
-                            size: ButtonSize.medium,
+                            type: DigitButtonType.tertiary,
+                            size: DigitButtonSize.medium,
                             isDisabled: true,
                             onPressed: () {},
                           ),
                         )
                       : Align(
                           alignment: Alignment.centerLeft,
-                          child: Button(
+                          child: DigitButton(
                             prefixIcon: Icons.check_circle,
                             label: localizations.translate(
                               i18.householdOverView
@@ -226,8 +228,8 @@ class MemberCard extends StatelessWidget {
                                 .instance.colorScheme.onSurfaceVariant,
                             iconColor: DigitTheme
                                 .instance.colorScheme.onSurfaceVariant,
-                            type: ButtonType.tertiary,
-                            size: ButtonSize.medium,
+                            type: DigitButtonType.tertiary,
+                            size: DigitButtonSize.medium,
                             onPressed: () {},
                           ),
                         ),
@@ -247,14 +249,14 @@ class MemberCard extends StatelessWidget {
                               isBeneficiaryReferred
                           ? const Offstage()
                           : !isNotEligible
-                              ? Button(
+                              ? DigitButton(
                                   mainAxisSize: MainAxisSize.max,
                                   isDisabled:
                                       (projectBeneficiaries ?? []).isEmpty
                                           ? true
                                           : false,
-                                  type: ButtonType.primary,
-                                  size: ButtonSize.large,
+                                  type: DigitButtonType.primary,
+                                  size: DigitButtonSize.large,
                                   label: allDosesDelivered(
                                             tasks,
                                             context.selectedCycle,
@@ -324,20 +326,20 @@ class MemberCard extends StatelessWidget {
                                   ) &&
                                   !checkStatus(tasks, context.selectedCycle)))
                           ? const Offstage()
-                          : Button(
+                          : DigitButton(
                               label: localizations.translate(
                                 i18.memberCard.unableToDeliverLabel,
                               ),
                               isDisabled: (projectBeneficiaries ?? []).isEmpty
                                   ? true
                                   : false,
-                              type: ButtonType.secondary,
-                              size: ButtonSize.large,
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.large,
                               mainAxisSize: MainAxisSize.max,
                               onPressed: () async {
                                 await showDialog(
                                   context: context,
-                                  builder: (ctx) => ActionCard(
+                                  builder: (ctx) => DigitActionCard(
                                     onOutsideTap: () {
                                       Navigator.of(
                                         context,
@@ -345,13 +347,13 @@ class MemberCard extends StatelessWidget {
                                       ).pop();
                                     },
                                     actions: [
-                                      Button(
+                                      DigitButton(
                                         label: localizations.translate(
                                           i18.memberCard
                                               .beneficiaryRefusedLabel,
                                         ),
-                                        type: ButtonType.secondary,
-                                        size: ButtonSize.large,
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large,
                                         onPressed: () {
                                           Navigator.of(context,
                                                   rootNavigator: true)
@@ -441,12 +443,12 @@ class MemberCard extends StatelessWidget {
                                           );
                                         },
                                       ),
-                                      Button(
+                                      DigitButton(
                                         label: localizations.translate(
                                           i18.memberCard.referBeneficiaryLabel,
                                         ),
-                                        type: ButtonType.secondary,
-                                        size: ButtonSize.large,
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large,
                                         onPressed: () async {
                                           Navigator.of(
                                             context,
@@ -461,7 +463,7 @@ class MemberCard extends StatelessWidget {
                                           );
                                         },
                                       ),
-                                      Button(
+                                      DigitButton(
                                         label: localizations.translate(
                                           i18.memberCard
                                               .recordAdverseEventsLabel,
@@ -470,8 +472,8 @@ class MemberCard extends StatelessWidget {
                                                 (tasks ?? []).isNotEmpty
                                             ? false
                                             : true,
-                                        type: ButtonType.secondary,
-                                        size: ButtonSize.large,
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large,
                                         mainAxisSize: MainAxisSize.max,
                                         onPressed: () async {
                                           Navigator.of(

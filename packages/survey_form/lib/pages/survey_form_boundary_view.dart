@@ -2,14 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../router/survey_form_router.gm.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
-import '../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class SurveyFormBoundaryViewPage extends LocalizedStatefulWidget {
@@ -39,20 +39,21 @@ class SurveyFormBoundaryViewPageState
         footer: DigitCard(
             cardType: CardType.primary,
             margin: const EdgeInsets.only(top: spacer2),
-            padding: const EdgeInsets.all(spacer2),
             children: [
-              Button(
-                type: ButtonType.primary,
+              DigitButton(
+                type: DigitButtonType.primary,
                 label: localizations.translate(
                   i18.common.coreCommonContinue,
                 ),
-                size: ButtonSize.large,
+                size: DigitButtonSize.large,
                 mainAxisSize: MainAxisSize.max,
                 onPressed: () => context.router.push(SurveyFormViewRoute()),
               ),
             ]),
         children: [
-          DigitCard(cardType: CardType.primary, children: [
+          DigitCard(
+              margin: const EdgeInsets.all(spacer2),
+              cardType: CardType.primary, children: [
             Text(
               localizations.translate(
                 i18.surveyForm.surveyFormDetailLabel,

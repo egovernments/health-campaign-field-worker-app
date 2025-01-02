@@ -1,7 +1,9 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
@@ -25,249 +27,105 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
     final router = context.router;
     final theme = Theme.of(context);
     final localizations = ComplaintsLocalization.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ScrollableContent(
-        enableFixedButton: true,
+        enableFixedDigitButton: true,
         header: Column(
           children: [
             const BackNavigationHelpHeaderWidget(),
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 20.0),
+                padding: const EdgeInsets.only(left: spacer2, top: spacer2, bottom: spacer2),
                 child: Text(
                   localizations
                       .translate(i18.complaints.complaintsDetailsLabel),
-                  style: theme.textTheme.displayMedium,
+                  style: textTheme.headingXl,
                 ),
               ),
             ),
           ],
         ),
-        footer: SizedBox(
-          child: DigitCard(
-            margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-            padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-            child: DigitElevatedButton(
-              onPressed: () {
-                router.pop();
-              },
-              child: Center(
-                child: Text(
-                  localizations.translate(i18.common.corecommonclose),
-                ),
+        footer: DigitCard(
+            cardType: CardType.primary,
+            margin: const EdgeInsets.only(top: spacer2),
+            children: [
+              DigitButton(
+                onPressed: () {
+                  router.pop();
+                },
+                label: localizations.translate(i18.common.corecommonclose),
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
               ),
-            ),
-          ),
-        ),
+            ]),
         children: [
           DigitCard(
-            child: Column(
+            margin: const EdgeInsets.all(spacer2),
+              cardType: CardType.primary,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          localizations
-                              .translate(i18.complaints.inboxNumberLabel),
-                          style: theme.textTheme.headlineSmall,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          complaint.serviceRequestId ??
-                              "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
-                          style: TextStyle(
-                            color: complaint.serviceRequestId != null
-                                ? theme.colorScheme.secondary
-                                : const DigitColors().woodsmokeBlack,
-                          ),
-                        ),
-                      ),
-                    ],
+            LabelValueSummary(
+              padding: EdgeInsets.zero,
+                items: [
+                  LabelValueItem(
+                      label: localizations.translate(i18.complaints.inboxNumberLabel),
+                      value: complaint.serviceRequestId ??
+                          "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
+                      valueTextStyle: complaint.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
+                    labelFlex: 5,
                   ),
-                ),
-                const DigitDivider(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          localizations
-                              .translate(i18.complaints.inboxTypeLabel),
-                          style: theme.textTheme.headlineSmall,
-                        ),
+                  LabelValueItem(
+                      label: localizations.translate(i18.complaints.inboxTypeLabel),
+                      value: localizations.translate(
+                        complaint.serviceCode.snakeCase.toUpperCase().trim(),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          localizations.translate(
-                            complaint.serviceCode.snakeCase
-                                .toUpperCase()
-                                .trim(),
-                          ),
-                        ),
-                      ),
-                    ],
+                    labelFlex: 5,
                   ),
-                ),
-                const DigitDivider(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          localizations
-                              .translate(i18.complaints.inboxDateLabel),
-                          style: theme.textTheme.headlineSmall,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          complaint.auditDetails?.createdTime.toDateTime
-                                  .getFormattedDate() ??
-                              "",
-                        ),
-                      ),
-                    ],
+                  LabelValueItem(
+                      label: localizations.translate(i18.complaints.inboxDateLabel),
+                      value: complaint.auditDetails?.createdTime.toDateTime
+                          .getFormattedDate() ??
+                          "",
+                    labelFlex: 5,
                   ),
-                ),
-                const DigitDivider(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          localizations
-                              .translate(i18.complaints.complainantName),
-                          style: theme.textTheme.headlineSmall,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          complaint.user.name ?? "",
-                        ),
-                      ),
-                    ],
+                  LabelValueItem(
+                    label: localizations.translate(i18.complaints.complainantName),
+                    value: complaint.user.name ?? "",
+                    labelFlex: 5,
                   ),
-                ),
-                const DigitDivider(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          localizations
-                              .translate(i18.complaints.inboxAreaLabel),
-                          style: theme.textTheme.headlineSmall,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          complaint.address.locality?.name ?? "",
-                        ),
-                      ),
-                    ],
+                  LabelValueItem(
+                    label: localizations.translate(i18.complaints.inboxAreaLabel),
+                    value: complaint.address.locality?.name ?? "",
+                    labelFlex: 5,
                   ),
-                ),
-                const DigitDivider(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          localizations.translate(
-                            i18.complaints.complainantContactNumber,
-                          ),
-                          style: theme.textTheme.headlineSmall,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          complaint.user.mobileNumber ?? "",
-                        ),
-                      ),
-                    ],
+                  LabelValueItem(
+                    label: localizations.translate(
+                      i18.complaints.complainantContactNumber,
+                    ),
+                    value: complaint.user.mobileNumber ?? "",
+                    labelFlex: 5,
                   ),
-                ),
-                const DigitDivider(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          localizations
-                              .translate(i18.complaints.inboxStatusLabel),
-                          style: theme.textTheme.headlineSmall,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          localizations.translate(
-                            "COMPLAINTS_STATUS_${complaint.applicationStatus.name.snakeCase.toUpperCase()}",
-                          ),
-                        ),
-                      ),
-                    ],
+                  LabelValueItem(
+                    label: localizations.translate(i18.complaints.inboxStatusLabel),
+                    value: localizations.translate(
+                      "COMPLAINTS_STATUS_${complaint.applicationStatus.name.snakeCase.toUpperCase()}",
+                    ),
+                    labelFlex: 5,
                   ),
-                ),
-                const DigitDivider(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          localizations
-                              .translate(i18.complaints.complaintDescription),
-                          style: theme.textTheme.headlineSmall,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          localizations.translate(
-                            complaint.description,
-                          ),
-                        ),
-                      ),
-                    ],
+                  LabelValueItem(
+                    label: localizations
+                        .translate(i18.complaints.complaintDescription),
+                    value: localizations.translate(
+                      complaint.description,
+                    ),
+                    labelFlex: 5,
                   ),
-                ),
-              ],
-            ),
-          ),
+                ]
+            )
+          ]),
         ],
       ),
     );

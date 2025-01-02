@@ -1,8 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Run analysis and tests
 
 on:
@@ -22,7 +17,13 @@ jobs:
       - name: Flutter action
         uses: subosito/flutter-action@v2.8.0
         with:
-          flutter-version: "3.16.5"
+          flutter-version: "3.22.1"
+
+      - name: Clean previous builds
+        run: flutter clean
+
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Generate models
         run: ./tools/install_bricks.sh
