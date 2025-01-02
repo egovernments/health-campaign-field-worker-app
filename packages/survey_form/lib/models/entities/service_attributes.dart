@@ -1,12 +1,13 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
-import 'package:digit_data_model/data_model.dart';
 part 'service_attributes.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ServiceAttributesSearchModel extends EntitySearchModel with ServiceAttributesSearchModelMappable {
+class ServiceAttributesSearchModel extends EntitySearchModel
+    with ServiceAttributesSearchModelMappable {
   final List<String>? clientReferenceId;
   final String? tenantId;
 
@@ -15,19 +16,19 @@ class ServiceAttributesSearchModel extends EntitySearchModel with ServiceAttribu
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   ServiceAttributesSearchModel.ignoreDeleted({
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ServiceAttributesModel extends EntityModel with ServiceAttributesModelMappable {
-
+class ServiceAttributesModel extends EntityModel
+    with ServiceAttributesModelMappable {
   static const schemaName = 'ServiceAttributes';
 
   final String? attributeCode;
@@ -52,9 +53,10 @@ class ServiceAttributesModel extends EntityModel with ServiceAttributesModelMapp
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   //Helper object to represents the data you want to insert or update in a table
   ServiceAttributesCompanion get companion {
@@ -83,11 +85,11 @@ class ServiceAttributesModel extends EntityModel with ServiceAttributesModelMapp
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ServiceAttributesAdditionalFields extends AdditionalFields with ServiceAttributesAdditionalFieldsMappable {
+class ServiceAttributesAdditionalFields extends AdditionalFields
+    with ServiceAttributesAdditionalFieldsMappable {
   ServiceAttributesAdditionalFields({
     super.schema = 'ServiceAttributes',
     required super.version,
     super.fields,
   });
 }
-

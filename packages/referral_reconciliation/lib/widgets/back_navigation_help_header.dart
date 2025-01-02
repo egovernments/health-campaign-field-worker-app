@@ -24,6 +24,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Padding(
       padding: EdgeInsets.all(theme.spacerTheme.spacer2 / 2),
@@ -36,7 +37,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                   Flexible(
                     child: TextButton.icon(
                       style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onBackground,
+                        foregroundColor: theme.colorTheme.primary.primary2,
                         padding: EdgeInsets.zero,
                       ),
                       onPressed: () {

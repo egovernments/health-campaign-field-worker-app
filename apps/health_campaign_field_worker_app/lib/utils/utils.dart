@@ -1,7 +1,6 @@
 library app_utils;
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
@@ -12,7 +11,6 @@ import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
@@ -25,7 +23,6 @@ import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
-import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
@@ -96,14 +93,14 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult == ConnectivityResult.wifi ||
-      connectivityResult == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+      connectivityResult.firstOrNull == ConnectivityResult.mobile;
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
   if (stopService) {
     if (isRunning) {
-      if (!isBackground && context != null) {
+      if (!isBackground && context != null && context.mounted) {
         if (context.mounted) {
           DigitToast.show(
             context,
@@ -407,103 +404,6 @@ initializeAllMappers() async {
     Future(() => complaints_mappers.initializeMappers())
   ];
   await Future.wait(initializations);
-}
-
-int getSyncCount(List<OpLog> oplogs) {
-  int count = oplogs.where((element) {
-    if (element.syncedDown == false && element.syncedUp == true) {
-      switch (element.entityType) {
-        case DataModelType.household:
-        case DataModelType.individual:
-        case DataModelType.householdMember:
-        case DataModelType.projectBeneficiary:
-        case DataModelType.task:
-        case DataModelType.stock:
-        case DataModelType.stockReconciliation:
-        case DataModelType.sideEffect:
-        case DataModelType.referral:
-        case DataModelType.hFReferral:
-        case DataModelType.attendance:
-        case DataModelType.service:
-          return true;
-        default:
-          return false;
-      }
-    } else {
-      switch (element.entityType) {
-        // add syncCount case for package
-        case DataModelType.household:
-        case DataModelType.individual:
-        case DataModelType.householdMember:
-        case DataModelType.projectBeneficiary:
-        case DataModelType.task:
-        case DataModelType.stock:
-        case DataModelType.stockReconciliation:
-        case DataModelType.service:
-        case DataModelType.complaints:
-        case DataModelType.sideEffect:
-        case DataModelType.referral:
-        case DataModelType.hFReferral:
-        case DataModelType.attendance:
-        case DataModelType.userLocation:
-          return true;
-        default:
-          return false;
-      }
-    }
-  }).length;
-
-  return count;
-}
-
-void createDbRecords(LocalRepository<EntityModel, EntitySearchModel> local,
-    List<Map<String, dynamic>> entityList, String key) async {
-  switch (key) {
-    case "Individuals":
-      final entity = entityList
-          .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
-          .toList();
-      await local.bulkCreate(entity);
-    case "Households":
-      final entity = entityList
-          .map((e) => HouseholdModelMapper.fromJson(jsonEncode(e)))
-          .toList();
-      await local.bulkCreate(entity);
-    case "HouseholdMembers":
-      final entity = entityList
-          .map(
-            (e) => HouseholdMemberModelMapper.fromJson(
-              jsonEncode(e),
-            ),
-          )
-          .toList();
-      await local.bulkCreate(entity);
-    case "ProjectBeneficiaries":
-      final entity = entityList
-          .map((e) => ProjectBeneficiaryModelMapper.fromJson(jsonEncode(e)))
-          .toList();
-      await local.bulkCreate(entity);
-    case "Tasks":
-      final entity = entityList
-          .map((e) => TaskModelMapper.fromJson(jsonEncode(e)))
-          .toList();
-      await local.bulkCreate(entity);
-    case "SideEffects":
-      final entity = entityList
-          .map((e) => SideEffectModelMapper.fromJson(jsonEncode(e)))
-          .toList();
-      await local.bulkCreate(entity);
-    case "Referrals":
-      final entity = entityList
-          .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
-          .toList();
-      await local.bulkCreate(entity);
-    default:
-      final entity = entityList
-          .map((e) => EntityModelMapper.fromJson(jsonEncode(e)))
-          .toList();
-      await local.bulkCreate(entity);
-  }
 }
 
 class LocalizationParams {

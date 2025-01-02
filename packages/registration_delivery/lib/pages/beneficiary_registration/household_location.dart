@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -107,7 +108,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   : true;
             },
             child: ScrollableContent(
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               header: const Column(
                 children: [
                   BackNavigationHelpHeaderWidget(
@@ -117,155 +118,159 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                 ],
               ),
               footer: DigitCard(
-                margin: const EdgeInsets.only(top: spacer2),
-                padding: const EdgeInsets.all(spacer2),
-                children: [BlocBuilder<LocationBloc, LocationState>(
-                  builder: (context, locationState) {
-                    return Button(
-                      label: localizations.translate(
-                        i18.householdLocation.actionLabel,
-                      ),
-                      type: ButtonType.primary,
-                      size: ButtonSize.large,
-                      mainAxisSize: MainAxisSize.max,
-                      onPressed: () {
-                        form.markAllAsTouched();
-                        if (!form.valid) return;
+                  margin: const EdgeInsets.only(top: spacer2),
+                  children: [
+                    BlocBuilder<LocationBloc, LocationState>(
+                      builder: (context, locationState) {
+                        return DigitButton(
+                          label: localizations.translate(
+                            i18.householdLocation.actionLabel,
+                          ),
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
+                          mainAxisSize: MainAxisSize.max,
+                          onPressed: () {
+                            form.markAllAsTouched();
+                            if (!form.valid) return;
 
-                        final addressLine1 =
-                            form.control(_addressLine1Key).value as String?;
-                        final addressLine2 =
-                            form.control(_addressLine2Key).value as String?;
-                        final landmark =
-                            form.control(_landmarkKey).value as String?;
-                        final postalCode =
-                            form.control(_postalCodeKey).value as String?;
-                        registrationState.maybeWhen(
-                          orElse: () {
-                            return;
-                          },
-                          create: (
-                            address,
-                            householdModel,
-                            individualModel,
-                            projectBeneficiaryModel,
-                            registrationDate,
-                            searchQuery,
-                            loading,
-                            isHeadOfHousehold,
-                          ) {
-                            var addressModel = AddressModel(
-                              addressLine1: addressLine1 != null &&
-                                      addressLine1.trim().isNotEmpty
-                                  ? addressLine1
-                                  : null,
-                              addressLine2: addressLine2 != null &&
-                                      addressLine2.trim().isNotEmpty
-                                  ? addressLine2
-                                  : null,
-                              landmark:
-                                  landmark != null && landmark.trim().isNotEmpty
+                            final addressLine1 =
+                                form.control(_addressLine1Key).value as String?;
+                            final addressLine2 =
+                                form.control(_addressLine2Key).value as String?;
+                            final landmark =
+                                form.control(_landmarkKey).value as String?;
+                            final postalCode =
+                                form.control(_postalCodeKey).value as String?;
+                            registrationState.maybeWhen(
+                              orElse: () {
+                                return;
+                              },
+                              create: (
+                                address,
+                                householdModel,
+                                individualModel,
+                                projectBeneficiaryModel,
+                                registrationDate,
+                                searchQuery,
+                                loading,
+                                isHeadOfHousehold,
+                              ) {
+                                var addressModel = AddressModel(
+                                  addressLine1: addressLine1 != null &&
+                                          addressLine1.trim().isNotEmpty
+                                      ? addressLine1
+                                      : null,
+                                  addressLine2: addressLine2 != null &&
+                                          addressLine2.trim().isNotEmpty
+                                      ? addressLine2
+                                      : null,
+                                  landmark: landmark != null &&
+                                          landmark.trim().isNotEmpty
                                       ? landmark
                                       : null,
-                              pincode: postalCode != null &&
-                                      postalCode.trim().isNotEmpty
-                                  ? postalCode
-                                  : null,
-                              type: AddressType.correspondence,
-                              latitude: form.control(_latKey).value ??
-                                  locationState.latitude,
-                              longitude: form.control(_lngKey).value ??
-                                  locationState.longitude,
-                              locationAccuracy:
-                                  form.control(_accuracyKey).value ??
-                                      locationState.accuracy,
-                              locality: LocalityModel(
-                                code: RegistrationDeliverySingleton()
-                                    .boundary!
-                                    .code!,
-                                name: RegistrationDeliverySingleton()
-                                    .boundary!
-                                    .name,
-                              ),
-                              tenantId:
-                                  RegistrationDeliverySingleton().tenantId,
-                              rowVersion: 1,
-                              auditDetails: AuditDetails(
-                                createdBy: RegistrationDeliverySingleton()
-                                    .loggedInUserUuid!,
-                                createdTime: context.millisecondsSinceEpoch(),
-                              ),
-                              clientAuditDetails: ClientAuditDetails(
-                                createdBy: RegistrationDeliverySingleton()
-                                    .loggedInUserUuid!,
-                                createdTime: context.millisecondsSinceEpoch(),
-                                lastModifiedBy: RegistrationDeliverySingleton()
-                                    .loggedInUserUuid,
-                                lastModifiedTime:
-                                    context.millisecondsSinceEpoch(),
-                              ),
-                            );
+                                  pincode: postalCode != null &&
+                                          postalCode.trim().isNotEmpty
+                                      ? postalCode
+                                      : null,
+                                  type: AddressType.correspondence,
+                                  latitude: form.control(_latKey).value ??
+                                      locationState.latitude,
+                                  longitude: form.control(_lngKey).value ??
+                                      locationState.longitude,
+                                  locationAccuracy:
+                                      form.control(_accuracyKey).value ??
+                                          locationState.accuracy,
+                                  locality: LocalityModel(
+                                    code: RegistrationDeliverySingleton()
+                                        .boundary!
+                                        .code!,
+                                    name: RegistrationDeliverySingleton()
+                                        .boundary!
+                                        .name,
+                                  ),
+                                  tenantId:
+                                      RegistrationDeliverySingleton().tenantId,
+                                  rowVersion: 1,
+                                  auditDetails: AuditDetails(
+                                    createdBy: RegistrationDeliverySingleton()
+                                        .loggedInUserUuid!,
+                                    createdTime:
+                                        context.millisecondsSinceEpoch(),
+                                  ),
+                                  clientAuditDetails: ClientAuditDetails(
+                                    createdBy: RegistrationDeliverySingleton()
+                                        .loggedInUserUuid!,
+                                    createdTime:
+                                        context.millisecondsSinceEpoch(),
+                                    lastModifiedBy:
+                                        RegistrationDeliverySingleton()
+                                            .loggedInUserUuid,
+                                    lastModifiedTime:
+                                        context.millisecondsSinceEpoch(),
+                                  ),
+                                );
 
-                            bloc.add(
-                              BeneficiaryRegistrationSaveAddressEvent(
-                                addressModel,
-                              ),
-                            );
-                            router.push(HouseDetailsRoute());
-                          },
-                          editHousehold: (
-                            address,
-                            householdModel,
-                            individuals,
-                            registrationDate,
-                            projectBeneficiaryModel,
-                            loading,
-                            headOfHousehold,
-                          ) {
-                            var addressModel = address.copyWith(
-                              addressLine1: addressLine1 != null &&
-                                      addressLine1.trim().isNotEmpty
-                                  ? addressLine1
-                                  : null,
-                              addressLine2: addressLine2 != null &&
-                                      addressLine2.trim().isNotEmpty
-                                  ? addressLine2
-                                  : null,
-                              landmark:
-                                  landmark != null && landmark.trim().isNotEmpty
+                                bloc.add(
+                                  BeneficiaryRegistrationSaveAddressEvent(
+                                    addressModel,
+                                  ),
+                                );
+                                router.push(HouseDetailsRoute());
+                              },
+                              editHousehold: (
+                                address,
+                                householdModel,
+                                individuals,
+                                registrationDate,
+                                projectBeneficiaryModel,
+                                loading,
+                                headOfHousehold,
+                              ) {
+                                var addressModel = address.copyWith(
+                                  addressLine1: addressLine1 != null &&
+                                          addressLine1.trim().isNotEmpty
+                                      ? addressLine1
+                                      : null,
+                                  addressLine2: addressLine2 != null &&
+                                          addressLine2.trim().isNotEmpty
+                                      ? addressLine2
+                                      : null,
+                                  landmark: landmark != null &&
+                                          landmark.trim().isNotEmpty
                                       ? landmark
                                       : null,
-                              locality: address.locality,
-                              pincode: postalCode != null &&
-                                      postalCode.trim().isNotEmpty
-                                  ? postalCode
-                                  : null,
-                              type: AddressType.correspondence,
-                              latitude: form.control(_latKey).value,
-                              longitude: form.control(_lngKey).value,
-                              locationAccuracy:
-                                  form.control(_accuracyKey).value,
-                            );
-                            // TODO [Linking of Voucher for Household based project  need to be handled]
+                                  locality: address.locality,
+                                  pincode: postalCode != null &&
+                                          postalCode.trim().isNotEmpty
+                                      ? postalCode
+                                      : null,
+                                  type: AddressType.correspondence,
+                                  latitude: form.control(_latKey).value,
+                                  longitude: form.control(_lngKey).value,
+                                  locationAccuracy:
+                                      form.control(_accuracyKey).value,
+                                );
+                                // TODO [Linking of Voucher for Household based project  need to be handled]
 
-                            bloc.add(
-                              BeneficiaryRegistrationSaveAddressEvent(
-                                addressModel,
-                              ),
+                                bloc.add(
+                                  BeneficiaryRegistrationSaveAddressEvent(
+                                    addressModel,
+                                  ),
+                                );
+                                router.push(HouseDetailsRoute());
+                              },
                             );
-                            router.push(HouseDetailsRoute());
                           },
                         );
                       },
-                    );
-                  },
-                ),]
-              ),
+                    ),
+                  ]),
               slivers: [
                 SliverToBoxAdapter(
                   child: DigitCard(
-                    children: [
-                      DigitTextBlock(
+                    margin: const EdgeInsets.all(spacer2),
+                      children: [
+                    DigitTextBlock(
                         padding: const EdgeInsets.only(top: spacer2),
                         heading: localizations.translate(
                           i18.householdLocation.householdLocationLabelText,
@@ -274,27 +279,27 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                           i18.householdLocation
                               .householdLocationDescriptionText,
                         )),
-                    householdLocationShowcaseData.administrativeArea
-                        .buildWith(
+                    householdLocationShowcaseData.administrativeArea.buildWith(
                       child: ReactiveWrapperField(
                         formControlName: _administrationAreaKey,
                         validationMessages: {
                           'required': (_) => localizations.translate(
-                            i18.householdLocation
-                                .administrationAreaRequiredValidation,
-                          ),
+                                i18.householdLocation
+                                    .administrationAreaRequiredValidation,
+                              ),
                         },
-                        builder: (field)=> LabeledField(
+                        builder: (field) => LabeledField(
                           label: localizations.translate(
-                            i18.householdLocation
-                                .administrationAreaFormLabel,
+                            i18.householdLocation.administrationAreaFormLabel,
                           ),
                           child: DigitTextFormInput(
                             readOnly: true,
                             errorMessage: field.errorText,
-                            initialValue: form.control(_administrationAreaKey).value,
-                            onChange: (value){
-                              form.control(_administrationAreaKey).value=value;
+                            initialValue:
+                                form.control(_administrationAreaKey).value,
+                            onChange: (value) {
+                              form.control(_administrationAreaKey).value =
+                                  value;
                             },
                           ),
                         ),
@@ -305,17 +310,18 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                         formControlName: _accuracyKey,
                         validationMessages: {
                           'required': (_) => localizations.translate(
-                            i18.common.corecommonRequired,
-                          ),
+                                i18.common.corecommonRequired,
+                              ),
                         },
-                        builder: (field)=>LabeledField(
+                        builder: (field) => LabeledField(
                           label: localizations.translate(
                             i18.householdLocation.gpsAccuracyLabel,
                           ),
                           child: DigitTextFormInput(
                             readOnly: true,
                             errorMessage: field.errorText,
-                            initialValue: form.control(_accuracyKey).value.toString(),
+                            initialValue:
+                                form.control(_accuracyKey).value.toString(),
                           ),
                         ),
                       ),
@@ -325,21 +331,21 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                         formControlName: _addressLine1Key,
                         validationMessages: {
                           'required': (_) => localizations.translate(
-                            i18.common.min2CharsRequired,
-                          ),
+                                i18.common.min2CharsRequired,
+                              ),
                           'maxLength': (object) => localizations
                               .translate(i18.common.maxCharsRequired)
                               .replaceAll('{}', maxLength.toString()),
                         },
-                        builder: (field)=> LabeledField(
+                        builder: (field) => LabeledField(
                           label: localizations.translate(
                             i18.householdLocation
                                 .householdAddressLine1LabelText,
                           ),
                           child: DigitTextFormInput(
                             errorMessage: field.errorText,
-                            onChange: (value){
-                              form.control(_addressLine1Key).value=value;
+                            onChange: (value) {
+                              form.control(_addressLine1Key).value = value;
                             },
                             initialValue: form.control(_addressLine1Key).value,
                           ),
@@ -351,21 +357,21 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                         formControlName: _addressLine2Key,
                         validationMessages: {
                           'required': (_) => localizations.translate(
-                            i18.common.min2CharsRequired,
-                          ),
+                                i18.common.min2CharsRequired,
+                              ),
                           'maxLength': (object) => localizations
                               .translate(i18.common.maxCharsRequired)
                               .replaceAll('{}', maxLength.toString()),
                         },
-                        builder: (field)=> LabeledField(
+                        builder: (field) => LabeledField(
                           label: localizations.translate(
                             i18.householdLocation
                                 .householdAddressLine2LabelText,
                           ),
                           child: DigitTextFormInput(
                             errorMessage: field.errorText,
-                            onChange: (value){
-                              form.control(_addressLine2Key).value=value;
+                            onChange: (value) {
+                              form.control(_addressLine2Key).value = value;
                             },
                             initialValue: form.control(_addressLine2Key).value,
                           ),
@@ -377,20 +383,20 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                         formControlName: _landmarkKey,
                         validationMessages: {
                           'required': (_) => localizations.translate(
-                            i18.common.min2CharsRequired,
-                          ),
+                                i18.common.min2CharsRequired,
+                              ),
                           'maxLength': (object) => localizations
                               .translate(i18.common.maxCharsRequired)
                               .replaceAll('{}', maxLength.toString()),
                         },
-                        builder: (field)=> LabeledField(
+                        builder: (field) => LabeledField(
                           label: localizations.translate(
                             i18.householdLocation.landmarkFormLabel,
                           ),
                           child: DigitTextFormInput(
                             errorMessage: field.errorText,
-                            onChange: (value){
-                              form.control(_landmarkKey).value=value;
+                            onChange: (value) {
+                              form.control(_landmarkKey).value = value;
                             },
                             initialValue: form.control(_landmarkKey).value,
                           ),
@@ -402,13 +408,13 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                         formControlName: _postalCodeKey,
                         validationMessages: {
                           'required': (_) => localizations.translate(
-                            i18.common.min2CharsRequired,
-                          ),
+                                i18.common.min2CharsRequired,
+                              ),
                           'maxLength': (object) => localizations
                               .translate(i18.common.maxCharsRequired)
                               .replaceAll('{}', '6'),
                         },
-                        builder: (field)=> LabeledField(
+                        builder: (field) => LabeledField(
                           label: localizations.translate(
                             i18.householdLocation.postalCodeFormLabel,
                           ),
@@ -418,16 +424,16 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                               FilteringTextInputFormatter.digitsOnly,
                             ],
                             errorMessage: field.errorText,
-                            onChange: (value){
-                              form.control(_postalCodeKey).value=value;
+                            onChange: (value) {
+                              form.control(_postalCodeKey).value = value;
                             },
                             maxLength: 6,
                             initialValue: form.control(_postalCodeKey).value,
                           ),
                         ),
                       ),
-                    ),]
-                  ),
+                    ),
+                  ]),
                 ),
               ],
             ),
@@ -444,35 +450,37 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
 
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: localizations.translate(
-            RegistrationDeliverySingleton().boundary!.code ?? ''),
+        value: localizations
+            .translate(RegistrationDeliverySingleton().boundary!.code ?? ''),
         validators: [Validators.required],
       ),
       _addressLine1Key:
           FormControl<String>(value: addressModel?.addressLine1, validators: [
-        CustomValidator.requiredMin,
+        Validators.delegate(
+            (validator) => CustomValidator.requiredMin(validator)),
         Validators.maxLength(64),
       ]),
       _addressLine2Key: FormControl<String>(
         value: addressModel?.addressLine2,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(64),
         ],
       ),
       _landmarkKey:
           FormControl<String>(value: addressModel?.landmark, validators: [
-        CustomValidator.requiredMin,
+        Validators.delegate(
+            (validator) => CustomValidator.requiredMin(validator)),
         Validators.maxLength(64),
       ]),
       _postalCodeKey:
           FormControl<String>(value: addressModel?.pincode, validators: [
-        CustomValidator.requiredMin,
+        Validators.delegate(
+            (validator) => CustomValidator.requiredMin(validator)),
         Validators.maxLength(6),
       ]),
-      _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
-        CustomValidator.requiredMin,
-      ]),
+      _latKey: FormControl<double>(value: addressModel?.latitude),
       _lngKey: FormControl<double>(
         value: addressModel?.longitude,
       ),

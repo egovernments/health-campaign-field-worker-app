@@ -3,11 +3,11 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../router/referral_reconciliation_router.gm.dart';
@@ -32,6 +32,7 @@ class _ReferralReasonChecklistPreviewPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ScrollableContent(
@@ -48,8 +49,8 @@ class _ReferralReasonChecklistPreviewPageState
                         cardType: CardType.primary,
                         padding: EdgeInsets.all(theme.spacerTheme.spacer2),
                         children: [
-                            Button(
-                              size: ButtonSize.large,
+                            DigitButton(
+                              size: DigitButtonSize.large,
                               label: localizations
                                   .translate(i18.common.corecommonclose),
                               mainAxisSize: MainAxisSize.max,
@@ -63,7 +64,7 @@ class _ReferralReasonChecklistPreviewPageState
                                     SearchReferralReconciliationsRoute.name);
                                 context.router.maybePop();
                               },
-                              type: ButtonType.primary,
+                              type: DigitButtonType.primary,
                             )
                           ])
                     : const Offstage();
@@ -100,8 +101,7 @@ class _ReferralReasonChecklistPreviewPageState
                                                   e.createdAt.toString(),
                                                 ),
                                               ),
-                                              style: theme
-                                                  .textTheme.headlineMedium,
+                                              style: textTheme.headingM,
                                             ),
                                           ),
                                           Row(
@@ -115,7 +115,7 @@ class _ReferralReasonChecklistPreviewPageState
                                                   ),
                                                 ),
                                               ),
-                                              Button(
+                                              DigitButton(
                                                 label: localizations.translate(
                                                   i18.referralReconciliation
                                                       .iconLabel,
@@ -129,8 +129,8 @@ class _ReferralReasonChecklistPreviewPageState
                                                         ),
                                                       );
                                                 },
-                                                type: ButtonType.secondary,
-                                                size: ButtonSize.large,
+                                                type: DigitButtonType.secondary,
+                                                size: DigitButtonSize.large,
                                               ),
                                             ],
                                           ),
@@ -167,7 +167,7 @@ class _ReferralReasonChecklistPreviewPageState
                                                 item2?.code ?? '',
                                               ),
                                               style:
-                                                  theme.textTheme.displayMedium,
+                                                  textTheme.headingXl,
                                             ),
                                           ),
                                           ...(value2.attributes ?? [])
@@ -192,8 +192,7 @@ class _ReferralReasonChecklistPreviewPageState
                                                               .translate(
                                                             "${item2?.code ?? ''}.${e.attributeCode!}",
                                                           ),
-                                                          style: theme.textTheme
-                                                              .headlineSmall,
+                                                          style: textTheme.headingS,
                                                         ),
                                                       ),
                                                       Container(
@@ -214,7 +213,9 @@ class _ReferralReasonChecklistPreviewPageState
                                                                     'SingleValueList'
                                                                 ? localizations
                                                                     .translate(
-                                                                    'CORE_COMMON_${e.value.toString().toUpperCase()}',
+                                                                    e.value
+                                                                        .toString()
+                                                                        .toUpperCase(),
                                                                   )
                                                                 : e.value ?? "",
                                                           ),

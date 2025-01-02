@@ -3,6 +3,7 @@
 import 'package:drift/drift.dart';
 
 class Project extends Table {
+  TextColumn get projectType => text().nullable()();
   TextColumn get id => text()();
   TextColumn get projectTypeId => text().nullable()();
   TextColumn get projectNumber => text().nullable()();
