@@ -78,6 +78,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                   : localizations.translate(i18.dataShare.receiveAction),
               size: ButtonSize.large,
               mainAxisSize: MainAxisSize.max,
+              capitalizeLetters: false,
             ),
           ],
         ),
@@ -179,7 +180,9 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
     return device.state == SessionState.connected ||
             device.state == SessionState.notConnected
         ? GestureDetector(
-            onTap: () => handleDeviceTap(device),
+            onTap: () {
+              handleDeviceTap(device);
+            },
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

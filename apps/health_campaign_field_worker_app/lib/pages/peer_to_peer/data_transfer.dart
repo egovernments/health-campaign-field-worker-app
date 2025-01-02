@@ -14,6 +14,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import '../../blocs/peer_to_peer/peer_to_peer.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/peer_to_peer/file_transfer_animation.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
@@ -42,7 +43,9 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
     peerToPeerBloc = context.read<PeerToPeerBloc>();
     peerToPeerBloc.add(DataTransferEvent(
         connectedDevice: widget.connectedDevices,
-        nearbyService: nearbyService));
+        nearbyService: nearbyService,
+        selectedBoundaryCode: context.boundary.code ?? '',
+        selectedProject: context.selectedProject.id));
     nearbyService.stateChangedSubscription(callback: (devices) {
       for (var device in devices) {
         if (device.state == SessionState.notConnected) {
@@ -129,7 +132,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                                   radius:
                                       MediaQuery.of(context).size.height * 0.15,
                                   lineWidth: kPadding * 1.5,
-                                  animation: true,
+                                  animation: false,
                                   percent: 0,
                                   // Update this dynamically for progress
                                   center: const Text(
@@ -159,7 +162,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                                 radius:
                                     MediaQuery.of(context).size.height * 0.15,
                                 lineWidth: kPadding * 1.5,
-                                animation: true,
+                                animation: false,
                                 percent: progress,
                                 // Update this dynamically for progress
                                 center: Text(
@@ -214,7 +217,11 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                                     DataTransferEvent(
                                         nearbyService: nearbyService,
                                         connectedDevice:
-                                            widget.connectedDevices));
+                                            widget.connectedDevices,
+                                        selectedBoundaryCode:
+                                            context.boundary.code ?? '',
+                                        selectedProject:
+                                            context.selectedProject.id));
                               },
                               size: ButtonSize.large,
                               label: localizations

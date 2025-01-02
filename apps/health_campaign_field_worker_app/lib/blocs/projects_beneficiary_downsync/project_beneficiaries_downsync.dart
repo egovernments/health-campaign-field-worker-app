@@ -209,7 +209,8 @@ class BeneficiaryDownSyncBloc
             );
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
-              writeToFile(event.boundaryCode, downSyncResults);
+              writeToFile(event.projectId, event.boundaryCode,
+                  event.boundaryName, downSyncResults);
               await networkManager
                   .writeToEntityDB(event.boundaryCode, downSyncResults, [
                 individualLocalRepository,
@@ -269,7 +270,9 @@ class BeneficiaryDownSyncBloc
   }
 
   void writeToFile(
+    String projectId,
     String selectedBoundaryCode,
+    String selectedBoundaryName,
     Map<String, dynamic> response,
   ) async {
     Map<String, dynamic> storedData = {};
@@ -284,7 +287,8 @@ class BeneficiaryDownSyncBloc
     }
 
     // Define the file path
-    final file = File('${downloadsDirectory.path}/down_sync_data.json');
+    final file = File(
+        '${downloadsDirectory.path}/$projectId/$selectedBoundaryCode/down_sync_data.json');
 
     // Read existing file content if available
     if (file.existsSync()) {
@@ -301,13 +305,13 @@ class BeneficiaryDownSyncBloc
     var downSyncModel = response["DownsyncCriteria"];
     // Create a unique key using just the offset
     String uniqueKey = '${downSyncModel["offset"]}';
-    response.removeWhere((key, value) => key == 'DownsyncCriteria');
 
     // Prepare data to insert
     Map<String, dynamic> data = {
       "totalCount": downSyncModel["totalCount"],
       "response": response,
       "boundaryCode": selectedBoundaryCode,
+      "boundaryName": selectedBoundaryName
     };
 
     // Store the data under the unique key

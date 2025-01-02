@@ -20,7 +20,10 @@ mixin _$PeerToPeerEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            NearbyService nearbyService, List<Device> connectedDevice)
+            NearbyService nearbyService,
+            String selectedProject,
+            String selectedBoundaryCode,
+            List<Device> connectedDevice)
         dataTransfer,
     required TResult Function(NearbyService nearbyService, dynamic data)
         dataReceiver,
@@ -28,15 +31,16 @@ mixin _$PeerToPeerEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            NearbyService nearbyService, List<Device> connectedDevice)?
+    TResult? Function(NearbyService nearbyService, String selectedProject,
+            String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
     TResult? Function(NearbyService nearbyService, dynamic data)? dataReceiver,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(NearbyService nearbyService, List<Device> connectedDevice)?
+    TResult Function(NearbyService nearbyService, String selectedProject,
+            String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
     TResult Function(NearbyService nearbyService, dynamic data)? dataReceiver,
     required TResult orElse(),
@@ -108,7 +112,11 @@ abstract class _$$DataTransferEventImplCopyWith<$Res>
       __$$DataTransferEventImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({NearbyService nearbyService, List<Device> connectedDevice});
+  $Res call(
+      {NearbyService nearbyService,
+      String selectedProject,
+      String selectedBoundaryCode,
+      List<Device> connectedDevice});
 }
 
 /// @nodoc
@@ -123,6 +131,8 @@ class __$$DataTransferEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? nearbyService = null,
+    Object? selectedProject = null,
+    Object? selectedBoundaryCode = null,
     Object? connectedDevice = null,
   }) {
     return _then(_$DataTransferEventImpl(
@@ -130,6 +140,14 @@ class __$$DataTransferEventImplCopyWithImpl<$Res>
           ? _value.nearbyService
           : nearbyService // ignore: cast_nullable_to_non_nullable
               as NearbyService,
+      selectedProject: null == selectedProject
+          ? _value.selectedProject
+          : selectedProject // ignore: cast_nullable_to_non_nullable
+              as String,
+      selectedBoundaryCode: null == selectedBoundaryCode
+          ? _value.selectedBoundaryCode
+          : selectedBoundaryCode // ignore: cast_nullable_to_non_nullable
+              as String,
       connectedDevice: null == connectedDevice
           ? _value._connectedDevice
           : connectedDevice // ignore: cast_nullable_to_non_nullable
@@ -145,11 +163,17 @@ class _$DataTransferEventImpl
     implements DataTransferEvent {
   const _$DataTransferEventImpl(
       {required this.nearbyService,
+      required this.selectedProject,
+      required this.selectedBoundaryCode,
       required final List<Device> connectedDevice})
       : _connectedDevice = connectedDevice;
 
   @override
   final NearbyService nearbyService;
+  @override
+  final String selectedProject;
+  @override
+  final String selectedBoundaryCode;
   final List<Device> _connectedDevice;
   @override
   List<Device> get connectedDevice {
@@ -160,7 +184,7 @@ class _$DataTransferEventImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PeerToPeerEvent.dataTransfer(nearbyService: $nearbyService, connectedDevice: $connectedDevice)';
+    return 'PeerToPeerEvent.dataTransfer(nearbyService: $nearbyService, selectedProject: $selectedProject, selectedBoundaryCode: $selectedBoundaryCode, connectedDevice: $connectedDevice)';
   }
 
   @override
@@ -169,6 +193,8 @@ class _$DataTransferEventImpl
     properties
       ..add(DiagnosticsProperty('type', 'PeerToPeerEvent.dataTransfer'))
       ..add(DiagnosticsProperty('nearbyService', nearbyService))
+      ..add(DiagnosticsProperty('selectedProject', selectedProject))
+      ..add(DiagnosticsProperty('selectedBoundaryCode', selectedBoundaryCode))
       ..add(DiagnosticsProperty('connectedDevice', connectedDevice));
   }
 
@@ -179,12 +205,20 @@ class _$DataTransferEventImpl
             other is _$DataTransferEventImpl &&
             (identical(other.nearbyService, nearbyService) ||
                 other.nearbyService == nearbyService) &&
+            (identical(other.selectedProject, selectedProject) ||
+                other.selectedProject == selectedProject) &&
+            (identical(other.selectedBoundaryCode, selectedBoundaryCode) ||
+                other.selectedBoundaryCode == selectedBoundaryCode) &&
             const DeepCollectionEquality()
                 .equals(other._connectedDevice, _connectedDevice));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, nearbyService,
+  int get hashCode => Object.hash(
+      runtimeType,
+      nearbyService,
+      selectedProject,
+      selectedBoundaryCode,
       const DeepCollectionEquality().hash(_connectedDevice));
 
   @JsonKey(ignore: true)
@@ -198,35 +232,42 @@ class _$DataTransferEventImpl
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            NearbyService nearbyService, List<Device> connectedDevice)
+            NearbyService nearbyService,
+            String selectedProject,
+            String selectedBoundaryCode,
+            List<Device> connectedDevice)
         dataTransfer,
     required TResult Function(NearbyService nearbyService, dynamic data)
         dataReceiver,
   }) {
-    return dataTransfer(nearbyService, connectedDevice);
+    return dataTransfer(
+        nearbyService, selectedProject, selectedBoundaryCode, connectedDevice);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            NearbyService nearbyService, List<Device> connectedDevice)?
+    TResult? Function(NearbyService nearbyService, String selectedProject,
+            String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
     TResult? Function(NearbyService nearbyService, dynamic data)? dataReceiver,
   }) {
-    return dataTransfer?.call(nearbyService, connectedDevice);
+    return dataTransfer?.call(
+        nearbyService, selectedProject, selectedBoundaryCode, connectedDevice);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(NearbyService nearbyService, List<Device> connectedDevice)?
+    TResult Function(NearbyService nearbyService, String selectedProject,
+            String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
     TResult Function(NearbyService nearbyService, dynamic data)? dataReceiver,
     required TResult orElse(),
   }) {
     if (dataTransfer != null) {
-      return dataTransfer(nearbyService, connectedDevice);
+      return dataTransfer(nearbyService, selectedProject, selectedBoundaryCode,
+          connectedDevice);
     }
     return orElse();
   }
@@ -266,10 +307,14 @@ class _$DataTransferEventImpl
 abstract class DataTransferEvent implements PeerToPeerEvent {
   const factory DataTransferEvent(
       {required final NearbyService nearbyService,
+      required final String selectedProject,
+      required final String selectedBoundaryCode,
       required final List<Device> connectedDevice}) = _$DataTransferEventImpl;
 
   @override
   NearbyService get nearbyService;
+  String get selectedProject;
+  String get selectedBoundaryCode;
   List<Device> get connectedDevice;
   @override
   @JsonKey(ignore: true)
@@ -367,7 +412,10 @@ class _$DataReceiverEventImpl
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            NearbyService nearbyService, List<Device> connectedDevice)
+            NearbyService nearbyService,
+            String selectedProject,
+            String selectedBoundaryCode,
+            List<Device> connectedDevice)
         dataTransfer,
     required TResult Function(NearbyService nearbyService, dynamic data)
         dataReceiver,
@@ -378,8 +426,8 @@ class _$DataReceiverEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            NearbyService nearbyService, List<Device> connectedDevice)?
+    TResult? Function(NearbyService nearbyService, String selectedProject,
+            String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
     TResult? Function(NearbyService nearbyService, dynamic data)? dataReceiver,
   }) {
@@ -389,7 +437,8 @@ class _$DataReceiverEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(NearbyService nearbyService, List<Device> connectedDevice)?
+    TResult Function(NearbyService nearbyService, String selectedProject,
+            String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
     TResult Function(NearbyService nearbyService, dynamic data)? dataReceiver,
     required TResult orElse(),
