@@ -136,7 +136,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                                   .height *
                                               0.15,
                                           lineWidth: kPadding * 1.5,
-                                          animation: true,
+                                          animation: false,
                                           percent: 0,
                                           // Update this dynamically for progress
                                           center: const Text(

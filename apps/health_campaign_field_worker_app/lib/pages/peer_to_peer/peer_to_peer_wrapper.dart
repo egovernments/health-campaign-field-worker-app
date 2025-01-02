@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../blocs/peer_to_peer/peer_to_peer.dart';
+import '../../models/downsync/downsync.dart';
 import '../../router/app_router.dart';
 
 @RoutePage()
@@ -36,6 +37,8 @@ class PeerToPeerWrapperPage extends StatelessWidget
             sideEffectLocalRepository: context.read<
                 LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
             referralLocalRepository: context
-                .read<LocalRepository<ReferralModel, ReferralSearchModel>>()));
+                .read<LocalRepository<ReferralModel, ReferralSearchModel>>(),
+            downSyncLocalRepository: context
+                .read<LocalRepository<DownsyncModel, DownsyncSearchModel>>()));
   }
 }

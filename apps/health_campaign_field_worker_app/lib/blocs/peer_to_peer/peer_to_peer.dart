@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../data/repositories/sync/remote_type.dart';
+import '../../models/downsync/downsync.dart';
 import '../../utils/utils.dart';
 
 part 'peer_to_peer.freezed.dart';
@@ -32,22 +33,26 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
       sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
       referralLocalRepository;
+  final LocalRepository<DownsyncModel, DownsyncSearchModel>
+      downSyncLocalRepository;
 
   List<dynamic> receivedData = [];
   int receivedBytes = 0;
   int totalCount = 0;
   String entityType = '';
   late Device connectedDevice;
+  late String selectedBoundaryCode;
 
-  PeerToPeerBloc({
-    required this.individualLocalRepository,
-    required this.householdLocalRepository,
-    required this.householdMemberLocalRepository,
-    required this.projectBeneficiaryLocalRepository,
-    required this.taskLocalRepository,
-    required this.sideEffectLocalRepository,
-    required this.referralLocalRepository,
-  }) : super(const PeerToPeerInitial()) {
+  PeerToPeerBloc(
+      {required this.individualLocalRepository,
+      required this.householdLocalRepository,
+      required this.householdMemberLocalRepository,
+      required this.projectBeneficiaryLocalRepository,
+      required this.taskLocalRepository,
+      required this.sideEffectLocalRepository,
+      required this.referralLocalRepository,
+      required this.downSyncLocalRepository})
+      : super(const PeerToPeerInitial()) {
     on(_handleSendEntities);
     on(_handleReceiveEntities);
   }
@@ -61,7 +66,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           progress: 0, offset: 0, totalCount: 0));
 
       final downloadsDirectory = await getDownloadsDirectory();
-      final file = File('${downloadsDirectory!.path}/down_sync_data.json');
+      final file = File(
+          '${downloadsDirectory!.path}/${event.selectedProject}/${event.selectedBoundaryCode}/down_sync_data.json');
 
       if (await file.exists()) {
         final fileStream = file.openRead();
@@ -88,6 +94,16 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
                 .map((e) => offsetData[e])
                 .toList();
 
+            var selectedBoundaryCode = offsetData.keys
+                .where((element) => element == 'boundaryCode')
+                .map((e) => offsetData[e])
+                .firstOrNull;
+
+            var selectedBoundaryName = offsetData.keys
+                .where((element) => element == 'boundaryName')
+                .map((e) => offsetData[e])
+                .firstOrNull;
+
             totalCount = offsetData.keys
                 .where((element) => element == 'totalCount')
                 .map((e) => offsetData[e])
@@ -102,6 +118,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
                   device.deviceId,
                   jsonEncode({
                     "type": "chunk",
+                    "selectedBoundaryCode": selectedBoundaryCode,
+                    "selectedBoundaryName": selectedBoundaryName,
                     "message": compressJson(entityResponse),
                     "offset": offsetValue,
                     "totalData": totalCount,
@@ -144,6 +162,9 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
 
           emit(const PeerToPeerState.completedDataTransfer());
         }
+      } else {
+        emit(const PeerToPeerState.failedToTransfer(
+            error: "File doesn't exist"));
       }
     } catch (e) {
       emit(PeerToPeerState.failedToTransfer(error: e.toString()));
@@ -185,30 +206,47 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
         // Process chunk
         int offset = receivedJson["offset"];
         int totalCount = receivedJson["totalData"];
+        selectedBoundaryCode = receivedJson["selectedBoundaryCode"];
         final compressedMessage = receivedJson["message"];
         final entityList = decompressJson(compressedMessage).entries;
 
         for (var entity in entityList) {
           entityType = entity.key;
-          final List<dynamic> entityResponse = entity.value ?? [];
-          final entityList =
-              entityResponse.whereType<Map<String, dynamic>>().toList();
-          // Save chunk to database immediately
-          final local = RepositoryType.getLocalForType(
-            DataModels.getDataModelForEntityName(entityType),
-            [
-              individualLocalRepository,
-              householdLocalRepository,
-              householdMemberLocalRepository,
-              projectBeneficiaryLocalRepository,
-              taskLocalRepository,
-              sideEffectLocalRepository,
-              referralLocalRepository,
-            ],
-          );
 
-          // Convert chunk to entity list and save it
-          createDbRecords(local, entityList, entityType);
+          if (entityType == 'DownsyncCriteria') {
+            final existingDownSyncData =
+                await downSyncLocalRepository.search(DownsyncSearchModel(
+              locality: selectedBoundaryCode,
+            ));
+
+            if (existingDownSyncData.isNotEmpty) {
+              await downSyncLocalRepository
+                  .update(DownsyncModelMapper.fromMap(entity.value));
+            } else {
+              await downSyncLocalRepository
+                  .create(DownsyncModelMapper.fromMap(entity.value));
+            }
+          } else {
+            final List<dynamic> entityResponse = entity.value ?? [];
+            final entityList =
+                entityResponse.whereType<Map<String, dynamic>>().toList();
+            // Save chunk to database immediately
+            final local = RepositoryType.getLocalForType(
+              DataModels.getDataModelForEntityName(entityType),
+              [
+                individualLocalRepository,
+                householdLocalRepository,
+                householdMemberLocalRepository,
+                projectBeneficiaryLocalRepository,
+                taskLocalRepository,
+                sideEffectLocalRepository,
+                referralLocalRepository,
+              ],
+            );
+
+            // Convert chunk to entity list and save it
+            createDbRecords(local, entityList, entityType);
+          }
         }
 
         // Update progress and clear processed data
@@ -235,7 +273,20 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           }),
         );
       } else if (messageType == "confirmation" &&
-          receivedJson["confirmationType"] == "allEntitiesTransferComplete") {
+          receivedJson["confirmationType"] == "finalTransfer") {
+        final existingDownSyncData =
+            await downSyncLocalRepository.search(DownsyncSearchModel(
+          locality: selectedBoundaryCode,
+        ));
+
+        await downSyncLocalRepository.update(
+          existingDownSyncData.first.copyWith(
+            offset: 0,
+            limit: 0,
+            lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+          ),
+        );
+
         // Handle overall transfer final acknowledgment
         emit(const PeerToPeerState.dataReceived());
 
@@ -245,7 +296,6 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           jsonEncode({
             "type": "confirmation",
             "confirmationType": "finalAcknowledgment",
-            "level": "overall", // Differentiator
             "status": "success",
             "message": "All entities received and processed successfully.",
           }),
@@ -278,15 +328,18 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
       callback: (data) {
         try {
           var receivedJson = jsonDecode(data["message"]);
-          if (receivedJson["type"] == "confirmation" &&
-              receivedJson["confirmationType"] == confirmationType) {
+          if (receivedJson["type"] == "confirmation") {
             if (confirmationType == "chunk" &&
                 receivedJson["offset"] == offset) {
+              completer.complete();
+            } else if (confirmationType == "finalAcknowledgment") {
               completer.complete();
             } else if (confirmationType == "final") {
               completer.complete();
             } else if (confirmationType == "failed") {
               completer.complete();
+              emit(const PeerToPeerState.failedToTransfer(
+                  error: "File doesn't exist"));
               throw "Failed to transfer ${receivedJson['message']}";
             }
           }
@@ -305,6 +358,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
 class PeerToPeerEvent with _$PeerToPeerEvent {
   const factory PeerToPeerEvent.dataTransfer(
       {required NearbyService nearbyService,
+      required String selectedProject,
+      required String selectedBoundaryCode,
       required List<Device> connectedDevice}) = DataTransferEvent;
 
   const factory PeerToPeerEvent.dataReceiver(

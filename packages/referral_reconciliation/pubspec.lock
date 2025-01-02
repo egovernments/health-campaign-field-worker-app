@@ -421,9 +421,10 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../digit_scanner"
-      relative: true
-    source: path
+      name: digit_scanner
+      sha256: "9862c4885465bb1942e36dc9b42596c201648db9b0f5ffb8ad768e2409fc2742"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3+1"
   digit_ui_components:
     dependency: "direct main"
@@ -1461,9 +1462,10 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      path: "../survey_form"
-      relative: true
-    source: path
+      name: survey_form
+      sha256: "52532fb3fae06883828d22f870045587bf7122f67cb4de236c82ad4d6de1d7d7"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1-dev.2"
   synchronized:
     dependency: transitive
