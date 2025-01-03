@@ -46,6 +46,8 @@ import 'package:inventory_management/blocs/app_localization.dart';
 
 import '../pages/reports/beneficiary/custom_enumeration_summary_report_details.dart';
 import '../pages/reports/beneficiary/custom_distribution_summary_report_details.dart';
+import '../pages/complaints/custom_complaints_details.dart';
+import 'package:complaints/blocs/localization/app_localization.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -137,6 +139,14 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ComplaintsDetailsRoute.page,
               path: 'complaints-details',
+            ),
+            AutoRoute(
+              page: CustomComplaintsDetailsRoute.page,
+              path: 'custom-complaints-details',
+            ),
+            RedirectRoute(
+              path: 'complaints-details',
+              redirectTo: 'custom-complaints-details',
             ),
           ],
         ),
