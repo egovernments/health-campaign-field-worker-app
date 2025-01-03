@@ -33,16 +33,17 @@ class BeneficiaryDownSyncBloc
       downSyncLocalRepository;
   final BandwidthCheckRepository bandwidthCheckRepository;
   final LocalRepository<HouseholdModel, HouseholdSearchModel>
-  householdLocalRepository;
+      householdLocalRepository;
   final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-  householdMemberLocalRepository;
+      householdMemberLocalRepository;
   final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-  projectBeneficiaryLocalRepository;
+      projectBeneficiaryLocalRepository;
   final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
   final LocalRepository<SideEffectModel, SideEffectSearchModel>
-  sideEffectLocalRepository;
+      sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
       referralLocalRepository;
+
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
@@ -209,8 +210,7 @@ class BeneficiaryDownSyncBloc
                   event.boundaryName, downSyncResults);
               await SyncServiceSingleton()
                   .entityMapper
-                  ?
-                  .writeToEntityDB(event.boundaryCode, downSyncResults, [
+                  ?.writeToEntityDB(downSyncResults, [
                 individualLocalRepository,
                 householdLocalRepository,
                 householdMemberLocalRepository,

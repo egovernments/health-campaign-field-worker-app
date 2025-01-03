@@ -65,18 +65,18 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
     return Scaffold(
       body: ScrollableContent(
         backgroundColor: DigitTheme.instance.colors.light.primary1Bg,
-        enableFixedButton: true,
+        enableFixedDigitButton: true,
         footer: DigitCard(
           margin: const EdgeInsets.only(top: 16.0),
           padding: const EdgeInsets.all(16.0),
           children: [
-            Button(
+            DigitButton(
               onPressed: handleFooterButtonPress,
-              type: ButtonType.primary,
+              type: DigitButtonType.primary,
               label: widget.deviceType == DeviceType.sender
                   ? localizations.translate(i18.dataShare.sendAction)
                   : localizations.translate(i18.dataShare.receiveAction),
-              size: ButtonSize.large,
+              size: DigitButtonSize.large,
               mainAxisSize: MainAxisSize.max,
               capitalizeLetters: false,
             ),
