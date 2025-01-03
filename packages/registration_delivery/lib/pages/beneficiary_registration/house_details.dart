@@ -49,7 +49,8 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
 
     if (widget.widgetConfig != null) {
       final converter = FieldConverter(widget.widgetConfig);
-      mapper.configs = converter.convertWidgetConfigToJsonByName(HouseDetailsRoute.name)!;
+      mapper.configs =
+          converter.convertWidgetConfigToJsonByName(HouseDetailsRoute.name)!;
     }
     super.initState();
   }
@@ -73,7 +74,8 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
     final router = context.router;
 
     void validate(final form, final key, final fieldConfig) {
-      if (fieldConfig?['attribute'] != 'textField' &&
+      if (fieldConfig?['attribute'] != null &&
+          fieldConfig?['attribute'] != 'textField' &&
           fieldConfig?['attribute'] != 'dateFormPicker' &&
           fieldConfig?['attribute'] != 'dobPicker') {
         if (form.control(key).value == null &&
@@ -131,8 +133,9 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 var val = form.control(key).value ?? '';
                                 fields.add(AdditionalField(
                                   key,
-                                  val is List ? val.join("|")
-                                    .toString() : val.toString(),
+                                  val is List
+                                      ? val.join("|").toString()
+                                      : val.toString(),
                                 ));
                               }
                             }

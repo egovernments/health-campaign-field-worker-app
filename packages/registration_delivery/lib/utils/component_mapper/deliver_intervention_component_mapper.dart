@@ -488,7 +488,11 @@ class DeliverInterventionComponentMapper {
 
     formGroup.addAll(newControls);
 
-    addValidators(formGroup,configs);
+    for (var component in configs["components"]) {
+      for (var attribute in component["attributes"]) {
+        addValidators(formGroup,attribute);
+      }
+    }
 
     return formGroup;
   }

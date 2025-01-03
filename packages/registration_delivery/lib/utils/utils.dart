@@ -317,7 +317,7 @@ class RegistrationDeliverySingleton {
   PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
   List<FormConfigModel>? _formConfig;
-  List <config>? _registrationFormConfig;
+  List<config>? _registrationFormConfig;
   List<String>? _genderOptions;
   List<String>? _idTypeOptions;
   List<String>? _householdDeletionReasonOptions;
@@ -338,27 +338,26 @@ class RegistrationDeliverySingleton {
     _persistenceConfiguration = persistenceConfiguration;
   }
 
-  void setInitialData({
-    required String loggedInUserUuid,
-    required double maxRadius,
-    required String projectId,
-    required BeneficiaryType selectedBeneficiaryType,
-    required ProjectTypeModel? projectType,
-    required ProjectModel selectedProject,
-    required List<String>? genderOptions,
-    required List<String>? idTypeOptions,
-    required List<String>? householdDeletionReasonOptions,
-    required List<String>? householdMemberDeletionReasonOptions,
-    required List<String>? deliveryCommentOptions,
-    required List<String>? symptomsTypes,
-    required List<String>? searchHouseHoldFilter,
-    required List<String>? referralReasons,
-    required List<String>? houseStructureTypes,
-    required List<String>? refusalReasons,
-    required UserModel? loggedInUser,
-    List<FormConfigModel>? formConfig,
-    List<config>? registrationFormConfig
-  }) {
+  void setInitialData(
+      {required String loggedInUserUuid,
+      required double maxRadius,
+      required String projectId,
+      required BeneficiaryType selectedBeneficiaryType,
+      required ProjectTypeModel? projectType,
+      required ProjectModel selectedProject,
+      required List<String>? genderOptions,
+      required List<String>? idTypeOptions,
+      required List<String>? householdDeletionReasonOptions,
+      required List<String>? householdMemberDeletionReasonOptions,
+      required List<String>? deliveryCommentOptions,
+      required List<String>? symptomsTypes,
+      required List<String>? searchHouseHoldFilter,
+      required List<String>? referralReasons,
+      required List<String>? houseStructureTypes,
+      required List<String>? refusalReasons,
+      required UserModel? loggedInUser,
+      List<FormConfigModel>? formConfig,
+      List<config>? registrationFormConfig}) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
     _projectId = projectId;
@@ -408,8 +407,8 @@ class RegistrationDeliverySingleton {
   List<String>? get houseStructureTypes => _houseStructureTypes;
   List<String>? get refusalReasons => _refusalReasons;
   UserModel? get loggedInUser => _loggedInUser;
-  List <FormConfigModel>? get formConfig => _formConfig;
-  List <config>? get registrationFormConfig => _registrationFormConfig;
+  List<FormConfigModel>? get formConfig => _formConfig;
+  List<config>? get registrationFormConfig => _registrationFormConfig;
 }
 
 bool allDosesDelivered(
@@ -486,57 +485,51 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
   return Status.registered.toValue();
 }
 
-void addValidators(final formGroup, dynamic configs) {
-  for (var component in configs["components"]) {
-    for (var fieldConfig in component["attributes"]) {
-      final key = fieldConfig["name"];
-      final formControl = formGroup.control(key);
+void addValidators(final formGroup, dynamic fieldConfig) {
+  final key = fieldConfig["name"];
+  final formControl = formGroup.control(key);
 
-      // Get current validators
-      final currentValidators = formControl.validators;
+  // Get current validators
+  final currentValidators = formControl.validators;
 
-      List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
+  List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
       updatedValidators = currentValidators.where((validator) {
-        // Check if the validator is of the same type as Validators.required
-        return validator.runtimeType != Validators.required.runtimeType;
-      }).toList();
+    // Check if the validator is of the same type as Validators.required
+    return validator.runtimeType != Validators.required.runtimeType;
+  }).toList();
 
-      if (fieldConfig['isRequired'] == true &&
-          fieldConfig['isEnabled'] == true) {
-        // Add the new validator to the list
-        updatedValidators = [
-          ...updatedValidators,
-          Validators.required // Example new validator
-        ];
-      }
-
-      // If JSON config has regex, add it as a validator
-      if (fieldConfig['isEnabled'] == true &&
-          fieldConfig.containsKey('validation') &&
-          fieldConfig['validation'] is List) {
-        List<dynamic> validationList = fieldConfig['validation'];
-
-        validationList.asMap().forEach((index, regex) {
-          updatedValidators.add((control) {
-            final value = control.value?.toString() ??
-                ''; // Convert to string or default to empty
-            if (value.isNotEmpty &&
-                !RegExp(regex['pattern']).hasMatch(value)) {
-              // Ensure there's a matching error message for this index
-              return {
-                '${regex['key']}': regex['errorMessage']
-              }; // Use the correct error message for the index
-            }
-            return null;
-          });
-        });
-      }
-
-      // Set the updated validators back to the form control
-      formControl.setValidators(updatedValidators);
-
-      // Re-run validation with the new validators
-      formControl.updateValueAndValidity();
-    }
+  if (fieldConfig['isRequired'] == true && fieldConfig['isEnabled'] == true) {
+    // Add the new validator to the list
+    updatedValidators = [
+      ...updatedValidators,
+      Validators.required // Example new validator
+    ];
   }
+
+  // If JSON config has regex, add it as a validator
+  if (fieldConfig['isEnabled'] == true &&
+      fieldConfig.containsKey('validation') &&
+      fieldConfig['validation'] is List) {
+    List<dynamic> validationList = fieldConfig['validation'];
+
+    validationList.asMap().forEach((index, regex) {
+      updatedValidators.add((control) {
+        final value = control.value?.toString() ??
+            ''; // Convert to string or default to empty
+        if (value.isNotEmpty && !RegExp(regex['pattern']).hasMatch(value)) {
+          // Ensure there's a matching error message for this index
+          return {
+            '${regex['key']}': regex['errorMessage']
+          }; // Use the correct error message for the index
+        }
+        return null;
+      });
+    });
+  }
+
+  // Set the updated validators back to the form control
+  formControl.setValidators(updatedValidators);
+
+  // Re-run validation with the new validators
+  formControl.updateValueAndValidity();
 }
