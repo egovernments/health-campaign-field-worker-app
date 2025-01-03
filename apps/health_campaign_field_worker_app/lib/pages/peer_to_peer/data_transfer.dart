@@ -93,14 +93,14 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                 margin: const EdgeInsets.only(top: spacer2),
                 padding: const EdgeInsets.all(spacer2),
                 children: [
-                  Button(
-                    type: ButtonType.secondary,
+                  DigitButton(
+                    type: DigitButtonType.secondary,
                     mainAxisSize: MainAxisSize.max,
                     onPressed: () {
                       context.router.maybePop();
                     },
                     label: localizations.translate(i18.common.coreCommonCancel),
-                    size: ButtonSize.large,
+                    size: DigitButtonSize.large,
                   ),
                 ]),
             slivers: [
@@ -211,7 +211,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                             ],
                           ),
                           failedToTransfer: (error) => Center(
-                            child: Button(
+                            child: DigitButton(
                               onPressed: () {
                                 context.read<PeerToPeerBloc>().add(
                                     DataTransferEvent(
@@ -223,10 +223,10 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                                         selectedProject:
                                             context.selectedProject.id));
                               },
-                              size: ButtonSize.large,
+                              size: DigitButtonSize.large,
                               label: localizations
                                   .translate(i18.common.coreCommonRetry),
-                              type: ButtonType.primary,
+                              type: DigitButtonType.primary,
                             ),
                           ),
                         )),

@@ -10,10 +10,10 @@ import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:sync_service/data/repositories/sync/remote_type.dart';
 
-import '../../data/repositories/sync/remote_type.dart';
+import '../../data/sync_service_mapper.dart';
 import '../../models/downsync/downsync.dart';
-import '../../utils/utils.dart';
 
 part 'peer_to_peer.freezed.dart';
 
@@ -244,8 +244,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               ],
             );
 
-            // Convert chunk to entity list and save it
-            createDbRecords(local, entityList, entityType);
+            SyncServiceMapper().createDbRecords(local, entityList, entityType);
           }
         }
 

@@ -92,15 +92,15 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                       margin: const EdgeInsets.only(top: spacer2),
                       padding: const EdgeInsets.all(spacer2),
                       children: [
-                        Button(
-                          type: ButtonType.secondary,
+                        DigitButton(
+                          type: DigitButtonType.secondary,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () {
                             context.router.maybePop();
                           },
                           label: localizations
                               .translate(i18.common.coreCommonCancel),
-                          size: ButtonSize.large,
+                          size: DigitButtonSize.large,
                         ),
                       ]),
                   slivers: [

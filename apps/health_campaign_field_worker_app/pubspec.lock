@@ -953,6 +953,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_nearby_connections:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "9ead63aa7e01f7603a453368de1ee2b4dc009ed6"
+      url: "https://github.com/champeauxr/flutter_nearby_connections"
+    source: git
+    version: "1.1.2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -1669,6 +1678,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      sha256: "0d77d5c6fa9b7f60202cedf748b568ba9ba38d3f30405d6ceae4da76f5185462"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.4"
   permission_handler:
     dependency: "direct main"
     description:
