@@ -262,6 +262,10 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
       List<TaskModel> filteredTasks = [];
       List<ProjectBeneficiaryModel> filteredBeneficiaries = [];
       final householdId = entry.key;
+
+      final existingHousehold = state.householdMembers.firstWhereOrNull(
+          (element) => element.household?.clientReferenceId == householdId);
+      if (existingHousehold != null) continue;
       if (householdId == null) continue;
 
       // Filter household based on household ID
