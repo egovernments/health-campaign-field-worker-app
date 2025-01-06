@@ -1,3 +1,7 @@
+## 1.0.4-dev.8-search-fix
+
+* BeneficiaryReferred search query fix
+
 ## 1.0.4-dev.7-search-fix
 
 * Added facility repo reference to ProjectFacilityBloc

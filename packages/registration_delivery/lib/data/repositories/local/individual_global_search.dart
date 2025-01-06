@@ -331,10 +331,13 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           if (params.nameSearch == null || !params.isProximityEnabled)
             leftOuterJoin(
                 sql.projectBeneficiary,
-                sql.projectBeneficiary.beneficiaryClientReferenceId.equalsExp(
+                sql.projectBeneficiary.clientReferenceId.equalsExp(
                     sql.referral.projectBeneficiaryClientReferenceId))
-        ])
-          ..where(sql.referral.projectId.equals(params.projectId!));
+        ]);
+        if (!(params.filter!.contains(Status.notRegistered.name))) {
+          selectQuery.where(
+              sql.projectBeneficiary.projectId.equals(params.projectId!));
+        }
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -360,8 +363,11 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               sql.referral,
               sql.referral.projectBeneficiaryClientReferenceId
                   .equalsExp(sql.projectBeneficiary.clientReferenceId))
-        ])
-          ..where(sql.referral.projectId.equals(params.projectId!));
+        ]);
+        if (!(params.filter!.contains(Status.notRegistered.name))) {
+          selectQuery.where(
+              sql.projectBeneficiary.projectId.equals(params.projectId!));
+        }
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
