@@ -367,6 +367,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         if (!(params.filter!.contains(Status.notRegistered.name))) {
           selectQuery.where(
               sql.projectBeneficiary.projectId.equals(params.projectId!));
+          selectQuery.where(sql.projectBeneficiary.clientReferenceId
+              .equalsExp(sql.referral.projectBeneficiaryClientReferenceId));
         }
       } else {
         var filterSearchQuery =
