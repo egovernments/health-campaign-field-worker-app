@@ -59,14 +59,16 @@ jobs:
         env:
           BUILD_CONFIG: release   # or profile depending on your choice
         run: |
-          echo "Current working directory: $(pwd)"
           bash ./tools/generate-apk.sh
+          echo "Current working directory: $(pwd)"
+          echo "Listing all files at the current level:"
+          ls -l
 
       # Step 8: Verify APK path and upload artifacts
       - name: Check APK existence
         run: |
           echo "Looking for APK file"
-          if [ -f apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk/app-release.apk ]; then
+          if [ -f apps/health_campaign_field_worker_app/build/app/outputs/apk/release/app-release.apk ]; then
             echo "APK found."
           else
             echo "APK not found in the expected path."
@@ -74,13 +76,12 @@ jobs:
             exit 1
           fi
 
-
       # Archive the APK as a build artifact so it can be downloaded
       - name: Upload APKs
         uses: actions/upload-artifact@v3
         with:
           name: app-release-apk
-          path: apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk/app-release.apk
+          path: apps/health_campaign_field_worker_app/build/app/outputs/apk/release/app-release.apk
 
       - name: Upload .env as artifact
         uses: actions/upload-artifact@v3
