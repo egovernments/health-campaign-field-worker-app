@@ -1,6 +1,8 @@
 ## 1.0.4-dev.8-search-fix
 
 * BeneficiaryReferred search query fix
+* Check to avoid duplicate entry in containers
+* Fetching all individuals from members after query search
 
 ## 1.0.4-dev.7-search-fix
 
