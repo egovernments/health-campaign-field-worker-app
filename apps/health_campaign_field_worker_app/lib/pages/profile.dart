@@ -58,7 +58,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
         _mobileNumberKey: FormControl<String>(
           value: user?.mobileNumber,
           validators: [
-            // CustomValidator.validMobileNumber,
+            Validators.pattern(Constants.mobileNumberRegExp,
+                validationMessage:
+                    localizations.translate(i18.common.coreCommonMobileNumber))
           ],
         ),
         _emailId: FormControl<String>(
@@ -130,13 +132,6 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                         builder: (ctx, state) {
                           return DigitElevatedButton(
                             onPressed: () async {
-                              // final connectivityResult =
-                              //     await (Connectivity().checkConnectivity());
-                              // final isOnline = connectivityResult.first ==
-                              //         ConnectivityResult.wifi ||
-                              //     connectivityResult.first ==
-                              //         ConnectivityResult.mobile;
-
                               final connectivityResult =
                                   await (Connectivity().checkConnectivity());
                               final isOnline = connectivityResult.firstOrNull ==
@@ -260,15 +255,13 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                           ),
                                         ],
                                       ),
-                                      ...appConfiguration.genderOptions!
-                                          .map((e) =>
-                                              ReactiveRadioListTile<String>(
+                                      ...appConfiguration.genderOptions!.map(
+                                          (e) => ReactiveRadioListTile<String>(
                                                 value: e.code,
                                                 title: Text(localizations
                                                     .translate(e.code)),
                                                 formControlName: _genderKey,
-                                              ))
-                                          .toList(),
+                                              )),
                                     ],
                                   );
                                 },

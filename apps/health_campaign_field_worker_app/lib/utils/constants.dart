@@ -85,6 +85,8 @@ class Constants {
   static const String projectBeneficiary = 'ProjectBeneficiary';
   static const String household = 'Household';
   static const String closedHousehold = 'ClosedHousehold';
+  static RegExp mobileNumberRegExp =
+      RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
