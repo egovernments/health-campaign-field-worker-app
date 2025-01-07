@@ -189,14 +189,8 @@ class MainApplicationState extends State<MainApplication>
                                     widget.sql,
                                   )..add(
                                       LocalizationEvent.onLoadLocalization(
-                                        module: localizationModulesList
-                                            .interfaces
-                                            .where((element) =>
-                                                element.type ==
-                                                Modules.localizationModule)
-                                            .map((e) => e.name.toString())
-                                            .join(',')
-                                            .toString(),
+                                        module:
+                                            "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                         tenantId: appConfig.tenantId.toString(),
                                         locale: firstLanguage,
                                         path: Constants.localizationApiPath,
