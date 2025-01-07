@@ -382,6 +382,20 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
+            await context.router.push(const RegistrationDeliveryWrapperRoute());
+          },
+        ),
+      ),
+
+      i18.home.clfLabel: homeShowcaseData.clf.buildWith(
+        child: HomeItemCard(
+          icon: Icons.account_balance,
+          label: i18.home.clfLabel,
+          onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.community);
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -486,7 +500,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.viewSummaryReportsLabel:
-          homeShowcaseData.summaryReport.showcaseKey
+          homeShowcaseData.summaryReport.showcaseKey,
+      i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -504,7 +519,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.syncDataLabel,
       i18.home.db,
       i18.home.closedHouseHoldLabel,
-      i18.home.viewSummaryReportsLabel
+      i18.home.viewSummaryReportsLabel,
+      i18.home.clfLabel,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -678,6 +694,9 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
           referralReasons:
               appConfiguration.referralReasons!.map((e) => e.code).toList(),
+          searchCLFFilters: appConfiguration.searchCLFFilters != null
+              ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
+              : [],
         );
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
