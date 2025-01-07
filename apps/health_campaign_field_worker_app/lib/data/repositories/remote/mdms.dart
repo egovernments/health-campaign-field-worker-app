@@ -249,11 +249,11 @@ class MdmsRepository {
 
     final List<ChecklistTypes>? checklistTypes =
         element?.checklistTypes.map((e) {
-      final checklist = ChecklistTypes()
+      final surveyForm = ChecklistTypes()
         ..name = e.name
         ..code = e.code;
 
-      return checklist;
+      return surveyForm;
     }).toList();
 
     final List<TransportTypes>? transportTypes =

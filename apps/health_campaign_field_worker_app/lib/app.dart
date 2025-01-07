@@ -6,6 +6,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/data/repositories/remote/bandwidth_check.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
@@ -20,6 +21,7 @@ import 'blocs/summary_reports/custom_distribution_summary_report.dart';
 import 'blocs/summary_reports/custom_enumeration_summary_report.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
+import 'data/remote_client.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'router/app_navigator_observer.dart';
@@ -211,6 +213,11 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            bandwidthCheckRepository: BandwidthCheckRepository(
+                              DioClient().dio,
+                              bandwidthPath:
+                                  envConfig.variables.checkBandwidthApiPath,
+                            ),
                             mdmsRepository: MdmsRepository(widget.client),
                             facilityLocalRepository: ctx.read<
                                 LocalRepository<FacilityModel,

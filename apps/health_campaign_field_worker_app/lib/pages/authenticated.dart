@@ -42,7 +42,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
               return Portal(
                 child: Scaffold(
-                  backgroundColor: DigitTheme.instance.colorScheme.background,
+                  backgroundColor: DigitTheme.instance.colorScheme.surface,
                   appBar: AppBar(
                     backgroundColor: DigitTheme.instance.colorScheme.primary,
                     actions: showDrawer
@@ -106,6 +106,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   drawer: showDrawer ? const Drawer(child: SideBar()) : null,
                   body: MultiBlocProvider(
                     providers: [
+                      // INFO : Need to add bloc of package Here
+
                       BlocProvider(
                         create: (context) {
                           final userId = context.loggedInUserUuid;

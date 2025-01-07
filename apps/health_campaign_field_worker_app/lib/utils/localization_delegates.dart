@@ -15,6 +15,8 @@ import 'package:digit_components/blocs/localization.dart'
     as component_localization;
 import 'package:closed_household/blocs/app_localization.dart'
     as closed_household_localization;
+import 'package:survey_form/blocs/app_localization.dart'
+    as survey_form_localization;
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 
@@ -48,10 +50,6 @@ getAppLocalizationDelegates({
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
-    attendance_localization.AttendanceLocalization.getDelegate(
-      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
-      appConfig.languages!,
-    ),
     component_localization.ComponentLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
@@ -61,6 +59,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     complaints_localization.ComplaintsLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    survey_form_localization.SurveyFormLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
