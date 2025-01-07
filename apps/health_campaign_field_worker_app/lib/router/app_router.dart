@@ -9,6 +9,7 @@ import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
