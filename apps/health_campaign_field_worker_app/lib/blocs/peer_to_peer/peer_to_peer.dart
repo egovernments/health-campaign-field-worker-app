@@ -14,6 +14,8 @@ import 'package:sync_service/data/repositories/sync/remote_type.dart';
 
 import '../../data/sync_service_mapper.dart';
 import '../../models/downsync/downsync.dart';
+import '../../models/entities/peer_to_peer/message_types.dart';
+import '../../models/entities/peer_to_peer/peer_to_peer_message.dart';
 
 part 'peer_to_peer.freezed.dart';
 
@@ -41,7 +43,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
   int totalCount = 0;
   String entityType = '';
   late Device connectedDevice;
-  late String selectedBoundaryCode;
+  late String? selectedBoundaryCode;
 
   PeerToPeerBloc(
       {required this.individualLocalRepository,
@@ -99,11 +101,6 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
                 .map((e) => offsetData[e])
                 .firstOrNull;
 
-            var selectedBoundaryName = offsetData.keys
-                .where((element) => element == 'boundaryName')
-                .map((e) => offsetData[e])
-                .firstOrNull;
-
             totalCount = offsetData.keys
                 .where((element) => element == 'totalCount')
                 .map((e) => offsetData[e])
@@ -116,21 +113,20 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               for (var device in event.connectedDevice) {
                 await event.nearbyService.sendMessage(
                   device.deviceId,
-                  jsonEncode({
-                    "type": "chunk",
-                    "selectedBoundaryCode": selectedBoundaryCode,
-                    "selectedBoundaryName": selectedBoundaryName,
-                    "message": compressJson(entityResponse),
-                    "offset": offsetValue,
-                    "totalData": totalCount,
-                  }),
+                  PeerToPeerMessageModel(
+                          messageType: MessageTypes.chunk.toValue(),
+                          selectedBoundaryCode: selectedBoundaryCode,
+                          message: compressJson(entityResponse),
+                          offset: offsetValue,
+                          totalCount: totalCount)
+                      .toJson(),
                 );
               }
 
               // Wait for confirmation before proceeding
               await waitForConfirmation(
                 event.nearbyService,
-                confirmationType: "chunk",
+                confirmationType: ConfirmationTypes.chunk.toValue(),
                 offset: offsetValue,
               );
 
@@ -145,19 +141,19 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           for (var device in event.connectedDevice) {
             await event.nearbyService.sendMessage(
               device.deviceId,
-              jsonEncode({
-                "type": "confirmation",
-                "confirmationType": "finalTransfer",
-                "status": "completed",
-                "message": "All entities have been sent successfully.",
-              }),
+              PeerToPeerMessageModel(
+                messageType: MessageTypes.confirmation.toValue(),
+                message: "All entities have been sent successfully.",
+                confirmationType: ConfirmationTypes.finalTransfer.toValue(),
+                status: MessageStatus.completed.toValue(),
+              ).toJson(),
             );
           }
 
           // Wait for receiver's overall acknowledgment
           await waitForConfirmation(
             event.nearbyService,
-            confirmationType: "finalAcknowledgment",
+            confirmationType: ConfirmationTypes.finalAcknowledgment.toValue(),
           );
 
           emit(const PeerToPeerState.completedDataTransfer());
@@ -199,15 +195,15 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
     PeerToPeerEmitter emit,
   ) async {
     try {
-      var receivedJson = jsonDecode(event.data["message"]);
-      var messageType = receivedJson["type"];
+      PeerToPeerMessageModel messageModel =
+          PeerToPeerMessageModelMapper.fromJson(event.data["message"]);
 
-      if (messageType == "chunk") {
+      if (messageModel.messageType == MessageTypes.chunk.toValue()) {
         // Process chunk
-        int offset = receivedJson["offset"];
-        int totalCount = receivedJson["totalData"];
-        selectedBoundaryCode = receivedJson["selectedBoundaryCode"];
-        final compressedMessage = receivedJson["message"];
+        int? offset = messageModel.offset;
+        int? totalCount = messageModel.totalCount;
+        selectedBoundaryCode = messageModel.selectedBoundaryCode;
+        final compressedMessage = messageModel.message;
         final entityList = decompressJson(compressedMessage).entries;
 
         for (var entity in entityList) {
@@ -249,8 +245,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
         }
 
         // Update progress and clear processed data
-        receivedBytes = offset;
-        double progress = receivedBytes / totalCount;
+        receivedBytes = offset!;
+        double progress = receivedBytes / totalCount!;
 
         // Emit progress
         emit(PeerToPeerState.receivingInProgress(
@@ -261,18 +257,19 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
 
         // Send chunk acknowledgment
         await event.nearbyService.sendMessage(
-          event.data["deviceId"],
-          jsonEncode({
-            "type": "confirmation",
-            "confirmationType": "chunk",
-            "status": "received",
-            "offset": offset,
-            "progress": progress,
-            "message": "Chunk received and saved successfully.",
-          }),
-        );
-      } else if (messageType == "confirmation" &&
-          receivedJson["confirmationType"] == "finalTransfer") {
+            event.data["deviceId"],
+            PeerToPeerMessageModel(
+                    messageType: MessageTypes.confirmation.toValue(),
+                    confirmationType: ConfirmationTypes.chunk.toValue(),
+                    status: MessageStatus.received.toValue(),
+                    progress: progress,
+                    offset: offset,
+                    message: "Chunk received and saved successfully.")
+                .toJson());
+      } else if (messageModel.messageType ==
+              MessageTypes.confirmation.toValue() &&
+          messageModel.confirmationType ==
+              ConfirmationTypes.finalTransfer.toValue()) {
         final existingDownSyncData =
             await downSyncLocalRepository.search(DownsyncSearchModel(
           locality: selectedBoundaryCode,
@@ -286,33 +283,28 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           ),
         );
 
-        // Handle overall transfer final acknowledgment
-        emit(const PeerToPeerState.dataReceived());
-
         // Send overall transfer acknowledgment
         await event.nearbyService.sendMessage(
-          event.data["deviceId"],
-          jsonEncode({
-            "type": "confirmation",
-            "confirmationType": "finalAcknowledgment",
-            "status": "success",
-            "message": "All entities received and processed successfully.",
-          }),
-        );
+            event.data["deviceId"],
+            PeerToPeerMessageModel(
+              messageType: MessageTypes.confirmation.toValue(),
+              message: "All entities received and processed successfully.",
+              confirmationType: ConfirmationTypes.finalAcknowledgment.toValue(),
+              status: MessageStatus.success.toValue(),
+            ).toJson());
         emit(const PeerToPeerState.dataReceived());
       }
     } catch (e) {
       debugPrint("Error processing received data: $e");
       emit(PeerToPeerState.failedToReceive(error: e.toString()));
       await event.nearbyService.sendMessage(
-        event.data["deviceId"],
-        jsonEncode({
-          "type": "confirmation",
-          "confirmationType": "failed",
-          "status": "fail",
-          "message": "$e",
-        }),
-      );
+          event.data["deviceId"],
+          PeerToPeerMessageModel(
+            messageType: MessageTypes.confirmation.toValue(),
+            message: "$e",
+            confirmationType: ConfirmationTypes.failed.toValue(),
+            status: MessageStatus.fail.toValue(),
+          ).toJson());
     }
   }
 
@@ -326,20 +318,24 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
     final subscription = nearbyService.dataReceivedSubscription(
       callback: (data) {
         try {
-          var receivedJson = jsonDecode(data["message"]);
-          if (receivedJson["type"] == "confirmation") {
-            if (confirmationType == "chunk" &&
-                receivedJson["offset"] == offset) {
+          PeerToPeerMessageModel messageModel =
+              PeerToPeerMessageModelMapper.fromJson(data["message"]);
+
+          if (messageModel.messageType == MessageTypes.confirmation.toValue()) {
+            if (confirmationType == ConfirmationTypes.chunk.toValue() &&
+                messageModel.offset == offset) {
               completer.complete();
-            } else if (confirmationType == "finalAcknowledgment") {
+            } else if (confirmationType ==
+                ConfirmationTypes.finalAcknowledgment.toValue()) {
               completer.complete();
-            } else if (confirmationType == "final") {
+            } else if (confirmationType ==
+                ConfirmationTypes.finalTransfer.toValue()) {
               completer.complete();
-            } else if (confirmationType == "failed") {
+            } else if (confirmationType == ConfirmationTypes.failed.toValue()) {
               completer.complete();
               emit(const PeerToPeerState.failedToTransfer(
                   error: "File doesn't exist"));
-              throw "Failed to transfer ${receivedJson['message']}";
+              throw "Failed to transfer ${messageModel.message}";
             }
           }
         } catch (e) {
