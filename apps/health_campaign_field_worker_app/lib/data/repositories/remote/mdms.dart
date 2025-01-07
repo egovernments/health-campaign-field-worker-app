@@ -323,6 +323,15 @@ class MdmsRepository {
       return symptomTypes;
     }).toList();
 
+    appConfiguration.searchCLFFilters =
+        result.hcmWrapperModel?.searchCLFFilters?.map((e) {
+      final searchFilters = SearchCLFFilters()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return searchFilters;
+    }).toList();
+
     appConfiguration.referralReasons =
         result.hcmWrapperModel?.referralReasonList?.map((e) {
       final reasonTypes = ReferralReasons()

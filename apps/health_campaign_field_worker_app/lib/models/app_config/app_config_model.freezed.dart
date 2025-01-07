@@ -952,6 +952,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'SYMPTOM_TYPES')
   List<SymptomsType>? get symptomsTypeList =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'SEARCH_CLF_FILTERS')
+  List<SearchCLFFilters>? get searchCLFFilters =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList =>
       throw _privateConstructorUsedError;
@@ -990,6 +993,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
       @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
       @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
+      @JsonKey(name: 'SEARCH_CLF_FILTERS')
+      List<SearchCLFFilters>? searchCLFFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList});
 }
@@ -1020,6 +1025,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
     Object? symptomsTypeList = freezed,
+    Object? searchCLFFilters = freezed,
     Object? referralReasonList = freezed,
   }) {
     return _then(_value.copyWith(
@@ -1076,6 +1082,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.symptomsTypeList
           : symptomsTypeList // ignore: cast_nullable_to_non_nullable
               as List<SymptomsType>?,
+      searchCLFFilters: freezed == searchCLFFilters
+          ? _value.searchCLFFilters
+          : searchCLFFilters // ignore: cast_nullable_to_non_nullable
+              as List<SearchCLFFilters>?,
       referralReasonList: freezed == referralReasonList
           ? _value.referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
@@ -1114,6 +1124,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
       @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
       @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
+      @JsonKey(name: 'SEARCH_CLF_FILTERS')
+      List<SearchCLFFilters>? searchCLFFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList});
 }
@@ -1142,6 +1154,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
     Object? symptomsTypeList = freezed,
+    Object? searchCLFFilters = freezed,
     Object? referralReasonList = freezed,
   }) {
     return _then(_$HCMWrapperModelImpl(
@@ -1198,6 +1211,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._symptomsTypeList
           : symptomsTypeList // ignore: cast_nullable_to_non_nullable
               as List<SymptomsType>?,
+      searchCLFFilters: freezed == searchCLFFilters
+          ? _value._searchCLFFilters
+          : searchCLFFilters // ignore: cast_nullable_to_non_nullable
+              as List<SearchCLFFilters>?,
       referralReasonList: freezed == referralReasonList
           ? _value._referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
@@ -1236,6 +1253,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       required final List<TransportTypes> transportTypes,
       @JsonKey(name: 'SYMPTOM_TYPES')
       final List<SymptomsType>? symptomsTypeList,
+      @JsonKey(name: 'SEARCH_CLF_FILTERS')
+      final List<SearchCLFFilters>? searchCLFFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList})
       : _appConfig = appConfig,
@@ -1252,6 +1271,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes,
         _symptomsTypeList = symptomsTypeList,
+        _searchCLFFilters = searchCLFFilters,
         _referralReasonList = referralReasonList;
 
   factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -1389,6 +1409,18 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<SearchCLFFilters>? _searchCLFFilters;
+  @override
+  @JsonKey(name: 'SEARCH_CLF_FILTERS')
+  List<SearchCLFFilters>? get searchCLFFilters {
+    final value = _searchCLFFilters;
+    if (value == null) return null;
+    if (_searchCLFFilters is EqualUnmodifiableListView)
+      return _searchCLFFilters;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<ReferralReasonType>? _referralReasonList;
   @override
   @JsonKey(name: 'REFERRAL_REASONS')
@@ -1403,7 +1435,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, referralReasonList: $referralReasonList)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList)';
   }
 
   @override
@@ -1441,6 +1473,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality()
                 .equals(other._symptomsTypeList, _symptomsTypeList) &&
             const DeepCollectionEquality()
+                .equals(other._searchCLFFilters, _searchCLFFilters) &&
+            const DeepCollectionEquality()
                 .equals(other._referralReasonList, _referralReasonList));
   }
 
@@ -1462,6 +1496,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       const DeepCollectionEquality().hash(_callSupportOptions),
       const DeepCollectionEquality().hash(_transportTypes),
       const DeepCollectionEquality().hash(_symptomsTypeList),
+      const DeepCollectionEquality().hash(_searchCLFFilters),
       const DeepCollectionEquality().hash(_referralReasonList));
 
   @JsonKey(ignore: true)
@@ -1507,6 +1542,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<TransportTypes> transportTypes,
       @JsonKey(name: 'SYMPTOM_TYPES')
       final List<SymptomsType>? symptomsTypeList,
+      @JsonKey(name: 'SEARCH_CLF_FILTERS')
+      final List<SearchCLFFilters>? searchCLFFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>?
           referralReasonList}) = _$HCMWrapperModelImpl;
@@ -1553,6 +1590,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'SYMPTOM_TYPES')
   List<SymptomsType>? get symptomsTypeList;
+  @override
+  @JsonKey(name: 'SEARCH_CLF_FILTERS')
+  List<SearchCLFFilters>? get searchCLFFilters;
   @override
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList;
@@ -4910,6 +4950,179 @@ abstract class _CallSupportList implements CallSupportList {
   @override
   @JsonKey(ignore: true)
   _$$CallSupportListImplCopyWith<_$CallSupportListImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+SearchCLFFilters _$SearchCLFFiltersFromJson(Map<String, dynamic> json) {
+  return _SearchCLFFilters.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SearchCLFFilters {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+  bool get active => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SearchCLFFiltersCopyWith<SearchCLFFilters> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SearchCLFFiltersCopyWith<$Res> {
+  factory $SearchCLFFiltersCopyWith(
+          SearchCLFFilters value, $Res Function(SearchCLFFilters) then) =
+      _$SearchCLFFiltersCopyWithImpl<$Res, SearchCLFFilters>;
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class _$SearchCLFFiltersCopyWithImpl<$Res, $Val extends SearchCLFFilters>
+    implements $SearchCLFFiltersCopyWith<$Res> {
+  _$SearchCLFFiltersCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SearchCLFFiltersImplCopyWith<$Res>
+    implements $SearchCLFFiltersCopyWith<$Res> {
+  factory _$$SearchCLFFiltersImplCopyWith(_$SearchCLFFiltersImpl value,
+          $Res Function(_$SearchCLFFiltersImpl) then) =
+      __$$SearchCLFFiltersImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class __$$SearchCLFFiltersImplCopyWithImpl<$Res>
+    extends _$SearchCLFFiltersCopyWithImpl<$Res, _$SearchCLFFiltersImpl>
+    implements _$$SearchCLFFiltersImplCopyWith<$Res> {
+  __$$SearchCLFFiltersImplCopyWithImpl(_$SearchCLFFiltersImpl _value,
+      $Res Function(_$SearchCLFFiltersImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_$SearchCLFFiltersImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SearchCLFFiltersImpl implements _SearchCLFFilters {
+  _$SearchCLFFiltersImpl(
+      {required this.name, required this.code, required this.active});
+
+  factory _$SearchCLFFiltersImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SearchCLFFiltersImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+  @override
+  final bool active;
+
+  @override
+  String toString() {
+    return 'SearchCLFFilters(name: $name, code: $code, active: $active)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchCLFFiltersImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.active, active) || other.active == active));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code, active);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchCLFFiltersImplCopyWith<_$SearchCLFFiltersImpl> get copyWith =>
+      __$$SearchCLFFiltersImplCopyWithImpl<_$SearchCLFFiltersImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SearchCLFFiltersImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SearchCLFFilters implements SearchCLFFilters {
+  factory _SearchCLFFilters(
+      {required final String name,
+      required final String code,
+      required final bool active}) = _$SearchCLFFiltersImpl;
+
+  factory _SearchCLFFilters.fromJson(Map<String, dynamic> json) =
+      _$SearchCLFFiltersImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  bool get active;
+  @override
+  @JsonKey(ignore: true)
+  _$$SearchCLFFiltersImplCopyWith<_$SearchCLFFiltersImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
