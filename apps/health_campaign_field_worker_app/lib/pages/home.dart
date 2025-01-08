@@ -5,6 +5,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -382,8 +383,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            // RegistrationDeliverySingleton()
-            //     .setHouseholdType(HouseholdType.family);
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -394,8 +395,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.account_balance,
           label: i18.home.clfLabel,
           onPressed: () async {
-            // RegistrationDeliverySingleton()
-            //     .setHouseholdType(HouseholdType.community);
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.community);
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -694,9 +695,9 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
           referralReasons:
               appConfiguration.referralReasons!.map((e) => e.code).toList(),
-          // searchCLFFilters: appConfiguration.searchCLFFilters != null
-          //     ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
-          //     : [],
+          searchCLFFilters: appConfiguration.searchCLFFilters != null
+              ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
+              : [],
         );
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
