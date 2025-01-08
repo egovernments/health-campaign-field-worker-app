@@ -50,6 +50,7 @@ class CustomIndividualDetailsPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   bool isDuplicateTag = false;
+  bool isHeadAgeValid = true;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
@@ -116,6 +117,25 @@ class CustomIndividualDetailsPageState
                         if ((age.years == 0 && age.months == 0) ||
                             age.years >= 150 && age.months > 0) {
                           form.control(_dobKey).setErrors({'': true});
+                        }
+
+                        if (widget.isHeadOfHousehold) {
+                          isHeadAgeValid = age.years >= 12;
+                        }
+
+                        if (!isHeadAgeValid) {
+                          await DigitToast.show(
+                            context,
+                            options: DigitToastOptions(
+                              localizations.translate(
+                                i18Local.individualDetails.headAgeValidError,
+                              ),
+                              true,
+                              theme,
+                            ),
+                          );
+
+                          return;
                         }
                         if (form.control(_genderKey).value == null) {
                           setState(() {

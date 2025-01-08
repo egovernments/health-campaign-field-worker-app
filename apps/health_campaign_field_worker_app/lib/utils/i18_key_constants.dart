@@ -1077,6 +1077,7 @@ class IndividualDetails {
 
   String get voucherCodeScanMoreThanLimit =>
       "VOUCHER_CODE_SCAN_MORE_THAN_LIMIT";
+  String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
 }
 
 class BeneficiaryDetails {
