@@ -113,7 +113,7 @@ class MdmsRepository {
     app_configuration.AppConfigPrimaryWrapperModel result,
     PGRServiceDefinitions pgrServiceDefinitions,
     Isar isar,
-  ) async {
+  ) {
     final appConfiguration = AppConfiguration();
 
     final data = result.rowVersions?.rowVersionslist;
@@ -137,6 +137,10 @@ class MdmsRepository {
       ..serviceInterval =
           element?.backgroundServiceConfig?.first.serviceInterval;
 
+    final firebaseConfig = FirebaseConfig()
+      ..enableAnalytics = element?.firebaseConfig?.first.enableAnalytics
+      ..enableCrashlytics = element?.firebaseConfig?.first.enableCrashlytics;
+
     appConfiguration
       ..networkDetection = appConfig?.networkDetection
       ..persistenceMode = appConfig?.persistenceMode
@@ -144,7 +148,8 @@ class MdmsRepository {
       ..syncTrigger = appConfig?.syncTrigger
       ..tenantId = appConfig?.tenantId
       ..maxRadius = appConfig?.maxRadius
-      ..backgroundServiceConfig = backgroundServiceConfig;
+      ..backgroundServiceConfig = backgroundServiceConfig
+      ..firebaseConfig = firebaseConfig;
 
     final List<Languages>? languageList =
         commonMasters?.stateInfo.first.languages.map((element) {
@@ -211,6 +216,33 @@ class MdmsRepository {
       return genderOption;
     }).toList();
 
+    final privacyPolicyConfig = commonMasters?.privacyPolicyConfig;
+
+    final privacyPolicy = PrivacyPolicy()
+      ..header = privacyPolicyConfig?.first.header ?? ''
+      ..module = privacyPolicyConfig?.first.module ?? ''
+      ..active = privacyPolicyConfig?.first.active
+      ..contents = (privacyPolicyConfig?.first.contents ?? []).map((cont) {
+        final content = Content()
+          ..header = cont.header
+          ..descriptions = (cont.descriptions ?? []).map((d) {
+            final description = Description()
+              ..text = d.text
+              ..type = d.type
+              ..isBold = d.isBold
+              ..subDescriptions = (d.subDescriptions ?? []).map((sd) {
+                final subDescription = SubDescription()
+                  ..text = sd.text
+                  ..type = sd.type
+                  ..isBold = sd.isBold
+                  ..isSpaceRequired = sd.isSpaceRequired;
+                return subDescription;
+              }).toList();
+            return description;
+          }).toList();
+        return content;
+      }).toList();
+
     final List<IdTypeOptions>? idTypeOptions =
         element?.idTypeOptions.map((element) {
       final idOption = IdTypeOptions()
@@ -222,11 +254,11 @@ class MdmsRepository {
 
     final List<ChecklistTypes>? checklistTypes =
         element?.checklistTypes.map((e) {
-      final checklist = ChecklistTypes()
+      final surveyForm = ChecklistTypes()
         ..name = e.name
         ..code = e.code;
 
-      return checklist;
+      return surveyForm;
     }).toList();
 
     final List<TransportTypes>? transportTypes =
@@ -272,6 +304,7 @@ class MdmsRepository {
       ..interfaces = interfaceList ?? [];
     appConfiguration.genderOptions = genderOptions;
     appConfiguration.idTypeOptions = idTypeOptions;
+    appConfiguration.privacyPolicyConfig = privacyPolicy;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
     appConfiguration.householdDeletionReasonOptions =
         householdDeletionReasonOptions;
@@ -285,6 +318,15 @@ class MdmsRepository {
     appConfiguration.complaintTypes = complaintTypesList;
     appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
     appConfiguration.downSyncBandwidthBatchSize = downSyncBandWidthBatchSize;
+    appConfiguration.searchHouseHoldFilters =
+        result.hcmWrapperModel?.searchHouseHoldFilters?.map((e) {
+      final searchFilters = SearchHouseHoldFilters()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return searchFilters;
+    }).toList();
+
     appConfiguration.symptomsTypes =
         result.hcmWrapperModel?.symptomsTypeList?.map((e) {
       final symptomTypes = SymptomsTypes()
@@ -304,10 +346,29 @@ class MdmsRepository {
 
       return reasonTypes;
     }).toList();
+    appConfiguration.houseStructureTypes =
+        result.hcmWrapperModel?.houseStructureTypes?.map((e) {
+      final structureTypes = HouseStructureTypes()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
 
-    await isar.writeTxn(() async {
-      await isar.appConfigurations.put(appConfiguration);
-      await isar.rowVersionLists.putAll(rowVersionList);
+      return structureTypes;
+    }).toList();
+
+    appConfiguration.refusalReasons =
+        result.hcmWrapperModel?.refusalReasons?.map((e) {
+      final reasonTypes = RefusalReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+
+    isar.writeTxnSync(() {
+      isar.appConfigurations.putSync(appConfiguration);
+      isar.rowVersionLists.putAllSync(rowVersionList);
     });
   }
 

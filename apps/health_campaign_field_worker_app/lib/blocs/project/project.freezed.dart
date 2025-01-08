@@ -68,9 +68,9 @@ class _$ProjectEventCopyWithImpl<$Res, $Val extends ProjectEvent>
     implements $ProjectEventCopyWith<$Res> {
   _$ProjectEventCopyWithImpl(this._value, this._then);
 
-// ignore: unused_field
+  // ignore: unused_field
   final $Val _value;
-// ignore: unused_field
+  // ignore: unused_field
   final $Res Function($Val) _then;
 }
 
@@ -346,9 +346,9 @@ class _$ProjectStateCopyWithImpl<$Res, $Val extends ProjectState>
     implements $ProjectStateCopyWith<$Res> {
   _$ProjectStateCopyWithImpl(this._value, this._then);
 
-// ignore: unused_field
+  // ignore: unused_field
   final $Val _value;
-// ignore: unused_field
+  // ignore: unused_field
   final $Res Function($Val) _then;
 
   @pragma('vm:prefer-inline')
@@ -448,7 +448,7 @@ class _$ProjectStateImpl extends _ProjectState {
   @JsonKey()
   List<ProjectModel> get projects {
     if (_projects is EqualUnmodifiableListView) return _projects;
-// ignore: implicit_dynamic_type
+    // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_projects);
   }
 

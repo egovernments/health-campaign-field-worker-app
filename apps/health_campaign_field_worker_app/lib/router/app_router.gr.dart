@@ -55,7 +55,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -275,7 +274,6 @@ class BoundarySelectionRouteArgs {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
-
 
 /// generated route for
 /// [HomePage]
