@@ -272,7 +272,7 @@ class HouseholdOverviewBloc
           offset: members.isNotEmpty
               ? (event.offset ?? 0) + (event.limit ?? 10)
               : null,
-          // limit: event.limit,
+          limit: event.limit,
         ),
       );
     } else {

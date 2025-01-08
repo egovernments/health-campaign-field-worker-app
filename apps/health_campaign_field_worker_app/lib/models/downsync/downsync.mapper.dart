@@ -14,7 +14,6 @@ class DownsyncSearchModelMapper
   static DownsyncSearchModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DownsyncSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -222,10 +221,6 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
   static DownsyncModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DownsyncModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      DownsyncAdditionalFieldsMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -494,8 +489,6 @@ class DownsyncAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = DownsyncAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }

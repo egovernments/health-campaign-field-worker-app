@@ -58,9 +58,6 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     final referral =
         context.repository<ReferralModel, ReferralSearchModel>(context);
 
-    final serviceDefinationRepo = context.repository<ServiceDefinitionModel,
-        ServiceDefinitionSearchModel>(context);
-
     final individualGlobalSearchRepository =
         context.read<IndividualGlobalSearchRepository>();
 

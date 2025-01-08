@@ -395,6 +395,8 @@ class _HouseholdOverviewPageState
                                           capitalizeLetters: false,
                                         ),
                                       ),
+
+                                    ///Old UI Format
                                     // BlocBuilder<DeliverInterventionBloc,
                                     //     DeliverInterventionState>(
                                     //   builder: (ctx, deliverInterventionState) =>
@@ -440,7 +442,6 @@ class _HouseholdOverviewPageState
                                         ),
                                       ),
                                     ),
-
                                     Padding(
                                       padding: const EdgeInsets.only(
                                         left: spacer2,

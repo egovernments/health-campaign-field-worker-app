@@ -444,11 +444,12 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: "04a6e7117382f8a8689b3e363bee6c3de8c9ea4332e664148fe01bd576eb1126"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: ab088b8fc21a07ed7a56bf81c935ee51481ad253
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
+    version: "4.2.3"
   dart_style:
     dependency: transitive
     description:
@@ -516,11 +517,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: c3bc7299a7d927ebb83d8e91c1d7a8a51f6a1d1295dafeacb642012b72b99a2f
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.5+1"
   digit_dss:
     dependency: "direct main"
     description:
@@ -1855,10 +1855,9 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "4dd6e6781e367edf806d838e58771dff838eeff0d444534079a468789cadfbcb"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.5+2"
   remove_emoji_input_formatter:
     dependency: transitive
