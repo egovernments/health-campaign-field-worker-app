@@ -33,6 +33,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
   static const _emailId = 'emailId';
 
   bool isLoading = false;
+  bool isUpdate = false;
 
   @override
   void initState() {
@@ -58,7 +59,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
         _mobileNumberKey: FormControl<String>(
           value: user?.mobileNumber,
           validators: [
-            CustomValidator.validMobileNumber,
+            Validators.pattern(Constants.mobileNumberRegExp,
+                validationMessage:
+                    localizations.translate(i18.common.coreCommonMobileNumber))
           ],
         ),
         _emailId: FormControl<String>(
@@ -68,7 +71,11 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
         _genderKey: FormControl<String>(
           value: context.read<AppInitializationBloc>().state.maybeWhen(
                 orElse: () => null,
-                initialized: (appConfiguration, serviceRegistryList) {
+                initialized: (
+                  appConfiguration,
+                  serviceRegistryList,
+                  _,
+                ) {
                   return appConfiguration.genderOptions
                       ?.map((e) => e.code)
                       .firstWhereOrNull((element) => element == user?.gender);
@@ -93,14 +100,24 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
               if (isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
               }
+              if (isUpdate) {
+                DigitToast.show(context,
+                    options: DigitToastOptions(
+                        localizations
+                            .translate(i18.common.profileUpdateSuccess),
+                        false,
+                        theme));
+              }
               setState(() {
                 isLoading = false;
+                isUpdate = false;
               });
             },
             error: (error) {
               Navigator.of(context, rootNavigator: true).pop();
               setState(() {
                 isLoading = false;
+                isUpdate = false;
               });
               DigitToast.show(
                 context,
@@ -132,9 +149,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                             onPressed: () async {
                               final connectivityResult =
                                   await (Connectivity().checkConnectivity());
-                              final isOnline = connectivityResult ==
+                              final isOnline = connectivityResult.firstOrNull ==
                                       ConnectivityResult.wifi ||
-                                  connectivityResult ==
+                                  connectivityResult.firstOrNull ==
                                       ConnectivityResult.mobile;
 
                               if (!isOnline) {
@@ -170,6 +187,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                   user: (value) => value.userModel,
                                 );
                                 if (user != null) {
+                                  setState(() {
+                                    isUpdate = true;
+                                  });
                                   final updatedUser = user.copyWith(
                                     gender: formGroup.control(_genderKey).value
                                         as String,
@@ -227,8 +247,8 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                               label: localizations.translate(
                                 i18.common.coreCommonMobileNumber,
                               ),
-                              minLength: 10,
                               maxLength: 10,
+                              readOnly: true,
                               validationMessages: {
                                 'mobileNumber': (object) =>
                                     localizations.translate(i18
@@ -240,7 +260,11 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                 AppInitializationState>(
                               builder: (context, state) => state.maybeWhen(
                                 orElse: () => const Offstage(),
-                                initialized: (appConfiguration, _) {
+                                initialized: (
+                                  appConfiguration,
+                                  _,
+                                  __,
+                                ) {
                                   return Column(
                                     children: [
                                       Row(
@@ -249,19 +273,17 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                             localizations.translate(
                                               i18.common.coreCommonGender,
                                             ),
-                                            style: theme.textTheme.labelMedium,
+                                            style: theme.textTheme.titleMedium,
                                           ),
                                         ],
                                       ),
-                                      ...appConfiguration.genderOptions!
-                                          .map((e) =>
-                                              ReactiveRadioListTile<String>(
+                                      ...appConfiguration.genderOptions!.map(
+                                          (e) => ReactiveRadioListTile<String>(
                                                 value: e.code,
                                                 title: Text(localizations
                                                     .translate(e.code)),
                                                 formControlName: _genderKey,
-                                              ))
-                                          .toList(),
+                                              )),
                                     ],
                                   );
                                 },

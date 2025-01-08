@@ -9,6 +9,7 @@ class HomeItemCard extends StatelessWidget {
   final String customIcon;
   final String label;
   final VoidCallback? onPressed;
+  final double? customIconSize;
   final bool enableCustomIcon;
 
   const HomeItemCard({
@@ -16,6 +17,7 @@ class HomeItemCard extends StatelessWidget {
     required this.label,
     this.enableCustomIcon = false,
     this.customIcon = "",
+    this.customIconSize,
     this.onPressed,
     super.key,
   });
@@ -38,8 +40,8 @@ class HomeItemCard extends StatelessWidget {
             if (enableCustomIcon)
               SvgPicture.asset(
                 customIcon,
-                width: 25,
-                height: 25,
+                width: customIconSize ?? 25,
+                height: customIconSize ?? 25,
               ),
             if (!enableCustomIcon)
               Icon(

@@ -2,13 +2,13 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:disk_space/disk_space.dart';
+import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
-import '../../data/network_manager.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../models/downsync/downsync.dart';
 import '../../utils/background_service.dart';
@@ -26,13 +26,12 @@ class BeneficiaryDownSyncBloc
       downSyncRemoteRepository;
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
       downSyncLocalRepository;
-  final NetworkManager networkManager;
   final BandwidthCheckRepository bandwidthCheckRepository;
+
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
     required this.downSyncLocalRepository,
-    required this.networkManager,
     required this.bandwidthCheckRepository,
   }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
@@ -122,6 +121,7 @@ class BeneficiaryDownSyncBloc
           event.batchSize,
         ));
       } else {
+        await LocalSecureStore.instance.setManualSyncTrigger(false);
         emit(const BeneficiaryDownSyncState.resetState());
         emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
       }
@@ -184,7 +184,9 @@ class BeneficiaryDownSyncBloc
             );
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
-              await networkManager.writeToEntityDB(downSyncResults, [
+              await SyncServiceSingleton()
+                  .entityMapper
+                  ?.writeToEntityDB(downSyncResults, [
                 individualLocalRepository,
               ]);
               // Update the local downSync data for the boundary with the new values
@@ -283,9 +285,11 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int syncedCount,
     int totalCount,
   ) = _DownSyncInProgressState;
+
   const factory BeneficiaryDownSyncState.success(
     DownsyncModel downSyncResult,
   ) = _DownSyncSuccessState;
+
   const factory BeneficiaryDownSyncState.getBatchSize(
     int batchSize,
     String projectId,
@@ -293,21 +297,29 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int pendingSyncCount,
     String boundaryName,
   ) = _DownSyncGetBatchSizeState;
+
   const factory BeneficiaryDownSyncState.loading(bool isPop) =
       _DownSyncLoadingState;
+
   const factory BeneficiaryDownSyncState.insufficientStorage() =
       _DownSyncInsufficientStorageState;
+
   const factory BeneficiaryDownSyncState.dataFound(
     int initialServerCount,
     int batchSize,
   ) = _DownSyncDataFoundState;
+
   const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;
+
   const factory BeneficiaryDownSyncState.totalCountCheckFailed() =
       _DownSynnCountCheckFailedState;
+
   const factory BeneficiaryDownSyncState.failed() = _DownSyncFailureState;
+
   const factory BeneficiaryDownSyncState.report(
     List<DownsyncModel> downsyncCriteriaList,
   ) = _DownSyncReportState;
+
   const factory BeneficiaryDownSyncState.pendingSync() =
       _DownSyncPendingSyncState;
 }

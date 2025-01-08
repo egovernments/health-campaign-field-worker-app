@@ -8,10 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
-import '../blocs/sync/sync.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
@@ -42,7 +42,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
               return Portal(
                 child: Scaffold(
-                  backgroundColor: DigitTheme.instance.colorScheme.background,
+                  backgroundColor: DigitTheme.instance.colorScheme.surface,
                   appBar: AppBar(
                     backgroundColor: DigitTheme.instance.colorScheme.primary,
                     actions: showDrawer
@@ -54,10 +54,11 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 if (selectedBoundary == null) {
                                   return const SizedBox.shrink();
                                 } else {
+                                  LocalizationParams()
+                                      .setCode([selectedBoundary.code!]);
                                   final boundaryName =
                                       AppLocalizations.of(context).translate(
-                                    selectedBoundary.name ??
-                                        selectedBoundary.code ??
+                                    selectedBoundary.code ??
                                         i18.projectSelection.onProjectMapped,
                                   );
 
@@ -106,6 +107,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   drawer: showDrawer ? const Drawer(child: SideBar()) : null,
                   body: MultiBlocProvider(
                     providers: [
+                      // INFO : Need to add bloc of package Here
                       BlocProvider(
                         create: (context) {
                           final userId = context.loggedInUserUuid;
@@ -113,7 +115,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           final isar = context.read<Isar>();
                           final bloc = SyncBloc(
                             isar: isar,
-                            networkManager: context.read(),
+                            syncService: SyncService(),
                           );
 
                           if (!bloc.isClosed) {
@@ -132,7 +134,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 bloc.add(
                                   SyncRefreshEvent(
                                     userId,
-                                    getSyncCount(event),
+                                    SyncServiceSingleton()
+                                        .entityMapper!
+                                        .getSyncCount(event),
                                   ),
                                 );
                               }
@@ -151,7 +155,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 bloc.add(
                                   SyncRefreshEvent(
                                     userId,
-                                    getSyncCount(event),
+                                    SyncServiceSingleton()
+                                        .entityMapper!
+                                        .getSyncCount(event),
                                   ),
                                 );
                               }
@@ -181,7 +187,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           downSyncLocalRepository: ctx.read<
                               LocalRepository<DownsyncModel,
                                   DownsyncSearchModel>>(),
-                          networkManager: ctx.read(),
                         ),
                       ),
                     ],

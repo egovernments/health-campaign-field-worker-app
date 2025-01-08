@@ -185,9 +185,9 @@ class SideBar extends StatelessWidget {
               onPressed: () async {
                 final connectivityResult =
                     await (Connectivity().checkConnectivity());
-                final isOnline =
-                    connectivityResult == ConnectivityResult.wifi ||
-                        connectivityResult == ConnectivityResult.mobile;
+                final isOnline = connectivityResult.firstOrNull ==
+                        ConnectivityResult.wifi ||
+                    connectivityResult.firstOrNull == ConnectivityResult.mobile;
 
                 if (isOnline) {
                   if (context.mounted) {

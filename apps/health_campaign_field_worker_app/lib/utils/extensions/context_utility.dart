@@ -99,9 +99,9 @@ extension ContextUtilityExtensions on BuildContext {
     if (selectedBoundary == null) {
       throw AppException('No boundary is selected');
     }
-
     // INFO: Set Boundary for packages
-
+    LocationTrackerSingleton()
+        .setBoundaryName(boundaryName: selectedBoundary.code!);
     return selectedBoundary;
   }
 
@@ -143,6 +143,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     return individualUUID;
+  }
+
+  UserModel? get loggedInUserModel {
+    final userRequestModel = loggedInUser;
+    final userModel = UserModel(
+      userName: userRequestModel.userName,
+      name: userRequestModel.name,
+      uuid: userRequestModel.uuid,
+      mobileNumber: userRequestModel.mobileNumber,
+      gender: userRequestModel.gender,
+      active: userRequestModel.active,
+      tenantId: userRequestModel.tenantId,
+    );
+
+    return userModel;
   }
 
   String get loggedInUserUuid => loggedInUser.uuid;
@@ -203,5 +218,17 @@ extension ContextUtilityExtensions on BuildContext {
     } catch (error) {
       throw AppException('Could not fetch ${T.runtimeType}');
     }
+  }
+
+  // sync refresh
+  void syncRefresh() {
+    final syncBloc = _get<SyncBloc>();
+    syncBloc.add(SyncRefreshEvent(loggedInUserUuid));
+  }
+
+  // insert sync count
+  Stream<SyncState> syncCount() {
+    final syncBloc = _get<SyncBloc>();
+    return syncBloc.stream;
   }
 }
