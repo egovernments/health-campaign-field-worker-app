@@ -1,10 +1,10 @@
 name: health_campaign_field_worker_app
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: "none"
 version: 1.6.0+0
 
 environment:
-  sdk: '>=3.0.0 <=4.0.0'
+  sdk: ">=3.0.0 <=4.0.0"
 
 dependencies:
   flutter:
@@ -62,15 +62,31 @@ dependencies:
   digit_scanner: ^1.0.4
   inventory_management: ^1.0.4
   referral_reconciliation: ^1.0.3
-  digit_data_model: ^1.0.5
-  registration_delivery: ^1.0.5+2
+  digit_data_model:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: hcmpre-1250-beneficiary
+      path: ./packages/digit_data_model
+  registration_delivery:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: hcmpre-1250-beneficiary
+      path: ./packages/registration_delivery
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.3
   closed_household: ^1.0.3
   digit_location_tracker: ^1.0.0
   permission_handler: ^11.3.1
-  survey_form: ^1.0.0
-  complaints: ^1.0.0
+  survey_form:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: hcmpre-1250-beneficiary
+      path: ./packages/survey_form
+  complaints:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: hcmpre-1250-beneficiary
+      path: ./packages/complaints
 
 dev_dependencies:
   flutter_test:
@@ -91,9 +107,9 @@ dev_dependencies:
   hrk_flutter_test_batteries: ^0.8.0
 
 flutter_icons:
-  android: 'ic_launcher'
+  android: "ic_launcher"
   ios: true
-  image_path: 'assets/icons/app_icon.png'
+  image_path: "assets/icons/app_icon.png"
   min_sdk_android: 21
 
 flutter:

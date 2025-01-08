@@ -33,7 +33,8 @@ class SideBar extends StatelessWidget {
         : false;
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-      return Column(
+      return SingleChildScrollView(
+          child: Column(
         children: [
           Container(
             color: theme.colorScheme.secondary.withOpacity(0.12),
@@ -200,7 +201,7 @@ class SideBar extends StatelessWidget {
             version: Constants().version,
           ),
         ],
-      );
+      ));
     });
   }
 }

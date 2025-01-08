@@ -5,6 +5,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';

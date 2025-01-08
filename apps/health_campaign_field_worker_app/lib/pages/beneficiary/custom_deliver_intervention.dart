@@ -9,6 +9,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/pages/custom_qr_scanner.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
@@ -26,7 +27,6 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/beneficiary/custom_resource_beneficiary_card.dart';
 import '../../widgets/localized.dart';
-import '../custom_qr_scanner.dart';
 
 @RoutePage()
 class CustomDeliverInterventionPage extends LocalizedStatefulWidget {
@@ -636,8 +636,6 @@ class CustomDeliverInterventionPageState
                                                                               bednetCount < 2,
                                                                           isEditEnabled:
                                                                               true,
-                                                                          manualEnabled:
-                                                                              false,
                                                                         ),
                                                                         settings:
                                                                             const RouteSettings(name: '/qr-scanner'),
@@ -679,8 +677,6 @@ class CustomDeliverInterventionPageState
                                                                             2,
                                                                     isEditEnabled:
                                                                         true,
-                                                                    manualEnabled:
-                                                                        false,
                                                                   ),
                                                                   settings:
                                                                       const RouteSettings(
