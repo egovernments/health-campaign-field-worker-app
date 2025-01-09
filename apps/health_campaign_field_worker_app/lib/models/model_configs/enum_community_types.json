@@ -1,0 +1,13 @@
+{
+    "name": "CommunityTypes",
+    "enumValues": [
+      {
+        "name": "RefugeeCamps",
+        "value": "refugee_camps"
+      },
+      {
+        "name": "SpecialGroups",
+        "value": "special_groups"
+      }
+    ]
+}
