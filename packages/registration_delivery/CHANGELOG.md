@@ -1,3 +1,6 @@
+## 1.0.3-dev.12
+* Manipulating the registration delivery form using mdms json config
+
 ## 1.0.3+3
 * Updated Service model additionalDetails objectType in digit_data_model package
 
