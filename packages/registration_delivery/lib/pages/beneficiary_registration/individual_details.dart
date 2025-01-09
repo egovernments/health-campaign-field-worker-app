@@ -33,7 +33,7 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
-  final List<config>? widgetConfig;
+  final List<RegistrationDeliveryFormConfig>? widgetConfig;
   final bool isHeadOfHousehold;
 
   const IndividualDetailsPage({

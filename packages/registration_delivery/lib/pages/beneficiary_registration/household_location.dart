@@ -22,7 +22,7 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseholdLocationPage extends LocalizedStatefulWidget {
-  final List<config>? widgetConfig;
+  final List<RegistrationDeliveryFormConfig>? widgetConfig;
 
   const HouseholdLocationPage({
     this.widgetConfig,

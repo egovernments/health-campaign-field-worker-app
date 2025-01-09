@@ -13,7 +13,6 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../utils/component_mapper/house_details_component_mapper.dart';
 import '../../utils/convert_to_map.dart';
-import '../../utils/formController.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/models/widget_config_model.dart';
 import '../../utils/utils.dart';
@@ -25,7 +24,7 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseDetailsPage extends LocalizedStatefulWidget {
-  final List<config>? widgetConfig;
+  final List<RegistrationDeliveryFormConfig>? widgetConfig;
 
   const HouseDetailsPage({
     this.widgetConfig,

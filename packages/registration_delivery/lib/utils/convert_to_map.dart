@@ -1,7 +1,7 @@
 import 'models/widget_config_model.dart';
 
 class FieldConverter {
-  final List<config>? widgetConfig;
+  final List<RegistrationDeliveryFormConfig>? widgetConfig;
 
   FieldConverter(this.widgetConfig);
 
@@ -12,8 +12,8 @@ class FieldConverter {
     }
 
     // Find the config with the specified name
-    final config? foundConfig =
-    widgetConfig?.firstWhere((config) => nameToFind.toLowerCase().contains(config.name?.toLowerCase() as Pattern), orElse: () => config());
+    final RegistrationDeliveryFormConfig? foundConfig =
+    widgetConfig?.firstWhere((config) => nameToFind.toLowerCase().contains(config.name?.toLowerCase() as Pattern), orElse: () => RegistrationDeliveryFormConfig());
 
     // Convert to JSON if found
     return foundConfig?.toJson();

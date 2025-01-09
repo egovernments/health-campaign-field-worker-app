@@ -317,7 +317,7 @@ class RegistrationDeliverySingleton {
   PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
   List<FormConfigModel>? _formConfig;
-  List<config>? _registrationFormConfig;
+  List<RegistrationDeliveryFormConfig>? _registrationFormConfig;
   List<String>? _genderOptions;
   List<String>? _idTypeOptions;
   List<String>? _householdDeletionReasonOptions;
@@ -357,7 +357,7 @@ class RegistrationDeliverySingleton {
       required List<String>? refusalReasons,
       required UserModel? loggedInUser,
       List<FormConfigModel>? formConfig,
-      List<config>? registrationFormConfig}) {
+      List<RegistrationDeliveryFormConfig>? registrationFormConfig}) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
     _projectId = projectId;
@@ -408,7 +408,7 @@ class RegistrationDeliverySingleton {
   List<String>? get refusalReasons => _refusalReasons;
   UserModel? get loggedInUser => _loggedInUser;
   List<FormConfigModel>? get formConfig => _formConfig;
-  List<config>? get registrationFormConfig => _registrationFormConfig;
+  List<RegistrationDeliveryFormConfig>? get registrationFormConfig => _registrationFormConfig;
 }
 
 bool allDosesDelivered(

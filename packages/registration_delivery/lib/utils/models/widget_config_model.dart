@@ -101,14 +101,14 @@ class FieldConfig {
   }
 }
 
-class config {
+class RegistrationDeliveryFormConfig {
   String? name;
   String? type;
   List<Components>? components;
 
-  config({this.name, this.type, this.components});
+  RegistrationDeliveryFormConfig({this.name, this.type, this.components});
 
-  config.fromJson(Map<String, dynamic> json) {
+  RegistrationDeliveryFormConfig.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     type = json['type'];
     if (json['components'] != null) {

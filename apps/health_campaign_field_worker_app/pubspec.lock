@@ -1608,7 +1608,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.3+3"
+    version: "1.0.3-dev.12-json-config"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

@@ -25,7 +25,7 @@ import '../../pages/beneficiary_registration/house_details.dart';
 import '../../widgets/beneficiary/resource_beneficiary_card.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
-import '../formController.dart';
+import '../form_controller.dart';
 import '../models/widget_config_model.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../utils.dart';

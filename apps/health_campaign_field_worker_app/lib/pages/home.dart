@@ -650,7 +650,7 @@ void setPackagesSingleton(BuildContext context) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
-          registrationFormConfig: appConfiguration.registrationDeliveryConfigs?.map((element) => config()
+          registrationFormConfig: appConfiguration.registrationDeliveryConfigs!.map((element) => RegistrationDeliveryFormConfig()
           ..name = element.name
           ..type = element.type
           ..components = element.components.map((component) => Components()

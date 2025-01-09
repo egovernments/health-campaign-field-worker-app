@@ -28,7 +28,7 @@ import '../../widgets/localized.dart';
 
 @RoutePage()
 class DeliverInterventionPage extends LocalizedStatefulWidget {
-  final List<config>? widgetConfig;
+  final List<RegistrationDeliveryFormConfig>? widgetConfig;
   final bool isEditing;
 
   const DeliverInterventionPage({

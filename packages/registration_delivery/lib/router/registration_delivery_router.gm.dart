@@ -569,7 +569,7 @@ class BeneficiaryWrapperRouteArgs {
 class DeliverInterventionRoute
     extends _i26.PageRouteInfo<DeliverInterventionRouteArgs> {
   DeliverInterventionRoute({
-    List<_i29.config>? widgetConfig,
+    List<_i29.RegistrationDeliveryFormConfig>? widgetConfig,
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     bool isEditing = false,
@@ -599,7 +599,7 @@ class DeliverInterventionRouteArgs {
     this.isEditing = false,
   });
 
-  final List<_i29.config>? widgetConfig;
+  final List<_i29.RegistrationDeliveryFormConfig>? widgetConfig;
 
   final _i27.Key? key;
 
@@ -763,7 +763,7 @@ class FacilitySelectionRouteArgs {
 /// [_i11.HouseDetailsPage]
 class HouseDetailsRoute extends _i26.PageRouteInfo<HouseDetailsRouteArgs> {
   HouseDetailsRoute({
-    List<_i29.config>? widgetConfig,
+    List<_i29.RegistrationDeliveryFormConfig>? widgetConfig,
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     List<_i26.PageRouteInfo>? children,
@@ -790,7 +790,7 @@ class HouseDetailsRouteArgs {
     this.appLocalizations,
   });
 
-  final List<_i29.config>? widgetConfig;
+  final List<_i29.RegistrationDeliveryFormConfig>? widgetConfig;
 
   final _i27.Key? key;
 
@@ -807,7 +807,7 @@ class HouseDetailsRouteArgs {
 class HouseHoldDetailsRoute
     extends _i26.PageRouteInfo<HouseHoldDetailsRouteArgs> {
   HouseHoldDetailsRoute({
-    List<_i33.config>? widgetConfig,
+    List<_i33.RegistrationDeliveryFormConfig>? widgetConfig,
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     List<_i26.PageRouteInfo>? children,
@@ -834,7 +834,7 @@ class HouseHoldDetailsRouteArgs {
     this.appLocalizations,
   });
 
-  final List<_i33.config>? widgetConfig;
+  final List<_i33.RegistrationDeliveryFormConfig>? widgetConfig;
 
   final _i27.Key? key;
 
@@ -895,7 +895,7 @@ class HouseholdAcknowledgementRouteArgs {
 class HouseholdLocationRoute
     extends _i26.PageRouteInfo<HouseholdLocationRouteArgs> {
   HouseholdLocationRoute({
-    List<_i33.config>? widgetConfig,
+    List<_i33.RegistrationDeliveryFormConfig>? widgetConfig,
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     List<_i26.PageRouteInfo>? children,
@@ -922,7 +922,7 @@ class HouseholdLocationRouteArgs {
     this.appLocalizations,
   });
 
-  final List<_i33.config>? widgetConfig;
+  final List<_i33.RegistrationDeliveryFormConfig>? widgetConfig;
 
   final _i27.Key? key;
 
@@ -978,7 +978,7 @@ class HouseholdOverviewRouteArgs {
 class IndividualDetailsRoute
     extends _i26.PageRouteInfo<IndividualDetailsRouteArgs> {
   IndividualDetailsRoute({
-    List<_i33.config>? widgetConfig,
+    List<_i33.RegistrationDeliveryFormConfig>? widgetConfig,
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     bool isHeadOfHousehold = false,
@@ -1008,7 +1008,7 @@ class IndividualDetailsRouteArgs {
     this.isHeadOfHousehold = false,
   });
 
-  final List<_i33.config>? widgetConfig;
+  final List<_i33.RegistrationDeliveryFormConfig>? widgetConfig;
 
   final _i27.Key? key;
 
