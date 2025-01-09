@@ -1,4 +1,4 @@
-## 1.0.3-dev.12
+## 1.0.3-dev.12-json-config
 * Manipulating the registration delivery form using mdms json config
 
 ## 1.0.3+3

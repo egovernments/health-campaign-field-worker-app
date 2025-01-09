@@ -1,6 +1,6 @@
 name: registration_delivery
 description: This package enables health facility workers to register a household and individual members and deliver the resources.
-version: 1.0.3-dev.12
+version: 1.0.3-dev.12-json-config
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/registration_delivery
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
