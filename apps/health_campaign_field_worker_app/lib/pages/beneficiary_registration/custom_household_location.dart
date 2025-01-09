@@ -4,6 +4,9 @@ import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -225,16 +228,25 @@ class CustomHouseholdLocationPageState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        TextBlock(
-                            padding: const EdgeInsets.only(top: kPadding),
-                            heading: localizations.translate(
-                              i18.householdLocation.householdLocationLabelText,
-                            ),
-                            headingStyle: theme.textTheme.displayMedium,
-                            body: localizations.translate(
-                              i18.householdLocation
-                                  .householdLocationDescriptionText,
-                            )),
+                        DigitTextBlock(
+                            padding: const EdgeInsets.only(top: spacer2),
+                            heading: (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.community)
+                                ? localizations.translate(
+                                    i18.householdLocation.clfLocationLabelText)
+                                : localizations.translate(
+                                    i18.householdLocation
+                                        .householdLocationLabelText,
+                                  ),
+                            description: (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.community)
+                                ? null
+                                : localizations.translate(
+                                    i18.householdLocation
+                                        .householdLocationDescriptionText,
+                                  )),
                         Column(children: [
                           householdLocationShowcaseData.administrativeArea
                               .buildWith(
@@ -268,7 +280,14 @@ class CustomHouseholdLocationPageState
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {
     final addressModel = state.mapOrNull(
+      create: (value) => value.addressModel,
       editHousehold: (value) => value.addressModel,
+    );
+
+    final searchQuery = state.mapOrNull<String>(
+      create: (value) {
+        return value.searchQuery;
+      },
     );
 
     return fb.group(<String, Object>{

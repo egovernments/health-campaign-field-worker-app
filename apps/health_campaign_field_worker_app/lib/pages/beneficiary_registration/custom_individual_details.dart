@@ -2,11 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -395,10 +396,17 @@ class CustomIndividualDetailsPageState
                           Offstage(
                             offstage: !widget.isHeadOfHousehold,
                             child: DigitCheckbox(
-                              label: localizations.translate(
-                                i18.individualDetails.checkboxLabelText,
-                              ),
+                              capitalizeFirstLetter: false,
+                              label: (RegistrationDeliverySingleton()
+                                          .householdType ==
+                                      HouseholdType.community)
+                                  ? localizations.translate(i18
+                                      .individualDetails.clfCheckboxLabelText)
+                                  : localizations.translate(
+                                      i18.individualDetails.checkboxLabelText,
+                                    ),
                               value: widget.isHeadOfHousehold,
+                              onChanged: (_) {},
                             ),
                           ),
                           individualDetailsShowcaseData.dateOfBirth.buildWith(
@@ -713,7 +721,11 @@ class CustomIndividualDetailsPageState
               utilsLocal.CustomValidator.requiredMin3(validator)),
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery?.trim(),
+        value: individual?.name?.givenName ??
+            ((RegistrationDeliverySingleton().householdType ==
+                    HouseholdType.community)
+                ? null
+                : searchQuery?.trim()),
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null

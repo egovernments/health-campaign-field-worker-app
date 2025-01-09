@@ -3,6 +3,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/utils/date_utils.dart'
     as DigitDOBAgeConvertor;
 import 'package:flutter/material.dart';
@@ -307,22 +308,36 @@ class CustomViewBeneficiaryCardState
                     householdMember.household?.address?.city,
                     householdMember.household?.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
-                  subtitle: widget.distance != null
-                      ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
-                      : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
-                  status: getStatus(
-                      tasks ?? [],
-                      householdMember.projectBeneficiaries ?? [],
-                      RegistrationDeliverySingleton().beneficiaryType ==
-                              BeneficiaryType.individual
-                          ? isNotEligible
-                          : false,
-                      isBeneficiaryRefused),
-                  title: [
-                    householdMember.headOfHousehold?.name?.givenName ??
-                        localizations.translate(i18.common.coreCommonNA),
-                    householdMember.headOfHousehold?.name?.familyName,
-                  ].whereNotNull().join(''),
+                  subtitle: (RegistrationDeliverySingleton().householdType ==
+                          HouseholdType.family)
+                      ? widget.distance != null
+                          ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
+                          : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}'
+                      : (widget.distance != null)
+                          ? ((widget.distance!) * 1000).round() > 999
+                              ? '(${((widget.distance!).round())} km)'
+                              : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'
+                          : null,
+                  status: (RegistrationDeliverySingleton().householdType ==
+                          HouseholdType.community)
+                      ? null
+                      : getStatus(
+                          tasks ?? [],
+                          householdMember.projectBeneficiaries ?? [],
+                          RegistrationDeliverySingleton().beneficiaryType ==
+                                  BeneficiaryType.individual
+                              ? isNotEligible
+                              : false,
+                          isBeneficiaryRefused),
+                  title: (RegistrationDeliverySingleton().householdType ==
+                          HouseholdType.community)
+                      ? householdMember.household?.address?.buildingName ??
+                          localizations.translate(i18.common.coreCommonNA)
+                      : [
+                          householdMember.headOfHousehold?.name?.givenName ??
+                              localizations.translate(i18.common.coreCommonNA),
+                          householdMember.headOfHousehold?.name?.familyName,
+                        ].whereNotNull().join(''),
                 ),
               ),
               Flexible(
@@ -341,37 +356,40 @@ class CustomViewBeneficiaryCardState
               ),
             ],
           ),
-          Offstage(
-            offstage: !isCardExpanded,
-            child: DigitTable(
-              headerList: filteredHeaderList,
-              tableData: tableData ?? [],
-              columnWidth: 130,
-              columnRowFixedHeight: 65,
-              height: householdMember.members?.length == 1
-                  ? 65 * 2
-                  : (householdMember.members?.length ?? 0) <= 4
-                      ? ((householdMember.members?.length ?? 0) + 1) * 65
-                      : 5 * 68,
-              scrollPhysics: (householdMember.members?.length ?? 0) <= 4
-                  ? const NeverScrollableScrollPhysics()
-                  : const ClampingScrollPhysics(),
-            ),
-          ),
-          Container(
-            height: 24,
-            margin: const EdgeInsets.all(4),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              icon: Icon(
-                isCardExpanded
-                    ? Icons.keyboard_arrow_up
-                    : Icons.keyboard_arrow_down,
-                size: 24,
+          if (RegistrationDeliverySingleton().householdType ==
+              HouseholdType.family) ...[
+            Offstage(
+              offstage: !isCardExpanded,
+              child: DigitTable(
+                headerList: filteredHeaderList,
+                tableData: tableData ?? [],
+                columnWidth: 130,
+                columnRowFixedHeight: 65,
+                height: householdMember.members?.length == 1
+                    ? 65 * 2
+                    : (householdMember.members?.length ?? 0) <= 4
+                        ? ((householdMember.members?.length ?? 0) + 1) * 65
+                        : 5 * 68,
+                scrollPhysics: (householdMember.members?.length ?? 0) <= 4
+                    ? const NeverScrollableScrollPhysics()
+                    : const ClampingScrollPhysics(),
               ),
-              onPressed: () => isCardExpanded = !isCardExpanded,
             ),
-          ),
+            Container(
+              height: 24,
+              margin: const EdgeInsets.all(4),
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                icon: Icon(
+                  isCardExpanded
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
+                  size: 24,
+                ),
+                onPressed: () => isCardExpanded = !isCardExpanded,
+              ),
+            ),
+          ]
         ],
       ),
     );
