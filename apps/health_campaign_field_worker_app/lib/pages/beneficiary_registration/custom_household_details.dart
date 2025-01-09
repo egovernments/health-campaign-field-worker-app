@@ -119,6 +119,9 @@ class CustomHouseHoldDetailsPageState
                             longitude: addressModel?.longitude ??
                                 householdModel?.longitude,
                             tenantId: RegistrationDeliverySingleton().tenantId,
+                            // setting householdType here
+                            householdType:
+                                RegistrationDeliverySingleton().householdType,
                             clientReferenceId:
                                 householdModel?.clientReferenceId ??
                                     IdGen.i.identifier,
