@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
 
@@ -243,8 +243,6 @@ class MdmsRepository {
           }).toList();
         return content;
       }).toList();
-
-
 
     final List<IdTypeOptions>? idTypeOptions =
         element?.idTypeOptions.map((element) {
