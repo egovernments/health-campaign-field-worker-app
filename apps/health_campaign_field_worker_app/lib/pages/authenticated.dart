@@ -8,6 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/referral.dart';
+import 'package:registration_delivery/models/entities/side_effect.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -183,6 +189,23 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           downSyncLocalRepository: ctx.read<
                               LocalRepository<DownsyncModel,
                                   DownsyncSearchModel>>(),
+                          householdLocalRepository: ctx.read<
+                              LocalRepository<HouseholdModel,
+                                  HouseholdSearchModel>>(),
+                          householdMemberLocalRepository: ctx.read<
+                              LocalRepository<HouseholdMemberModel,
+                                  HouseholdMemberSearchModel>>(),
+                          projectBeneficiaryLocalRepository: ctx.read<
+                              LocalRepository<ProjectBeneficiaryModel,
+                                  ProjectBeneficiarySearchModel>>(),
+                          taskLocalRepository: ctx.read<
+                              LocalRepository<TaskModel, TaskSearchModel>>(),
+                          sideEffectLocalRepository: ctx.read<
+                              LocalRepository<SideEffectModel,
+                                  SideEffectSearchModel>>(),
+                          referralLocalRepository: ctx.read<
+                              LocalRepository<ReferralModel,
+                                  ReferralSearchModel>>(),
                           networkManager: ctx.read(),
                         ),
                       ),
