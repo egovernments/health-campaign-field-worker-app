@@ -292,7 +292,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       // INFO : Need to add project load functions
 
       try {
-        await _loadProjectFacilities(projects, batchSize);
+        await _loadProjectFacilities(projects);
       } catch (_) {
         emit(
           state.copyWith(
@@ -343,8 +343,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
   }
 
-  FutureOr<void> _loadProjectFacilities(
-      List<ProjectModel> projects, int batchSize) async {
+  FutureOr<void> _loadProjectFacilities(List<ProjectModel> projects) async {
     final projectFacilities = await projectFacilityRemoteRepository.search(
       ProjectFacilitySearchModel(
         projectId: projects.map((e) => e.id).toList(),
@@ -357,7 +356,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       FacilitySearchModel(
         id: null,
       ),
-      limit: batchSize,
     );
 
     await facilityLocalRepository.bulkCreate(facilities);
@@ -544,6 +542,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         loading: false,
         syncError: ProjectSyncErrorType.boundary,
       ));
+
+      return;
     }
 
     emit(state.copyWith(
