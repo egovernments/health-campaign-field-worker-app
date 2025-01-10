@@ -206,151 +206,26 @@ class _HouseholdOverviewPageState
                                         .isNotEmpty)
                                       Align(
                                         alignment: Alignment.centerLeft,
-                                        child: DigitButton(
-                                          onPressed: () {
-                                            final projectId =
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!;
-
-                                            final bloc = context
-                                                .read<HouseholdOverviewBloc>();
-                                            bloc.add(
-                                              HouseholdOverviewReloadEvent(
-                                                projectId: projectId,
-                                                projectBeneficiaryType:
-                                                    beneficiaryType,
-                                              ),
-                                            );
-                                            showDialog(
-                                              context: context,
-                                              builder: (ctx) => DigitActionCard(
-                                                actions: [
-                                                  DigitButton(
-                                                    capitalizeLetters: false,
-                                                    prefixIcon: Icons.edit,
-                                                    label: (RegistrationDeliverySingleton()
-                                                                .householdType ==
-                                                            HouseholdType
-                                                                .community)
-                                                        ? localizations.translate(i18
-                                                            .householdOverView
-                                                            .clfOverViewEditLabel)
-                                                        : localizations
-                                                            .translate(
-                                                            i18.householdOverView
-                                                                .householdOverViewEditLabel,
-                                                          ),
-                                                    type: DigitButtonType
-                                                        .secondary,
-                                                    size: DigitButtonSize.large,
-                                                    onPressed: () async {
-                                                      Navigator.of(
-                                                        context,
-                                                        rootNavigator: true,
-                                                      ).pop();
-
-                                                      HouseholdMemberWrapper
-                                                          wrapper = state
-                                                              .householdMemberWrapper;
-
-                                                      final timestamp = wrapper
-                                                          .headOfHousehold
-                                                          ?.clientAuditDetails
-                                                          ?.createdTime;
-                                                      final date = DateTime
-                                                          .fromMillisecondsSinceEpoch(
-                                                        timestamp ??
-                                                            DateTime.now()
-                                                                .millisecondsSinceEpoch,
-                                                      );
-
-                                                      final address = wrapper
-                                                          .household?.address;
-
-                                                      if (address == null)
-                                                        return;
-
-                                                      final projectBeneficiary = state
-                                                          .householdMemberWrapper
-                                                          .projectBeneficiaries
-                                                          ?.firstWhereOrNull(
-                                                        (element) =>
-                                                            element
-                                                                .beneficiaryClientReferenceId ==
-                                                            wrapper.household
-                                                                ?.clientReferenceId,
-                                                      );
-
-                                                      await context.router.root
-                                                          .push(
-                                                        BeneficiaryRegistrationWrapperRoute(
-                                                          initialState:
-                                                              BeneficiaryRegistrationEditHouseholdState(
-                                                            addressModel:
-                                                                address,
-                                                            individualModel: state
-                                                                    .householdMemberWrapper
-                                                                    .members ??
-                                                                [],
-                                                            householdModel: state
-                                                                .householdMemberWrapper
-                                                                .household!,
-                                                            registrationDate:
-                                                                date,
-                                                            projectBeneficiaryModel:
-                                                                projectBeneficiary,
-                                                          ),
-                                                          children: [
-                                                            HouseholdLocationRoute(),
-                                                          ],
-                                                        ),
-                                                      );
-                                                      callReloadEvent(
-                                                          offset: 0, limit: 10);
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                          label:
-                                              (RegistrationDeliverySingleton()
-                                                          .householdType ==
-                                                      HouseholdType.community)
-                                                  ? localizations.translate(i18
-                                                      .householdOverView
-                                                      .clfOverViewEditIconText)
-                                                  : localizations.translate(
-                                                      i18.householdOverView
-                                                          .householdOverViewEditIconText,
-                                                    ),
-                                          type: DigitButtonType.tertiary,
-                                          size: DigitButtonSize.medium,
-                                          prefixIcon: Icons.edit,
-                                          capitalizeLetters: false,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
+                                          child: Text(
+                                            RegistrationDeliverySingleton()
+                                                            .householdType !=
+                                                        null &&
+                                                    RegistrationDeliverySingleton()
+                                                            .householdType ==
+                                                        HouseholdType.community
+                                                ? localizations.translate(i18
+                                                    .householdOverView
+                                                    .clfOverviewLabel)
+                                                : localizations.translate(i18
+                                                    .householdOverView
+                                                    .householdOverViewLabel),
+                                            style: textTheme.headingXl,
+                                          ),
                                         ),
                                       ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(spacer2),
-                                        child: Text(
-                                          RegistrationDeliverySingleton()
-                                                          .householdType !=
-                                                      null &&
-                                                  RegistrationDeliverySingleton()
-                                                          .householdType ==
-                                                      HouseholdType.community
-                                              ? localizations.translate(i18
-                                                  .householdOverView
-                                                  .clfOverviewLabel)
-                                              : localizations.translate(i18
-                                                  .householdOverView
-                                                  .householdOverViewLabel),
-                                          style: textTheme.headingXl,
-                                        ),
-                                      ),
-                                    ),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                         left: spacer2,
@@ -443,108 +318,6 @@ class _HouseholdOverviewPageState
                                         );
                                       }),
                                     ),
-                                    if (RegistrationDeliverySingleton()
-                                            .householdType ==
-                                        HouseholdType.community) ...[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: spacer2, bottom: spacer2),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: DigitSearchBar(
-                                                controller: searchController,
-                                                hintText:
-                                                    localizations.translate(
-                                                  i18.common.searchByName,
-                                                ),
-                                                textCapitalization:
-                                                    TextCapitalization.words,
-                                                onChanged: (value) {
-                                                  if (value.length >= 3) {
-                                                    callReloadEvent(
-                                                        offset: 0, limit: 10);
-                                                  } else if (searchController
-                                                      .value.text.isEmpty) {
-                                                    callReloadEvent(
-                                                        offset: 0, limit: 10);
-                                                  }
-                                                },
-                                              ),
-                                            ),
-                                            Column(
-                                              children: [
-                                                getFilters()
-                                                    ? Align(
-                                                        alignment:
-                                                            Alignment.topLeft,
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(spacer2),
-                                                          child: DigitButton(
-                                                            label:
-                                                                getFilterIconNLabel()[
-                                                                    'label'],
-                                                            size:
-                                                                DigitButtonSize
-                                                                    .medium,
-                                                            type:
-                                                                DigitButtonType
-                                                                    .tertiary,
-                                                            suffixIcon:
-                                                                getFilterIconNLabel()[
-                                                                    'icon'],
-                                                            onPressed: () =>
-                                                                showFilterDialog(),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : const Offstage(),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                    selectedFilters.isNotEmpty
-                                        ? Align(
-                                            alignment: Alignment.topLeft,
-                                            child: SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.06,
-                                              child: ListView.builder(
-                                                  shrinkWrap: true,
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  itemCount:
-                                                      selectedFilters.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              spacer1),
-                                                      child: DigitChip(
-                                                        label:
-                                                            '${localizations.translate(getStatus(selectedFilters[index]))}'
-                                                            ' (${state.householdMemberWrapper.members!.length})',
-                                                        onItemDelete: () {
-                                                          selectedFilters.remove(
-                                                              selectedFilters[
-                                                                  index]);
-                                                          callReloadEvent(
-                                                              offset: 0,
-                                                              limit: 10);
-                                                        },
-                                                      ),
-                                                    );
-                                                  }),
-                                            ),
-                                          )
-                                        : const Offstage(),
                                   ],
                                 ),
                               ]),
