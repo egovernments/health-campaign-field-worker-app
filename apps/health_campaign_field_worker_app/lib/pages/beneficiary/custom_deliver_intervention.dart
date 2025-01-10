@@ -5,6 +5,7 @@ import 'package:digit_components/widgets/atoms/digit_stepper.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -21,6 +22,7 @@ import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../models/entities/community_types.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -161,9 +163,8 @@ class CustomDeliverInterventionPageState
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
-          final memberCount =
-              householdMemberWrapper.household?.memberCount ?? 0;
-          bednetCount = (memberCount / 2).round();
+
+          bednetCount = getBednetCount(householdMemberWrapper);
 
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
@@ -919,6 +920,49 @@ class CustomDeliverInterventionPageState
     );
 
     return task;
+  }
+
+  dynamic getBednetCount(HouseholdMemberWrapper householdMemberWrapper) {
+    // Early return if the householdMemberWrapper or household is null
+    final household = householdMemberWrapper?.household;
+    if (household == null) return 0;
+
+    final memberCount = household.memberCount ?? 0;
+
+    final householdType = household.householdType;
+    if (householdType == null) return 0;
+
+    // Handle the 'family' household type
+    if (householdType == HouseholdType.family) {
+      return (memberCount / 2).round();
+    }
+
+    // Handle the 'community' household type
+    if (householdType == HouseholdType.community) {
+      final additionalFields = household.additionalFields?.fields;
+
+      if (additionalFields == null || additionalFields.isEmpty) return 0;
+
+      final communityType = additionalFields
+          .where(
+            (field) => field.key == Constants.communityKey,
+          )
+          .firstOrNull;
+
+      if (communityType == null) return 0;
+
+      final communityValue = communityType.value;
+
+      // Handle different community types
+      if (communityValue == CommunityTypes.refugeeCamps.toValue()) {
+        return (memberCount / 2).round();
+      } else if (communityValue == CommunityTypes.specialGroups.toValue()) {
+        return memberCount;
+      }
+    }
+
+    // Default return value if no conditions match
+    return 0;
   }
 
 // This method builds a form used for delivering interventions.
