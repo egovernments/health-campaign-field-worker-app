@@ -189,12 +189,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
-        create: (_) => TaskLocalRepository(
-          sql,
-          TaskOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
         create: (_) => CustomTaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
