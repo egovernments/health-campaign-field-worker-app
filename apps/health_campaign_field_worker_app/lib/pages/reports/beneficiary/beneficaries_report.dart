@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,6 +19,7 @@ import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 import '../../../widgets/no_result_card/no_result_card.dart';
+import '../../../widgets/table_card/digit_table_card.dart';
 
 @RoutePage()
 class BeneficiariesReportPage extends LocalizedStatefulWidget {
@@ -63,6 +66,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: BlocBuilder<AppInitializationBloc, AppInitializationState>(
@@ -75,20 +79,22 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
               __,
             ) =>
                 ScrollableContent(
-              footer: SizedBox(
-                child: DigitCard(
-                  margin: const EdgeInsets.only(top: kPadding),
-                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                  child: DigitElevatedButton(
-                    onPressed: () {
-                      context.router.replace(HomeRoute());
-                    },
-                    child: Text(localizations.translate(
-                      i18.acknowledgementSuccess.goToHome,
-                    )),
-                  ),
-                ),
-              ),
+              footer: DigitCard(
+                  margin: const EdgeInsets.only(top: spacer2),
+                  padding: const EdgeInsets.all(spacer2),
+                  children: [
+                    DigitButton(
+                      mainAxisSize: MainAxisSize.max,
+                      label: localizations.translate(
+                        i18.acknowledgementSuccess.goToHome,
+                      ),
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large,
+                      onPressed: () {
+                        context.router.replace(HomeRoute());
+                      },
+                    ),
+                  ]),
               header: const BackNavigationHelpHeaderWidget(),
               children: [
                 BlocListener<BeneficiaryDownSyncBloc, BeneficiaryDownSyncState>(
@@ -103,7 +109,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           },
                         DigitSyncDialog.show(
                           context,
-                          type: DigitSyncDialogType.inProgress,
+                          type: DialogType.inProgress,
                           label: 'Loading',
                           barrierDismissible: false,
                         ),
@@ -326,88 +332,74 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                   },
                   child: Column(children: [
                     Padding(
-                      padding: const EdgeInsets.all(kPadding),
+                      padding: const EdgeInsets.all(spacer2),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           localizations.translate(
                             i18.beneficiaryDetails.datadownloadreport,
                           ),
-                          style: theme.textTheme.displayMedium,
+                          style: textTheme.headingXl,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
                     ...downSyncList.map(
-                      (e) => DigitCard(
-                        child: Column(
-                          children: [
-                            DigitTableCard(
-                              element: {
-                                localizations.translate(
-                                  i18.beneficiaryDetails.boundary,
-                                ): e.boundaryName!,
-                                localizations.translate(
-                                  i18.beneficiaryDetails.status,
-                                ): e.offset == 0 && e.limit == 0
-                                    ? localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .downloadcompleted,
-                                      )
-                                    : localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .partialdownloaded,
-                                      ),
-                                localizations.translate(
-                                  i18.beneficiaryDetails.downloadtime,
-                                ): e.lastSyncedTime != null
-                                    ? '${DigitDateUtils.getTimeFromTimestamp(e.lastSyncedTime!)} on ${DigitDateUtils.getDateFromTimestamp(e.lastSyncedTime!)}'
-                                    : '--',
-                                localizations.translate(
-                                  i18.beneficiaryDetails.totalrecorddownload,
-                                ): e.offset == 0 && e.limit == 0
-                                    ? '${e.totalCount}/${e.totalCount}'
-                                    : '${e.offset}/${e.totalCount}',
-                              },
-                            ),
-                            DigitOutLineButton(
-                              label: localizations.translate(
-                                i18.beneficiaryDetails.download,
-                              ),
-                              buttonStyle: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                side: BorderSide(
-                                  width: 1.0,
-                                  color: theme.colorScheme.secondary,
-                                ),
-                                minimumSize: Size(
-                                  MediaQuery.of(context).size.width,
-                                  50,
-                                ),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  selectedBoundary = BoundaryModel(
-                                    code: e.locality,
-                                    name: e.boundaryName,
-                                  );
-                                });
-                                context.read<BeneficiaryDownSyncBloc>().add(
-                                      DownSyncGetBatchSizeEvent(
-                                        appConfiguration: [
-                                          appConfiguration,
-                                        ],
-                                        projectId: context.projectId,
-                                        boundaryCode: e.locality!,
-                                        pendingSyncCount: pendingSyncCount,
-                                        boundaryName: e.boundaryName.toString(),
-                                      ),
-                                    );
-                              },
-                            ),
-                          ],
+                      (e) => DigitCard(children: [
+                        DigitTableCard(
+                          element: {
+                            localizations.translate(
+                              i18.beneficiaryDetails.boundary,
+                            ): e.boundaryName!,
+                            localizations.translate(
+                              i18.beneficiaryDetails.status,
+                            ): e.offset == 0 && e.limit == 0
+                                ? localizations.translate(
+                                    i18.beneficiaryDetails.downloadcompleted,
+                                  )
+                                : localizations.translate(
+                                    i18.beneficiaryDetails.partialdownloaded,
+                                  ),
+                            localizations.translate(
+                              i18.beneficiaryDetails.downloadtime,
+                            ): e.lastSyncedTime != null
+                                ? '${DigitDateUtils.getTimeFromTimestamp(e.lastSyncedTime!)} on ${DigitDateUtils.getDateFromTimestamp(e.lastSyncedTime!)}'
+                                : '--',
+                            localizations.translate(
+                              i18.beneficiaryDetails.totalrecorddownload,
+                            ): e.offset == 0 && e.limit == 0
+                                ? '${e.totalCount}/${e.totalCount}'
+                                : '${e.offset}/${e.totalCount}',
+                          },
                         ),
-                      ),
+                        DigitButton(
+                          label: localizations.translate(
+                            i18.beneficiaryDetails.download,
+                          ),
+                          mainAxisSize: MainAxisSize.max,
+                          type: DigitButtonType.secondary,
+                          size: DigitButtonSize.large,
+                          onPressed: () {
+                            setState(() {
+                              selectedBoundary = BoundaryModel(
+                                code: e.locality,
+                                name: e.boundaryName,
+                              );
+                            });
+                            context.read<BeneficiaryDownSyncBloc>().add(
+                                  DownSyncGetBatchSizeEvent(
+                                    appConfiguration: [
+                                      appConfiguration,
+                                    ],
+                                    projectId: context.projectId,
+                                    boundaryCode: e.locality!,
+                                    pendingSyncCount: pendingSyncCount,
+                                    boundaryName: e.boundaryName.toString(),
+                                  ),
+                                );
+                          },
+                        ),
+                      ]),
                     ),
                     downSyncList.isEmpty
                         ? NoResultCard(

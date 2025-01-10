@@ -1,4 +1,5 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -37,31 +38,29 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
         body: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             return ScrollableContent(
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showHelp: false,
                 ),
               ]),
               footer: DigitCard(
-                margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                padding: const EdgeInsets.fromLTRB(
-                  kPadding,
-                  0,
-                  kPadding,
-                  0,
-                ),
-                child: DigitElevatedButton(
-                  onPressed: () {
-                    context.router.popUntilRouteWithName(HomeRoute.name);
-                  },
-                  child: Center(
-                    child: Text(
-                      localizations.translate(i18.common.corecommonclose),
-                    ),
+                  margin: const EdgeInsets.only(top: spacer2),
+                  padding: const EdgeInsets.all(
+                    spacer2,
                   ),
-                ),
-              ),
+                  children: [
+                    DigitButton(
+                      label:
+                          localizations.translate(i18.common.corecommonclose),
+                      size: DigitButtonSize.large,
+                      type: DigitButtonType.primary,
+                      mainAxisSize: MainAxisSize.max,
+                      onPressed: () {
+                        context.router.popUntilRouteWithName(HomeRoute.name);
+                      },
+                    ),
+                  ]),
               children: [
                 state.maybeMap(
                   authenticated: (value) => Column(
@@ -70,7 +69,7 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                         width: MediaQuery.of(context).size.width / 1.25,
                         height: MediaQuery.of(context).size.width / 1.25,
                         child: Padding(
-                          padding: const EdgeInsets.all(kPadding),
+                          padding: const EdgeInsets.all(spacer2),
                           child: Card(
                             child: QrImageView(
                               data: context.loggedInUserUuid,

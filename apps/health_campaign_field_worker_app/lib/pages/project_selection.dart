@@ -1,9 +1,9 @@
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/digit_project_cell.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_location_tracker/location_tracker.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
@@ -46,6 +46,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ScrollableContent(
@@ -57,15 +58,12 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               showLogoutCTA: true,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
+              padding: const EdgeInsets.all(spacer4),
               child: Text(
                 localizations.translate(
                   i18.projectSelection.projectDetailsLabelText,
                 ),
-                style: theme.textTheme.displayMedium,
+                style: textTheme.headingXl,
               ),
             ),
           ],
@@ -83,40 +81,38 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 syncDialogRoute = DialogRoute(
                   context: context,
                   barrierDismissible: false,
-                  builder: (context) => DigitDialog(
-                    options: DigitSyncDialog.getDigitDialog(
-                      type: DigitSyncDialogType.failed,
+                  builder: (context) => DigitSyncDialogContent(
+                    label: localizations.translate(
+                      i18.projectSelection.syncFailedTitleText,
+                    ),
+                    type: DialogType.failed,
+                    primaryAction: DigitDialogActions(
                       label: localizations.translate(
-                        i18.projectSelection.syncFailedTitleText,
+                        i18.projectSelection.retryButtonText,
                       ),
-                      primaryAction: DigitDialogActions(
-                        label: localizations.translate(
-                          i18.projectSelection.retryButtonText,
-                        ),
-                        action: _selectedProject == null
-                            ? null
-                            : (context) {
-                                if (syncDialogRoute?.isActive ?? false) {
-                                  Navigator.of(context)
-                                      .removeRoute(syncDialogRoute!);
-                                }
-                                context.read<ProjectBloc>().add(
-                                      ProjectSelectProjectEvent(
-                                        _selectedProject!,
-                                      ),
-                                    );
-                              },
+                      action: _selectedProject == null
+                          ? null
+                          : (context) {
+                              if (syncDialogRoute?.isActive ?? false) {
+                                Navigator.of(context)
+                                    .removeRoute(syncDialogRoute!);
+                              }
+                              context.read<ProjectBloc>().add(
+                                    ProjectSelectProjectEvent(
+                                      _selectedProject!,
+                                    ),
+                                  );
+                            },
+                    ),
+                    secondaryAction: DigitDialogActions(
+                      label: localizations.translate(
+                        i18.projectSelection.dismissButtonText,
                       ),
-                      secondaryAction: DigitDialogActions(
-                        label: localizations.translate(
-                          i18.projectSelection.dismissButtonText,
-                        ),
-                        action: (context) {
-                          if (syncDialogRoute?.isActive ?? false) {
-                            Navigator.of(context).removeRoute(syncDialogRoute!);
-                          }
-                        },
-                      ),
+                      action: (context) {
+                        if (syncDialogRoute?.isActive ?? false) {
+                          Navigator.of(context).removeRoute(syncDialogRoute!);
+                        }
+                      },
                     ),
                   ),
                 );
@@ -128,12 +124,10 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 syncDialogRoute = DialogRoute(
                   context: context,
                   barrierDismissible: false,
-                  builder: (context) => DigitDialog(
-                    options: DigitSyncDialog.getDigitDialog(
-                      type: DigitSyncDialogType.inProgress,
-                      label: localizations.translate(
-                        i18.projectSelection.syncInProgressTitleText,
-                      ),
+                  builder: (context) => DigitSyncDialogContent(
+                    type: DialogType.inProgress,
+                    label: localizations.translate(
+                      i18.projectSelection.syncInProgressTitleText,
                     ),
                   ),
                 );
@@ -149,13 +143,12 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   triggerLocationTracking(state.selectedProject!);
                   navigateToBoundary(boundary);
                 } else {
-                  DigitToast.show(
+                  Toast.showToast(
                     context,
-                    options: DigitToastOptions(
-                      'No boundary data associated with this project.',
-                      true,
-                      theme,
+                    message: localizations.translate(
+                      i18.projectSelection.fetchBoundaryFailed,
                     ),
+                    type: ToastType.error,
                   );
                 }
               }
@@ -185,19 +178,18 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           padding: const EdgeInsets.symmetric(vertical: 30),
                           child: SizedBox(
                             width: 300,
-                            child: DigitElevatedButton(
+                            child: DigitButton(
+                              label: localizations.translate(
+                                i18.common.coreCommonOk,
+                              ),
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large,
+                              mainAxisSize: MainAxisSize.max,
                               onPressed: () {
                                 context
                                     .read<AuthBloc>()
                                     .add(const AuthLogoutEvent());
                               },
-                              child: Center(
-                                child: Text(
-                                  localizations.translate(
-                                    i18.common.coreCommonOk,
-                                  ),
-                                ),
-                              ),
                             ),
                           ),
                         ),
@@ -210,15 +202,19 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               return Column(
                 children: projects
                     .map(
-                      (element) => DigitProjectCell(
-                        projectText: element.name,
-                        onTap: () {
-                          _selectedProject = element;
+                      (element) => Padding(
+                        padding: const EdgeInsets.all(spacer2),
+                        child: MenuCard(
+                          icon: Icons.article,
+                          heading: element.name,
+                          onTap: () {
+                            _selectedProject = element;
 
-                          context.read<ProjectBloc>().add(
-                                ProjectSelectProjectEvent(element),
-                              );
-                        },
+                            context.read<ProjectBloc>().add(
+                                  ProjectSelectProjectEvent(element),
+                                );
+                          },
+                        ),
                       ),
                     )
                     .toList(),

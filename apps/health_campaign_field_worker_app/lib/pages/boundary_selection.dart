@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -15,8 +15,6 @@ import 'package:sync_service/blocs/sync/sync.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
-import '../data/local_store/app_shared_preferences.dart';
-import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../models/entities/roles_type.dart';
@@ -129,12 +127,13 @@ class _BoundarySelectionPageState
                           children: [
                             Expanded(
                               child: ListView.builder(
-                                itemCount: labelList.length+1,
+                                itemCount: labelList.length + 1,
                                 itemBuilder: (context, labelIndex) {
-
                                   if (labelIndex == labelList.length) {
                                     // Return a SizedBox for whitespace after the last item
-                                    return const SizedBox(height: kPadding*3); // Adjust height as needed
+                                    return const SizedBox(
+                                        height: spacer2 *
+                                            3); // Adjust height as needed
                                   }
 
                                   final label = labelList.elementAt(labelIndex);
@@ -161,51 +160,82 @@ class _BoundarySelectionPageState
                                   }).toList();
 
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kPadding * 2,
+                                    padding: const EdgeInsets.all(
+                                      spacer4,
                                     ),
-                                    child: DigitReactiveSearchDropdown<
-                                        BoundaryModel>(
-                                      label: localizations.translate(label),
-                                      form: form,
-                                      menuItems: filteredItems,
+                                    child: ReactiveWrapperField(
                                       formControlName: label,
-                                      valueMapper: (value) {
-                                        return localizations.translate(
-                                            value.code ?? 'No Value');
+                                      validationMessages: {
+                                        "required": (control) {
+                                          return localizations.translate(
+                                            i18.common.corecommonRequired,
+                                          );
+                                        }
                                       },
-                                      onFieldTap: (value) {
-                                        setState(() {
-                                          resetChildDropdowns(label, state);
-                                        });
-                                      },
-                                      onSelected: (value) {
-                                        if (value == null) return;
-                                        context.read<BoundaryBloc>().add(
-                                              BoundarySearchEvent(
-                                                boundaryNum:
-                                                    (value).boundaryNum!,
-                                                code: (value).code!,
-                                              ),
-                                            );
+                                      builder: (field) => LabeledField(
+                                        label: localizations.translate(label),
+                                        isRequired: true,
+                                        child: DigitDropdown<BoundaryModel>(
+                                          items: filteredItems
+                                              .map((e) => DropdownItem(
+                                                  name: localizations.translate(
+                                                      e.code ?? 'No Value'),
+                                                  code: e.code ?? ''))
+                                              .toList(),
+                                          onSelect: (value) {
+                                            final selectedBoundary =
+                                                filteredItems.firstWhere(
+                                                    (boundary) =>
+                                                        boundary.code ==
+                                                        value.code);
 
-                                        context.read<BoundaryBloc>().add(
-                                              BoundarySelectEvent(
-                                                label: label,
-                                                selectedBoundary: value,
-                                              ),
-                                            );
-                                        formControls[label]?.updateValue(value);
-                                        // Call the resetChildDropdowns function when a parent dropdown is selected
-                                        resetChildDropdowns(label, state);
-                                      },
-                                      isRequired: true,
-                                      validationMessage:
-                                          localizations.translate(
-                                        i18.common.corecommonRequired,
+                                            context.read<BoundaryBloc>().add(
+                                                  BoundarySearchEvent(
+                                                    boundaryNum:
+                                                        (selectedBoundary)
+                                                            .boundaryNum!,
+                                                    code: (selectedBoundary)
+                                                        .code!,
+                                                  ),
+                                                );
+
+                                            context.read<BoundaryBloc>().add(
+                                                  BoundarySelectEvent(
+                                                    label: label,
+                                                    selectedBoundary:
+                                                        selectedBoundary,
+                                                  ),
+                                                );
+                                            formControls[label]
+                                                ?.updateValue(selectedBoundary);
+                                            // Call the resetChildDropdowns function when a parent dropdown is selected
+                                            resetChildDropdowns(label, state);
+                                          },
+                                          emptyItemText:
+                                              localizations.translate(
+                                                  i18.common.noMatchFound),
+                                          errorMessage: form
+                                                  .control(label)
+                                                  .hasErrors
+                                              ? localizations.translate(
+                                                  i18.common.corecommonRequired,
+                                                )
+                                              : null,
+                                          selectedOption: formControls[label]
+                                                      ?.value
+                                                      ?.code !=
+                                                  null
+                                              ? DropdownItem(
+                                                  name: localizations.translate(
+                                                      formControls[label]!
+                                                          .value!
+                                                          .code!),
+                                                  code: formControls[label]!
+                                                      .value!
+                                                      .code!)
+                                              : null,
+                                        ),
                                       ),
-                                      emptyText: localizations
-                                          .translate(i18.common.noMatchFound),
                                     ),
                                   );
                                 },
@@ -241,7 +271,7 @@ class _BoundarySelectionPageState
                                         },
                                       DigitSyncDialog.show(
                                         context,
-                                        type: DigitSyncDialogType.inProgress,
+                                        type: DialogType.inProgress,
                                         label: localizations.translate(
                                           i18.beneficiaryDetails
                                               .dataDownloadInProgress,
@@ -531,87 +561,88 @@ class _BoundarySelectionPageState
                                 });
                               },
                               child: DigitCard(
-                                margin: const EdgeInsets.fromLTRB(
-                                    0, kPadding, 0, 0),
-                                padding: const EdgeInsets.fromLTRB(
-                                    kPadding, 0, kPadding, 0),
-                                child: SafeArea(
-                                  child: ValueListenableBuilder(
-                                    valueListenable: clickedStatus,
-                                    builder: (context, bool isClicked, _) {
-                                      return DigitElevatedButton(
-                                        onPressed: selectedBoundary == null ||
-                                                isClicked
-                                            ? null
-                                            : () async {
-                                                if (!form.valid ||
-                                                    validateAllBoundarySelection()) {
-                                                  clickedStatus.value = false;
-                                                  await DigitToast.show(
-                                                    context,
-                                                    options: DigitToastOptions(
-                                                      localizations.translate(i18
-                                                          .common
+                                  margin: const EdgeInsets.only(top: spacer2),
+                                  padding: const EdgeInsets.all(spacer2),
+                                  children: [
+                                    SafeArea(
+                                      child: ValueListenableBuilder(
+                                        valueListenable: clickedStatus,
+                                        builder: (context, bool isClicked, _) {
+                                          return DigitButton(
+                                            mainAxisSize: MainAxisSize.max,
+                                            isDisabled:
+                                                selectedBoundary == null ||
+                                                    isClicked,
+                                            label: localizations.translate(
+                                              i18.common.coreCommonSubmit,
+                                            ),
+                                            type: DigitButtonType.primary,
+                                            size: DigitButtonSize.large,
+                                            onPressed: () async {
+                                              if (!form.valid ||
+                                                  validateAllBoundarySelection()) {
+                                                clickedStatus.value = false;
+                                                Toast.showToast(
+                                                  context,
+                                                  message: localizations
+                                                      .translate(i18.common
                                                           .corecommonRequired),
-                                                      true,
-                                                      Theme.of(context),
-                                                    ),
-                                                  );
-                                                } else {
-                                                  setState(() {
-                                                    shouldPop = true;
-                                                  });
+                                                  type: ToastType.error,
+                                                );
+                                              } else {
+                                                setState(() {
+                                                  shouldPop = true;
+                                                });
 
+                                                context
+                                                    .read<BoundaryBloc>()
+                                                    .add(
+                                                      const BoundarySubmitEvent(),
+                                                    );
+                                                bool isOnline =
+                                                    await getIsConnected();
+
+                                                if (context.mounted) {
+                                                  if (isOnline &&
+                                                      isDistributor) {
                                                     context
-                                                        .read<BoundaryBloc>()
+                                                        .read<
+                                                            BeneficiaryDownSyncBloc>()
                                                         .add(
-                                                          const BoundarySubmitEvent(),
-                                                        );
-                                                    bool isOnline =
-                                                        await getIsConnected();
-
-                                                    if (context.mounted) {
-                                                      if (isOnline &&
-                                                          isDistributor) {
-                                                        context
-                                                            .read<
-                                                                BeneficiaryDownSyncBloc>()
-                                                            .add(
-                                                              DownSyncGetBatchSizeEvent(
-                                                                appConfiguration: [
-                                                                  appConfiguration,
-                                                                ],
-                                                                projectId: context
-                                                                    .projectId,
-                                                                boundaryCode:
-                                                                    selectedBoundary
-                                                                        .value!
-                                                                        .code
-                                                                        .toString(),
-                                                                pendingSyncCount:
-                                                                    pendingSyncCount,
-                                                                boundaryName:
-                                                                    selectedBoundary
-                                                                        .value!
-                                                                        .name
-                                                                        .toString(),
-                                                              ),
-                                                            );
-                                                      } else {
-                                                        Future.delayed(
-                                                          const Duration(
-                                                            milliseconds: 100,
+                                                          DownSyncGetBatchSizeEvent(
+                                                            appConfiguration: [
+                                                              appConfiguration,
+                                                            ],
+                                                            projectId: context
+                                                                .projectId,
+                                                            boundaryCode:
+                                                                selectedBoundary!
+                                                                    .value!.code
+                                                                    .toString(),
+                                                            pendingSyncCount:
+                                                                pendingSyncCount,
+                                                            boundaryName:
+                                                                selectedBoundary
+                                                                    .value!.name
+                                                                    .toString(),
                                                           ),
-                                                          () => context.router
-                                                              .maybePop(),
                                                         );
-                                                      }
-                                                      clickedStatus.value =
-                                                          true;
-                                                      LocalizationParams()
-                                                          .setModule(
-                                                              'boundary', true);
-                                                      context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
+                                                  } else {
+                                                    Future.delayed(
+                                                      const Duration(
+                                                        milliseconds: 100,
+                                                      ),
+                                                      () => context.router
+                                                          .maybePop(),
+                                                    );
+                                                  }
+                                                  clickedStatus.value = true;
+                                                  LocalizationParams()
+                                                      .setModule(
+                                                          'boundary', true);
+                                                  context
+                                                      .read<LocalizationBloc>()
+                                                      .add(LocalizationEvent.onUpdateLocalizationIndex(
                                                           index: appConfiguration
                                                               .languages!
                                                               .indexWhere((element) =>
@@ -621,18 +652,15 @@ class _BoundarySelectionPageState
                                                                       .getSelectedLocale),
                                                           code: AppSharedPreferences()
                                                               .getSelectedLocale!));
-                                                    }
-                                                  }
-                                                },
-                                          child: Text(localizations.translate(
-                                            i18.common.coreCommonSubmit,
-                                          )),
-                                        );
-                                      },
+                                                }
+                                              }
+                                            },
+                                          );
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
+                                  ]),
+                            ),
                           ],
                         ),
                       ),
