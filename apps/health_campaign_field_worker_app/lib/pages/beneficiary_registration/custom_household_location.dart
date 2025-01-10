@@ -6,6 +6,8 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_text_form_input.dart';
+import 'package:digit_ui_components/widgets/atoms/reactive_fields.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,6 +45,7 @@ class CustomHouseholdLocationPageState
   static const _lngKey = 'lng';
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
+  static const _buildingNameKey = 'buildingName';
 
   @override
   void initState() {
@@ -159,6 +162,11 @@ class CustomHouseholdLocationPageState
                               ),
                               tenantId:
                                   RegistrationDeliverySingleton().tenantId,
+                              buildingName: (RegistrationDeliverySingleton()
+                                          .householdType ==
+                                      HouseholdType.community)
+                                  ? form.control(_buildingNameKey).value
+                                  : null,
                               rowVersion: 1,
                               auditDetails: AuditDetails(
                                 createdBy: RegistrationDeliverySingleton()
@@ -198,6 +206,11 @@ class CustomHouseholdLocationPageState
                               longitude: form.control(_lngKey).value,
                               locationAccuracy:
                                   form.control(_accuracyKey).value,
+                              buildingName: (RegistrationDeliverySingleton()
+                                          .householdType ==
+                                      HouseholdType.community)
+                                  ? form.control(_buildingNameKey).value
+                                  : null,
                             );
                             // TODO [Linking of Voucher for Household based project  need to be handled]
 
@@ -265,6 +278,42 @@ class CustomHouseholdLocationPageState
                               },
                             ),
                           ),
+                          if (RegistrationDeliverySingleton().householdType ==
+                              HouseholdType.community)
+                            householdLocationShowcaseData.buildingName
+                                .buildWith(
+                                    child: ReactiveWrapperField(
+                                        formControlName: _buildingNameKey,
+                                        validationMessages: {
+                                          'required': (_) =>
+                                              localizations.translate(
+                                                i18.common.corecommonRequired,
+                                              ),
+                                          'sizeLessThan2': (_) =>
+                                              localizations.translate(
+                                                  i18.common.min3CharsRequired),
+                                          'maxLength': (object) => localizations
+                                              .translate(
+                                                  i18.common.maxCharsRequired)
+                                              .replaceAll(
+                                                  '{}', maxLength.toString()),
+                                        },
+                                        builder: (field) => LabeledField(
+                                            label: localizations.translate(i18
+                                                .householdLocation
+                                                .buildingNameLabel),
+                                            isRequired: true,
+                                            child: DigitTextFormInput(
+                                              errorMessage: field.errorText,
+                                              onChange: (value) {
+                                                form
+                                                    .control(_buildingNameKey)
+                                                    .value = value;
+                                              },
+                                              initialValue: form
+                                                  .control(_buildingNameKey)
+                                                  .value,
+                                            )))),
                         ]),
                       ],
                     ),
@@ -306,6 +355,17 @@ class CustomHouseholdLocationPageState
       _accuracyKey: FormControl<double>(
         value: addressModel?.locationAccuracy,
       ),
+      if (RegistrationDeliverySingleton().householdType ==
+          HouseholdType.community)
+        _buildingNameKey: FormControl<String>(
+          validators: [
+            Validators.required,
+            Validators.delegate(
+                (validator) => CustomValidator.sizeLessThan2(validator)),
+            Validators.maxLength(64),
+          ],
+          value: addressModel?.buildingName ?? searchQuery?.trim(),
+        ),
     });
   }
 }

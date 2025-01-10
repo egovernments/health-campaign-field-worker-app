@@ -924,13 +924,13 @@ class CustomDeliverInterventionPageState
 
   dynamic getBednetCount(HouseholdMemberWrapper householdMemberWrapper) {
     // Early return if the householdMemberWrapper or household is null
-    final household = householdMemberWrapper?.household;
-    if (household == null) return 0;
+    final household = householdMemberWrapper.household;
+    if (household == null) return 1;
 
-    final memberCount = household.memberCount ?? 0;
+    final memberCount = household.memberCount ?? 2;
 
     final householdType = household.householdType;
-    if (householdType == null) return 0;
+    if (householdType == null) return 1;
 
     // Handle the 'family' household type
     if (householdType == HouseholdType.family) {
@@ -941,7 +941,9 @@ class CustomDeliverInterventionPageState
     if (householdType == HouseholdType.community) {
       final additionalFields = household.additionalFields?.fields;
 
-      if (additionalFields == null || additionalFields.isEmpty) return 0;
+      if (additionalFields == null || additionalFields.isEmpty) {
+        return (memberCount / 2).round();
+      }
 
       final communityType = additionalFields
           .where(
@@ -949,7 +951,7 @@ class CustomDeliverInterventionPageState
           )
           .firstOrNull;
 
-      if (communityType == null) return 0;
+      if (communityType == null) return (memberCount / 2).round();
 
       final communityValue = communityType.value;
 
@@ -962,7 +964,7 @@ class CustomDeliverInterventionPageState
     }
 
     // Default return value if no conditions match
-    return 0;
+    return (memberCount / 2).round();
   }
 
 // This method builds a form used for delivering interventions.
