@@ -6,7 +6,9 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -344,61 +346,76 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       ),
                     ),
                     ...downSyncList.map(
-                      (e) => DigitCard(children: [
-                        DigitTableCard(
-                          element: {
-                            localizations.translate(
-                              i18.beneficiaryDetails.boundary,
-                            ): e.boundaryName!,
-                            localizations.translate(
-                              i18.beneficiaryDetails.status,
-                            ): e.offset == 0 && e.limit == 0
-                                ? localizations.translate(
-                                    i18.beneficiaryDetails.downloadcompleted,
-                                  )
-                                : localizations.translate(
-                                    i18.beneficiaryDetails.partialdownloaded,
+                      (e) => DigitCard(
+                          margin: const EdgeInsets.all(spacer2),
+                          padding: const EdgeInsets.all(spacer1),
+                          children: [
+                            LabelValueSummary(items: [
+                              LabelValueItem(
+                                  labelFlex: 5,
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.boundary,
                                   ),
-                            localizations.translate(
-                              i18.beneficiaryDetails.downloadtime,
-                            ): e.lastSyncedTime != null
-                                ? '${DigitDateUtils.getTimeFromTimestamp(e.lastSyncedTime!)} on ${DigitDateUtils.getDateFromTimestamp(e.lastSyncedTime!)}'
-                                : '--',
-                            localizations.translate(
-                              i18.beneficiaryDetails.totalrecorddownload,
-                            ): e.offset == 0 && e.limit == 0
-                                ? '${e.totalCount}/${e.totalCount}'
-                                : '${e.offset}/${e.totalCount}',
-                          },
-                        ),
-                        DigitButton(
-                          label: localizations.translate(
-                            i18.beneficiaryDetails.download,
-                          ),
-                          mainAxisSize: MainAxisSize.max,
-                          type: DigitButtonType.secondary,
-                          size: DigitButtonSize.large,
-                          onPressed: () {
-                            setState(() {
-                              selectedBoundary = BoundaryModel(
-                                code: e.locality,
-                                name: e.boundaryName,
-                              );
-                            });
-                            context.read<BeneficiaryDownSyncBloc>().add(
-                                  DownSyncGetBatchSizeEvent(
-                                    appConfiguration: [
-                                      appConfiguration,
-                                    ],
-                                    projectId: context.projectId,
-                                    boundaryCode: e.locality!,
-                                    pendingSyncCount: pendingSyncCount,
-                                    boundaryName: e.boundaryName.toString(),
+                                  value: e.boundaryName!),
+                              LabelValueItem(
+                                  labelFlex: 5,
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.status,
                                   ),
-                                );
-                          },
-                        ),
-                      ]),
+                                  value: e.offset == 0 && e.limit == 0
+                                      ? localizations.translate(
+                                          i18.beneficiaryDetails
+                                              .downloadcompleted,
+                                        )
+                                      : localizations.translate(
+                                          i18.beneficiaryDetails
+                                              .partialdownloaded,
+                                        )),
+                              LabelValueItem(
+                                  labelFlex: 5,
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.downloadtime,
+                                  ),
+                                  value: e.lastSyncedTime != null
+                                      ? '${DigitDateUtils.getTimeFromTimestamp(e.lastSyncedTime!)} on ${DigitDateUtils.getDateFromTimestamp(e.lastSyncedTime!)}'
+                                      : '--'),
+                              LabelValueItem(
+                                  labelFlex: 5,
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.totalrecorddownload,
+                                  ),
+                                  value: e.offset == 0 && e.limit == 0
+                                      ? '${e.totalCount}/${e.totalCount}'
+                                      : '${e.offset}/${e.totalCount}')
+                            ]),
+                            DigitButton(
+                              label: localizations.translate(
+                                i18.beneficiaryDetails.download,
+                              ),
+                              mainAxisSize: MainAxisSize.max,
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.large,
+                              onPressed: () {
+                                setState(() {
+                                  selectedBoundary = BoundaryModel(
+                                    code: e.locality,
+                                    name: e.boundaryName,
+                                  );
+                                });
+                                context.read<BeneficiaryDownSyncBloc>().add(
+                                      DownSyncGetBatchSizeEvent(
+                                        appConfiguration: [
+                                          appConfiguration,
+                                        ],
+                                        projectId: context.projectId,
+                                        boundaryCode: e.locality!,
+                                        pendingSyncCount: pendingSyncCount,
+                                        boundaryName: e.boundaryName.toString(),
+                                      ),
+                                    );
+                              },
+                            ),
+                          ]),
                     ),
                     downSyncList.isEmpty
                         ? NoResultCard(
