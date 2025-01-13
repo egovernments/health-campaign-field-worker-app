@@ -413,9 +413,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           .isNotEmpty) {
         final attendanceRegisters = await attendanceRemoteRepository.search(
           AttendanceRegisterSearchModel(
-              staffId: context.loggedInUser.uuid,
-              referenceId: event.model.id,
-              localityCode: ""),
+            staffId: context.loggedInUser.uuid,
+            referenceId: event.model.id,
+            localityCode: event.model.address?.boundary,
+          ),
         );
         await attendanceLocalRepository.bulkCreate(attendanceRegisters);
 
