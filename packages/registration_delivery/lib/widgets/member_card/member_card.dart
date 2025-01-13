@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:survey_form/blocs/service_definition.dart';
 
 import '../../blocs/app_localization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -114,7 +115,8 @@ class MemberCard extends StatelessWidget {
                             context: context,
                             builder: (ctx) => DigitActionCard(
                               onOutsideTap: () {
-                                Navigator.of(context, rootNavigator: true).pop();
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
                               },
                               actions: [
                                 DigitButton(
@@ -279,9 +281,9 @@ class MemberCard extends StatelessWidget {
                                   onPressed: () {
                                     final bloc =
                                         context.read<HouseholdOverviewBloc>();
-                                      final serviceDefinitionBloc = context
-                                          .read<ServiceDefinitionBloc>()
-                                          .state;
+                                    final serviceDefinitionBloc = context
+                                        .read<ServiceDefinitionBloc>()
+                                        .state;
 
                                     bloc.add(
                                       HouseholdOverviewEvent.selectedIndividual(
@@ -311,28 +313,25 @@ class MemberCard extends StatelessWidget {
                                       );
                                     } else {
                                       serviceDefinitionBloc.when(
-                                            empty: () {},
-                                            isloading: () {},
-                                            serviceDefinitionFetch:
-                                                (value, model) {
-                                              if (value
-                                                  .where((element) => element
-                                                      .code
-                                                      .toString()
-                                                      .contains(
-                                                          '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
-                                                  .toList()
-                                                  .isEmpty) {
-                                                context.router.push(
-                                                  DeliverInterventionRoute(),
-                                                );
-                                              } else {
-                                                navigateToChecklist(
-                                                    context,
-                                                    individual
-                                                        .clientReferenceId);
-                                              }
-                                            });
+                                          empty: () {},
+                                          isloading: () {},
+                                          serviceDefinitionFetch:
+                                              (value, model) {
+                                            if (value
+                                                .where((element) => element.code
+                                                    .toString()
+                                                    .contains(
+                                                        '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                .toList()
+                                                .isEmpty) {
+                                              context.router.push(
+                                                DeliverInterventionRoute(),
+                                              );
+                                            } else {
+                                              navigateToChecklist(context,
+                                                  individual.clientReferenceId);
+                                            }
+                                          });
                                     }
                                   },
                                 )

@@ -117,12 +117,7 @@ class _HouseholdOverviewPageState
                                           type: DigitButtonType.secondary,
                                           size: DigitButtonSize.large,
                                           mainAxisSize: MainAxisSize.max,
-                                          onPressed: state.householdMemberWrapper
-                                              .tasks?.lastOrNull?.status ==
-                                              Status.administeredSuccess
-                                                  .toValue()
-                                              ? null
-                                              : () {
+                                          onPressed: () {
                                             serviceDefinitionState.when(
                                                 empty: () {},
                                                 isloading: () {},
@@ -130,14 +125,14 @@ class _HouseholdOverviewPageState
                                                     (value, model) {
                                                   if (value
                                                       .where((element) =>
-                                                  element.code
-                                                      .toString()
-                                                      .contains(
-                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
-                                                      element.code
-                                                          .toString()
-                                                          .contains(
-                                                          '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                          element.code
+                                                              .toString()
+                                                              .contains(
+                                                                  '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                          element.code
+                                                              .toString()
+                                                              .contains(
+                                                                  '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                       .toList()
                                                       .isEmpty) {
                                                     context.router.push(
@@ -191,32 +186,31 @@ class _HouseholdOverviewPageState
                                             ),
                                           );
 
-                                            serviceDefinitionState.when(
-                                                empty: () {},
-                                                isloading: () {},
-                                                serviceDefinitionFetch:
-                                                    (value, model) {
-                                                  if (value
-                                                      .where((element) =>
-                                                          element.code
-                                                              .toString()
-                                                              .contains(
-                                                                  '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
-                                                          element.code
-                                                              .toString()
-                                                              .contains(
-                                                                  '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
-                                                      .toList()
-                                                      .isEmpty) {
-                                                    context.router.push(
-                                                      DeliverInterventionRoute(),
-                                                    );
-                                                  } else {
-                                                    navigateToChecklist(
-                                                        ctx,
-                                                        state
-                                                            .selectedIndividual!
-                                                            .clientReferenceId);
+                                          serviceDefinitionState.when(
+                                              empty: () {},
+                                              isloading: () {},
+                                              serviceDefinitionFetch:
+                                                  (value, model) {
+                                                if (value
+                                                    .where((element) =>
+                                                        element.code
+                                                            .toString()
+                                                            .contains(
+                                                                '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                        element.code
+                                                            .toString()
+                                                            .contains(
+                                                                '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                    .toList()
+                                                    .isEmpty) {
+                                                  context.router.push(
+                                                    DeliverInterventionRoute(),
+                                                  );
+                                                } else {
+                                                  navigateToChecklist(
+                                                      ctx,
+                                                      state.selectedIndividual!
+                                                          .clientReferenceId);
                                                 }
                                               });
                                         },
@@ -381,12 +375,13 @@ class _HouseholdOverviewPageState
                                     padding: const EdgeInsets.only(
                                       left: spacer2,
                                       right: spacer2,
-                                ),
-                                child: BlocBuilder<DeliverInterventionBloc,
-                                        DeliverInterventionState>(
-                                    builder: (ctx, deliverInterventionState) {
-                                  bool shouldShowStatus = beneficiaryType ==
-                                      BeneficiaryType.household;
+                                    ),
+                                    child: BlocBuilder<DeliverInterventionBloc,
+                                            DeliverInterventionState>(
+                                        builder:
+                                            (ctx, deliverInterventionState) {
+                                      bool shouldShowStatus = beneficiaryType ==
+                                          BeneficiaryType.household;
 
                                       return Column(
                                         children: [
@@ -407,48 +402,51 @@ class _HouseholdOverviewPageState
                                                 i18.householdLocation
                                                     .administrationAreaFormLabel,
                                               ): localizations.translate(state
-                                              .householdMemberWrapper
-                                              .headOfHousehold
-                                              ?.address
-                                              ?.first
-                                              .locality
-                                              ?.code??
-                                                  i18.common.coreCommonNA),localizations.translate(
-                                            i18.deliverIntervention
-                                                .memberCountText,
-                                          ): state.householdMemberWrapper
-                                              .household?.memberCount,
-                                          if (shouldShowStatus)
-                                            localizations.translate(i18
-                                                    .beneficiaryDetails.status):
-                                                localizations.translate(
-                                              getStatusAttributes(state,
-                                                      deliverInterventionState)[
-                                                  'textLabel'],
-                                            )
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                }),
-                              ),
-                              Column(
-                                children:
-                                    (state.householdMemberWrapper.members ?? [])
-                                        .map(
-                                  (e) {
-                                    final isHead = state
+                                                      .householdMemberWrapper
+                                                      .headOfHousehold
+                                                      ?.address
+                                                      ?.first
+                                                      .locality
+                                                      ?.code ??
+                                                  i18.common.coreCommonNA),
+                                              localizations.translate(
+                                                i18.deliverIntervention
+                                                    .memberCountText,
+                                              ): state.householdMemberWrapper
+                                                  .household?.memberCount,
+                                              if (shouldShowStatus)
+                                                localizations.translate(i18
+                                                        .beneficiaryDetails
+                                                        .status):
+                                                    localizations.translate(
+                                                  getStatusAttributes(state,
+                                                          deliverInterventionState)[
+                                                      'textLabel'],
+                                                )
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    }),
+                                  ),
+                                  Column(
+                                    children:
+                                        (state.householdMemberWrapper.members ??
+                                                [])
+                                            .map(
+                                      (e) {
+                                        final isHead = state
+                                                .householdMemberWrapper
+                                                .headOfHousehold
+                                                ?.clientReferenceId ==
+                                            e.clientReferenceId;
+                                        final projectBeneficiaryId = state
                                             .householdMemberWrapper
-                                            .headOfHousehold
-                                            ?.clientReferenceId ==
-                                        e.clientReferenceId;
-                                    final projectBeneficiaryId = state
-                                        .householdMemberWrapper
-                                        .projectBeneficiaries
-                                        ?.firstWhereOrNull((b) =>
-                                            b.beneficiaryClientReferenceId ==
-                                            e.clientReferenceId)
-                                        ?.clientReferenceId;
+                                            .projectBeneficiaries
+                                            ?.firstWhereOrNull((b) =>
+                                                b.beneficiaryClientReferenceId ==
+                                                e.clientReferenceId)
+                                            ?.clientReferenceId;
 
                                         final projectBeneficiary = state
                                             .householdMemberWrapper
@@ -497,43 +495,45 @@ class _HouseholdOverviewPageState
                                                 taskData.isNotEmpty
                                             ? state.householdMemberWrapper
                                                 .sideEffects
-                                            ?.where((element) =>
-                                                element.taskClientReferenceId ==
-                                                taskData.lastOrNull
-                                                    ?.clientReferenceId)
-                                            .toList()
-                                        : null;
-                                    final ageInYears = e.dateOfBirth != null
-                                        ? DigitDateUtils.calculateAge(
-                                            DigitDateUtils
-                                                    .getFormattedDateToDateTime(
-                                                  e.dateOfBirth!,
-                                                ) ??
-                                                DateTime.now(),
-                                          ).years
-                                        : 0;
-                                    final ageInMonths = e.dateOfBirth != null
-                                        ? DigitDateUtils.calculateAge(
-                                            DigitDateUtils
-                                                    .getFormattedDateToDateTime(
-                                                  e.dateOfBirth!,
-                                                ) ??
-                                                DateTime.now(),
-                                          ).months
-                                        : 0;
-                                    final currentCycle =
-                                        RegistrationDeliverySingleton()
-                                            .projectType
-                                            ?.cycles
-                                            ?.firstWhereOrNull(
-                                              (e) =>
-                                                  (e.startDate) <
-                                                      DateTime.now()
-                                                          .millisecondsSinceEpoch &&
-                                                  (e.endDate) >
-                                                      DateTime.now()
-                                                          .millisecondsSinceEpoch,
-                                            );
+                                                ?.where((element) =>
+                                                    element
+                                                        .taskClientReferenceId ==
+                                                    taskData.lastOrNull
+                                                        ?.clientReferenceId)
+                                                .toList()
+                                            : null;
+                                        final ageInYears = e.dateOfBirth != null
+                                            ? DigitDateUtils.calculateAge(
+                                                DigitDateUtils
+                                                        .getFormattedDateToDateTime(
+                                                      e.dateOfBirth!,
+                                                    ) ??
+                                                    DateTime.now(),
+                                              ).years
+                                            : 0;
+                                        final ageInMonths =
+                                            e.dateOfBirth != null
+                                                ? DigitDateUtils.calculateAge(
+                                                    DigitDateUtils
+                                                            .getFormattedDateToDateTime(
+                                                          e.dateOfBirth!,
+                                                        ) ??
+                                                        DateTime.now(),
+                                                  ).months
+                                                : 0;
+                                        final currentCycle =
+                                            RegistrationDeliverySingleton()
+                                                .projectType
+                                                ?.cycles
+                                                ?.firstWhereOrNull(
+                                                  (e) =>
+                                                      (e.startDate) <
+                                                          DateTime.now()
+                                                              .millisecondsSinceEpoch &&
+                                                      (e.endDate) >
+                                                          DateTime.now()
+                                                              .millisecondsSinceEpoch,
+                                                );
 
                                         final isBeneficiaryRefused =
                                             checkIfBeneficiaryRefused(

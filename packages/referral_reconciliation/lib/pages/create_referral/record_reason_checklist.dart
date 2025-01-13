@@ -153,29 +153,42 @@ class _ReferralReasonChecklistPageState
                                         type: DigitButtonType.primary,
                                         size: DigitButtonSize.large,
                                         onPressed: () {
-                                List<ServiceAttributesModel> attributes = [];
-                                for (int i = 0; i < controller.length; i++) {
-                                  final attribute = initialAttributes;
-                                  attributes.add(ServiceAttributesModel(
-                                    attributeCode: '${attribute?[i].code}',
-                                    dataType: attribute?[i].dataType,
-                                    clientReferenceId: IdGen.i.identifier,
-                                    referenceId: widget.referralClientRefId,
-                                    value: attribute?[i].dataType !=
-                                            'SingleValueList'
-                                        ? controller[i]
-                                                .text
-                                                .toString()
-                                                .trim()
-                                                .isNotEmpty
-                                            ? controller[i].text.toString()
-                                            : ''
-                                        : visibleChecklistIndexes.contains(i)
-                                            ? controller[i].text.toString()
-                                            : i18.checklist.notSelectedKey,
-                                    rowVersion: 1,
-                                    tenantId: attribute?[i].tenantId,
-                                  ));
+                                          List<ServiceAttributesModel>
+                                              attributes = [];
+                                          for (int i = 0;
+                                              i < controller.length;
+                                              i++) {
+                                            final attribute = initialAttributes;
+                                            attributes
+                                                .add(ServiceAttributesModel(
+                                              attributeCode:
+                                                  '${attribute?[i].code}',
+                                              dataType: attribute?[i].dataType,
+                                              clientReferenceId:
+                                                  IdGen.i.identifier,
+                                              referenceId:
+                                                  widget.referralClientRefId,
+                                              value: attribute?[i].dataType !=
+                                                      'SingleValueList'
+                                                  ? controller[i]
+                                                          .text
+                                                          .toString()
+                                                          .trim()
+                                                          .isNotEmpty
+                                                      ? controller[i]
+                                                          .text
+                                                          .toString()
+                                                      : ''
+                                                  : visibleChecklistIndexes
+                                                          .contains(i)
+                                                      ? controller[i]
+                                                          .text
+                                                          .toString()
+                                                      : i18.checklist
+                                                          .notSelectedKey,
+                                              rowVersion: 1,
+                                              tenantId: attribute?[i].tenantId,
+                                            ));
                                           }
 
                                           context.read<ServiceBloc>().add(
@@ -533,23 +546,23 @@ class _ReferralReasonChecklistPageState
                             : [],
                         groupValue: controller[index].text.trim(),
                         onChanged: (selectedValue) {
-                      context.read<ServiceBloc>().add(
-                            ServiceSurveyFormEvent(
-                              value: Random().nextInt(100).toString(),
-                              submitTriggered: submitTriggered,
-                            ),
-                          );
-                      setState(() {
-                        // Clear child controllers and update visibility
-                        for (final matchingChildItem in childItems) {
-                          final childIndex =
-                              initialAttributes?.indexOf(matchingChildItem);
-                          if (childIndex != null) {
-                            controller[childIndex].clear();
-                            visibleChecklistIndexes
-                                .removeWhere((v) => v == childIndex);
-                          }
-                        }
+                          context.read<ServiceBloc>().add(
+                                ServiceSurveyFormEvent(
+                                  value: Random().nextInt(100).toString(),
+                                  submitTriggered: submitTriggered,
+                                ),
+                              );
+                          setState(() {
+                            // Clear child controllers and update visibility
+                            for (final matchingChildItem in childItems) {
+                              final childIndex =
+                                  initialAttributes?.indexOf(matchingChildItem);
+                              if (childIndex != null) {
+                                controller[childIndex].clear();
+                                visibleChecklistIndexes
+                                    .removeWhere((v) => v == childIndex);
+                              }
+                            }
 
                             // Update the current controller's value
                             controller[index].value =
