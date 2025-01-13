@@ -11,6 +11,5 @@ abstract class SideEffectLocalBaseRepository
   @override
   DataModelType get type => DataModelType.sideEffect;
 
-  @override
   TableInfo get table => sql.sideEffect;
 }

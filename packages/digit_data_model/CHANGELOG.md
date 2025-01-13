@@ -1,3 +1,18 @@
+## 1.0.5
+
+* Upgrade to Flutter 3.22
+* Added project_type in Project Table
+* Changed isActive to bool in Service Attribute table
+
+## 1.0.5-dev.1
+
+* Merged pgr and survey_form package changes
+
+## 1.0.4+1
+
+* Bug Fix:
+    * Updated syncRetryCount,syncRetryInterval and errorPath to dynamic
+
 ## 1.0.4
 
 * Added user_action entity for digit_location_tracker package
@@ -12,10 +27,6 @@
 
 * Updated beneficiary type target model and table to string
 * Updated project type beneficiary type model and table to BeneficiaryType enum
-
-## 1.0.4-dev.5
-
-* Merged pgr and checklist changes
 
 ## 1.0.3+1
 
@@ -37,7 +48,7 @@
 
 ## 1.0.4-dev.1
 
-* Separated PGR Package 
+* Separated PGR Package
 * Moved Models, Bloc, Repositories related to PGR Package
 
 ## 1.0.3
@@ -48,11 +59,11 @@
 ## 1.0.3-dev.4
 
 * Updated individual local search results with user uuid mapping
-  
+
 ## 1.0.3-dev.3
 
-* Created localization table 
-  - Creation of the localization table.
+* Created localization table
+    - Creation of the localization table.
 
 ## 1.0.3-dev.2
 
@@ -86,7 +97,7 @@
 
 ## 0.0.0-dev.2
 
-* Boundary v2 Integrated, to use Boundary v1  0.0.0-dev.1 version can be used
+* Boundary v2 Integrated, to use Boundary v1 0.0.0-dev.1 version can be used
     - Integration of Boundary v2 with the option to use Boundary v1 version 0.0.0-dev.1.
 
 ## 0.0.0-dev.1

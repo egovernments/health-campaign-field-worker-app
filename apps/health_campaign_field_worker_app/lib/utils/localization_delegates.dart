@@ -73,10 +73,6 @@ getAppLocalizationDelegates({
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
-    component_localization.ComponentLocalization.getDelegate(
-      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
-      appConfig.languages!,
-    ),
     complaints_localization.ComplaintsLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,

@@ -41,11 +41,11 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                   Flexible(
                     child: TextButton.icon(
                       style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onBackground,
+                        foregroundColor: theme.colorScheme.onSurface,
                         padding: EdgeInsets.zero,
                       ),
                       onPressed: () {
-                        context.router.pop();
+                        context.router.maybePop();
                         handleback != null ? handleback!() : null;
                       },
                       icon: const Icon(Icons.arrow_left_sharp),

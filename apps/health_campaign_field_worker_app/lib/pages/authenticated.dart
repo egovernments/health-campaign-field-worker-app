@@ -10,10 +10,10 @@ import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
-import '../blocs/sync/sync.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/downsync/downsync.dart';
@@ -44,7 +44,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
               return Portal(
                 child: Scaffold(
-                  backgroundColor: DigitTheme.instance.colorScheme.background,
+                  backgroundColor: DigitTheme.instance.colorScheme.surface,
                   appBar: AppBar(
                     backgroundColor: DigitTheme.instance.colorScheme.primary,
                     actions: showDrawer
@@ -109,6 +109,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   drawer: showDrawer ? const Drawer(child: SideBar()) : null,
                   body: MultiBlocProvider(
                     providers: [
+                      // INFO : Need to add bloc of package Here
                       BlocProvider(
                         create: (context) {
                           final userId = context.loggedInUserUuid;
@@ -116,7 +117,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           final isar = context.read<Isar>();
                           final bloc = SyncBloc(
                             isar: isar,
-                            networkManager: context.read(),
+                            syncService: SyncService(),
                           );
 
                           if (!bloc.isClosed) {
@@ -132,12 +133,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               .listen(
                             (event) {
                               if (!bloc.isClosed) {
-                                bloc.add(
-                                  SyncRefreshEvent(
-                                    userId,
-                                    getSyncCount(event),
-                                  ),
-                                );
+                                triggerSyncRefreshEvent(bloc, userId, event);
                               }
                             },
                           );
@@ -151,12 +147,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               .listen(
                             (event) {
                               if (!bloc.isClosed) {
-                                bloc.add(
-                                  SyncRefreshEvent(
-                                    userId,
-                                    getSyncCount(event),
-                                  ),
-                                );
+                                triggerSyncRefreshEvent(bloc, userId, event);
                               }
                             },
                           );
@@ -184,7 +175,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           downSyncLocalRepository: ctx.read<
                               LocalRepository<DownsyncModel,
                                   DownsyncSearchModel>>(),
-                          networkManager: ctx.read(),
                           householdLocalRepository: ctx.read<
                               LocalRepository<HouseholdModel,
                                   HouseholdSearchModel>>(),
@@ -237,6 +227,16 @@ class AuthenticatedPageWrapper extends StatelessWidget {
             },
           );
         },
+      ),
+    );
+  }
+
+  void triggerSyncRefreshEvent(
+      SyncBloc bloc, String userId, List<OpLog> event) {
+    bloc.add(
+      SyncRefreshEvent(
+        userId,
+        SyncServiceSingleton().entityMapper!.getSyncCount(event),
       ),
     );
   }

@@ -3,18 +3,18 @@ import 'dart:async';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
-import 'package:digit_ui_components/widgets/molecules/digit_table.dart'
-    as table;
 import 'package:digit_data_model/data/data_repository.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_table.dart'
+    as table;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -156,15 +156,16 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   attendanceCollectionModel!, viewOnly);
 
                           return ScrollableContent(
-                            enableFixedButton: true,
+                            enableFixedDigitButton: true,
                             footer: viewOnly
                                 ? const SizedBox.shrink()
                                 : DigitCard(
-                                    margin: EdgeInsets.only(top: theme.spacerTheme.spacer4),
+                                    margin: EdgeInsets.only(
+                                        top: theme.spacerTheme.spacer4),
                                     children: [
-                                        Button(
-                                          size: ButtonSize.large,
-                                          type: ButtonType.secondary,
+                                        DigitButton(
+                                          size: DigitButtonSize.large,
+                                          type: DigitButtonType.secondary,
                                           mainAxisSize: MainAxisSize.max,
                                           onPressed: () {
                                             checkIfAllAttendeesMarked(
@@ -183,9 +184,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                 .saveAndMarkLaterLabel,
                                           ),
                                         ),
-                                        Button(
-                                          size: ButtonSize.large,
-                                          type: ButtonType.primary,
+                                        DigitButton(
+                                          size: DigitButtonSize.large,
+                                          type: DigitButtonType.primary,
                                           mainAxisSize: MainAxisSize.max,
                                           onPressed: !viewOnly
                                               ? () {
@@ -199,8 +200,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                     context,
                                                   );
                                                 }
-                                              : () {
-                                                },
+                                              : () {},
                                           label: localizations.translate(
                                             (!viewOnly)
                                                 ? i18.common.coreCommonSubmit
@@ -268,6 +268,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   children: [
                                     tableData.isNotEmpty
                                         ? table.DigitTable(
+                                            showSelectedState: false,
                                             tableHeight: viewOnly
                                                 ? MediaQuery.of(context)
                                                         .size
@@ -301,8 +302,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                         },
                         loading: () {
                           return Center(
-                            child:
-                                DigitLoaders.circularLoader(context: context),
+                            child: DigitLoaders.inlineLoader(),
                           );
                         },
                       );
@@ -409,9 +409,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                   SizedBox(
                     width: 100,
                     height: 40,
-                    child: Button(
-                      size: ButtonSize.large,
-                      type: ButtonType.primary,
+                    child: DigitButton(
+                      size: DigitButtonSize.large,
+                      type: DigitButtonType.primary,
                       mainAxisSize: MainAxisSize.max,
                       label: k.translate(
                         i18.attendance.closeButton,
@@ -496,12 +496,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                         description:
                             '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
                         actions: [
-                          Button(
+                          DigitButton(
                             label: localizations.translate(
                               i18.attendance.proceed,
                             ),
-                            type: ButtonType.primary,
-                            size: ButtonSize.large,
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large,
                             onPressed: () {
                               individualLogBloc?.add(SaveAsDraftEvent(
                                 entryTime: widget.entryTime,
@@ -519,11 +519,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               navigateToAcknowledgement(localizations);
                             },
                           ),
-                          Button(
+                          DigitButton(
                             label: localizations
                                 .translate(i18.common.coreCommonGoback),
-                            type: ButtonType.secondary,
-                            size: ButtonSize.large,
+                            type: DigitButtonType.secondary,
+                            size: DigitButtonSize.large,
                             onPressed: () {
                               Navigator.of(
                                 context,

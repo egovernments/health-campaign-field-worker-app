@@ -1,4 +1,4 @@
-import 'package:digit_components/widgets/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/beneficiary_statistics/beneficiary_statistics_model.dart';
@@ -16,7 +16,7 @@ class BeneficiaryStatisticsCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return DigitCard(
-      child: Row(
+      children: [Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           SizedBox(
@@ -56,7 +56,7 @@ class BeneficiaryStatisticsCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      ),]
     );
   }
 }

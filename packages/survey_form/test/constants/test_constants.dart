@@ -46,7 +46,7 @@ class ServiceTestConstants {
     dataType: testDataType,
     values: null,
     required: true,
-    isActive: 'true',
+    isActive: true,
     regex: null,
     order: 1,
   );
@@ -57,7 +57,7 @@ class ServiceTestConstants {
     dataType: testDataType,
     values: null,
     required: true,
-    isActive: 'true',
+    isActive: true,
     regex: null,
     order: 1,
   );

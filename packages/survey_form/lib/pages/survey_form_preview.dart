@@ -1,19 +1,18 @@
 import 'package:auto_route/annotations.dart';
-import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/widgets/atoms/digit_divider.dart';
-import 'package:digit_components/widgets/digit_card.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
-import 'package:digit_components/widgets/digit_outline_button.dart';
-import 'package:digit_components/widgets/scrollable_content.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:survey_form/survey_form.dart';
 
+import '../utils/constants.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
-import '../utils/i18_key_constants.dart' as i18;
-import '../utils/constants.dart';
 import '../widgets/no_result_card.dart';
 
 @RoutePage()
@@ -31,12 +30,14 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ScrollableContent(
         header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
+        enableFixedDigitButton: true,
         footer: BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
             return state.maybeWhen(
@@ -44,17 +45,22 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
               serviceSearch: (value1, value2, value3) {
                 return value2 != null
                     ? DigitCard(
-                        child: DigitElevatedButton(
-                          onPressed: () {
-                            context.read<ServiceBloc>().add(
-                                  ServiceResetEvent(serviceList: value1),
-                                );
-                          },
-                          child: Text(
-                            localizations.translate(i18.common.corecommonclose),
-                          ),
-                        ),
-                      )
+                        cardType: CardType.primary,
+                        margin: const EdgeInsets.only(top: spacer2),
+                        children: [
+                            DigitButton(
+                              mainAxisSize: MainAxisSize.max,
+                              label: localizations
+                                  .translate(i18.common.corecommonclose),
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large,
+                              onPressed: () {
+                                context.read<ServiceBloc>().add(
+                                      ServiceResetEvent(serviceList: value1),
+                                    );
+                              },
+                            ),
+                          ])
                     : const Offstage();
               },
             );
@@ -68,69 +74,66 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                 return selectedService == null
                     ? serviceList.isNotEmpty
                         ? Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               ...serviceList
                                   .map((e) => e.serviceDefId != null
-                                      ? DigitCard(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  DateFormat(Constants.SurveyFormPreviewDateFormat)
-                                                      .format(
-                                                    DateFormat(Constants.defaultDateFormat)
-                                                        .parse(
-                                                      e.createdAt.toString(),
+                                      ? Padding(
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
+                                          child: DigitCard(
+                                              cardType: CardType.primary,
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    DateFormat(Constants
+                                                            .SurveyFormPreviewDateFormat)
+                                                        .format(
+                                                      DateFormat(Constants
+                                                              .defaultDateFormat)
+                                                          .parse(
+                                                        e.createdAt.toString(),
+                                                      ),
                                                     ),
+                                                    style: textTheme.headingXl,
                                                   ),
-                                                  style: theme
-                                                      .textTheme.headlineMedium,
                                                 ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  SizedBox(
-                                                    child: Text(
-                                                      localizations.translate(
-                                                        '${e.tenantId}',
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  DigitOutLineButton(
-                                                    label:
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    SizedBox(
+                                                      child: Text(
                                                         localizations.translate(
-                                                      i18.searchBeneficiary
-                                                          .iconLabel,
-                                                    ),
-                                                    onPressed: () {
-                                                      context
-                                                          .read<ServiceBloc>()
-                                                          .add(
-                                                            ServiceSelectionEvent(
-                                                              service: e,
-                                                            ),
-                                                          );
-                                                    },
-                                                    buttonStyle: OutlinedButton
-                                                        .styleFrom(
-                                                      shape:
-                                                          const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.zero,
+                                                          '${e.tenantId}',
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
+                                                    DigitButton(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.searchBeneficiary
+                                                            .iconLabel,
+                                                      ),
+                                                      type: DigitButtonType
+                                                          .secondary,
+                                                      size: DigitButtonSize
+                                                          .medium,
+                                                      onPressed: () {
+                                                        context
+                                                            .read<ServiceBloc>()
+                                                            .add(
+                                                              ServiceSelectionEvent(
+                                                                service: e,
+                                                              ),
+                                                            );
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ]),
                                         )
                                       : const Offstage())
                                   .toList(),
@@ -156,121 +159,77 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                             item2,
                           ) {
                             return DigitCard(
-                              child: Column(
+                                cardType: CardType.primary,
                                 children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    margin: const EdgeInsets.all(8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
+                                  Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
                                           child: Text(
                                             localizations.translate(
                                               item2?.code ?? '',
                                             ),
-                                            style:
-                                                theme.textTheme.displayMedium,
+                                            style: textTheme.headingXl,
                                           ),
                                         ),
-                                        ...(selectedService.attributes ?? [])
-                                            .where((a) =>
-                                                a.value !=
-                                                    i18.surveyForm
-                                                        .notSelectedKey &&
-                                                a.value != '')
-                                            .map(
-                                              (e) => Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
+                                      ),
+                                      ...(selectedService.attributes ?? [])
+                                          .where((a) =>
+                                              a.value !=
+                                                  i18.surveyForm
+                                                      .notSelectedKey &&
+                                              a.value != '')
+                                          .map(
+                                            (e) => Padding(
+                                              padding:
+                                                  const EdgeInsets.all(spacer2),
+                                              child: Align(
+                                                alignment: AlignmentDirectional
+                                                    .topStart,
+                                                child:
+                                                    LabelValueSummary(items: [
+                                                  LabelValueItem(
+                                                    label:
                                                         localizations.translate(
-                                                          "${item2?.code ?? ''}.${e.attributeCode!}",
-                                                        ),
-                                                        style: theme.textTheme
-                                                            .headlineSmall,
-                                                      ),
+                                                      "${item2?.code ?? ''}.${e.attributeCode!}",
                                                     ),
-                                                    Container(
-                                                      margin: const EdgeInsets
-                                                              .only()
-                                                          .copyWith(
-                                                        top: kPadding,
-                                                        bottom: kPadding,
-                                                      ),
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Text(
-                                                          e.dataType ==
-                                                                  'SingleValueList'
-                                                              ? localizations
-                                                                  .translate(
-                                                                  'CORE_COMMON_${e.value.toString().toUpperCase()}',
-                                                                )
-                                                              : e.value ?? "",
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    e.additionalDetails != '' &&
-                                                            e.additionalDetails !=
-                                                                null
-                                                        ? Container(
-                                                            margin:
-                                                                const EdgeInsets
-                                                                        .only()
-                                                                    .copyWith(
-                                                              top: kPadding,
-                                                              bottom: kPadding,
-                                                            ),
-                                                            child: Column(
-                                                              children: [
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .centerLeft,
-                                                                  child: Text(
-                                                                    localizations
-                                                                        .translate(
-                                                                      "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .centerLeft,
-                                                                  child: Text(
-                                                                    localizations
-                                                                        .translate(
-                                                                      e.additionalDetails,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
+                                                    value: e.dataType ==
+                                                            'SingleValueList'
+                                                        ? localizations
+                                                            .translate(
+                                                            '${item2?.code ?? ''}.${e.value.toString().toUpperCase()}',
                                                           )
-                                                        : const Offstage(),
-                                                    const DigitDivider(),
-                                                  ],
-                                                ),
+                                                        : e.value ?? "",
+                                                    isInline: false,
+                                                  ),
+                                                  if (e.additionalDetails !=
+                                                          '' &&
+                                                      e.additionalDetails !=
+                                                          null) ...[
+                                                    LabelValueItem(
+                                                      label: localizations
+                                                          .translate(
+                                                        "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
+                                                      ),
+                                                      value: localizations
+                                                          .translate(
+                                                        e.additionalDetails,
+                                                      ),
+                                                      isInline: false,
+                                                      labelTextStyle:
+                                                          textTheme.bodyL,
+                                                    )
+                                                  ]
+                                                ]),
                                               ),
                                             ),
-                                      ].toList(),
-                                    ),
+                                          )
+                                    ].toList(),
                                   ),
-                                ],
-                              ),
-                            );
+                                ]);
                           },
                           orElse: () => const Offstage(),
                         );

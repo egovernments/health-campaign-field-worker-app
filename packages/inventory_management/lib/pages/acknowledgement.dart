@@ -1,16 +1,20 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
+
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
 @RoutePage()
 class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
-  bool isDataRecordSuccess;
-  String? label;
-  String? description;
-  Map<String, dynamic>? descriptionTableData;
-  InventoryAcknowledgementPage({
+  final bool isDataRecordSuccess;
+  final String? label;
+  final String? description;
+  final Map<String, dynamic>? descriptionTableData;
+
+  const InventoryAcknowledgementPage({
     super.key,
     super.appLocalizations,
     this.isDataRecordSuccess = false,
@@ -31,26 +35,39 @@ class AcknowledgementPageState
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: DigitAcknowledgement.success(
+      body: PanelCard(
+        title: widget.label ??
+            localizations.translate(
+              i18.acknowledgementSuccess.acknowledgementLabelText,
+            ),
+        type: PanelType.success,
         description: widget.description ??
             localizations.translate(
               i18.acknowledgementSuccess.acknowledgementDescriptionText,
             ),
-        descriptionWidget: widget.isDataRecordSuccess
-            ? DigitTableCard(
-                element: widget.descriptionTableData ?? {},
-              )
-            : null,
-        label: widget.label ??
-            localizations.translate(
-              i18.acknowledgementSuccess.acknowledgementLabelText,
-            ),
-        action: () {
-          context.router.maybePop();
-        },
-        enableBackToSearch: widget.isDataRecordSuccess ? false : true,
-        actionLabel:
-            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+
+        /// TODO: need to update this as listview card
+        // additionWidgets: widget.isDataRecordSuccess
+        //     ? DigitTableCard(
+        //         element: widget.descriptionTableData ?? {},
+        //       )
+        //     : null,
+        actions: [
+          DigitButton(
+              label: localizations
+                  .translate(i18.acknowledgementSuccess.actionLabelText),
+              onPressed: () {
+                context.router.maybePop();
+              },
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large),
+        ],
+        // action: () {
+        //   context.router.maybePop();
+        // },
+        // enableBackToSearch: widget.isDataRecordSuccess ? false : true,
+        // actionLabel:
+        //     localizations.translate(i18.acknowledgementSuccess.actionLabelText),
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
@@ -58,43 +75,30 @@ class AcknowledgementPageState
         child: SizedBox(
           height: 150,
           child: DigitCard(
-            margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-            padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-            child: Column(
-              children: [
-                DigitElevatedButton(
-                  child: Text(localizations
-                      .translate(i18.acknowledgementSuccess.goToHome)),
-                  onPressed: () {
-                    context.router.popUntilRoot();
-                  },
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                DigitOutLineButton(
-                  onPressed: () {
-                    context.router.popUntilRoot();
-                  },
-                  label: localizations
-                      .translate(i18.acknowledgementSuccess.downloadmoredata),
-                  buttonStyle: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                    side: BorderSide(
-                      width: 1.0,
-                      color: theme.colorScheme.secondary,
-                    ),
-                    minimumSize: Size(
-                      MediaQuery.of(context).size.width,
-                      50,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+            children: [
+              DigitButton(
+                size: DigitButtonSize.large,
+                type: DigitButtonType.secondary,
+                label: localizations
+                    .translate(i18.acknowledgementSuccess.goToHome),
+                onPressed: () {
+                  context.router.popUntilRoot();
+                },
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              DigitButton(
+                size: DigitButtonSize.large,
+                type: DigitButtonType.primary,
+                onPressed: () {
+                  context.router.popUntilRoot();
+                },
+                label: localizations
+                    .translate(i18.acknowledgementSuccess.downloadmoredata),
+              ),
+            ],
           ),
         ),
       ),

@@ -331,7 +331,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     if (projectBeneficiariesList.isNotEmpty) {
       if (taskList.isEmpty) {
         taskList =
-            await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
+            await fetchTaskByProjectBeneficiary(projectBeneficiariesList);
       }
       sideEffectsList =
           await sideEffectDataRepository.search(SideEffectSearchModel(

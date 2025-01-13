@@ -34,7 +34,7 @@ class TargetModel extends EntityModel with TargetModelMappable {
   final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
-  final String? beneficiaryType;
+  final BeneficiaryType? beneficiaryType;
   final TargetAdditionalFields? additionalFields;
 
   TargetModel({

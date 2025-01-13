@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
@@ -40,17 +42,20 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
     final localizations = RegistrationDeliveryLocalization.of(context);
 
     final headerList = [
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.beneficiaryDoseNo),
-        cellKey: 'dose',
+      DigitTableColumn(
+        header:
+            localizations.translate(i18.beneficiaryDetails.beneficiaryDoseNo),
+        cellValue: 'dose',
       ),
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.beneficiaryStatus),
-        cellKey: 'status',
+      DigitTableColumn(
+        header:
+            localizations.translate(i18.beneficiaryDetails.beneficiaryStatus),
+        cellValue: 'status',
       ),
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
-        cellKey: 'completedOn',
+      DigitTableColumn(
+        header: localizations
+            .translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
+        cellValue: 'completedOn',
       ),
     ]; // List of table headers for displaying cycle and dose information
 
@@ -115,7 +120,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                             Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                horizontal: kPadding / 2,
+                                                horizontal: spacer2 / 2,
                                               ),
                                               child: TextButton(
                                                 style: TextButton.styleFrom(
@@ -126,12 +131,11 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                                 onPressed: null,
                                                 child: Text(
                                                   style: TextStyle(
-                                                    fontSize: kPadding * 2,
-                                                    decoration: TextDecoration
-                                                        .underline,
+                                                    fontSize: spacer2 * 2,
                                                     color: Theme.of(context)
-                                                        .colorScheme
-                                                        .secondary,
+                                                        .colorTheme
+                                                        .primary
+                                                        .primary1,
                                                   ),
                                                   isExpanded
                                                       ? localizations.translate(
@@ -148,15 +152,17 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                             !isExpanded
                                                 ? Icon(
                                                     color: Theme.of(context)
-                                                        .colorScheme
-                                                        .secondary,
+                                                        .colorTheme
+                                                        .primary
+                                                        .primary1,
                                                     Icons.keyboard_arrow_down,
                                                     size: 24,
                                                   )
                                                 : Icon(
                                                     color: Theme.of(context)
-                                                        .colorScheme
-                                                        .secondary,
+                                                        .colorTheme
+                                                        .primary
+                                                        .primary1,
                                                     Icons.keyboard_arrow_up,
                                                     size: 24,
                                                   ),
@@ -183,7 +189,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
   Widget buildCycleAndDoseTable(
     List<ProjectCycle> cycles,
-    List<TableHeader> headerList,
+    List<DigitTableColumn> headerList,
     int? selectedIndex,
     bool isCurrentCycle,
   ) {
@@ -196,14 +202,12 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
       final e = cycles[i];
       widgetList.add(
         Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: isCurrentCycle
-                  ? EdgeInsets.zero
-                  : const EdgeInsets.only(
-                      top: kPadding + 2,
-                      bottom: 0,
-                    ),
+                  ? const EdgeInsets.all(spacer2)
+                  : const EdgeInsets.all(spacer2),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -216,84 +220,86 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                 ),
               ),
             ),
-            DigitTable(
-              selectedIndex: selectedIndex,
-              headerList: headerList,
-              tableData: e.deliveries!.mapIndexed(
-                (index, item) {
-                  final tasks = widget.taskData
-                      ?.where((element) =>
-                          element.additionalFields?.fields
-                                  .firstWhereOrNull(
-                                    (f) =>
-                                        f.key ==
-                                        AdditionalFieldsType.doseIndex
-                                            .toValue(),
-                                  )
-                                  ?.value ==
-                              '0${item.id}' &&
-                          element.additionalFields?.fields
-                                  .firstWhereOrNull(
-                                    (c) =>
-                                        c.key ==
-                                        AdditionalFieldsType.cycleIndex
-                                            .toValue(),
-                                  )
-                                  ?.value ==
-                              '0${e.id}')
-                      .lastOrNull;
-
-                  return TableDataRow([
-                    TableData(
-                      '${localizations.translate(i18.deliverIntervention.dose)} ${e.deliveries!.indexOf(item) + 1}',
-                      cellKey: 'dose',
-                    ),
-                    TableData(
-                      localizations.translate(
-                        index == selectedIndex
-                            ? Status.toAdminister.toValue()
-                            : tasks?.status ?? Status.inComplete.toValue(),
-                      ),
-                      cellKey: 'status',
-                      style: TextStyle(
-                        color: index == selectedIndex
-                            ? null
-                            : tasks?.status ==
-                                    Status.administeredSuccess.toValue()
-                                ? DigitTheme
-                                    .instance.colorScheme.onSurfaceVariant
-                                : DigitTheme.instance.colorScheme.error,
-                        fontWeight:
-                            index == selectedIndex ? FontWeight.w700 : null,
-                      ),
-                    ),
-                    TableData(
-                      tasks?.status == Status.administeredFailed.toValue() ||
-                              (tasks?.additionalFields?.fields
-                                      .where((e) =>
-                                          e.key ==
-                                          AdditionalFieldsType.deliveryStrategy
-                                              .toValue())
-                                      .firstOrNull
-                                      ?.value ==
-                                  DeliverStrategyType.indirect.toValue())
-                          ? ' -- '
-                          : tasks?.clientAuditDetails?.createdTime.toDateTime
-                                  .getFormattedDate() ??
-                              ' -- ',
-                      cellKey: 'completedOn',
-                    ),
-                  ]);
-                },
-              ).toList(),
-              columnWidth: 130,
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
               height: ((e.deliveries?.length ?? 0) + 1) * 57.5,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            const Divider(
-              thickness: 1.0,
+              child: DigitTable(
+                enableBorder: true,
+                withRowDividers: true,
+                withColumnDividers: true,
+                showSelectedState: false,
+                showPagination: false,
+                highlightedRows: (selectedIndex != null) ? [selectedIndex] : [],
+                columns: headerList,
+                rows: e.deliveries!.mapIndexed(
+                  (index, item) {
+                    final tasks = widget.taskData
+                        ?.where((element) =>
+                            element.additionalFields?.fields
+                                    .firstWhereOrNull(
+                                      (f) =>
+                                          f.key ==
+                                          AdditionalFieldsType.doseIndex
+                                              .toValue(),
+                                    )
+                                    ?.value ==
+                                '0${item.id}' &&
+                            element.additionalFields?.fields
+                                    .firstWhereOrNull(
+                                      (c) =>
+                                          c.key ==
+                                          AdditionalFieldsType.cycleIndex
+                                              .toValue(),
+                                    )
+                                    ?.value ==
+                                '0${e.id}')
+                        .lastOrNull;
+
+                    return DigitTableRow(tableRow: [
+                      DigitTableData(
+                        '${localizations.translate(i18.deliverIntervention.dose)} ${e.deliveries!.indexOf(item) + 1}',
+                        cellKey: 'dose',
+                      ),
+                      DigitTableData(
+                        localizations.translate(
+                          index == selectedIndex
+                              ? Status.toAdminister.toValue()
+                              : tasks?.status ?? Status.inComplete.toValue(),
+                        ),
+                        cellKey: 'status',
+                        style: TextStyle(
+                          color: index == selectedIndex
+                              ? null
+                              : tasks?.status ==
+                                      Status.administeredSuccess.toValue()
+                                  ? DigitTheme
+                                      .instance.colorScheme.onSurfaceVariant
+                                  : DigitTheme.instance.colorScheme.error,
+                          fontWeight:
+                              index == selectedIndex ? FontWeight.w700 : null,
+                        ),
+                      ),
+                      DigitTableData(
+                        tasks?.status == Status.administeredFailed.toValue() ||
+                                (tasks?.additionalFields?.fields
+                                        .where((e) =>
+                                            e.key ==
+                                            AdditionalFieldsType
+                                                .deliveryStrategy
+                                                .toValue())
+                                        .firstOrNull
+                                        ?.value ==
+                                    DeliverStrategyType.indirect.toValue())
+                            ? ' -- '
+                            : tasks?.clientAuditDetails?.createdTime.toDateTime
+                                    .getFormattedDate() ??
+                                ' -- ',
+                        cellKey: 'completedOn',
+                      ),
+                    ]);
+                  },
+                ).toList(),
+              ),
             ),
           ],
         ),
@@ -301,6 +307,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
     }
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: widgetList,
     );
   }

@@ -1,11 +1,12 @@
 import 'dart:io';
 
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/blocs/app_localization.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/data/remote/dashboard.dart';
 import 'package:digit_dss/models/entities/dashboard_request.dart';
+import 'package:digit_ui_components/theme/digit_theme.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
@@ -43,7 +44,7 @@ Widget buildMetric(
           width: MediaQuery.of(context).size.width / 3.6,
           child: Divider(
             indent: 0,
-            height: kPadding,
+            height: spacer1,
             endIndent: 0,
             thickness: 2,
             color: DigitTheme.instance.mobileTheme.colorScheme.outline,
