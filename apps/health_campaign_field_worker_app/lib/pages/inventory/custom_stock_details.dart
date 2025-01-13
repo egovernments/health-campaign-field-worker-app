@@ -1449,20 +1449,61 @@ class CustomStockDetailsPageState
                                               borderRadius: BorderRadius.zero,
                                             ),
                                           ),
-                                          onPressed: () {
-                                            //[TODO: Add route to auto_route]
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const CustomDigitScannerPage(
-                                                  quantity: 5,
-                                                  isGS1code: true,
-                                                  singleValue: false,
+                                          onPressed: () async {
+                                            final balesQuantity = form
+                                                .control(_balesQuantityKey)
+                                                .value;
+
+                                            try {
+                                              int balesQuantityInInt =
+                                                  balesQuantity != null
+                                                      ? int.parse(
+                                                          balesQuantity
+                                                              .toString(),
+                                                        )
+                                                      : 0;
+
+                                              if (balesQuantityInInt > 0) {
+                                                //[TODO: Add route to auto_route]
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CustomDigitScannerPage(
+                                                      quantity:
+                                                          balesQuantityInInt,
+                                                      isGS1code: true,
+                                                      singleValue: false,
+                                                    ),
+                                                    settings:
+                                                        const RouteSettings(
+                                                            name:
+                                                                '/qr-scanner'),
+                                                  ),
+                                                );
+                                              } else {
+                                                await DigitToast.show(
+                                                  context,
+                                                  options: DigitToastOptions(
+                                                    localizations.translate(
+                                                        i18_local.stockDetails
+                                                            .balesQuantityRequiredError),
+                                                    true,
+                                                    theme,
+                                                  ),
+                                                );
+                                              }
+                                            } catch (_) {
+                                              await DigitToast.show(
+                                                context,
+                                                options: DigitToastOptions(
+                                                  localizations.translate(i18_local
+                                                      .stockDetails
+                                                      .balesQuantityRequiredError),
+                                                  true,
+                                                  theme,
                                                 ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
-                                            );
+                                              );
+                                            }
                                           },
                                           icon: Icons.qr_code,
                                           label: localizations.translate(
@@ -1497,22 +1538,68 @@ class CustomStockDetailsPageState
                                                   color: theme
                                                       .colorScheme.secondary,
                                                   icon: const Icon(Icons.edit),
-                                                  onPressed: () {
-                                                    //[TODO: Add route to auto_route]
-                                                    Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const CustomDigitScannerPage(
-                                                          quantity: 5,
-                                                          isGS1code: true,
-                                                          singleValue: false,
+                                                  onPressed: () async {
+                                                    final balesQuantity = form
+                                                        .control(
+                                                            _balesQuantityKey)
+                                                        .value;
+
+                                                    try {
+                                                      int balesQuantityInInt =
+                                                          balesQuantity != null
+                                                              ? int.parse(
+                                                                  balesQuantity
+                                                                      .toString(),
+                                                                )
+                                                              : 0;
+                                                      if (balesQuantityInInt >
+                                                          0) {
+                                                        //[TODO: Add route to auto_route]
+                                                        Navigator.of(context)
+                                                            .push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                CustomDigitScannerPage(
+                                                              quantity:
+                                                                  balesQuantityInInt,
+                                                              isGS1code: true,
+                                                              singleValue:
+                                                                  false,
+                                                            ),
+                                                            settings:
+                                                                const RouteSettings(
+                                                                    name:
+                                                                        '/qr-scanner'),
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        await DigitToast.show(
+                                                          context,
+                                                          options:
+                                                              DigitToastOptions(
+                                                            localizations.translate(
+                                                                i18_local
+                                                                    .stockDetails
+                                                                    .balesQuantityRequiredError),
+                                                            true,
+                                                            theme,
+                                                          ),
+                                                        );
+                                                      }
+                                                    } catch (_) {
+                                                      await DigitToast.show(
+                                                        context,
+                                                        options:
+                                                            DigitToastOptions(
+                                                          localizations.translate(
+                                                              i18_local
+                                                                  .stockDetails
+                                                                  .balesQuantityRequiredError),
+                                                          true,
+                                                          theme,
                                                         ),
-                                                        settings:
-                                                            const RouteSettings(
-                                                                name:
-                                                                    '/qr-scanner'),
-                                                      ),
-                                                    );
+                                                      );
+                                                    }
                                                   },
                                                 ),
                                               ),
@@ -1526,9 +1613,10 @@ class CustomStockDetailsPageState
                                               ))
                                         ]),
 
-                                if ([
-                                  StockRecordEntryType.receipt,
-                                ].contains(entryType))
+                                if (isWareHouseMgr &&
+                                    [
+                                      StockRecordEntryType.receipt,
+                                    ].contains(entryType))
                                   DigitTextFormField(
                                     label: localizations.translate(
                                       i18_local.stockDetails
@@ -1548,9 +1636,10 @@ class CustomStockDetailsPageState
                                           ),
                                     },
                                   ),
-                                if ([
-                                  StockRecordEntryType.receipt,
-                                ].contains(entryType))
+                                if (isWareHouseMgr &&
+                                    [
+                                      StockRecordEntryType.receipt,
+                                    ].contains(entryType))
                                   DigitTextFormField(
                                     label: localizations.translate(
                                       i18_local
