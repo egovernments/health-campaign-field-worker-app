@@ -344,6 +344,8 @@ class Login {
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+
+  String get unableToLoginText => 'UNABLE_TO_LOGIN';
 }
 
 class SelectSurveyFormShowcase {
@@ -510,7 +512,6 @@ class ComplaintsInboxShowcase {
   }
 }
 
-
 class ForgotPassword {
   const ForgotPassword();
 
@@ -600,6 +601,8 @@ class ProjectSelection {
   String get contactSysAdmin => 'CONTACT_SYS_ADMIN';
 
   String get onProjectMapped => 'NO_PROJECT_MAPPED';
+
+  String get fetchBoundaryFailed => 'FETCH_BOUNDARY_FAILED';
 }
 
 class Complaints {
@@ -1014,7 +1017,6 @@ class PrivacyPolicy {
   String get privacyNoticeText => 'PRIVACY_POLICY_TEXT';
   String get privacyPolicyLinkText => 'PRIVACY_POLICY_LINK_TEXT';
   String get privacyPolicyValidationText => 'PRIVACY_POLICY_VALIDATION_TEXT';
-
 }
 
 class Dashboard {
