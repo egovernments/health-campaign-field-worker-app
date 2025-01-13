@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
-import '../widgets/table_card/digit_table_card.dart';
 
 @RoutePage()
 class AcknowledgementPage extends LocalizedStatefulWidget {

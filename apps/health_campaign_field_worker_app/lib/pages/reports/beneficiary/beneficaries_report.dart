@@ -21,7 +21,6 @@ import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 import '../../../widgets/no_result_card/no_result_card.dart';
-import '../../../widgets/table_card/digit_table_card.dart';
 
 @RoutePage()
 class BeneficiariesReportPage extends LocalizedStatefulWidget {
