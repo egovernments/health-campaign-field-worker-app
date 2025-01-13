@@ -1,3 +1,4 @@
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
 
@@ -36,9 +37,10 @@ class ProgressIndicatorContainer extends StatelessWidget {
           child: Column(
             children: [
               LinearProgressIndicator(
+                backgroundColor: theme.colorTheme.generic.background,
                 valueColor: valueColor ??
                     AlwaysStoppedAnimation<Color>(
-                      theme.colorScheme.onSurfaceVariant,
+                      theme.colorTheme.primary.primary1,
                     ),
                 value: value,
                 minHeight: 7.0,

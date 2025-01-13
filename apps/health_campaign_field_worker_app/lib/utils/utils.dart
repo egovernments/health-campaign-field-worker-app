@@ -10,6 +10,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
@@ -278,16 +279,13 @@ void showDownloadDialog(
         context: context,
         builder: (ctx) => Popup(
           title: model.title,
-          onOutsideTap: () {
-            Navigator.of(ctx).pop();
-          },
           titleIcon: Icon(
             dialogType == DigitProgressDialogType.insufficientStorage
                 ? Icons.warning
                 : Icons.info_outline_rounded,
             color: dialogType == DigitProgressDialogType.insufficientStorage
-                ? DigitTheme.instance.colorScheme.error
-                : DigitTheme.instance.colorScheme.surfaceTint,
+                ? Theme.of(context).colorTheme.alert.error
+                : Theme.of(context).colorTheme.text.primary,
           ),
           description: model.content,
           actions: [
@@ -318,7 +316,7 @@ void showDownloadDialog(
                   }
                 },
                 type: DigitButtonType.primary,
-                size: DigitButtonSize.large),
+                size: DigitButtonSize.medium),
             if (model.secondaryButtonLabel != null)
               DigitButton(
                   label: model.secondaryButtonLabel ?? '',
@@ -330,7 +328,7 @@ void showDownloadDialog(
                     }
                   },
                   type: DigitButtonType.secondary,
-                  size: DigitButtonSize.large),
+                  size: DigitButtonSize.medium),
           ],
         ),
       );
@@ -348,7 +346,7 @@ void showDownloadDialog(
                     '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  DigitTheme.instance.colorScheme.secondary,
+                  Theme.of(context).colorTheme.primary.primary1,
                 ),
                 subLabel: model.title,
               );

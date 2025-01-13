@@ -142,7 +142,6 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                     enableFixedDigitButton: true,
                     footer: DigitCard(
                         margin: const EdgeInsets.only(top: spacer2),
-                        padding: const EdgeInsets.all(spacer2),
                         children: [
                           BlocBuilder<UserBloc, UserState>(
                             builder: (ctx, state) {

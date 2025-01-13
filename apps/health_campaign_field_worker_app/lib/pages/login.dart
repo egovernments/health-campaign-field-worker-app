@@ -47,7 +47,10 @@ class _LoginPageState extends LocalizedState<LoginPage> {
     final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        foregroundColor: theme.colorTheme.paper.primary,
+        backgroundColor: theme.colorTheme.primary.primary2,
+      ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           state.maybeWhen(
@@ -155,7 +158,6 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                               i18.privacyPolicy.privacyPolicyValidationText),
                         );
                       }),
-                      const SizedBox(height: spacer4),
                       DigitButton(
                         label: localizations.translate(i18.login.actionLabel),
                         type: DigitButtonType.primary,

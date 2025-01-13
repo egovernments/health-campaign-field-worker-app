@@ -1,4 +1,5 @@
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/molecules/language_selection_card.dart';
 import 'package:flutter/material.dart';
@@ -34,9 +35,11 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: Container(
-        color: const DigitColors().light.primary2,
+        color: theme.colorTheme.primary.primary2,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [

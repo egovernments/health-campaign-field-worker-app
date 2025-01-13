@@ -160,9 +160,8 @@ class _BoundarySelectionPageState
                                   }).toList();
 
                                   return Padding(
-                                    padding: const EdgeInsets.all(
-                                      spacer4,
-                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: spacer4, vertical: spacer2),
                                     child: ReactiveWrapperField(
                                       formControlName: label,
                                       validationMessages: {
@@ -176,6 +175,11 @@ class _BoundarySelectionPageState
                                         label: localizations.translate(label),
                                         isRequired: true,
                                         child: DigitDropdown<BoundaryModel>(
+                                          onTap: () {
+                                            setState(() {
+                                              resetChildDropdowns(label, state);
+                                            });
+                                          },
                                           items: filteredItems
                                               .map((e) => DropdownItem(
                                                   name: localizations.translate(
@@ -562,7 +566,6 @@ class _BoundarySelectionPageState
                               },
                               child: DigitCard(
                                   margin: const EdgeInsets.only(top: spacer2),
-                                  padding: const EdgeInsets.all(spacer2),
                                   children: [
                                     SafeArea(
                                       child: ValueListenableBuilder(

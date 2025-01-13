@@ -1,5 +1,8 @@
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 
@@ -41,9 +44,14 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
             ),
         additionWidgets: widget.isDataRecordSuccess
             ? [
-                DigitTableCard(
-                  element: widget.descriptionTableData ?? {},
-                )
+                LabelValueSummary(
+                  items: widget.descriptionTableData!.keys
+                      .map((e) => LabelValueItem(
+                          labelFlex: 5,
+                          label: e,
+                          value: widget.descriptionTableData?[e].toString()))
+                      .toList(),
+                ),
               ]
             : null,
         actions: (!widget.isDataRecordSuccess)
@@ -64,31 +72,28 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
         // Show the bottom navigation bar if `isDataRecordSuccess` is true
-        child: DigitCard(
-            margin: const EdgeInsets.only(top: spacer2),
-            padding: const EdgeInsets.all(spacer2),
-            children: [
-              DigitButton(
-                mainAxisSize: MainAxisSize.max,
-                label: localizations
-                    .translate(i18.acknowledgementSuccess.goToHome),
-                type: DigitButtonType.primary,
-                size: DigitButtonSize.large,
-                onPressed: () {
-                  context.router.popUntilRouteWithName(HomeRoute.name);
-                },
-              ),
-              DigitButton(
-                type: DigitButtonType.secondary,
-                mainAxisSize: MainAxisSize.max,
-                size: DigitButtonSize.large,
-                onPressed: () {
-                  context.router.popAndPush(BoundarySelectionRoute());
-                },
-                label: localizations
-                    .translate(i18.acknowledgementSuccess.downloadmoredata),
-              ),
-            ]),
+        child:
+            DigitCard(margin: const EdgeInsets.only(top: spacer2), children: [
+          DigitButton(
+            mainAxisSize: MainAxisSize.max,
+            label: localizations.translate(i18.acknowledgementSuccess.goToHome),
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
+            onPressed: () {
+              context.router.popUntilRouteWithName(HomeRoute.name);
+            },
+          ),
+          DigitButton(
+            type: DigitButtonType.secondary,
+            mainAxisSize: MainAxisSize.max,
+            size: DigitButtonSize.large,
+            onPressed: () {
+              context.router.popAndPush(BoundarySelectionRoute());
+            },
+            label: localizations
+                .translate(i18.acknowledgementSuccess.downloadmoredata),
+          ),
+        ]),
       ),
     );
   }

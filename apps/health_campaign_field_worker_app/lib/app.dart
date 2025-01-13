@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/digit_theme.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -396,7 +397,7 @@ class MainApplicationState extends State<MainApplication>
                                     selectedLocale.split("_").last,
                                   )
                                 : firstLanguage,
-                            theme: DigitTheme.instance.mobileTheme,
+                            theme: DigitExtendedTheme.instance.getLightTheme(),
                             routeInformationParser:
                                 widget.appRouter.defaultRouteParser(),
                             scaffoldMessengerKey: scaffoldMessengerKey,

@@ -259,13 +259,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                   pendingSync: (count) {
                     return count == 0
                         ? const Offstage()
-                        : InfoCard(
-                            type: InfoType.info,
-                            description: localizations
-                                .translate(i18.home.dataSyncInfoContent)
-                                .replaceAll('{}', count.toString()),
-                            title: localizations.translate(
-                              i18.home.dataSyncInfoLabel,
+                        : Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: spacer2,
+                            ),
+                            child: InfoCard(
+                              type: InfoType.info,
+                              description: localizations
+                                  .translate(i18.home.dataSyncInfoContent)
+                                  .replaceAll('{}', count.toString()),
+                              title: localizations.translate(
+                                i18.home.dataSyncInfoLabel,
+                              ),
                             ),
                           );
                   },
@@ -348,9 +353,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
           icon: Icons.home,
-          // enableCustomIcon: true,
-          // customIconSize: 48,
-          // customIcon: Constants.closedHouseholdSvg,
+          enableCustomIcon: true,
+          customIconSize: 40,
+          customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () {
             context.router.push(const ClosedHouseholdWrapperRoute());
@@ -388,8 +393,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
       i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
-          // enableCustomIcon: true,
-          // customIcon: mySurveyFormSvg,
+          enableCustomIcon: true,
+          customIcon: mySurveyFormSvg,
           icon: Icons.checklist,
           label: i18.home.mySurveyForm,
           onPressed: () => context.router.push(SurveyFormWrapperRoute()),
