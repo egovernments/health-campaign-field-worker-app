@@ -4,7 +4,6 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
@@ -13,6 +12,7 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import 'package:registration_delivery/utils/utils.dart' as registration_utils;
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
@@ -20,6 +20,7 @@ import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 
 import '../../utils/i18_key_constants.dart' as i18_local;
+import '../custom_qr_scanner.dart';
 
 @RoutePage()
 class CustomStockDetailsPage extends LocalizedStatefulWidget {
@@ -40,18 +41,18 @@ class CustomStockDetailsPageState
   static const _transactionReasonKey = 'transactionReason';
   static const _waybillNumberKey = 'waybillNumber';
   static const _waybillQuantityKey = 'waybillQuantity';
+  static const _balesQuantityKey = 'balesQuantity';
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
   static const _commentsKey = 'comments';
   static const _driverNameKey = 'driverName';
   static const _deliveryTeamKey = 'deliveryTeam';
+  static const _manualScanCommentsKey = 'manualScanComments';
+  static const _baleMismatchCommentsKey = 'baleMismatchCommentsKey';
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
   int maxCount = 100000000;
-
-  // List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
-  //     driverNameValidations = [];
 
   List<GS1Barcode> scannedResources = [];
 
@@ -77,10 +78,25 @@ class CustomStockDetailsPageState
       _driverNameKey: FormControl<String>(
         validators: [],
       ),
+      _balesQuantityKey: FormControl<int>(
+        validators: [],
+      ),
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(
         validators: deliveryTeamSelected ? [Validators.required] : [],
       ),
+      _manualScanCommentsKey: FormControl<String>(
+        validators: [
+          Validators.delegate((validator) =>
+              registration_utils.CustomValidator.requiredMin(validator))
+        ],
+      ),
+      _baleMismatchCommentsKey: FormControl<String>(
+        validators: [
+          Validators.delegate((validator) =>
+              registration_utils.CustomValidator.requiredMin(validator))
+        ],
+      )
     });
   }
 
@@ -129,9 +145,11 @@ class CustomStockDetailsPageState
                 StockRecordEntryType entryType = stockState.entryType;
 
                 const module = i18.stockDetails;
+                const localModule = i18_local.stockDetails;
 
                 String pageTitle;
                 String transactionPartyLabel;
+                String balesCountLabel;
                 String quantityCountLabel;
                 String? transactionReasonLabel;
                 String? transactionReason;
@@ -144,6 +162,7 @@ class CustomStockDetailsPageState
                     pageTitle = module.receivedPageTitle;
                     transactionPartyLabel =
                         module.selectTransactingPartyReceived;
+                    balesCountLabel = localModule.balesReceivedCountLabel;
                     quantityCountLabel = module.quantityReceivedLabel;
                     transactionType = TransactionType.received.toValue();
 
@@ -151,6 +170,7 @@ class CustomStockDetailsPageState
                   case StockRecordEntryType.dispatch:
                     pageTitle = module.issuedPageTitle;
                     transactionPartyLabel = module.selectTransactingPartyIssued;
+                    balesCountLabel = localModule.balesSentCountLabel;
                     quantityCountLabel = module.quantitySentLabel;
                     transactionType = TransactionType.dispatched.toValue();
 
@@ -159,12 +179,14 @@ class CustomStockDetailsPageState
                     pageTitle = module.returnedPageTitle;
                     transactionPartyLabel =
                         module.selectTransactingPartyReturned;
+                    balesCountLabel = localModule.balesReturnedCountLabel;
                     quantityCountLabel = module.quantityReturnedLabel;
                     transactionType = TransactionType.received.toValue();
                     break;
                   case StockRecordEntryType.loss:
                     pageTitle = module.lostPageTitle;
                     quantityCountLabel = module.quantityLostLabel;
+                    balesCountLabel = localModule.balesLostCountLabel;
                     transactionReasonLabel = module.transactionReasonLost;
                     transactionType = TransactionType.dispatched.toValue();
 
@@ -178,6 +200,7 @@ class CustomStockDetailsPageState
                     transactionPartyLabel =
                         module.selectTransactingPartyReceivedFromDamaged;
                     quantityCountLabel = module.quantityDamagedLabel;
+                    balesCountLabel = localModule.balesDamagedCountLabel;
                     transactionReasonLabel = module.transactionReasonDamaged;
                     transactionType = TransactionType.dispatched.toValue();
 
@@ -361,6 +384,10 @@ class CustomStockDetailsPageState
                                               .control(_waybillQuantityKey)
                                               .value as String?;
 
+                                          final balesQuantity = form
+                                              .control(_balesQuantityKey)
+                                              .value;
+
                                           final vehicleNumber = form
                                               .control(_vehicleNumberKey)
                                               .value as String?;
@@ -375,6 +402,18 @@ class CustomStockDetailsPageState
                                               .control(_commentsKey)
                                               .value as String?;
 
+                                          final manualScanComments = form
+                                              .control(
+                                                _manualScanCommentsKey,
+                                              )
+                                              .value as String?;
+
+                                          final baleMismtachComments = form
+                                              .control(
+                                                _baleMismatchCommentsKey,
+                                              )
+                                              .value as String?;
+
                                           final driverName = (form
                                                   .control(_driverNameKey)
                                                   .value as String?)
@@ -383,6 +422,73 @@ class CustomStockDetailsPageState
                                           final deliveryTeamName = form
                                               .control(_deliveryTeamKey)
                                               .value as String?;
+
+                                          final List<AdditionalField>
+                                              additionalFields = [];
+                                          final scannerState = context
+                                              .read<DigitScannerBloc>()
+                                              .state;
+                                          final List<GS1Barcode> barcodes =
+                                              scannerState.barCodes;
+
+                                          final List<String> qrCodes =
+                                              scannerState.qrCodes;
+
+                                          if ([
+                                            StockRecordEntryType.receipt,
+                                          ].contains(entryType)) {
+                                            if (balesQuantity != null &&
+                                                (barcodes.length +
+                                                        qrCodes.length) !=
+                                                    int.parse(balesQuantity
+                                                        .toString()) &&
+                                                (baleMismtachComments == null ||
+                                                    baleMismtachComments
+                                                        .isEmpty)) {
+                                              await DigitToast.show(
+                                                context,
+                                                options: DigitToastOptions(
+                                                  localizations.translate(i18_local
+                                                      .stockDetails
+                                                      .baleMismatchCommentRequired),
+                                                  true,
+                                                  theme,
+                                                ),
+                                              );
+
+                                              return;
+                                            }
+
+                                            if (qrCodes.isNotEmpty &&
+                                                (manualScanComments == null ||
+                                                    manualScanComments
+                                                        .isEmpty)) {
+                                              await DigitToast.show(
+                                                context,
+                                                options: DigitToastOptions(
+                                                  localizations.translate(i18_local
+                                                      .stockDetails
+                                                      .manualScanCommentRequired),
+                                                  true,
+                                                  theme,
+                                                ),
+                                              );
+
+                                              return;
+                                            }
+
+                                            int qrCodeCount = 0;
+
+                                            for (var qrCode in qrCodes) {
+                                              additionalFields.add(
+                                                AdditionalField(
+                                                  'manualScan-$qrCodeCount',
+                                                  qrCode,
+                                                ),
+                                              );
+                                              qrCodeCount = qrCodeCount + 1;
+                                            }
+                                          }
 
                                           String? senderId;
                                           String? senderType;
@@ -505,6 +611,24 @@ class CustomStockDetailsPageState
                                                           'comments',
                                                           comments,
                                                         ),
+                                                      if (manualScanComments !=
+                                                              null &&
+                                                          manualScanComments
+                                                              .trim()
+                                                              .isNotEmpty)
+                                                        AdditionalField(
+                                                          _manualScanCommentsKey,
+                                                          manualScanComments,
+                                                        ),
+                                                      if (baleMismtachComments !=
+                                                              null &&
+                                                          baleMismtachComments
+                                                              .trim()
+                                                              .isNotEmpty)
+                                                        AdditionalField(
+                                                          _baleMismatchCommentsKey,
+                                                          baleMismtachComments,
+                                                        ),
                                                       if (deliveryTeamName !=
                                                               null &&
                                                           deliveryTeamName
@@ -520,6 +644,14 @@ class CustomStockDetailsPageState
                                                           'driver_name',
                                                           driverName,
                                                         ),
+                                                      if (balesQuantity !=
+                                                              null &&
+                                                          balesQuantity
+                                                              .toString()
+                                                              .isNotEmpty)
+                                                        AdditionalField(
+                                                            _balesQuantityKey,
+                                                            balesQuantity),
                                                       if (hasLocationData) ...[
                                                         AdditionalField(
                                                           'lat',
@@ -535,6 +667,9 @@ class CustomStockDetailsPageState
                                                         addBarCodesToFields(
                                                             scannerState
                                                                 .barCodes),
+                                                      if (additionalFields
+                                                          .isNotEmpty)
+                                                        ...additionalFields,
                                                     ],
                                                   )
                                                 : null,
@@ -1121,7 +1256,7 @@ class CustomStockDetailsPageState
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const DigitScannerPage(
+                                                const CustomDigitScannerPage(
                                               quantity: 5,
                                               isGS1code: false,
                                               singleValue: false,
@@ -1141,6 +1276,33 @@ class CustomStockDetailsPageState
                                     formControlName: _deliveryTeamKey,
                                   ),
                                 ),
+                                if ([
+                                  StockRecordEntryType.receipt,
+                                ].contains(entryType))
+                                  DigitTextFormField(
+                                    keyboardType: TextInputType.number,
+                                    label: localizations.translate(
+                                      balesCountLabel,
+                                    ),
+                                    formControlName: _balesQuantityKey,
+                                    isRequired: true,
+                                    validationMessages: {
+                                      "number": (object) =>
+                                          localizations.translate(
+                                            i18_local.stockDetails
+                                                .balesQuantityRequiredError,
+                                          ),
+                                      // todo : add the max quantity here
+                                      "max": (object) =>
+                                          "${localizations.translate(
+                                            '${quantityCountLabel}_MAX_ERROR',
+                                          )} ${0}",
+                                      "min": (object) =>
+                                          localizations.translate(
+                                            '${quantityCountLabel}_MIN_ERROR',
+                                          ),
+                                    },
+                                  ),
                                 DigitTextFormField(
                                   key: const Key(_transactionQuantityKey),
                                   formControlName: _transactionQuantityKey,
@@ -1276,6 +1438,7 @@ class CustomStockDetailsPageState
                                   maxLines: 3,
                                   formControlName: _commentsKey,
                                 ),
+
                                 // todo not yet confirmed if needed or not for issue flow
                                 if (isWareHouseMgr &&
                                     (entryType == StockRecordEntryType.receipt))
@@ -1291,7 +1454,7 @@ class CustomStockDetailsPageState
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const DigitScannerPage(
+                                                    const CustomDigitScannerPage(
                                                   quantity: 5,
                                                   isGS1code: true,
                                                   singleValue: false,
@@ -1339,7 +1502,7 @@ class CustomStockDetailsPageState
                                                     Navigator.of(context).push(
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            const DigitScannerPage(
+                                                            const CustomDigitScannerPage(
                                                           quantity: 5,
                                                           isGS1code: true,
                                                           singleValue: false,
@@ -1361,7 +1524,52 @@ class CustomStockDetailsPageState
                                                     .elements.values.first.data
                                                     .toString()),
                                               ))
-                                        ])
+                                        ]),
+
+                                if ([
+                                  StockRecordEntryType.receipt,
+                                ].contains(entryType))
+                                  DigitTextFormField(
+                                    label: localizations.translate(
+                                      i18_local.stockDetails
+                                          .baleMismatchCommentsLabel,
+                                    ),
+                                    minLines: 2,
+                                    maxLines: 3,
+                                    formControlName: _baleMismatchCommentsKey,
+                                    validationMessages: {
+                                      "required": (object) =>
+                                          localizations.translate(
+                                            i18.common.corecommonRequired,
+                                          ),
+                                      "min2": (object) =>
+                                          localizations.translate(
+                                            i18.common.min2CharsRequired,
+                                          ),
+                                    },
+                                  ),
+                                if ([
+                                  StockRecordEntryType.receipt,
+                                ].contains(entryType))
+                                  DigitTextFormField(
+                                    label: localizations.translate(
+                                      i18_local
+                                          .stockDetails.manualScanCommentsLabel,
+                                    ),
+                                    minLines: 2,
+                                    maxLines: 3,
+                                    formControlName: _manualScanCommentsKey,
+                                    validationMessages: {
+                                      "required": (object) =>
+                                          localizations.translate(
+                                            i18.common.corecommonRequired,
+                                          ),
+                                      "min2": (object) =>
+                                          localizations.translate(
+                                            i18.common.min2CharsRequired,
+                                          ),
+                                    },
+                                  ),
                               ],
                             ),
                           ),

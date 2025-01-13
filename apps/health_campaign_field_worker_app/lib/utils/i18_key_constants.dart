@@ -22,6 +22,7 @@ const householdLocation = HouseholdLocation();
 const searchBeneficiary = SearchBeneficiary();
 const individualDetails = IndividualDetails();
 const beneficiaryDetails = BeneficiaryDetails();
+const stockDetails = StockDetails();
 
 const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
@@ -1078,6 +1079,47 @@ class IndividualDetails {
   String get voucherCodeScanMoreThanLimit =>
       "VOUCHER_CODE_SCAN_MORE_THAN_LIMIT";
   String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
+}
+
+class StockDetails {
+  const StockDetails();
+
+  /// Quantity sent/received/lost/damaged label
+  String get quantityReceivedLabel => 'STOCK_DETAILS_QUANTITY_RECEIVED';
+
+  String get quantitySentLabel => 'STOCK_DETAILS_QUANTITY_SENT';
+
+  String get quantityReturnedLabel => 'STOCK_DETAILS_QUANTITY_RETURNED';
+
+  String get quantityLostLabel => 'STOCK_DETAILS_QUANTITY_LOST';
+
+  String get quantityGainedLabel => 'STOCK_DETAILS_QUANTITY_GAINED';
+
+  String get quantityDamagedLabel => 'STOCK_DETAILS_QUANTITY_DAMAGED';
+
+  String get balesReceivedCountLabel => 'STOCK_DETAILS_BALES_RECEIVED';
+
+  String get balesSentCountLabel => 'STOCK_DETAILS_BALES_SENT';
+
+  String get balesReturnedCountLabel => 'STOCK_DETAILS_BALES_RETURNED';
+
+  String get balesLostCountLabel => 'STOCK_DETAILS_BALES_LOST';
+
+  String get balesGainedCountLabel => 'STOCK_DETAILS_BALES_GAINED';
+
+  String get balesDamagedCountLabel => 'STOCK_DETAILS_BALES_DAMAGED';
+  String get balesQuantityRequiredError => 'BALES_QUANTITY_REQUIRED_ERROR';
+
+  // comments
+  String get manualScanCommentsLabel =>
+      'STOCK_DETAILS_MANUAL_SCAN_COMMENTS_LABEL';
+
+  String get baleMismatchCommentsLabel =>
+      'STOCK_DETAILS_BALE_MISMATCH_COMMENTS_LABEL';
+
+  String get baleMismatchCommentRequired => 'BALE_MISMATCH_COMMENT_REQUIRED';
+
+  String get manualScanCommentRequired => 'MANUAL_SCAN_COMMENT_REQUIRED';
 }
 
 class BeneficiaryDetails {
