@@ -930,7 +930,7 @@ class CustomDeliverInterventionPageState
     final memberCount = household.memberCount ?? 2;
 
     final householdType = household.householdType;
-    if (householdType == null) return 1;
+    if (householdType == null) return (memberCount / 2).round();
 
     // Handle the 'family' household type
     if (householdType == HouseholdType.family) {
