@@ -184,22 +184,6 @@ class CustomWarehouseDetailsPageState
                                                     theme,
                                                   ),
                                                 );
-                                              } else if (deliveryTeamSelected &&
-                                                  (teamCode == null ||
-                                                      teamCode
-                                                          .trim()
-                                                          .isEmpty)) {
-                                                DigitToast.show(
-                                                  context,
-                                                  options: DigitToastOptions(
-                                                    localizations.translate(
-                                                      i18.stockDetails
-                                                          .teamCodeRequired,
-                                                    ),
-                                                    true,
-                                                    theme,
-                                                  ),
-                                                );
                                               } else {
                                                 recordStockBloc.add(
                                                   RecordStockSaveTransactionDetailsEvent(
@@ -390,53 +374,6 @@ class CustomWarehouseDetailsPageState
                                         ),
                                       ),
                                     ),
-                                    if (deliveryTeamSelected)
-                                      DigitTextFormField(
-                                        label: localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .teamCodeLabel,
-                                        ),
-                                        formControlName: _teamCodeKey,
-                                        onChanged: (val) {
-                                          String? value = val as String?;
-                                          if (value != null &&
-                                              value.trim().isNotEmpty) {
-                                            context
-                                                .read<DigitScannerBloc>()
-                                                .add(
-                                                  DigitScannerEvent
-                                                      .handleScanner(
-                                                    barCode: [],
-                                                    qrCode: [value],
-                                                  ),
-                                                );
-                                          } else {
-                                            clearQRCodes();
-                                          }
-                                        },
-                                        isRequired: true,
-                                        suffix: IconButton(
-                                          onPressed: () {
-                                            //[TODO: Add route to auto_route]
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const DigitScannerPage(
-                                                  quantity: 1,
-                                                  isGS1code: false,
-                                                  singleValue: false,
-                                                ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
-                                            );
-                                          },
-                                          icon: Icon(
-                                            Icons.qr_code_2,
-                                            color: theme.colorScheme.secondary,
-                                          ),
-                                        ),
-                                      ),
                                   ],
                                 ),
                               ),
