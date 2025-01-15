@@ -71,6 +71,7 @@ dependencies:
   permission_handler: ^11.3.1
   survey_form: ^1.0.0
   complaints: ^1.0.0
+  digit_maps: ^0.0.1
 
 dev_dependencies:
   flutter_test:

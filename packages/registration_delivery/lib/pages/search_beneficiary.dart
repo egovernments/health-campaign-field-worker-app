@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_maps/pages/home.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -263,6 +264,17 @@ class _SearchBeneficiaryPageState
                     child: CircularProgressIndicator(),
                   ),
                 ),
+              if (isProximityEnabled)
+                SliverToBoxAdapter(
+                    child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  child: const MapsHomePage(
+                    houseHoldPoints: [
+                      [12.927721214003412, 77.62723049326378],
+                      [12.93114059451119, 77.62672623800329]
+                    ],
+                  ),
+                )),
               BlocListener<DigitScannerBloc, DigitScannerState>(
                 listener: (context, scannerState) {
                   if (scannerState.qrCodes.isNotEmpty) {

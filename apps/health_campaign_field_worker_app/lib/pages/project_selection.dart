@@ -248,6 +248,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void triggerLocationTracking(ProjectModel project) async {
+    context.read<LocationBloc>().add(const RequestLocationPermissionEvent());
     DateTime now = DateTime.now();
     DateTime startAfterTimestamp =
         project.startDateTime!.isBefore(now) ? now : project.startDateTime!;

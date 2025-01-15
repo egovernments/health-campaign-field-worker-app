@@ -228,10 +228,11 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../digit_components"
-      relative: true
-    source: path
-    version: "1.0.2+1"
+      name: digit_components
+      sha256: "7097c7e8bd2fa96415eb4049a7fc2e4cb3dcb5a913d63703ca69cb785a069300"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   easy_stepper:
     dependency: transitive
     description:
@@ -1042,5 +1043,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.0 <3.9.0"
   flutter: ">=3.19.2"

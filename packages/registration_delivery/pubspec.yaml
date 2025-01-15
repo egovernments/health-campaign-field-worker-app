@@ -42,6 +42,11 @@ dependencies:
   formula_parser: ^2.0.1
   flutter_keyboard_visibility: ^5.4.1
   survey_form: ^1.0.0
+  digit_maps: ^0.0.1
+
+dependency_overrides:
+  digit_maps:
+    path: ../digit_maps
 
 dev_dependencies:
   flutter_test:

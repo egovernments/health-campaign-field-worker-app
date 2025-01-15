@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -14,6 +13,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -161,8 +161,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
-        connectivityResult.firstOrNull == ConnectivityResult.mobile;
+    final isOnline =
+        connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+            connectivityResult.firstOrNull == ConnectivityResult.mobile;
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
@@ -296,7 +297,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
-
       // INFO : Need to add project load functions
 
       try {
@@ -383,7 +383,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final facilities = await facilityRemoteRepository.search(
       FacilitySearchModel(tenantId: envConfig.variables.tenantId),
-      limit: batchSize,
+      limit: 100,
     );
 
     await facilityLocalRepository.bulkCreate(facilities);
@@ -507,7 +507,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             dashboardRemoteRepository,
             dashboardActionPath.trim().isNotEmpty
                 ? dashboardActionPath
-                : '/dashboard-analytics/dashboard/getChartV2', //[TODO: To be added to MDMS Service registry
+                : '/dashboard-analytics/dashboard/getChartV2',
+            //[TODO: To be added to MDMS Service registry
             envConfig.variables.tenantId,
             event.model.id,
             userUUIDList,
