@@ -1,3 +1,7 @@
+## 1.0.3+1
+
+* Added localityCode for register
+
 ## 1.0.3
 
 * Updated digit_data_model to latest version

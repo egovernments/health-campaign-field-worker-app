@@ -1,3 +1,7 @@
+## 1.0.5+1
+
+* Added localityCode in attendance table and modified migration script
+
 ## 1.0.5
 
 * Upgrade to Flutter 3.22
