@@ -160,7 +160,7 @@ class _CustomDigitScannerPageState
                             ),
                           ),
                         ),
-                        if (widget.isGS1code)
+                        if (widget.isGS1code && !widget.manualEnabled)
                           const SizedBox.shrink()
                         else
                           Align(

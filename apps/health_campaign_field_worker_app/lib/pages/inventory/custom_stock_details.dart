@@ -49,6 +49,7 @@ class CustomStockDetailsPageState
   static const _deliveryTeamKey = 'deliveryTeam';
   static const _manualScanCommentsKey = 'manualScanComments';
   static const _baleMismatchCommentsKey = 'baleMismatchCommentsKey';
+
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
@@ -1229,7 +1230,7 @@ class CustomStockDetailsPageState
                                   },
                                 ),
                                 Visibility(
-                                  visible: deliveryTeamSelected,
+                                  visible: false,
                                   child: DigitTextFormField(
                                     label: localizations.translate(
                                       i18.stockReconciliationDetails
@@ -1336,73 +1337,69 @@ class CustomStockDetailsPageState
                                     quantityCountLabel,
                                   ),
                                 ),
-                                if (isWareHouseMgr)
-                                  DigitTextFormField(
-                                      key: const Key(_waybillNumberKey),
-                                      label: localizations.translate(
-                                        i18.stockDetails.waybillNumberLabel,
-                                      ),
-                                      formControlName: _waybillNumberKey,
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                        decimal: true,
-                                      ),
-                                      validationMessages: {
-                                        'maxLength': (object) => localizations
-                                            .translate(
-                                                i18.common.maxCharsRequired)
-                                            .replaceAll('{}', '200'),
-                                        'minLength': (object) => localizations
-                                            .translate(
-                                                i18.common.min2CharsRequired)
-                                            .replaceAll('{}', ''),
-                                      }),
-                                if (isWareHouseMgr)
-                                  DigitTextFormField(
-                                      label: localizations.translate(
-                                        i18.stockDetails
-                                            .quantityOfProductIndicatedOnWaybillLabel,
-                                      ),
-                                      formControlName: _waybillQuantityKey,
-                                      onChanged: (val) {
-                                        if (val.toString().isEmpty ||
-                                            val.value == null) {
-                                          form
-                                              .control(_waybillQuantityKey)
-                                              .value = '0';
-                                        }
-                                      }),
-                                if (isWareHouseMgr)
-                                  transportTypes.isNotEmpty
-                                      ? DigitReactiveDropdown<String>(
-                                          key: const Key(_typeOfTransportKey),
-                                          isRequired: false,
-                                          label: localizations.translate(
-                                            i18.stockDetails.transportTypeLabel,
-                                          ),
-                                          valueMapper: (e) => e,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              form.control(
-                                                _typeOfTransportKey,
-                                              );
-                                            });
+                                DigitTextFormField(
+                                    key: const Key(_waybillNumberKey),
+                                    label: localizations.translate(
+                                      i18.stockDetails.waybillNumberLabel,
+                                    ),
+                                    formControlName: _waybillNumberKey,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                    validationMessages: {
+                                      'maxLength': (object) => localizations
+                                          .translate(
+                                              i18.common.maxCharsRequired)
+                                          .replaceAll('{}', '200'),
+                                      'minLength': (object) => localizations
+                                          .translate(
+                                              i18.common.min2CharsRequired)
+                                          .replaceAll('{}', ''),
+                                    }),
+                                DigitTextFormField(
+                                    label: localizations.translate(
+                                      i18.stockDetails
+                                          .quantityOfProductIndicatedOnWaybillLabel,
+                                    ),
+                                    formControlName: _waybillQuantityKey,
+                                    onChanged: (val) {
+                                      if (val.toString().isEmpty ||
+                                          val.value == null) {
+                                        form
+                                            .control(_waybillQuantityKey)
+                                            .value = '0';
+                                      }
+                                    }),
+                                transportTypes.isNotEmpty
+                                    ? DigitReactiveDropdown<String>(
+                                        key: const Key(_typeOfTransportKey),
+                                        isRequired: false,
+                                        label: localizations.translate(
+                                          i18.stockDetails.transportTypeLabel,
+                                        ),
+                                        valueMapper: (e) => e,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            form.control(
+                                              _typeOfTransportKey,
+                                            );
+                                          });
+                                        },
+                                        initialValue:
+                                            transportTypes.firstOrNull?.name,
+                                        menuItems: transportTypes.map(
+                                          (e) {
+                                            return localizations
+                                                .translate(e.name);
                                           },
-                                          initialValue:
-                                              transportTypes.firstOrNull?.name,
-                                          menuItems: transportTypes.map(
-                                            (e) {
-                                              return localizations
-                                                  .translate(e.name);
-                                            },
-                                          ).toList(),
-                                          formControlName: _typeOfTransportKey,
-                                        )
-                                      : const Offstage(),
-                                if (isWareHouseMgr)
-                                  const SizedBox(
-                                    height: kPadding,
-                                  ),
+                                        ).toList(),
+                                        formControlName: _typeOfTransportKey,
+                                      )
+                                    : const Offstage(),
+                                const SizedBox(
+                                  height: kPadding,
+                                ),
                                 DigitTextFormField(
                                   label: localizations.translate(
                                     i18_local
@@ -1423,13 +1420,12 @@ class CustomStockDetailsPageState
                                         .replaceAll('{}', ''),
                                   },
                                 ),
-                                if (isWareHouseMgr)
-                                  DigitTextFormField(
-                                    label: localizations.translate(
-                                      i18.stockDetails.vehicleNumberLabel,
-                                    ),
-                                    formControlName: _vehicleNumberKey,
+                                DigitTextFormField(
+                                  label: localizations.translate(
+                                    i18.stockDetails.vehicleNumberLabel,
                                   ),
+                                  formControlName: _vehicleNumberKey,
+                                ),
                                 DigitTextFormField(
                                   label: localizations.translate(
                                     i18.stockDetails.commentsLabel,
@@ -1440,8 +1436,7 @@ class CustomStockDetailsPageState
                                 ),
 
                                 // todo not yet confirmed if needed or not for issue flow
-                                if (isWareHouseMgr &&
-                                    (entryType == StockRecordEntryType.receipt))
+                                if ((entryType == StockRecordEntryType.receipt))
                                   scannerState.barCodes.isEmpty
                                       ? DigitOutlineIconButton(
                                           buttonStyle: OutlinedButton.styleFrom(
@@ -1613,10 +1608,9 @@ class CustomStockDetailsPageState
                                               ))
                                         ]),
 
-                                if (isWareHouseMgr &&
-                                    [
-                                      StockRecordEntryType.receipt,
-                                    ].contains(entryType))
+                                if ([
+                                  StockRecordEntryType.receipt,
+                                ].contains(entryType))
                                   DigitTextFormField(
                                     label: localizations.translate(
                                       i18_local.stockDetails
@@ -1636,10 +1630,9 @@ class CustomStockDetailsPageState
                                           ),
                                     },
                                   ),
-                                if (isWareHouseMgr &&
-                                    [
-                                      StockRecordEntryType.receipt,
-                                    ].contains(entryType))
+                                if ([
+                                  StockRecordEntryType.receipt,
+                                ].contains(entryType))
                                   DigitTextFormField(
                                     label: localizations.translate(
                                       i18_local
