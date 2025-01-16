@@ -33,6 +33,7 @@ migrate_working_dir/
 /build/
 **.apk
 .env
+.env-qa
 
 # Symbolication related
 app.*.symbols
