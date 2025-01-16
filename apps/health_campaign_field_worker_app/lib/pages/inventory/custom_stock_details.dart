@@ -387,7 +387,7 @@ class CustomStockDetailsPageState
 
                                           final balesQuantity = form
                                               .control(_balesQuantityKey)
-                                              .value;
+                                              .value as String?;
 
                                           final vehicleNumber = form
                                               .control(_vehicleNumberKey)
@@ -649,7 +649,6 @@ class CustomStockDetailsPageState
                                                       if (balesQuantity !=
                                                               null &&
                                                           balesQuantity
-                                                              .toString()
                                                               .isNotEmpty)
                                                         AdditionalField(
                                                             _balesQuantityKey,
@@ -669,6 +668,7 @@ class CustomStockDetailsPageState
                                                         addBarCodesToFields(
                                                             scannerState
                                                                 .barCodes),
+                                                      // adding qrcodes data if any
                                                       if (additionalFields
                                                           .isNotEmpty)
                                                         ...additionalFields,
