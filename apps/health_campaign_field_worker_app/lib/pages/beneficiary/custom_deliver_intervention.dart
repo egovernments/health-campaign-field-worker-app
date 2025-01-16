@@ -933,7 +933,8 @@ class CustomDeliverInterventionPageState
               deliveryComment,
             ),
           if (householdType != null)
-            AdditionalField(Constants.householdTypeKey, householdType),
+            AdditionalField(
+                Constants.householdTypeKey, householdType.toValue()),
           if (householdType != null &&
               householdType == HouseholdType.community &&
               communityTypeValue.isNotEmpty)
