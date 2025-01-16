@@ -279,116 +279,120 @@ class AuthenticatedPageWrapper extends StatelessWidget {
               .isNotEmpty
           : false;
       return SafeArea(
-        child: SideBar(
-          profile: state.maybeMap(
-            authenticated: (value) => ProfileWidget(
-              leading: GestureDetector(
-                onTap: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  context.router.push(UserQRDetailsRoute());
-                },
-                child: QrImageView(
-                  data: context.loggedInUserUuid,
-                  version: QrVersions.auto,
-                  size: 150.0,
-                ),
-              ),
-              title: value.userModel.name.toString(),
-              description: value.userModel.mobileNumber.toString(),
-            ),
-            orElse: () => null,
-          ),
-          sidebarItems: [
-            SidebarItem(
-              title: AppLocalizations.of(context).translate(
-                i18.common.coreCommonHome,
-              ),
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop();
-                context.router.replaceAll([HomeRoute()]);
-              },
-              icon: Icons.home,
-            ),
-            if (appInitializationBloc.state is AppInitialized) ...[
-              SidebarItem(
-                title: AppLocalizations.of(context).translate(
-                  i18.common.coreCommonlanguage,
-                ),
-                isSearchEnabled: false,
-                icon: Icons.language,
-                onPressed: () {},
-                children: (localizationModulesList != null)
-                    ? buildLanguage(
-                        localizationModulesList, languages, context, appConfig)
-                    : null,
-              )
-            ],
-            SidebarItem(
-              title: AppLocalizations.of(context).translate(
-                i18.common.coreCommonProfile,
-              ),
-              icon: Icons.person,
-              onPressed: () async {
-                final connectivityResult =
-                    await (Connectivity().checkConnectivity());
-                final isOnline = connectivityResult.firstOrNull ==
-                        ConnectivityResult.wifi ||
-                    connectivityResult.firstOrNull == ConnectivityResult.mobile;
-
-                if (isOnline) {
-                  if (context.mounted) {
+        child: Padding(
+          padding: const EdgeInsets.only(top: kToolbarHeight),
+          child: SideBar(
+            profile: state.maybeMap(
+              authenticated: (value) => ProfileWidget(
+                leading: GestureDetector(
+                  onTap: () {
                     Navigator.of(context, rootNavigator: true).pop();
-                    context.router.push(ProfileRoute());
-                  }
-                } else {
-                  if (context.mounted) {
-                    showCustomPopup(
-                      context: context,
-                      builder: (ctx) => Popup(
-                        title: AppLocalizations.of(context).translate(
-                          i18.common.connectionLabel,
-                        ),
-                        description: AppLocalizations.of(context).translate(
-                          i18.common.connectionContent,
-                        ),
-                        actions: [
-                          DigitButton(
-                              label: AppLocalizations.of(context).translate(
-                                i18.common.coreCommonOk,
-                              ),
-                              onPressed: () =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
-                              type: DigitButtonType.primary,
-                              size: DigitButtonSize.large)
-                        ],
-                      ),
-                    );
-                  }
-                }
-              },
+                    context.router.push(UserQRDetailsRoute());
+                  },
+                  child: QrImageView(
+                    data: context.loggedInUserUuid,
+                    version: QrVersions.auto,
+                    size: 150.0,
+                  ),
+                ),
+                title: value.userModel.name.toString(),
+                description: value.userModel.mobileNumber.toString(),
+              ),
+              orElse: () => null,
             ),
-            if (isDistributor) ...[
+            sidebarItems: [
               SidebarItem(
                 title: AppLocalizations.of(context).translate(
-                  i18.common.coreCommonViewDownloadedData,
+                  i18.common.coreCommonHome,
                 ),
-                icon: Icons.download,
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).pop();
-                  context.router.push(const BeneficiariesReportRoute());
+                  context.router.replaceAll([HomeRoute()]);
                 },
-              )
+                icon: Icons.home,
+              ),
+              if (appInitializationBloc.state is AppInitialized) ...[
+                SidebarItem(
+                  title: AppLocalizations.of(context).translate(
+                    i18.common.coreCommonlanguage,
+                  ),
+                  isSearchEnabled: false,
+                  icon: Icons.language,
+                  onPressed: () {},
+                  children: (localizationModulesList != null)
+                      ? buildLanguage(localizationModulesList, languages,
+                          context, appConfig)
+                      : null,
+                )
+              ],
+              SidebarItem(
+                title: AppLocalizations.of(context).translate(
+                  i18.common.coreCommonProfile,
+                ),
+                icon: Icons.person,
+                onPressed: () async {
+                  final connectivityResult =
+                      await (Connectivity().checkConnectivity());
+                  final isOnline = connectivityResult.firstOrNull ==
+                          ConnectivityResult.wifi ||
+                      connectivityResult.firstOrNull ==
+                          ConnectivityResult.mobile;
+
+                  if (isOnline) {
+                    if (context.mounted) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.push(ProfileRoute());
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showCustomPopup(
+                        context: context,
+                        builder: (ctx) => Popup(
+                          title: AppLocalizations.of(context).translate(
+                            i18.common.connectionLabel,
+                          ),
+                          description: AppLocalizations.of(context).translate(
+                            i18.common.connectionContent,
+                          ),
+                          actions: [
+                            DigitButton(
+                                label: AppLocalizations.of(context).translate(
+                                  i18.common.coreCommonOk,
+                                ),
+                                onPressed: () =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop(),
+                                type: DigitButtonType.primary,
+                                size: DigitButtonSize.large)
+                          ],
+                        ),
+                      );
+                    }
+                  }
+                },
+              ),
+              if (isDistributor) ...[
+                SidebarItem(
+                  title: AppLocalizations.of(context).translate(
+                    i18.common.coreCommonViewDownloadedData,
+                  ),
+                  icon: Icons.download,
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.push(const BeneficiariesReportRoute());
+                  },
+                )
+              ],
             ],
-          ],
-          logOutDigitButtonLabel: AppLocalizations.of(context)
-              .translate(i18.common.coreCommonLogout),
-          onLogOut: () {
-            context.read<BoundaryBloc>().add(const BoundaryResetEvent());
-            context.read<AuthBloc>().add(const AuthLogoutEvent());
-          },
-          footer: PoweredByDigit(
-            version: Constants().version,
+            logOutDigitButtonLabel: AppLocalizations.of(context)
+                .translate(i18.common.coreCommonLogout),
+            onLogOut: () {
+              context.read<BoundaryBloc>().add(const BoundaryResetEvent());
+              context.read<AuthBloc>().add(const AuthLogoutEvent());
+            },
+            footer: PoweredByDigit(
+              version: Constants().version,
+            ),
           ),
         ),
       );
