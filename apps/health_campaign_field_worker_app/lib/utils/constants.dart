@@ -89,6 +89,7 @@ class Constants {
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
   // same key would be used to set community type like refugee or special groups etc
   static const String communityKey = 'communityKey';
+  static const String householdTypeKey = 'householdTypeKey';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:registration_delivery/utils/constants.dart';
@@ -194,10 +195,18 @@ class CustomIndividualDetailsPageState
                                 isHeadOfHousehold: widget.isHeadOfHousehold,
                               ),
                             );
+                            // check if the tag already exist
+                            final repository = context.read<
+                                    LocalRepository<ProjectBeneficiaryModel,
+                                        ProjectBeneficiarySearchModel>>()
+                                as ProjectBeneficiaryLocalRepository;
                             final scannerBloc =
                                 context.read<DigitScannerBloc>();
+                            final projectBeneficiary = await repository.search(
+                                ProjectBeneficiarySearchModel(
+                                    tag: [scannerBloc.state.qrCodes.first]));
 
-                            if (scannerBloc.state.duplicate) {
+                            if (projectBeneficiary.isNotEmpty) {
                               DigitToast.show(
                                 context,
                                 options: DigitToastOptions(
@@ -209,6 +218,8 @@ class CustomIndividualDetailsPageState
                                   theme,
                                 ),
                               );
+
+                              return;
                             } else {
                               clickedStatus.value = true;
                               final scannerBloc =
