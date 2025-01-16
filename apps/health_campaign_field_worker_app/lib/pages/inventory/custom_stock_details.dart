@@ -385,9 +385,9 @@ class CustomStockDetailsPageState
                                               .control(_waybillQuantityKey)
                                               .value as String?;
 
-                                          final balesQuantity = form
+                                          final int? balesQuantity = form
                                               .control(_balesQuantityKey)
-                                              .value as String?;
+                                              .value;
 
                                           final vehicleNumber = form
                                               .control(_vehicleNumberKey)
@@ -646,10 +646,7 @@ class CustomStockDetailsPageState
                                                           'driver_name',
                                                           driverName,
                                                         ),
-                                                      if (balesQuantity !=
-                                                              null &&
-                                                          balesQuantity
-                                                              .isNotEmpty)
+                                                      if (balesQuantity != null)
                                                         AdditionalField(
                                                             _balesQuantityKey,
                                                             balesQuantity),
@@ -1329,7 +1326,7 @@ class CustomStockDetailsPageState
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       const CustomDigitScannerPage(
-                                                    quantity: 5,
+                                                    quantity: 1,
                                                     isGS1code: false,
                                                     singleValue: false,
                                                     manualEnabled: false,
