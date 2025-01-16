@@ -73,7 +73,7 @@ class CustomStockDetailsPageState
       _waybillNumberKey: FormControl<String>(
         validators: [Validators.minLength(2), Validators.maxLength(200)],
       ),
-      _waybillQuantityKey: FormControl<String>(),
+      _waybillQuantityKey: FormControl<int>(),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
@@ -383,11 +383,11 @@ class CustomStockDetailsPageState
 
                                           final waybillQuantity = form
                                               .control(_waybillQuantityKey)
-                                              .value as String?;
+                                              .value as int?;
 
-                                          final int? balesQuantity = form
+                                          final balesQuantity = form
                                               .control(_balesQuantityKey)
-                                              .value;
+                                              .value as int?;
 
                                           final vehicleNumber = form
                                               .control(_vehicleNumberKey)
@@ -588,10 +588,7 @@ class CustomStockDetailsPageState
                                                             ?.name,
                                                       ),
                                                       if (waybillQuantity !=
-                                                              null &&
-                                                          waybillQuantity
-                                                              .trim()
-                                                              .isNotEmpty)
+                                                          null)
                                                         AdditionalField(
                                                           'waybill_quantity',
                                                           waybillQuantity,
