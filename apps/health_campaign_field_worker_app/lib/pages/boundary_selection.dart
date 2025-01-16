@@ -591,6 +591,8 @@ class _BoundarySelectionPageState
                                                       .translate(i18.common
                                                           .corecommonRequired),
                                                   type: ToastType.error,
+                                                  position: ToastPosition
+                                                      .aboveOneButtonFooter,
                                                 );
                                               } else {
                                                 setState(() {

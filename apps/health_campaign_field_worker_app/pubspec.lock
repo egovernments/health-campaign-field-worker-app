@@ -277,10 +277,10 @@ packages:
     dependency: transitive
     description:
       name: camera_avfoundation
-      sha256: c3038e6e72e284b14ad246a419f26908c08f8886d114cb8a2e351988439bfa68
+      sha256: "3f81ee3e88a79b0b010f0233d42625926299551b05d5dc995267a0b35bc33247"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.17+6"
+    version: "0.9.18"
   camera_platform_interface:
     dependency: transitive
     description:
@@ -373,10 +373,10 @@ packages:
     dependency: "direct main"
     description:
       name: connectivity_plus
-      sha256: e0817759ec6d2d8e57eb234e6e57d2173931367a865850c7acea40d4b4f9c27d
+      sha256: "8a68739d3ee113e51ad35583fdf9ab82c55d09d693d3c39da1aebab87c938412"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.1"
+    version: "6.1.2"
   connectivity_plus_platform_interface:
     dependency: transitive
     description:
@@ -558,7 +558,7 @@ packages:
     description:
       path: "flutter/digit-ui-components/digit_components"
       ref: hcm-fix
-      resolved-ref: bf0061caf8e2f702b57160c99cdcefa562ddade0
+      resolved-ref: d8763217ef6e718ae367b08c9a7f443e2ba2c3c8
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
     version: "0.0.2-dev.4"
@@ -1553,10 +1553,10 @@ packages:
     dependency: "direct main"
     description:
       name: package_info_plus
-      sha256: "70c421fe9d9cc1a9a7f3b05ae56befd469fe4f8daa3b484823141a55442d858d"
+      sha256: "739e0a5c3c4055152520fa321d0645ee98e932718b4c8efeeb51451968fe0790"
       url: "https://pub.dev"
     source: hosted
-    version: "8.1.2"
+    version: "8.1.3"
   package_info_plus_platform_interface:
     dependency: transitive
     description:

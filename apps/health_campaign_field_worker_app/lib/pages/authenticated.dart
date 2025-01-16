@@ -268,16 +268,17 @@ class AuthenticatedPageWrapper extends StatelessWidget {
         (appInitializationBloc.state as AppInitialized).appConfiguration;
     final languages = appConfig.languages;
     final localizationModulesList = appConfig.backendInterface;
+    final authBloc = context.read<AuthBloc>();
+    bool isDistributor = authBloc.state != const AuthState.unauthenticated()
+        ? context.loggedInUserRoles
+            .where(
+              (role) => role.code == RolesType.distributor.toValue(),
+            )
+            .toList()
+            .isNotEmpty
+        : false;
 
-    return BlocBuilder<AuthBloc, AuthState>(builder: (ctx, state) {
-      bool isDistributor = state != const AuthState.unauthenticated()
-          ? context.loggedInUserRoles
-              .where(
-                (role) => role.code == RolesType.distributor.toValue(),
-              )
-              .toList()
-              .isNotEmpty
-          : false;
+    return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
       return SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(top: kToolbarHeight),
