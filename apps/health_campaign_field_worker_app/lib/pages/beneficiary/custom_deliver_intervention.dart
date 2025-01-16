@@ -101,6 +101,7 @@ class CustomDeliverInterventionPageState
                 latitude: lat,
                 longitude: long,
                 codes: codeAdditionalFields,
+                householdMemberWrapper: householdMember,
               ),
               isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
                       RegistrationDeliverySingleton().beneficiaryType ==
@@ -810,6 +811,7 @@ class CustomDeliverInterventionPageState
     double? latitude,
     double? longitude,
     List<AdditionalField>? codes,
+    HouseholdMemberWrapper? householdMemberWrapper,
   }) {
     // Initialize task with oldTask if available, or create a new one
     var task = oldTask;
@@ -831,6 +833,22 @@ class CustomDeliverInterventionPageState
         createdTime: context.millisecondsSinceEpoch(),
       ),
     );
+
+    // get the householdType and communityType
+    final householdType = householdMemberWrapper?.household?.householdType;
+    var communityTypeValue = "";
+    if (householdType != null && householdType == HouseholdType.community) {
+      final communityType =
+          householdMemberWrapper?.household?.additionalFields?.fields
+              .where(
+                (element) => element.key == Constants.communityKey,
+              )
+              .firstOrNull;
+
+      if (communityType != null) {
+        communityTypeValue = communityType.value;
+      }
+    }
 
     // Extract productvariantList from the form
     final productvariantList =
@@ -914,7 +932,14 @@ class CustomDeliverInterventionPageState
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,
             ),
-          if (codes != null && codes.isNotEmpty) ...codes
+          if (householdType != null)
+            AdditionalField(
+                Constants.householdTypeKey, householdType.toValue()),
+          if (householdType != null &&
+              householdType == HouseholdType.community &&
+              communityTypeValue.isNotEmpty)
+            AdditionalField(Constants.communityKey, communityTypeValue),
+          if (codes != null && codes.isNotEmpty) ...codes,
         ],
       ),
     );
