@@ -218,6 +218,8 @@ class CustomIndividualDetailsPageState
                                   theme,
                                 ),
                               );
+
+                              return;
                             } else {
                               clickedStatus.value = true;
                               final scannerBloc =
