@@ -437,6 +437,7 @@ class CustomStockDetailsPageState
 
                                           if ([
                                             StockRecordEntryType.receipt,
+                                            StockRecordEntryType.dispatch
                                           ].contains(entryType)) {
                                             if (balesQuantity != null &&
                                                 (barcodes.length +
