@@ -1297,11 +1297,11 @@ class CustomStockDetailsPageState
                                 Visibility(
                                   visible: true,
                                   child: DigitTextFormField(
-                                    isRequired: false,
                                     label: localizations.translate(
                                       i18.stockReconciliationDetails
                                           .teamCodeLabel,
                                     ),
+                                    isRequired: deliveryTeamSelected,
                                     onChanged: (val) {
                                       String? value = val.value as String?;
                                       if (value != null &&
