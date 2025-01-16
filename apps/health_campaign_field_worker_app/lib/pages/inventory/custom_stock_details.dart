@@ -1229,56 +1229,11 @@ class CustomStockDetailsPageState
                                         });
                                   },
                                 ),
-                                Visibility(
-                                  visible: false,
-                                  child: DigitTextFormField(
-                                    label: localizations.translate(
-                                      i18.stockReconciliationDetails
-                                          .teamCodeLabel,
-                                    ),
-                                    onChanged: (val) {
-                                      String? value = val.value as String?;
-                                      if (value != null &&
-                                          value.trim().isNotEmpty) {
-                                        context.read<DigitScannerBloc>().add(
-                                              DigitScannerEvent.handleScanner(
-                                                barCode: [],
-                                                qrCode: [value],
-                                                manualCode: value,
-                                              ),
-                                            );
-                                      } else {
-                                        clearQRCodes();
-                                      }
-                                    },
-                                    suffix: IconButton(
-                                      onPressed: () {
-                                        //[TODO: Add route to auto_route]
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const CustomDigitScannerPage(
-                                              quantity: 5,
-                                              isGS1code: false,
-                                              singleValue: false,
-                                            ),
-                                            settings: const RouteSettings(
-                                                name: '/qr-scanner'),
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(
-                                        Icons.qr_code_2,
-                                        color: theme.colorScheme.secondary,
-                                      ),
-                                    ),
-                                    isRequired: deliveryTeamSelected,
-                                    maxLines: 3,
-                                    formControlName: _deliveryTeamKey,
-                                  ),
-                                ),
+
                                 if ([
                                   StockRecordEntryType.receipt,
+                                  StockRecordEntryType.dispatch,
+                                  StockRecordEntryType.returned
                                 ].contains(entryType))
                                   DigitTextFormField(
                                     keyboardType: TextInputType.number,
@@ -1335,6 +1290,63 @@ class CustomStockDetailsPageState
                                   },
                                   label: localizations.translate(
                                     quantityCountLabel,
+                                  ),
+                                ),
+
+                                Visibility(
+                                  visible: true,
+                                  child: DigitTextFormField(
+                                    isRequired: false,
+                                    label: localizations.translate(
+                                      i18.stockReconciliationDetails
+                                          .teamCodeLabel,
+                                    ),
+                                    onChanged: (val) {
+                                      String? value = val.value as String?;
+                                      if (value != null &&
+                                          value.trim().isNotEmpty) {
+                                        context.read<DigitScannerBloc>().add(
+                                              DigitScannerEvent.handleScanner(
+                                                barCode: [],
+                                                qrCode: [value],
+                                                manualCode: value,
+                                              ),
+                                            );
+                                      } else {
+                                        clearQRCodes();
+                                      }
+                                    },
+                                    suffix: [
+                                      StockRecordEntryType.receipt,
+                                      StockRecordEntryType.dispatch,
+                                      StockRecordEntryType.returned
+                                    ].contains(entryType)
+                                        ? IconButton(
+                                            onPressed: () {
+                                              //[TODO: Add route to auto_route]
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const CustomDigitScannerPage(
+                                                    quantity: 5,
+                                                    isGS1code: false,
+                                                    singleValue: false,
+                                                    manualEnabled: false,
+                                                  ),
+                                                  settings: const RouteSettings(
+                                                      name: '/qr-scanner'),
+                                                ),
+                                              );
+                                            },
+                                            icon: Icon(
+                                              Icons.qr_code_2,
+                                              color:
+                                                  theme.colorScheme.secondary,
+                                            ),
+                                          )
+                                        : null,
+                                    maxLines: 3,
+                                    formControlName: _deliveryTeamKey,
                                   ),
                                 ),
                                 DigitTextFormField(
@@ -1400,32 +1412,44 @@ class CustomStockDetailsPageState
                                 const SizedBox(
                                   height: kPadding,
                                 ),
-                                DigitTextFormField(
-                                  label: localizations.translate(
-                                    i18_local
-                                        .stockDetailsReceiptShowcase.driverName,
+                                if ([
+                                  StockRecordEntryType.receipt,
+                                  StockRecordEntryType.dispatch,
+                                  StockRecordEntryType.returned
+                                ].contains(entryType))
+                                  DigitTextFormField(
+                                    label: localizations.translate(
+                                      i18_local.stockDetailsReceiptShowcase
+                                          .driverName,
+                                    ),
+                                    isRequired: isWareHouseMgr,
+                                    formControlName: _driverNameKey,
+                                    validationMessages: {
+                                      'required': (object) =>
+                                          localizations.translate(
+                                            i18.common.corecommonRequired,
+                                          ),
+                                      'maxLength': (object) => localizations
+                                          .translate(
+                                              i18.common.maxCharsRequired)
+                                          .replaceAll('{}', '200'),
+                                      'min2': (object) => localizations
+                                          .translate(
+                                              i18.common.min2CharsRequired)
+                                          .replaceAll('{}', ''),
+                                    },
                                   ),
-                                  isRequired: isWareHouseMgr,
-                                  formControlName: _driverNameKey,
-                                  validationMessages: {
-                                    'required': (object) =>
-                                        localizations.translate(
-                                          i18.common.corecommonRequired,
-                                        ),
-                                    'maxLength': (object) => localizations
-                                        .translate(i18.common.maxCharsRequired)
-                                        .replaceAll('{}', '200'),
-                                    'min2': (object) => localizations
-                                        .translate(i18.common.min2CharsRequired)
-                                        .replaceAll('{}', ''),
-                                  },
-                                ),
-                                DigitTextFormField(
-                                  label: localizations.translate(
-                                    i18.stockDetails.vehicleNumberLabel,
+                                if ([
+                                  StockRecordEntryType.receipt,
+                                  StockRecordEntryType.dispatch,
+                                  StockRecordEntryType.returned
+                                ].contains(entryType))
+                                  DigitTextFormField(
+                                    label: localizations.translate(
+                                      i18.stockDetails.vehicleNumberLabel,
+                                    ),
+                                    formControlName: _vehicleNumberKey,
                                   ),
-                                  formControlName: _vehicleNumberKey,
-                                ),
                                 DigitTextFormField(
                                   label: localizations.translate(
                                     i18.stockDetails.commentsLabel,
@@ -1436,7 +1460,10 @@ class CustomStockDetailsPageState
                                 ),
 
                                 // todo not yet confirmed if needed or not for issue flow
-                                if ((entryType == StockRecordEntryType.receipt))
+                                if ([
+                                  StockRecordEntryType.receipt,
+                                  StockRecordEntryType.dispatch,
+                                ].contains(entryType))
                                   scannerState.barCodes.isEmpty
                                       ? DigitOutlineIconButton(
                                           buttonStyle: OutlinedButton.styleFrom(
@@ -1468,6 +1495,7 @@ class CustomStockDetailsPageState
                                                           balesQuantityInInt,
                                                       isGS1code: true,
                                                       singleValue: false,
+                                                      manualEnabled: false,
                                                     ),
                                                     settings:
                                                         const RouteSettings(
@@ -1560,6 +1588,8 @@ class CustomStockDetailsPageState
                                                               isGS1code: true,
                                                               singleValue:
                                                                   false,
+                                                              manualEnabled:
+                                                                  false,
                                                             ),
                                                             settings:
                                                                 const RouteSettings(
@@ -1610,6 +1640,7 @@ class CustomStockDetailsPageState
 
                                 if ([
                                   StockRecordEntryType.receipt,
+                                  StockRecordEntryType.dispatch,
                                 ].contains(entryType))
                                   DigitTextFormField(
                                     label: localizations.translate(
@@ -1632,6 +1663,7 @@ class CustomStockDetailsPageState
                                   ),
                                 if ([
                                   StockRecordEntryType.receipt,
+                                  StockRecordEntryType.dispatch,
                                 ].contains(entryType))
                                   DigitTextFormField(
                                     label: localizations.translate(
