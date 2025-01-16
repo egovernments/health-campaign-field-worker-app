@@ -1,9 +1,9 @@
 name: freezed_bloc_hooks
 
 environment:
-  sdk: '>=3.0.0 <=4.0.0'
+  sdk: ">=3.0.0 <=4.0.0"
 
 dependencies:
   mason: any
   recase: ^4.1.0
-  build_runner: ^2.2.1
+build_runner: ^2.4.11

@@ -7,9 +7,9 @@ name: Run analysis and tests
 
 on:
   push:
-    branches: ['develop', 'master', 'qa', 'demo', 'uat']
+    branches: ["develop", "master", "qa", "demo", "uat"]
   pull_request:
-    branches: ['develop', 'master', 'qa', 'demo', 'uat']
+    branches: ["develop", "master", "qa", "demo", "uat"]
 
 jobs:
   build:
@@ -22,7 +22,13 @@ jobs:
       - name: Flutter action
         uses: subosito/flutter-action@v2.8.0
         with:
-          flutter-version: "3.16.5"
+          flutter-version: "3.22.1"
+
+      - name: Clean previous builds
+        run: flutter clean
+
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Generate models
         run: ./tools/install_bricks.sh

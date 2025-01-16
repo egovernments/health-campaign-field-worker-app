@@ -50,8 +50,8 @@ class CustomStockDetailsPageState
   List<InventoryTransportTypes> transportTypes = [];
   int maxCount = 100000000;
 
-  List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
-      driverNameValidations = [];
+  // List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
+  //     driverNameValidations = [];
 
   List<GS1Barcode> scannedResources = [];
 
@@ -62,7 +62,7 @@ class CustomStockDetailsPageState
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<int>(validators: [
-        Validators.number,
+        Validators.number(),
         Validators.required,
         Validators.min(0),
         Validators.max(10000),
@@ -75,7 +75,7 @@ class CustomStockDetailsPageState
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
-        validators: driverNameValidations,
+        validators: [],
       ),
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(
@@ -804,7 +804,7 @@ class CustomStockDetailsPageState
                                                         .setValidators(
                                                       [
                                                         Validators.required,
-                                                        Validators.number,
+                                                        Validators.number(),
                                                         Validators.min(0),
                                                         Validators.max(
                                                             maxCount),
@@ -1023,7 +1023,7 @@ class CustomStockDetailsPageState
                                                             .setValidators(
                                                           [
                                                             Validators.required,
-                                                            Validators.number,
+                                                            Validators.number(),
                                                             Validators.min(0),
                                                             Validators.max(
                                                                 maxCount),

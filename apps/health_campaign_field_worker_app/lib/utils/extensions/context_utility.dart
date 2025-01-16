@@ -116,9 +116,12 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     // INFO: Set Boundary for packages
+    ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
     RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
     ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
+    ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
 
     return selectedBoundary;
   }
@@ -165,6 +168,27 @@ extension ContextUtilityExtensions on BuildContext {
     } catch (_) {
       return false;
     }
+  }
+
+  bool get isCommunityCreator {
+    UserRequestModel loggedInUser;
+
+    try {
+      loggedInUser = this.loggedInUser;
+    } catch (_) {
+      return false;
+    }
+
+    for (final role in loggedInUser.roles) {
+      switch (role.code) {
+        case "COMMUNITY_CREATOR":
+          return true;
+        default:
+          break;
+      }
+    }
+
+    return false;
   }
 
   List<UserRoleModel> get loggedInUserRoles {

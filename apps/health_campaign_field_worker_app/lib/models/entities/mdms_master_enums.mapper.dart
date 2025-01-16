@@ -61,6 +61,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.rowVersion;
       case "ServiceDefs":
         return MasterEnums.serviceDefinitions;
+      case "SEARCH_CLF_FILTERS":
+        return MasterEnums.searchCLFFilters;
       case "PrivacyPolicy":
         return MasterEnums.privacyPolicy;
       default:
@@ -107,6 +109,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "ROW_VERSIONS";
       case MasterEnums.serviceDefinitions:
         return "ServiceDefs";
+      case MasterEnums.searchCLFFilters:
+        return "SEARCH_CLF_FILTERS";
       case MasterEnums.privacyPolicy:
         return "PrivacyPolicy";
     }

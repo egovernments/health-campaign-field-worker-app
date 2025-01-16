@@ -70,6 +70,9 @@ class AppConfiguration {
   @Name('FIREBASE_CONFIG')
   FirebaseConfig? firebaseConfig;
 
+  @Name('SEARCH_CLF_FILTERS')
+  late List<SearchCLFFilters>? searchCLFFilters;
+
   late List<SymptomsTypes>? symptomsTypes;
 
   late List<ReferralReasons>? referralReasons;
@@ -157,6 +160,13 @@ class BackgroundServiceConfig {
 
   @Name("API_CONCURRENCY")
   late int? apiConcurrency;
+}
+
+@embedded
+class SearchCLFFilters {
+  late String name;
+  late String code;
+  late bool active;
 }
 
 @embedded

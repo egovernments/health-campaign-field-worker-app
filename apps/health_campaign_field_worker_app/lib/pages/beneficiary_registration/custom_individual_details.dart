@@ -2,15 +2,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:registration_delivery/utils/constants.dart';
@@ -50,6 +52,7 @@ class CustomIndividualDetailsPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   bool isDuplicateTag = false;
+  bool isHeadAgeValid = true;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
@@ -117,6 +120,25 @@ class CustomIndividualDetailsPageState
                             age.years >= 150 && age.months > 0) {
                           form.control(_dobKey).setErrors({'': true});
                         }
+
+                        if (widget.isHeadOfHousehold) {
+                          isHeadAgeValid = age.years >= 12;
+                        }
+
+                        if (!isHeadAgeValid) {
+                          await DigitToast.show(
+                            context,
+                            options: DigitToastOptions(
+                              localizations.translate(
+                                i18Local.individualDetails.headAgeValidError,
+                              ),
+                              true,
+                              theme,
+                            ),
+                          );
+
+                          return;
+                        }
                         if (form.control(_genderKey).value == null) {
                           setState(() {
                             form.control(_genderKey).setErrors({'': true});
@@ -173,10 +195,18 @@ class CustomIndividualDetailsPageState
                                 isHeadOfHousehold: widget.isHeadOfHousehold,
                               ),
                             );
+                            // check if the tag already exist
+                            final repository = context.read<
+                                    LocalRepository<ProjectBeneficiaryModel,
+                                        ProjectBeneficiarySearchModel>>()
+                                as ProjectBeneficiaryLocalRepository;
                             final scannerBloc =
                                 context.read<DigitScannerBloc>();
+                            final projectBeneficiary = await repository.search(
+                                ProjectBeneficiarySearchModel(
+                                    tag: [scannerBloc.state.qrCodes.first]));
 
-                            if (scannerBloc.state.duplicate) {
+                            if (projectBeneficiary.isNotEmpty) {
                               DigitToast.show(
                                 context,
                                 options: DigitToastOptions(
@@ -188,6 +218,8 @@ class CustomIndividualDetailsPageState
                                   theme,
                                 ),
                               );
+
+                              return;
                             } else {
                               clickedStatus.value = true;
                               final scannerBloc =
@@ -375,10 +407,17 @@ class CustomIndividualDetailsPageState
                           Offstage(
                             offstage: !widget.isHeadOfHousehold,
                             child: DigitCheckbox(
-                              label: localizations.translate(
-                                i18.individualDetails.checkboxLabelText,
-                              ),
+                              capitalizeFirstLetter: false,
+                              label: (RegistrationDeliverySingleton()
+                                          .householdType ==
+                                      HouseholdType.community)
+                                  ? localizations.translate(i18
+                                      .individualDetails.clfCheckboxLabelText)
+                                  : localizations.translate(
+                                      i18.individualDetails.checkboxLabelText,
+                                    ),
                               value: widget.isHeadOfHousehold,
+                              onChanged: (_) {},
                             ),
                           ),
                           individualDetailsShowcaseData.dateOfBirth.buildWith(
@@ -689,10 +728,15 @@ class CustomIndividualDetailsPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          utilsLocal.CustomValidator.requiredMin3,
+          Validators.delegate((validator) =>
+              utilsLocal.CustomValidator.requiredMin3(validator)),
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery?.trim(),
+        value: individual?.name?.givenName ??
+            ((RegistrationDeliverySingleton().householdType ==
+                    HouseholdType.community)
+                ? null
+                : searchQuery?.trim()),
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null

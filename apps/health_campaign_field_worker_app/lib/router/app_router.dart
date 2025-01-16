@@ -1,3 +1,5 @@
+import 'package:complaints/router/complaints_router.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.dart';
@@ -9,6 +11,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:complaints/complaints.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../blocs/summary_reports/custom_enumeration_summary_report.dart';
@@ -43,6 +46,8 @@ import 'package:inventory_management/blocs/app_localization.dart';
 
 import '../pages/reports/beneficiary/custom_enumeration_summary_report_details.dart';
 import '../pages/reports/beneficiary/custom_distribution_summary_report_details.dart';
+import '../pages/complaints/custom_complaints_details.dart';
+import 'package:complaints/blocs/localization/app_localization.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -54,7 +59,8 @@ part 'app_router.gr.dart';
     RegistrationDeliveryRoute,
     InventoryRoute,
     AttendanceRoute,
-    ClosedHouseholdPackageRoute
+    ClosedHouseholdPackageRoute,
+    ComplaintsRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -88,6 +94,69 @@ class AppRouter extends _$AppRouter {
         ),
 
         // INFO : Need to add Router of package Here
+        AutoRoute(
+          page: ComplaintsInboxWrapperRoute.page,
+          path: 'complaints-inbox',
+          children: [
+            AutoRoute(
+              page: ComplaintsInboxRoute.page,
+              path: 'complaints-inbox-items',
+              initial: true,
+            ),
+            AutoRoute(
+              page: ComplaintsInboxFilterRoute.page,
+              path: 'complaints-inbox-filter',
+            ),
+            AutoRoute(
+              page: ComplaintsInboxSearchRoute.page,
+              path: 'complaints-inbox-search',
+            ),
+            AutoRoute(
+              page: ComplaintsInboxSortRoute.page,
+              path: 'complaints-inbox-sort',
+            ),
+            AutoRoute(
+              page: ComplaintsDetailsViewRoute.page,
+              path: 'complaints-inbox-view-details',
+            ),
+          ],
+        ),
+
+        /// Complaints registration
+        AutoRoute(
+          page: ComplaintsRegistrationWrapperRoute.page,
+          path: 'complaints-registration',
+          children: [
+            AutoRoute(
+              page: ComplaintTypeRoute.page,
+              path: 'complaints-type',
+              initial: true,
+            ),
+            AutoRoute(
+              page: ComplaintsLocationRoute.page,
+              path: 'complaints-location',
+            ),
+            AutoRoute(
+              page: ComplaintsDetailsRoute.page,
+              path: 'complaints-details',
+            ),
+            AutoRoute(
+              page: CustomComplaintsDetailsRoute.page,
+              path: 'custom-complaints-details',
+            ),
+            RedirectRoute(
+              path: 'complaints-details',
+              redirectTo: 'custom-complaints-details',
+            ),
+          ],
+        ),
+
+        /// Complaints Acknowledgemnet
+        AutoRoute(
+          page: ComplaintsAcknowledgementRoute.page,
+          path: 'complaints-acknowledgement',
+        ),
+
         // Closed-Household Route
         AutoRoute(
             page: ClosedHouseholdWrapperRoute.page,

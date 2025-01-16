@@ -261,6 +261,10 @@ class HomeShowcase {
   String get deleteAll {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
   }
+
+  String get clf {
+    return "COMMUNAL_LIVING_FACILITY_SHOWCASE";
+  }
 }
 
 class PrivacyPolicy {
@@ -675,6 +679,8 @@ class Home {
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
   String get viewSummaryReportsLabel => 'VIEW_SUMMARY_REPORTS_LABEL';
+
+  String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
 }
 
 class AcknowledgementSuccess {
@@ -1071,6 +1077,7 @@ class IndividualDetails {
 
   String get voucherCodeScanMoreThanLimit =>
       "VOUCHER_CODE_SCAN_MORE_THAN_LIMIT";
+  String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
 }
 
 class BeneficiaryDetails {

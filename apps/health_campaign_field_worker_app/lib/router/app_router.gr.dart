@@ -89,6 +89,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomComplaintsDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomComplaintsDetailsRouteArgs>(
+          orElse: () => const CustomComplaintsDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomComplaintsDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomDeliverInterventionRoute.name: (routeData) {
       final args = routeData.argsAs<CustomDeliverInterventionRouteArgs>(
           orElse: () => const CustomDeliverInterventionRouteArgs());
@@ -183,12 +194,34 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomStockDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomStockDetailsRouteArgs>(
+          orElse: () => const CustomStockDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomStockDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomSummaryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomSummaryRouteArgs>(
           orElse: () => const CustomSummaryRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomSummaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomWarehouseDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomWarehouseDetailsRouteArgs>(
+          orElse: () => const CustomWarehouseDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomWarehouseDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -201,28 +234,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: DoseAdministeredVerificationPage(
           householdModel: args.householdModel,
           selectedIndividual: args.selectedIndividual,
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    CustomStockDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomStockDetailsRouteArgs>(
-          orElse: () => const CustomStockDetailsRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CustomStockDetailsPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    CustomWarehouseDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomWarehouseDetailsRouteArgs>(
-          orElse: () => const CustomWarehouseDetailsRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CustomWarehouseDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -309,6 +320,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...InventoryRoute().pagesMap,
     ...AttendanceRoute().pagesMap,
     ...ClosedHouseholdPackageRoute().pagesMap,
+    ...ComplaintsRoute().pagesMap,
   };
 }
 
@@ -571,6 +583,45 @@ class CustomClosedHouseholdSummaryRouteArgs {
   @override
   String toString() {
     return 'CustomClosedHouseholdSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomComplaintsDetailsPage]
+class CustomComplaintsDetailsRoute
+    extends PageRouteInfo<CustomComplaintsDetailsRouteArgs> {
+  CustomComplaintsDetailsRoute({
+    Key? key,
+    ComplaintsLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomComplaintsDetailsRoute.name,
+          args: CustomComplaintsDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomComplaintsDetailsRoute';
+
+  static const PageInfo<CustomComplaintsDetailsRouteArgs> page =
+      PageInfo<CustomComplaintsDetailsRouteArgs>(name);
+}
+
+class CustomComplaintsDetailsRouteArgs {
+  const CustomComplaintsDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final ComplaintsLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomComplaintsDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -897,6 +948,45 @@ class CustomSearchBeneficiaryRouteArgs {
 }
 
 /// generated route for
+/// [CustomStockDetailsPage]
+class CustomStockDetailsRoute
+    extends PageRouteInfo<CustomStockDetailsRouteArgs> {
+  CustomStockDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomStockDetailsRoute.name,
+          args: CustomStockDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomStockDetailsRoute';
+
+  static const PageInfo<CustomStockDetailsRouteArgs> page =
+      PageInfo<CustomStockDetailsRouteArgs>(name);
+}
+
+class CustomStockDetailsRouteArgs {
+  const CustomStockDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomStockDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomSummaryPage]
 class CustomSummaryRoute extends PageRouteInfo<CustomSummaryRouteArgs> {
   CustomSummaryRoute({
@@ -931,6 +1021,45 @@ class CustomSummaryRouteArgs {
   @override
   String toString() {
     return 'CustomSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomWarehouseDetailsPage]
+class CustomWarehouseDetailsRoute
+    extends PageRouteInfo<CustomWarehouseDetailsRouteArgs> {
+  CustomWarehouseDetailsRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomWarehouseDetailsRoute.name,
+          args: CustomWarehouseDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomWarehouseDetailsRoute';
+
+  static const PageInfo<CustomWarehouseDetailsRouteArgs> page =
+      PageInfo<CustomWarehouseDetailsRouteArgs>(name);
+}
+
+class CustomWarehouseDetailsRouteArgs {
+  const CustomWarehouseDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomWarehouseDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -980,84 +1109,6 @@ class DoseAdministeredVerificationRouteArgs {
   @override
   String toString() {
     return 'DoseAdministeredVerificationRouteArgs{householdModel: $householdModel, selectedIndividual: $selectedIndividual, key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [CustomStockDetailsPage]
-class CustomStockDetailsRoute
-    extends PageRouteInfo<CustomStockDetailsRouteArgs> {
-  CustomStockDetailsRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CustomStockDetailsRoute.name,
-          args: CustomStockDetailsRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CustomStockDetailsRoute';
-
-  static const PageInfo<CustomStockDetailsRouteArgs> page =
-      PageInfo<CustomStockDetailsRouteArgs>(name);
-}
-
-class CustomStockDetailsRouteArgs {
-  const CustomStockDetailsRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'CustomStockDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [CustomWarehouseDetailsPage]
-class CustomWarehouseDetailsRoute
-    extends PageRouteInfo<CustomWarehouseDetailsRouteArgs> {
-  CustomWarehouseDetailsRoute({
-    Key? key,
-    InventoryLocalization? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CustomWarehouseDetailsRoute.name,
-          args: CustomWarehouseDetailsRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CustomWarehouseDetailsRoute';
-
-  static const PageInfo<CustomWarehouseDetailsRouteArgs> page =
-      PageInfo<CustomWarehouseDetailsRouteArgs>(name);
-}
-
-class CustomWarehouseDetailsRouteArgs {
-  const CustomWarehouseDetailsRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  @override
-  String toString() {
-    return 'CustomWarehouseDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

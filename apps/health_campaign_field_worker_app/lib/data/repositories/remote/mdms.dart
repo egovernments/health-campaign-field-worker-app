@@ -249,11 +249,11 @@ class MdmsRepository {
 
     final List<ChecklistTypes>? checklistTypes =
         element?.checklistTypes.map((e) {
-      final checklist = ChecklistTypes()
+      final surveyForm = ChecklistTypes()
         ..name = e.name
         ..code = e.code;
 
-      return checklist;
+      return surveyForm;
     }).toList();
 
     final List<TransportTypes>? transportTypes =
@@ -321,6 +321,15 @@ class MdmsRepository {
         ..active = e.active;
 
       return symptomTypes;
+    }).toList();
+
+    appConfiguration.searchCLFFilters =
+        result.hcmWrapperModel?.searchCLFFilters?.map((e) {
+      final searchFilters = SearchCLFFilters()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return searchFilters;
     }).toList();
 
     appConfiguration.referralReasons =

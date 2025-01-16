@@ -5,11 +5,14 @@ import 'package:digit_components/widgets/atoms/digit_stepper.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/pages/custom_qr_scanner.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
@@ -19,13 +22,13 @@ import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../models/entities/community_types.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/beneficiary/custom_resource_beneficiary_card.dart';
 import '../../widgets/localized.dart';
-import '../custom_qr_scanner.dart';
 
 @RoutePage()
 class CustomDeliverInterventionPage extends LocalizedStatefulWidget {
@@ -76,7 +79,7 @@ class CustomDeliverInterventionPageState
     FormGroup form,
     HouseholdMemberWrapper householdMember,
     ProjectBeneficiaryModel projectBeneficiary,
-    List<String> codes,
+    List<AdditionalField> codeAdditionalFields,
   ) async {
     final lat = locationState.latitude;
     final long = locationState.longitude;
@@ -97,7 +100,8 @@ class CustomDeliverInterventionPageState
                 address: householdMember.members?.first.address?.first,
                 latitude: lat,
                 longitude: long,
-                codes: codes,
+                codes: codeAdditionalFields,
+                householdMemberWrapper: householdMember,
               ),
               isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
                       RegistrationDeliverySingleton().beneficiaryType ==
@@ -119,7 +123,7 @@ class CustomDeliverInterventionPageState
     FormGroup form,
     HouseholdMemberWrapper householdMember,
     ProjectBeneficiaryModel projectBeneficiary,
-    List<String> codes,
+    List<AdditionalField> codeAdditionalFields,
   ) {
     if (context.mounted) {
       DigitComponentsUtils().showLocationCapturingDialog(
@@ -137,7 +141,7 @@ class CustomDeliverInterventionPageState
             form,
             householdMember,
             projectBeneficiary,
-            codes);
+            codeAdditionalFields);
       });
     }
   }
@@ -160,9 +164,8 @@ class CustomDeliverInterventionPageState
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
-          final memberCount =
-              householdMemberWrapper.household?.memberCount ?? 0;
-          bednetCount = (memberCount / 2).round();
+
+          bednetCount = getBednetCount(householdMemberWrapper);
 
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
@@ -275,8 +278,48 @@ class CustomDeliverInterventionPageState
                                                         : () async {
                                                             bednetScanned =
                                                                 scannerState
-                                                                    .qrCodes
+                                                                    .barCodes
                                                                     .length;
+
+                                                            final List<
+                                                                    GS1Barcode>
+                                                                barcodes =
+                                                                scannerState
+                                                                    .barCodes;
+                                                            List<AdditionalField>
+                                                                codeAdditionalFields =
+                                                                [];
+                                                            for (var element
+                                                                in barcodes) {
+                                                              List<String>
+                                                                  keys = [];
+                                                              List<String>
+                                                                  values = [];
+                                                              for (var e
+                                                                  in element
+                                                                      .elements
+                                                                      .entries) {
+                                                                e.value.rawData;
+                                                                keys.add(
+                                                                  e.key
+                                                                      .toString(),
+                                                                );
+                                                                values.add(
+                                                                  e.value.data
+                                                                      .toString(),
+                                                                );
+                                                              }
+                                                              codeAdditionalFields
+                                                                  .add(
+                                                                AdditionalField(
+                                                                  keys.join(
+                                                                      '|'),
+                                                                  values.join(
+                                                                      '|'),
+                                                                ),
+                                                              );
+                                                            }
+
                                                             final deliveredProducts =
                                                                 ((form.control(_resourceDeliveredKey)
                                                                             as FormArray)
@@ -445,8 +488,7 @@ class CustomDeliverInterventionPageState
                                                                   householdMemberWrapper,
                                                                   projectBeneficiary!
                                                                       .first,
-                                                                  scannerState
-                                                                      .qrCodes,
+                                                                  codeAdditionalFields,
                                                                 );
                                                               }
                                                             }
@@ -596,8 +638,6 @@ class CustomDeliverInterventionPageState
                                                                               bednetCount < 2,
                                                                           isEditEnabled:
                                                                               true,
-                                                                          manualEnabled:
-                                                                              false,
                                                                         ),
                                                                         settings:
                                                                             const RouteSettings(name: '/qr-scanner'),
@@ -639,8 +679,6 @@ class CustomDeliverInterventionPageState
                                                                             2,
                                                                     isEditEnabled:
                                                                         true,
-                                                                    manualEnabled:
-                                                                        false,
                                                                   ),
                                                                   settings:
                                                                       const RouteSettings(
@@ -772,7 +810,8 @@ class CustomDeliverInterventionPageState
     AddressModel? address,
     double? latitude,
     double? longitude,
-    List<String>? codes,
+    List<AdditionalField>? codes,
+    HouseholdMemberWrapper? householdMemberWrapper,
   }) {
     // Initialize task with oldTask if available, or create a new one
     var task = oldTask;
@@ -794,6 +833,22 @@ class CustomDeliverInterventionPageState
         createdTime: context.millisecondsSinceEpoch(),
       ),
     );
+
+    // get the householdType and communityType
+    final householdType = householdMemberWrapper?.household?.householdType;
+    var communityTypeValue = "";
+    if (householdType != null && householdType == HouseholdType.community) {
+      final communityType =
+          householdMemberWrapper?.household?.additionalFields?.fields
+              .where(
+                (element) => element.key == Constants.communityKey,
+              )
+              .firstOrNull;
+
+      if (communityType != null) {
+        communityTypeValue = communityType.value;
+      }
+    }
 
     // Extract productvariantList from the form
     final productvariantList =
@@ -877,16 +932,64 @@ class CustomDeliverInterventionPageState
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,
             ),
-          if (codes != null && codes.isNotEmpty)
+          if (householdType != null)
             AdditionalField(
-              _qrCodesKey,
-              codes.join(Constants.comma),
-            ),
+                Constants.householdTypeKey, householdType.toValue()),
+          if (householdType != null &&
+              householdType == HouseholdType.community &&
+              communityTypeValue.isNotEmpty)
+            AdditionalField(Constants.communityKey, communityTypeValue),
+          if (codes != null && codes.isNotEmpty) ...codes,
         ],
       ),
     );
 
     return task;
+  }
+
+  dynamic getBednetCount(HouseholdMemberWrapper householdMemberWrapper) {
+    // Early return if the householdMemberWrapper or household is null
+    final household = householdMemberWrapper.household;
+    if (household == null) return 1;
+
+    final memberCount = household.memberCount ?? 2;
+
+    final householdType = household.householdType;
+    if (householdType == null) return (memberCount / 2).round();
+
+    // Handle the 'family' household type
+    if (householdType == HouseholdType.family) {
+      return (memberCount / 2).round();
+    }
+
+    // Handle the 'community' household type
+    if (householdType == HouseholdType.community) {
+      final additionalFields = household.additionalFields?.fields;
+
+      if (additionalFields == null || additionalFields.isEmpty) {
+        return (memberCount / 2).round();
+      }
+
+      final communityType = additionalFields
+          .where(
+            (field) => field.key == Constants.communityKey,
+          )
+          .firstOrNull;
+
+      if (communityType == null) return (memberCount / 2).round();
+
+      final communityValue = communityType.value;
+
+      // Handle different community types
+      if (communityValue == CommunityTypes.refugeeCamps.toValue()) {
+        return (memberCount / 2).round();
+      } else if (communityValue == CommunityTypes.specialGroups.toValue()) {
+        return memberCount;
+      }
+    }
+
+    // Default return value if no conditions match
+    return (memberCount / 2).round();
   }
 
 // This method builds a form used for delivering interventions.

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
@@ -108,11 +109,19 @@ class _CustomSearchBeneficiaryPageStateState
                           alignment: Alignment.topLeft,
                           child: Text(
                             localizations.translate(
-                              RegistrationDeliverySingleton().beneficiaryType !=
-                                      BeneficiaryType.individual
-                                  ? i18.searchBeneficiary.statisticsLabelText
-                                  : i18.searchBeneficiary
-                                      .searchIndividualLabelText,
+                              RegistrationDeliverySingleton().householdType !=
+                                          null &&
+                                      RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community
+                                  ? i18.searchBeneficiary.searchCLFLabel
+                                  : RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
+                                          BeneficiaryType.individual
+                                      ? i18
+                                          .searchBeneficiary.statisticsLabelText
+                                      : i18.searchBeneficiary
+                                          .searchIndividualLabelText,
                             ),
                             style: theme.textTheme.displayMedium,
                             textAlign: TextAlign.left,
@@ -125,10 +134,15 @@ class _CustomSearchBeneficiaryPageStateState
                             children: [
                               DigitSearchBar(
                                 controller: searchController,
-                                hintText: localizations.translate(
-                                  i18.searchBeneficiary
-                                      .beneficiarySearchHintText,
-                                ),
+                                hintText: (RegistrationDeliverySingleton()
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? localizations.translate(
+                                        i18.searchBeneficiary.clfSearchHintText)
+                                    : localizations.translate(
+                                        i18.searchBeneficiary
+                                            .beneficiarySearchHintText,
+                                      ),
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
                                   if (value.isEmpty ||
@@ -142,7 +156,10 @@ class _CustomSearchBeneficiaryPageStateState
                                           null &&
                                       RegistrationDeliverySingleton()
                                           .searchHouseHoldFilter!
-                                          .isNotEmpty
+                                          .isNotEmpty &&
+                                      RegistrationDeliverySingleton()
+                                              .householdType !=
+                                          HouseholdType.community
                                   ? Align(
                                       alignment: Alignment.topLeft,
                                       child: Padding(
@@ -249,9 +266,15 @@ class _CustomSearchBeneficiaryPageStateState
                       if (searchHouseholdsState.resultsNotFound &&
                           !searchHouseholdsState.loading)
                         DigitInfoCard(
-                          description: localizations.translate(
-                            i18.searchBeneficiary.beneficiaryInfoDescription,
-                          ),
+                          description: (RegistrationDeliverySingleton()
+                                      .householdType ==
+                                  HouseholdType.community)
+                              ? localizations
+                                  .translate(i18.searchBeneficiary.clfInfoTitle)
+                              : localizations.translate(
+                                  i18.searchBeneficiary
+                                      .beneficiaryInfoDescription,
+                                ),
                           title: localizations.translate(
                             i18.searchBeneficiary.beneficiaryInfoTitle,
                           ),
@@ -333,8 +356,14 @@ class _CustomSearchBeneficiaryPageStateState
                                                       ? i.projectBeneficiaries
                                                           ?.lastOrNull
                                                       : null,
-                                              addressModel: i.headOfHousehold!
-                                                  .address!.lastOrNull!,
+                                              addressModel:
+                                                  (RegistrationDeliverySingleton()
+                                                              .householdType ==
+                                                          HouseholdType
+                                                              .community)
+                                                      ? i.household!.address!
+                                                      : i.headOfHousehold!
+                                                          .address!.lastOrNull!,
                                               headOfHousehold:
                                                   i.headOfHousehold),
                                     ),
@@ -366,73 +395,79 @@ class _CustomSearchBeneficiaryPageStateState
             ],
           ),
         ),
-        bottomNavigationBar: SizedBox(
-          height: 80,
-          child: Card(
-            margin: const EdgeInsets.all(0),
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-              child: Column(
-                children: [
-                  context.isRegistrar
-                      ? DigitElevatedButton(
-                          onPressed: searchHouseholdsState.loading
-                              ? null
-                              : () {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  context.read<DigitScannerBloc>().add(
-                                        const DigitScannerEvent.handleScanner(),
-                                      );
-                                  context.router
-                                      .push(BeneficiaryRegistrationWrapperRoute(
-                                    initialState:
-                                        BeneficiaryRegistrationCreateState(
-                                      searchQuery:
-                                          searchHouseholdsState.searchQuery,
-                                    ),
-                                  ));
-                                  searchController.clear();
-                                  selectedFilters = [];
-                                  blocWrapper.clearEvent();
-                                },
-                          child: Center(
-                            child: Text(localizations.translate(
-                              i18.searchBeneficiary.beneficiaryAddActionLabel,
-                            )),
-                          ),
-                        )
-                      : const Offstage(),
-                  context.isRegistrar
-                      ? const Offstage()
-                      : DigitOutlineIconButton(
-                          buttonStyle: OutlinedButton.styleFrom(
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
+        bottomNavigationBar: Offstage(
+          offstage: RegistrationDeliverySingleton().householdType ==
+              HouseholdType.community,
+          child: SizedBox(
+            height: 80,
+            child: Card(
+              margin: const EdgeInsets.all(0),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                child: Column(
+                  children: [
+                    context.isRegistrar
+                        ? DigitElevatedButton(
+                            onPressed: searchHouseholdsState.loading
+                                ? null
+                                : () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    context.read<DigitScannerBloc>().add(
+                                          const DigitScannerEvent
+                                              .handleScanner(),
+                                        );
+                                    context.router.push(
+                                        BeneficiaryRegistrationWrapperRoute(
+                                      initialState:
+                                          BeneficiaryRegistrationCreateState(
+                                        searchQuery:
+                                            searchHouseholdsState.searchQuery,
+                                      ),
+                                    ));
+                                    searchController.clear();
+                                    selectedFilters = [];
+                                    blocWrapper.clearEvent();
+                                  },
+                            child: Center(
+                              child: Text(localizations.translate(
+                                i18.searchBeneficiary.beneficiaryAddActionLabel,
+                              )),
+                            ),
+                          )
+                        : const Offstage(),
+                    context.isRegistrar
+                        ? const Offstage()
+                        : DigitOutlineIconButton(
+                            buttonStyle: OutlinedButton.styleFrom(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                            ),
+                            onPressed: () {
+                              blocWrapper.clearEvent();
+                              selectedFilters = [];
+                              searchController.clear();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const CustomDigitScannerPage(
+                                    quantity: 1,
+                                    isGS1code: false,
+                                    singleValue: true,
+                                  ),
+                                  settings:
+                                      const RouteSettings(name: '/qr-scanner'),
+                                ),
+                              );
+                            },
+                            icon: Icons.qr_code,
+                            label: localizations.translate(
+                              i18.deliverIntervention.scannerLabel,
                             ),
                           ),
-                          onPressed: () {
-                            blocWrapper.clearEvent();
-                            selectedFilters = [];
-                            searchController.clear();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CustomDigitScannerPage(
-                                  quantity: 1,
-                                  isGS1code: false,
-                                  singleValue: true,
-                                ),
-                                settings:
-                                    const RouteSettings(name: '/qr-scanner'),
-                              ),
-                            );
-                          },
-                          icon: Icons.qr_code,
-                          label: localizations.translate(
-                            i18.deliverIntervention.scannerLabel,
-                          ),
-                        ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -510,6 +545,7 @@ class _CustomSearchBeneficiaryPageStateState
           limit: isPagination
               ? blocWrapper.individualGlobalSearchBloc.state.limit
               : limit,
+          householdType: RegistrationDeliverySingleton().householdType,
         )));
       }
     } else {
@@ -534,36 +570,37 @@ class _CustomSearchBeneficiaryPageStateState
           limit: isPagination
               ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
               : limit,
+          householdType: RegistrationDeliverySingleton().householdType,
         )));
       }
     }
   }
 
-  String getStatus(String selectedFilter) {
-    final statusMap = {
-      Status.delivered.toValue(): Status.delivered,
-      Status.notAdministered.toValue(): Status.notAdministered,
-      Status.visited.toValue(): Status.visited,
-      Status.notVisited.toValue(): Status.notVisited,
-      Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
-      Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
-      Status.administeredSuccess.toValue(): Status.administeredSuccess,
-      Status.administeredFailed.toValue(): Status.administeredFailed,
-      Status.inComplete.toValue(): Status.inComplete,
-      Status.toAdminister.toValue(): Status.toAdminister,
-      Status.closeHousehold.toValue(): Status.closeHousehold,
-      Status.registered.toValue(): Status.registered,
-      Status.notRegistered.toValue(): Status.notRegistered,
-    };
+  // String getStatus(String selectedFilter) {
+  //   final statusMap = {
+  //     Status.delivered.toValue(): Status.delivered,
+  //     Status.notAdministered.toValue(): Status.notAdministered,
+  //     Status.visited.toValue(): Status.visited,
+  //     Status.notVisited.toValue(): Status.notVisited,
+  //     Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+  //     Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+  //     Status.administeredSuccess.toValue(): Status.administeredSuccess,
+  //     Status.administeredFailed.toValue(): Status.administeredFailed,
+  //     Status.inComplete.toValue(): Status.inComplete,
+  //     Status.toAdminister.toValue(): Status.toAdminister,
+  //     Status.closeHousehold.toValue(): Status.closeHousehold,
+  //     Status.registered.toValue(): Status.registered,
+  //     Status.notRegistered.toValue(): Status.notRegistered,
+  //   };
 
-    var mappedStatus = statusMap.entries
-        .where((element) => element.value.name == selectedFilter)
-        .first
-        .key;
-    if (mappedStatus != null) {
-      return mappedStatus;
-    } else {
-      return selectedFilter;
-    }
-  }
+  //   var mappedStatus = statusMap.entries
+  //       .where((element) => element.value.name == selectedFilter)
+  //       .first
+  //       .key;
+  //   if (mappedStatus != null) {
+  //     return mappedStatus;
+  //   } else {
+  //     return selectedFilter;
+  //   }
+  // }
 }

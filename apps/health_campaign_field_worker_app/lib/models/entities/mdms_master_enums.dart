@@ -41,6 +41,8 @@ enum MasterEnums {
   rowVersion,
   @MappableValue("ServiceDefs")
   serviceDefinitions,
+  @MappableValue("SEARCH_CLF_FILTERS")
+  searchCLFFilters,
   @MappableValue("PrivacyPolicy")
   privacyPolicy,
 }
