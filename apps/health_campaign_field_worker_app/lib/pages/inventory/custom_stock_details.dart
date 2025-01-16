@@ -1423,7 +1423,7 @@ class CustomStockDetailsPageState
                                       i18_local.stockDetailsReceiptShowcase
                                           .driverName,
                                     ),
-                                    isRequired: isWareHouseMgr,
+                                    isRequired: false,
                                     formControlName: _driverNameKey,
                                     validationMessages: {
                                       'required': (object) =>
