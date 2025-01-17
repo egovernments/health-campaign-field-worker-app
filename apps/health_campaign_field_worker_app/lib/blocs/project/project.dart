@@ -161,8 +161,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
-        connectivityResult.firstOrNull == ConnectivityResult.mobile;
+    final isOnline =
+        connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+            connectivityResult.firstOrNull == ConnectivityResult.mobile;
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
@@ -296,7 +297,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
-
       // INFO : Need to add project load functions
 
       try {
@@ -507,7 +507,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             dashboardRemoteRepository,
             dashboardActionPath.trim().isNotEmpty
                 ? dashboardActionPath
-                : '/dashboard-analytics/dashboard/getChartV2', //[TODO: To be added to MDMS Service registry
+                : '/dashboard-analytics/dashboard/getChartV2',
+            //[TODO: To be added to MDMS Service registry
             envConfig.variables.tenantId,
             event.model.id,
             userUUIDList,
@@ -551,9 +552,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           boundaryRefetched) {
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
-            boundaryType: event.model.address?.boundaryType,
-            codes: event.model.address?.boundary,
-          ),
+              boundaryType: event.model.address?.boundaryType,
+              codes: event.model.address?.boundary,
+              hierarchyType: event.model.address?.boundary?.split('_')[0]),
         );
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
@@ -576,15 +577,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       } else {
         boundaries = await boundaryLocalRepository.search(
           BoundarySearchModel(
-            boundaryType: event.model.address?.boundaryType,
-            codes: event.model.address?.boundary,
-          ),
+              boundaryType: event.model.address?.boundaryType,
+              codes: event.model.address?.boundary,
+              hierarchyType: event.model.address?.boundary?.split('_')[0]),
         );
         if (boundaries.isEmpty) {
           boundaries = await boundaryRemoteRepository.search(
             BoundarySearchModel(
               boundaryType: event.model.address?.boundaryType,
               codes: event.model.address?.boundary,
+              hierarchyType: event.model.address?.boundary?.split('_')[0],
             ),
           );
         }

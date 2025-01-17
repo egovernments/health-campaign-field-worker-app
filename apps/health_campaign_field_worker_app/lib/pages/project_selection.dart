@@ -3,16 +3,22 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_location_tracker/location_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/project/project.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/local_store/no_sql/schema/entity_mapper.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
+import '../utils/environment_config.dart';
 import '../utils/extensions/extensions.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -141,11 +147,42 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 Navigator.of(context).push(syncDialogRoute!);
               }
 
-              final selectedProject = state.selectedProject;
+              final selectedProject = state.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            selectedProject;
               if (selectedProject != null) {
                 final boundary = selectedProject.address?.boundary;
 
                 if (boundary != null) {
+                  List<String> parts = boundary.split('_');
+                  envConfig.variables.hierarchyType = parts[0];
+
+                  var appConfigState = context.read<AppInitializationBloc>().state;
+
+                  var appConfig, localizationModulesList, firstLanguage;
+                  if (appConfigState is AppInitialized) {
+                    appConfig = appConfigState.appConfiguration;
+                    localizationModulesList = appConfig.backendInterface;
+                    firstLanguage = appConfig.languages?.isNotEmpty == true
+                        ? appConfig.languages!.first.value
+                        : null;
+                  }
+
+                  context.read<LocalizationBloc>().add(
+                    LocalizationEvent.onLoadLocalization(
+                      module:
+                      "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()}",
+                      tenantId: appConfig.tenantId.toString(),
+                      locale: AppSharedPreferences()
+                          .getSelectedLocale
+                          .toString(),
+                      path: Constants.localizationApiPath,
+                    ),
+                  );
+                  DigitDataModelSingleton().setData(syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+                      retryTimeInterval: envConfig.variables.retryTimeInterval,
+                      tenantId: envConfig.variables.tenantId,
+                      entityMapper: EntityMapper(),
+                      errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
+                      hierarchyType: parts[0]);
                   triggerLocationTracking(state.selectedProject!);
                   navigateToBoundary(boundary);
                 } else {
