@@ -107,7 +107,7 @@ dev_dependencies:
   hrk_flutter_test_batteries: ^0.8.0
 
 flutter_icons:
-  android: "ic_launcher"
+  android: "burundi_logo_tsinda_malaria"
   ios: true
   image_path: "assets/icons/app_icon.png"
   min_sdk_android: 21
