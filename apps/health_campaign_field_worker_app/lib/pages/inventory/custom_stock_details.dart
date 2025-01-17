@@ -1370,13 +1370,16 @@ class CustomStockDetailsPageState
                                           .quantityOfProductIndicatedOnWaybillLabel,
                                     ),
                                     formControlName: _waybillQuantityKey,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
                                     onChanged: (val) {
-                                      if (val.toString().isEmpty ||
-                                          val.value == null) {
-                                        form
-                                            .control(_waybillQuantityKey)
-                                            .value = '0';
-                                      }
+                                      // if (val.value == null) {
+                                      //   form
+                                      //       .control(_waybillQuantityKey)
+                                      //       .value = 0;
+                                      // } TODO: Check this condition
                                     }),
                                 transportTypes.isNotEmpty
                                     ? DigitReactiveDropdown<String>(
