@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../bloc/map_path/map_path_bloc.dart';
 import '../main.dart';
+import '../models/geoJson/marker_details.dart';
 
 @RoutePage()
 class MapsHomePage extends StatefulWidget {
@@ -34,7 +35,7 @@ class _MapsHomePageState extends State<MapsHomePage> {
   void initState() {
     super.initState();
     _controller.mapEventStream.listen((event) {
-      debugPrint('Source name: ${event.source.name}');
+      // debugPrint('Source name: ${event.source.name}');
     });
     initializeMaps();
     _setInitialLocation(); // Set initial location
@@ -43,9 +44,10 @@ class _MapsHomePageState extends State<MapsHomePage> {
   Future<void> _setInitialLocation() async {
     currentPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+    setState(() {});
     _controller.move(
         LatLng(currentPosition!.latitude, currentPosition!.longitude),
-        15); // Move to user's location
+        18); // Move to user's location
   }
 
   void _onHouseMarkerTap(String id) {
@@ -61,12 +63,10 @@ class _MapsHomePageState extends State<MapsHomePage> {
     return Scaffold(
       body: FlutterMap(
         mapController: _controller,
-        options: MapOptions(
+        options: const MapOptions(
             minZoom: 1,
             maxZoom: 25,
-            initialCenter: const LatLng(12.929059692687234, 77.62804588474884),
-            // This will be overridden
-            onTap: (tapPosition, point) {},
+            initialCenter: LatLng(12.929059692687234, 77.62804588474884),
             applyPointerTranslucencyToLayers: false),
         children: [
           TileLayer(
@@ -75,24 +75,20 @@ class _MapsHomePageState extends State<MapsHomePage> {
           ),
           currentPosition != null
               ? MarkerLayer(
-                  markers: widget.markerDetails
-                      .map((houseHold) => Marker(
-                          point: LatLng(
-                            currentPosition!.latitude,
-                            currentPosition!.longitude,
-                          ),
-                          height: 44,
-                          width: 44,
-                          child: IconButton(
-                            onPressed: () =>
-                                _onHouseMarkerTap(houseHold.id), // Pass the ID
-                            icon: const Icon(
-                              Icons.my_location,
-                              size: 48,
-                            ),
-                            color: Colors.blue,
-                          )))
-                      .toList(),
+                  markers: [
+                    Marker(
+                      point: LatLng(
+                        currentPosition!.latitude,
+                        currentPosition!.longitude,
+                      ),
+                      height: 24,
+                      width: 24,
+                      child: const Icon(
+                        Icons.my_location,
+                        size: 24,
+                      ),
+                    )
+                  ],
                 )
               : const Offstage(),
           widget.markerDetails.isNotEmpty
@@ -103,14 +99,14 @@ class _MapsHomePageState extends State<MapsHomePage> {
                             houseHold.coordinates.first,
                             houseHold.coordinates.last,
                           ),
-                          height: 44,
-                          width: 44,
+                          height: 24,
+                          width: 24,
                           child: IconButton(
                             onPressed: () =>
                                 _onHouseMarkerTap(houseHold.id), // Pass the ID
                             icon: const Icon(
-                              Icons.house,
-                              size: 48,
+                              Icons.location_on,
+                              size: 24,
                             ),
                             color: Colors.red,
                           )))
@@ -175,11 +171,4 @@ class _MapsHomePageState extends State<MapsHomePage> {
       ),
     );
   }
-}
-
-class MarkerDetails {
-  final String id;
-  final List<double> coordinates;
-
-  MarkerDetails({required this.id, required this.coordinates});
 }

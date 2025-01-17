@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_maps/bloc/map_path/map_path_bloc.dart';
 import 'package:flutter/material.dart';
 
+import '../models/geoJson/marker_details.dart';
 import '../pages/map_path.dart';
 import '../pages/map_plot.dart';
 import '../pages/maps_home.dart';

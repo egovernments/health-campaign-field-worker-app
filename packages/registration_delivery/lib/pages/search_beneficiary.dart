@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_maps/models/geoJson/marker_details.dart';
 import 'package:digit_maps/pages/maps_home.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
@@ -40,7 +41,7 @@ class SearchBeneficiaryPage extends LocalizedStatefulWidget {
 class _SearchBeneficiaryPageState
     extends LocalizedState<SearchBeneficiaryPage> {
   final TextEditingController searchController = TextEditingController();
-  bool isProximityEnabled = false;
+  bool isProximityEnabled = false, isMapViewEnabled = false;
   int offset = 0;
   int limit = 10;
 
@@ -130,35 +131,60 @@ class _SearchBeneficiaryPageState
                               locationState.latitude != null
                                   ? Padding(
                                       padding: const EdgeInsets.all(spacer2),
-                                      child: DigitSwitch(
+                                      child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        label: localizations.translate(
-                                          i18.searchBeneficiary.proximityLabel,
-                                        ),
-                                        value: isProximityEnabled,
-                                        onChanged: (value) {
-                                          searchController.clear();
-                                          setState(() {
-                                            isProximityEnabled = value;
-                                            lat = locationState.latitude!;
-                                            long = locationState.longitude!;
-                                          });
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          DigitSwitch(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            label: localizations.translate(
+                                              i18.searchBeneficiary
+                                                  .proximityLabel,
+                                            ),
+                                            value: isProximityEnabled,
+                                            onChanged: (value) {
+                                              searchController.clear();
+                                              setState(() {
+                                                isProximityEnabled = value;
+                                                lat = locationState.latitude!;
+                                                long = locationState.longitude!;
+                                              });
 
-                                          if (locationState.hasPermissions &&
-                                              value &&
-                                              locationState.latitude != null &&
-                                              locationState.longitude != null &&
-                                              RegistrationDeliverySingleton()
-                                                      .maxRadius !=
-                                                  null &&
-                                              isProximityEnabled) {
-                                            triggerGlobalSearchEvent();
-                                          } else {
-                                            blocWrapper.clearEvent();
-                                            triggerGlobalSearchEvent();
-                                          }
-                                        },
+                                              if (locationState
+                                                      .hasPermissions &&
+                                                  value &&
+                                                  locationState.latitude !=
+                                                      null &&
+                                                  locationState.longitude !=
+                                                      null &&
+                                                  RegistrationDeliverySingleton()
+                                                          .maxRadius !=
+                                                      null &&
+                                                  isProximityEnabled) {
+                                                triggerGlobalSearchEvent();
+                                              } else {
+                                                blocWrapper.clearEvent();
+                                                triggerGlobalSearchEvent();
+                                              }
+                                            },
+                                          ),
+                                          DigitSwitch(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            label: localizations.translate(
+                                              i18.searchBeneficiary
+                                                  .mapViewLabel,
+                                            ),
+                                            value: isMapViewEnabled,
+                                            onChanged: (value) {
+                                              searchController.clear();
+                                              setState(() {
+                                                isMapViewEnabled = value;
+                                              });
+                                            },
+                                          ),
+                                        ],
                                       ),
                                     )
                                   : const Offstage(),
@@ -240,7 +266,8 @@ class _SearchBeneficiaryPageState
                         },
                       ),
                       if (searchHouseholdsState.resultsNotFound &&
-                          !searchHouseholdsState.loading)
+                          !searchHouseholdsState.loading &&
+                          !isMapViewEnabled)
                         Padding(
                           padding: const EdgeInsets.only(
                               left: spacer2, top: spacer2, right: spacer2),
@@ -280,19 +307,39 @@ class _SearchBeneficiaryPageState
                 },
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
-                    return isProximityEnabled
+                    return isProximityEnabled && isMapViewEnabled
                         ? SliverToBoxAdapter(
-                            child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.45,
-                            child: MapsHomePage(
-                                onPressed: (String clientRefId) {
-                                  // find the house details from the clientRefId
-                                  findHouseHoldDetailsFromClientRefId(
-                                      clientRefId);
-                                },
-                                markerDetails: getHouseHoldCords(
-                                    searchHouseholdsState.householdMembers)),
-                          ))
+                            child: Stack(children: [
+                            if (searchHouseholdsState.resultsNotFound &&
+                                !searchHouseholdsState.loading)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: spacer2,
+                                    top: spacer2,
+                                    right: spacer2),
+                                child: InfoCard(
+                                  type: InfoType.info,
+                                  description: localizations.translate(
+                                    i18.searchBeneficiary
+                                        .beneficiaryInfoDescription,
+                                  ),
+                                  title: localizations.translate(
+                                    i18.searchBeneficiary.beneficiaryInfoTitle,
+                                  ),
+                                ),
+                              ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.45,
+                              child: MapsHomePage(
+                                  onPressed: (String clientRefId) {
+                                    // find the house details from the clientRefId
+                                    findHouseHoldDetailsFromClientRefId(
+                                        clientRefId);
+                                  },
+                                  markerDetails: getHouseHoldCords(
+                                      searchHouseholdsState.householdMembers)),
+                            ),
+                          ]))
                         : SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (ctx, index) {
