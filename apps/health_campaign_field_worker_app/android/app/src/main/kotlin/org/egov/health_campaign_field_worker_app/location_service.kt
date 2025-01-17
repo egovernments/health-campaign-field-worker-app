@@ -47,7 +47,7 @@ class LocationService : Service() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Location Service")
             .setContentText("Tracking location in background")
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.burundi_logo_tsinda_malaria)
             .setContentIntent(pendingIntent)
             .build()
 
@@ -138,7 +138,7 @@ class LocationService : Service() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Location Service")
             .setContentText(notificationContent)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.burundi_logo_tsinda_malaria)
             .setContentIntent(pendingIntent)
             .build()
 

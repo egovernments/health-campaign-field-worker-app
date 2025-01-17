@@ -537,7 +537,8 @@ class CustomStockDetailsPageState
                                               senderType = primaryType;
                                               break;
                                           }
-
+                                          UserModel? loggedInUserModel =
+                                              InventorySingleton().loggedInUser;
                                           final stockModel = StockModel(
                                             clientReferenceId:
                                                 IdGen.i.identifier,
@@ -585,9 +586,7 @@ class CustomStockDetailsPageState
                                                         InventoryManagementEnums
                                                             .name
                                                             .toValue(),
-                                                        InventorySingleton()
-                                                            .loggedInUser
-                                                            ?.name,
+                                                        loggedInUserModel?.name,
                                                       ),
                                                       if (waybillQuantity !=
                                                           null)

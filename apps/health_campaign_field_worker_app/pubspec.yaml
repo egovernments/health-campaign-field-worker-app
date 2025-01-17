@@ -1,7 +1,7 @@
 name: health_campaign_field_worker_app
 description: A new Flutter project.
 publish_to: "none"
-version: 1.6.1+2
+version: 1.6.2+3
 
 environment:
   sdk: ">=3.0.0 <=4.0.0"
@@ -67,7 +67,8 @@ dependencies:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
       ref: hcmpre-1250-beneficiary
       path: ./packages/digit_data_model
-  registration_delivery:
+  registration_delivery:   print(
+                                              "tesss ${loggedInUserModel?.name}");
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
       ref: hcmpre-1250-beneficiary
@@ -116,7 +117,7 @@ flutter:
   assets:
     - ./
     - assets/icons/svg/
-    # - assets/animated_json/
+    - assets/animated_json/
 
   fonts:
     - family: Roboto
