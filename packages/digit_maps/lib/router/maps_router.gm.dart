@@ -34,7 +34,8 @@ abstract class _$DigitMapsRoute extends AutoRouterModule {
         routeData: routeData,
         child: MapsHomePage(
           key: args.key,
-          houseHoldPoints: args.houseHoldPoints,
+          markerDetails: args.markerDetails,
+          onPressed: args.onPressed,
         ),
       );
     },
@@ -98,13 +99,15 @@ class MapPlotPageRouteArgs {
 class MapsHomePageRoute extends PageRouteInfo<MapsHomePageRouteArgs> {
   MapsHomePageRoute({
     Key? key,
-    required List<List<double>> houseHoldPoints,
+    required List<MarkerDetails> markerDetails,
+    required void Function(String) onPressed,
     List<PageRouteInfo>? children,
   }) : super(
           MapsHomePageRoute.name,
           args: MapsHomePageRouteArgs(
             key: key,
-            houseHoldPoints: houseHoldPoints,
+            markerDetails: markerDetails,
+            onPressed: onPressed,
           ),
           initialChildren: children,
         );
@@ -118,15 +121,18 @@ class MapsHomePageRoute extends PageRouteInfo<MapsHomePageRouteArgs> {
 class MapsHomePageRouteArgs {
   const MapsHomePageRouteArgs({
     this.key,
-    required this.houseHoldPoints,
+    required this.markerDetails,
+    required this.onPressed,
   });
 
   final Key? key;
 
-  final List<List<double>> houseHoldPoints;
+  final List<MarkerDetails> markerDetails;
+
+  final void Function(String) onPressed;
 
   @override
   String toString() {
-    return 'MapsHomePageRouteArgs{key: $key, houseHoldPoints: $houseHoldPoints}';
+    return 'MapsHomePageRouteArgs{key: $key, markerDetails: $markerDetails, onPressed: $onPressed}';
   }
 }

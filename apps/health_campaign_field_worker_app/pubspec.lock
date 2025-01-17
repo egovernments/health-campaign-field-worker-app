@@ -1429,10 +1429,9 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      name: inventory_management
-      sha256: e8ac85b2a4cfdcabdb9a0e49bc3231953b9c5c7e02c6aabadda6ffc3b78ef128
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/inventory_management"
+      relative: true
+    source: path
     version: "1.0.4"
   io:
     dependency: transitive

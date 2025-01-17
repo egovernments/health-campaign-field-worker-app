@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_maps/pages/home.dart';
+import 'package:digit_maps/pages/maps_home.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -264,17 +264,6 @@ class _SearchBeneficiaryPageState
                     child: CircularProgressIndicator(),
                   ),
                 ),
-              if (isProximityEnabled)
-                SliverToBoxAdapter(
-                    child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  child: const MapsHomePage(
-                    houseHoldPoints: [
-                      [12.927721214003412, 77.62723049326378],
-                      [12.93114059451119, 77.62672623800329]
-                    ],
-                  ),
-                )),
               BlocListener<DigitScannerBloc, DigitScannerState>(
                 listener: (context, scannerState) {
                   if (scannerState.qrCodes.isNotEmpty) {
@@ -291,84 +280,53 @@ class _SearchBeneficiaryPageState
                 },
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (ctx, index) {
-                          final i = searchHouseholdsState.householdMembers
-                              .elementAt(index);
-                          final distance = calculateDistance(
-                            Coordinate(
-                              lat,
-                              long,
-                            ),
-                            Coordinate(
-                              i.household?.address?.latitude,
-                              i.household?.address?.longitude,
-                            ),
-                          );
-
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: spacer2),
-                            child: ViewBeneficiaryCard(
-                              distance: isProximityEnabled ? distance : null,
-                              householdMember: i,
-                              onOpenPressed: () async {
-                                final scannerBloc =
-                                    context.read<DigitScannerBloc>();
-
-                                scannerBloc.add(
-                                  const DigitScannerEvent.handleScanner(),
+                    return isProximityEnabled
+                        ? SliverToBoxAdapter(
+                            child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.45,
+                            child: MapsHomePage(
+                                onPressed: (String clientRefId) {
+                                  // find the house details from the clientRefId
+                                  findHouseHoldDetailsFromClientRefId(
+                                      clientRefId);
+                                },
+                                markerDetails: getHouseHoldCords(
+                                    searchHouseholdsState.householdMembers)),
+                          ))
+                        : SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (ctx, index) {
+                                final i = searchHouseholdsState.householdMembers
+                                    .elementAt(index);
+                                final distance = calculateDistance(
+                                  Coordinate(
+                                    lat,
+                                    long,
+                                  ),
+                                  Coordinate(
+                                    i.household?.address?.latitude,
+                                    i.household?.address?.longitude,
+                                  ),
                                 );
 
-                                if ((i.tasks != null &&
-                                        i.tasks?.lastOrNull!.status ==
-                                            Status.closeHousehold.toValue() &&
-                                        (i.tasks ?? []).isNotEmpty) ||
-                                    (i.projectBeneficiaries ?? []).isEmpty) {
-                                  setState(() {
-                                    selectedFilters = [];
-                                  });
-                                  blocWrapper.clearEvent();
-                                  await context.router.push(
-                                    BeneficiaryRegistrationWrapperRoute(
-                                      initialState: BeneficiaryRegistrationState
-                                          .editHousehold(
-                                              householdModel: i.household!,
-                                              individualModel: i.members!,
-                                              registrationDate: DateTime.now(),
-                                              projectBeneficiaryModel:
-                                                  (i.projectBeneficiaries ?? [])
-                                                          .isNotEmpty
-                                                      ? i.projectBeneficiaries
-                                                          ?.lastOrNull
-                                                      : null,
-                                              addressModel: i.headOfHousehold!
-                                                  .address!.lastOrNull!,
-                                              headOfHousehold:
-                                                  i.headOfHousehold),
-                                    ),
-                                  );
-                                } else {
-                                  await context.router.push(
-                                    BeneficiaryWrapperRoute(
-                                      wrapper: i,
-                                    ),
-                                  );
-                                }
-                                setState(() {
-                                  isProximityEnabled = false;
-                                });
-                                searchController.clear();
-                                selectedFilters.clear();
-                                blocWrapper.clearEvent();
+                                return Container(
+                                  margin:
+                                      const EdgeInsets.only(bottom: spacer2),
+                                  child: ViewBeneficiaryCard(
+                                    distance:
+                                        isProximityEnabled ? distance : null,
+                                    householdMember: i,
+                                    onOpenPressed: () async {
+                                      findHouseHoldDetailsFromClientRefId(
+                                          i.household!.clientReferenceId);
+                                    },
+                                  ),
+                                );
                               },
+                              childCount:
+                                  searchHouseholdsState.householdMembers.length,
                             ),
                           );
-                        },
-                        childCount:
-                            searchHouseholdsState.householdMembers.length,
-                      ),
-                    );
                   },
                 ),
               ),
@@ -565,5 +523,74 @@ class _SearchBeneficiaryPageState
     } else {
       return selectedFilter;
     }
+  }
+
+  List<MarkerDetails> getHouseHoldCords(
+      List<HouseholdMemberWrapper> householdMembers) {
+    List<MarkerDetails> coordinates = [];
+
+    for (var e in householdMembers) {
+      if (e.household?.address != null) {
+        double? longitude = e.household?.address?.longitude;
+        double? latitude = e.household?.address?.latitude;
+        String? id = e.household
+            ?.clientReferenceId; // Assuming there's an ID field in household
+
+        if (longitude != null && latitude != null && id != null) {
+          coordinates
+              .add(MarkerDetails(id: id, coordinates: [latitude, longitude]));
+        }
+      }
+    }
+    return coordinates;
+  }
+
+  void findHouseHoldDetailsFromClientRefId(String clientRefId) async {
+    final house = searchHouseholdsState.householdMembers.indexWhere((e) {
+      return e.household?.clientReferenceId == clientRefId;
+    });
+
+    final i = searchHouseholdsState.householdMembers.elementAt(house);
+
+    final scannerBloc = context.read<DigitScannerBloc>();
+
+    scannerBloc.add(
+      const DigitScannerEvent.handleScanner(),
+    );
+
+    if ((i.tasks != null &&
+            i.tasks?.lastOrNull!.status == Status.closeHousehold.toValue() &&
+            (i.tasks ?? []).isNotEmpty) ||
+        (i.projectBeneficiaries ?? []).isEmpty) {
+      setState(() {
+        selectedFilters = [];
+      });
+      blocWrapper.clearEvent();
+      await context.router.push(
+        BeneficiaryRegistrationWrapperRoute(
+          initialState: BeneficiaryRegistrationState.editHousehold(
+              householdModel: i.household!,
+              individualModel: i.members!,
+              registrationDate: DateTime.now(),
+              projectBeneficiaryModel: (i.projectBeneficiaries ?? []).isNotEmpty
+                  ? i.projectBeneficiaries?.lastOrNull
+                  : null,
+              addressModel: i.headOfHousehold!.address!.lastOrNull!,
+              headOfHousehold: i.headOfHousehold),
+        ),
+      );
+    } else {
+      await context.router.push(
+        BeneficiaryWrapperRoute(
+          wrapper: i,
+        ),
+      );
+    }
+    setState(() {
+      isProximityEnabled = false;
+    });
+    searchController.clear();
+    selectedFilters.clear();
+    blocWrapper.clearEvent();
   }
 }
