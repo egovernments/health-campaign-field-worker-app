@@ -115,6 +115,7 @@ flutter_icons:
 flutter:
   assets:
     - ./
+    - assets/audio/
     - assets/icons/svg/
     - assets/animated_json/
 
