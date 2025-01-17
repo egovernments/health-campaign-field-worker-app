@@ -2,7 +2,7 @@ name: Build APK Workflow
 
 on:
   push:
-    branches: [ 'develop', 'master' ]  # This specifies that the workflow will run on any push to the 'develop' or 'master' branches
+    branches: [ 'develop', 'master', 'HCMPRE-1873-GITHUB-ACTIONS' ]  # This specifies that the workflow will run on any push to the 'develop' or 'master' branches
   pull_request:
     branches: [ 'develop', 'master' ]  # Optionally, run on pull requests targeting the 'develop' or 'master' branches
 
