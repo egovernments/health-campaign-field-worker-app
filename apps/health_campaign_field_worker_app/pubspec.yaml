@@ -67,8 +67,7 @@ dependencies:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
       ref: hcmpre-1250-beneficiary
       path: ./packages/digit_data_model
-  registration_delivery:   print(
-                                              "tesss ${loggedInUserModel?.name}");
+  registration_delivery:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
       ref: hcmpre-1250-beneficiary
