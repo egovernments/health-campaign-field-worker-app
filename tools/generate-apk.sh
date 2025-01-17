@@ -54,7 +54,7 @@ cd "$APP_DIR" || exit
   cd ../../ || exit
 
   mkdir -p outputs
-  mv "$APP_DIR/build/app/outputs/flutter-apk/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
+#  mv "$APP_DIR/build/app/outputs/flutter-apk/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
 # done
 
 # open outputs
