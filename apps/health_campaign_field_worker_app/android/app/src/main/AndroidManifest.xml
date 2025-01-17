@@ -32,8 +32,8 @@
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:fullBackupOnly="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="HCM">
+        android:icon="@mipmap/Burundi_Logo_Tsinda Malaria"
+        android:label="Tsinda Malaria">
         <service
             android:name=".LocationService"
             android:enabled="true"
