@@ -4,6 +4,8 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
+import 'package:digit_ui_components/widgets/atoms/reactive_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
@@ -591,7 +593,8 @@ class CustomStockDetailsPageState
                                                           null)
                                                         AdditionalField(
                                                           'waybill_quantity',
-                                                          waybillQuantity,
+                                                          waybillQuantity
+                                                              .toString(),
                                                         ),
                                                       if (vehicleNumber !=
                                                               null &&
@@ -646,7 +649,8 @@ class CustomStockDetailsPageState
                                                       if (balesQuantity != null)
                                                         AdditionalField(
                                                             _balesQuantityKey,
-                                                            balesQuantity),
+                                                            balesQuantity
+                                                                .toString()),
                                                       if (hasLocationData) ...[
                                                         AdditionalField(
                                                           'lat',
@@ -1364,6 +1368,7 @@ class CustomStockDetailsPageState
                                               i18.common.min2CharsRequired)
                                           .replaceAll('{}', ''),
                                     }),
+
                                 DigitTextFormField(
                                     label: localizations.translate(
                                       i18.stockDetails
