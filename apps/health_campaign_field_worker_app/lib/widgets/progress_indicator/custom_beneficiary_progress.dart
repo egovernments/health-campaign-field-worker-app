@@ -12,6 +12,7 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import '../../data/repositories/local/custom_project_beneficiary.dart';
 import '../../data/repositories/local/custom_task.dart';
 import '../../utils/extensions/extensions.dart';
 import '../progress_indicator/progress_indicator.dart';
@@ -44,7 +45,7 @@ class CustomBeneficiaryProgressBarState
     final projectBeneficiaryRepository = context.read<
             LocalRepository<ProjectBeneficiaryModel,
                 ProjectBeneficiarySearchModel>>()
-        as ProjectBeneficiaryLocalRepository;
+        as CustomProjectBeneficiaryLocalRepository;
 
     final projectId = RegistrationDeliverySingleton().projectId;
     final loggedInUserUuid = RegistrationDeliverySingleton().loggedInUserUuid;
