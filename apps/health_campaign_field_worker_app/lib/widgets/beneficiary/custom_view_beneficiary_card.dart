@@ -7,6 +7,7 @@ import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/utils/date_utils.dart'
     as DigitDOBAgeConvertor;
 import 'package:flutter/material.dart';
+import 'package:health_campaign_field_worker_app/widgets/beneficiary/custom_beneficiary_card.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -299,7 +300,7 @@ class CustomViewBeneficiaryCardState
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.8,
-                child: BeneficiaryCard(
+                child: CustomBeneficiaryCard(
                   description: [
                     householdMember.household?.address?.doorNo,
                     householdMember.household?.address?.addressLine1,
