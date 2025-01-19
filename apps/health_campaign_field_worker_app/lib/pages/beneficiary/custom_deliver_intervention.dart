@@ -590,7 +590,7 @@ class CustomDeliverInterventionPageState
                                                         .fromLTRB(kPadding,
                                                         kPadding, kPadding, 0),
                                                     child: scannerState
-                                                            .qrCodes.isNotEmpty
+                                                            .barCodes.isNotEmpty
                                                         ? Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -647,6 +647,8 @@ class CustomDeliverInterventionPageState
                                                                               bednetCount < 2,
                                                                           isEditEnabled:
                                                                               true,
+                                                                          manualEnabled:
+                                                                              true,
                                                                         ),
                                                                         settings:
                                                                             const RouteSettings(name: '/qr-scanner'),
@@ -687,6 +689,8 @@ class CustomDeliverInterventionPageState
                                                                         bednetCount <
                                                                             2,
                                                                     isEditEnabled:
+                                                                        true,
+                                                                    manualEnabled:
                                                                         true,
                                                                   ),
                                                                   settings:

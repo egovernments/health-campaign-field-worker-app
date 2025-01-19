@@ -455,6 +455,7 @@ class _CustomSearchBeneficiaryPageStateState
                                     quantity: 1,
                                     isGS1code: false,
                                     singleValue: true,
+                                    manualEnabled: true,
                                   ),
                                   settings:
                                       const RouteSettings(name: '/qr-scanner'),

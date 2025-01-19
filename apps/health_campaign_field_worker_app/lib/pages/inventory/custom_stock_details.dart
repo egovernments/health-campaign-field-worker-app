@@ -1329,7 +1329,7 @@ class CustomStockDetailsPageState
                                                     quantity: 1,
                                                     isGS1code: false,
                                                     singleValue: false,
-                                                    manualEnabled: false,
+                                                    manualEnabled: true,
                                                   ),
                                                   settings: const RouteSettings(
                                                       name: '/qr-scanner'),
@@ -1497,7 +1497,7 @@ class CustomStockDetailsPageState
                                                           balesQuantityInInt,
                                                       isGS1code: true,
                                                       singleValue: false,
-                                                      manualEnabled: false,
+                                                      manualEnabled: true,
                                                     ),
                                                     settings:
                                                         const RouteSettings(
@@ -1591,7 +1591,7 @@ class CustomStockDetailsPageState
                                                               singleValue:
                                                                   false,
                                                               manualEnabled:
-                                                                  false,
+                                                                  true,
                                                             ),
                                                             settings:
                                                                 const RouteSettings(
