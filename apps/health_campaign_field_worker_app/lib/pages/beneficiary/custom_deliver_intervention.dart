@@ -83,6 +83,14 @@ class CustomDeliverInterventionPageState
   ) async {
     final lat = locationState.latitude;
     final long = locationState.longitude;
+
+    final code = householdMember.members?.first.address?.first.boundaryCode;
+
+    final name = householdMember.members?.first.address?.first.boundary;
+
+    final boundaryModel = code == null || name == null
+        ? null
+        : BoundaryModel(code: code, name: name);
     context.read<DeliverInterventionBloc>().add(
           DeliverInterventionSubmitEvent(
               task: _getTaskModel(
@@ -108,7 +116,8 @@ class CustomDeliverInterventionPageState
                           BeneficiaryType.household
                   ? true
                   : false,
-              boundaryModel: RegistrationDeliverySingleton().boundary!,
+              boundaryModel:
+                  boundaryModel ?? RegistrationDeliverySingleton().boundary!,
               navigateToSummary: false,
               householdMemberWrapper: householdMember),
         );
