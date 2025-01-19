@@ -383,7 +383,7 @@ class CustomComplaintsDetailsPageState
                                   i18.complaints.validationMinLengthError),
                               'maxLength': (object) => localizations
                                   .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', '10'),
+                                  .replaceAll('{}', '8'),
                             },
                             builder: (field) {
                               return LabeledField(
@@ -445,7 +445,7 @@ class CustomComplaintsDetailsPageState
                                   i18.complaints.validationMinLengthError),
                               'maxLength': (object) => localizations
                                   .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', '10'),
+                                  .replaceAll('{}', '8'),
                             },
                             builder: (field) {
                               return LabeledField(
@@ -553,7 +553,7 @@ class CustomComplaintsDetailsPageState
         validators: [
           Validators.delegate(
               (validator) => CustomValidator.validMobileNumber(validator)),
-          Validators.minLength(8),
+          Validators.maxLength(8),
         ],
       ),
       _complaintDescription: FormControl<String>(
