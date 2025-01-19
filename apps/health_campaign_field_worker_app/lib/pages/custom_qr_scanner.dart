@@ -14,6 +14,7 @@ import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18Local;
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/widgets/vision_detector_views/detector_view.dart';
@@ -58,12 +59,29 @@ class _CustomDigitScannerPageState
   bool flashStatus = false;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   static const _manualCodeFormKey = 'manualCode';
+  String districSecificDigitsBasedOnEnv = '';
+  bool isTraining = true;
+  String districtRange = '48';
+  String phase = '00';
 
-  RegExp pattern = RegExp(r'^2025-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}$');
-
+  RegExp pattern = RegExp(r'^2025-00-48-\d{2}-\d{2}-\d{2}$');
   @override
   void initState() {
     initializeCameras();
+    if (envConfig.variables.envType == EnvType.prod) {
+      isTraining = false;
+
+      // Phase is usually static, but it could also depend on the environment
+      phase = isTraining ? '00' : '01|02';
+
+      // For training, district code is 48, else it is [01-47]
+      districtRange = isTraining ? '48' : '[01-47]';
+
+      // Construct the regex dynamically
+      pattern = RegExp(
+          r'^2025-' + phase + '-' + districtRange + r'-\d{2}-\d{2}-\d{2}$');
+    }
+
     if (!widget.isEditEnabled) {
       context
           .read<DigitScannerBloc>()
