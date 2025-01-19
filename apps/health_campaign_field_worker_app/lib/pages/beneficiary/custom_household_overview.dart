@@ -372,7 +372,8 @@ class _HouseholdOverviewPageState
       textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
           ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue() ==
                   Status.administeredSuccess.toValue()
-              ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()}'
+              ? getTaskStatus(state.householdMemberWrapper.tasks ?? [])
+                  .toValue()
               : getTaskStatus(state.householdMemberWrapper.tasks ?? [])
                   .toValue()
           : Status.registered.toValue();
