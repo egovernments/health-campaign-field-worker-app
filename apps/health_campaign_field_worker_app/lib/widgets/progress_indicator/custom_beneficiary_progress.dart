@@ -143,7 +143,7 @@ class CustomBeneficiaryProgressBarState
             projectId: [projectId],
           );
           List<ProjectBeneficiaryModel> results =
-              await projectBeneficiaryRepository.search(
+              await projectBeneficiaryRepository.progressBarSearch(
                   projectBeneficiarySearchQuery, loggedInUserUuid);
 
           if (mounted) {

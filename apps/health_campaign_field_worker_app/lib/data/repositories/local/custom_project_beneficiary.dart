@@ -72,8 +72,7 @@ class CustomProjectBeneficiaryLocalRepository
     });
   }
 
-  @override
-  FutureOr<List<ProjectBeneficiaryModel>> search(
+  FutureOr<List<ProjectBeneficiaryModel>> progressBarSearch(
     ProjectBeneficiarySearchModel query, [
     String? userId,
   ]) async {
