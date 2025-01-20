@@ -65,6 +65,8 @@ class _CustomDigitScannerPageState
   String phase = '00';
 
   RegExp pattern = RegExp(r'^2025-00-48-\d{2}-\d{2}-\d{2}$');
+  RegExp balePattern = RegExp(r'^\d{18}$');
+
   @override
   void initState() {
     initializeCameras();
@@ -178,7 +180,7 @@ class _CustomDigitScannerPageState
                             ),
                           ),
                         ),
-                        if (widget.isGS1code)
+                        if (widget.isGS1code && !widget.manualEnabled)
                           const SizedBox.shrink()
                         else
                           Align(
@@ -244,7 +246,8 @@ class _CustomDigitScannerPageState
                                   .translate(i18.common.coreCommonSubmit)),
                               onPressed: () async {
                                 if (widget.isGS1code &&
-                                    result.length < widget.quantity) {
+                                    result.length + codes.length <
+                                        widget.quantity) {
                                   DigitScannerUtils().buildDialog(
                                     context,
                                     localizations,
@@ -280,8 +283,12 @@ class _CustomDigitScannerPageState
                         Positioned(
                           bottom: (kPadding * 7.5),
                           height: widget.isGS1code
-                              ? state.barCodes.length < 3
-                                  ? (state.barCodes.length * 60) + 80
+                              ? (state.barCodes.length + state.qrCodes.length) <
+                                      3
+                                  ? ((state.barCodes.length +
+                                              state.qrCodes.length) *
+                                          60) +
+                                      80
                                   : MediaQuery.of(context).size.height / 3
                               : state.qrCodes.length < 2
                                   ? ((state.qrCodes.length + 1) * 60)
@@ -317,7 +324,7 @@ class _CustomDigitScannerPageState
                                   width: MediaQuery.of(context).size.width,
                                   child: widget.isGS1code
                                       ? Text(
-                                          '${state.barCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
+                                          '${(state.barCodes.length + state.qrCodes.length).toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
                                           style: theme.textTheme.headlineMedium,
                                         )
                                       : Text(
@@ -326,110 +333,36 @@ class _CustomDigitScannerPageState
                                         ),
                                 ),
                                 Expanded(
-                                  child: ListView.builder(
-                                    itemCount: widget.isGS1code
-                                        ? state.barCodes.length
-                                        : state.qrCodes.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return ListTile(
-                                        shape: const Border(),
-                                        title: Container(
-                                          margin: const EdgeInsets.only(
-                                            left: kPadding,
-                                            right: kPadding,
+                                  child: ListView(
+                                    children: <Widget>[
+                                      codesListView(codes, onRemove: (index) {
+                                        final bloc =
+                                            context.read<DigitScannerBloc>();
+                                        codes.removeAt(index);
+                                        bloc.add(
+                                          DigitScannerEvent.handleScanner(
+                                            barCode: state.barCodes,
+                                            qrCode: codes,
                                           ),
-                                          height: kPadding * 6,
-                                          decoration: BoxDecoration(
-                                            color: DigitTheme.instance
-                                                .colorScheme.background,
-                                            border: Border.all(
-                                              color: DigitTheme
-                                                  .instance.colorScheme.outline,
-                                              width: 1,
-                                            ),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                              Radius.circular(4.0),
-                                            ),
+                                        );
+                                      }),
+                                      codesListView(
+                                          result
+                                              .map((e) => e.elements.entries
+                                                  .last.value.data
+                                                  .toString())
+                                              .toList(), onRemove: (index) {
+                                        final bloc =
+                                            context.read<DigitScannerBloc>();
+                                        result.removeAt(index);
+                                        bloc.add(
+                                          DigitScannerEvent.handleScanner(
+                                            barCode: result,
+                                            qrCode: state.qrCodes,
                                           ),
-                                          padding:
-                                              const EdgeInsets.all(kPadding),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  widget.isGS1code
-                                                      ? state
-                                                          .barCodes[index]
-                                                          .elements
-                                                          .entries
-                                                          .last
-                                                          .value
-                                                          .data
-                                                          .toString()
-                                                      : DigitScannerUtils()
-                                                          .trimString(state
-                                                              .qrCodes[index]
-                                                              .toString()),
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(
-                                                  Icons.delete,
-                                                  color:
-                                                      theme.colorScheme.error,
-                                                  size: 24,
-                                                ),
-                                                onPressed: () {
-                                                  final bloc = context
-                                                      .read<DigitScannerBloc>();
-                                                  if (widget.isGS1code) {
-                                                    result = List.from(
-                                                      state.barCodes,
-                                                    );
-                                                    result.removeAt(index);
-                                                    setState(() {
-                                                      result = result;
-                                                    });
-
-                                                    bloc.add(
-                                                      DigitScannerEvent
-                                                          .handleScanner(
-                                                        barCode: result,
-                                                        qrCode: state.qrCodes,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    codes = List.from(
-                                                      state.qrCodes,
-                                                    );
-                                                    codes.removeAt(index);
-                                                    setState(() {
-                                                      codes = codes;
-                                                    });
-
-                                                    bloc.add(
-                                                      DigitScannerEvent
-                                                          .handleScanner(
-                                                        barCode: state.barCodes,
-                                                        qrCode: codes,
-                                                      ),
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
+                                        );
+                                      }),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -460,16 +393,10 @@ class _CustomDigitScannerPageState
                                 ),
                                 footer: DigitElevatedButton(
                                   onPressed: () async {
-                                    if (form
-                                                .control(_manualCodeFormKey)
-                                                .value ==
-                                            null ||
-                                        form
-                                            .control(_manualCodeFormKey)
-                                            .value
-                                            .toString()
-                                            .trim()
-                                            .isEmpty) {
+                                    String? code =
+                                        form.control(_manualCodeFormKey).value;
+                                    if (code == null ||
+                                        code.toString().trim().isEmpty) {
                                       DigitToast.show(context,
                                           options: DigitToastOptions(
                                             localizations.translate(
@@ -480,22 +407,20 @@ class _CustomDigitScannerPageState
                                     } else {
                                       final bloc =
                                           context.read<DigitScannerBloc>();
-                                      String code = form
-                                          .control(_manualCodeFormKey)
-                                          .value;
-                                      if (pattern.hasMatch(code)) {
+
+                                      RegExp newPattern = widget.isGS1code
+                                          ? balePattern
+                                          : pattern;
+                                      if (newPattern.hasMatch(code)) {
                                         codes.add(form
                                             .control(_manualCodeFormKey)
                                             .value);
                                         // Info when quantity is provided and user enters more resource then replace the (only when quantity 1 rest cases this does not follow)
                                         if ((widget.quantity == 1) &&
-                                            codes.length > widget.quantity &&
+                                            codes.length + result.length >
+                                                widget.quantity &&
                                             codes.isNotEmpty) {
-                                          codes = [
-                                            form
-                                                .control(_manualCodeFormKey)
-                                                .value
-                                          ];
+                                          codes = [code];
                                         }
                                         bloc.add(
                                           DigitScannerEvent.handleScanner(
@@ -564,6 +489,91 @@ class _CustomDigitScannerPageState
     );
   }
 
+  Widget codesListView(List<String> list, {required Function(int) onRemove}) {
+    if (list.isEmpty) {
+      return Container();
+    }
+    return Column(children: [
+      for (var index = 0; index < list.length; index++)
+        ListTile(
+          shape: const Border(),
+          title: Container(
+            margin: const EdgeInsets.only(
+              left: kPadding,
+              right: kPadding,
+            ),
+            height: kPadding * 6,
+            decoration: BoxDecoration(
+              color: DigitTheme.instance.colorScheme.background,
+              border: Border.all(
+                color: DigitTheme.instance.colorScheme.outline,
+                width: 1,
+              ),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(4.0),
+              ),
+            ),
+            padding: const EdgeInsets.all(kPadding),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    list[index],
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: Theme.of(context).colorScheme.error,
+                    size: 24,
+                  ),
+                  onPressed: () {
+                    list.removeAt(index);
+                    onRemove(index);
+                    // final bloc = context.read<DigitScannerBloc>();
+                    // if (widget.isGS1code) {
+                    //   result = List.from(
+                    //     state.barCodes,
+                    //   );
+                    //   result.removeAt(index);
+                    //   setState(() {
+                    //     result = result;
+                    //   });
+
+                    //   bloc.add(
+                    //     DigitScannerEvent.handleScanner(
+                    //       barCode: result,
+                    //       qrCode: state.qrCodes,
+                    //     ),
+                    //   );
+                    // } else {
+                    //   codes = List.from(
+                    //     state.qrCodes,
+                    //   );
+                    //   codes.removeAt(index);
+                    //   setState(() {
+                    //     codes = codes;
+                    //   });
+
+                    //   bloc.add(
+                    //     DigitScannerEvent.handleScanner(
+                    //       barCode: state.barCodes,
+                    //       qrCode: codes,
+                    //     ),
+                    //   );
+                    // }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+    ]);
+  }
+
   Future<void> _processImage(InputImage inputImage) async {
     await DigitScannerUtils().processImage(
       context: context,
@@ -602,18 +612,31 @@ class _CustomDigitScannerPageState
   }
 
   Future<void> storeCodeWrapper(String code) async {
-    await DigitScannerUtils().storeCode(
-      context: context,
-      code: code,
-      player: player,
-      singleValue: widget.singleValue,
-      updateCodes: (newCodes) {
-        setState(() {
-          codes = newCodes;
-        });
-      },
-      initialCodes: codes,
-    );
+    if (codes.length < widget.quantity) {
+      await DigitScannerUtils().storeCode(
+        context: context,
+        code: code,
+        player: player,
+        singleValue: widget.singleValue,
+        updateCodes: (newCodes) {
+          setState(() {
+            codes = newCodes;
+          });
+        },
+        initialCodes: codes,
+      );
+    } else {
+      await DigitToast.show(
+        context,
+        options: DigitToastOptions(
+          localizations
+              .translate(i18Local.deliverIntervention.bednetScanMoreThanCount),
+          true,
+          Theme.of(context),
+        ),
+      );
+      await Future.delayed(const Duration(seconds: 2));
+    }
   }
 
   Future<void> storeValueWrapper(GS1Barcode scanData) async {
