@@ -413,7 +413,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           .isNotEmpty) {
         final attendanceRegisters = await attendanceRemoteRepository.search(
           AttendanceRegisterSearchModel(
-            staffId: context.loggedInUser.uuid,
+            staffId: context.loggedInIndividualId,
             referenceId: event.model.id,
             localityCode: event.model.address?.boundary,
           ),
@@ -501,7 +501,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             dashboardRemoteRepository,
             dashboardActionPath.trim().isNotEmpty
                 ? dashboardActionPath
-                : '/dashboard-analytics/dashboard/getChartV2', //[TODO: To be added to MDMS Service registry
+                : '/dashboard-analytics/dashboard/getChartV2',
+            //[TODO: To be added to MDMS Service registry
             envConfig.variables.tenantId,
             event.model.id,
             userUUIDList,
