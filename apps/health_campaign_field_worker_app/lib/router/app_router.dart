@@ -48,6 +48,7 @@ import '../pages/reports/beneficiary/custom_enumeration_summary_report_details.d
 import '../pages/reports/beneficiary/custom_distribution_summary_report_details.dart';
 import '../pages/complaints/custom_complaints_details.dart';
 import 'package:complaints/blocs/localization/app_localization.dart';
+import '../pages/complaints/custom_complaint_type.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -130,7 +131,15 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ComplaintTypeRoute.page,
               path: 'complaints-type',
+            ),
+            AutoRoute(
+              page: CustomComplaintTypeRoute.page,
+              path: 'custom-complaints-type',
               initial: true,
+            ),
+            RedirectRoute(
+              path: 'complaints-type',
+              redirectTo: 'custom-complaints-details',
             ),
             AutoRoute(
               page: ComplaintsLocationRoute.page,

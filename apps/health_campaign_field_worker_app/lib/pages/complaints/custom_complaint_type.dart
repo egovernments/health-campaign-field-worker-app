@@ -10,22 +10,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
-import '/utils/i18_key_constants.dart' as i18;
-import '/widgets/header/back_navigation_help_header.dart';
-import '/widgets/localized.dart';
+import 'package:complaints/utils/i18_key_constants.dart' as i18;
+import 'package:complaints/widgets/header/back_navigation_help_header.dart';
+import 'package:complaints/widgets/localized.dart';
+
+import '../../router/app_router.dart';
 
 @RoutePage()
-class ComplaintTypePage extends LocalizedStatefulWidget {
-  const ComplaintTypePage({
+class CustomComplaintTypePage extends LocalizedStatefulWidget {
+  const CustomComplaintTypePage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<ComplaintTypePage> createState() => ComplaintTypePageState();
+  State<CustomComplaintTypePage> createState() =>
+      CustomComplaintTypePageState();
 }
 
-class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
+class CustomComplaintTypePageState
+    extends LocalizedState<CustomComplaintTypePage> {
   static const _complaintType = 'complaintType';
   static const _otherComplaintType = 'otherComplaintType';
 
@@ -107,7 +111,7 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                           },
                         );
 
-                        router.push(ComplaintsLocationRoute());
+                        router.push(CustomComplaintsDetailsRoute());
                       },
                     ),
                   ]),
