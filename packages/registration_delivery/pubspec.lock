@@ -373,8 +373,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "packages/dart_mappable_builder"
-      ref: "1.6-final-dev"
-      resolved-ref: "1e7467577a9701d396f7e23afbf00065e54c5469"
+      ref: master
+      resolved-ref: ab088b8fc21a07ed7a56bf81c935ee51481ad253
       url: "https://github.com/egovernments/health-campaign-field-worker-app/"
     source: git
     version: "4.2.3"
@@ -823,7 +823,7 @@ packages:
     source: hosted
     version: "2.3.1"
   group_radio_button:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: group_radio_button
       sha256: "204de8d16b224be7fc72dade0c3afd410ff5a34417d89f74f0fd8be7a8c2b4d6"

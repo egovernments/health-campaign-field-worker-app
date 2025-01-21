@@ -68,10 +68,9 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      name: attendance_management
-      sha256: "7221a7ed0d20cbbb45357dca59c6f6aa247e935247eeb5a8991b79fa809200e4"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/attendance_management"
+      relative: true
+    source: path
     version: "1.0.3"
   audioplayers:
     dependency: transitive
@@ -266,7 +265,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -444,11 +443,12 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: "04a6e7117382f8a8689b3e363bee6c3de8c9ea4332e664148fe01bd576eb1126"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: ab088b8fc21a07ed7a56bf81c935ee51481ad253
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
+    version: "4.2.3"
   dart_style:
     dependency: transitive
     description:
@@ -516,11 +516,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: c3bc7299a7d927ebb83d8e91c1d7a8a51f6a1d1295dafeacb642012b72b99a2f
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.5+1"
   digit_dss:
     dependency: "direct main"
     description:
@@ -1359,10 +1358,9 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      name: inventory_management
-      sha256: e8ac85b2a4cfdcabdb9a0e49bc3231953b9c5c7e02c6aabadda6ffc3b78ef128
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/inventory_management"
+      relative: true
+    source: path
     version: "1.0.4"
   io:
     dependency: transitive
@@ -1855,10 +1853,9 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "4dd6e6781e367edf806d838e58771dff838eeff0d444534079a468789cadfbcb"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.5+2"
   remove_emoji_input_formatter:
     dependency: transitive
