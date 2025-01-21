@@ -822,7 +822,7 @@ packages:
     source: hosted
     version: "2.3.1"
   group_radio_button:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: group_radio_button
       sha256: "204de8d16b224be7fc72dade0c3afd410ff5a34417d89f74f0fd8be7a8c2b4d6"
