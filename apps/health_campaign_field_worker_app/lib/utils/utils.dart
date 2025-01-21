@@ -230,17 +230,16 @@ Future<bool> getIsConnected() async {
   }
 }
 
-void showDownloadDialog(
-  BuildContext context, {
-  required DownloadBeneficiary model,
-  required DigitProgressDialogType dialogType,
-  bool isPop = true,
-  StreamController<double>? downloadProgressController,
-}) {
+void showDownloadDialog(BuildContext context,
+    {required DownloadBeneficiary model,
+    required DigitProgressDialogType dialogType,
+    bool isPop = true,
+    StreamController<double>? downloadProgressController,
+    required bool isCommunityCreator,
+    required bool isDistributor}) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
   }
-
   switch (dialogType) {
     case DigitProgressDialogType.failed:
     case DigitProgressDialogType.checkFailed:
@@ -301,21 +300,22 @@ void showDownloadDialog(
                 context.router.replaceAll([HomeRoute()]);
               } else {
                 if ((model.totalCount ?? 0) > 0) {
-                  context.read<BeneficiaryDownSyncBloc>().add(
-                        DownSyncBeneficiaryEvent(
-                          projectId: context.projectId,
-                          boundaryCode: model.boundary,
-                          // Batch Size need to be defined based on Internet speed.
-                          batchSize: model.batchSize ?? 1,
-                          initialServerCount: model.totalCount ?? 0,
-                          boundaryName: model.boundaryName,
-                        ),
-                      );
-                } else {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  context.read<BeneficiaryDownSyncBloc>().add(
-                        const DownSyncResetStateEvent(),
-                      );
+                  if (isCommunityCreator) {
+                    context.read<BeneficiaryDownSyncBloc>().add(
+                          DownSyncOfClfBeneficiaryEvent(
+                              projectId: context.projectId,
+                              boundaryCode: model.boundary,
+                              batchSize: model.batchSize ?? 1,
+                              initialServerCount: model.totalCount ?? 0,
+                              boundaryName: model.boundaryName),
+                        );
+                  }
+                  if (isDistributor) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.read<BeneficiaryDownSyncBloc>().add(
+                          const DownSyncResetStateEvent(),
+                        );
+                  }
                 }
               }
             },

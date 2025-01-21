@@ -11,6 +11,7 @@ import 'package:sync_service/sync_service_lib.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
+import '../../data/repositories/remote/downsync.dart';
 import '../../models/downsync/downsync.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
@@ -23,20 +24,19 @@ class BeneficiaryDownSyncBloc
     extends Bloc<BeneficiaryDownSyncEvent, BeneficiaryDownSyncState> {
   final LocalRepository<IndividualModel, IndividualSearchModel>
       individualLocalRepository;
-  final RemoteRepository<DownsyncModel, DownsyncSearchModel>
-      downSyncRemoteRepository;
+  final DownsyncRemoteRepository downSyncRemoteRepository;
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
       downSyncLocalRepository;
   final BandwidthCheckRepository bandwidthCheckRepository;
   final LocalRepository<HouseholdModel, HouseholdSearchModel>
-  householdLocalRepository;
+      householdLocalRepository;
   final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-  householdMemberLocalRepository;
+      householdMemberLocalRepository;
   final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-  projectBeneficiaryLocalRepository;
+      projectBeneficiaryLocalRepository;
   final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
   final LocalRepository<SideEffectModel, SideEffectSearchModel>
-  sideEffectLocalRepository;
+      sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
       referralLocalRepository;
   BeneficiaryDownSyncBloc({
@@ -56,6 +56,8 @@ class BeneficiaryDownSyncBloc
     on(_handleDownSyncResetState);
     on(_handleDownSyncReport);
     on(_handleCheckBandWidth);
+    on(_handleClfTotalCount);
+    on(_handleDownSyncOfClf);
   }
 
   FutureOr<void> _handleDownSyncResetState(
@@ -267,6 +269,161 @@ class BeneficiaryDownSyncBloc
     final result = await downSyncLocalRepository.search(DownsyncSearchModel());
     emit(BeneficiaryDownSyncState.report(result));
   }
+
+  FutureOr<void> _handleDownSyncOfClf(DownSyncOfClfBeneficiaryEvent event,
+      BeneficiaryDownSyncEmitter emit) async {
+    emit(const BeneficiaryDownSyncState.loading(true));
+    double? diskSpace = 0;
+    diskSpace = await DiskSpace
+        .getFreeDiskSpace; // Returns the device available space in MB
+    // diskSpace in MB * 1000 comparison with serverTotalCount * 150KB * Number of entities * 2
+    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 150 * 2)) {
+      emit(const BeneficiaryDownSyncState.insufficientStorage());
+    } else {
+      try {
+        while (true) {
+          // Check each time, till the loop runs the offset, limit, totalCount, lastSyncTime from Local DB of DownSync Model
+          final existingDownSyncData =
+              await downSyncLocalRepository.search(DownsyncSearchModel(
+            locality: event.boundaryCode,
+          ));
+
+          int offset = existingDownSyncData.isEmpty
+              ? 0
+              : existingDownSyncData.first.offset ?? 0;
+          int totalCount = event.initialServerCount;
+          int? lastSyncedTime = existingDownSyncData.isEmpty
+              ? null
+              : existingDownSyncData.first.lastSyncedTime;
+
+          if (existingDownSyncData.isEmpty) {
+            await downSyncLocalRepository.create(DownsyncModel(
+              offset: offset,
+              limit: event.batchSize,
+              lastSyncedTime: lastSyncedTime,
+              totalCount: totalCount,
+              locality: event.boundaryCode,
+              boundaryName: event.boundaryName,
+            ));
+          }
+
+          if (offset < totalCount) {
+            emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
+
+            final downSyncResults = await downSyncRemoteRepository
+                .searchClfDownSync(DownsyncSearchModel(
+              locality: event.boundaryCode,
+              offset: offset,
+              limit: event.batchSize,
+              totalCount: totalCount,
+              tenantId: envConfig.variables.tenantId,
+              projectId: event.projectId,
+              lastSyncedTime: lastSyncedTime,
+              isDeleted: true,
+            ));
+
+            if (downSyncResults.isNotEmpty) {
+              final householdList = downSyncResults["Households"] as List;
+
+              householdList.forEach((e) async {
+                int memberOffset = 0;
+                while (true) {
+                  final memberData = await downSyncRemoteRepository
+                      .getMemberData(DownsyncSearchModel(
+                    locality: event.boundaryCode,
+                    offset: memberOffset,
+                    limit: event.batchSize,
+                    totalCount: totalCount,
+                    tenantId: envConfig.variables.tenantId,
+                    projectId: event.projectId,
+                    lastSyncedTime: lastSyncedTime,
+                    isDeleted: true,
+                    householdId: (e as HouseholdModel).id,
+                  ));
+
+                  if (memberData.isEmpty) break;
+                  memberData["Households"].add([e]);
+                  await SyncServiceSingleton()
+                      .entityMapper
+                      ?.writeToEntityDB(memberData, [
+                    individualLocalRepository,
+                    householdLocalRepository,
+                    householdMemberLocalRepository,
+                    projectBeneficiaryLocalRepository,
+                    taskLocalRepository,
+                    sideEffectLocalRepository,
+                    referralLocalRepository,
+                  ]);
+                  memberOffset += event.batchSize;
+                }
+              });
+            }
+
+            totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
+
+            await downSyncLocalRepository.update(DownsyncModel(
+              offset: offset + event.batchSize,
+              limit: event.batchSize,
+              lastSyncedTime: lastSyncedTime,
+              totalCount: totalCount,
+              locality: event.boundaryCode,
+              boundaryName: event.boundaryName,
+            ));
+          } else {
+            emit(const BeneficiaryDownSyncState.failed());
+            await LocalSecureStore.instance.setManualSyncTrigger(false);
+            break;
+          }
+        }
+      } catch (e) {
+        await LocalSecureStore.instance.setManualSyncTrigger(false);
+        emit(const BeneficiaryDownSyncState.failed());
+      }
+    }
+  }
+
+  FutureOr<void> _handleClfTotalCount(DownSyncCheckTotalCountEvent event,
+      BeneficiaryDownSyncEmitter emit) async {
+    if (event.pendingSyncCount > 0) {
+      emit(const BeneficiaryDownSyncState.loading(true));
+      emit(const BeneficiaryDownSyncState.pendingSync());
+    } else {
+      emit(const BeneficiaryDownSyncState.loading(true));
+      await LocalSecureStore.instance.setManualSyncTrigger(true);
+      final existingDownSyncData =
+          await downSyncLocalRepository.search(DownsyncSearchModel(
+        locality: event.boundaryCode,
+      ));
+
+      int? lastSyncedTime = existingDownSyncData.isEmpty
+          ? null
+          : existingDownSyncData.first.lastSyncedTime;
+
+      //To get the server totalCount
+      final initialResults =
+          await downSyncRemoteRepository.searchClfDownSync(DownsyncSearchModel(
+        locality: event.boundaryCode,
+        offset: existingDownSyncData.firstOrNull?.offset ?? 0,
+        limit: 1,
+        isDeleted: true,
+        lastSyncedTime: lastSyncedTime,
+        tenantId: envConfig.variables.tenantId,
+        projectId: event.projectId,
+      ));
+
+      if (initialResults.isNotEmpty) {
+        int serverTotalCount =
+            initialResults["Households"]["DownsyncCriteria"]["totalCount"];
+
+        emit(BeneficiaryDownSyncState.dataFound(
+            serverTotalCount, event.batchSize));
+      } else {
+        await LocalSecureStore.instance.setManualSyncTrigger(false);
+        emit(const BeneficiaryDownSyncState.resetState());
+        emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+      }
+    }
+  }
 }
 
 @freezed
@@ -279,6 +436,14 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required String boundaryName,
   }) = DownSyncBeneficiaryEvent;
 
+  const factory BeneficiaryDownSyncEvent.downSyncCLF({
+    required String projectId,
+    required String boundaryCode,
+    required int batchSize,
+    required int initialServerCount,
+    required String boundaryName,
+  }) = DownSyncOfClfBeneficiaryEvent;
+
   const factory BeneficiaryDownSyncEvent.checkForData({
     required String projectId,
     required String boundaryCode,
@@ -286,6 +451,14 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required int batchSize,
     required String boundaryName,
   }) = DownSyncCheckTotalCountEvent;
+
+  const factory BeneficiaryDownSyncEvent.checkForClf({
+    required String projectId,
+    required String boundaryCode,
+    required int pendingSyncCount,
+    required int batchSize,
+    required String boundaryName,
+  }) = DownSyncClfCheckTotalCountEvent;
 
   const factory BeneficiaryDownSyncEvent.getBatchSize({
     required List<AppConfiguration> appConfiguration,
