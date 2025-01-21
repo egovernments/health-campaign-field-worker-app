@@ -161,8 +161,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
-        connectivityResult.firstOrNull == ConnectivityResult.mobile;
+    final isOnline =
+        connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+            connectivityResult.firstOrNull == ConnectivityResult.mobile;
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
@@ -506,7 +507,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             dashboardRemoteRepository,
             dashboardActionPath.trim().isNotEmpty
                 ? dashboardActionPath
-                : '/dashboard-analytics/dashboard/getChartV2', //[TODO: To be added to MDMS Service registry
+                : '/dashboard-analytics/dashboard/getChartV2',
+            //[TODO: To be added to MDMS Service registry
             envConfig.variables.tenantId,
             event.model.id,
             userUUIDList,
