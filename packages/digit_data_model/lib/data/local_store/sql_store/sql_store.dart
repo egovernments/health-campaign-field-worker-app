@@ -108,11 +108,10 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 5; // Increment schema version
+  int get schemaVersion => 6; // Increment schema version
 
   @override
-  MigrationStrategy get migration =>
-      MigrationStrategy(
+  MigrationStrategy get migration => MigrationStrategy(
         onUpgrade: (migrator, from, to) async {
           if (from < 5) {
             //Add column for projectType in Project Table
@@ -173,6 +172,13 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             // Step 4: Rename the new table to the old table's name
             await customStatement(
                 'ALTER TABLE attributes_temp RENAME TO attributes;');
+          }
+
+          if (from < 6) {
+            try {
+              await migrator.addColumn(
+                  attendanceRegister, attendanceRegister.localityCode);
+            } catch (e) {}
           }
         },
       );

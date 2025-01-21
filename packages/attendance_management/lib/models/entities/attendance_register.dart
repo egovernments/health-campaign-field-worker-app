@@ -17,6 +17,7 @@ class AttendanceRegisterSearchModel extends EntitySearchModel
   final String? registerNumber;
   final String? status;
   final String? referenceId;
+  final String? localityCode;
   final String? serviceCode;
   final int? offSet;
   final int? limit;
@@ -30,6 +31,7 @@ class AttendanceRegisterSearchModel extends EntitySearchModel
     this.referenceId,
     this.offSet,
     this.limit,
+    this.localityCode,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -44,6 +46,7 @@ class AttendanceRegisterSearchModel extends EntitySearchModel
     this.referenceId,
     this.offSet,
     this.limit,
+    this.localityCode,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
@@ -57,6 +60,7 @@ class AttendanceRegisterModel extends EntityModel
   final String? tenantId;
   final String? registerNumber;
   final String? name;
+  final String? localityCode;
   final String? referenceId;
   final String? serviceCode;
   final String? status;
@@ -82,6 +86,7 @@ class AttendanceRegisterModel extends EntityModel
     this.nonRecoverableError = false,
     this.rowVersion,
     this.startDate,
+    this.localityCode,
     this.endDate,
     this.individualList,
     this.attendees,
