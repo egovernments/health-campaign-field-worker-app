@@ -826,6 +826,9 @@ class Complaints {
 
   String get validationRadioRequiredError =>
       'COMPLAINTS_VALIDATION_RADIO_REQUIRED_ERROR';
+
+  String get supervisorContactNumberMinLength =>
+      'COMPLAINTS_SUPERVISOR_NUMBER_MIN_LENGTH';
 }
 
 class SyncDialog {
