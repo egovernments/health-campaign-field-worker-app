@@ -301,6 +301,7 @@ void showDownloadDialog(BuildContext context,
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   if (isCommunityCreator) {
+                    Navigator.of(context, rootNavigator: true).pop();
                     context.read<BeneficiaryDownSyncBloc>().add(
                           DownSyncOfClfBeneficiaryEvent(
                               projectId: context.projectId,

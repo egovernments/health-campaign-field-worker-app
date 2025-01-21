@@ -71,7 +71,6 @@ class DownsyncRemoteRepository
     }
 
     final entityResponse = responseMap['Households'];
-    final DownsyncModel downSyncCriteria = entityResponse['DownsyncCriteria'];
 
     final household_map = entityResponse['HouseholdCountMap'] as List;
 

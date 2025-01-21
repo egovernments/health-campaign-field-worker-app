@@ -408,8 +408,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             ),
           ),
         if (value == DataModelType.downsync)
-          RepositoryProvider<
-              RemoteRepository<DownsyncModel, DownsyncSearchModel>>(
+          RepositoryProvider<DownsyncRemoteRepository>(
             create: (_) => DownsyncRemoteRepository(
               dio,
               actionMap: actions,

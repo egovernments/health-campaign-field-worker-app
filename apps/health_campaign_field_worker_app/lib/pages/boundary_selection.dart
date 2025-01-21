@@ -262,7 +262,26 @@ class _BoundarySelectionPageState
                                       boundaryCode,
                                       pendingSyncCount,
                                       boundaryName,
-                                    ) =>
+                                    ) {
+                                      if (isCommunityCreator) {
+                                        context
+                                            .read<BeneficiaryDownSyncBloc>()
+                                            .add(
+                                              DownSyncClfCheckTotalCountEvent(
+                                                projectId: context.projectId,
+                                                boundaryCode: selectedBoundary!
+                                                    .value!.code
+                                                    .toString(),
+                                                pendingSyncCount:
+                                                    pendingSyncCount,
+                                                boundaryName: selectedBoundary
+                                                    .value!.name
+                                                    .toString(),
+                                                batchSize: batchSize,
+                                              ),
+                                            );
+                                      }
+                                      if (isDistributor) {
                                         context
                                             .read<BeneficiaryDownSyncBloc>()
                                             .add(
@@ -278,7 +297,9 @@ class _BoundarySelectionPageState
                                                     .toString(),
                                                 batchSize: batchSize,
                                               ),
-                                            ),
+                                            );
+                                      }
+                                    },
                                     pendingSync: () => showDownloadDialog(
                                       context,
                                       model: DownloadBeneficiary(

@@ -382,7 +382,7 @@ class BeneficiaryDownSyncBloc
     }
   }
 
-  FutureOr<void> _handleClfTotalCount(DownSyncCheckTotalCountEvent event,
+  FutureOr<void> _handleClfTotalCount(DownSyncClfCheckTotalCountEvent event,
       BeneficiaryDownSyncEmitter emit) async {
     if (event.pendingSyncCount > 0) {
       emit(const BeneficiaryDownSyncState.loading(true));
