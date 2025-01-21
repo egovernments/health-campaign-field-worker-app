@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
@@ -56,9 +57,11 @@ class MarkAttendancePage extends LocalizedStatefulWidget {
 
 class _MarkAttendancePageState extends State<MarkAttendancePage> {
   bool isDialogOpen = false;
+  static const _commentKey = 'comment';
   Timer? _debounce;
   late TextEditingController controller;
   AttendanceIndividualBloc? individualLogBloc;
+  late FormGroup form;
 
   @override
   void initState() {
@@ -71,6 +74,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
       attendanceLogLocalRepository: context.read<
           LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(),
     );
+    form = buildForm(); // Initialize the form using your method
     super.initState();
   }
 
@@ -297,6 +301,31 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                             ),
                                           ),
                                   ]),
+                              DigitCard(
+                                margin:
+                                    EdgeInsets.all(theme.spacerTheme.spacer3),
+                                children: [
+                                  ReactiveForm(
+                                    formGroup: form,
+                                    child: ReactiveWrapperField(
+                                      formControlName: _commentKey,
+                                      builder: (field) => LabeledField(
+                                        label: localizations
+                                            .translate(i18.common.commentKey),
+                                        child: DigitTextFormInput(
+                                          errorMessage: field.errorText,
+                                          onChange: (value) {
+                                            form.control(_commentKey).value =
+                                                value;
+                                          },
+                                          initialValue:
+                                              form.control(_commentKey).value,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ],
                           );
                         },
@@ -471,14 +500,14 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             } else {
               if (type == EnumValues.draft.toValue()) {
                 individualLogBloc?.add(SaveAsDraftEvent(
-                  entryTime: widget.entryTime,
-                  exitTime: widget.exitTime,
-                  selectedDate: widget.dateTime,
-                  isSingleSession: widget.session == null,
-                  createOplog: type != EnumValues.draft.toValue(),
-                  latitude: latitude,
-                  longitude: longitude,
-                ));
+                    entryTime: widget.entryTime,
+                    exitTime: widget.exitTime,
+                    selectedDate: widget.dateTime,
+                    isSingleSession: widget.session == null,
+                    createOplog: type != EnumValues.draft.toValue(),
+                    latitude: latitude,
+                    longitude: longitude,
+                    comment: form.control(_commentKey).value));
                 Toast.showToast(
                   context,
                   message:
@@ -504,14 +533,15 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             size: DigitButtonSize.large,
                             onPressed: () {
                               individualLogBloc?.add(SaveAsDraftEvent(
-                                entryTime: widget.entryTime,
-                                exitTime: widget.exitTime,
-                                selectedDate: widget.dateTime,
-                                isSingleSession: widget.session == null,
-                                createOplog: type != EnumValues.draft.toValue(),
-                                latitude: latitude,
-                                longitude: longitude,
-                              ));
+                                  entryTime: widget.entryTime,
+                                  exitTime: widget.exitTime,
+                                  selectedDate: widget.dateTime,
+                                  isSingleSession: widget.session == null,
+                                  createOplog:
+                                      type != EnumValues.draft.toValue(),
+                                  latitude: latitude,
+                                  longitude: longitude,
+                                  comment: form.control(_commentKey).value));
                               Navigator.of(
                                 context,
                                 rootNavigator: true,
@@ -556,5 +586,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         },
       ),
     );
+  }
+
+  FormGroup buildForm() {
+    return fb.group(<String, Object>{
+      _commentKey: FormControl<String>(value: ""),
+    });
   }
 }
