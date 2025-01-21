@@ -141,9 +141,17 @@ class _HouseholdOverviewPageState
                                                   } else {
                                                     navigateToChecklist(
                                                         ctx,
-                                                        state
-                                                            .selectedIndividual!
-                                                            .clientReferenceId);
+                                                        RegistrationDeliverySingleton()
+                                                                    .beneficiaryType ==
+                                                                BeneficiaryType
+                                                                    .individual
+                                                            ? state
+                                                                .selectedIndividual!
+                                                                .clientReferenceId
+                                                            : state
+                                                                .householdMemberWrapper
+                                                                .household!
+                                                                .clientReferenceId);
                                                   }
                                                 });
                                           },
@@ -209,8 +217,17 @@ class _HouseholdOverviewPageState
                                                 } else {
                                                   navigateToChecklist(
                                                       ctx,
-                                                      state.selectedIndividual!
-                                                          .clientReferenceId);
+                                                      RegistrationDeliverySingleton()
+                                                                  .beneficiaryType ==
+                                                              BeneficiaryType
+                                                                  .individual
+                                                          ? state
+                                                              .selectedIndividual!
+                                                              .clientReferenceId
+                                                          : state
+                                                              .householdMemberWrapper
+                                                              .household!
+                                                              .clientReferenceId);
                                                 }
                                               });
                                         },

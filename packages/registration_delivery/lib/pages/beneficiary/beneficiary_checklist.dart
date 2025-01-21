@@ -84,7 +84,7 @@ class _BeneficiaryChecklistPageState
                         element.code.toString().contains(
                             '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                     .toList()
-                    .first;
+                    .firstOrNull;
 
                 initialAttributes = selectedServiceDefinition?.attributes;
                 if (!isControllersInitialized) {
@@ -168,7 +168,7 @@ class _BeneficiaryChecklistPageState
                                                 i18.common.coreCommonYes,
                                               ),
                                               onPressed: () {
-                                                selectedServiceDefinition = value
+                                                var eligibilityChecklist = value
                                                     .serviceDefinitionList
                                                     .where((element) => element
                                                         .code
@@ -176,24 +176,28 @@ class _BeneficiaryChecklistPageState
                                                         .contains(
                                                             '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                     .toList()
-                                                    .first;
+                                                    .firstOrNull;
 
-                                                if (selectedServiceDefinition !=
+                                                if (eligibilityChecklist !=
                                                     null) {
                                                   var decidedFlow =
                                                       assessEligibility(
                                                           selectedServiceDefinition!);
                                                   createSubmitRequest(
                                                       decidedFlow: decidedFlow);
-                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop();
                                                   navigateToDecidedFlow(
                                                       context, decidedFlow);
                                                 } else {
                                                   createSubmitRequest();
-                                                  Navigator.of(context).pop();
                                                   context.router.push(
                                                     DeliverInterventionRoute(),
                                                   );
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop();
                                                 }
                                               },
                                               type: DigitButtonType.primary,
@@ -205,7 +209,9 @@ class _BeneficiaryChecklistPageState
                                               onPressed: () {
                                                 createSubmitRequest();
 
-                                                Navigator.of(context).pop();
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop();
                                                 context.router.push(
                                                   RefusedDeliveryRoute(),
                                                 );
@@ -1024,7 +1030,7 @@ class _BeneficiaryChecklistPageState
                 DateTime.now().toLocal().millisecondsSinceEpoch,
                 dateFormat: Constants.checklistViewDateFormat,
               ),
-              tenantId: selectedServiceDefinition!.tenantId,
+              tenantId: selectedServiceDefinition?.tenantId,
               clientId: widget.beneficiaryClientRefId.toString(),
               serviceDefId: selectedServiceDefinition?.id,
               attributes: attributes,

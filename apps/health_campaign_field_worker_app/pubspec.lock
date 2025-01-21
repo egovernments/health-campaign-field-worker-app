@@ -339,10 +339,9 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      name: closed_household
-      sha256: d3e78f1a1f65a88b695d37d4fbf217cd3e259c8fdb11402dfb821225a11726c2
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/closed_household"
+      relative: true
+    source: path
     version: "1.0.3"
   code_builder:
     dependency: transitive
