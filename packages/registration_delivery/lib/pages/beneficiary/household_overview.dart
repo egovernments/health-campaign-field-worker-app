@@ -124,18 +124,26 @@ class _HouseholdOverviewPageState
                                                 serviceDefinitionFetch:
                                                     (value, model) {
                                                   if (value
-                                                      .where((element) => element
-                                                          .code
-                                                          .toString()
-                                                          .contains(
-                                                              '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
+                                                      .where((element) =>
+                                                          element.code
+                                                              .toString()
+                                                              .contains(
+                                                                  '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                          element.code
+                                                              .toString()
+                                                              .contains(
+                                                                  '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                       .toList()
                                                       .isEmpty) {
                                                     context.router.push(
                                                       DeliverInterventionRoute(),
                                                     );
                                                   } else {
-                                                    navigateToChecklist(ctx);
+                                                    navigateToChecklist(
+                                                        ctx,
+                                                        state
+                                                            .selectedIndividual!
+                                                            .clientReferenceId);
                                                   }
                                                 });
                                           },
@@ -184,18 +192,25 @@ class _HouseholdOverviewPageState
                                               serviceDefinitionFetch:
                                                   (value, model) {
                                                 if (value
-                                                    .where((element) => element
-                                                        .code
-                                                        .toString()
-                                                        .contains(
-                                                            '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
+                                                    .where((element) =>
+                                                        element.code
+                                                            .toString()
+                                                            .contains(
+                                                                '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                        element.code
+                                                            .toString()
+                                                            .contains(
+                                                                '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                     .toList()
                                                     .isEmpty) {
                                                   context.router.push(
                                                     DeliverInterventionRoute(),
                                                   );
                                                 } else {
-                                                  navigateToChecklist(ctx);
+                                                  navigateToChecklist(
+                                                      ctx,
+                                                      state.selectedIndividual!
+                                                          .clientReferenceId);
                                                 }
                                               });
                                         },
@@ -864,7 +879,9 @@ class _HouseholdOverviewPageState
     return {'textLabel': textLabel, 'color': color, 'icon': icon};
   }
 
-  void navigateToChecklist(BuildContext ctx) async {
-    await context.router.push(BeneficiaryChecklistRoute());
+  void navigateToChecklist(
+      BuildContext ctx, String beneficiaryClientRefId) async {
+    await context.router.push(BeneficiaryChecklistRoute(
+        beneficiaryClientRefId: beneficiaryClientRefId));
   }
 }
