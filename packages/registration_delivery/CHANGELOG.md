@@ -1,3 +1,7 @@
+## 1.0.5+3
+
+* Added Eligibility checklist
+
 ## 1.0.5+2
 
 * Action label and status change with projectType

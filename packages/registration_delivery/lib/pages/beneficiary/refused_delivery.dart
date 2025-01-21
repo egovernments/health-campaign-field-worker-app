@@ -163,96 +163,112 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                     slivers: [
                       SliverToBoxAdapter(
                         child: DigitCard(
-                          margin: const EdgeInsets.all(spacer2),
+                            margin: const EdgeInsets.all(spacer2),
                             children: [
-                          Text(
-                            localizations.translate(
-                              i18.deliverIntervention.refusedDeliveryLabel,
-                            ),
-                            style: textTheme.headingXl,
-                          ),
-                          refusedDeliveryShowcaseData.dateOfVisit.buildWith(
-                            child: ReactiveWrapperField(
-                              formControlName: _dataOfRefusalKey,
-                              builder: (field) => LabeledField(
-                                label: localizations.translate(
-                                  i18.deliverIntervention
-                                      .refusedDeliveryVisitDateLabel,
+                              Text(
+                                localizations.translate(
+                                  RegistrationDeliverySingleton()
+                                          .projectType!
+                                          .code
+                                          .toString() +
+                                      i18.deliverIntervention
+                                          .refusedDeliveryLabel,
                                 ),
-                                child: DigitDateFormInput(
-                                  readOnly: true,
-                                  confirmText: localizations.translate(
-                                    i18.common.coreCommonOk,
+                                style: textTheme.headingXl,
+                              ),
+                              refusedDeliveryShowcaseData.dateOfVisit.buildWith(
+                                child: ReactiveWrapperField(
+                                  formControlName: _dataOfRefusalKey,
+                                  builder: (field) => LabeledField(
+                                    label: localizations.translate(
+                                      i18.deliverIntervention
+                                          .refusedDeliveryVisitDateLabel,
+                                    ),
+                                    child: DigitDateFormInput(
+                                      readOnly: true,
+                                      confirmText: localizations.translate(
+                                        i18.common.coreCommonOk,
+                                      ),
+                                      cancelText: localizations.translate(
+                                        i18.common.coreCommonCancel,
+                                      ),
+                                      initialValue: DateFormat('dd MMM yyyy')
+                                          .format(form
+                                              .control(_dataOfRefusalKey)
+                                              .value),
+                                    ),
                                   ),
-                                  cancelText: localizations.translate(
-                                    i18.common.coreCommonCancel,
-                                  ),
-                                  initialValue: DateFormat('dd MMM yyyy')
-                                      .format(form
-                                          .control(_dataOfRefusalKey)
-                                          .value),
                                 ),
                               ),
-                            ),
-                          ),
-                          refusedDeliveryShowcaseData.reasonOfRefusal.buildWith(
-                            child: SelectionCard<String>(
-                              title: localizations.translate(
-                                i18.deliverIntervention.reasonForRefusalLabel,
-                              ),
-                              showParentContainer: true,
-                              isRequired: true,
-                              width: MediaQuery.of(context).size.width * .34,
-                              allowMultipleSelection: false,
-                              options: RegistrationDeliverySingleton()
-                                      .refusalReasons ??
-                                  [],
-                              onSelectionChanged: (value) {
-                                form.control(_reasonOfRefusal).markAsTouched();
-                                setState(() {
-                                  if (value.isNotEmpty) {
-                                    form.control(_reasonOfRefusal).value =
-                                        value.first;
-                                  } else {
-                                    form.control(_reasonOfRefusal).value = null;
+                              refusedDeliveryShowcaseData.reasonOfRefusal
+                                  .buildWith(
+                                child: SelectionCard<String>(
+                                  title: localizations.translate(
+                                    RegistrationDeliverySingleton()
+                                            .projectType!
+                                            .code
+                                            .toString() +
+                                        i18.deliverIntervention
+                                            .reasonForRefusalLabel,
+                                  ),
+                                  showParentContainer: true,
+                                  isRequired: true,
+                                  width:
+                                      MediaQuery.of(context).size.width * .34,
+                                  allowMultipleSelection: false,
+                                  options: RegistrationDeliverySingleton()
+                                          .refusalReasons ??
+                                      [],
+                                  onSelectionChanged: (value) {
+                                    form
+                                        .control(_reasonOfRefusal)
+                                        .markAsTouched();
                                     setState(() {
-                                      form
-                                          .control(_reasonOfRefusal)
-                                          .setErrors({'': true});
+                                      if (value.isNotEmpty) {
+                                        form.control(_reasonOfRefusal).value =
+                                            value.first;
+                                      } else {
+                                        form.control(_reasonOfRefusal).value =
+                                            null;
+                                        setState(() {
+                                          form
+                                              .control(_reasonOfRefusal)
+                                              .setErrors({'': true});
+                                        });
+                                      }
                                     });
-                                  }
-                                });
-                              },
-                              valueMapper: (value) {
-                                return localizations
-                                    .translate('REASON_${value.toString()}');
-                              },
-                              errorMessage: form
-                                          .control(_reasonOfRefusal)
-                                          .hasErrors &&
-                                      form.control(_reasonOfRefusal).touched
-                                  ? localizations
-                                      .translate(i18.common.corecommonRequired)
-                                  : null,
-                            ),
-                          ),
-                          refusedDeliveryShowcaseData.comments.buildWith(
-                            child: ReactiveWrapperField(
-                              formControlName: _deliveryCommentKey,
-                              builder: (field) => LabeledField(
-                                label: localizations.translate(i18
-                                    .deliverIntervention
-                                    .reasonForRefusalCommentLabel),
-                                child: DigitTextFormInput(
-                                  onChange: (value) {
-                                    form.control(_deliveryCommentKey).value =
-                                        value;
                                   },
+                                  valueMapper: (value) {
+                                    return localizations.translate(
+                                        'REASON_${value.toString()}');
+                                  },
+                                  errorMessage: form
+                                              .control(_reasonOfRefusal)
+                                              .hasErrors &&
+                                          form.control(_reasonOfRefusal).touched
+                                      ? localizations.translate(
+                                          i18.common.corecommonRequired)
+                                      : null,
                                 ),
                               ),
-                            ),
-                          ),
-                        ]),
+                              refusedDeliveryShowcaseData.comments.buildWith(
+                                child: ReactiveWrapperField(
+                                  formControlName: _deliveryCommentKey,
+                                  builder: (field) => LabeledField(
+                                    label: localizations.translate(i18
+                                        .deliverIntervention
+                                        .reasonForRefusalCommentLabel),
+                                    child: DigitTextFormInput(
+                                      onChange: (value) {
+                                        form
+                                            .control(_deliveryCommentKey)
+                                            .value = value;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ]),
                       ),
                     ],
                   );
