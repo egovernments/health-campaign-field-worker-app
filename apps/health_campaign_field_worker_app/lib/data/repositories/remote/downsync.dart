@@ -13,12 +13,10 @@ class DownsyncRemoteRepository
     super.entityName = 'Downsync',
   });
 
-  @override
-  String get searchPath => actionMap[ApiOperation.search]?[0] ?? '';
+  String get searchClfPath => actionMap[ApiOperation.clfSearch] ?? '';
 
-  String get searchClfPath => actionMap[ApiOperation.search]?[1] ?? '';
-
-  String get searchClfMemberData => actionMap[ApiOperation.search]?[2] ?? '';
+  String get searchClfMemberData =>
+      actionMap[ApiOperation.clfMemberSearch] ?? '';
 
   @override
   DataModelType get type => DataModelType.downsync;

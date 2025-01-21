@@ -126,5 +126,7 @@ enum ApiOperation {
   bulkCreate,
   bulkUpdate,
   bulkDelete,
-  singleCreate
+  singleCreate,
+  clfSearch,
+  clfMemberSearch
 }
