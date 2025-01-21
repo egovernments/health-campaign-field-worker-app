@@ -733,6 +733,13 @@ class CustomDeliverInterventionPageState
                                                       i18.deliverIntervention
                                                           .deliveryCommentLabel,
                                                     ),
+                                                    validationMessages: {
+                                                      'sizeLessThan2': (object) =>
+                                                          localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .min3CharsRequired),
+                                                    },
                                                   ),
                                                 ],
                                               ),
@@ -1068,7 +1075,10 @@ class CustomDeliverInterventionPageState
                     .value
                 : ''
             : null,
-        validators: [],
+        validators: [
+          Validators.delegate(
+              (validator) => CustomValidator.sizeLessThan2(validator))
+        ],
       ),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
         [

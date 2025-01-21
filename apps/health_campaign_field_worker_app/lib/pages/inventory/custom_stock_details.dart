@@ -20,6 +20,8 @@ import '../../../widgets/localized.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
+import 'package:registration_delivery/utils/utils.dart'
+    as CustomValidatorRegistration;
 
 import '../../utils/i18_key_constants.dart' as i18_local;
 import '../custom_qr_scanner.dart';
@@ -84,20 +86,25 @@ class CustomStockDetailsPageState
       _balesQuantityKey: FormControl<int>(
         validators: [],
       ),
-      _commentsKey: FormControl<String>(),
+      _commentsKey: FormControl<String>(
+        validators: [
+          Validators.delegate((validator) =>
+              registration_utils.CustomValidator.sizeLessThan2(validator))
+        ],
+      ),
       _deliveryTeamKey: FormControl<String>(
         validators: deliveryTeamSelected ? [Validators.required] : [],
       ),
       _manualScanCommentsKey: FormControl<String>(
         validators: [
           Validators.delegate((validator) =>
-              registration_utils.CustomValidator.requiredMin(validator))
+              registration_utils.CustomValidator.sizeLessThan2(validator))
         ],
       ),
       _baleMismatchCommentsKey: FormControl<String>(
         validators: [
           Validators.delegate((validator) =>
-              registration_utils.CustomValidator.requiredMin(validator))
+              registration_utils.CustomValidator.sizeLessThan2(validator))
         ],
       )
     });
@@ -1459,6 +1466,11 @@ class CustomStockDetailsPageState
                                   minLines: 2,
                                   maxLines: 3,
                                   formControlName: _commentsKey,
+                                  validationMessages: {
+                                    'sizeLessThan2': (object) =>
+                                        localizations.translate(
+                                            i18_local.common.min3CharsRequired),
+                                  },
                                 ),
 
                                 // todo not yet confirmed if needed or not for issue flow
@@ -1657,10 +1669,9 @@ class CustomStockDetailsPageState
                                           localizations.translate(
                                             i18.common.corecommonRequired,
                                           ),
-                                      "min2": (object) =>
-                                          localizations.translate(
-                                            i18.common.min2CharsRequired,
-                                          ),
+                                      'sizeLessThan2': (object) =>
+                                          localizations.translate(i18_local
+                                              .common.min3CharsRequired),
                                     },
                                   ),
                                 if ([
@@ -1680,10 +1691,9 @@ class CustomStockDetailsPageState
                                           localizations.translate(
                                             i18.common.corecommonRequired,
                                           ),
-                                      "min2": (object) =>
-                                          localizations.translate(
-                                            i18.common.min2CharsRequired,
-                                          ),
+                                      'sizeLessThan2': (object) =>
+                                          localizations.translate(i18_local
+                                              .common.min3CharsRequired),
                                     },
                                   ),
                               ],
