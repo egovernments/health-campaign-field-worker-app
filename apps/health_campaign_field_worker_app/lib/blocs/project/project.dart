@@ -165,8 +165,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadOnline(ProjectEmitter emit) async {
-    final batchSize = await _getBatchSize();
-
     final userObject = await localSecureStore.userRequestModel;
     final uuid = userObject?.uuid;
 
@@ -551,25 +549,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: false,
       syncError: null,
     ));
-  }
-
-  FutureOr<int> _getBatchSize() async {
-    try {
-      final configs = await isar.appConfigurations.where().findAll();
-
-      final double speed = await bandwidthCheckRepository.pingBandwidthCheck(
-        bandWidthCheckModel: null,
-      );
-
-      int configuredBatchSize = getBatchSizeToBandwidth(
-        speed,
-        configs,
-        isDownSync: true,
-      );
-      return configuredBatchSize;
-    } catch (e) {
-      rethrow;
-    }
   }
 }
 
