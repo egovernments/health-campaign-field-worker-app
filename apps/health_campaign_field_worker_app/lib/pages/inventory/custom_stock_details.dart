@@ -1301,6 +1301,11 @@ class CustomStockDetailsPageState
                                 Visibility(
                                   visible: true,
                                   child: DigitTextFormField(
+                                    readOnly: [
+                                      StockRecordEntryType.receipt,
+                                      StockRecordEntryType.dispatch,
+                                      StockRecordEntryType.returned
+                                    ].contains(entryType),
                                     label: localizations.translate(
                                       i18.stockReconciliationDetails
                                           .teamCodeLabel,
