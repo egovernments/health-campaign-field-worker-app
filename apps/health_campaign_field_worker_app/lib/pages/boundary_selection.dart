@@ -429,7 +429,7 @@ class _BoundarySelectionPageState
                                         i18.beneficiaryDetails.downloadedon,
                                       )} $date\n${localizations.translate(
                                         i18.beneficiaryDetails.recordsdownload,
-                                      )} ${result.totalCount}/${result.totalCount}";
+                                      )} ${result.totalCount! + result.clfTotalCount!}/${result.totalCount! + result.clfTotalCount!}";
                                       Navigator.of(
                                         context,
                                         rootNavigator: true,

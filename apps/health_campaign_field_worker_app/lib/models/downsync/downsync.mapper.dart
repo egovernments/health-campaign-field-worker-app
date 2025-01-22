@@ -251,6 +251,12 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
   static int? _$offset(DownsyncModel v) => v.offset;
   static const Field<DownsyncModel, int> _f$offset =
       Field('offset', _$offset, opt: true);
+  static int? _$clfOffset(DownsyncModel v) => v.clfOffset;
+  static const Field<DownsyncModel, int> _f$clfOffset =
+      Field('clfOffset', _$clfOffset, opt: true);
+  static int? _$clfTotalCount(DownsyncModel v) => v.clfTotalCount;
+  static const Field<DownsyncModel, int> _f$clfTotalCount =
+      Field('clfTotalCount', _$clfTotalCount, opt: true);
   static int? _$limit(DownsyncModel v) => v.limit;
   static const Field<DownsyncModel, int> _f$limit =
       Field('limit', _$limit, opt: true);
@@ -293,6 +299,8 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
     #locality: _f$locality,
     #projectId: _f$projectId,
     #offset: _f$offset,
+    #clfOffset: _f$clfOffset,
+    #clfTotalCount: _f$clfTotalCount,
     #limit: _f$limit,
     #lastSyncedTime: _f$lastSyncedTime,
     #totalCount: _f$totalCount,
@@ -322,6 +330,8 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
         locality: data.dec(_f$locality),
         projectId: data.dec(_f$projectId),
         offset: data.dec(_f$offset),
+        clfOffset: data.dec(_f$clfOffset),
+        clfTotalCount: data.dec(_f$clfTotalCount),
         limit: data.dec(_f$limit),
         lastSyncedTime: data.dec(_f$lastSyncedTime),
         totalCount: data.dec(_f$totalCount),
@@ -401,6 +411,8 @@ abstract class DownsyncModelCopyWith<$R, $In extends DownsyncModel, $Out>
       String? locality,
       String? projectId,
       int? offset,
+      int? clfOffset,
+      int? clfTotalCount,
       int? limit,
       int? lastSyncedTime,
       int? totalCount,
@@ -441,6 +453,8 @@ class _DownsyncModelCopyWithImpl<$R, $Out>
           Object? locality = $none,
           Object? projectId = $none,
           Object? offset = $none,
+          Object? clfOffset = $none,
+          Object? clfTotalCount = $none,
           Object? limit = $none,
           Object? lastSyncedTime = $none,
           Object? totalCount = $none,
@@ -457,6 +471,8 @@ class _DownsyncModelCopyWithImpl<$R, $Out>
         if (locality != $none) #locality: locality,
         if (projectId != $none) #projectId: projectId,
         if (offset != $none) #offset: offset,
+        if (clfOffset != $none) #clfOffset: clfOffset,
+        if (clfTotalCount != $none) #clfTotalCount: clfTotalCount,
         if (limit != $none) #limit: limit,
         if (lastSyncedTime != $none) #lastSyncedTime: lastSyncedTime,
         if (totalCount != $none) #totalCount: totalCount,
@@ -478,6 +494,8 @@ class _DownsyncModelCopyWithImpl<$R, $Out>
       locality: data.get(#locality, or: $value.locality),
       projectId: data.get(#projectId, or: $value.projectId),
       offset: data.get(#offset, or: $value.offset),
+      clfOffset: data.get(#clfOffset, or: $value.clfOffset),
+      clfTotalCount: data.get(#clfTotalCount, or: $value.clfTotalCount),
       limit: data.get(#limit, or: $value.limit),
       lastSyncedTime: data.get(#lastSyncedTime, or: $value.lastSyncedTime),
       totalCount: data.get(#totalCount, or: $value.totalCount),

@@ -199,6 +199,10 @@ class BeneficiaryDownSyncBloc
               ? 0
               : existingDownSyncData.first.offset ?? 0;
 
+          int clfOffset = existingDownSyncData.isEmpty
+              ? 0
+              : existingDownSyncData.first.clfOffset ?? 0;
+
           int totalCount = event.initialServerCount;
 
           int clfTotalCount = event.clfServerCount;
@@ -210,9 +214,11 @@ class BeneficiaryDownSyncBloc
           if (existingDownSyncData.isEmpty) {
             await downSyncLocalRepository.create(DownsyncModel(
               offset: offset,
+              clfOffset: clfOffset,
               limit: event.batchSize,
               lastSyncedTime: lastSyncedTime,
               totalCount: totalCount,
+              clfTotalCount: clfTotalCount,
               locality: event.boundaryCode,
               boundaryName: event.boundaryName,
             ));
@@ -262,13 +268,13 @@ class BeneficiaryDownSyncBloc
             }
           }
 
-          if (event.isCommunityCreator && offset < clfTotalCount) {
+          if (event.isCommunityCreator && clfOffset < clfTotalCount) {
             flag = true;
 
             final downSyncResults = await downSyncRemoteRepository
                 .searchClfDownSync(DownsyncSearchModel(
               locality: event.boundaryCode,
-              offset: offset,
+              offset: clfOffset,
               limit: event.batchSize,
               totalCount: clfTotalCount,
               tenantId: envConfig.variables.tenantId,
@@ -292,7 +298,7 @@ class BeneficiaryDownSyncBloc
                     locality: event.boundaryCode,
                     offset: memberOffset,
                     limit: event.batchSize,
-                    totalCount: totalCount,
+                    totalCount: clfTotalCount,
                     tenantId: envConfig.variables.tenantId,
                     projectId: event.projectId,
                     lastSyncedTime: lastSyncedTime,
@@ -304,7 +310,6 @@ class BeneficiaryDownSyncBloc
                   if (memberData["Households"] == null) {
                     memberData["Households"] = [];
                     memberData["Households"].add(e);
-                    // e["householdType"] = HouseholdType.community;
                   }
                   await SyncServiceSingleton()
                       .entityMapper
@@ -335,16 +340,19 @@ class BeneficiaryDownSyncBloc
               existingDownSyncData.first.copyWith(
                 offset: 0,
                 limit: 0,
-                totalCount: clfTotalCount,
+                totalCount: totalCount,
+                clfTotalCount: clfTotalCount,
                 locality: event.boundaryCode,
                 boundaryName: event.boundaryName,
                 lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
               ),
             );
             final result = DownsyncModel(
-              offset: clfTotalCount + totalCount,
+              offset: totalCount,
+              clfOffset: clfTotalCount,
               lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
-              totalCount: clfTotalCount,
+              totalCount: totalCount,
+              clfTotalCount: clfTotalCount,
               locality: event.boundaryCode,
               boundaryName: event.boundaryName,
             );
@@ -353,10 +361,12 @@ class BeneficiaryDownSyncBloc
             break;
           } else {
             await downSyncLocalRepository.update(DownsyncModel(
-              offset: offset + event.batchSize,
+              offset: (totalCount != 0) ? offset + event.batchSize : 0,
+              clfOffset: (clfTotalCount != 0) ? clfOffset + event.batchSize : 0,
               limit: event.batchSize,
               lastSyncedTime: lastSyncedTime,
               totalCount: totalCount,
+              clfTotalCount: clfTotalCount,
               locality: event.boundaryCode,
               boundaryName: event.boundaryName,
             ));
