@@ -31,7 +31,7 @@ build_config="${build_config:-release}"
 #   env_list=("$env")
 # fi
 
-./tools/install_bricks.sh
+# ./tools/install_bricks.sh
 
 cd "$APP_DIR" || exit
 
