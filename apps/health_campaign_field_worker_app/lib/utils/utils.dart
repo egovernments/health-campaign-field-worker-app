@@ -299,24 +299,25 @@ void showDownloadDialog(BuildContext context,
                 Navigator.of(context, rootNavigator: true).pop();
                 context.router.replaceAll([HomeRoute()]);
               } else {
-                if ((model.totalCount ?? 0) > 0) {
-                  if (isCommunityCreator) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.read<BeneficiaryDownSyncBloc>().add(
-                          DownSyncOfClfBeneficiaryEvent(
-                              projectId: context.projectId,
-                              boundaryCode: model.boundary,
-                              batchSize: model.batchSize ?? 1,
-                              initialServerCount: model.totalCount ?? 0,
-                              boundaryName: model.boundaryName),
-                        );
-                  }
-                  if (isDistributor) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.read<BeneficiaryDownSyncBloc>().add(
-                          const DownSyncResetStateEvent(),
-                        );
-                  }
+                if ((model.totalCount ?? 0) > 0 ||
+                    (model.clfTotalCount ?? 0) > 0) {
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        DownSyncBeneficiaryEvent(
+                          projectId: context.projectId,
+                          boundaryCode: model.boundary,
+                          batchSize: model.batchSize ?? 1,
+                          initialServerCount: model.totalCount ?? 0,
+                          boundaryName: model.boundaryName,
+                          clfServerCount: model.clfTotalCount ?? 0,
+                          isCommunityCreator: isCommunityCreator,
+                          isDistributor: isDistributor,
+                        ),
+                      );
+                } else {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        const DownSyncResetStateEvent(),
+                      );
                 }
               }
             },
@@ -346,7 +347,7 @@ void showDownloadDialog(BuildContext context,
                 label: '',
                 prefixLabel: '',
                 suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
+                    '${(snapshot.data == null ? 0 : snapshot.data! * ((model.totalCount! + model.clfTotalCount!).toDouble().toInt()))}/${model.suffixLabel}',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,

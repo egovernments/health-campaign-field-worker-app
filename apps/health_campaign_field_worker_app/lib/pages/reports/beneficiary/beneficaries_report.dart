@@ -135,6 +135,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                   pendingSyncCount: pendingSyncCount,
                                   boundaryName: boundaryName,
                                   batchSize: batchSize,
+                                  isDistributor: isDistributor,
+                                  isCommunityCreator: isCommunityCreator,
                                 ),
                               ),
                       report: (downSyncCriteriaList) {
@@ -166,7 +168,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         isCommunityCreator: isCommunityCreator,
                         isDistributor: isDistributor,
                       ),
-                      dataFound: (initialServerCount, batchSize) =>
+                      dataFound: (initialServerCount, initialClfServerCount,
+                              batchSize) =>
                           showDownloadDialog(
                         context,
                         model: DownloadBeneficiary(
@@ -180,6 +183,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           boundary: selectedBoundary!.code.toString(),
                           batchSize: 5,
                           totalCount: initialServerCount,
+                          clfTotalCount: initialClfServerCount,
                           content: localizations.translate(
                             initialServerCount > 0
                                 ? i18.beneficiaryDetails.dataFoundContent
@@ -203,7 +207,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         isCommunityCreator: isCommunityCreator,
                         isDistributor: isDistributor,
                       ),
-                      inProgress: (syncCount, totalCount) {
+                      inProgress: (syncCount, totalCount, clfCount) {
                         downloadProgress.add(
                           min(
                             (syncCount) / (totalCount),
@@ -221,6 +225,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                 appConfiguartion: appConfiguration,
                                 syncCount: syncCount,
                                 totalCount: totalCount,
+                                clfTotalCount: clfCount,
                                 prefixLabel: syncCount.toString(),
                                 suffixLabel: totalCount.toString(),
                                 boundaryName: selectedBoundary!.name.toString(),

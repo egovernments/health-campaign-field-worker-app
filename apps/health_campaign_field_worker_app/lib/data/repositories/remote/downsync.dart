@@ -28,7 +28,8 @@ class DownsyncRemoteRepository
 
     Map<String, dynamic> finalResult = {
       "Households": [],
-      "DownsyncCriteria": {}
+      "DownsyncCriteria": {},
+      "numberOfMembers": []
     };
 
     Response response;
@@ -72,11 +73,15 @@ class DownsyncRemoteRepository
 
     final entityResponse = responseMap['Households'];
 
-    final household_map = entityResponse['HouseholdCountMap'] as List;
+    final householdMap = entityResponse['HouseholdCountMap'] as List;
 
     try {
-      household_map
-          .forEach((e) => finalResult["Household"].add(e['household']));
+      for (var item in householdMap) {
+        if (item is Map && item.containsKey('household')) {
+          finalResult["Households"].add(item['household']);
+          finalResult["numberOfMembers"].add(item['numberOfMembers']);
+        }
+      }
     } catch (e) {
       rethrow;
     }
