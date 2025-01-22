@@ -859,7 +859,11 @@ class CustomStockDetailsPageState
                                                     _driverNameKey,
                                                   )
                                                       .setValidators(
-                                                    [],
+                                                    [
+                                                      Validators.required,
+                                                      Validators.minLength(2),
+                                                      Validators.maxLength(200),
+                                                    ],
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
@@ -868,7 +872,11 @@ class CustomStockDetailsPageState
                                                     _waybillNumberKey,
                                                   )
                                                       .setValidators(
-                                                    [],
+                                                    [
+                                                      Validators.required,
+                                                      Validators.minLength(2),
+                                                      Validators.maxLength(200),
+                                                    ],
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
@@ -877,7 +885,12 @@ class CustomStockDetailsPageState
                                                     _waybillQuantityKey,
                                                   )
                                                       .setValidators(
-                                                    [],
+                                                    [
+                                                      Validators.required,
+                                                      Validators.number(),
+                                                      Validators.min(0),
+                                                      Validators.max(maxCount),
+                                                    ],
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
@@ -886,7 +899,9 @@ class CustomStockDetailsPageState
                                                     _typeOfTransportKey,
                                                   )
                                                       .setValidators(
-                                                    [],
+                                                    [
+                                                      Validators.required,
+                                                    ],
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
@@ -895,7 +910,11 @@ class CustomStockDetailsPageState
                                                     _vehicleNumberKey,
                                                   )
                                                       .setValidators(
-                                                    [],
+                                                    [
+                                                      Validators.required,
+                                                      Validators.minLength(2),
+                                                      Validators.maxLength(200),
+                                                    ],
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
