@@ -123,7 +123,7 @@ class CustomStockDetailsPageState
     final theme = Theme.of(context);
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
-    final parser = GS1BarcodeParser.defaultParser();
+    // final parser = GS1BarcodeParser.defaultParser();
 
     return PopScope(
       onPopInvoked: (didPop) {
@@ -235,6 +235,7 @@ class CustomStockDetailsPageState
 
                       return ScrollableContent(
                         header: Column(children: [
+                          // Back Button
                           BackNavigationHelpHeaderWidget(
                             handleBack: () {
                               final stockState =
@@ -253,6 +254,7 @@ class CustomStockDetailsPageState
                           ),
                         ]),
                         enableFixedButton: true,
+                        // Submit Button
                         footer: DigitCard(
                           margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                           padding: const EdgeInsets.fromLTRB(
@@ -748,10 +750,12 @@ class CustomStockDetailsPageState
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
+                                //Title
                                 Text(
                                   localizations.translate(pageTitle),
                                   style: theme.textTheme.displayMedium,
                                 ),
+                                //Product Variant Dropdown Selection
                                 BlocBuilder<InventoryProductVariantBloc,
                                     InventoryProductVariantState>(
                                   builder: (context, state) {
@@ -766,29 +770,34 @@ class CustomStockDetailsPageState
                                         )),
                                       ),
                                       fetched: (productVariants) {
-                                        return DigitReactiveDropdown<
-                                            ProductVariantModel>(
-                                          key: const Key(_productVariantKey),
-                                          formControlName: _productVariantKey,
-                                          label: localizations.translate(
-                                            module.selectProductLabel,
+                                        form.control(_productVariantKey).value =
+                                            productVariants.first;
+                                        return DisableWidget(
+                                          child: DigitReactiveDropdown<
+                                              ProductVariantModel>(
+                                            key: const Key(_productVariantKey),
+                                            formControlName: _productVariantKey,
+                                            label: localizations.translate(
+                                              module.selectProductLabel,
+                                            ),
+                                            isRequired: true,
+                                            valueMapper: (value) {
+                                              return localizations.translate(
+                                                value.sku ?? value.id,
+                                              );
+                                            },
+                                            menuItems: productVariants,
+                                            validationMessages: {
+                                              'required': (object) =>
+                                                  '${module.selectProductLabel}_IS_REQUIRED',
+                                            },
                                           ),
-                                          isRequired: true,
-                                          valueMapper: (value) {
-                                            return localizations.translate(
-                                              value.sku ?? value.id,
-                                            );
-                                          },
-                                          menuItems: productVariants,
-                                          validationMessages: {
-                                            'required': (object) =>
-                                                '${module.selectProductLabel}_IS_REQUIRED',
-                                          },
                                         );
                                       },
                                     );
                                   },
                                 ),
+                                //Product Return Reason
                                 if ([
                                   StockRecordEntryType.loss,
                                   StockRecordEntryType.damaged,
@@ -802,8 +811,9 @@ class CustomStockDetailsPageState
                                     formControlName: _transactionReasonKey,
                                     valueMapper: (value) =>
                                         localizations.translate(value),
-                                    isRequired: true,
+                                    // isRequired: true,
                                   ),
+                                //Product Facility
                                 BlocBuilder<FacilityBloc, FacilityState>(
                                   builder: (context, state) {
                                     return state.maybeWhen(
@@ -843,6 +853,7 @@ class CustomStockDetailsPageState
                                                   'Delivery Team') {
                                                 setState(() {
                                                   deliveryTeamSelected = true;
+
                                                   form
                                                       .control(
                                                     _driverNameKey,
@@ -898,7 +909,6 @@ class CustomStockDetailsPageState
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
-
                                                   form
                                                       .control(
                                                         _deliveryTeamKey,
@@ -909,6 +919,15 @@ class CustomStockDetailsPageState
                                                 setState(() {
                                                   deliveryTeamSelected = false;
                                                   if (isWareHouseMgr) {
+                                                    form
+                                                        .control(
+                                                      _deliveryTeamKey,
+                                                    )
+                                                        .setValidators(
+                                                      [],
+                                                      updateParent: true,
+                                                      autoValidate: true,
+                                                    );
                                                     form
                                                         .control(
                                                       _driverNameKey,
@@ -1234,7 +1253,7 @@ class CustomStockDetailsPageState
                                         });
                                   },
                                 ),
-
+                                //Bales Quantity
                                 if ([
                                   StockRecordEntryType.receipt,
                                   StockRecordEntryType.dispatch,
@@ -1264,6 +1283,7 @@ class CustomStockDetailsPageState
                                           ),
                                     },
                                   ),
+                                //Transaction Quantity
                                 DigitTextFormField(
                                   key: const Key(_transactionQuantityKey),
                                   formControlName: _transactionQuantityKey,
@@ -1297,15 +1317,16 @@ class CustomStockDetailsPageState
                                     quantityCountLabel,
                                   ),
                                 ),
-
-                                Visibility(
-                                  visible: true,
+                                //Delivery Team
+                                AbsorbPointer(
+                                  absorbing: !deliveryTeamSelected,
                                   child: DigitTextFormField(
-                                    readOnly: [
-                                      StockRecordEntryType.receipt,
-                                      StockRecordEntryType.dispatch,
-                                      StockRecordEntryType.returned
-                                    ].contains(entryType),
+                                    readOnly: !deliveryTeamSelected,
+                                    // [
+                                    //   StockRecordEntryType.receipt,
+                                    //   StockRecordEntryType.dispatch,
+                                    //   StockRecordEntryType.returned
+                                    // ].contains(entryType),
                                     label: localizations.translate(
                                       i18.stockReconciliationDetails
                                           .teamCodeLabel,
@@ -1359,11 +1380,13 @@ class CustomStockDetailsPageState
                                     formControlName: _deliveryTeamKey,
                                   ),
                                 ),
+                                //Waybill Number
                                 DigitTextFormField(
                                     key: const Key(_waybillNumberKey),
                                     label: localizations.translate(
                                       i18.stockDetails.waybillNumberLabel,
                                     ),
+                                    isRequired: true,
                                     formControlName: _waybillNumberKey,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
@@ -1379,12 +1402,13 @@ class CustomStockDetailsPageState
                                               i18.common.min2CharsRequired)
                                           .replaceAll('{}', ''),
                                     }),
-
+                                //Quantity of Products on Waybill
                                 DigitTextFormField(
                                     label: localizations.translate(
                                       i18.stockDetails
                                           .quantityOfProductIndicatedOnWaybillLabel,
                                     ),
+                                    isRequired: true,
                                     formControlName: _waybillQuantityKey,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
@@ -1397,10 +1421,11 @@ class CustomStockDetailsPageState
                                       //       .value = 0;
                                       // } TODO: Check this condition
                                     }),
+                                //Transport Type
                                 transportTypes.isNotEmpty
                                     ? DigitReactiveDropdown<String>(
                                         key: const Key(_typeOfTransportKey),
-                                        isRequired: false,
+                                        isRequired: true,
                                         label: localizations.translate(
                                           i18.stockDetails.transportTypeLabel,
                                         ),
@@ -1426,6 +1451,7 @@ class CustomStockDetailsPageState
                                 const SizedBox(
                                   height: kPadding,
                                 ),
+                                //Stock Details Receipt
                                 if ([
                                   StockRecordEntryType.receipt,
                                   StockRecordEntryType.dispatch,
@@ -1436,7 +1462,7 @@ class CustomStockDetailsPageState
                                       i18_local.stockDetailsReceiptShowcase
                                           .driverName,
                                     ),
-                                    isRequired: false,
+                                    isRequired: true,
                                     formControlName: _driverNameKey,
                                     validationMessages: {
                                       'required': (object) =>
@@ -1453,6 +1479,7 @@ class CustomStockDetailsPageState
                                           .replaceAll('{}', ''),
                                     },
                                   ),
+                                //Vehicle Number
                                 if ([
                                   StockRecordEntryType.receipt,
                                   StockRecordEntryType.dispatch,
@@ -1462,8 +1489,10 @@ class CustomStockDetailsPageState
                                     label: localizations.translate(
                                       i18.stockDetails.vehicleNumberLabel,
                                     ),
+                                    isRequired: true,
                                     formControlName: _vehicleNumberKey,
                                   ),
+                                //Comments
                                 DigitTextFormField(
                                   label: localizations.translate(
                                     i18.stockDetails.commentsLabel,
@@ -1749,5 +1778,19 @@ class CustomStockDetailsPageState
       }
     }
     return AdditionalField(keys.join('|'), values.join('|'));
+  }
+}
+
+class DisableWidget extends StatelessWidget {
+  final bool disable;
+  final Widget child;
+  const DisableWidget({super.key, this.disable = true, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return AbsorbPointer(
+      absorbing: disable,
+      child: Opacity(opacity: disable ? 0.5 : 1, child: child),
+    );
   }
 }
