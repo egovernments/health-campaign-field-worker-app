@@ -5,8 +5,11 @@ import 'package:digit_dss/blocs/app_localization.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/data/remote/dashboard.dart';
 import 'package:digit_dss/models/entities/dashboard_request.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/digit_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
@@ -34,32 +37,28 @@ Widget buildMetric(
   int index,
   DashboardLocalization localizations,
 ) {
+  final theme = Theme.of(context);
+  final textTheme = theme.digitTextTheme(context);
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    mainAxisAlignment: MainAxisAlignment.start,
     mainAxisSize: MainAxisSize.max,
     children: [
       if (index > 2)
-        SizedBox(
-          width: MediaQuery.of(context).size.width / 3.6,
-          child: Divider(
-            indent: 0,
-            height: spacer1,
-            endIndent: 0,
-            thickness: 2,
-            color: DigitTheme.instance.mobileTheme.colorScheme.outline,
-          ),
-        ),
+        const DigitDivider(dividerOrientation: DividerOrientation.vertical,dividerType: DividerType.small),
       ConstrainedBox(
         constraints:
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 5),
         child: Text(
           value,
-          style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
+          style: textTheme.headingM.copyWith(
+            color: theme.colorTheme.primary.primary2,
+          ),
           maxLines: 2,
           textAlign: TextAlign.center,
         ),
       ),
+      const SizedBox(height: spacer2,),
       ConstrainedBox(
         constraints:
             BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 3.6),
@@ -70,7 +69,9 @@ Widget buildMetric(
               label,
             ),
             textAlign: TextAlign.center,
-            style: DigitTheme.instance.mobileTheme.textTheme.bodyMedium,
+            style: textTheme.bodyS.copyWith(
+              color: theme.colorTheme.text.secondary,
+            ),
           ),
         ),
       ),
