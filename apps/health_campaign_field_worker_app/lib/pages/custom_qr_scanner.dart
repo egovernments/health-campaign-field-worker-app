@@ -66,8 +66,10 @@ class _CustomDigitScannerPageState
 
   RegExp pattern = RegExp(r'^2025-00-48-\d{2}-\d{2}-\d{2}$');
   RegExp balePattern = RegExp(r'^\d{18}$');
+  late BuildContext currentContext;
   @override
   void initState() {
+    currentContext = context;
     initializeCameras();
     if (envConfig.variables.envType == EnvType.prod) {
       isTraining = false;
@@ -600,7 +602,7 @@ class _CustomDigitScannerPageState
 
   Future<void> _processImage(InputImage inputImage) async {
     await DigitScannerUtils().processImage(
-      context: context,
+      context: currentContext,
       inputImage: inputImage,
       canProcess: _canProcess,
       isBusy: _isBusy,
@@ -620,25 +622,27 @@ class _CustomDigitScannerPageState
   }
 
   Future<void> handleErrorWrapper(String message) async {
-    await DigitScannerUtils().handleError(
-      context: context,
-      message: message,
-      player: player,
-      result: result,
-      setStateCallback: () {
-        setState(() {
-          _canProcess = true;
-          _isBusy = false;
-        });
-      },
-      localizations: localizations,
-    );
+    if (currentContext.mounted) {
+      await DigitScannerUtils().handleError(
+        context: currentContext,
+        message: message,
+        player: player,
+        result: result,
+        setStateCallback: () {
+          setState(() {
+            _canProcess = true;
+            _isBusy = false;
+          });
+        },
+        localizations: localizations,
+      );
+    }
   }
 
   Future<void> storeCodeWrapper(String code) async {
     if (codes.length < widget.quantity) {
       await DigitScannerUtils().storeCode(
-        context: context,
+        context: currentContext,
         code: code,
         player: player,
         singleValue: widget.singleValue,
@@ -651,12 +655,12 @@ class _CustomDigitScannerPageState
       );
     } else {
       await DigitToast.show(
-        context,
+        currentContext,
         options: DigitToastOptions(
           localizations
               .translate(i18Local.deliverIntervention.bednetScanMoreThanCount),
           true,
-          Theme.of(context),
+          Theme.of(currentContext),
         ),
       );
       await Future.delayed(const Duration(seconds: 2));
@@ -665,7 +669,7 @@ class _CustomDigitScannerPageState
 
   Future<void> storeValueWrapper(GS1Barcode scanData) async {
     await DigitScannerUtils().storeValue(
-      context: context,
+      context: currentContext,
       scanData: scanData,
       player: player,
       updateResult: (newResult) {
