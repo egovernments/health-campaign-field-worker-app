@@ -157,6 +157,7 @@ class CustomIndividualDetailsPageState
                               theme,
                             ),
                           );
+                          return;
                         }
                         final userId =
                             RegistrationDeliverySingleton().loggedInUserUuid;
