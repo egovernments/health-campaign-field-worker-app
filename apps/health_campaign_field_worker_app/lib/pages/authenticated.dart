@@ -150,14 +150,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               .listen(
                             (event) {
                               if (!bloc.isClosed) {
-                                bloc.add(
-                                  SyncRefreshEvent(
-                                    userId,
-                                    SyncServiceSingleton()
-                                        .entityMapper!
-                                        .getSyncCount(event),
-                                  ),
-                                );
+                                triggerSyncRefreshEvent(bloc, userId, event);
                               }
                             },
                           );
@@ -171,14 +164,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               .listen(
                             (event) {
                               if (!bloc.isClosed) {
-                                bloc.add(
-                                  SyncRefreshEvent(
-                                    userId,
-                                    SyncServiceSingleton()
-                                        .entityMapper!
-                                        .getSyncCount(event),
-                                  ),
-                                );
+                                triggerSyncRefreshEvent(bloc, userId, event);
                               }
                             },
                           );
@@ -258,6 +244,16 @@ class AuthenticatedPageWrapper extends StatelessWidget {
             },
           );
         },
+      ),
+    );
+  }
+
+  void triggerSyncRefreshEvent(
+      SyncBloc bloc, String userId, List<OpLog> event) {
+    bloc.add(
+      SyncRefreshEvent(
+        userId,
+        SyncServiceSingleton().entityMapper!.getSyncCount(event),
       ),
     );
   }

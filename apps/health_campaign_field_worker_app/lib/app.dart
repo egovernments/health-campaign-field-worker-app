@@ -363,7 +363,7 @@ class MainApplicationState extends State<MainApplication>
                                 location: BannerLocation.topEnd,
                                 color: () {
                                   switch (envConfig.variables.envType) {
-                                    case EnvType.uat:
+                                    case EnvType.uat || EnvType.demo:
                                       return Colors.green;
                                     case EnvType.qa:
                                       return Colors.pink;

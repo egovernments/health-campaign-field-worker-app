@@ -166,8 +166,7 @@ class _ReferralReasonChecklistPreviewPageState
                                               localizations.translate(
                                                 item2?.code ?? '',
                                               ),
-                                              style:
-                                                  textTheme.headingXl,
+                                              style: textTheme.headingXl,
                                             ),
                                           ),
                                           ...(value2.attributes ?? [])
@@ -192,7 +191,8 @@ class _ReferralReasonChecklistPreviewPageState
                                                               .translate(
                                                             "${item2?.code ?? ''}.${e.attributeCode!}",
                                                           ),
-                                                          style: textTheme.headingS,
+                                                          style: textTheme
+                                                              .headingS,
                                                         ),
                                                       ),
                                                       Container(

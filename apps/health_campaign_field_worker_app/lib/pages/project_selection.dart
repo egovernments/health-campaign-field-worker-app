@@ -244,28 +244,35 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void triggerLocationTracking(ProjectModel project) async {
-    DateTime now = DateTime.now();
-    DateTime startAfterTimestamp =
-        project.startDateTime!.isBefore(now) ? now : project.startDateTime!;
-    DateTime endAfterTimestamp = project.endDateTime!;
-    Isar isar = await Constants().isar;
-    final appConfiguration = await isar.appConfigurations.where().findAll();
+    context.read<LocationBloc>().add(const LocationEvent.requestPermission());
+    var locationState = context.read<LocationBloc>().state;
 
-    if (endAfterTimestamp.isAfter(now)) {
-      triggerLocationTracker(
-        'com.digit.location_tracker',
-        startAfterTimestamp: startAfterTimestamp.millisecondsSinceEpoch,
-        locationUpdateInterval: 60 * 1000, // TODO: Read from config
-        stopAfterTimestamp: project.endDate ??
-            now.add(const Duration(hours: 8)).millisecondsSinceEpoch,
-      );
+    if (locationState.hasPermissions) {
+      DateTime now = DateTime.now();
+      DateTime startAfterTimestamp =
+          project.startDateTime!.isBefore(now) ? now : project.startDateTime!;
+      DateTime endAfterTimestamp = project.endDateTime!;
+      Isar isar = await Constants().isar;
+      final appConfiguration = await isar.appConfigurations.where().findAll();
 
-      if (mounted) {
-        LocationTrackerService().processLocationData(
-            interval: 120, // TODO: Read from config
-            createdBy: context.loggedInUserUuid,
-            isar: isar);
+      if (endAfterTimestamp.isAfter(now)) {
+        triggerLocationTracker(
+          'com.digit.location_tracker',
+          startAfterTimestamp: startAfterTimestamp.millisecondsSinceEpoch,
+          locationUpdateInterval: 60 * 1000, // TODO: Read from config
+          stopAfterTimestamp: project.endDate ??
+              now.add(const Duration(hours: 8)).millisecondsSinceEpoch,
+        );
+
+        if (mounted) {
+          LocationTrackerService().processLocationData(
+              interval: 120, // TODO: Read from config
+              createdBy: context.loggedInUserUuid,
+              isar: isar);
+        }
       }
+    } else {
+      context.read<LocationBloc>().add(const LocationEvent.requestPermission());
     }
   }
 }
