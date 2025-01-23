@@ -173,12 +173,12 @@ class AttendanceIndividualBloc
                       ? {
                           "latitude": event.latitude,
                           "longitude": event.longitude,
-                          if (event.comment != "") "comment": event.comment,
+                          if (event.comment!.isNotEmpty) "comment": event.comment,
                         }
                       : {
                           EnumValues.boundaryCode.toValue():
                               AttendanceSingleton().boundary?.code,
-                          if (event.comment != "") "comment": event.comment,
+                          if (event.comment!.isNotEmpty) "comment": event.comment,
                         },
                 ),
                 AttendanceLogModel(
@@ -202,12 +202,12 @@ class AttendanceIndividualBloc
                             EnumValues.longitude.toValue(): event.longitude,
                             EnumValues.boundaryCode.toValue():
                                 AttendanceSingleton().boundary?.code,
-                            if (event.comment != "") "comment": event.comment,
+                            if (event.comment!.isNotEmpty) "comment": event.comment,
                           }
                         : {
                             EnumValues.boundaryCode.toValue():
                                 AttendanceSingleton().boundary?.code,
-                            if (event.comment != "") "comment": event.comment,
+                            if (event.comment!.isNotEmpty) "comment": event.comment,
                           })
               ]);
             }
