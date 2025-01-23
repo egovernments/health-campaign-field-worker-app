@@ -32,7 +32,6 @@ class SurveyFormSingleton {
       required String loggedInIndividualId,
       required String loggedInUserUuid,
       required String appVersion,
-      required bool isHealthFacilityWorker,
       required Object roles}) {
     _projectId = projectId;
     _projectName = projectName;
