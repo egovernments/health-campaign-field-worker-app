@@ -1,3 +1,9 @@
+## 1.0.0+1
+
+* Modified ServiceSearchModel with relatedClientReferenceId and search query
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+
 ## 1.0.0
 
 * Upgrade to Flutter 3.22

@@ -1,5 +1,10 @@
 ## 1.0.3
 
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+
+## 1.0.3
+
 * Upgrade to Flutter 3.22
 * Updated digit_data_model, survey_form to latest version
 * Migrated to digit_ui_components
