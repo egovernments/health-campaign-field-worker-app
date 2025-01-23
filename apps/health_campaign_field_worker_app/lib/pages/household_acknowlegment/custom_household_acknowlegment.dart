@@ -42,23 +42,24 @@ class CustomHouseholdAcknowledgementPageState
                 i18.acknowledgementSuccess.acknowledgementLabelText,
               ),
               actions: [
-                // DigitButton(
-                //     label: localizations.translate(
-                //       i18.householdDetails.viewHouseHoldDetailsAction,
-                //     ),
-                //     isDisabled: !(widget.enableViewHousehold ?? false),
-                //     onPressed: () {
-                //       final wrapper = context
-                //           .read<HouseholdOverviewBloc>()
-                //           .state
-                //           .householdMemberWrapper;
+                if ((widget.enableViewHousehold ?? false))
+                  DigitButton(
+                      label: localizations.translate(
+                        i18.householdDetails.viewHouseHoldDetailsAction,
+                      ),
+                      isDisabled: !(widget.enableViewHousehold ?? false),
+                      onPressed: () {
+                        final wrapper = context
+                            .read<HouseholdOverviewBloc>()
+                            .state
+                            .householdMemberWrapper;
 
-                //       context.router.popAndPush(
-                //         BeneficiaryWrapperRoute(wrapper: wrapper),
-                //       );
-                //     },
-                //     type: DigitButtonType.primary,
-                //     size: DigitButtonSize.large),
+                        context.router.popAndPush(
+                          BeneficiaryWrapperRoute(wrapper: wrapper),
+                        );
+                      },
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large),
                 DigitButton(
                     label: localizations
                         .translate(i18.acknowledgementSuccess.actionLabelText),

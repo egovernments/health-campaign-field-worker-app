@@ -645,7 +645,7 @@ class _CustomDigitScannerPageState
 
   Future<void> storeCodeWrapper(String code) async {
     if (codes.length < widget.quantity) {
-      if (widget.scanType == ScanType.stock) {
+      if (widget.scanType == ScanType.stock && code.contains("||")) {
         code = code.split("||").last.trim();
       }
       await DigitScannerUtils().storeCode(
