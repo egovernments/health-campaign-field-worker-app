@@ -1382,6 +1382,7 @@ class CustomStockDetailsPageState
                                                     isGS1code: false,
                                                     singleValue: false,
                                                     manualEnabled: true,
+                                                    scanType: ScanType.stock,
                                                   ),
                                                   settings: const RouteSettings(
                                                       name: '/qr-scanner'),

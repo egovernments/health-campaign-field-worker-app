@@ -19,6 +19,8 @@ import '../utils/i18_key_constants.dart' as i18Local;
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/widgets/vision_detector_views/detector_view.dart';
 
+enum ScanType { stock, others }
+
 @RoutePage()
 class CustomDigitScannerPage extends LocalizedStatefulWidget {
   final bool singleValue;
@@ -26,6 +28,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
   final bool isGS1code;
   final bool isEditEnabled;
   final bool manualEnabled;
+  final ScanType scanType;
 
   const CustomDigitScannerPage({
     super.key,
@@ -35,6 +38,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
     this.singleValue = false,
     this.isEditEnabled = false,
     this.manualEnabled = true,
+    this.scanType = ScanType.others,
   });
 
   @override
@@ -641,6 +645,9 @@ class _CustomDigitScannerPageState
 
   Future<void> storeCodeWrapper(String code) async {
     if (codes.length < widget.quantity) {
+      if (widget.scanType == ScanType.stock) {
+        code = code.split("||").last.trim();
+      }
       await DigitScannerUtils().storeCode(
         context: currentContext,
         code: code,
