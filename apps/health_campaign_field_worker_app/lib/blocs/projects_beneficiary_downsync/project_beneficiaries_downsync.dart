@@ -119,6 +119,7 @@ class BeneficiaryDownSyncBloc
           ? null
           : existingDownSyncData.first.lastSyncedTime;
 
+      //Check if the event is for DISTRIBUTOR
       if (event.isDistributor) {
         //To get the server totalCount,
         final initialResults = await downSyncRemoteRepository.downSync(
@@ -133,6 +134,7 @@ class BeneficiaryDownSyncBloc
           ),
         );
 
+        //If API request failed, reset the State and emit a failure state
         if (initialResults.isEmpty) {
           await LocalSecureStore.instance.setManualSyncTrigger(false);
           emit(const BeneficiaryDownSyncState.resetState());
@@ -140,9 +142,11 @@ class BeneficiaryDownSyncBloc
           return;
         }
 
+        //Extract server total count
         serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
       }
 
+      //Check if the event is for COMMUNITY_CREATOR
       if (event.isCommunityCreator) {
         //To get the CLF server totalCount
         final initialResults = await downSyncRemoteRepository
@@ -156,6 +160,7 @@ class BeneficiaryDownSyncBloc
           projectId: event.projectId,
         ));
 
+        //If API request failed, reset the State and emit a failure state
         if (initialResults.isEmpty) {
           await LocalSecureStore.instance.setManualSyncTrigger(false);
           emit(const BeneficiaryDownSyncState.resetState());
@@ -163,9 +168,11 @@ class BeneficiaryDownSyncBloc
           return;
         }
 
+        //Extract clf total count
         clfServerCount = initialResults["DownsyncCriteria"]["totalCount"];
       }
 
+      // Emit a new state indicating that data has been found. Pass the server's total count, and clf total count
       emit(BeneficiaryDownSyncState.dataFound(
         serverTotalCount,
         clfServerCount,
@@ -224,10 +231,14 @@ class BeneficiaryDownSyncBloc
             ));
           }
 
+          //Flag to check if any API calls are made, if not then break out of loop
           bool flag = false;
+
           emit(BeneficiaryDownSyncState.inProgress(
               offset, totalCount, clfTotalCount));
 
+          //Check if logged in user has role DISTRIBUTOR and offset value is less than totalcount
+          //then make API call
           if (event.isDistributor && offset < totalCount) {
             flag = true;
             //Make the batch API call
@@ -268,9 +279,12 @@ class BeneficiaryDownSyncBloc
             }
           }
 
+          //Check if logged in user has role COMMUNITY_CREATOR and clfOffset value is less than clfTotalCount
+          //then make API call
           if (event.isCommunityCreator && clfOffset < clfTotalCount) {
             flag = true;
 
+            //Get households
             final downSyncResults = await downSyncRemoteRepository
                 .searchClfDownSync(DownsyncSearchModel(
               locality: event.boundaryCode,
@@ -289,6 +303,7 @@ class BeneficiaryDownSyncBloc
                   downSyncResults["numberOfMembers"] as List;
               int idx = 0;
 
+              //Get memberData for each household
               householdList.forEach((e) async {
                 int memberOffset = 0;
                 int memberCount = memberCountList[idx++];
@@ -336,6 +351,7 @@ class BeneficiaryDownSyncBloc
           }
 
           if (!flag) {
+            //Update DownSync result
             await downSyncLocalRepository.update(
               existingDownSyncData.first.copyWith(
                 offset: 0,

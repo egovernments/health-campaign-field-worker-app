@@ -21,6 +21,7 @@ class DownsyncRemoteRepository
   @override
   DataModelType get type => DataModelType.downsync;
 
+  //DownSync CLF household
   FutureOr<Map<String, dynamic>> searchClfDownSync(DownsyncSearchModel query,
       {int? offSet, int? limit}) async {
     int defaultBatchSize = limit ?? 100;
@@ -91,6 +92,7 @@ class DownsyncRemoteRepository
     return finalResult;
   }
 
+  //DownSync MemberData for each household
   FutureOr<Map<String, dynamic>> getMemberData(DownsyncSearchModel query,
       {int? offSet, int? limit}) async {
     Response response;
