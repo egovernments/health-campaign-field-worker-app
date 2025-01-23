@@ -123,6 +123,22 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDigitScannerRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDigitScannerRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDigitScannerPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          quantity: args.quantity,
+          isGS1code: args.isGS1code,
+          singleValue: args.singleValue,
+          isEditEnabled: args.isEditEnabled,
+          manualEnabled: args.manualEnabled,
+          scanType: args.scanType,
+        ),
+      );
+    },
     CustomDistributionSummaryReportDetailsRoute.name: (routeData) {
       final args =
           routeData.argsAs<CustomDistributionSummaryReportDetailsRouteArgs>(
@@ -157,6 +173,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CustomHouseHoldDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomHouseholdAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdAcknowledgementRouteArgs>(
+          orElse: () => const CustomHouseholdAcknowledgementRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
         ),
       );
     },
@@ -720,6 +748,75 @@ class CustomDeliverInterventionRouteArgs {
 }
 
 /// generated route for
+/// [CustomDigitScannerPage]
+class CustomDigitScannerRoute
+    extends PageRouteInfo<CustomDigitScannerRouteArgs> {
+  CustomDigitScannerRoute({
+    Key? key,
+    ScannerLocalization? appLocalizations,
+    required int quantity,
+    required bool isGS1code,
+    bool singleValue = false,
+    bool isEditEnabled = false,
+    bool manualEnabled = true,
+    ScanType scanType = ScanType.others,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDigitScannerRoute.name,
+          args: CustomDigitScannerRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            quantity: quantity,
+            isGS1code: isGS1code,
+            singleValue: singleValue,
+            isEditEnabled: isEditEnabled,
+            manualEnabled: manualEnabled,
+            scanType: scanType,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDigitScannerRoute';
+
+  static const PageInfo<CustomDigitScannerRouteArgs> page =
+      PageInfo<CustomDigitScannerRouteArgs>(name);
+}
+
+class CustomDigitScannerRouteArgs {
+  const CustomDigitScannerRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.quantity,
+    required this.isGS1code,
+    this.singleValue = false,
+    this.isEditEnabled = false,
+    this.manualEnabled = true,
+    this.scanType = ScanType.others,
+  });
+
+  final Key? key;
+
+  final ScannerLocalization? appLocalizations;
+
+  final int quantity;
+
+  final bool isGS1code;
+
+  final bool singleValue;
+
+  final bool isEditEnabled;
+
+  final bool manualEnabled;
+
+  final ScanType scanType;
+
+  @override
+  String toString() {
+    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, manualEnabled: $manualEnabled, scanType: $scanType}';
+  }
+}
+
+/// generated route for
 /// [CustomDistributionSummaryReportDetailsPage]
 class CustomDistributionSummaryReportDetailsRoute
     extends PageRouteInfo<CustomDistributionSummaryReportDetailsRouteArgs> {
@@ -833,6 +930,50 @@ class CustomHouseHoldDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomHouseHoldDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseholdAcknowledgementPage]
+class CustomHouseholdAcknowledgementRoute
+    extends PageRouteInfo<CustomHouseholdAcknowledgementRouteArgs> {
+  CustomHouseholdAcknowledgementRoute({
+    Key? key,
+    RegistrationDeliveryLocalization? appLocalizations,
+    bool? enableViewHousehold,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdAcknowledgementRoute.name,
+          args: CustomHouseholdAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdAcknowledgementRoute';
+
+  static const PageInfo<CustomHouseholdAcknowledgementRouteArgs> page =
+      PageInfo<CustomHouseholdAcknowledgementRouteArgs>(name);
+}
+
+class CustomHouseholdAcknowledgementRouteArgs {
+  const CustomHouseholdAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final RegistrationDeliveryLocalization? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 

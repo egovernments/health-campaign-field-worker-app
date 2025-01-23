@@ -4,6 +4,9 @@ import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:digit_scanner/blocs/app_localization.dart';
+import 'package:health_campaign_field_worker_app/pages/custom_qr_scanner.dart';
+import 'package:health_campaign_field_worker_app/pages/household_acknowlegment/custom_household_acknowlegment.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
@@ -417,10 +420,16 @@ class AppRouter extends _$AppRouter {
                     page: HouseholdAcknowledgementRoute.page,
                     path: 'household-acknowledgement',
                   ),
+                  AutoRoute(
+                    page: CustomHouseholdAcknowledgementRoute.page,
+                    path: 'custom-household-acknowledgement',
+                  ),
+                  RedirectRoute(
+                      path: 'household-acknowledgement',
+                      redirectTo: 'custom-household-acknowledgement')
                 ],
               ),
             ]),
-
         //Enumeration and distribution Summary reports
         AutoRoute(
           page: CustomEumerationSummaryReportDetailsRoute.page,
