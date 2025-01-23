@@ -310,6 +310,10 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                                   name: localizations
                                                       .translate(e.code)))
                                               .toList(),
+                                          groupValue: formGroup
+                                                  .control(_genderKey)
+                                                  .value ??
+                                              '',
                                           onChanged: (value) {
                                             formGroup
                                                 .control(_genderKey)

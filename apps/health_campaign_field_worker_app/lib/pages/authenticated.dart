@@ -401,6 +401,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
       List<Languages>? languages,
       BuildContext context,
       AppConfiguration appConfig) {
+    final state = context.read<AppInitializationBloc>().state as AppInitialized;
     return languages
         ?.map((e) => SidebarItem(
               title: e.label,
@@ -425,6 +426,11 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                       ),
                     );
               },
+              initiallySelected: getSelectedLanguage(
+                  state,
+                  languages.indexWhere(
+                    (ele) => ele.value.toString() == e.value.toString(),
+                  )),
             ))
         .toList();
   }

@@ -84,13 +84,9 @@ class ProjectFacilitySelectionPage extends StatelessWidget {
                             ),
                             ReactiveWrapperField(
                               formControlName: _facilityName,
-                              builder: (field) => DigitTextFormInput(
+                              builder: (field) => DigitSearchFormInput(
                                 onChange: (value) =>
                                     form.control(_facilityName).value = value,
-                                // suffix: Padding(
-                                //   padding: EdgeInsets.all(8.0),
-                                //   child: Icon(Icons.search),
-                                // ),
                               ),
                             ),
                           ],
