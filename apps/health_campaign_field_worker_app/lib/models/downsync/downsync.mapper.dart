@@ -45,6 +45,9 @@ class DownsyncSearchModelMapper
   static String? _$tenantId(DownsyncSearchModel v) => v.tenantId;
   static const Field<DownsyncSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static String? _$householdId(DownsyncSearchModel v) => v.householdId;
+  static const Field<DownsyncSearchModel, String> _f$householdId =
+      Field('householdId', _$householdId, opt: true);
   static String? _$boundaryCode(DownsyncSearchModel v) => v.boundaryCode;
   static const Field<DownsyncSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -67,6 +70,7 @@ class DownsyncSearchModelMapper
     #totalCount: _f$totalCount,
     #boundaryName: _f$boundaryName,
     #tenantId: _f$tenantId,
+    #householdId: _f$householdId,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -92,6 +96,7 @@ class DownsyncSearchModelMapper
         totalCount: data.dec(_f$totalCount),
         boundaryName: data.dec(_f$boundaryName),
         tenantId: data.dec(_f$tenantId),
+        householdId: data.dec(_f$householdId),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -160,6 +165,7 @@ abstract class DownsyncSearchModelCopyWith<$R, $In extends DownsyncSearchModel,
       int? totalCount,
       String? boundaryName,
       String? tenantId,
+      String? householdId,
       String? boundaryCode});
   DownsyncSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -183,6 +189,7 @@ class _DownsyncSearchModelCopyWithImpl<$R, $Out>
           Object? totalCount = $none,
           Object? boundaryName = $none,
           Object? tenantId = $none,
+          Object? householdId = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (locality != $none) #locality: locality,
@@ -193,6 +200,7 @@ class _DownsyncSearchModelCopyWithImpl<$R, $Out>
         if (totalCount != $none) #totalCount: totalCount,
         if (boundaryName != $none) #boundaryName: boundaryName,
         if (tenantId != $none) #tenantId: tenantId,
+        if (householdId != $none) #householdId: householdId,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -206,6 +214,7 @@ class _DownsyncSearchModelCopyWithImpl<$R, $Out>
           totalCount: data.get(#totalCount, or: $value.totalCount),
           boundaryName: data.get(#boundaryName, or: $value.boundaryName),
           tenantId: data.get(#tenantId, or: $value.tenantId),
+          householdId: data.get(#householdId, or: $value.householdId),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -242,6 +251,12 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
   static int? _$offset(DownsyncModel v) => v.offset;
   static const Field<DownsyncModel, int> _f$offset =
       Field('offset', _$offset, opt: true);
+  static int? _$clfOffset(DownsyncModel v) => v.clfOffset;
+  static const Field<DownsyncModel, int> _f$clfOffset =
+      Field('clfOffset', _$clfOffset, opt: true);
+  static int? _$clfTotalCount(DownsyncModel v) => v.clfTotalCount;
+  static const Field<DownsyncModel, int> _f$clfTotalCount =
+      Field('clfTotalCount', _$clfTotalCount, opt: true);
   static int? _$limit(DownsyncModel v) => v.limit;
   static const Field<DownsyncModel, int> _f$limit =
       Field('limit', _$limit, opt: true);
@@ -264,6 +279,9 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
   static int? _$rowVersion(DownsyncModel v) => v.rowVersion;
   static const Field<DownsyncModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
+  static String? _$householdId(DownsyncModel v) => v.householdId;
+  static const Field<DownsyncModel, String> _f$householdId =
+      Field('householdId', _$householdId, opt: true);
   static AuditDetails? _$auditDetails(DownsyncModel v) => v.auditDetails;
   static const Field<DownsyncModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -281,6 +299,8 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
     #locality: _f$locality,
     #projectId: _f$projectId,
     #offset: _f$offset,
+    #clfOffset: _f$clfOffset,
+    #clfTotalCount: _f$clfTotalCount,
     #limit: _f$limit,
     #lastSyncedTime: _f$lastSyncedTime,
     #totalCount: _f$totalCount,
@@ -288,6 +308,7 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
     #nonRecoverableError: _f$nonRecoverableError,
     #tenantId: _f$tenantId,
     #rowVersion: _f$rowVersion,
+    #householdId: _f$householdId,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -309,6 +330,8 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
         locality: data.dec(_f$locality),
         projectId: data.dec(_f$projectId),
         offset: data.dec(_f$offset),
+        clfOffset: data.dec(_f$clfOffset),
+        clfTotalCount: data.dec(_f$clfTotalCount),
         limit: data.dec(_f$limit),
         lastSyncedTime: data.dec(_f$lastSyncedTime),
         totalCount: data.dec(_f$totalCount),
@@ -316,6 +339,7 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         tenantId: data.dec(_f$tenantId),
         rowVersion: data.dec(_f$rowVersion),
+        householdId: data.dec(_f$householdId),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -387,6 +411,8 @@ abstract class DownsyncModelCopyWith<$R, $In extends DownsyncModel, $Out>
       String? locality,
       String? projectId,
       int? offset,
+      int? clfOffset,
+      int? clfTotalCount,
       int? limit,
       int? lastSyncedTime,
       int? totalCount,
@@ -394,6 +420,7 @@ abstract class DownsyncModelCopyWith<$R, $In extends DownsyncModel, $Out>
       bool? nonRecoverableError,
       String? tenantId,
       int? rowVersion,
+      String? householdId,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -426,6 +453,8 @@ class _DownsyncModelCopyWithImpl<$R, $Out>
           Object? locality = $none,
           Object? projectId = $none,
           Object? offset = $none,
+          Object? clfOffset = $none,
+          Object? clfTotalCount = $none,
           Object? limit = $none,
           Object? lastSyncedTime = $none,
           Object? totalCount = $none,
@@ -433,6 +462,7 @@ class _DownsyncModelCopyWithImpl<$R, $Out>
           Object? nonRecoverableError = $none,
           Object? tenantId = $none,
           Object? rowVersion = $none,
+          Object? householdId = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -441,6 +471,8 @@ class _DownsyncModelCopyWithImpl<$R, $Out>
         if (locality != $none) #locality: locality,
         if (projectId != $none) #projectId: projectId,
         if (offset != $none) #offset: offset,
+        if (clfOffset != $none) #clfOffset: clfOffset,
+        if (clfTotalCount != $none) #clfTotalCount: clfTotalCount,
         if (limit != $none) #limit: limit,
         if (lastSyncedTime != $none) #lastSyncedTime: lastSyncedTime,
         if (totalCount != $none) #totalCount: totalCount,
@@ -449,6 +481,7 @@ class _DownsyncModelCopyWithImpl<$R, $Out>
           #nonRecoverableError: nonRecoverableError,
         if (tenantId != $none) #tenantId: tenantId,
         if (rowVersion != $none) #rowVersion: rowVersion,
+        if (householdId != $none) #householdId: householdId,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -461,6 +494,8 @@ class _DownsyncModelCopyWithImpl<$R, $Out>
       locality: data.get(#locality, or: $value.locality),
       projectId: data.get(#projectId, or: $value.projectId),
       offset: data.get(#offset, or: $value.offset),
+      clfOffset: data.get(#clfOffset, or: $value.clfOffset),
+      clfTotalCount: data.get(#clfTotalCount, or: $value.clfTotalCount),
       limit: data.get(#limit, or: $value.limit),
       lastSyncedTime: data.get(#lastSyncedTime, or: $value.lastSyncedTime),
       totalCount: data.get(#totalCount, or: $value.totalCount),
@@ -469,6 +504,7 @@ class _DownsyncModelCopyWithImpl<$R, $Out>
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       tenantId: data.get(#tenantId, or: $value.tenantId),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+      householdId: data.get(#householdId, or: $value.householdId),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),

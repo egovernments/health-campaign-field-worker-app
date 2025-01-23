@@ -230,17 +230,16 @@ Future<bool> getIsConnected() async {
   }
 }
 
-void showDownloadDialog(
-  BuildContext context, {
-  required DownloadBeneficiary model,
-  required DigitProgressDialogType dialogType,
-  bool isPop = true,
-  StreamController<double>? downloadProgressController,
-}) {
+void showDownloadDialog(BuildContext context,
+    {required DownloadBeneficiary model,
+    required DigitProgressDialogType dialogType,
+    bool isPop = true,
+    StreamController<double>? downloadProgressController,
+    required bool isCommunityCreator,
+    required bool isDistributor}) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
   }
-
   switch (dialogType) {
     case DigitProgressDialogType.failed:
     case DigitProgressDialogType.checkFailed:
@@ -300,15 +299,18 @@ void showDownloadDialog(
                 Navigator.of(context, rootNavigator: true).pop();
                 context.router.replaceAll([HomeRoute()]);
               } else {
-                if ((model.totalCount ?? 0) > 0) {
+                if ((model.totalCount ?? 0) > 0 ||
+                    (model.clfTotalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
                         DownSyncBeneficiaryEvent(
                           projectId: context.projectId,
                           boundaryCode: model.boundary,
-                          // Batch Size need to be defined based on Internet speed.
                           batchSize: model.batchSize ?? 1,
                           initialServerCount: model.totalCount ?? 0,
                           boundaryName: model.boundaryName,
+                          clfServerCount: model.clfTotalCount ?? 0,
+                          isCommunityCreator: isCommunityCreator,
+                          isDistributor: isDistributor,
                         ),
                       );
                 } else {
@@ -345,7 +347,7 @@ void showDownloadDialog(
                 label: '',
                 prefixLabel: '',
                 suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
+                    '${(snapshot.data == null ? 0 : snapshot.data! * ((model.totalCount! + model.clfTotalCount!).toDouble().toInt()))}/${model.suffixLabel}',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,

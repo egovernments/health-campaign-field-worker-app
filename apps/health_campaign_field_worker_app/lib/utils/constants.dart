@@ -353,6 +353,7 @@ class DownloadBeneficiary {
   int? pendingSyncCount;
   int? syncCount;
   int? totalCount;
+  int? clfTotalCount;
   String? content;
   int? batchSize;
   String? primaryButtonLabel;
@@ -371,6 +372,7 @@ class DownloadBeneficiary {
     this.batchSize,
     this.syncCount,
     this.totalCount,
+    this.clfTotalCount,
     this.content,
     this.primaryButtonLabel,
     this.secondaryButtonLabel,
