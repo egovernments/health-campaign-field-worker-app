@@ -60,6 +60,7 @@ class SideBar extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
+                        // remove drawer
                         Navigator.of(context).pop();
                         context.router.push(UserQRDetailsRoute());
                       },
