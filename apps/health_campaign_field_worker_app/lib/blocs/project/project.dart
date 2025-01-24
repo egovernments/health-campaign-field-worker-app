@@ -25,6 +25,7 @@ import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
+import '../../utils/LeastLevelBoundarySingleton.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
@@ -590,6 +591,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           );
         }
         await boundaryLocalRepository.bulkCreate(boundaries);
+        LeastLevelBoundarySingleton().setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
         await localSecureStore.setSelectedProject(event.model);
       }
       await localSecureStore.setProjectSetUpComplete(event.model.id, true);
