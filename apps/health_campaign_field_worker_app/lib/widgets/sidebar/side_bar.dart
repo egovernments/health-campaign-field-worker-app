@@ -60,7 +60,7 @@ class SideBar extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context, rootNavigator: true).pop();
+                        Navigator.of(context).pop();
                         context.router.push(UserQRDetailsRoute());
                       },
                       child: Container(
