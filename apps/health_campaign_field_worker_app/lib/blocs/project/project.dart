@@ -25,7 +25,7 @@ import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
-import '../../utils/LeastLevelBoundarySingleton.dart';
+import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
