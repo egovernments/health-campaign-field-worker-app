@@ -335,7 +335,7 @@ class MemberCard extends StatelessWidget {
                                                       .code
                                                       .toString()
                                                       .contains(
-                                                          '${RegistrationDeliverySingleton().selectedProject!.projectType}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                          '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                   .toList()
                                                   .isEmpty) {
                                                 context.router.push(
