@@ -1566,6 +1566,25 @@ class CustomStockDetailsPageState
                                   minLines: 2,
                                   maxLines: 3,
                                   formControlName: _commentsKey,
+                                  onChanged: (value) {
+                                    if (value.value == "") {
+                                      form.control(_commentsKey).setValidators(
+                                        [],
+                                        updateParent: true,
+                                        autoValidate: true,
+                                      );
+                                    } else {
+                                      form.control(_commentsKey).setValidators(
+                                        [
+                                          Validators.delegate((validator) =>
+                                              registration_utils.CustomValidator
+                                                  .sizeLessThan2(validator))
+                                        ],
+                                        updateParent: true,
+                                        autoValidate: true,
+                                      );
+                                    }
+                                  },
                                   validationMessages: {
                                     'sizeLessThan2': (object) =>
                                         localizations.translate(
@@ -1763,6 +1782,30 @@ class CustomStockDetailsPageState
                                     ),
                                     minLines: 2,
                                     maxLines: 3,
+                                    onChanged: (value) {
+                                      if (value.value == "") {
+                                        form
+                                            .control(_baleMismatchCommentsKey)
+                                            .setValidators(
+                                          [],
+                                          updateParent: true,
+                                          autoValidate: true,
+                                        );
+                                      } else {
+                                        form
+                                            .control(_baleMismatchCommentsKey)
+                                            .setValidators(
+                                          [
+                                            Validators.delegate((validator) =>
+                                                registration_utils
+                                                        .CustomValidator
+                                                    .sizeLessThan2(validator))
+                                          ],
+                                          updateParent: true,
+                                          autoValidate: true,
+                                        );
+                                      }
+                                    },
                                     formControlName: _baleMismatchCommentsKey,
                                     validationMessages: {
                                       "required": (object) =>
@@ -1786,6 +1829,30 @@ class CustomStockDetailsPageState
                                     minLines: 2,
                                     maxLines: 3,
                                     formControlName: _manualScanCommentsKey,
+                                    onChanged: (value) {
+                                      if (value.value == "") {
+                                        form
+                                            .control(_manualScanCommentsKey)
+                                            .setValidators(
+                                          [],
+                                          updateParent: true,
+                                          autoValidate: true,
+                                        );
+                                      } else {
+                                        form
+                                            .control(_manualScanCommentsKey)
+                                            .setValidators(
+                                          [
+                                            Validators.delegate((validator) =>
+                                                registration_utils
+                                                        .CustomValidator
+                                                    .sizeLessThan2(validator))
+                                          ],
+                                          updateParent: true,
+                                          autoValidate: true,
+                                        );
+                                      }
+                                    },
                                     validationMessages: {
                                       "required": (object) =>
                                           localizations.translate(
