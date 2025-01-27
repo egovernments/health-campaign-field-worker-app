@@ -1,8 +1,8 @@
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/models/entities/status.dart';
 
-import '../../models/entities/status.dart';
 import '../../utils/utils.dart';
 
 class CustomBeneficiaryCard extends StatelessWidget {

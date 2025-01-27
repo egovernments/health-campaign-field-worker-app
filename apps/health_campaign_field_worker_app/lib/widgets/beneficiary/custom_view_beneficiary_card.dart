@@ -149,15 +149,18 @@ class CustomViewBeneficiaryCardState
               : DateTime.now(),
         ).months;
 
-        final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-          DigitDOBAgeConvertor.DigitDOBAgeConvertor(
-            years: ageInYears,
-            months: ageInMonths,
-          ),
-          RegistrationDeliverySingleton().projectType,
-          (taskData ?? []).isNotEmpty ? taskData?.last : null,
-          sideEffects,
-        );
+        final isNotEligible =
+            (RegistrationDeliverySingleton().projectType?.cycles ?? []).isEmpty
+                ? false
+                : !checkEligibilityForAgeAndSideEffect(
+                    DigitDOBAgeConvertor.DigitDOBAgeConvertor(
+                      years: ageInYears,
+                      months: ageInMonths,
+                    ),
+                    RegistrationDeliverySingleton().projectType,
+                    (taskData ?? []).isNotEmpty ? taskData?.last : null,
+                    sideEffects,
+                  );
         final isSideEffectRecorded = recordedSideEffect(
           currentCycle,
           (taskData ?? []).isNotEmpty ? taskData?.last : null,
