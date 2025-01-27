@@ -1,10 +1,14 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:disk_space_update/disk_space_update.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
@@ -29,16 +33,17 @@ class BeneficiaryDownSyncBloc
       downSyncLocalRepository;
   final BandwidthCheckRepository bandwidthCheckRepository;
   final LocalRepository<HouseholdModel, HouseholdSearchModel>
-  householdLocalRepository;
+      householdLocalRepository;
   final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-  householdMemberLocalRepository;
+      householdMemberLocalRepository;
   final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-  projectBeneficiaryLocalRepository;
+      projectBeneficiaryLocalRepository;
   final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
   final LocalRepository<SideEffectModel, SideEffectSearchModel>
-  sideEffectLocalRepository;
+      sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
       referralLocalRepository;
+
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
@@ -201,6 +206,8 @@ class BeneficiaryDownSyncBloc
             );
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
+              writeToFile(event.projectId, event.boundaryCode,
+                  event.boundaryName, downSyncResults);
               await SyncServiceSingleton()
                   .entityMapper
                   ?.writeToEntityDB(downSyncResults, [
@@ -260,6 +267,67 @@ class BeneficiaryDownSyncBloc
     }
   }
 
+  void writeToFile(
+    String projectId,
+    String selectedBoundaryCode,
+    String selectedBoundaryName,
+    Map<String, dynamic> response,
+  ) async {
+    Map<String, dynamic> storedData = {};
+
+    // Get the Downloads directory
+    final downloadsDirectory = await getDownloadsDirectory();
+    if (downloadsDirectory == null) {
+      if (kDebugMode) {
+        print("Downloads directory is not available.");
+      }
+      return;
+    }
+
+    // Define the file path
+    final file = File(
+        '${downloadsDirectory.path}/$projectId/$selectedBoundaryCode/down_sync_data.json');
+
+    // Read existing file content if available
+    if (file.existsSync()) {
+      final content = await file.readAsString();
+      if (content.isNotEmpty) {
+        storedData = jsonDecode(content);
+      }
+    } else {
+      // Create the file if it doesn't exist
+      await file.create(recursive: true);
+      await file.writeAsString(
+          jsonEncode({})); // Initialize with an empty JSON object
+    }
+    var downSyncModel = response["DownsyncCriteria"];
+    // Create a unique key using just the offset
+    String uniqueKey = '${downSyncModel["offset"]}';
+
+    // Prepare data to insert
+    Map<String, dynamic> data = {
+      "totalCount": downSyncModel["totalCount"],
+      "response": response,
+      "boundaryCode": selectedBoundaryCode,
+      "boundaryName": selectedBoundaryName
+    };
+
+    // Store the data under the unique key
+    storedData[uniqueKey] = data;
+
+    // Convert map to JSON string
+    String storedDataString = jsonEncode(storedData);
+
+    debugPrint("Stored data: $storedDataString");
+
+    // Write the updated data back to the file
+    await file.writeAsString(storedDataString);
+
+    if (kDebugMode) {
+      print("Data successfully written to ${file.path}");
+    }
+  }
+
   FutureOr<void> _handleDownSyncReport(
     DownSyncReportEvent event,
     BeneficiaryDownSyncEmitter emit,
@@ -308,9 +376,11 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int syncedCount,
     int totalCount,
   ) = _DownSyncInProgressState;
+
   const factory BeneficiaryDownSyncState.success(
     DownsyncModel downSyncResult,
   ) = _DownSyncSuccessState;
+
   const factory BeneficiaryDownSyncState.getBatchSize(
     int batchSize,
     String projectId,
@@ -318,21 +388,29 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int pendingSyncCount,
     String boundaryName,
   ) = _DownSyncGetBatchSizeState;
+
   const factory BeneficiaryDownSyncState.loading(bool isPop) =
       _DownSyncLoadingState;
+
   const factory BeneficiaryDownSyncState.insufficientStorage() =
       _DownSyncInsufficientStorageState;
+
   const factory BeneficiaryDownSyncState.dataFound(
     int initialServerCount,
     int batchSize,
   ) = _DownSyncDataFoundState;
+
   const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;
+
   const factory BeneficiaryDownSyncState.totalCountCheckFailed() =
       _DownSynnCountCheckFailedState;
+
   const factory BeneficiaryDownSyncState.failed() = _DownSyncFailureState;
+
   const factory BeneficiaryDownSyncState.report(
     List<DownsyncModel> downsyncCriteriaList,
   ) = _DownSyncReportState;
+
   const factory BeneficiaryDownSyncState.pendingSync() =
       _DownSyncPendingSyncState;
 }

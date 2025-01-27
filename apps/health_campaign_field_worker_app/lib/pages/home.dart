@@ -482,6 +482,15 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.dataShare: homeShowcaseData.dataShare.buildWith(
+        child: HomeItemCard(
+          icon: Icons.send,
+          label: i18.home.dataShare,
+          onPressed: () async {
+            context.router.push(const DataShareHomeRoute());
+          },
+        ),
+      ),
       i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
@@ -546,6 +555,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         .where((f) => f != i18.home.db)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
+
+    filteredLabels.add(i18.home.dataShare); // TODO: Role action mapping
 
     if (!context.selectedProject.name.contains('IRS')) {
       filteredLabels.remove(i18.home.dashboard);
