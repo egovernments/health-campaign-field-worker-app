@@ -265,6 +265,7 @@ class CustomStockDetailsPageState
                           ),
                           child: ReactiveFormConsumer(
                               builder: (context, form, child) {
+                            print("form_error ${form.errors}");
                             if (form
                                     .control(_deliveryTeamKey)
                                     .value
@@ -856,17 +857,29 @@ class CustomStockDetailsPageState
 
                                                   form
                                                       .control(
-                                                    _driverNameKey,
-                                                  )
+                                                        _driverNameKey,
+                                                      )
                                                       .setValidators(
-                                                    [
-                                                      Validators.required,
-                                                      Validators.minLength(2),
-                                                      Validators.maxLength(200),
-                                                    ],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
+                                                        ([
+                                                          StockRecordEntryType
+                                                              .loss,
+                                                          StockRecordEntryType
+                                                              .damaged,
+                                                        ].contains(entryType))
+                                                            ? []
+                                                            : [
+                                                                Validators
+                                                                    .required,
+                                                                Validators
+                                                                    .minLength(
+                                                                        2),
+                                                                Validators
+                                                                    .maxLength(
+                                                                        200),
+                                                              ],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
                                                   form
                                                       .control(
                                                     _waybillNumberKey,
@@ -907,17 +920,29 @@ class CustomStockDetailsPageState
                                                   );
                                                   form
                                                       .control(
-                                                    _vehicleNumberKey,
-                                                  )
+                                                        _vehicleNumberKey,
+                                                      )
                                                       .setValidators(
-                                                    [
-                                                      Validators.required,
-                                                      Validators.minLength(2),
-                                                      Validators.maxLength(200),
-                                                    ],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
+                                                        ([
+                                                          StockRecordEntryType
+                                                              .loss,
+                                                          StockRecordEntryType
+                                                              .damaged,
+                                                        ].contains(entryType))
+                                                            ? []
+                                                            : [
+                                                                Validators
+                                                                    .required,
+                                                                Validators
+                                                                    .minLength(
+                                                                        2),
+                                                                Validators
+                                                                    .maxLength(
+                                                                        200),
+                                                              ],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
 
                                                   form
                                                       .control(
@@ -949,18 +974,29 @@ class CustomStockDetailsPageState
                                                     );
                                                     form
                                                         .control(
-                                                      _driverNameKey,
-                                                    )
+                                                          _driverNameKey,
+                                                        )
                                                         .setValidators(
-                                                      [
-                                                        Validators.required,
-                                                        Validators.minLength(2),
-                                                        Validators.maxLength(
-                                                            200),
-                                                      ],
-                                                      updateParent: true,
-                                                      autoValidate: true,
-                                                    );
+                                                          ([
+                                                            StockRecordEntryType
+                                                                .loss,
+                                                            StockRecordEntryType
+                                                                .damaged,
+                                                          ].contains(entryType))
+                                                              ? []
+                                                              : [
+                                                                  Validators
+                                                                      .required,
+                                                                  Validators
+                                                                      .minLength(
+                                                                          2),
+                                                                  Validators
+                                                                      .maxLength(
+                                                                          200),
+                                                                ],
+                                                          updateParent: true,
+                                                          autoValidate: true,
+                                                        );
 
                                                     form
                                                         .control(
@@ -1004,18 +1040,29 @@ class CustomStockDetailsPageState
                                                     );
                                                     form
                                                         .control(
-                                                      _vehicleNumberKey,
-                                                    )
+                                                          _vehicleNumberKey,
+                                                        )
                                                         .setValidators(
-                                                      [
-                                                        Validators.required,
-                                                        Validators.minLength(2),
-                                                        Validators.maxLength(
-                                                            200),
-                                                      ],
-                                                      updateParent: true,
-                                                      autoValidate: true,
-                                                    );
+                                                          ([
+                                                            StockRecordEntryType
+                                                                .loss,
+                                                            StockRecordEntryType
+                                                                .damaged,
+                                                          ].contains(entryType))
+                                                              ? []
+                                                              : [
+                                                                  Validators
+                                                                      .required,
+                                                                  Validators
+                                                                      .minLength(
+                                                                          2),
+                                                                  Validators
+                                                                      .maxLength(
+                                                                          200),
+                                                                ],
+                                                          updateParent: true,
+                                                          autoValidate: true,
+                                                        );
 
                                                     form
                                                         .control(
