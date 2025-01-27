@@ -20618,9 +20618,12 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   static const VerificationMeta _beneficiaryTypeMeta =
       const VerificationMeta('beneficiaryType');
   @override
-  late final GeneratedColumn<String> beneficiaryType = GeneratedColumn<String>(
-      'beneficiary_type', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumnWithTypeConverter<BeneficiaryType?, int>
+      beneficiaryType = GeneratedColumn<int>(
+              'beneficiary_type', aliasedName, true,
+              type: DriftSqlType.int, requiredDuringInsert: false)
+          .withConverter<BeneficiaryType?>(
+              $TargetTable.$converterbeneficiaryTypen);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -20745,12 +20748,7 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
-    if (data.containsKey('beneficiary_type')) {
-      context.handle(
-          _beneficiaryTypeMeta,
-          beneficiaryType.isAcceptableOrUnknown(
-              data['beneficiary_type']!, _beneficiaryTypeMeta));
-    }
+    context.handle(_beneficiaryTypeMeta, const VerificationResult.success());
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -20798,8 +20796,9 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
-      beneficiaryType: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}beneficiary_type']),
+      beneficiaryType: $TargetTable.$converterbeneficiaryTypen.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.int, data['${effectivePrefix}beneficiary_type'])),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -20809,6 +20808,13 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   $TargetTable createAlias(String alias) {
     return $TargetTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<BeneficiaryType, int, int>
+      $converterbeneficiaryType =
+      const EnumIndexConverter<BeneficiaryType>(BeneficiaryType.values);
+  static JsonTypeConverter2<BeneficiaryType?, int?, int?>
+      $converterbeneficiaryTypen =
+      JsonTypeConverter2.asNullable($converterbeneficiaryType);
 }
 
 class TargetData extends DataClass implements Insertable<TargetData> {
@@ -20828,7 +20834,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final String? beneficiaryType;
+  final BeneficiaryType? beneficiaryType;
   final String? additionalFields;
   const TargetData(
       {required this.id,
@@ -20899,7 +20905,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       map['row_version'] = Variable<int>(rowVersion);
     }
     if (!nullToAbsent || beneficiaryType != null) {
-      map['beneficiary_type'] = Variable<String>(beneficiaryType);
+      map['beneficiary_type'] = Variable<int>(
+          $TargetTable.$converterbeneficiaryTypen.toSql(beneficiaryType));
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -20986,7 +20993,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
-      beneficiaryType: serializer.fromJson<String?>(json['beneficiaryType']),
+      beneficiaryType: $TargetTable.$converterbeneficiaryTypen
+          .fromJson(serializer.fromJson<int?>(json['beneficiaryType'])),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -21010,7 +21018,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
-      'beneficiaryType': serializer.toJson<String?>(beneficiaryType),
+      'beneficiaryType': serializer.toJson<int?>(
+          $TargetTable.$converterbeneficiaryTypen.toJson(beneficiaryType)),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -21032,7 +21041,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
           Value<String?> tenantId = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> beneficiaryType = const Value.absent(),
+          Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       TargetData(
         id: id ?? this.id,
@@ -21163,7 +21172,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
-  final Value<String?> beneficiaryType;
+  final Value<BeneficiaryType?> beneficiaryType;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const TargetCompanion({
@@ -21225,7 +21234,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
     Expression<String>? tenantId,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
-    Expression<String>? beneficiaryType,
+    Expression<int>? beneficiaryType,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -21271,7 +21280,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
-      Value<String?>? beneficiaryType,
+      Value<BeneficiaryType?>? beneficiaryType,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return TargetCompanion(
@@ -21349,7 +21358,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
     if (beneficiaryType.present) {
-      map['beneficiary_type'] = Variable<String>(beneficiaryType.value);
+      map['beneficiary_type'] = Variable<int>(
+          $TargetTable.$converterbeneficiaryTypen.toSql(beneficiaryType.value));
     }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
