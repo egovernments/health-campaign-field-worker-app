@@ -38,9 +38,13 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
           builder: (context, state) {
             return ScrollableContent(
               enableFixedButton: true,
-              header: const Column(children: [
+              header: Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showHelp: false,
+                  handleback: (){
+                     context.router.replaceAll([HomeRoute()]);
+                  },
+                  defaultPopRoute: false,
                 ),
               ]),
               footer: DigitCard(
@@ -53,7 +57,7 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                 ),
                 child: DigitElevatedButton(
                   onPressed: () {
-                    context.router.popUntilRouteWithName(HomeRoute.name);
+                    context.router.replaceAll([HomeRoute()]);
                   },
                   child: Center(
                     child: Text(
