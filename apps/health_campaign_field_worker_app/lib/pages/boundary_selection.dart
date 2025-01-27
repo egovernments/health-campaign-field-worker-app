@@ -603,16 +603,6 @@ class _BoundarySelectionPageState
                                                       LocalizationParams()
                                                           .setModule(
                                                               'boundary', true);
-                                                      context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
-                                                          index: appConfiguration
-                                                              .languages!
-                                                              .indexWhere((element) =>
-                                                                  element
-                                                                      .value ==
-                                                                  AppSharedPreferences()
-                                                                      .getSelectedLocale),
-                                                          code: AppSharedPreferences()
-                                                              .getSelectedLocale!));
                                                     }
                                                   }
                                                 }

@@ -45,6 +45,7 @@ import '../router/app_router.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/least_level_boundary_singleton.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
@@ -636,7 +637,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             final appConfig = appConfiguration;
             final localizationModulesList = appConfiguration.backendInterface;
             final selectedLocale = AppSharedPreferences().getSelectedLocale;
-
+            LocalizationParams()
+                .setCode(LeastLevelBoundarySingleton().boundary);
             context
                 .read<LocalizationBloc>()
                 .add(LocalizationEvent.onLoadLocalization(
