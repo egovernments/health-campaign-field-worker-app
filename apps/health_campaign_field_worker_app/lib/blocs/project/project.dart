@@ -370,6 +370,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         selectedProject: selectedProject,
       ),
     );
+    final boundaries = await boundaryLocalRepository.search(
+      BoundarySearchModel(),
+    );
+    LeastLevelBoundarySingleton()
+        .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
   }
 
   FutureOr<void> _loadProjectFacilities(

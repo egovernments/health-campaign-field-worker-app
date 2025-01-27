@@ -377,7 +377,7 @@ String _findLeastLevelBoundaryCode(List<data_model.BoundaryModel> boundaries) {
 
   // If the highest boundary has no children, it is the least level
   if (highestBoundary?.children.isEmpty ?? true) {
-    return highestBoundary?.boundaryType ?? "";
+    return highestBoundary?.boundaryType ?? highestBoundary?.label ?? "";
   }
 
   // If the highest boundary has children, recursively search in them
@@ -405,7 +405,7 @@ List<String> findLeastLevelBoundaries(List<data_model.BoundaryModel> boundaries)
   // Iterate through the boundaries to find matching codes
   if(leastLevelType.isNotEmpty) {
     for (var boundary in boundaries) {
-      if (boundary.boundaryType == leastLevelType && boundary.children.isEmpty) {
+      if ((boundary.boundaryType == leastLevelType || boundary.label == leastLevelType) && boundary.children.isEmpty) {
         // Found a least level boundary with no children (leaf node), add its code
         leastLevelBoundaryCodes.add(boundary.code!);
       } else if (boundary.children.isNotEmpty) {
