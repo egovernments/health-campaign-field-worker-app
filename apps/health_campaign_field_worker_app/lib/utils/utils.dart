@@ -20,6 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
 import 'package:isar/isar.dart';
+import 'package:digit_data_model/data_model.dart' as data_model;
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
@@ -34,6 +35,7 @@ import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
 import '../models/data_model.init.dart';
+import '../models/tenant_boundary/tenant_boundary_model.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -359,6 +361,63 @@ void showDownloadDialog(
     default:
       return;
   }
+}
+
+
+// Existing _findLeastLevelBoundaryCode method remains unchanged
+String _findLeastLevelBoundaryCode(List<data_model.BoundaryModel> boundaries) {
+  data_model.BoundaryModel? highestBoundary;
+
+  // Find the boundary with the highest boundaryNum
+  for (var boundary in boundaries) {
+    if (highestBoundary == null || (boundary.boundaryNum ?? 0) > (highestBoundary.boundaryNum ?? 0)) {
+      highestBoundary = boundary;
+    }
+  }
+
+  // If the highest boundary has no children, it is the least level
+  if (highestBoundary?.children.isEmpty ?? true) {
+    return highestBoundary?.boundaryType ?? "";
+  }
+
+  // If the highest boundary has children, recursively search in them
+  if(highestBoundary?.children != null) {
+    for (var child in highestBoundary!.children) {
+      String leastCode = _findLeastLevelBoundaryCode([child]); // Recursively find the least level
+      if (leastCode.isNotEmpty) {
+        return leastCode;
+      }
+    }
+  }
+
+  // If no boundary found
+  return "";
+}
+
+// Recursive function to find the least level boundary codes
+List<String> findLeastLevelBoundaries(List<data_model.BoundaryModel> boundaries) {
+  // Find the least level boundary type
+  String leastLevelType = _findLeastLevelBoundaryCode(boundaries);
+
+  // Initialize a list to store the matching boundary codes with lowest level boundary type
+  List<String> leastLevelBoundaryCodes = [];
+
+  // Iterate through the boundaries to find matching codes
+  if(leastLevelType.isNotEmpty) {
+    for (var boundary in boundaries) {
+      if (boundary.boundaryType == leastLevelType && boundary.children.isEmpty) {
+        // Found a least level boundary with no children (leaf node), add its code
+        leastLevelBoundaryCodes.add(boundary.code!);
+      } else if (boundary.children.isNotEmpty) {
+        // Recursively search in the children
+        List<String> childVillageCodes = findLeastLevelBoundaries(boundary.children);
+        leastLevelBoundaryCodes.addAll(childVillageCodes);
+      }
+    }
+  }
+
+  // Return the list of matching boundary codes
+  return leastLevelBoundaryCodes;
 }
 
 //Function to read the localizations from ISAR,
