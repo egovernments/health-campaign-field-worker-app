@@ -36,6 +36,7 @@ abstract class _$DigitMapsRoute extends AutoRouterModule {
           key: args.key,
           markerDetails: args.markerDetails,
           onPressed: args.onPressed,
+          onLoadPagination: args.onLoadPagination,
         ),
       );
     },
@@ -101,6 +102,10 @@ class MapsHomePageRoute extends PageRouteInfo<MapsHomePageRouteArgs> {
     Key? key,
     required List<MarkerDetails> markerDetails,
     required void Function(String) onPressed,
+    void Function(
+      int,
+      int,
+    )? onLoadPagination,
     List<PageRouteInfo>? children,
   }) : super(
           MapsHomePageRoute.name,
@@ -108,6 +113,7 @@ class MapsHomePageRoute extends PageRouteInfo<MapsHomePageRouteArgs> {
             key: key,
             markerDetails: markerDetails,
             onPressed: onPressed,
+            onLoadPagination: onLoadPagination,
           ),
           initialChildren: children,
         );
@@ -123,6 +129,7 @@ class MapsHomePageRouteArgs {
     this.key,
     required this.markerDetails,
     required this.onPressed,
+    this.onLoadPagination,
   });
 
   final Key? key;
@@ -131,8 +138,13 @@ class MapsHomePageRouteArgs {
 
   final void Function(String) onPressed;
 
+  final void Function(
+    int,
+    int,
+  )? onLoadPagination;
+
   @override
   String toString() {
-    return 'MapsHomePageRouteArgs{key: $key, markerDetails: $markerDetails, onPressed: $onPressed}';
+    return 'MapsHomePageRouteArgs{key: $key, markerDetails: $markerDetails, onPressed: $onPressed, onLoadPagination: $onLoadPagination}';
   }
 }

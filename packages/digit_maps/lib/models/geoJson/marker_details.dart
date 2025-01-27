@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
+
 class MarkerDetails {
   final String id;
   final List<double> coordinates;
+  final Icon? icon;
 
-  MarkerDetails({required this.id, required this.coordinates});
+  MarkerDetails({this.icon, required this.id, required this.coordinates});
 }

@@ -336,6 +336,10 @@ class _SearchBeneficiaryPageState
                                     findHouseHoldDetailsFromClientRefId(
                                         clientRefId);
                                   },
+                                  onLoadPagination: (int offset, int limit) {
+                                    triggerGlobalSearchEvent(
+                                        isPagination: true);
+                                  },
                                   markerDetails: getHouseHoldCords(
                                       searchHouseholdsState.householdMembers)),
                             ),
@@ -584,8 +588,15 @@ class _SearchBeneficiaryPageState
             ?.clientReferenceId; // Assuming there's an ID field in household
 
         if (longitude != null && latitude != null && id != null) {
-          coordinates
-              .add(MarkerDetails(id: id, coordinates: [latitude, longitude]));
+          coordinates.add(MarkerDetails(
+            id: id,
+            coordinates: [latitude, longitude],
+            icon: const Icon(
+              Icons.location_on,
+              size: 24,
+              color: Colors.red,
+            ),
+          ));
         }
       }
     }

@@ -1,23 +1,26 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart'; // Import geolocator package
 import 'package:latlong2/latlong.dart';
 
-import '../bloc/map_path/map_path_bloc.dart';
 import '../main.dart';
 import '../models/geoJson/marker_details.dart';
 
 @RoutePage()
 class MapsHomePage extends StatefulWidget {
   final void Function(String id) onPressed; // Updated callback type
+  final void Function(int offset, int limit)?
+      onLoadPagination; // Updated callback type
+
   final List<MarkerDetails>
       markerDetails; // Changed type to use HouseHold class
 
-  MapsHomePage(
-      {super.key, required this.markerDetails, required this.onPressed});
+  const MapsHomePage(
+      {super.key,
+      required this.markerDetails,
+      required this.onPressed,
+      this.onLoadPagination});
 
   @override
   State<MapsHomePage> createState() => _MapsHomePageState();
@@ -25,11 +28,7 @@ class MapsHomePage extends StatefulWidget {
 
 class _MapsHomePageState extends State<MapsHomePage> {
   final MapController _controller = MapController();
-  LatLng? first;
-  LatLng? second;
   Position? currentPosition;
-
-  List<LatLng> get waypoints => [first, second].whereNotNull().toList();
 
   @override
   void initState() {
@@ -47,15 +46,11 @@ class _MapsHomePageState extends State<MapsHomePage> {
     setState(() {});
     _controller.move(
         LatLng(currentPosition!.latitude, currentPosition!.longitude),
-        18); // Move to user's location
+        15); // Move to user's location
   }
 
-  void _onHouseMarkerTap(String id) {
-    // Implement the function to handle marker tap
-    print('House marker tapped with ID: $id');
-    // You can add more functionality here, e.g., navigate to a detail page
-
-    widget.onPressed!(id);
+  void _onMarkerTap(String id) {
+    widget.onPressed(id);
   }
 
   @override
@@ -94,21 +89,22 @@ class _MapsHomePageState extends State<MapsHomePage> {
           widget.markerDetails.isNotEmpty
               ? MarkerLayer(
                   markers: widget.markerDetails
-                      .map((houseHold) => Marker(
+                      .map((marker) => Marker(
                           point: LatLng(
-                            houseHold.coordinates.first,
-                            houseHold.coordinates.last,
+                            marker.coordinates.first,
+                            marker.coordinates.last,
                           ),
                           height: 24,
                           width: 24,
                           child: IconButton(
                             onPressed: () =>
-                                _onHouseMarkerTap(houseHold.id), // Pass the ID
-                            icon: const Icon(
-                              Icons.location_on,
-                              size: 24,
-                            ),
-                            color: Colors.red,
+                                _onMarkerTap(marker.id), // Pass the ID
+                            icon: marker.icon ??
+                                const Icon(
+                                  Icons.location_on,
+                                  size: 24,
+                                  color: Colors.red,
+                                ),
                           )))
                       .toList(),
                 )
@@ -145,28 +141,13 @@ class _MapsHomePageState extends State<MapsHomePage> {
             },
             child: const Icon(Icons.remove),
           ),
-          if (waypoints.length == 2)
-            FloatingActionButton(
-              heroTag: 'navigate',
-              onPressed: () {
-                final coordinatePair = CoordinatePair(
-                  source: MapCoordinates(
-                    first!.latitude,
-                    first!.longitude,
-                  ),
-                  destination: MapCoordinates(
-                    second!.latitude,
-                    second!.longitude,
-                  ),
-                );
-
-                context.read<MapPathBloc>().add(
-                      MapAddPointsEvent(coordinatePair: coordinatePair),
-                    );
-                context.router.pop();
-              },
-              child: const Icon(Icons.map_outlined),
-            )
+          FloatingActionButton(
+            heroTag: 'navigate',
+            onPressed: () {
+              widget.onLoadPagination!(0, 10);
+            },
+            child: const Icon(Icons.refresh_outlined),
+          )
         ],
       ),
     );
