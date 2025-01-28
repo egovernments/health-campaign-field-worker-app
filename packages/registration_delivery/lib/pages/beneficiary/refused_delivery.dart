@@ -66,7 +66,6 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                     ),
                     footer: DigitCard(
                         margin: const EdgeInsets.only(top: spacer2),
-                        padding: const EdgeInsets.all(spacer2),
                         children: [
                           DigitButton(
                             label: localizations.translate(

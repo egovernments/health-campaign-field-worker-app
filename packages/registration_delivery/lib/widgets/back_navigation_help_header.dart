@@ -39,11 +39,13 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
             child: Row(
               children: [
                 if (showBackNavigation)
-                  DigitBackButton(label: RegistrationDeliveryLocalization.of(context).translate(
-                    i18.common.coreCommonBack,
-                  ),
+                  DigitBackButton(
+                    label:
+                        RegistrationDeliveryLocalization.of(context).translate(
+                      i18.common.coreCommonBack,
+                    ),
                     digitBackButtonThemeData:
-                    const DigitBackButtonThemeData().copyWith(
+                        const DigitBackButtonThemeData().copyWith(
                       context: context,
                       backDigitButtonIcon: Icon(
                         Icons.arrow_left,
@@ -63,21 +65,13 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
           ),
           SizedBox(width: showHelp ? spacer2 * 2 : 0),
           if (showHelp)
-            TextButton(
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
-              onPressed: helpClicked,
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    RegistrationDeliveryLocalization.of(context)
-                        .translate(i18.common.coreCommonHelp),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const Icon(
-                    Icons.help_outline_outlined,
-                  ), // Add the icon to the right
-                ],
-              ),
+            DigitButton(
+              label: RegistrationDeliveryLocalization.of(context)
+                  .translate(i18.common.coreCommonHelp),
+              type: DigitButtonType.tertiary,
+              size: DigitButtonSize.medium,
+              suffixIcon: Icons.help_outline_outlined,
+              onPressed: () => helpClicked,
             ),
           SizedBox(width: showcaseButton != null ? 16 : 0),
           if (showcaseButton != null) showcaseButton!,

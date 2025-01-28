@@ -70,6 +70,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                   footer: DigitCard(children: [
                     DigitButton(
                       label: 'Close',
+                      mainAxisSize: MainAxisSize.max,
                       type: DigitButtonType.primary,
                       size: DigitButtonSize.large,
                       onPressed: () => exit(0),
