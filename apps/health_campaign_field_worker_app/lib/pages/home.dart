@@ -68,6 +68,7 @@ class _HomePageState extends LocalizedState<HomePage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
   late StreamSubscription<List<ConnectivityResult>> subscription;
+  bool isTriggerLocalisation = true;
 
   @override
   initState() {
@@ -327,7 +328,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
           onPressed: () {
-            triggerLocalization();
+            if(isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             context.router.push(const ComplaintsInboxWrapperRoute());
           },
         ),
@@ -339,7 +343,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            triggerLocalization();
+            if(isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -352,7 +359,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () {
-            triggerLocalization();
+            if(isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
@@ -363,7 +373,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
           onPressed: () {
-            triggerLocalization();
+            if(isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             context.router.push(ManageStocksRoute());
           },
         ),
@@ -374,7 +387,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
           onPressed: () {
-            triggerLocalization();
+            if(isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             context.router.push(StockReconciliationRoute());
           },
         ),
@@ -386,7 +402,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.checklist,
           label: i18.home.mySurveyForm,
           onPressed: () {
-            triggerLocalization();
+            if(isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             context.router.push(SurveyFormWrapperRoute());
           },
         ),
@@ -426,7 +445,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
-            triggerLocalization();
+            if(isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             context.router.push(SearchReferralReconciliationsRoute());
           },
         ),
@@ -436,7 +458,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
           onPressed: () {
-            triggerLocalization();
+            if(isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             context.router.push(InventoryReportSelectionRoute());
           },
         ),
@@ -447,7 +472,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            triggerLocalization();
+           if(isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            };
             context.router.push(const ManageAttendanceRoute());
           },
         ),
@@ -472,7 +500,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
-            triggerLocalization();
+           if(isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            };
             context.router.push(const UserDashboardRoute());
           },
         ),

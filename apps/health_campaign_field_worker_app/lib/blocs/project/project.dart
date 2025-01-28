@@ -370,6 +370,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         selectedProject: selectedProject,
       ),
     );
+
+    /* An empty BoundarySearchModel is sent to retrieve all boundaries from the repository.
+    This ensures that the entire dataset is fetched, as no specific filters or constraints are applied.
+    The retrieved boundaries are then processed to find the least level boundaries and set them in the singleton.*/
+    final boundaries = await boundaryLocalRepository.search(
+      BoundarySearchModel(),
+    );
+    LeastLevelBoundarySingleton()
+        .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
   }
 
   FutureOr<void> _loadProjectFacilities(
