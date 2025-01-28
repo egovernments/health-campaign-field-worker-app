@@ -1427,7 +1427,7 @@ class CustomStockDetailsPageState
                                                     quantity: 1,
                                                     isGS1code: false,
                                                     singleValue: false,
-                                                    manualEnabled: true,
+                                                    manualEnabled: false,
                                                     scanType: ScanType.stock,
                                                   ),
                                                   settings: const RouteSettings(
