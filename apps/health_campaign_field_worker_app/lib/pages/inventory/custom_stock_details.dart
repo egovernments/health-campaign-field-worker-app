@@ -521,7 +521,27 @@ class CustomStockDetailsPageState
                                           switch (entryType) {
                                             case StockRecordEntryType.receipt:
                                             case StockRecordEntryType.loss:
+                                              if (deliveryTeamSelected) {
+                                                receiverId = deliveryTeamName;
+                                                receiverType = "STAFF";
+                                              } else {
+                                                receiverId = secondaryParty?.id;
+                                                receiverType = "WAREHOUSE";
+                                              }
+                                              senderId = primaryId;
+                                              senderType = primaryType;
+                                              break;
                                             case StockRecordEntryType.damaged:
+                                              if (deliveryTeamSelected) {
+                                                receiverId = deliveryTeamName;
+                                                receiverType = "STAFF";
+                                              } else {
+                                                receiverId = secondaryParty?.id;
+                                                receiverType = "WAREHOUSE";
+                                              }
+                                              senderId = primaryId;
+                                              senderType = primaryType;
+                                              break;
                                             case StockRecordEntryType.returned:
                                               if (deliveryTeamSelected) {
                                                 senderId = deliveryTeamName;
@@ -1386,12 +1406,7 @@ class CustomStockDetailsPageState
                                 AbsorbPointer(
                                   absorbing: !deliveryTeamSelected,
                                   child: DigitTextFormField(
-                                    readOnly: !deliveryTeamSelected,
-                                    // [
-                                    //   StockRecordEntryType.receipt,
-                                    //   StockRecordEntryType.dispatch,
-                                    //   StockRecordEntryType.returned
-                                    // ].contains(entryType),
+                                    readOnly: true,
                                     label: localizations.translate(
                                       i18.stockReconciliationDetails
                                           .teamCodeLabel,
@@ -1412,12 +1427,9 @@ class CustomStockDetailsPageState
                                         clearQRCodes();
                                       }
                                     },
-                                    suffix: [
-                                      StockRecordEntryType.receipt,
-                                      StockRecordEntryType.dispatch,
-                                      StockRecordEntryType.returned
-                                    ].contains(entryType)
-                                        ? IconButton(
+                                    suffix: !deliveryTeamSelected
+                                        ? null
+                                        : IconButton(
                                             onPressed: () {
                                               //[TODO: Add route to auto_route]
                                               Navigator.of(context).push(
@@ -1440,8 +1452,7 @@ class CustomStockDetailsPageState
                                               color:
                                                   theme.colorScheme.secondary,
                                             ),
-                                          )
-                                        : null,
+                                          ),
                                     maxLines: 3,
                                     formControlName: _deliveryTeamKey,
                                   ),
