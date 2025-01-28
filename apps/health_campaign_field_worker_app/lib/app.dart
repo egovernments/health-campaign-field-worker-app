@@ -53,6 +53,16 @@ class MainApplication extends StatefulWidget {
 
 class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
+  String defaultLanguageCode = "fr_BI";
+  Locale getLocale(String? languageCode) {
+    languageCode ??= defaultLanguageCode;
+    List<String> results = languageCode.split("_");
+    return Locale(
+      results.first,
+      results.last,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
@@ -171,15 +181,16 @@ class MainApplicationState extends State<MainApplication>
                     final appConfig = appConfigState.appConfiguration;
 
                     final localizationModulesList = appConfig.backendInterface;
-                    var firstLanguage;
-                    firstLanguage = appConfig.languages?.last.value;
                     final languages = appConfig.languages;
+                    String firstLanguage =
+                        appConfig.languages?.last.value ?? defaultLanguageCode;
+                    String? selectedLocale =
+                        AppSharedPreferences().getSelectedLocale;
 
                     return MultiBlocProvider(
                       providers: [
                         BlocProvider(
-                          create: (localizationModulesList != null &&
-                                  firstLanguage != null)
+                          create: (localizationModulesList != null)
                               ? (context) => LocalizationBloc(
                                     const LocalizationState(),
                                     LocalizationRepository(
@@ -192,7 +203,7 @@ class MainApplicationState extends State<MainApplication>
                                         module:
                                             "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                         tenantId: appConfig.tenantId.toString(),
-                                        locale: firstLanguage,
+                                        locale: selectedLocale ?? firstLanguage,
                                         path: Constants.localizationApiPath,
                                       ),
                                     )
@@ -310,10 +321,6 @@ class MainApplicationState extends State<MainApplication>
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
-                          final selectedLocale =
-                              AppSharedPreferences().getSelectedLocale ??
-                                  firstLanguage;
-
                           return MaterialApp.router(
                             debugShowCheckedModeBanner: false,
                             builder: (context, child) {
@@ -321,7 +328,6 @@ class MainApplicationState extends State<MainApplication>
                               if (env == EnvType.prod) {
                                 return child ?? const SizedBox.shrink();
                               }
-
                               return Banner(
                                 message: envConfig.variables.envType.name,
                                 location: BannerLocation.topEnd,
@@ -339,25 +345,24 @@ class MainApplicationState extends State<MainApplication>
                               );
                             },
                             supportedLocales: languages != null
-                                ? languages.map((e) {
-                                    final results = e.value.split('_');
+                                ? languages.map((e) => getLocale(e.value)
+                                    // {
+                                    //     final results = e.value.split('_');
 
-                                    return results.isNotEmpty
-                                        ? Locale(results.first, results.last)
-                                        : firstLanguage;
-                                  })
-                                : [firstLanguage],
+                                    //     return results.isNotEmpty
+                                    //         ? Locale(results.first, results.last)
+                                    //         : firstLanguage;
+                                    //   }
+                                    )
+                                : [getLocale(firstLanguage)],
                             localizationsDelegates: getAppLocalizationDelegates(
                               sql: widget.sql,
                               appConfig: appConfig,
-                              selectedLocale: selectedLocale,
+                              selectedLocale: selectedLocale ?? firstLanguage,
                             ),
                             locale: languages != null
-                                ? Locale(
-                                    selectedLocale!.split("_").first,
-                                    selectedLocale.split("_").last,
-                                  )
-                                : firstLanguage,
+                                ? getLocale(selectedLocale)
+                                : getLocale(firstLanguage),
                             theme: DigitTheme.instance.mobileTheme,
                             routeInformationParser:
                                 widget.appRouter.defaultRouteParser(),
