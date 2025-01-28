@@ -176,8 +176,6 @@ class Attendance {
 
   String get tableHeaderUserId => 'TABLE_HEADER_USERID';
 
-  String get tableHeaderMobileNumber => 'TABLE_HEADER_MOBILENUMBER';
-
   String get markAttendanceLabel => "LABEL_MARK_ATTENDANCE";
 
   String get closeButton => "CLOSE_BUTTON";

@@ -193,7 +193,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 
     return register.copyWith(
       attendees: attendeeList,
-      individualList: individualList,
       attendanceLog: list,
       completedDays: completedDaysCount,
     );
