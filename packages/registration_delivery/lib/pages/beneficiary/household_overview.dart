@@ -103,180 +103,191 @@ class _HouseholdOverviewPageState
                       ),
                       enableFixedDigitButton: true,
                       footer: DigitCard(
-                          margin: const EdgeInsets.only(top: spacer2),
-                          children: [
-                            DigitButton(
-                              mainAxisSize: MainAxisSize.max,
-                              onPressed: () => addIndividual(
-                                context,
-                                state.householdMemberWrapper.household!,
-                              ),
-                              label: localizations.translate(
-                                i18.householdOverView
-                                    .householdOverViewAddActionText,
-                              ),
-                              prefixIcon: Icons.add_circle,
-                              type: DigitButtonType.secondary,
-                              size: DigitButtonSize.medium,
+                        margin: const EdgeInsets.only(top: spacer2),
+                        children: [
+                          DigitButton(
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () => addIndividual(
+                              context,
+                              state.householdMemberWrapper.household!,
                             ),
-                            Offstage(
-                              offstage: beneficiaryType ==
-                                      BeneficiaryType.individual ||
-                                  isOutsideProjectDateRange(),
-                              child: BlocBuilder<ServiceDefinitionBloc,
-                                  ServiceDefinitionState>(
-                                builder: (context, serviceDefinitionState) =>
-                                    BlocBuilder<DeliverInterventionBloc,
-                                        DeliverInterventionState>(
-                                  builder: (ctx, deliverInterventionState) =>
-                                      state.householdMemberWrapper.tasks
-                                                  ?.lastOrNull?.status ==
-                                              Status.administeredSuccess
-                                                  .toValue()
-                                          ? Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: spacer2),
-                                              child: DigitButton(
-                                                label: localizations.translate(
-                                                  i18.memberCard
-                                                      .deliverDetailsUpdateLabel,
-                                                ),
-                                                isDisabled: state
-                                                            .householdMemberWrapper
-                                                            .tasks
-                                                            ?.lastOrNull
-                                                            ?.status ==
-                                                        Status
-                                                            .administeredSuccess
-                                                            .toValue()
-                                                    ? true
-                                                    : false,
-                                                type: DigitButtonType.secondary,
-                                                size: DigitButtonSize.large,
-                                                mainAxisSize: MainAxisSize.max,
-                                                onPressed: () {
-                                                  serviceDefinitionState.when(
-                                                      empty: () {},
-                                                      isloading: () {},
-                                                      serviceDefinitionFetch:
-                                                          (value, model) {
-                                                        if (value
-                                                            .where((element) =>
-                                                                element.code
-                                                                    .toString()
-                                                                    .contains(
-                                                                        '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
-                                                            .toList()
-                                                            .isEmpty) {
-                                                          context.router.push(
-                                                            DeliverInterventionRoute(),
-                                                          );
-                                                        } else {
-                                                          navigateToChecklist(
-                                                              ctx);
-                                                        }
-                                                      });
-                                                  callReloadEvent(
-                                                      offset: state
-                                                          .householdMemberWrapper
-                                                          .members!
-                                                          .length,
-                                                      limit: limit);
-                                                },
-                                              ),
-                                            )
-                                          : DigitButton(
+                            label: localizations.translate(
+                              i18.householdOverView
+                                  .householdOverViewAddActionText,
+                            ),
+                            prefixIcon: Icons.add_circle,
+                            type: DigitButtonType.secondary,
+                            size: DigitButtonSize.medium,
+                          ),
+                          Offstage(
+                            offstage:
+                                beneficiaryType == BeneficiaryType.individual ||
+                                    isOutsideProjectDateRange(),
+                            child: BlocBuilder<ServiceDefinitionBloc,
+                                ServiceDefinitionState>(
+                              builder: (context, serviceDefinitionState) =>
+                                  BlocBuilder<DeliverInterventionBloc,
+                                      DeliverInterventionState>(
+                                builder: (ctx, deliverInterventionState) =>
+                                    state.householdMemberWrapper.tasks
+                                                ?.lastOrNull?.status ==
+                                            Status.administeredSuccess.toValue()
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: spacer2),
+                                            child: DigitButton(
                                               label: localizations.translate(
-                                                i18.householdOverView
-                                                    .householdOverViewEditLabel,
+                                                i18.memberCard
+                                                    .deliverDetailsUpdateLabel,
                                               ),
-                                              type: DigitButtonType.primary,
-                                              size: DigitButtonSize.large,
-                                              mainAxisSize: MainAxisSize.max,
-                                              isDisabled: (state.householdMemberWrapper
-                                                                  .projectBeneficiaries ??
-                                                              [])
-                                                          .isEmpty ||
-                                                      state
-                                                              .householdMemberWrapper
-                                                              .tasks
-                                                              ?.lastOrNull
-                                                              ?.status ==
-                                                          Status.closeHousehold
-                                                              .toValue()
+                                              isDisabled: state
+                                                          .householdMemberWrapper
+                                                          .tasks
+                                                          ?.lastOrNull
+                                                          ?.status ==
+                                                      Status.administeredSuccess
+                                                          .toValue()
                                                   ? true
                                                   : false,
-                                              onPressed: () async {
-                                                final bloc = ctx.read<
-                                                    HouseholdOverviewBloc>();
-
-                                                final projectId =
-                                                    RegistrationDeliverySingleton()
-                                                        .projectId!;
-
-                                                bloc.add(
-                                                  HouseholdOverviewReloadEvent(
-                                                    projectId: projectId,
-                                                    projectBeneficiaryType:
-                                                        beneficiaryType,
-                                                  ),
-                                                );
-
-                                          serviceDefinitionState.when(
-                                              empty: () {},
-                                              isloading: () {},
-                                              serviceDefinitionFetch:
-                                                  (value, model) {
-                                                if (value
-                                                    .where((element) => element
-                                                        .code
-                                                        .toString()
-                                                        .contains(
-                                                            '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
-                                                element.code.toString().contains('${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
-                                                    .toList()
-                                                    .isEmpty) {
-                                                  context.router.push(
-                                                    DeliverInterventionRoute(),
-                                                  );
-                                                } else {
-                                                  navigateToChecklist(ctx,
-                                                  state.selectedIndividual!.clientReferenceId);
-                                                }
-                                              });
+                                              type: DigitButtonType.secondary,
+                                              size: DigitButtonSize.large,
+                                              mainAxisSize: MainAxisSize.max,
+                                              onPressed: () {
+                                                serviceDefinitionState.when(
+                                                    empty: () {},
+                                                    isloading: () {},
+                                                    serviceDefinitionFetch:
+                                                        (value, model) {
+                                                      if (value
+                                                          .where((element) =>
+                                                              element.code
+                                                                  .toString()
+                                                                  .contains(
+                                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                              element.code
+                                                                  .toString()
+                                                                  .contains(
+                                                                      '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                          .toList()
+                                                          .isEmpty) {
+                                                        context.router.push(
+                                                          DeliverInterventionRoute(),
+                                                        );
+                                                      } else {
+                                                        navigateToChecklist(
+                                                            ctx,
+                                                            state
+                                                                .selectedIndividual!
+                                                                .clientReferenceId);
+                                                      }
+                                                    });
                                                 callReloadEvent(
                                                     offset: state
                                                         .householdMemberWrapper
                                                         .members!
                                                         .length,
                                                     limit: limit);
-                                        },
-                                      ),
-                              ]),
-                        ),
+                                              },
+                                            ),
+                                          )
+                                        : DigitButton(
+                                            label: localizations.translate(
+                                              i18.householdOverView
+                                                  .householdOverViewEditLabel,
+                                            ),
+                                            type: DigitButtonType.primary,
+                                            size: DigitButtonSize.large,
+                                            mainAxisSize: MainAxisSize.max,
+                                            isDisabled: (state.householdMemberWrapper
+                                                                .projectBeneficiaries ??
+                                                            [])
+                                                        .isEmpty ||
+                                                    state
+                                                            .householdMemberWrapper
+                                                            .tasks
+                                                            ?.lastOrNull
+                                                            ?.status ==
+                                                        Status.closeHousehold
+                                                            .toValue()
+                                                ? true
+                                                : false,
+                                            onPressed: () async {
+                                              final bloc = ctx.read<
+                                                  HouseholdOverviewBloc>();
+
+                                              final projectId =
+                                                  RegistrationDeliverySingleton()
+                                                      .projectId!;
+
+                                              bloc.add(
+                                                HouseholdOverviewReloadEvent(
+                                                  projectId: projectId,
+                                                  projectBeneficiaryType:
+                                                      beneficiaryType,
+                                                ),
+                                              );
+
+                                              serviceDefinitionState.when(
+                                                  empty: () {},
+                                                  isloading: () {},
+                                                  serviceDefinitionFetch:
+                                                      (value, model) {
+                                                    if (value
+                                                        .where((element) =>
+                                                            element.code
+                                                                .toString()
+                                                                .contains(
+                                                                    '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                            element.code
+                                                                .toString()
+                                                                .contains(
+                                                                    '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                        .toList()
+                                                        .isEmpty) {
+                                                      context.router.push(
+                                                        DeliverInterventionRoute(),
+                                                      );
+                                                    } else {
+                                                      navigateToChecklist(
+                                                          ctx,
+                                                          state
+                                                              .selectedIndividual!
+                                                              .clientReferenceId);
+                                                    }
+                                                  });
+                                              callReloadEvent(
+                                                  offset: state
+                                                      .householdMemberWrapper
+                                                      .members!
+                                                      .length,
+                                                  limit: limit);
+                                            },
+                                          ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: DigitCard(
-                            margin: const EdgeInsets.all(spacer2),
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  if ((state.householdMemberWrapper
-                                              .projectBeneficiaries ??
-                                          [])
-                                      .isNotEmpty)
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: DigitButton(
-                                        onPressed: () {
-                                          final projectId =
-                                              RegistrationDeliverySingleton()
-                                                  .projectId!;
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: DigitCard(
+                              margin: const EdgeInsets.all(spacer2),
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    if ((state.householdMemberWrapper
+                                                .projectBeneficiaries ??
+                                            [])
+                                        .isNotEmpty)
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: DigitButton(
+                                          onPressed: () {
+                                            final projectId =
+                                                RegistrationDeliverySingleton()
+                                                    .projectId!;
 
                                             final bloc = context
                                                 .read<HouseholdOverviewBloc>();
