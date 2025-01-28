@@ -14,6 +14,7 @@ import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
+import '../utils/constants.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18Local;
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -645,8 +646,9 @@ class _CustomDigitScannerPageState
 
   Future<void> storeCodeWrapper(String code) async {
     if (codes.length < widget.quantity) {
-      if (widget.scanType == ScanType.stock && code.contains("||")) {
-        code = code.split("||").last.trim();
+      if (widget.scanType == ScanType.stock &&
+          code.contains(Constants.pipeSeparator)) {
+        code = code.split(Constants.pipeSeparator).last.trim();
       }
       await DigitScannerUtils().storeCode(
         context: currentContext,
