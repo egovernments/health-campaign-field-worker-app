@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -14,6 +13,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -161,8 +161,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
-        connectivityResult.firstOrNull == ConnectivityResult.mobile;
+    final isOnline =
+        connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+            connectivityResult.firstOrNull == ConnectivityResult.mobile;
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
@@ -218,56 +219,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       List<ProjectModel> staffProjects;
       try {
-        if (context.loggedInUserRoles
-            .where(
-              (role) => role.code == RolesType.districtSupervisor.toValue(),
-            )
-            .toList()
-            .isNotEmpty) {
-          final individual = await individualRemoteRepository.search(
-            IndividualSearchModel(
-              userUuid: [projectStaff.userId.toString()],
-            ),
-          );
-          if (individual.isNotEmpty) {
-            final attendanceRegisters = await attendanceRemoteRepository.search(
-              AttendanceRegisterSearchModel(
-                staffId: individual.first.id,
-                referenceId: projectStaff.projectId,
-              ),
-            );
-            await attendanceLocalRepository.bulkCreate(attendanceRegisters);
-
-            for (final register in attendanceRegisters) {
-              if (register.attendees != null &&
-                  (register.attendees ?? []).isNotEmpty) {
-                try {
-                  final individuals = await individualRemoteRepository.search(
-                    IndividualSearchModel(
-                      id: register.attendees!
-                          .map((e) => e.individualId!)
-                          .toList(),
-                    ),
-                  );
-                  await individualLocalRepository.bulkCreate(individuals);
-                  final logs = await attendanceLogRemoteRepository.search(
-                    AttendanceLogSearchModel(
-                      registerId: register.id,
-                    ),
-                  );
-                  await attendanceLogLocalRepository.bulkCreate(logs);
-                } catch (_) {
-                  emit(state.copyWith(
-                    loading: false,
-                    syncError: ProjectSyncErrorType.project,
-                  ));
-
-                  return;
-                }
-              }
-            }
-          }
-        }
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(
             id: projectStaff.projectId,
@@ -296,7 +247,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
-
       // INFO : Need to add project load functions
 
       try {
@@ -453,6 +403,50 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     List<BoundaryModel> boundaries;
     try {
+      if (context.loggedInUserRoles
+          .where(
+            (role) =>
+                role.code == RolesType.districtSupervisor.toValue() ||
+                role.code == RolesType.teamSupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty) {
+        final attendanceRegisters = await attendanceRemoteRepository.search(
+          AttendanceRegisterSearchModel(
+            staffId: context.loggedInIndividualId,
+            referenceId: event.model.id,
+            localityCode: event.model.address?.boundary,
+          ),
+        );
+        await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+
+        for (final register in attendanceRegisters) {
+          if (register.attendees != null &&
+              (register.attendees ?? []).isNotEmpty) {
+            try {
+              final individuals = await individualRemoteRepository.search(
+                IndividualSearchModel(
+                  id: register.attendees!.map((e) => e.individualId!).toList(),
+                ),
+              );
+              await individualLocalRepository.bulkCreate(individuals);
+              final logs = await attendanceLogRemoteRepository.search(
+                AttendanceLogSearchModel(
+                  registerId: register.id,
+                ),
+              );
+              await attendanceLogLocalRepository.bulkCreate(logs);
+            } catch (_) {
+              emit(state.copyWith(
+                loading: false,
+                syncError: ProjectSyncErrorType.project,
+              ));
+
+              return;
+            }
+          }
+        }
+      }
       try {
         final startDate = DateTime(
                 DateTime.now().year, DateTime.now().month, DateTime.now().day)
@@ -507,7 +501,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             dashboardRemoteRepository,
             dashboardActionPath.trim().isNotEmpty
                 ? dashboardActionPath
-                : '/dashboard-analytics/dashboard/getChartV2', //[TODO: To be added to MDMS Service registry
+                : '/dashboard-analytics/dashboard/getChartV2',
+            //[TODO: To be added to MDMS Service registry
             envConfig.variables.tenantId,
             event.model.id,
             userUUIDList,

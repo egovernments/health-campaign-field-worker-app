@@ -37,6 +37,12 @@ class $AttendanceRegisterTable extends AttendanceRegister
   late final GeneratedColumn<String> referenceId = GeneratedColumn<String>(
       'reference_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _localityCodeMeta =
+      const VerificationMeta('localityCode');
+  @override
+  late final GeneratedColumn<String> localityCode = GeneratedColumn<String>(
+      'locality_code', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _serviceCodeMeta =
       const VerificationMeta('serviceCode');
   @override
@@ -147,6 +153,7 @@ class $AttendanceRegisterTable extends AttendanceRegister
         registerNumber,
         name,
         referenceId,
+        localityCode,
         serviceCode,
         status,
         startDate,
@@ -205,6 +212,14 @@ class $AttendanceRegisterTable extends AttendanceRegister
               data['reference_id']!, _referenceIdMeta));
     } else if (isInserting) {
       context.missing(_referenceIdMeta);
+    }
+    if (data.containsKey('locality_code')) {
+      context.handle(
+          _localityCodeMeta,
+          localityCode.isAcceptableOrUnknown(
+              data['locality_code']!, _localityCodeMeta));
+    } else if (isInserting) {
+      context.missing(_localityCodeMeta);
     }
     if (data.containsKey('service_code')) {
       context.handle(
@@ -317,6 +332,8 @@ class $AttendanceRegisterTable extends AttendanceRegister
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       referenceId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}reference_id'])!,
+      localityCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}locality_code'])!,
       serviceCode: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}service_code'])!,
       status: attachedDatabase.typeMapping
@@ -365,6 +382,7 @@ class AttendanceRegisterData extends DataClass
   final String registerNumber;
   final String name;
   final String referenceId;
+  final String localityCode;
   final String serviceCode;
   final String status;
   final int? startDate;
@@ -387,6 +405,7 @@ class AttendanceRegisterData extends DataClass
       required this.registerNumber,
       required this.name,
       required this.referenceId,
+      required this.localityCode,
       required this.serviceCode,
       required this.status,
       this.startDate,
@@ -413,6 +432,7 @@ class AttendanceRegisterData extends DataClass
     map['register_number'] = Variable<String>(registerNumber);
     map['name'] = Variable<String>(name);
     map['reference_id'] = Variable<String>(referenceId);
+    map['locality_code'] = Variable<String>(localityCode);
     map['service_code'] = Variable<String>(serviceCode);
     map['status'] = Variable<String>(status);
     if (!nullToAbsent || startDate != null) {
@@ -467,6 +487,7 @@ class AttendanceRegisterData extends DataClass
       registerNumber: Value(registerNumber),
       name: Value(name),
       referenceId: Value(referenceId),
+      localityCode: Value(localityCode),
       serviceCode: Value(serviceCode),
       status: Value(status),
       startDate: startDate == null && nullToAbsent
@@ -523,6 +544,7 @@ class AttendanceRegisterData extends DataClass
       registerNumber: serializer.fromJson<String>(json['registerNumber']),
       name: serializer.fromJson<String>(json['name']),
       referenceId: serializer.fromJson<String>(json['referenceId']),
+      localityCode: serializer.fromJson<String>(json['localityCode']),
       serviceCode: serializer.fromJson<String>(json['serviceCode']),
       status: serializer.fromJson<String>(json['status']),
       startDate: serializer.fromJson<int?>(json['startDate']),
@@ -551,6 +573,7 @@ class AttendanceRegisterData extends DataClass
       'registerNumber': serializer.toJson<String>(registerNumber),
       'name': serializer.toJson<String>(name),
       'referenceId': serializer.toJson<String>(referenceId),
+      'localityCode': serializer.toJson<String>(localityCode),
       'serviceCode': serializer.toJson<String>(serviceCode),
       'status': serializer.toJson<String>(status),
       'startDate': serializer.toJson<int?>(startDate),
@@ -576,6 +599,7 @@ class AttendanceRegisterData extends DataClass
           String? registerNumber,
           String? name,
           String? referenceId,
+          String? localityCode,
           String? serviceCode,
           String? status,
           Value<int?> startDate = const Value.absent(),
@@ -598,6 +622,7 @@ class AttendanceRegisterData extends DataClass
         registerNumber: registerNumber ?? this.registerNumber,
         name: name ?? this.name,
         referenceId: referenceId ?? this.referenceId,
+        localityCode: localityCode ?? this.localityCode,
         serviceCode: serviceCode ?? this.serviceCode,
         status: status ?? this.status,
         startDate: startDate.present ? startDate.value : this.startDate,
@@ -642,6 +667,7 @@ class AttendanceRegisterData extends DataClass
           ..write('registerNumber: $registerNumber, ')
           ..write('name: $name, ')
           ..write('referenceId: $referenceId, ')
+          ..write('localityCode: $localityCode, ')
           ..write('serviceCode: $serviceCode, ')
           ..write('status: $status, ')
           ..write('startDate: $startDate, ')
@@ -669,6 +695,7 @@ class AttendanceRegisterData extends DataClass
         registerNumber,
         name,
         referenceId,
+        localityCode,
         serviceCode,
         status,
         startDate,
@@ -695,6 +722,7 @@ class AttendanceRegisterData extends DataClass
           other.registerNumber == this.registerNumber &&
           other.name == this.name &&
           other.referenceId == this.referenceId &&
+          other.localityCode == this.localityCode &&
           other.serviceCode == this.serviceCode &&
           other.status == this.status &&
           other.startDate == this.startDate &&
@@ -720,6 +748,7 @@ class AttendanceRegisterCompanion
   final Value<String> registerNumber;
   final Value<String> name;
   final Value<String> referenceId;
+  final Value<String> localityCode;
   final Value<String> serviceCode;
   final Value<String> status;
   final Value<int?> startDate;
@@ -743,6 +772,7 @@ class AttendanceRegisterCompanion
     this.registerNumber = const Value.absent(),
     this.name = const Value.absent(),
     this.referenceId = const Value.absent(),
+    this.localityCode = const Value.absent(),
     this.serviceCode = const Value.absent(),
     this.status = const Value.absent(),
     this.startDate = const Value.absent(),
@@ -767,6 +797,7 @@ class AttendanceRegisterCompanion
     required String registerNumber,
     required String name,
     required String referenceId,
+    required String localityCode,
     required String serviceCode,
     required String status,
     this.startDate = const Value.absent(),
@@ -788,6 +819,7 @@ class AttendanceRegisterCompanion
         registerNumber = Value(registerNumber),
         name = Value(name),
         referenceId = Value(referenceId),
+        localityCode = Value(localityCode),
         serviceCode = Value(serviceCode),
         status = Value(status);
   static Insertable<AttendanceRegisterData> custom({
@@ -796,6 +828,7 @@ class AttendanceRegisterCompanion
     Expression<String>? registerNumber,
     Expression<String>? name,
     Expression<String>? referenceId,
+    Expression<String>? localityCode,
     Expression<String>? serviceCode,
     Expression<String>? status,
     Expression<int>? startDate,
@@ -820,6 +853,7 @@ class AttendanceRegisterCompanion
       if (registerNumber != null) 'register_number': registerNumber,
       if (name != null) 'name': name,
       if (referenceId != null) 'reference_id': referenceId,
+      if (localityCode != null) 'locality_code': localityCode,
       if (serviceCode != null) 'service_code': serviceCode,
       if (status != null) 'status': status,
       if (startDate != null) 'start_date': startDate,
@@ -848,6 +882,7 @@ class AttendanceRegisterCompanion
       Value<String>? registerNumber,
       Value<String>? name,
       Value<String>? referenceId,
+      Value<String>? localityCode,
       Value<String>? serviceCode,
       Value<String>? status,
       Value<int?>? startDate,
@@ -871,6 +906,7 @@ class AttendanceRegisterCompanion
       registerNumber: registerNumber ?? this.registerNumber,
       name: name ?? this.name,
       referenceId: referenceId ?? this.referenceId,
+      localityCode: localityCode ?? this.localityCode,
       serviceCode: serviceCode ?? this.serviceCode,
       status: status ?? this.status,
       startDate: startDate ?? this.startDate,
@@ -908,6 +944,9 @@ class AttendanceRegisterCompanion
     }
     if (referenceId.present) {
       map['reference_id'] = Variable<String>(referenceId.value);
+    }
+    if (localityCode.present) {
+      map['locality_code'] = Variable<String>(localityCode.value);
     }
     if (serviceCode.present) {
       map['service_code'] = Variable<String>(serviceCode.value);
@@ -971,6 +1010,7 @@ class AttendanceRegisterCompanion
           ..write('registerNumber: $registerNumber, ')
           ..write('name: $name, ')
           ..write('referenceId: $referenceId, ')
+          ..write('localityCode: $localityCode, ')
           ..write('serviceCode: $serviceCode, ')
           ..write('status: $status, ')
           ..write('startDate: $startDate, ')
@@ -39459,6 +39499,7 @@ typedef $$AttendanceRegisterTableInsertCompanionBuilder
   required String registerNumber,
   required String name,
   required String referenceId,
+  required String localityCode,
   required String serviceCode,
   required String status,
   Value<int?> startDate,
@@ -39484,6 +39525,7 @@ typedef $$AttendanceRegisterTableUpdateCompanionBuilder
   Value<String> registerNumber,
   Value<String> name,
   Value<String> referenceId,
+  Value<String> localityCode,
   Value<String> serviceCode,
   Value<String> status,
   Value<int?> startDate,
@@ -39529,6 +39571,7 @@ class $$AttendanceRegisterTableTableManager extends RootTableManager<
             Value<String> registerNumber = const Value.absent(),
             Value<String> name = const Value.absent(),
             Value<String> referenceId = const Value.absent(),
+            Value<String> localityCode = const Value.absent(),
             Value<String> serviceCode = const Value.absent(),
             Value<String> status = const Value.absent(),
             Value<int?> startDate = const Value.absent(),
@@ -39553,6 +39596,7 @@ class $$AttendanceRegisterTableTableManager extends RootTableManager<
             registerNumber: registerNumber,
             name: name,
             referenceId: referenceId,
+            localityCode: localityCode,
             serviceCode: serviceCode,
             status: status,
             startDate: startDate,
@@ -39577,6 +39621,7 @@ class $$AttendanceRegisterTableTableManager extends RootTableManager<
             required String registerNumber,
             required String name,
             required String referenceId,
+            required String localityCode,
             required String serviceCode,
             required String status,
             Value<int?> startDate = const Value.absent(),
@@ -39601,6 +39646,7 @@ class $$AttendanceRegisterTableTableManager extends RootTableManager<
             registerNumber: registerNumber,
             name: name,
             referenceId: referenceId,
+            localityCode: localityCode,
             serviceCode: serviceCode,
             status: status,
             startDate: startDate,
@@ -39660,6 +39706,11 @@ class $$AttendanceRegisterTableFilterComposer
 
   ColumnFilters<String> get referenceId => $state.composableBuilder(
       column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get localityCode => $state.composableBuilder(
+      column: $state.table.localityCode,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -39769,6 +39820,11 @@ class $$AttendanceRegisterTableOrderingComposer
 
   ColumnOrderings<String> get referenceId => $state.composableBuilder(
       column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get localityCode => $state.composableBuilder(
+      column: $state.table.localityCode,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

@@ -223,59 +223,60 @@ class _HouseholdOverviewPageState
                                                   ),
                                                 );
 
-                                                serviceDefinitionState.when(
-                                                    empty: () {},
-                                                    isloading: () {},
-                                                    serviceDefinitionFetch:
-                                                        (value, model) {
-                                                      if (value
-                                                          .where((element) =>
-                                                              element.code
-                                                                  .toString()
-                                                                  .contains(
-                                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
-                                                          .toList()
-                                                          .isEmpty) {
-                                                        context.router.push(
-                                                          DeliverInterventionRoute(),
-                                                        );
-                                                      } else {
-                                                        navigateToChecklist(
-                                                            ctx);
-                                                      }
-                                                    });
+                                          serviceDefinitionState.when(
+                                              empty: () {},
+                                              isloading: () {},
+                                              serviceDefinitionFetch:
+                                                  (value, model) {
+                                                if (value
+                                                    .where((element) => element
+                                                        .code
+                                                        .toString()
+                                                        .contains(
+                                                            '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                element.code.toString().contains('${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                    .toList()
+                                                    .isEmpty) {
+                                                  context.router.push(
+                                                    DeliverInterventionRoute(),
+                                                  );
+                                                } else {
+                                                  navigateToChecklist(ctx,
+                                                  state.selectedIndividual!.clientReferenceId);
+                                                }
+                                              });
                                                 callReloadEvent(
                                                     offset: state
                                                         .householdMemberWrapper
                                                         .members!
                                                         .length,
                                                     limit: limit);
-                                              },
-                                            ),
-                                ),
-                              ),
-                            ),
-                          ]),
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: DigitCard(
-                              margin: const EdgeInsets.all(spacer2),
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    if ((state.householdMemberWrapper
-                                                .projectBeneficiaries ??
-                                            [])
-                                        .isNotEmpty)
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: DigitButton(
-                                          onPressed: () {
-                                            final projectId =
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!;
+                                        },
+                                      ),
+                              ]),
+                        ),
+                      ),
+                    ),
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: DigitCard(
+                            margin: const EdgeInsets.all(spacer2),
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  if ((state.householdMemberWrapper
+                                              .projectBeneficiaries ??
+                                          [])
+                                      .isNotEmpty)
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: DigitButton(
+                                        onPressed: () {
+                                          final projectId =
+                                              RegistrationDeliverySingleton()
+                                                  .projectId!;
 
                                             final bloc = context
                                                 .read<HouseholdOverviewBloc>();
@@ -1066,8 +1067,10 @@ class _HouseholdOverviewPageState
     return {'textLabel': textLabel, 'color': color, 'icon': icon};
   }
 
-  void navigateToChecklist(BuildContext ctx) async {
-    await context.router.push(BeneficiaryChecklistRoute());
+  void navigateToChecklist(
+      BuildContext ctx, String beneficiaryClientRefId) async {
+    await context.router.push(BeneficiaryChecklistRoute(
+        beneficiaryClientRefId: beneficiaryClientRefId));
   }
 
   void callReloadEvent({
