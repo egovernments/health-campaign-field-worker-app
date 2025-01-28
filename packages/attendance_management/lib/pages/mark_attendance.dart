@@ -4,6 +4,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -31,6 +32,7 @@ import '../widgets/no_result_card.dart';
 @RoutePage()
 class MarkAttendancePage extends LocalizedStatefulWidget {
   final List<AttendeeModel> attendees;
+  final List<IndividualModel> individuals;
   final String registerId;
   final String tenantId;
   final DateTime dateTime;
@@ -40,6 +42,7 @@ class MarkAttendancePage extends LocalizedStatefulWidget {
 
   const MarkAttendancePage({
     required this.attendees,
+    required this.individuals,
     required this.registerId,
     required this.tenantId,
     required this.dateTime,
@@ -268,10 +271,17 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   children: [
                                     tableData.isNotEmpty
                                         ? SizedBox(
-                                      height: MediaQuery.of(context).size.height*.525,
-                                          child: table.DigitTable(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .525,
+                                            child: table.DigitTable(
                                               showSelectedState: false,
-                                              tableHeight:MediaQuery.of(context).size.height*.5 ,
+                                              tableHeight:
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .5,
                                               tableWidth: MediaQuery.of(context)
                                                   .size
                                                   .width,
@@ -284,7 +294,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                               ),
                                               rows: tableData,
                                             ),
-                                        )
+                                          )
                                         : NoResultCard(
                                             align: Alignment.center,
                                             label: localizations.translate(
@@ -316,6 +326,14 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   }
 
   DigitTableRow getAttendanceRow(AttendeeModel tableDataModel, bool viewOnly) {
+    final mobileNumber = (widget.individuals.isNotEmpty)
+        ? widget.individuals
+            .firstWhere(
+              (i) => i.id == tableDataModel.individualId,
+            )
+            .mobileNumber
+        : null;
+
     return DigitTableRow(tableRow: [
       DigitTableData(
         tableDataModel.name.toString(),
@@ -347,6 +365,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         tableDataModel.individualNumber.toString(),
         cellKey: tableDataModel.individualNumber ?? "",
       ),
+      DigitTableData(
+        mobileNumber ?? "NA",
+        cellKey: mobileNumber ?? "",
+      ),
     ]);
   }
 
@@ -364,6 +386,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         header: localizations.translate(i18.attendance.tableHeaderUserId),
         cellValue: "userId",
       ),
+      DigitTableColumn(
+          header:
+              localizations.translate(i18.attendance.tableHeaderMobileNumber),
+          cellValue: 'mobileNumber')
     ];
   }
 
