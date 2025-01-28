@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Added mobile number field for attendees in Mark Attendance Screen
+
 ## 1.0.3
 
 * Updated digit_data_model to latest version
