@@ -1,4 +1,4 @@
-## 1.0.5
+## 1.0.4+1
 
 * Added the boundary new variable in inventory singleton class to get the code of the selected boundary
 
