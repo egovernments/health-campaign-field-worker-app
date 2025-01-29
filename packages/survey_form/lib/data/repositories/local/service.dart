@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-
 import 'package:drift/drift.dart';
 import 'package:survey_form/survey_form.dart';
 
@@ -96,6 +95,9 @@ class ServiceLocalRepository
                 sql.service.clientId.equals(
                   query.clientId!,
                 ),
+              if (query.relatedClientReferenceId != null)
+                sql.service.relatedClientReferenceId
+                    .equals(query.relatedClientReferenceId!),
             ])))
           .get();
 
@@ -126,7 +128,7 @@ class ServiceLocalRepository
                 rowVersion: attribute.rowVersion,
                 additionalFields: attribute.additionalFields != null
                     ? ServiceAttributesAdditionalFieldsMapper.fromJson(
-                    attribute.additionalFields!)
+                        attribute.additionalFields!)
                     : null);
           }
         }).toList();

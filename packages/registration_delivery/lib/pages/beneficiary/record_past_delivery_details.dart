@@ -258,7 +258,8 @@ class RecordPastDeliveryDetailsPageState
                             localizations.translate(
                               i18.deliverIntervention.recordPastDeliveryDeatils,
                             ),
-                            style: DigitTheme.instance.mobileTheme.textTheme.displayMedium,
+                            style: DigitTheme
+                                .instance.mobileTheme.textTheme.displayMedium,
                           ),
                         ),
                         ...(futureTaskList?.asMap().entries.map((entry) {
