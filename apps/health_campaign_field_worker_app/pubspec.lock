@@ -1359,7 +1359,7 @@ packages:
       path: "../../packages/inventory_management"
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.0.4+1"
   io:
     dependency: transitive
     description:

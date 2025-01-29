@@ -195,26 +195,50 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final String? condition = criteria.condition;
       if (condition != null) {
-        final conditions = condition.split('and');
+        if (condition.contains('and')) {
+          final conditions = condition.split('and');
 
-        List expressionParser = [];
-        for (var element in conditions) {
-          final expression = CustomFormulaParser.parseCondition(element, {
-            if (individualModel != null && individualAgeInMonths != 0)
-              'age': individualAgeInMonths,
-            if (gender != null) 'gender': gender,
-            if (memberCount != null) 'memberCount': memberCount,
-            if (roomCount != null) 'roomCount': roomCount,
-            if (structureType != null) 'type_of_structure': structureType
-          }, stringKeys: [
-            'type_of_structure'
-          ]);
-          final error = expression;
-          expressionParser.add(error["value"]);
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        } else if (condition.contains('or')) {
+          final conditions = condition.split('or');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).isNotEmpty
+              ? true
+              : false;
         }
-
-        return expressionParser.where((element) => element == true).length ==
-            conditions.length;
       }
 
       return false;
