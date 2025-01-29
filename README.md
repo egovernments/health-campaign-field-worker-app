@@ -268,14 +268,12 @@ To learn more about Registration and Delivery, click here.
 
 -   **Auto-calculation of resources**: Automatically calculate resources to be delivered to a household or individual based on the configured rules.
 
-* * * * *
-
-**📌 Getting Started**
-----------------------
+**Getting Started**
+-------------------
 
 ### **Step 1: Add Dependencies**
 
-Add the following dependencies in your `pubspec.yaml` file:
+Add the following dependencies in your **pubspec.yaml** file:
 
 ```
 dependencies:
@@ -285,12 +283,12 @@ dependencies:
 
 * * * * *
 
-**🛠️ Integration with the HCM Application**
---------------------------------------------
+**Integrating with the HCM Application**
+----------------------------------------
 
 ### **Step 2: Run the Import Script**
 
-Execute the main function to integrate the package:
+To integrate this package with the HCM Application, execute the main function:
 
 ```
 health-campaign-field-worker-app/tools/registration_delivery_imports.dart
@@ -298,19 +296,19 @@ health-campaign-field-worker-app/tools/registration_delivery_imports.dart
 
 This will automatically handle:\
 ✅ Imports\
-✅ Mapper Initializers\
-✅ Route Configuration\
-✅ Initial Data Setup\
-✅ Repository Initialization
+✅ Mapper initializers\
+✅ Route configuration\
+✅ Initial data setup\
+✅ Repository initialization
 
 * * * * *
 
 ### **Step 3: Run Build Runner**
 
-Ensure you're in the correct project directory:
+Ensure you are in the correct project directory:
 
 ```
-cd apps/health_campaign_field_worker_app
+apps/health_campaign_field_worker_app
 ```
 
 Run the following command:
@@ -319,14 +317,16 @@ Run the following command:
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-This adds the **package route** to `router.gr.dart`.
+This will add the package route to **router.gr.dart**.
+
+✅ **Now, install the application**, and **Registration & Delivery** should be integrated into your app.
 
 * * * * *
 
-**🔄 Downsyncing Data During Boundary Selection**
--------------------------------------------------
+**Downsyncing Data During Boundary Selection**
+----------------------------------------------
 
-To **enable data synchronization**, update `**project_beneficiaries_downsync.dart**` with the following repositories:
+If you need to **downsync registration-delivery data** during boundary selection, modify **project_beneficiaries_downsync.dart** by including the following repositories:
 
 ```
 final LocalRepository<HouseholdModel, HouseholdSearchModel> householdLocalRepository;
@@ -354,103 +354,103 @@ sideEffectLocalRepository,
 referralLocalRepository,
 ```
 
-✅ **This ensures proper downsync of registration & delivery data.**
+✅ **These changes will enable the down sync of registration & delivery data.**
 
 * * * * *
 
-**📂 Registries Update**
-------------------------
+**Registries Update**
+---------------------
 
 When users **downsync data** by passing **project ID & boundary code**, the server returns responses **only for the selected boundary**.
 
-### **📋 Response Entities:**
+### **Response Entities:**
 
--   **🏠 Household**
+-   **Household**
 
--   **👤 Individual**
+-   **Individual**
 
--   **👨‍👩‍👦 House Member**
+-   **House Member**
 
-#### **📌 Scenarios**
+#### **Scenarios**
 
-1️⃣ **Updating Project-Specific Data**\
-2️⃣ **Creating New Project-Specific Data**
+1️⃣ **Updating project-specific data**\
+2️⃣ **Creating new project-specific data**
 
 -   **Beneficiary (Mandatory)**
 
--   **Task & Related Entities (Optional)**
+-   **Task & related entities (Optional)**
 
 * * * * *
 
-**🔍 Filtering Mechanism**
---------------------------
+**Filtering Mechanism**
+-----------------------
 
-The package supports advanced **filters** for efficient data retrieval:
+To enable better data access, we introduce **filters**:
 
--   ✅ **Registered**
+-   **Registered**
 
--   ✅ **Unregistered**
+-   **Unregistered**
 
--   ✅ **Closed**
+-   **Closed**
 
--   ✅ **Combination of Filters**
+-   **Combination of Filters**
 
--   ✅ **Proximity Enabled Search**
+-   **Proximity Enabled Search**
 
--   ✅ **Search by Name**
+-   **Search by Name**
+
+A **query builder** is used to fetch results dynamically (example below for an individual-based project).
 
 * * * * *
 
-**📝 Fields in Registration Flow**
-----------------------------------
+**Fields in Registration Flow**
+-------------------------------
 
-### 📍 **GPS Accuracy**
+### **GPS Accuracy**
 
 -   Captured on the **Household Location** screen.
 
-### 🤰 **Pregnant Women & Children Count**
+### **Pregnant Women & Children Count**
 
 -   Entered on the **Member Screen**.
 
 -   Stored in the **Additional Fields Object** of the **Household Member entity**.
 
-### 🏠 **Household Structure Selection**
+### **Household Structure Selection**
 
--   A new screen captures **household structure**.
+-   A new screen has been added to **capture household structure**.
 
--   Structure data is fetched from **MDMS** and displayed in a **card selection UI**.
+-   Structure data is fetched from **MDMS** and displayed as a **card selection UI**.
 
--   The selected value is stored in the **Additional Details Object** of the **Household Entity**.
-
-* * * * *
-
-**🏡 Closed House Data Capture**
---------------------------------
-
--   A **new module** named **closed_household** has been developed.
-
--   This module is a **dependency** of the **registration and delivery package**.
+-   The selected value is stored in the **Additional Details Object** in the **Household Entity**.
 
 * * * * *
 
-**❌ Handling Unsuccessful Deliveries**
---------------------------------------
+**Closed House Data Capture**
+-----------------------------
 
-For **household-based flows**, a feature is introduced to **capture reasons for unsuccessful deliveries**.
+-   A **new module** named **closed_household** has been built.
+
+-   This will be a **dependency** of the **registration and delivery package**.
 
 * * * * *
 
-**✅ Final Steps**
------------------
+**Handling Unsuccessful Deliveries**
+------------------------------------
 
-Once all modifications are implemented, rerun:
+For **household-based flows**, a feature has been introduced to **capture reasons for unsuccessful deliveries**.
+
+* * * * *
+
+### ✅ **Final Steps**
+
+Once all the above modifications are implemented, rerun:
 
 ```
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-🚀 **Now, your Registration & Delivery module is successfully integrated into the HCM app!**
-
+This ensures proper integration of **Registration & Delivery** within the **HCM app**.
 
 ### Sequence Diagram
 
