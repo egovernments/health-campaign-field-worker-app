@@ -185,6 +185,7 @@ class ClosedHouseholdDetailsPageState
                               label: localizations.translate(
                                 i18.closeHousehold.accuracyLabel,
                               ),
+                              capitalizedFirstLetter: false,
                               child: DigitTextFormInput(
                                 errorMessage: field.errorText,
                                 readOnly: true,
