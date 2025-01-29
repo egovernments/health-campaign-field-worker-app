@@ -1,6 +1,6 @@
 ## 1.0.3-dev.1
 
-* Added localityCode for register to support Payments
+* Added localityCode for register to support Payments feature
 
 ## 1.0.3+1
 
