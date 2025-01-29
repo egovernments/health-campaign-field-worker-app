@@ -23,6 +23,7 @@ import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/utils/utils.dart'
     as CustomValidatorRegistration;
 
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import '../custom_qr_scanner.dart';
 
@@ -863,7 +864,7 @@ class CustomStockDetailsPageState
 
                                               final facility =
                                                   await context.router.push(
-                                                          InventoryFacilitySelectionRoute(
+                                                          CustomInventoryFacilitySelectionRoute(
                                                               facilities:
                                                                   allFacilities))
                                                       as FacilityModel?;
@@ -1152,7 +1153,7 @@ class CustomStockDetailsPageState
 
                                                   final facility =
                                                       await context.router.push(
-                                                    InventoryFacilitySelectionRoute(
+                                                    CustomInventoryFacilitySelectionRoute(
                                                       facilities: allFacilities,
                                                     ),
                                                   ) as FacilityModel?;
