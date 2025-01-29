@@ -165,28 +165,62 @@ Getting Started (Generalized for All Packages)
 
 To get started with any package, follow these steps:
 
-1.  **Add Dependency**: Add the relevant package to your `pubspec.yaml` file:
+### **Step 1: Add Dependencies**
 
-    ```
-    dependencies:
-      <package_name>: ^latest_version
-    ```
+Add the following dependencies in your **pubspec.yaml** file:
 
-2.  **Integrating with the HCM Application**:
+```
+dependencies:
+  <package_name>: ^latest_version
+```
 
-    -   Locate the main function for integration in the respective tool's import file. For example, `health-campaign-field-worker-app/tools/<package_name>_imports.dart`.
+* * * * *
 
-    -   Run the integration script to automatically add necessary imports, mappers, route configurations, and repository initializations.
+**Integrating with the HCM Application**
+----------------------------------------
 
-    Example command to run:
+### **Step 2: Run the Import Script**
 
-    ```
-    dart run build_runner build --delete-conflicting-outputs
-    ```
+    -   To integrate this package with the HCM Application, locate the main function for integration in the respective tool's import file. For example, `health-campaign-field-worker-app/tools/<package_name>_imports.dart`.
 
-3.  **Install the Application**: After running the build command, install the application on your device to have the module integrated with your base app.
+    -   Run the integration script to automatically add necessary imports, mappers, route configurations, and repository initializations.:
 
-4.  **Sync Data**: To ensure proper data synchronization, follow any additional steps for down-syncing or up-syncing based on your use case.
+```
+health-campaign-field-worker-app/tools/<package_name>_imports.dart
+```
+
+This will automatically handle:\
+✅ Imports\
+✅ Mapper initializers\
+✅ Route configuration\
+✅ Initial data setup\
+✅ Repository initialization
+
+* * * * *
+
+### **Step 3: Run Build Runner**
+
+Ensure you are in the correct project directory:
+
+```
+apps/health_campaign_field_worker_app
+```
+
+Run the following command:
+
+```
+dart run build_runner build --delete-conflicting-outputs
+```
+
+This will add the package route to **router.gr.dart**.
+
+### **Step 4: Install the Application** 
+
+After running the build command, install the application on your device to have the module integrated with your base app.
+
+### **Step 5: Sync Data**
+
+To ensure proper data synchronization, follow any additional steps for down-syncing or up-syncing based on your use case.
 
 By following these general steps, you can successfully integrate and use any of the packages within your application.
 
@@ -219,7 +253,7 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 
 -   **Update Task**: Updates the task if a closed household is registered.
 
-Integrating with the HCM Application[Jump to Getting Started](#getting-started-generalized-for-all-packages)
+Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
 
 ### Sequence Diagram
 
