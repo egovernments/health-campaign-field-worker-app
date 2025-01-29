@@ -174,16 +174,12 @@ dependencies:
   <package_name>: ^latest_version
 ```
 
-* * * * *
-
 **Integrating with the HCM Application**
 ----------------------------------------
 
 ### **Step 2: Run the Import Script**
 
-    -   To integrate this package with the HCM Application, locate the main function for integration in the respective tool's import file. For example, `health-campaign-field-worker-app/tools/<package_name>_imports.dart`.
-
-    -   Run the integration script to automatically add necessary imports, mappers, route configurations, and repository initializations.:
+To integrate this package with the HCM Application, locate the main function for integration in the respective tool's import file. For example, `health-campaign-field-worker-app/tools/<package_name>_imports.dart`.
 
 ```
 health-campaign-field-worker-app/tools/<package_name>_imports.dart
@@ -196,7 +192,6 @@ This will automatically handle:\
 ✅ Initial data setup\
 ✅ Repository initialization
 
-* * * * *
 
 ### **Step 3: Run Build Runner**
 
@@ -253,7 +248,9 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 
 -   **Update Task**: Updates the task if a closed household is registered.
 
+
 Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
+
 
 ### Sequence Diagram
 
@@ -303,60 +300,9 @@ To learn more about Registration and Delivery, click here.
 
 -   **Auto-calculation of resources**: Automatically calculate resources to be delivered to a household or individual based on the configured rules.
 
-**Getting Started**
--------------------
 
-### **Step 1: Add Dependencies**
+Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
 
-Add the following dependencies in your **pubspec.yaml** file:
-
-```
-dependencies:
-  registration_delivery: ^latest
-  digit_scanner: ^latest
-```
-
-* * * * *
-
-**Integrating with the HCM Application**
-----------------------------------------
-
-### **Step 2: Run the Import Script**
-
-To integrate this package with the HCM Application, execute the main function:
-
-```
-health-campaign-field-worker-app/tools/registration_delivery_imports.dart
-```
-
-This will automatically handle:\
-✅ Imports\
-✅ Mapper initializers\
-✅ Route configuration\
-✅ Initial data setup\
-✅ Repository initialization
-
-* * * * *
-
-### **Step 3: Run Build Runner**
-
-Ensure you are in the correct project directory:
-
-```
-apps/health_campaign_field_worker_app
-```
-
-Run the following command:
-
-```
-dart run build_runner build --delete-conflicting-outputs
-```
-
-This will add the package route to **router.gr.dart**.
-
-✅ **Now, install the application**, and **Registration & Delivery** should be integrated into your app.
-
-* * * * *
 
 **Downsyncing Data During Boundary Selection**
 ----------------------------------------------
@@ -391,7 +337,6 @@ referralLocalRepository,
 
 ✅ **These changes will enable the down sync of registration & delivery data.**
 
-* * * * *
 
 **Registries Update**
 ---------------------
@@ -415,7 +360,6 @@ When users **downsync data** by passing **project ID & boundary code**, the serv
 
 -   **Task & related entities (Optional)**
 
-* * * * *
 
 **Filtering Mechanism**
 -----------------------
@@ -436,7 +380,6 @@ To enable better data access, we introduce **filters**:
 
 A **query builder** is used to fetch results dynamically (example below for an individual-based project).
 
-* * * * *
 
 **Fields in Registration Flow**
 -------------------------------
@@ -459,7 +402,6 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 -   The selected value is stored in the **Additional Details Object** in the **Household Entity**.
 
-* * * * *
 
 **Closed House Data Capture**
 -----------------------------
@@ -468,14 +410,12 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 -   This will be a **dependency** of the **registration and delivery package**.
 
-* * * * *
 
 **Handling Unsuccessful Deliveries**
 ------------------------------------
 
 For **household-based flows**, a feature has been introduced to **capture reasons for unsuccessful deliveries**.
 
-* * * * *
 
 ### ✅ **Final Steps**
 
@@ -487,10 +427,14 @@ dart run build_runner build --delete-conflicting-outputs
 
 This ensures proper integration of **Registration & Delivery** within the **HCM app**.
 
+
 ### Sequence Diagram
 
 
 *(Add sequence diagram here)*
+
+
+* * * * *
 
 
 **Inventory Management Package**
@@ -528,6 +472,9 @@ To learn more about Inventory Management, click here.
 
 
 *(Add sequence diagram here)*
+
+
+* * * * *
 
 
 **Referral Reconciliation Package**
@@ -570,6 +517,9 @@ To learn more about Referral Reconciliation, click here.
 *(Add sequence diagram here)*
 
 
+* * * * *
+
+
 **Attendance Management Package**
 ---------------------------------
 
@@ -596,45 +546,8 @@ The **Attendance Management package** is a comprehensive solution for tracking a
 
     -   **session_select.dart** -- Enables users to select attendance sessions conveniently.
 
-* * * * *
 
-**Integrating with the HCM Application**
-----------------------------------------
-
-### **Step 1: Run the Import Script**
-
-To integrate this package with the HCM application, run the main function located at:
-
-```
-health-campaign-field-worker-app/tools/attendance_management_imports.dart
-```
-
-This will automatically add the necessary:\
-✅ Imports\
-✅ Mapper initializers\
-✅ Route configuration\
-✅ Initial data setup\
-✅ Repository initialization
-
-* * * * *
-
-### **Step 2: Run Build Runner**
-
-Ensure you are in the correct project directory:
-
-```
-apps/health_campaign_field_worker_app
-```
-
-Then, run the command:
-
-```
-dart run build_runner build --delete-conflicting-outputs
-```
-
-This will add the necessary package route to the **main router.gr.dart** file.
-
-* * * * *
+Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
 
 ### **Step 3: Fetch Attendance Registers & Attendee Data**
 
@@ -714,7 +627,6 @@ if (context.loggedInUserRoles
     }
 ```
 
-* * * * *
 
 ### **Step 5: Run Build Runner Again**
 
