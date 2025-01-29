@@ -20,6 +20,7 @@ import 'blocs/project/project.dart';
 import 'blocs/summary_reports/custom_distribution_summary_report.dart';
 import 'blocs/summary_reports/custom_enumeration_summary_report.dart';
 import 'data/local_store/app_shared_preferences.dart';
+import 'data/local_store/no_sql/schema/app_configuration.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
 import 'data/repositories/remote/localization.dart';
@@ -181,9 +182,9 @@ class MainApplicationState extends State<MainApplication>
                     final appConfig = appConfigState.appConfiguration;
 
                     final localizationModulesList = appConfig.backendInterface;
-                    final languages = appConfig.languages;
+                    List<Languages>? languages = appConfig.languages;
                     String firstLanguage =
-                        appConfig.languages?.last.value ?? defaultLanguageCode;
+                        languages?.last.value ?? defaultLanguageCode;
                     String? selectedLocale =
                         AppSharedPreferences().getSelectedLocale;
 
@@ -321,6 +322,8 @@ class MainApplicationState extends State<MainApplication>
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
+                          String? selectedLocale =
+                              AppSharedPreferences().getSelectedLocale;
                           return MaterialApp.router(
                             debugShowCheckedModeBanner: false,
                             builder: (context, child) {
