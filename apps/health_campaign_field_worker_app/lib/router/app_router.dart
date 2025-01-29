@@ -7,6 +7,9 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
 import 'package:health_campaign_field_worker_app/pages/custom_qr_scanner.dart';
 import 'package:health_campaign_field_worker_app/pages/household_acknowlegment/custom_household_acknowlegment.dart';
+import 'package:health_campaign_field_worker_app/pages/inventory/custom_report_details.dart';
+import 'package:health_campaign_field_worker_app/pages/inventory/custom_report_selection.dart';
+import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
@@ -268,9 +271,23 @@ class AppRouter extends _$AppRouter {
           path: 'inventory-report-selection',
         ),
         AutoRoute(
+          page: CustomInventoryReportSelectionRoute.page,
+          path: 'custom-inventory-report-selection',
+        ),
+        RedirectRoute(
+            path: 'inventory-report-selection',
+            redirectTo: 'custom-inventory-report-selection'),
+        AutoRoute(
           page: InventoryReportDetailsRoute.page,
           path: 'inventory-report-details',
         ),
+        AutoRoute(
+          page: CustomInventoryReportDetailsRoute.page,
+          path: 'custom-inventory-report-details',
+        ),
+        RedirectRoute(
+            path: 'inventory-report-details',
+            redirectTo: 'custom-inventory-report-details'),
         AutoRoute(
           page: InventoryAcknowledgementRoute.page,
           path: 'inventory-acknowledgement',
