@@ -18,6 +18,7 @@ import 'package:attendance_management/pages/session_select.dart' as _i2;
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart'
     as _i1;
 import 'package:auto_route/auto_route.dart' as _i5;
+import 'package:digit_data_model/models/entities/individual.dart' as _i10;
 import 'package:flutter/material.dart' as _i6;
 
 abstract class $AttendanceRoute extends _i5.AutoRouterModule {
@@ -66,6 +67,7 @@ abstract class $AttendanceRoute extends _i5.AutoRouterModule {
         routeData: routeData,
         child: _i4.MarkAttendancePage(
           attendees: args.attendees,
+          individuals: args.individuals,
           registerId: args.registerId,
           tenantId: args.tenantId,
           dateTime: args.dateTime,
@@ -232,6 +234,7 @@ class ManageAttendanceRoute extends _i5.PageRouteInfo<void> {
 class MarkAttendanceRoute extends _i5.PageRouteInfo<MarkAttendanceRouteArgs> {
   MarkAttendanceRoute({
     required List<_i9.AttendeeModel> attendees,
+    required List<_i10.IndividualModel> individuals,
     required String registerId,
     required String tenantId,
     required DateTime dateTime,
@@ -245,6 +248,7 @@ class MarkAttendanceRoute extends _i5.PageRouteInfo<MarkAttendanceRouteArgs> {
           MarkAttendanceRoute.name,
           args: MarkAttendanceRouteArgs(
             attendees: attendees,
+            individuals: individuals,
             registerId: registerId,
             tenantId: tenantId,
             dateTime: dateTime,
@@ -266,6 +270,7 @@ class MarkAttendanceRoute extends _i5.PageRouteInfo<MarkAttendanceRouteArgs> {
 class MarkAttendanceRouteArgs {
   const MarkAttendanceRouteArgs({
     required this.attendees,
+    required this.individuals,
     required this.registerId,
     required this.tenantId,
     required this.dateTime,
@@ -277,6 +282,8 @@ class MarkAttendanceRouteArgs {
   });
 
   final List<_i9.AttendeeModel> attendees;
+
+  final List<_i10.IndividualModel> individuals;
 
   final String registerId;
 
@@ -296,6 +303,6 @@ class MarkAttendanceRouteArgs {
 
   @override
   String toString() {
-    return 'MarkAttendanceRouteArgs{attendees: $attendees, registerId: $registerId, tenantId: $tenantId, dateTime: $dateTime, entryTime: $entryTime, exitTime: $exitTime, session: $session, key: $key, appLocalizations: $appLocalizations}';
+    return 'MarkAttendanceRouteArgs{attendees: $attendees, individuals: $individuals, registerId: $registerId, tenantId: $tenantId, dateTime: $dateTime, entryTime: $entryTime, exitTime: $exitTime, session: $session, key: $key, appLocalizations: $appLocalizations}';
   }
 }

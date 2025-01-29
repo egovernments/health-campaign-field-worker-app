@@ -140,10 +140,10 @@ class ClosedHouseholdSummaryPageState
                           LabelValueItem(
                             label: localizations.translate(
                                 i18.closeHousehold.closeHouseholdVillageName),
-                            value: ClosedHouseholdSingleton()
+                            value: localizations.translate(ClosedHouseholdSingleton()
                                 .boundary!
                                 .code
-                                .toString(),
+                                .toString()),
                             labelFlex: 5,
                           ),
                           LabelValueItem(
