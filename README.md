@@ -191,3 +191,201 @@ To get started with any package, follow these steps:
 By following these general steps, you can successfully integrate and use any of the packages within your application.
 
 * * * * *
+
+**Closed Household Package**
+----------------------------
+
+
+The **Closed Household** package is a new module built as a Flutter package (`closed_household`). It will be a dependency for the **Registration and Delivery** package.
+
+
+### Link to the Pub Package:
+
+
+-   [closed_household | Flutter package](https://pub.dev/packages/closed_household)
+
+
+### Role
+
+
+**Distributor**
+
+
+### Features:
+
+
+-   **Create a Closed Household**: Enables creating a closed household record.
+
+
+-   **Update Task**: Updates the task if a closed household is registered.
+
+
+### Sequence Diagram
+
+
+*(Add sequence diagram here)*
+
+
+* * * * *
+
+
+**Registration & Delivery Package**
+-----------------------------------
+
+
+This package provides a way to register a household and individual members and deliver the resources to the registered households.
+
+
+To learn more about Registration and Delivery, click here.
+
+
+### Link to the Pub Package:
+
+
+-   registration_delivery | Flutter package
+
+
+### Role
+
+
+-   **DISTRIBUTOR**
+
+
+### Features:
+
+
+-   **Register new households and individuals**: Register new records for households and individuals.
+
+
+-   **Search existing households and individuals**: Easily search for already registered records.
+
+
+-   **Update existing records**: Modify details for existing households and individuals.
+
+
+-   **Record service delivery**: Track healthcare interventions delivered to households and individuals for a single-round campaign.
+
+
+-   **Auto-calculation of resources**: Automatically calculate resources to be delivered to a household or individual based on the configured rules.
+
+
+### Sequence Diagram
+
+
+*(Add sequence diagram here)*
+
+
+**Inventory Management Package**
+--------------------------------
+
+
+This package enables the user to manage the stocks of a health campaign. The user can record the stocks received, issued, returned, damaged, and lost.
+
+
+To learn more about Inventory Management, click here.
+
+
+### Link to the Pub Package:
+
+
+-   inventory_management | Flutter package
+
+
+### Role
+
+
+-   **DISTRIBUTOR**
+-   **WAREHOUSE_MANAGER**
+
+
+### Features:
+
+
+-   **Manage Stocks**: Record the receipt, issue, return, damage, and loss of stocks.
+-   **Stock Reconciliation**: Reconcile the stock data.
+-   **View Reports**: View the reports of the stocks.
+
+
+### Sequence Diagram
+
+
+*(Add sequence diagram here)*
+
+
+**Referral Reconciliation Package**
+-----------------------------------
+
+
+This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally via the **Digit HCM app**.
+
+
+To learn more about Referral Reconciliation, click here.
+
+
+### Link to the Pub Package:
+
+
+-   referral_reconciliation | Flutter package
+
+
+### Role
+
+
+-   **HEALTH_FACILITY_WORKER**
+
+
+### Features:
+
+
+-   **Track referrals made by on-field health workers**: Enables tracking of all referrals to various health facilities.
+
+
+-   **Capture beneficiary referral details**: Includes the reason for referrals, diagnosis, and any further applicable details.
+
+
+-   **Detailed record keeping**: Ensures all referral cases are documented digitally for better monitoring.
+
+
+### Sequence Diagram
+
+
+*(Add sequence diagram here)*
+
+
+**Attendance Management Package**
+---------------------------------
+
+
+The Attendance Management package is a comprehensive solution for managing attendance in the **Digit HCM app**.
+
+
+To learn more about Attendance Management, click here.
+
+
+### Link to the Pub Package:
+
+
+-   attendance_management | Flutter package
+
+
+### Role
+
+
+-   **SUPERVISOR**
+
+
+### Features
+
+
+-   **Attendance Pages**:\
+    The package includes several pages to provide a user interface for managing attendance:
+-   **mark_attendance.dart**: Allows users to mark attendance for individuals.
+-   **manage_attendance.dart**: Provides an interface for managing and updating attendance records.
+-   **session_select.dart**: Enables users to select attendance sessions conveniently.
+
+
+### Sequence Diagram
+
+
+*(Add sequence diagram here)*
+
