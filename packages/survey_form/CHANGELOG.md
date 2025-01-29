@@ -1,4 +1,4 @@
-## 1.0.0+1
+## 1.0.0-dev.1
 
 * Modified ServiceSearchModel with relatedClientReferenceId and search query
 * Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing

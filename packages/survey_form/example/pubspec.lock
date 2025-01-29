@@ -277,10 +277,10 @@ packages:
     dependency: transitive
     description:
       name: digit_data_model
-      sha256: c3bc7299a7d927ebb83d8e91c1d7a8a51f6a1d1295dafeacb642012b72b99a2f
+      sha256: "3280e583b1409146c7aa842b23c9a0f6734eca20dd4603c609ec7719f2729e52"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.5-dev.2"
   digit_ui_components:
     dependency: "direct main"
     description:
@@ -1112,7 +1112,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.0-dev.1"
   term_glyph:
     dependency: transitive
     description:
