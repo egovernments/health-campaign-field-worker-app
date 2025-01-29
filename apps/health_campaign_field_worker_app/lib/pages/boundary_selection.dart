@@ -45,6 +45,7 @@ class _BoundarySelectionPageState
 
   Map<String, TextEditingController> dropdownControllers = {};
   late StreamSubscription syncSubscription;
+  var leastLevelBoundaries;
 
   @override
   void initState() {
@@ -68,6 +69,7 @@ class _BoundarySelectionPageState
 
   @override
   void dispose() {
+    clickedStatus.value = true;
     clickedStatus.dispose();
     syncSubscription.cancel();
     super.dispose();
@@ -597,27 +599,21 @@ class _BoundarySelectionPageState
                                                             ),
                                                           );
                                                     } else {
-                                                      Future.delayed(
-                                                        const Duration(
-                                                          milliseconds: 100,
-                                                        ),
-                                                        () => context.router
-                                                            .maybePop(),
-                                                      );
+                                                      context.router.maybePop();
+                                                      LocalizationParams()
+                                                          .setModule(
+                                                              'boundary', true);
+                                                      context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
+                                                          index: appConfiguration
+                                                              .languages!
+                                                              .indexWhere((element) =>
+                                                                  element
+                                                                      .value ==
+                                                                  AppSharedPreferences()
+                                                                      .getSelectedLocale),
+                                                          code: AppSharedPreferences()
+                                                              .getSelectedLocale!));
                                                     }
-                                                    clickedStatus.value = true;
-                                                    LocalizationParams()
-                                                        .setModule(
-                                                            'boundary', true);
-                                                    context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
-                                                        index: appConfiguration
-                                                            .languages!
-                                                            .indexWhere((element) =>
-                                                                element.value ==
-                                                                AppSharedPreferences()
-                                                                    .getSelectedLocale),
-                                                        code: AppSharedPreferences()
-                                                            .getSelectedLocale!));
                                                   }
                                                 }
                                               },
@@ -648,6 +644,7 @@ class _BoundarySelectionPageState
     final labelList = state.selectedBoundaryMap.keys.toList();
     final parentIndex = labelList.indexOf(parentLabel);
     if (state.boundaryList.isNotEmpty) {
+      leastLevelBoundaries = (state.boundaryList.map((e) => e.code!).toList());
       LocalizationParams()
           .setCode(state.boundaryList.map((e) => e.code!).toList());
     }
