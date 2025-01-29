@@ -599,10 +599,22 @@ class _BoundarySelectionPageState
                                                             ),
                                                           );
                                                     } else {
-                                                      context.router.maybePop();
                                                       LocalizationParams()
                                                           .setModule(
                                                               'boundary', true);
+                                                      context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
+                                                          index: appConfiguration
+                                                              .languages!
+                                                              .indexWhere((element) =>
+                                                          element
+                                                              .value ==
+                                                              AppSharedPreferences()
+                                                                  .getSelectedLocale),
+                                                          code: AppSharedPreferences()
+                                                              .getSelectedLocale!));
+
+                                                      context.router.replaceAll([HomeRoute()]);
+
                                                     }
                                                   }
                                                 }
