@@ -549,7 +549,7 @@ The **Attendance Management package** is a comprehensive solution for tracking a
 
 Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
 
-### **Step 3: Fetch Attendance Registers & Attendee Data**
+### ** Fetch Attendance Registers & Attendee Data**
 
 Navigate to the **Project Bloc**, where attendance data should be fetched after login.
 
@@ -571,7 +571,7 @@ final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
 
 * * * * *
 
-### **Step 4: Fetch Attendance Data Based on User Role**
+### ** Fetch Attendance Data Based on User Role**
 
 Find the section where **project staff search** is handled.\
 Modify the **try-catch block** to fetch attendance data based on role:
@@ -628,7 +628,7 @@ if (context.loggedInUserRoles
 ```
 
 
-### **Step 5: Run Build Runner Again**
+### ** Run Build Runner Again**
 
 Ensure you are still in:
 
