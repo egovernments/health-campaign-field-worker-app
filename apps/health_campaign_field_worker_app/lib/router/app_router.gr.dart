@@ -244,6 +244,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomStockReconciliationRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomStockReconciliationRouteArgs>(
+          orElse: () => const CustomStockReconciliationRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomStockReconciliationPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomSummaryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomSummaryRouteArgs>(
           orElse: () => const CustomSummaryRouteArgs());
@@ -1174,6 +1185,45 @@ class CustomStockDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomStockDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomStockReconciliationPage]
+class CustomStockReconciliationRoute
+    extends PageRouteInfo<CustomStockReconciliationRouteArgs> {
+  CustomStockReconciliationRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomStockReconciliationRoute.name,
+          args: CustomStockReconciliationRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomStockReconciliationRoute';
+
+  static const PageInfo<CustomStockReconciliationRouteArgs> page =
+      PageInfo<CustomStockReconciliationRouteArgs>(name);
+}
+
+class CustomStockReconciliationRouteArgs {
+  const CustomStockReconciliationRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomStockReconciliationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

@@ -52,6 +52,7 @@ import '../pages/reports/beneficiary/custom_distribution_summary_report_details.
 import '../pages/complaints/custom_complaints_details.dart';
 import 'package:complaints/blocs/localization/app_localization.dart';
 import '../pages/complaints/custom_complaint_type.dart';
+import '../pages/inventory/custom_stock_reconciliation.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -255,6 +256,13 @@ class AppRouter extends _$AppRouter {
           page: StockReconciliationRoute.page,
           path: 'stock-reconciliation',
         ),
+        AutoRoute(
+          page: CustomStockReconciliationRoute.page,
+          path: 'custom-stock-reconciliation',
+        ),
+        RedirectRoute(
+            path: 'stock-reconciliation',
+            redirectTo: 'custom-stock-reconciliation'),
         AutoRoute(
           page: InventoryReportSelectionRoute.page,
           path: 'inventory-report-selection',

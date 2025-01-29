@@ -1123,6 +1123,8 @@ class StockDetails {
   String get baleMismatchCommentRequired => 'BALE_MISMATCH_COMMENT_REQUIRED';
 
   String get manualScanCommentRequired => 'MANUAL_SCAN_COMMENT_REQUIRED';
+
+  String get reconciliationCommentRequired => 'RECONCILIATION_COMMENT_REQUIRED';
 }
 
 class BeneficiaryDetails {
