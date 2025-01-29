@@ -65,12 +65,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
-    bool isHealthFacilityWorker = SurveyFormSingleton().isHealthFacilityWorker;
-
     return WillPopScope(
-      onWillPop: isHealthFacilityWorker && widget.referralClientRefId != null
-          ? () async => false
-          : () async => _onBackPressed(context),
+      onWillPop: () async => _onBackPressed(context),
       child: Scaffold(
         body: BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
           builder: (context, state) {
@@ -81,10 +77,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 if (!isControllersInitialized) {
                   initialAttributes?.forEach((e) {
                     controller.add(TextEditingController());
-                    if (!(isHealthFacilityWorker &&
-                        widget.referralClientRefId != null)) {
-                      additionalController.add(TextEditingController());
-                    }
                   });
 
                   // Set the flag to true after initializing controllers
@@ -96,11 +88,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               orElse: () => Text(state.runtimeType.toString()),
               serviceDefinitionFetch: (value) {
                 return ScrollableContent(
-                  header: Column(children: [
-                    if (!(isHealthFacilityWorker &&
-                        widget.referralClientRefId != null))
-                      const BackNavigationHelpHeaderWidget(),
-                  ]),
+                  header: const BackNavigationHelpHeaderWidget(),
                   enableFixedDigitButton: true,
                   footer: DigitCard(
                       cardType: CardType.primary,
@@ -139,10 +127,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                           (controller[i].text == '')) ||
                                       (itemsAttributes?[i].dataType !=
                                               'SingleValueList' &&
-                                          (controller[i].text == '' &&
-                                              !(isHealthFacilityWorker &&
-                                                  widget.referralClientRefId !=
-                                                      null))))) {
+                                          (controller[i].text == '')))) {
                                 return;
                               }
                             }
@@ -196,11 +181,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                               dataType: attribute?[i].dataType,
                                               clientReferenceId:
                                                   IdGen.i.identifier,
-                                              referenceId: isHealthFacilityWorker &&
-                                                      widget.referralClientRefId !=
-                                                          null
-                                                  ? widget.referralClientRefId
-                                                  : referenceId,
+                                              referenceId: referenceId,
                                               value: attribute?[i].dataType !=
                                                       'SingleValueList'
                                                   ? controller[i]
@@ -221,32 +202,27 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                           .notSelectedKey,
                                               rowVersion: 1,
                                               tenantId: attribute?[i].tenantId,
-                                              additionalDetails: isHealthFacilityWorker &&
-                                                      widget.referralClientRefId !=
-                                                          null
-                                                  ? null
-                                                  : ((attribute?[i]
-                                                                      .values
-                                                                      ?.length ==
-                                                                  2 ||
-                                                              attribute?[i]
-                                                                      .values
-                                                                      ?.length ==
-                                                                  3) &&
-                                                          controller[i].text ==
-                                                              attribute?[i]
-                                                                  .values?[1]
-                                                                  .trim())
-                                                      ? additionalController[i]
-                                                              .text
-                                                              .toString()
-                                                              .isEmpty
-                                                          ? null
-                                                          : additionalController[
-                                                                  i]
-                                                              .text
-                                                              .toString()
-                                                      : null,
+                                              additionalDetails: ((attribute?[i]
+                                                                  .values
+                                                                  ?.length ==
+                                                              2 ||
+                                                          attribute?[i]
+                                                                  .values
+                                                                  ?.length ==
+                                                              3) &&
+                                                      controller[i].text ==
+                                                          attribute?[i]
+                                                              .values?[1]
+                                                              .trim())
+                                                  ? additionalController[i]
+                                                          .text
+                                                          .toString()
+                                                          .isEmpty
+                                                      ? null
+                                                      : additionalController[i]
+                                                          .text
+                                                          .toString()
+                                                  : null,
                                               additionalFields:
                                                   ServiceAttributesAdditionalFields(
                                                 version: 1,
@@ -283,13 +259,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                       tenantId: value
                                                           .selectedServiceDefinition!
                                                           .tenantId,
-                                                      clientId: isHealthFacilityWorker &&
-                                                              widget.referralClientRefId !=
-                                                                  null
-                                                          ? widget
-                                                              .referralClientRefId
-                                                              .toString()
-                                                          : referenceId,
+                                                      clientId: referenceId,
                                                       serviceDefId: value
                                                           .selectedServiceDefinition
                                                           ?.id,
@@ -706,8 +676,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
     ServiceDefinitionModel? selectedServiceDefinition,
     BuildContext context,
   ) {
-    bool isHealthFacilityWorker = SurveyFormSingleton().isHealthFacilityWorker;
-
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
     /* Check the data type of the attribute*/
@@ -829,8 +797,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
                   return (controller[index].text == item.values?[1].trim() &&
-                          !(isHealthFacilityWorker &&
-                              widget.referralClientRefId != null) &&
                           item.dataType != 'SingleValueList')
                       ? Padding(
                           padding: const EdgeInsets.only(
