@@ -266,12 +266,6 @@ class CustomStockDetailsPageState
                           ),
                           child: ReactiveFormConsumer(
                               builder: (context, form, child) {
-                            if (!isWaybillQuantityInit &&
-                                form.control(_waybillQuantityKey).value ==
-                                    null) {
-                              form.control(_waybillQuantityKey).value = 0;
-                              isWaybillQuantityInit = true;
-                            }
                             print("form.errors ${form.errors}");
                             if (form
                                     .control(_deliveryTeamKey)
@@ -923,10 +917,7 @@ class CustomStockDetailsPageState
                                                     _waybillQuantityKey,
                                                   )
                                                       .setValidators(
-                                                    [
-                                                      Validators.min(0),
-                                                      Validators.max(maxCount),
-                                                    ],
+                                                    [],
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
@@ -1013,11 +1004,7 @@ class CustomStockDetailsPageState
                                                       _waybillQuantityKey,
                                                     )
                                                         .setValidators(
-                                                      [
-                                                        Validators.min(0),
-                                                        Validators.max(
-                                                            maxCount),
-                                                      ],
+                                                      [],
                                                       updateParent: true,
                                                       autoValidate: true,
                                                     );
@@ -1226,11 +1213,7 @@ class CustomStockDetailsPageState
                                                           _waybillQuantityKey,
                                                         )
                                                             .setValidators(
-                                                          [
-                                                            Validators.min(0),
-                                                            Validators.max(
-                                                                maxCount),
-                                                          ],
+                                                          [],
                                                           updateParent: true,
                                                           autoValidate: true,
                                                         );
@@ -1441,6 +1424,29 @@ class CustomStockDetailsPageState
                                         .quantityOfProductIndicatedOnWaybillLabel,
                                   ),
                                   formControlName: _waybillQuantityKey,
+                                  onChanged: (val) {
+                                    if (val.value == null || val.value != "") {
+                                      form
+                                          .control(_waybillQuantityKey)
+                                          .setValidators(
+                                        [],
+                                        autoValidate: true,
+                                        updateParent: true,
+                                      );
+                                    } else {
+                                      form
+                                          .control(_waybillQuantityKey)
+                                          .setValidators(
+                                        [
+                                          Validators.number(),
+                                          Validators.min(0),
+                                          Validators.max(maxCount),
+                                        ],
+                                        autoValidate: true,
+                                        updateParent: true,
+                                      );
+                                    }
+                                  },
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
                                     decimal: true,
