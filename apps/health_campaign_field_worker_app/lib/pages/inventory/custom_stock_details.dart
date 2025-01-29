@@ -520,6 +520,17 @@ class CustomStockDetailsPageState
 
                                           switch (entryType) {
                                             case StockRecordEntryType.receipt:
+                                              if (deliveryTeamSelected) {
+                                                senderId = deliveryTeamName;
+                                                senderType = "STAFF";
+                                              } else {
+                                                senderId = secondaryParty?.id;
+                                                senderType = "WAREHOUSE";
+                                              }
+                                              receiverId = primaryId;
+                                              receiverType = primaryType;
+
+                                              break;
                                             case StockRecordEntryType.loss:
                                               if (deliveryTeamSelected) {
                                                 receiverId = deliveryTeamName;
