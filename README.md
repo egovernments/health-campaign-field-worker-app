@@ -268,6 +268,189 @@ To learn more about Registration and Delivery, click here.
 
 -   **Auto-calculation of resources**: Automatically calculate resources to be delivered to a household or individual based on the configured rules.
 
+* * * * *
+
+**📌 Getting Started**
+----------------------
+
+### **Step 1: Add Dependencies**
+
+Add the following dependencies in your `pubspec.yaml` file:
+
+```
+dependencies:
+  registration_delivery: ^latest
+  digit_scanner: ^latest
+```
+
+* * * * *
+
+**🛠️ Integration with the HCM Application**
+--------------------------------------------
+
+### **Step 2: Run the Import Script**
+
+Execute the main function to integrate the package:
+
+```
+health-campaign-field-worker-app/tools/registration_delivery_imports.dart
+```
+
+This will automatically handle:\
+✅ Imports\
+✅ Mapper Initializers\
+✅ Route Configuration\
+✅ Initial Data Setup\
+✅ Repository Initialization
+
+* * * * *
+
+### **Step 3: Run Build Runner**
+
+Ensure you're in the correct project directory:
+
+```
+cd apps/health_campaign_field_worker_app
+```
+
+Run the following command:
+
+```
+dart run build_runner build --delete-conflicting-outputs
+```
+
+This adds the **package route** to `router.gr.dart`.
+
+* * * * *
+
+**🔄 Downsyncing Data During Boundary Selection**
+-------------------------------------------------
+
+To **enable data synchronization**, update `**project_beneficiaries_downsync.dart**` with the following repositories:
+
+```
+final LocalRepository<HouseholdModel, HouseholdSearchModel> householdLocalRepository;
+final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel> householdMemberLocalRepository;
+final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> projectBeneficiaryLocalRepository;
+final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
+final LocalRepository<SideEffectModel, SideEffectSearchModel> sideEffectLocalRepository;
+final LocalRepository<ReferralModel, ReferralSearchModel> referralLocalRepository;
+```
+
+Next, locate the method:
+
+```
+networkManager.writeToEntityDb
+```
+
+Ensure it includes the repositories:
+
+```
+householdLocalRepository,
+householdMemberLocalRepository,
+projectBeneficiaryLocalRepository,
+taskLocalRepository,
+sideEffectLocalRepository,
+referralLocalRepository,
+```
+
+✅ **This ensures proper downsync of registration & delivery data.**
+
+* * * * *
+
+**📂 Registries Update**
+------------------------
+
+When users **downsync data** by passing **project ID & boundary code**, the server returns responses **only for the selected boundary**.
+
+### **📋 Response Entities:**
+
+-   **🏠 Household**
+
+-   **👤 Individual**
+
+-   **👨‍👩‍👦 House Member**
+
+#### **📌 Scenarios**
+
+1️⃣ **Updating Project-Specific Data**\
+2️⃣ **Creating New Project-Specific Data**
+
+-   **Beneficiary (Mandatory)**
+
+-   **Task & Related Entities (Optional)**
+
+* * * * *
+
+**🔍 Filtering Mechanism**
+--------------------------
+
+The package supports advanced **filters** for efficient data retrieval:
+
+-   ✅ **Registered**
+
+-   ✅ **Unregistered**
+
+-   ✅ **Closed**
+
+-   ✅ **Combination of Filters**
+
+-   ✅ **Proximity Enabled Search**
+
+-   ✅ **Search by Name**
+
+* * * * *
+
+**📝 Fields in Registration Flow**
+----------------------------------
+
+### 📍 **GPS Accuracy**
+
+-   Captured on the **Household Location** screen.
+
+### 🤰 **Pregnant Women & Children Count**
+
+-   Entered on the **Member Screen**.
+
+-   Stored in the **Additional Fields Object** of the **Household Member entity**.
+
+### 🏠 **Household Structure Selection**
+
+-   A new screen captures **household structure**.
+
+-   Structure data is fetched from **MDMS** and displayed in a **card selection UI**.
+
+-   The selected value is stored in the **Additional Details Object** of the **Household Entity**.
+
+* * * * *
+
+**🏡 Closed House Data Capture**
+--------------------------------
+
+-   A **new module** named **closed_household** has been developed.
+
+-   This module is a **dependency** of the **registration and delivery package**.
+
+* * * * *
+
+**❌ Handling Unsuccessful Deliveries**
+--------------------------------------
+
+For **household-based flows**, a feature is introduced to **capture reasons for unsuccessful deliveries**.
+
+* * * * *
+
+**✅ Final Steps**
+-----------------
+
+Once all modifications are implemented, rerun:
+
+```
+dart run build_runner build --delete-conflicting-outputs
+```
+
+🚀 **Now, your Registration & Delivery module is successfully integrated into the HCM app!**
+
 
 ### Sequence Diagram
 
@@ -355,34 +538,164 @@ To learn more about Referral Reconciliation, click here.
 **Attendance Management Package**
 ---------------------------------
 
+The **Attendance Management package** is a comprehensive solution for tracking and managing attendance within the **Digit HCM app**.
 
-The Attendance Management package is a comprehensive solution for managing attendance in the **Digit HCM app**.
+### **To learn more about Attendance Management, click here.**
 
-
-To learn more about Attendance Management, click here.
-
-
-### Link to the Pub Package:
-
+### **Link to the Pub Package:**
 
 -   attendance_management | Flutter package
 
-
-### Role
-
+### **Role**
 
 -   **SUPERVISOR**
 
-
-### Features
-
+### **Features**
 
 -   **Attendance Pages**:\
-    The package includes several pages to provide a user interface for managing attendance:
--   **mark_attendance.dart**: Allows users to mark attendance for individuals.
--   **manage_attendance.dart**: Provides an interface for managing and updating attendance records.
--   **session_select.dart**: Enables users to select attendance sessions conveniently.
+    The package includes several UI pages for attendance management:
 
+    -   **mark_attendance.dart** -- Allows users to mark attendance.
+
+    -   **manage_attendance.dart** -- Provides an interface for managing and updating attendance records.
+
+    -   **session_select.dart** -- Enables users to select attendance sessions conveniently.
+
+* * * * *
+
+**Integrating with the HCM Application**
+----------------------------------------
+
+### **Step 1: Run the Import Script**
+
+To integrate this package with the HCM application, run the main function located at:
+
+```
+health-campaign-field-worker-app/tools/attendance_management_imports.dart
+```
+
+This will automatically add the necessary:\
+✅ Imports\
+✅ Mapper initializers\
+✅ Route configuration\
+✅ Initial data setup\
+✅ Repository initialization
+
+* * * * *
+
+### **Step 2: Run Build Runner**
+
+Ensure you are in the correct project directory:
+
+```
+apps/health_campaign_field_worker_app
+```
+
+Then, run the command:
+
+```
+dart run build_runner build --delete-conflicting-outputs
+```
+
+This will add the necessary package route to the **main router.gr.dart** file.
+
+* * * * *
+
+### **Step 3: Fetch Attendance Registers & Attendee Data**
+
+Navigate to the **Project Bloc**, where attendance data should be fetched after login.
+
+Add the following repositories:
+
+```
+final RemoteRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
+  attendanceRemoteRepository;
+
+final LocalRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
+  attendanceLocalRepository;
+
+final LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>
+  attendanceLogLocalRepository;
+
+final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
+  attendanceLogRemoteRepository;
+```
+
+* * * * *
+
+### **Step 4: Fetch Attendance Data Based on User Role**
+
+Find the section where **project staff search** is handled.\
+Modify the **try-catch block** to fetch attendance data based on role:
+
+```
+if (context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.districtSupervisor.toValue(),
+        )
+        .toList()
+        .isNotEmpty) {
+      final individual = await individualRemoteRepository.search(
+        IndividualSearchModel(
+          userUuid: [projectStaff.userId.toString()],
+        ),
+      );
+      final attendanceRegisters = await attendanceRemoteRepository.search(
+        AttendanceRegisterSearchModel(
+          staffId: individual.first.id,
+          referenceId: projectStaff.projectId,
+        ),
+      );
+      await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+
+      for (final register in attendanceRegisters) {
+        if (register.attendees != null &&
+            (register.attendees ?? []).isNotEmpty) {
+          try {
+            final individuals = await individualRemoteRepository.search(
+              IndividualSearchModel(
+                id: register.attendees!
+                    .map((e) => e.individualId!)
+                    .toList(),
+              ),
+            );
+            await individualLocalRepository.bulkCreate(individuals);
+            final logs = await attendanceLogRemoteRepository.search(
+              AttendanceLogSearchModel(
+                registerId: register.id,
+              ),
+            );
+            await attendanceLogLocalRepository.bulkCreate(logs);
+          } catch (_) {
+            emit(state.copyWith(
+              loading: false,
+              syncError: ProjectSyncErrorType.project,
+            ));
+
+            return;
+          }
+        }
+      }
+    }
+```
+
+* * * * *
+
+### **Step 5: Run Build Runner Again**
+
+Ensure you are still in:
+
+```
+apps/health_campaign_field_worker_app
+```
+
+Then, run the build runner command again:
+
+```
+dart run build_runner build --delete-conflicting-outputs
+```
+
+This will ensure the package route is properly integrated into **router.gr.dart**.
 
 ### Sequence Diagram
 
