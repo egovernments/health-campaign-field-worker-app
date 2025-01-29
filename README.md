@@ -468,6 +468,9 @@ To learn more about Inventory Management, click here.
 -   **View Reports**: View the reports of the stocks.
 
 
+Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
+
+
 ### Sequence Diagram
 
 
@@ -511,6 +514,9 @@ To learn more about Referral Reconciliation, click here.
 -   **Detailed record keeping**: Ensures all referral cases are documented digitally for better monitoring.
 
 
+Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
+
+
 ### Sequence Diagram
 
 
@@ -549,7 +555,7 @@ The **Attendance Management package** is a comprehensive solution for tracking a
 
 Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
 
-### ** Fetch Attendance Registers & Attendee Data**
+### **Fetch Attendance Registers & Attendee Data**
 
 Navigate to the **Project Bloc**, where attendance data should be fetched after login.
 
@@ -569,9 +575,8 @@ final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
   attendanceLogRemoteRepository;
 ```
 
-* * * * *
 
-### ** Fetch Attendance Data Based on User Role**
+### **Fetch Attendance Data Based on User Role**
 
 Find the section where **project staff search** is handled.\
 Modify the **try-catch block** to fetch attendance data based on role:
@@ -628,7 +633,7 @@ if (context.loggedInUserRoles
 ```
 
 
-### ** Run Build Runner Again**
+### **Run Build Runner Again**
 
 Ensure you are still in:
 
@@ -643,6 +648,7 @@ dart run build_runner build --delete-conflicting-outputs
 ```
 
 This will ensure the package route is properly integrated into **router.gr.dart**.
+
 
 ### Sequence Diagram
 
