@@ -7,7 +7,6 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
@@ -195,10 +194,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                             ?.household
                                             ?.address
                                             ?.locality
-                                            ?.code
-                                            .split('_')
-                                            .last
-                                            .titleCase ??
+                                            ?.code ??
                                         i18.common.coreCommonNA),
                                     isInline: true,
                                     labelFlex: 5,

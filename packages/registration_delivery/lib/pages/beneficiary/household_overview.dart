@@ -137,9 +137,9 @@ class _HouseholdOverviewPageState
                                                 vertical: spacer2),
                                             child: DigitButton(
                                               label: localizations.translate(
-                                                i18.memberCard
-                                                    .deliverDetailsUpdateLabel,
+                                                '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.memberCard.deliverDetailsUpdateLabel}',
                                               ),
+                                              capitalizeLetters: false,
                                               isDisabled: state
                                                           .householdMemberWrapper
                                                           .tasks
@@ -177,7 +177,8 @@ class _HouseholdOverviewPageState
                                                         navigateToChecklist(
                                                             ctx,
                                                             state
-                                                                .selectedIndividual!
+                                                                .householdMemberWrapper
+                                                                .household!
                                                                 .clientReferenceId);
                                                       }
                                                     });
@@ -192,9 +193,9 @@ class _HouseholdOverviewPageState
                                           )
                                         : DigitButton(
                                             label: localizations.translate(
-                                              i18.householdOverView
-                                                  .householdOverViewEditLabel,
+                                              '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.householdOverView.householdOverViewActionText}',
                                             ),
+                                            capitalizeLetters: false,
                                             type: DigitButtonType.primary,
                                             size: DigitButtonSize.large,
                                             mainAxisSize: MainAxisSize.max,
@@ -250,9 +251,17 @@ class _HouseholdOverviewPageState
                                                     } else {
                                                       navigateToChecklist(
                                                           ctx,
-                                                          state
-                                                              .selectedIndividual!
-                                                              .clientReferenceId);
+                                                          RegistrationDeliverySingleton()
+                                                                      .beneficiaryType ==
+                                                                  BeneficiaryType
+                                                                      .individual
+                                                              ? state
+                                                                  .selectedIndividual!
+                                                                  .clientReferenceId
+                                                              : state
+                                                                  .householdMemberWrapper
+                                                                  .household!
+                                                                  .clientReferenceId);
                                                     }
                                                   });
                                               callReloadEvent(
@@ -863,13 +872,15 @@ class _HouseholdOverviewPageState
                                             deleteMemberAction: () {
                                               showCustomPopup(
                                                 context: context,
-                                                builder: (BuildContext) => Popup(
-                                                    title: localizations
-                                                        .translate(i18
-                                                            .householdOverView
-                                                            .householdOverViewActionCardTitle),
-                                                    type: PopUpType.simple,
-                                                    actions: [
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    Popup(
+                                                        title: localizations
+                                                            .translate(i18
+                                                                .householdOverView
+                                                                .householdOverViewActionCardTitle),
+                                                        type: PopUpType.simple,
+                                                        actions: [
                                                       DigitButton(
                                                           label: localizations
                                                               .translate(i18

@@ -155,6 +155,7 @@ class _ReferralReasonChecklistPageState
                                         onPressed: () {
                                           List<ServiceAttributesModel>
                                               attributes = [];
+                                          var referenceId = IdGen.i.identifier;
                                           for (int i = 0;
                                               i < controller.length;
                                               i++) {
@@ -166,8 +167,7 @@ class _ReferralReasonChecklistPageState
                                               dataType: attribute?[i].dataType,
                                               clientReferenceId:
                                                   IdGen.i.identifier,
-                                              referenceId:
-                                                  widget.referralClientRefId,
+                                              referenceId: referenceId,
                                               value: attribute?[i].dataType !=
                                                       'SingleValueList'
                                                   ? controller[i]
@@ -205,9 +205,7 @@ class _ReferralReasonChecklistPageState
                                                       tenantId: value
                                                           .selectedServiceDefinition!
                                                           .tenantId,
-                                                      clientId: widget
-                                                          .referralClientRefId
-                                                          .toString(),
+                                                      clientId: referenceId,
                                                       serviceDefId: value
                                                           .selectedServiceDefinition
                                                           ?.id,
@@ -246,6 +244,10 @@ class _ReferralReasonChecklistPageState
                                                           ServiceAdditionalFields(
                                                               version: 1,
                                                               fields: [
+                                                            AdditionalField(
+                                                                'relatedClientReferenceId',
+                                                                widget
+                                                                    .referralClientRefId),
                                                             AdditionalField(
                                                                 'boundaryCode',
                                                                 SurveyFormSingleton()

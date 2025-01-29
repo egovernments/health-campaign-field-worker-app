@@ -4,6 +4,8 @@ class Constants {
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
   static const String SurveyFormViewDateFormat = 'dd/MM/yyyy hh:mm a';
   static const String healthFacilitySurveyFormPrefix = 'HF_RF';
+  static const String iecSurveyFormPrefix = 'IEC';
+  static const String eligibilitySurveyFormPrefix = 'ELIGIBILITY';
 }
 
 const String noResultSvg = 'assets/icons/svg/no_result.svg';
