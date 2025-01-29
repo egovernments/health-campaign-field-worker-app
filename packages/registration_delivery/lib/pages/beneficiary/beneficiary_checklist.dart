@@ -185,12 +185,14 @@ class _BeneficiaryChecklistPageState
                                                           selectedServiceDefinition!);
                                                   createSubmitRequest(
                                                       decidedFlow: decidedFlow);
-                                                  Navigator.of(context).pop();
+                                                  Navigator.of(popUpContext)
+                                                      .pop();
                                                   navigateToDecidedFlow(
                                                       context, decidedFlow);
                                                 } else {
                                                   createSubmitRequest();
-                                                  Navigator.of(context).pop();
+                                                  Navigator.of(popUpContext)
+                                                      .pop();
                                                   context.router.push(
                                                     DeliverInterventionRoute(),
                                                   );
@@ -205,7 +207,8 @@ class _BeneficiaryChecklistPageState
                                               onPressed: () {
                                                 createSubmitRequest();
 
-                                                Navigator.of(context).pop();
+                                                Navigator.of(popUpContext)
+                                                    .pop();
                                                 context.router.push(
                                                   RefusedDeliveryRoute(),
                                                 );
