@@ -124,18 +124,27 @@ class _HouseholdOverviewPageState
                                                 serviceDefinitionFetch:
                                                     (value, model) {
                                                   if (value
-                                                      .where((element) => element
-                                                          .code
-                                                          .toString()
-                                                          .contains(
-                                                              '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
+                                                      .where((element) =>
+                                                          element.code
+                                                              .toString()
+                                                              .contains(
+                                                                  '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                          element.code
+                                                              .toString()
+                                                              .contains(
+                                                                  '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                       .toList()
                                                       .isEmpty) {
                                                     context.router.push(
                                                       DeliverInterventionRoute(),
                                                     );
                                                   } else {
-                                                    navigateToChecklist(ctx);
+                                                    navigateToChecklist(
+                                                        ctx,
+                                                        state
+                                                            .householdMemberWrapper
+                                                            .household!
+                                                            .clientReferenceId);
                                                   }
                                                 });
                                           },
@@ -184,18 +193,34 @@ class _HouseholdOverviewPageState
                                               serviceDefinitionFetch:
                                                   (value, model) {
                                                 if (value
-                                                    .where((element) => element
-                                                        .code
-                                                        .toString()
-                                                        .contains(
-                                                            '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
+                                                    .where((element) =>
+                                                        element.code
+                                                            .toString()
+                                                            .contains(
+                                                                '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                        element.code
+                                                            .toString()
+                                                            .contains(
+                                                                '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                     .toList()
                                                     .isEmpty) {
                                                   context.router.push(
                                                     DeliverInterventionRoute(),
                                                   );
                                                 } else {
-                                                  navigateToChecklist(ctx);
+                                                  navigateToChecklist(
+                                                      ctx,
+                                                      RegistrationDeliverySingleton()
+                                                                  .beneficiaryType ==
+                                                              BeneficiaryType
+                                                                  .individual
+                                                          ? state
+                                                              .selectedIndividual!
+                                                              .clientReferenceId
+                                                          : state
+                                                              .householdMemberWrapper
+                                                              .household!
+                                                              .clientReferenceId);
                                                 }
                                               });
                                         },
@@ -624,7 +649,7 @@ class _HouseholdOverviewPageState
                                           deleteMemberAction: () {
                                             showCustomPopup(
                                               context: context,
-                                              builder: (BuildContext) {
+                                              builder: (BuildContext context) {
                                                 return Popup(
                                                     title: localizations
                                                         .translate(i18
@@ -864,7 +889,9 @@ class _HouseholdOverviewPageState
     return {'textLabel': textLabel, 'color': color, 'icon': icon};
   }
 
-  void navigateToChecklist(BuildContext ctx) async {
-    await context.router.push(BeneficiaryChecklistRoute());
+  void navigateToChecklist(
+      BuildContext ctx, String beneficiaryClientRefId) async {
+    await context.router.push(BeneficiaryChecklistRoute(
+        beneficiaryClientRefId: beneficiaryClientRefId));
   }
 }

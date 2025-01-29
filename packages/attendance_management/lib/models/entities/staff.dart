@@ -39,6 +39,7 @@ class StaffModel extends EntityModel with StaffModelMappable {
   final String? userId;
   final int? enrollmentDate;
   final int? denrollmentDate;
+  final String? staffType;
   final bool? nonRecoverableError;
   final int? rowVersion;
   final StaffAdditionalFields? additionalFields;
@@ -51,6 +52,7 @@ class StaffModel extends EntityModel with StaffModelMappable {
     this.userId,
     this.enrollmentDate,
     this.denrollmentDate,
+    this.staffType,
     this.nonRecoverableError = false,
     this.rowVersion,
     super.auditDetails,
@@ -66,7 +68,7 @@ class StaffModel extends EntityModel with StaffModelMappable {
 class StaffAdditionalFields extends AdditionalFields
     with StaffAdditionalFieldsMappable {
   StaffAdditionalFields({
-    super.schema = 'AttendanceLog',
+    super.schema = 'Staff',
     required super.version,
     super.fields,
   });
