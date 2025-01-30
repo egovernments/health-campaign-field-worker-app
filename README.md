@@ -520,7 +520,7 @@ To learn more about Inventory Management, click here.
 -   **View Reports**: View the reports of the stocks.
 
 
-### **Integrating with the HCM Application:** [Getting Started](#📦-getting-started-generalized-for-all-packages)
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
 
 
 
@@ -752,7 +752,7 @@ The `digit_data_model` package is a comprehensive data modeling library for the 
 -   **Schema Versioning** -- Supports **database migrations** through schema versioning.
 
 
-**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
 
 
 Below are some examples of how you can use this package:
