@@ -40,7 +40,7 @@ The high-level architecture of the app is divided into three core parts:
 
 3.  **Database**: Combines SQLite and ISAR for flexible offline data storage.
 
-
+--------
 
 ✨ Tech Stack/Core Dependencies
 ----------------------------
@@ -53,7 +53,7 @@ The high-level architecture of the app is divided into three core parts:
 
 -   **Dio**: HTTP client for network communication.
 
-
+--------
 
 ✨ Design Considerations
 ---------------------
@@ -104,7 +104,7 @@ All offline actions are logged and processed during sync-up to ensure data consi
 
 A network manager component abstracts the online/offline logic, enabling seamless data handling by other app components.
 
-
+--------
 
 ✨ Modules and Features
 --------------------
