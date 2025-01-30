@@ -22,8 +22,6 @@ class DashboardConfigWrapper with _$DashboardConfigWrapper {
   const factory DashboardConfigWrapper({
     @JsonKey(name: 'enableDashboard') required bool enableDashboard,
     @JsonKey(name: 'charts') List<ChartConfigModel>? charts,
-    required String projectTypeCode,
-    String? projectTypeId,
   }) = _DashboardConfigWrapper;
 
   factory DashboardConfigWrapper.fromJson(

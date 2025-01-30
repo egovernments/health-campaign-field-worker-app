@@ -237,7 +237,7 @@ mixin _$AppInitializationState {
     required TResult Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)
+            DashboardConfigSchema? dashboardConfigSchema)
         initialized,
   }) =>
       throw _privateConstructorUsedError;
@@ -249,7 +249,7 @@ mixin _$AppInitializationState {
     TResult? Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)?
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
   }) =>
       throw _privateConstructorUsedError;
@@ -261,7 +261,7 @@ mixin _$AppInitializationState {
     TResult Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)?
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
     required TResult orElse(),
   }) =>
@@ -351,7 +351,7 @@ class _$AppUninitializedImpl extends AppUninitialized {
     required TResult Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)
+            DashboardConfigSchema? dashboardConfigSchema)
         initialized,
   }) {
     return uninitialized();
@@ -366,7 +366,7 @@ class _$AppUninitializedImpl extends AppUninitialized {
     TResult? Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)?
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
   }) {
     return uninitialized?.call();
@@ -381,7 +381,7 @@ class _$AppUninitializedImpl extends AppUninitialized {
     TResult Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)?
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
     required TResult orElse(),
   }) {
@@ -473,7 +473,7 @@ class _$AppInitializingImpl extends AppInitializing {
     required TResult Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)
+            DashboardConfigSchema? dashboardConfigSchema)
         initialized,
   }) {
     return loading();
@@ -488,7 +488,7 @@ class _$AppInitializingImpl extends AppInitializing {
     TResult? Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)?
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
   }) {
     return loading?.call();
@@ -503,7 +503,7 @@ class _$AppInitializingImpl extends AppInitializing {
     TResult Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)?
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
     required TResult orElse(),
   }) {
@@ -599,7 +599,7 @@ class _$AppInitializationFailedImpl extends AppInitializationFailed {
     required TResult Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)
+            DashboardConfigSchema? dashboardConfigSchema)
         initialized,
   }) {
     return failed();
@@ -614,7 +614,7 @@ class _$AppInitializationFailedImpl extends AppInitializationFailed {
     TResult? Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)?
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
   }) {
     return failed?.call();
@@ -629,7 +629,7 @@ class _$AppInitializationFailedImpl extends AppInitializationFailed {
     TResult Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)?
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
     required TResult orElse(),
   }) {
@@ -691,7 +691,7 @@ abstract class _$$AppInitializedImplCopyWith<$Res> {
   $Res call(
       {AppConfiguration appConfiguration,
       List<ServiceRegistry> serviceRegistryList,
-      List<DashboardConfigSchema?>? dashboardConfigSchema});
+      DashboardConfigSchema? dashboardConfigSchema});
 }
 
 /// @nodoc
@@ -719,9 +719,9 @@ class __$$AppInitializedImplCopyWithImpl<$Res>
           : serviceRegistryList // ignore: cast_nullable_to_non_nullable
               as List<ServiceRegistry>,
       dashboardConfigSchema: freezed == dashboardConfigSchema
-          ? _value._dashboardConfigSchema
+          ? _value.dashboardConfigSchema
           : dashboardConfigSchema // ignore: cast_nullable_to_non_nullable
-              as List<DashboardConfigSchema?>?,
+              as DashboardConfigSchema?,
     ));
   }
 }
@@ -732,9 +732,8 @@ class _$AppInitializedImpl extends AppInitialized {
   const _$AppInitializedImpl(
       {required this.appConfiguration,
       final List<ServiceRegistry> serviceRegistryList = const [],
-      final List<DashboardConfigSchema?>? dashboardConfigSchema})
+      this.dashboardConfigSchema})
       : _serviceRegistryList = serviceRegistryList,
-        _dashboardConfigSchema = dashboardConfigSchema,
         super._();
 
   @override
@@ -749,16 +748,8 @@ class _$AppInitializedImpl extends AppInitialized {
     return EqualUnmodifiableListView(_serviceRegistryList);
   }
 
-  final List<DashboardConfigSchema?>? _dashboardConfigSchema;
   @override
-  List<DashboardConfigSchema?>? get dashboardConfigSchema {
-    final value = _dashboardConfigSchema;
-    if (value == null) return null;
-    if (_dashboardConfigSchema is EqualUnmodifiableListView)
-      return _dashboardConfigSchema;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
+  final DashboardConfigSchema? dashboardConfigSchema;
 
   @override
   bool operator ==(Object other) {
@@ -769,8 +760,8 @@ class _$AppInitializedImpl extends AppInitialized {
                 other.appConfiguration == appConfiguration) &&
             const DeepCollectionEquality()
                 .equals(other._serviceRegistryList, _serviceRegistryList) &&
-            const DeepCollectionEquality()
-                .equals(other._dashboardConfigSchema, _dashboardConfigSchema));
+            (identical(other.dashboardConfigSchema, dashboardConfigSchema) ||
+                other.dashboardConfigSchema == dashboardConfigSchema));
   }
 
   @override
@@ -778,7 +769,7 @@ class _$AppInitializedImpl extends AppInitialized {
       runtimeType,
       appConfiguration,
       const DeepCollectionEquality().hash(_serviceRegistryList),
-      const DeepCollectionEquality().hash(_dashboardConfigSchema));
+      dashboardConfigSchema);
 
   @JsonKey(ignore: true)
   @override
@@ -796,7 +787,7 @@ class _$AppInitializedImpl extends AppInitialized {
     required TResult Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)
+            DashboardConfigSchema? dashboardConfigSchema)
         initialized,
   }) {
     return initialized(
@@ -812,7 +803,7 @@ class _$AppInitializedImpl extends AppInitialized {
     TResult? Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)?
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
   }) {
     return initialized?.call(
@@ -828,7 +819,7 @@ class _$AppInitializedImpl extends AppInitialized {
     TResult Function(
             AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList,
-            List<DashboardConfigSchema?>? dashboardConfigSchema)?
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
     required TResult orElse(),
   }) {
@@ -881,13 +872,13 @@ abstract class AppInitialized extends AppInitializationState {
   const factory AppInitialized(
           {required final AppConfiguration appConfiguration,
           final List<ServiceRegistry> serviceRegistryList,
-          final List<DashboardConfigSchema?>? dashboardConfigSchema}) =
+          final DashboardConfigSchema? dashboardConfigSchema}) =
       _$AppInitializedImpl;
   const AppInitialized._() : super._();
 
   AppConfiguration get appConfiguration;
   List<ServiceRegistry> get serviceRegistryList;
-  List<DashboardConfigSchema?>? get dashboardConfigSchema;
+  DashboardConfigSchema? get dashboardConfigSchema;
   @JsonKey(ignore: true)
   _$$AppInitializedImplCopyWith<_$AppInitializedImpl> get copyWith =>
       throw _privateConstructorUsedError;

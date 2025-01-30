@@ -179,7 +179,8 @@ class AppInitializationBloc
                 DashboardConfigPrimaryWrapper.fromJson(
                         jsonDecode(dashboardConfigWrapper)['MdmsRes']
                             [ModuleEnums.hcm.toValue()])
-                    .dashboardConfigWrapper,
+                    .dashboardConfigWrapper
+                    .first,
                 isar);
           }
         } catch (e) {
@@ -205,11 +206,11 @@ class AppInitializationBloc
   ) async {
     final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
     final configs = await isar.appConfigurations.where().findAll();
-    final dashboardConfigs = await isar.dashboardConfigSchemaLists
+    final dashboardConfigs = await isar.dashboardConfigSchemas
         .where()
         .filter()
-        .dashboardConfigsIsNotNull()
-        .dashboardConfigsIsNotEmpty()
+        .chartsIsNotNull()
+        .chartsIsNotEmpty()
         .findAll();
 
     if (serviceRegistryList.isEmpty) {
@@ -219,11 +220,10 @@ class AppInitializationBloc
       throw Exception('`configs` cannot be empty');
     }
 
-
     return MdmsConfig(
       appConfigs: configs,
       serviceRegistryList: serviceRegistryList,
-      dashboardConfigSchema: dashboardConfigs.first.dashboardConfigs,
+      dashboardConfigSchema: dashboardConfigs.firstOrNull,
     );
   }
 }
@@ -247,7 +247,7 @@ class AppInitializationState with _$AppInitializationState {
   const factory AppInitializationState.initialized({
     required AppConfiguration appConfiguration,
     @Default([]) List<ServiceRegistry> serviceRegistryList,
-    List<DashboardConfigSchema?>? dashboardConfigSchema,
+    DashboardConfigSchema? dashboardConfigSchema,
   }) = AppInitialized;
 
   Map<DataModelType, Map<ApiOperation, String>> get entityActionMapping {
@@ -311,7 +311,8 @@ class AppInitializationState with _$AppInitializationState {
 class MdmsConfig {
   final List<AppConfiguration> appConfigs;
   final List<ServiceRegistry> serviceRegistryList;
-  final List<DashboardConfigSchema?>? dashboardConfigSchema;
+  final DashboardConfigSchema? dashboardConfigSchema;
+
 
   const MdmsConfig(
       {required this.appConfigs,

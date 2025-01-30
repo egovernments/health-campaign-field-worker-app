@@ -547,6 +547,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
+    if (!context.selectedProject.name.contains('IRS')) {
+      filteredLabels.remove(i18.home.dashboard);
+    }
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -645,10 +648,8 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (
         AppConfiguration appConfiguration,
         List<ServiceRegistry> serviceRegistry,
-        List<DashboardConfigSchema?>? dashboardConfigSchema,
+        DashboardConfigSchema? dashboardConfigSchema,
       ) {
-        final filteredDashboardConfig = filterDashboardConfig(
-            dashboardConfigSchema ?? [], context.projectTypeCode ?? "");
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         ComplaintsSingleton().setInitialData(
@@ -774,7 +775,7 @@ void setPackagesSingleton(BuildContext context) {
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
-            dashboardConfig: filteredDashboardConfig.firstOrNull,
+            dashboardConfig: dashboardConfigSchema,
             appVersion: Constants().version,
             selectedProject: context.selectedProject,
             actionPath: Constants.getEndPoint(

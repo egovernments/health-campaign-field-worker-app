@@ -70,7 +70,7 @@ class Constants {
           OpLogSchema,
           ProjectTypeListCycleSchema,
           RowVersionListSchema,
-          DashboardConfigSchemaListSchema,
+          DashboardConfigSchemaSchema,
           DashboardResponseSchema,
         ],
         name: 'HCM',
@@ -90,8 +90,6 @@ class Constants {
   static const String healthFacilitySurveyFormPrefix = 'HF_RF';
 
   static const String boundaryLocalizationPath = 'rainmaker-boundary-admin';
-
-  static const String dashboardAnalyticsPath = '/dashboard-analytics/dashboard/getChartV2';
 
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
