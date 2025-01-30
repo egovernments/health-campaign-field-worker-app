@@ -1,6 +1,6 @@
 name: digit_dss
 description: "DSS Dashboard for campaign management"
-version: 1.0.3
+version: 1.0.4
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/digit_dss
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
