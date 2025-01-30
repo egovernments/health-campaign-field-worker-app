@@ -1,12 +1,15 @@
 Health Campaign Management V1.6 - Field Worker's App
 ====================================================
 
+
 Overview
 --------
 
 The Health Campaign Management (HCM) [latest version](https://github.com/egovernments/health-campaign-field-worker-app/tags) field worker's app is part of the DIGIT Health Platform. It empowers frontline teams to manage health campaigns efficiently, even in low or no network coverage areas. With its offline-first functionality and configurable design, the app is built to address the unique needs of field workers, ensuring seamless data collection, beneficiary management, and campaign tracking.
 
-Key Features
+
+
+✨Key Features
 ------------
 
 -   **Offline Mode**: Perform all tasks without active internet connectivity.
@@ -23,6 +26,8 @@ Key Features
 
 -   **Permission-Based Access**: Data sync tailored to user roles and assigned projects.
 
+
+
 Architecture
 ------------
 
@@ -33,6 +38,8 @@ The high-level architecture of the app is divided into three core parts:
 2.  **Backend Services**: Syncs with MDMS, localisation, and other backend services.
 
 3.  **Database**: Combines SQLite and ISAR for flexible offline data storage.
+
+
 
 Tech Stack/Core Dependencies
 ----------------------------
@@ -45,6 +52,8 @@ Tech Stack/Core Dependencies
 
 -   **Dio**: HTTP client for network communication.
 
+
+
 Design Considerations
 ---------------------
 
@@ -56,6 +65,7 @@ Design Considerations
 
 -   Designed for Android devices, ensuring compatibility with users who have low-tech literacy.
 
+
 ### Sync Mechanism
 
 -   **Sync Down**: Fetch configurations and data from the server (e.g., localisation, master data).
@@ -63,6 +73,7 @@ Design Considerations
 -   **Sync Up**: Upload collected data to the server.
 
 -   **Login & Sync**: Syncing can only occur while the user is online.
+
 
 ### Configurability
 
@@ -76,13 +87,17 @@ Key configurations include:
 
 -   Supported languages and localisation data.
 
+
 ### Operational Log (Op Log)
 
 All offline actions are logged and processed during sync-up to ensure data consistency and integrity.
 
+
 ### Network Manager
 
 A network manager component abstracts the online/offline logic, enabling seamless data handling by other app components.
+
+
 
 Modules and Features
 --------------------
@@ -91,7 +106,7 @@ Modules and Features
 
 Ensures the local device database is updated with the latest beneficiary data while preventing duplicate records.
 
-**Key Features:**
+✨**Key Features:**
 
 -   Uses offset and limit for efficient pagination.
 
@@ -102,6 +117,7 @@ Ensures the local device database is updated with the latest beneficiary data wh
 **Use Case:**
 
 -   Particularly useful in multi-user scenarios where teams operate in the same geographical boundary.
+
 
 ### Multi-Round Campaigns
 
@@ -128,6 +144,9 @@ Supports tracking and delivery processes across multiple cycles.
 -   **Visited**: Delivery successfully completed.
 
 -   **Not Visited**: Delivery not completed.
+
+* * * * *
+
 
 Packages
 -----------
@@ -160,6 +179,9 @@ As a part of the release, we have extracted the features of the Frontline Worker
 
 These are the packages which are created for this.
 
+* * * * *
+
+
 Getting Started (Generalized for All Packages)
 ----------------------------------------------
 
@@ -173,9 +195,6 @@ Add the following dependencies in your **pubspec.yaml** file:
 dependencies:
   <package_name>: ^latest_version
 ```
-
-**Integrating with the HCM Application**
-----------------------------------------
 
 ### **Step 2: Run the Import Script**
 
@@ -209,9 +228,11 @@ dart run build_runner build --delete-conflicting-outputs
 
 This will add the package route to **router.gr.dart**.
 
+
 ### **Step 4: Install the Application** 
 
 After running the build command, install the application on your device to have the module integrated with your base app.
+
 
 ### **Step 5: Sync Data**
 
@@ -220,6 +241,7 @@ To ensure proper data synchronization, follow any additional steps for down-sync
 By following these general steps, you can successfully integrate and use any of the packages within your application.
 
 * * * * *
+
 
 **Closed Household Package**
 ----------------------------
@@ -237,10 +259,10 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 ### Role
 
 
-**Distributor**
+-   **Distributor**
 
 
-### Features:
+### ✨Features:
 
 
 -   **Create a Closed Household**: Enables creating a closed household record.
@@ -249,7 +271,7 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 -   **Update Task**: Updates the task if a closed household is registered.
 
 
-Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
+**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
 
 
 ### Sequence Diagram
@@ -259,6 +281,7 @@ Integrating with the HCM Application: [Getting Started](#getting-started-general
 
 
 * * * * *
+
 
 
 **Registration & Delivery Package**
@@ -283,7 +306,7 @@ To learn more about Registration and Delivery, click here.
 -   **DISTRIBUTOR**
 
 
-### Features:
+### ✨Features:
 
 
 -   **Register new households and individuals**: Register new records for households and individuals.
@@ -301,7 +324,8 @@ To learn more about Registration and Delivery, click here.
 -   **Auto-calculation of resources**: Automatically calculate resources to be delivered to a household or individual based on the configured rules.
 
 
-Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
+**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
 
 
 **Downsyncing Data During Boundary Selection**
@@ -338,10 +362,12 @@ referralLocalRepository,
 ✅ **These changes will enable the down sync of registration & delivery data.**
 
 
+
 **Registries Update**
 ---------------------
 
 When users **downsync data** by passing **project ID & boundary code**, the server returns responses **only for the selected boundary**.
+
 
 ### **Response Entities:**
 
@@ -350,6 +376,7 @@ When users **downsync data** by passing **project ID & boundary code**, the serv
 -   **Individual**
 
 -   **House Member**
+
 
 #### **Scenarios**
 
@@ -384,15 +411,18 @@ A **query builder** is used to fetch results dynamically (example below for an i
 **Fields in Registration Flow**
 -------------------------------
 
+
 ### **GPS Accuracy**
 
 -   Captured on the **Household Location** screen.
+
 
 ### **Pregnant Women & Children Count**
 
 -   Entered on the **Member Screen**.
 
 -   Stored in the **Additional Fields Object** of the **Household Member entity**.
+
 
 ### **Household Structure Selection**
 
@@ -417,7 +447,7 @@ A **query builder** is used to fetch results dynamically (example below for an i
 For **household-based flows**, a feature has been introduced to **capture reasons for unsuccessful deliveries**.
 
 
-### ✅ **Final Steps**
+### **Final Steps**
 
 Once all the above modifications are implemented, rerun:
 
@@ -435,6 +465,7 @@ This ensures proper integration of **Registration & Delivery** within the **HCM 
 
 
 * * * * *
+
 
 
 **Inventory Management Package**
@@ -460,7 +491,7 @@ To learn more about Inventory Management, click here.
 -   **WAREHOUSE_MANAGER**
 
 
-### Features:
+### ✨Features:
 
 
 -   **Manage Stocks**: Record the receipt, issue, return, damage, and loss of stocks.
@@ -468,7 +499,7 @@ To learn more about Inventory Management, click here.
 -   **View Reports**: View the reports of the stocks.
 
 
-Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
+**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
 
 
 ### Sequence Diagram
@@ -478,6 +509,7 @@ Integrating with the HCM Application: [Getting Started](#getting-started-general
 
 
 * * * * *
+
 
 
 **Referral Reconciliation Package**
@@ -502,7 +534,7 @@ To learn more about Referral Reconciliation, click here.
 -   **HEALTH_FACILITY_WORKER**
 
 
-### Features:
+### ✨Features:
 
 
 -   **Track referrals made by on-field health workers**: Enables tracking of all referrals to various health facilities.
@@ -514,7 +546,7 @@ To learn more about Referral Reconciliation, click here.
 -   **Detailed record keeping**: Ensures all referral cases are documented digitally for better monitoring.
 
 
-Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
+**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
 
 
 ### Sequence Diagram
@@ -524,6 +556,7 @@ Integrating with the HCM Application: [Getting Started](#getting-started-general
 
 
 * * * * *
+
 
 
 **Attendance Management Package**
@@ -541,7 +574,7 @@ The **Attendance Management package** is a comprehensive solution for tracking a
 
 -   **SUPERVISOR**
 
-### **Features**
+### ✨ **Features**
 
 -   **Attendance Pages**:\
     The package includes several UI pages for attendance management:
@@ -553,7 +586,9 @@ The **Attendance Management package** is a comprehensive solution for tracking a
     -   **session_select.dart** -- Enables users to select attendance sessions conveniently.
 
 
-Integrating with the HCM Application: [Getting Started](#getting-started-generalized-for-all-packages)
+**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
 
 ### **Fetch Attendance Registers & Attendee Data**
 
@@ -654,4 +689,92 @@ This will ensure the package route is properly integrated into **router.gr.dart*
 
 
 *(Add sequence diagram here)*
+
+
+* * * * *
+
+
+
+Digit Data Model Package
+------------------------
+
+The `digit_data_model` package is a comprehensive data modeling library for the project. It defines various **classes, enums, and functions** used throughout the project. The package is written in **Dart** and is primarily used in **Flutter applications**.
+
+
+✨ Features
+----------
+
+-   **Data Models** -- Provides predefined models like `DataModel`, `EntityModel`, `EntitySearchModel`, `AdditionalFields`, `AuditDetails`, etc.
+
+-   **Model Provider** -- Includes a `ModelProvider` abstract class and a `ModelProviderRegistry` to register and retrieve models.
+
+-   **Data Model Type Enum** -- Defines a `DataModelType` enum representing different model types.
+
+-   **Mapping Annotations** -- Uses `dart_mappable` for generating mapping code, enabling **JSON serialization/deserialization**.
+
+-   **Data Repositories** -- Provides `DataRepository`, `RemoteRepository`, and `LocalRepository` for handling data operations.
+
+-   **SQL Store** -- Uses `Drift` for SQLite database integration with **reactive persistence**.
+
+-   **Schema Versioning** -- Supports **database migrations** through schema versioning.
+
+
+**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+Below are some examples of how you can use this package:
+
+
+📖 Examples
+-----------
+
+### ✅ Creating a Custom Search Model
+
+```
+class ExampleSearchModel extends EntitySearchModel {
+  ExampleSearchModel({
+    required this.employeeId,
+    required this.attendanceDate,
+    required this.status,
+  });
+}
+```
+
+
+### ✅ Creating Additional Fields
+
+```
+class ExampleAdditionalFields extends AdditionalFields {
+  ExampleAdditionalFields({
+    required this.field1,
+    required this.field2,
+  });
+}
+```
+
+
+### ✅ Implementing a Local Repository
+
+```
+class ExampleLocalRepository
+    extends LocalRepository<ExampleModel, ExampleSearchModel> {
+  ExampleLocalRepository(super.sql, super.opLogManager);
+}
+```
+
+
+### ✅ Implementing a Remote Repository
+
+```
+class ExampleRemoteRepository
+    extends RemoteRepository<ExampleModel, ExampleSearchModel> {
+  ExampleRemoteRepository(super.apiClient, super.opLogManager);
+}
+```
+
+### Sequence Diagram
+
+
+*(Add sequence diagram here)*
+
 
