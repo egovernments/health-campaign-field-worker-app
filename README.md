@@ -9,7 +9,7 @@ The Health Campaign Management (HCM) [latest version](https://github.com/egovern
 
 
 
-✨Key Features
+Key Features
 ------------
 
 -   **Offline Mode**: Perform all tasks without active internet connectivity.
@@ -106,7 +106,7 @@ Modules and Features
 
 Ensures the local device database is updated with the latest beneficiary data while preventing duplicate records.
 
-✨**Key Features:**
+**Key Features:**
 
 -   Uses offset and limit for efficient pagination.
 
@@ -262,7 +262,7 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 -   **Distributor**
 
 
-### ✨Features:
+### Features:
 
 
 -   **Create a Closed Household**: Enables creating a closed household record.
@@ -306,7 +306,7 @@ To learn more about Registration and Delivery, click here.
 -   **DISTRIBUTOR**
 
 
-### ✨Features:
+### Features:
 
 
 -   **Register new households and individuals**: Register new records for households and individuals.
@@ -491,7 +491,7 @@ To learn more about Inventory Management, click here.
 -   **WAREHOUSE_MANAGER**
 
 
-### ✨Features:
+### Features:
 
 
 -   **Manage Stocks**: Record the receipt, issue, return, damage, and loss of stocks.
@@ -534,7 +534,7 @@ To learn more about Referral Reconciliation, click here.
 -   **HEALTH_FACILITY_WORKER**
 
 
-### ✨Features:
+### Features:
 
 
 -   **Track referrals made by on-field health workers**: Enables tracking of all referrals to various health facilities.
@@ -574,7 +574,7 @@ The **Attendance Management package** is a comprehensive solution for tracking a
 
 -   **SUPERVISOR**
 
-### ✨ **Features**
+### **Features**
 
 -   **Attendance Pages**:\
     The package includes several UI pages for attendance management:
