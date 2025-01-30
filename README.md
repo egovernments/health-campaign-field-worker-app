@@ -3,14 +3,14 @@
 
 
 
-Overview
+✨ Overview
 --------
 
 The Health Campaign Management (HCM) [latest version](https://github.com/egovernments/health-campaign-field-worker-app/tags) field worker's app is part of the DIGIT Health Platform. It empowers frontline teams to manage health campaigns efficiently, even in low or no network coverage areas. With its offline-first functionality and configurable design, the app is built to address the unique needs of field workers, ensuring seamless data collection, beneficiary management, and campaign tracking.
 
 
 
-Key Features
+✨ Key Features
 ------------
 
 -   **Offline Mode**: Perform all tasks without active internet connectivity.
@@ -29,7 +29,7 @@ Key Features
 
 
 
-Architecture
+✨ Architecture
 ------------
 
 The high-level architecture of the app is divided into three core parts:
@@ -42,7 +42,7 @@ The high-level architecture of the app is divided into three core parts:
 
 
 
-Tech Stack/Core Dependencies
+✨ Tech Stack/Core Dependencies
 ----------------------------
 
 -   **Flutter**: Framework to build multi-platform apps.
@@ -55,7 +55,7 @@ Tech Stack/Core Dependencies
 
 
 
-Design Considerations
+✨ Design Considerations
 ---------------------
 
 
@@ -106,7 +106,7 @@ A network manager component abstracts the online/offline logic, enabling seamles
 
 
 
-Modules and Features
+✨ Modules and Features
 --------------------
 
 
@@ -347,7 +347,7 @@ To learn more about Registration and Delivery, click here.
 
 
 
-**Downsyncing Data During Boundary Selection**
+**✨ Downsyncing Data During Boundary Selection**
 ----------------------------------------------
 
 If you need to **downsync registration-delivery data** during boundary selection, modify **project_beneficiaries_downsync.dart** by including the following repositories:
@@ -382,14 +382,14 @@ referralLocalRepository,
 
 
 
-**Registries Update**
+**✨ Registries Update**
 ---------------------
 
 When users **downsync data** by passing **project ID & boundary code**, the server returns responses **only for the selected boundary**.
 
 
 
-### **Response Entities:**
+### **✨ Response Entities:**
 
 -   **Household**
 
@@ -410,7 +410,7 @@ When users **downsync data** by passing **project ID & boundary code**, the serv
 
 
 
-**Filtering Mechanism**
+**✨ Filtering Mechanism**
 -----------------------
 
 To enable better data access, we introduce **filters**:
@@ -431,7 +431,7 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 
 
-**Fields in Registration Flow**
+**✨ Fields in Registration Flow**
 -------------------------------
 
 ### **GPS Accuracy**
@@ -458,7 +458,7 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 
 
-**Closed House Data Capture**
+**✨ Closed House Data Capture**
 -----------------------------
 
 -   A **new module** named **closed_household** has been built.
@@ -467,14 +467,14 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 
 
-**Handling Unsuccessful Deliveries**
+**✨ Handling Unsuccessful Deliveries**
 ------------------------------------
 
 For **household-based flows**, a feature has been introduced to **capture reasons for unsuccessful deliveries**.
 
 
 
-**Final Steps**
+**✨ Final Steps**
 ----------------
 
 Once all the above modifications are implemented, rerun:
