@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Added support for multiple campaign types dashboard Configs
+
 ## 1.0.3
 
 * Updated to latest package versions
