@@ -379,7 +379,7 @@ referralLocalRepository,
 
 ✅ **These changes will enable the down sync of registration & delivery data.**
 
-
+* * * * *
 
 ### **✨ Registries Update**
 
@@ -406,7 +406,7 @@ When users **downsync data** by passing **project ID & boundary code**, the serv
 
 -   **Task & related entities (Optional)**
 
-
+* * * * *
 
 ### **✨ Filtering Mechanism**
 
@@ -426,7 +426,7 @@ To enable better data access, we introduce **filters**:
 
 A **query builder** is used to fetch results dynamically (example below for an individual-based project).
 
-
+* * * * *
 
 ### **✨ Fields in Registration Flow**
 
@@ -452,7 +452,7 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 -   The selected value is stored in the **Additional Details Object** in the **Household Entity**.
 
-
+* * * * *
 
 ### **✨ Closed House Data Capture**
 
@@ -460,13 +460,13 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 -   This will be a **dependency** of the **registration and delivery package**.
 
-
+* * * * *
 
 ### **✨ Handling Unsuccessful Deliveries**
 
 For **household-based flows**, a feature has been introduced to **capture reasons for unsuccessful deliveries**.
 
-
+* * * * *
 
 ### **✨ Final Steps**
 
@@ -640,7 +640,7 @@ final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
   attendanceLogRemoteRepository;
 ```
 
-
+* * * * *
 
 ### **✅ Fetch Attendance Data Based on User Role**
 
@@ -698,7 +698,7 @@ if (context.loggedInUserRoles
     }
 ```
 
-
+* * * * *
 
 ### **✅ Run Build Runner Again**
 
