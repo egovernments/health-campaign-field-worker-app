@@ -290,7 +290,7 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 -   **Update Task**: Updates the task if a closed household is registered.
 
 
-### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+### **Integrating with the HCM Application:** [Getting Started](#📦-getting-started-generalized-for-all-packages)
 
 
 
