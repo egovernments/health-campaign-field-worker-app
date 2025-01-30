@@ -457,20 +457,24 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .toLocal()
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
-        final dashboardConfig = await isar.dashboardConfigSchemas
+        final dashboardConfig = await isar.dashboardConfigSchemaLists
             .where()
             .filter()
-            .chartsIsNotNull()
-            .chartsIsNotEmpty()
+            .dashboardConfigsIsNotNull()
+            .dashboardConfigsIsNotEmpty()
             .findAll();
         final dashboardActionPath = Constants.getEndPoint(
             serviceRegistry: serviceRegistry,
             service: DashboardResponseModel.schemaName.toUpperCase(),
             action: ApiOperation.search.toValue(),
             entityName: DashboardResponseModel.schemaName);
-        if (dashboardConfig.isNotEmpty &&
-            dashboardConfig.first.enableDashboard == true &&
-            dashboardConfig.first.charts != null) {
+
+        final filteredDashboardConfig = filterDashboardConfig(dashboardConfig.isNotEmpty ? dashboardConfig.first.dashboardConfigs : null,
+            event.model.additionalDetails?.projectType?.code ?? "");
+
+        if (filteredDashboardConfig.isNotEmpty &&
+            filteredDashboardConfig.first?.enableDashboard == true &&
+            filteredDashboardConfig.first?.charts != null) {
           final loggedInIndividualId = await localSecureStore.userIndividualId;
           final registers = await attendanceLocalRepository.search(
             AttendanceRegisterSearchModel(
@@ -479,11 +483,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             ),
           );
           List<String> attendeesIndividualIds = [];
-          registers.forEach((r) {
+          for (var r in registers) {
             r.attendees?.where((a) => a.individualId != null).forEach((att) {
               attendeesIndividualIds.add(att.individualId.toString());
             });
-          });
+          }
           final individuals =
               await individualLocalRepository.search(IndividualSearchModel(
             id: attendeesIndividualIds,
@@ -493,7 +497,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .map((i) => i.userUuid.toString())
               .toList();
           await processDashboardConfig(
-            dashboardConfig.first.charts ?? [],
+            dashboardConfig.first.dashboardConfigs?.where(
+                    (config) => config.projectTypeId == event.model.projectTypeId || config.projectTypeCode == event.model.projectType).first.charts  ?? [],
             startDate,
             endDate,
             isar,
@@ -501,8 +506,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             dashboardRemoteRepository,
             dashboardActionPath.trim().isNotEmpty
                 ? dashboardActionPath
-                : '/dashboard-analytics/dashboard/getChartV2',
-            //[TODO: To be added to MDMS Service registry
+                : Constants.dashboardAnalyticsPath,
             envConfig.variables.tenantId,
             event.model.id,
             userUUIDList,
