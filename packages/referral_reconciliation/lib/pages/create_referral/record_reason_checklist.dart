@@ -155,43 +155,40 @@ class _ReferralReasonChecklistPageState
                                         onPressed: () {
                                           List<ServiceAttributesModel>
                                               attributes = [];
+                                          var referenceId = IdGen.i.identifier;
                                           for (int i = 0;
                                               i < controller.length;
                                               i++) {
                                             final attribute = initialAttributes;
-                                            attributes.add(
-                                                ServiceAttributesModel(
-                                                    attributeCode:
-                                                        '${attribute?[i].code}',
-                                                    dataType:
-                                                        attribute?[i].dataType,
-                                                    clientReferenceId:
-                                                        IdGen.i.identifier,
-                                                    referenceId: widget
-                                                        .referralClientRefId,
-                                                    value: attribute?[i]
-                                                                .dataType !=
-                                                            'SingleValueList'
-                                                        ? controller[i]
-                                                                .text
-                                                                .toString()
-                                                                .trim()
-                                                                .isNotEmpty
-                                                            ? controller[i]
-                                                                .text
-                                                                .toString()
-                                                            : ''
-                                                        : visibleChecklistIndexes
-                                                                .contains(i)
-                                                            ? controller[i]
-                                                                .text
-                                                                .toString()
-                                                            : i18.checklist
-                                                                .notSelectedKey,
-                                                    rowVersion: 1,
-                                                    tenantId:
-                                                        attribute?[i].tenantId,
-                                                    additionalDetails: null));
+                                            attributes
+                                                .add(ServiceAttributesModel(
+                                              attributeCode:
+                                                  '${attribute?[i].code}',
+                                              dataType: attribute?[i].dataType,
+                                              clientReferenceId:
+                                                  IdGen.i.identifier,
+                                              referenceId: referenceId,
+                                              value: attribute?[i].dataType !=
+                                                      'SingleValueList'
+                                                  ? controller[i]
+                                                          .text
+                                                          .toString()
+                                                          .trim()
+                                                          .isNotEmpty
+                                                      ? controller[i]
+                                                          .text
+                                                          .toString()
+                                                      : ''
+                                                  : visibleChecklistIndexes
+                                                          .contains(i)
+                                                      ? controller[i]
+                                                          .text
+                                                          .toString()
+                                                      : i18.checklist
+                                                          .notSelectedKey,
+                                              rowVersion: 1,
+                                              tenantId: attribute?[i].tenantId,
+                                            ));
                                           }
 
                                           context.read<ServiceBloc>().add(
@@ -208,9 +205,7 @@ class _ReferralReasonChecklistPageState
                                                       tenantId: value
                                                           .selectedServiceDefinition!
                                                           .tenantId,
-                                                      clientId: widget
-                                                          .referralClientRefId
-                                                          .toString(),
+                                                      clientId: referenceId,
                                                       serviceDefId: value
                                                           .selectedServiceDefinition
                                                           ?.id,
@@ -249,6 +244,10 @@ class _ReferralReasonChecklistPageState
                                                           ServiceAdditionalFields(
                                                               version: 1,
                                                               fields: [
+                                                            AdditionalField(
+                                                                'relatedClientReferenceId',
+                                                                widget
+                                                                    .referralClientRefId),
                                                             AdditionalField(
                                                                 'boundaryCode',
                                                                 SurveyFormSingleton()

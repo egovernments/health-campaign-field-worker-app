@@ -24,8 +24,6 @@ echo "Please select a build config (release or profile):"
 read build_config
 build_config="${build_config:-release}"
 
-cd "$APP_DIR" || exit
-
 # # Build APK for specified environment(s) and build config
 # if [ "$env" == "ALL" ]; then
 #   env_list=("UAT" "DEV" "QA")
@@ -33,7 +31,9 @@ cd "$APP_DIR" || exit
 #   env_list=("$env")
 # fi
 
-# ./tools/install_bricks.sh
+./tools/install_bricks.sh
+
+cd "$APP_DIR" || exit
 
 # for env_option in "${env_list[@]}"; do
 #   cd "$APP_DIR" || exit
@@ -53,8 +53,8 @@ cd "$APP_DIR" || exit
   build_apk
   cd ../../ || exit
 
-  mkdir -p outputs
-#  mv "$APP_DIR/build/app/outputs/flutter-apk/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
+  # mkdir -p outputs
+  # mv "$APP_DIR/build/app/outputs/apk/release/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
 # done
 
 # open outputs

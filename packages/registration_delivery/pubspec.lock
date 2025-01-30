@@ -405,11 +405,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: c3bc7299a7d927ebb83d8e91c1d7a8a51f6a1d1295dafeacb642012b72b99a2f
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
+      path: "../digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.5+1"
   digit_scanner:
     dependency: "direct main"
     description:
@@ -822,7 +821,7 @@ packages:
     source: hosted
     version: "2.3.1"
   group_radio_button:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: group_radio_button
       sha256: "204de8d16b224be7fc72dade0c3afd410ff5a34417d89f74f0fd8be7a8c2b4d6"

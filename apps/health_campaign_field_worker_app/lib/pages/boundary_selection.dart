@@ -17,8 +17,6 @@ import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
-import '../data/local_store/app_shared_preferences.dart';
-import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -129,12 +127,13 @@ class _BoundarySelectionPageState
                           children: [
                             Expanded(
                               child: ListView.builder(
-                                itemCount: labelList.length+1,
+                                itemCount: labelList.length + 1,
                                 itemBuilder: (context, labelIndex) {
-
                                   if (labelIndex == labelList.length) {
                                     // Return a SizedBox for whitespace after the last item
-                                    return const SizedBox(height: kPadding*3); // Adjust height as needed
+                                    return const SizedBox(
+                                        height: kPadding *
+                                            3); // Adjust height as needed
                                   }
 
                                   final label = labelList.elementAt(labelIndex);
@@ -562,77 +561,75 @@ class _BoundarySelectionPageState
                                                     shouldPop = true;
                                                   });
 
-                                                    context
-                                                        .read<BoundaryBloc>()
-                                                        .add(
-                                                          const BoundarySubmitEvent(),
-                                                        );
-                                                    bool isOnline =
-                                                        await getIsConnected();
+                                                  context
+                                                      .read<BoundaryBloc>()
+                                                      .add(
+                                                        const BoundarySubmitEvent(),
+                                                      );
+                                                  bool isOnline =
+                                                      await getIsConnected();
 
-                                                    if (context.mounted) {
-                                                      if (isOnline &&
-                                                          isDistributor) {
-                                                        context
-                                                            .read<
-                                                                BeneficiaryDownSyncBloc>()
-                                                            .add(
-                                                              DownSyncGetBatchSizeEvent(
-                                                                appConfiguration: [
-                                                                  appConfiguration,
-                                                                ],
-                                                                projectId: context
-                                                                    .projectId,
-                                                                boundaryCode:
-                                                                    selectedBoundary
-                                                                        .value!
-                                                                        .code
-                                                                        .toString(),
-                                                                pendingSyncCount:
-                                                                    pendingSyncCount,
-                                                                boundaryName:
-                                                                    selectedBoundary
-                                                                        .value!
-                                                                        .name
-                                                                        .toString(),
-                                                              ),
-                                                            );
-                                                      } else {
-                                                        Future.delayed(
-                                                          const Duration(
-                                                            milliseconds: 100,
-                                                          ),
-                                                          () => context.router
-                                                              .maybePop(),
-                                                        );
-                                                      }
-                                                      clickedStatus.value =
-                                                          true;
-                                                      LocalizationParams()
-                                                          .setModule(
-                                                              'boundary', true);
-                                                      context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
-                                                          index: appConfiguration
-                                                              .languages!
-                                                              .indexWhere((element) =>
-                                                                  element
-                                                                      .value ==
-                                                                  AppSharedPreferences()
-                                                                      .getSelectedLocale),
-                                                          code: AppSharedPreferences()
-                                                              .getSelectedLocale!));
+                                                  if (context.mounted) {
+                                                    if (isOnline &&
+                                                        isDistributor) {
+                                                      context
+                                                          .read<
+                                                              BeneficiaryDownSyncBloc>()
+                                                          .add(
+                                                            DownSyncGetBatchSizeEvent(
+                                                              appConfiguration: [
+                                                                appConfiguration,
+                                                              ],
+                                                              projectId: context
+                                                                  .projectId,
+                                                              boundaryCode:
+                                                                  selectedBoundary
+                                                                      .value!
+                                                                      .code
+                                                                      .toString(),
+                                                              pendingSyncCount:
+                                                                  pendingSyncCount,
+                                                              boundaryName:
+                                                                  selectedBoundary
+                                                                      .value!
+                                                                      .name
+                                                                      .toString(),
+                                                            ),
+                                                          );
+                                                    } else {
+                                                      Future.delayed(
+                                                        const Duration(
+                                                          milliseconds: 100,
+                                                        ),
+                                                        () => context.router
+                                                            .maybePop(),
+                                                      );
                                                     }
+                                                    clickedStatus.value = true;
+                                                    LocalizationParams()
+                                                        .setModule(
+                                                            'boundary', true);
+                                                    context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
+                                                        index: appConfiguration
+                                                            .languages!
+                                                            .indexWhere((element) =>
+                                                                element.value ==
+                                                                AppSharedPreferences()
+                                                                    .getSelectedLocale),
+                                                        code: AppSharedPreferences()
+                                                            .getSelectedLocale!));
                                                   }
-                                                },
-                                          child: Text(localizations.translate(
-                                            i18.common.coreCommonSubmit,
-                                          )),
-                                        );
-                                      },
-                                    ),
+                                                }
+                                              },
+                                        child: Text(localizations.translate(
+                                          i18.common.coreCommonSubmit,
+                                        )),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
+                            ),
                           ],
                         ),
                       ),
