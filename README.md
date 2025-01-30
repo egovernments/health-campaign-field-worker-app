@@ -200,7 +200,7 @@ These are the packages which are created for this.
 
 
 
-📦 Getting Started (Generalized for All Packages)
+Getting Started (Generalized for All Packages)
 ----------------------------------------------
 
 To get started with any package, follow these steps:
