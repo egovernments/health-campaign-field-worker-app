@@ -71,7 +71,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.3+1"
   audioplayers:
     dependency: transitive
     description:
@@ -545,10 +545,9 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: c33af61ed9ab3d7740fc3c8948af4b763d946cba5e902f8bfb00948d4d69d60a
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.4"
   digit_showcase:
     dependency: "direct main"
@@ -1854,7 +1853,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.5+2"
+    version: "1.0.5+3"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
@@ -2074,7 +2073,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.0+1"
   sync_http:
     dependency: transitive
     description:
