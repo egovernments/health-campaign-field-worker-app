@@ -2,6 +2,7 @@ Health Campaign Management V1.6 - Field Worker's App
 ====================================================
 
 
+
 Overview
 --------
 
@@ -57,6 +58,8 @@ Tech Stack/Core Dependencies
 Design Considerations
 ---------------------
 
+
+
 ### General Considerations
 
 -   Works seamlessly in low/no network coverage areas.
@@ -66,6 +69,7 @@ Design Considerations
 -   Designed for Android devices, ensuring compatibility with users who have low-tech literacy.
 
 
+
 ### Sync Mechanism
 
 -   **Sync Down**: Fetch configurations and data from the server (e.g., localisation, master data).
@@ -73,6 +77,7 @@ Design Considerations
 -   **Sync Up**: Upload collected data to the server.
 
 -   **Login & Sync**: Syncing can only occur while the user is online.
+
 
 
 ### Configurability
@@ -88,9 +93,11 @@ Key configurations include:
 -   Supported languages and localisation data.
 
 
+
 ### Operational Log (Op Log)
 
 All offline actions are logged and processed during sync-up to ensure data consistency and integrity.
+
 
 
 ### Network Manager
@@ -101,6 +108,8 @@ A network manager component abstracts the online/offline logic, enabling seamles
 
 Modules and Features
 --------------------
+
+
 
 ### Down Sync of Beneficiaries
 
@@ -117,6 +126,7 @@ Ensures the local device database is updated with the latest beneficiary data wh
 **Use Case:**
 
 -   Particularly useful in multi-user scenarios where teams operate in the same geographical boundary.
+
 
 
 ### Multi-Round Campaigns
@@ -145,11 +155,16 @@ Supports tracking and delivery processes across multiple cycles.
 
 -   **Not Visited**: Delivery not completed.
 
+
+
 * * * * *
+
 
 
 Packages
 -----------
+
+
 
 As a part of the release, we have extracted the features of the Frontline Worker's App as individual packages:
 
@@ -179,7 +194,10 @@ As a part of the release, we have extracted the features of the Frontline Worker
 
 These are the packages which are created for this.
 
+
+
 * * * * *
+
 
 
 Getting Started (Generalized for All Packages)
@@ -229,7 +247,7 @@ dart run build_runner build --delete-conflicting-outputs
 This will add the package route to **router.gr.dart**.
 
 
-### **Step 4: Install the Application** 
+### **Step 4: Install the Application**
 
 After running the build command, install the application on your device to have the module integrated with your base app.
 
@@ -240,30 +258,31 @@ To ensure proper data synchronization, follow any additional steps for down-sync
 
 By following these general steps, you can successfully integrate and use any of the packages within your application.
 
+
+
 * * * * *
+
 
 
 **Closed Household Package**
 ----------------------------
-
 
 The **Closed Household** package is a new module built as a Flutter package (`closed_household`). It will be a dependency for the **Registration and Delivery** package.
 
 
 ### Link to the Pub Package:
 
-
 -   [closed_household | Flutter package](https://pub.dev/packages/closed_household)
+
 
 
 ### Role
 
-
 -   **Distributor**
 
 
-### Features:
 
+### Features:
 
 -   **Create a Closed Household**: Enables creating a closed household record.
 
@@ -271,13 +290,14 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 -   **Update Task**: Updates the task if a closed household is registered.
 
 
-**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
 
 
 ### Sequence Diagram
 
-
 *(Add sequence diagram here)*
+
 
 
 * * * * *
@@ -287,27 +307,26 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 **Registration & Delivery Package**
 -----------------------------------
 
-
 This package provides a way to register a household and individual members and deliver the resources to the registered households.
 
 
 To learn more about Registration and Delivery, click here.
 
 
-### Link to the Pub Package:
 
+### Link to the Pub Package:
 
 -   registration_delivery | Flutter package
 
 
-### Role
 
+### Role
 
 -   **DISTRIBUTOR**
 
 
-### Features:
 
+### Features:
 
 -   **Register new households and individuals**: Register new records for households and individuals.
 
@@ -324,7 +343,7 @@ To learn more about Registration and Delivery, click here.
 -   **Auto-calculation of resources**: Automatically calculate resources to be delivered to a household or individual based on the configured rules.
 
 
-**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
 
 
 
@@ -369,6 +388,7 @@ referralLocalRepository,
 When users **downsync data** by passing **project ID & boundary code**, the server returns responses **only for the selected boundary**.
 
 
+
 ### **Response Entities:**
 
 -   **Household**
@@ -376,6 +396,7 @@ When users **downsync data** by passing **project ID & boundary code**, the serv
 -   **Individual**
 
 -   **House Member**
+
 
 
 #### **Scenarios**
@@ -386,6 +407,7 @@ When users **downsync data** by passing **project ID & boundary code**, the serv
 -   **Beneficiary (Mandatory)**
 
 -   **Task & related entities (Optional)**
+
 
 
 **Filtering Mechanism**
@@ -408,13 +430,14 @@ To enable better data access, we introduce **filters**:
 A **query builder** is used to fetch results dynamically (example below for an individual-based project).
 
 
+
 **Fields in Registration Flow**
 -------------------------------
-
 
 ### **GPS Accuracy**
 
 -   Captured on the **Household Location** screen.
+
 
 
 ### **Pregnant Women & Children Count**
@@ -422,6 +445,7 @@ A **query builder** is used to fetch results dynamically (example below for an i
 -   Entered on the **Member Screen**.
 
 -   Stored in the **Additional Fields Object** of the **Household Member entity**.
+
 
 
 ### **Household Structure Selection**
@@ -433,6 +457,7 @@ A **query builder** is used to fetch results dynamically (example below for an i
 -   The selected value is stored in the **Additional Details Object** in the **Household Entity**.
 
 
+
 **Closed House Data Capture**
 -----------------------------
 
@@ -441,13 +466,16 @@ A **query builder** is used to fetch results dynamically (example below for an i
 -   This will be a **dependency** of the **registration and delivery package**.
 
 
+
 **Handling Unsuccessful Deliveries**
 ------------------------------------
 
 For **household-based flows**, a feature has been introduced to **capture reasons for unsuccessful deliveries**.
 
 
-### **Final Steps**
+
+**Final Steps**
+----------------
 
 Once all the above modifications are implemented, rerun:
 
@@ -458,10 +486,11 @@ dart run build_runner build --delete-conflicting-outputs
 This ensures proper integration of **Registration & Delivery** within the **HCM app**.
 
 
+
 ### Sequence Diagram
 
-
 *(Add sequence diagram here)*
+
 
 
 * * * * *
@@ -471,41 +500,41 @@ This ensures proper integration of **Registration & Delivery** within the **HCM 
 **Inventory Management Package**
 --------------------------------
 
-
 This package enables the user to manage the stocks of a health campaign. The user can record the stocks received, issued, returned, damaged, and lost.
 
 
 To learn more about Inventory Management, click here.
 
 
-### Link to the Pub Package:
 
+### Link to the Pub Package:
 
 -   inventory_management | Flutter package
 
 
-### Role
 
+### Role
 
 -   **DISTRIBUTOR**
 -   **WAREHOUSE_MANAGER**
 
 
-### Features:
 
+### Features:
 
 -   **Manage Stocks**: Record the receipt, issue, return, damage, and loss of stocks.
 -   **Stock Reconciliation**: Reconcile the stock data.
 -   **View Reports**: View the reports of the stocks.
 
 
-**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
 
 
 ### Sequence Diagram
 
-
 *(Add sequence diagram here)*
+
 
 
 * * * * *
@@ -515,27 +544,26 @@ To learn more about Inventory Management, click here.
 **Referral Reconciliation Package**
 -----------------------------------
 
-
 This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally via the **Digit HCM app**.
 
 
 To learn more about Referral Reconciliation, click here.
 
 
-### Link to the Pub Package:
 
+### Link to the Pub Package:
 
 -   referral_reconciliation | Flutter package
 
 
-### Role
 
+### Role
 
 -   **HEALTH_FACILITY_WORKER**
 
 
-### Features:
 
+### Features:
 
 -   **Track referrals made by on-field health workers**: Enables tracking of all referrals to various health facilities.
 
@@ -546,13 +574,14 @@ To learn more about Referral Reconciliation, click here.
 -   **Detailed record keeping**: Ensures all referral cases are documented digitally for better monitoring.
 
 
-**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
 
 
 ### Sequence Diagram
 
-
 *(Add sequence diagram here)*
+
 
 
 * * * * *
@@ -564,15 +593,23 @@ To learn more about Referral Reconciliation, click here.
 
 The **Attendance Management package** is a comprehensive solution for tracking and managing attendance within the **Digit HCM app**.
 
+
+
 ### **To learn more about Attendance Management, click here.**
+
+
 
 ### **Link to the Pub Package:**
 
 -   attendance_management | Flutter package
 
+
+
 ### **Role**
 
 -   **SUPERVISOR**
+
+
 
 ### **Features**
 
@@ -586,7 +623,7 @@ The **Attendance Management package** is a comprehensive solution for tracking a
     -   **session_select.dart** -- Enables users to select attendance sessions conveniently.
 
 
-**Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
 
 
 
@@ -609,6 +646,7 @@ final LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>
 final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
   attendanceLogRemoteRepository;
 ```
+
 
 
 ### **Fetch Attendance Data Based on User Role**
@@ -668,6 +706,7 @@ if (context.loggedInUserRoles
 ```
 
 
+
 ### **Run Build Runner Again**
 
 Ensure you are still in:
@@ -685,8 +724,8 @@ dart run build_runner build --delete-conflicting-outputs
 This will ensure the package route is properly integrated into **router.gr.dart**.
 
 
-### Sequence Diagram
 
+### Sequence Diagram
 
 *(Add sequence diagram here)*
 
@@ -699,6 +738,7 @@ Digit Data Model Package
 ------------------------
 
 The `digit_data_model` package is a comprehensive data modeling library for the project. It defines various **classes, enums, and functions** used throughout the project. The package is written in **Dart** and is primarily used in **Flutter applications**.
+
 
 
 ✨ Features
@@ -723,6 +763,7 @@ The `digit_data_model` package is a comprehensive data modeling library for the 
 
 
 Below are some examples of how you can use this package:
+
 
 
 📖 Examples
@@ -772,8 +813,9 @@ class ExampleRemoteRepository
 }
 ```
 
-### Sequence Diagram
 
+
+### Sequence Diagram
 
 *(Add sequence diagram here)*
 
