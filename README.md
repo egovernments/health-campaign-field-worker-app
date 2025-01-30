@@ -377,7 +377,7 @@ sideEffectLocalRepository,
 referralLocalRepository,
 ```
 
-✅ **These changes will enable the down sync of registration & delivery data.**
+**These changes will enable the down sync of registration & delivery data.**
 
 * * * * *
 
@@ -520,7 +520,7 @@ To learn more about Inventory Management, click here.
 -   **View Reports**: View the reports of the stocks.
 
 
-### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+### **Integrating with the HCM Application:** [Getting Started](#📦-getting-started-generalized-for-all-packages)
 
 
 
