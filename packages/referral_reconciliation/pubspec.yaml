@@ -36,7 +36,8 @@ dependencies:
   flutter_keyboard_visibility: ^5.4.1
   digit_data_model: ^1.0.5
   stream_transform: ^2.1.0
-  survey_form: ^1.0.0
+  survey_form:
+    path: ../../packages/survey_form
 
 
 dev_dependencies:
