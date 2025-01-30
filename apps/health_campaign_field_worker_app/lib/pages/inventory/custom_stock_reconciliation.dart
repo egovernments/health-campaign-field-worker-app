@@ -25,6 +25,7 @@ import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
 
 @RoutePage()
@@ -404,7 +405,7 @@ class CustomStockReconciliationPageState
                                                                       StockReconciliationBloc>();
                                                               final facility = await context
                                                                       .router
-                                                                      .push(InventoryFacilitySelectionRoute(
+                                                                      .push(CustomInventoryFacilitySelectionRoute(
                                                                           facilities:
                                                                               facilities))
                                                                   as FacilityModel?;

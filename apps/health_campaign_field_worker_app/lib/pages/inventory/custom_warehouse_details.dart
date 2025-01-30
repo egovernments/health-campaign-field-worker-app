@@ -5,6 +5,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/pages/inventory/custom_inventory_facility_selection.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
@@ -282,7 +283,7 @@ class CustomWarehouseDetailsPageState
                                             await Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                InventoryFacilitySelectionPage(
+                                                CustomInventoryFacilitySelectionPage(
                                               facilities: facilities,
                                             ),
                                           ),
@@ -346,7 +347,7 @@ class CustomWarehouseDetailsPageState
                                                     .push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    InventoryFacilitySelectionPage(
+                                                    CustomInventoryFacilitySelectionPage(
                                                   facilities: facilities,
                                                 ),
                                               ),
