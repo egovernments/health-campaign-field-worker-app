@@ -58,18 +58,20 @@ dependencies:
   qr_flutter: ^4.1.0
   disk_space_update: ^0.0.2
   sync_service: ^0.0.1-dev.1
-  attendance_management: ^1.0.3
+  attendance_management:
+    path: ../../packages/attendance_management
   digit_scanner: ^1.0.4
   inventory_management: ^1.0.4
   referral_reconciliation: ^1.0.3
-  digit_data_model: ^1.0.5
+  digit_data_model: ^1.0.5-dev.2
   registration_delivery: ^1.0.5+2
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.3
   closed_household: ^1.0.3
   digit_location_tracker: ^1.0.0
   permission_handler: ^11.3.1
-  survey_form: ^1.0.0
+  survey_form:
+    path: ../../packages/survey_form
   complaints: ^1.0.0
 
 dev_dependencies:

@@ -28,7 +28,7 @@ dependencies:
   path_provider: ^2.0.11
   path: ^1.8.2
   drift_db_viewer: ^2.0.0
-  digit_data_model: ^1.0.5
+  digit_data_model: ^1.0.5-dev.2
   reactive_forms: ^17.0.0
 
 dev_dependencies:
