@@ -599,6 +599,9 @@ class _BoundarySelectionPageState
                                                             ),
                                                           );
                                                     } else {
+                                                      clickedStatus.value =
+                                                          true;
+
                                                       LocalizationParams()
                                                           .setModule(
                                                               'boundary', true);
@@ -606,15 +609,15 @@ class _BoundarySelectionPageState
                                                           index: appConfiguration
                                                               .languages!
                                                               .indexWhere((element) =>
-                                                          element
-                                                              .value ==
-                                                              AppSharedPreferences()
-                                                                  .getSelectedLocale),
+                                                                  element
+                                                                      .value ==
+                                                                  AppSharedPreferences()
+                                                                      .getSelectedLocale),
                                                           code: AppSharedPreferences()
                                                               .getSelectedLocale!));
 
-                                                      context.router.replaceAll([HomeRoute()]);
-
+                                                      context.router.replaceAll(
+                                                          [HomeRoute()]);
                                                     }
                                                   }
                                                 }
