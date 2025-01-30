@@ -1843,11 +1843,10 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      name: referral_reconciliation
-      sha256: "0b7e439b105b7cc4c89cff822b801ab8eecce497031be1572e5415aa1e871208"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
+    version: "1.0.3+1"
   registration_delivery:
     dependency: "direct main"
     description:

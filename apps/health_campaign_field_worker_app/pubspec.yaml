@@ -61,7 +61,8 @@ dependencies:
   attendance_management: 1.0.3-dev.1
   digit_scanner: ^1.0.4
   inventory_management: ^1.0.4
-  referral_reconciliation: ^1.0.3
+  referral_reconciliation:
+    path: ../../packages/referral_reconciliation
   digit_data_model: ^1.0.5-dev.2
   registration_delivery: ^1.0.5+2
   disable_battery_optimization: ^1.1.1
