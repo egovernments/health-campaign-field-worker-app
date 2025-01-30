@@ -8,7 +8,7 @@
 
 The Health Campaign Management (HCM) [latest version](https://github.com/egovernments/health-campaign-field-worker-app/tags) field worker's app is part of the DIGIT Health Platform. It empowers frontline teams to manage health campaigns efficiently, even in low or no network coverage areas. With its offline-first functionality and configurable design, the app is built to address the unique needs of field workers, ensuring seamless data collection, beneficiary management, and campaign tracking.
 
-
+--------
 
 ✨ Key Features
 ------------
@@ -27,7 +27,7 @@ The Health Campaign Management (HCM) [latest version](https://github.com/egovern
 
 -   **Permission-Based Access**: Data sync tailored to user roles and assigned projects.
 
-
+--------
 
 ✨ Architecture
 ------------
@@ -200,7 +200,7 @@ These are the packages which are created for this.
 
 
 
-Getting Started (Generalized for All Packages)
+📦 Getting Started (Generalized for All Packages)
 ----------------------------------------------
 
 To get started with any package, follow these steps:
@@ -468,7 +468,7 @@ For **household-based flows**, a feature has been introduced to **capture reason
 
 
 
-#### **✨ Final Steps**
+### **✨ Final Steps**
 
 Once all the above modifications are implemented, rerun:
 
