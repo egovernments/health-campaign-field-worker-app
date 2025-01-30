@@ -33,7 +33,6 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
-import '../models/data_model.init.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -379,6 +378,13 @@ getLocalizationString(Isar isar, String selectedLocale) async {
   return localizationValues;
 }
 
+List<dss_mappers.DashboardConfigSchema?> filterDashboardConfig(
+    List<dss_mappers.DashboardConfigSchema?>? dashboardConfig, String projectTypeCode) {
+  return dashboardConfig?.where((element) =>
+          element != null && element.projectTypeCode == projectTypeCode)
+      .toList() ?? [];
+}
+
 getSelectedLanguage(AppInitialized state, int index) {
   if (AppSharedPreferences().getSelectedLocale == null) {
     AppSharedPreferences()
@@ -393,7 +399,7 @@ getSelectedLanguage(AppInitialized state, int index) {
 
 initializeAllMappers() async {
   List<Future> initializations = [
-    Future(() => initializeMappers()),
+    Future(() => data_model_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
     Future(() => referral_reconciliation_mappers.initializeMappers()),
     Future(() => inventory_mappers.initializeMappers()),
