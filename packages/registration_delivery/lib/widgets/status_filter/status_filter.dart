@@ -1,4 +1,3 @@
-import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../localized.dart';
 
 class StatusFilter extends LocalizedStatefulWidget {
   final List<String>? selectedFilters;
