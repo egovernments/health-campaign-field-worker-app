@@ -60,7 +60,7 @@ The high-level architecture of the app is divided into three core parts:
 
 
 
-### General Considerations
+###  ✅ General Considerations
 
 -   Works seamlessly in low/no network coverage areas.
 
@@ -70,7 +70,7 @@ The high-level architecture of the app is divided into three core parts:
 
 
 
-### Sync Mechanism
+###  ✅ Sync Mechanism
 
 -   **Sync Down**: Fetch configurations and data from the server (e.g., localisation, master data).
 
@@ -80,7 +80,7 @@ The high-level architecture of the app is divided into three core parts:
 
 
 
-### Configurability
+###  ✅ Configurability
 
 Key configurations include:
 
@@ -94,13 +94,13 @@ Key configurations include:
 
 
 
-### Operational Log (Op Log)
+###  ✅ Operational Log (Op Log)
 
 All offline actions are logged and processed during sync-up to ensure data consistency and integrity.
 
 
 
-### Network Manager
+###  ✅ Network Manager
 
 A network manager component abstracts the online/offline logic, enabling seamless data handling by other app components.
 
@@ -111,7 +111,7 @@ A network manager component abstracts the online/offline logic, enabling seamles
 
 
 
-### Down Sync of Beneficiaries
+###  ✅ Down Sync of Beneficiaries
 
 Ensures the local device database is updated with the latest beneficiary data while preventing duplicate records.
 
@@ -129,7 +129,7 @@ Ensures the local device database is updated with the latest beneficiary data wh
 
 
 
-### Multi-Round Campaigns
+###  ✅ Multi-Round Campaigns
 
 Supports tracking and delivery processes across multiple cycles.
 
@@ -389,7 +389,7 @@ When users **downsync data** by passing **project ID & boundary code**, the serv
 
 
 
-### **✨ Response Entities:**
+### **✅ Response Entities:**
 
 -   **Household**
 
@@ -434,13 +434,13 @@ A **query builder** is used to fetch results dynamically (example below for an i
 **✨ Fields in Registration Flow**
 -------------------------------
 
-### **GPS Accuracy**
+### **✅ GPS Accuracy**
 
 -   Captured on the **Household Location** screen.
 
 
 
-### **Pregnant Women & Children Count**
+### **✅ Pregnant Women & Children Count**
 
 -   Entered on the **Member Screen**.
 
@@ -448,7 +448,7 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 
 
-### **Household Structure Selection**
+### **✅ Household Structure Selection**
 
 -   A new screen has been added to **capture household structure**.
 
@@ -627,7 +627,7 @@ The **Attendance Management package** is a comprehensive solution for tracking a
 
 
 
-### **Fetch Attendance Registers & Attendee Data**
+### **✅ Fetch Attendance Registers & Attendee Data**
 
 Navigate to the **Project Bloc**, where attendance data should be fetched after login.
 
@@ -649,7 +649,7 @@ final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
 
 
 
-### **Fetch Attendance Data Based on User Role**
+### **✅ Fetch Attendance Data Based on User Role**
 
 Find the section where **project staff search** is handled.\
 Modify the **try-catch block** to fetch attendance data based on role:
@@ -707,7 +707,7 @@ if (context.loggedInUserRoles
 
 
 
-### **Run Build Runner Again**
+### **✅ Run Build Runner Again**
 
 Ensure you are still in:
 
