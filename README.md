@@ -387,7 +387,7 @@ When users **downsync data** by passing **project ID & boundary code**, the serv
 
 
 
-### **✅ Response Entities:**
+#### **✅ Response Entities:**
 
 -   **Household**
 
@@ -430,13 +430,13 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 ### **✨ Fields in Registration Flow**
 
-### **✅ GPS Accuracy**
+#### **✅ GPS Accuracy**
 
 -   Captured on the **Household Location** screen.
 
 
 
-### **✅ Pregnant Women & Children Count**
+#### **✅ Pregnant Women & Children Count**
 
 -   Entered on the **Member Screen**.
 
@@ -444,7 +444,7 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 
 
-### **✅ Household Structure Selection**
+#### **✅ Household Structure Selection**
 
 -   A new screen has been added to **capture household structure**.
 
@@ -468,7 +468,7 @@ For **household-based flows**, a feature has been introduced to **capture reason
 
 
 
-### **✨ Final Steps**
+#### **✨ Final Steps**
 
 Once all the above modifications are implemented, rerun:
 
