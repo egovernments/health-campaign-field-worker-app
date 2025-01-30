@@ -42,7 +42,7 @@ dependencies:
   formula_parser: ^2.0.1
   flutter_keyboard_visibility: ^5.4.1
   survey_form:
-    path: ../survey_form
+    path: ../../packages/survey_form
   group_radio_button: ^1.3.0
 
 dev_dependencies:
