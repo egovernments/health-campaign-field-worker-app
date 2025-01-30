@@ -85,7 +85,18 @@ class CustomStockDetailsPageState
         validators: [],
       ),
       _balesQuantityKey: FormControl<int>(
-        validators: [],
+        validators: [
+          StockRecordEntryType.receipt,
+          StockRecordEntryType.dispatch,
+          StockRecordEntryType.returned
+        ].contains(stockType)
+            ? [
+                Validators.number(),
+                Validators.required,
+                Validators.min(0),
+                Validators.max(10000),
+              ]
+            : [],
       ),
       _commentsKey: FormControl<String>(
         validators: [
