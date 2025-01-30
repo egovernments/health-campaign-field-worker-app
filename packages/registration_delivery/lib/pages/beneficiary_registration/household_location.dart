@@ -318,6 +318,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                               label: localizations.translate(
                                 i18.householdLocation.gpsAccuracyLabel,
                               ),
+                              capitalizedFirstLetter: false,
                               child: DigitTextFormInput(
                                 readOnly: true,
                                 errorMessage: field.errorText,
