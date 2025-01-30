@@ -265,7 +265,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -522,10 +522,9 @@ packages:
   digit_dss:
     dependency: "direct main"
     description:
-      name: digit_dss
-      sha256: cb5ae888503260dff1df2d4785ba2cac39a20348cfcd660e2212a8965b948dba
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_dss"
+      relative: true
+    source: path
     version: "1.0.3"
   digit_firebase_services:
     dependency: "direct main"
@@ -2075,7 +2074,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.0+1"
   sync_http:
     dependency: transitive
     description:
