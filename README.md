@@ -347,8 +347,7 @@ To learn more about Registration and Delivery, click here.
 
 
 
-**✨ Downsyncing Data During Boundary Selection**
-----------------------------------------------
+### **✨ Downsyncing Data During Boundary Selection**
 
 If you need to **downsync registration-delivery data** during boundary selection, modify **project_beneficiaries_downsync.dart** by including the following repositories:
 
@@ -382,8 +381,7 @@ referralLocalRepository,
 
 
 
-**✨ Registries Update**
----------------------
+### **✨ Registries Update**
 
 When users **downsync data** by passing **project ID & boundary code**, the server returns responses **only for the selected boundary**.
 
@@ -410,8 +408,7 @@ When users **downsync data** by passing **project ID & boundary code**, the serv
 
 
 
-**✨ Filtering Mechanism**
------------------------
+### **✨ Filtering Mechanism**
 
 To enable better data access, we introduce **filters**:
 
@@ -431,8 +428,7 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 
 
-**✨ Fields in Registration Flow**
--------------------------------
+### **✨ Fields in Registration Flow**
 
 ### **✅ GPS Accuracy**
 
@@ -458,8 +454,7 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 
 
-**✨ Closed House Data Capture**
------------------------------
+### **✨ Closed House Data Capture**
 
 -   A **new module** named **closed_household** has been built.
 
@@ -467,15 +462,13 @@ A **query builder** is used to fetch results dynamically (example below for an i
 
 
 
-**✨ Handling Unsuccessful Deliveries**
-------------------------------------
+### **✨ Handling Unsuccessful Deliveries**
 
 For **household-based flows**, a feature has been introduced to **capture reasons for unsuccessful deliveries**.
 
 
 
-**✨ Final Steps**
-----------------
+### **✨ Final Steps**
 
 Once all the above modifications are implemented, rerun:
 
