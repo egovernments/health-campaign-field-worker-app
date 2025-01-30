@@ -58,8 +58,7 @@ dependencies:
   qr_flutter: ^4.1.0
   disk_space_update: ^0.0.2
   sync_service: ^0.0.1-dev.1
-  attendance_management:
-    path: ../../packages/attendance_management
+  attendance_management: 1.0.3-dev.1
   digit_scanner: ^1.0.4
   inventory_management: ^1.0.4
   referral_reconciliation: ^1.0.3
