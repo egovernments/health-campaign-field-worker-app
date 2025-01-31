@@ -78,7 +78,7 @@ jobs:
 
       # Archive the APK as a build artifact so it can be downloaded
       - name: Upload APKs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
           path: apps/health_campaign_field_worker_app/build/app/outputs/apk/release/app-release.apk
