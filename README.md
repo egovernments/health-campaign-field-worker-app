@@ -1055,4 +1055,60 @@ BlocListener<DigitScannerBloc, DigitScannerState>(
 
 
 
+📦 DIGIT Showcase Package
+========================
+
+
+The **Digit Showcase Package** provides an easy way to **highlight** or **showcase** widgets in your Flutter application. It helps guide users by visually emphasizing UI elements.
+
+✨ Features
+----------
+
+✔️ **Highlight widgets dynamically**\
+✔️ **Guide users through the UI with visual cues**\
+✔️ **Enable automatic scrolling to showcased widgets**\
+✔️ **Supports localization for messages**
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+🚀 How to Use
+-------------
+
+### 1️⃣ Wrap the **Top Layer** with `ShowcaseWidget`
+
+```
+ShowcaseWidget(
+  enableAutoScroll: true,
+  builder: Builder(
+    builder: (context) {
+      // Your widget tree
+    },
+  ),
+);
+```
+
+### 2️⃣ Provide Localization for the Showcase Widget
+
+```
+final date = ShowcaseItemBuilder(
+  messageLocalizationKey: i18.showcase_date.date,
+);
+```
+
+### 3️⃣ Use `.buildWith` to Highlight the Widget
+
+```
+date.buildWith(
+  child: Text('Date'),
+);
+```
+
+### Sequence Diagram
+
+*(Add sequence diagram here)*
+
+
+
 
