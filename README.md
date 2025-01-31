@@ -813,3 +813,34 @@ class ExampleRemoteRepository
 *(Add sequence diagram here)*
 
 
+* * * * *
+
+
+📊 DIGIT DSS Package
+====================
+
+
+**Digit_dss** is a Flutter package designed to facilitate the seamless integration of dynamic dashboards into your mobile application. This package allows developers to configure and render various types of charts directly from a dashboard configuration, enabling a flexible and customizable approach to data visualization.
+
+✨ Features
+----------
+
+✔️ Dynamic charts configuration\
+✔️ Support for **Metric Charts**\
+✔️ Support for **Table Charts**
+
+🎭 Role
+-------
+
+👤 **DISTRICT_SUPERVISOR**
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+
+### Sequence Diagram
+
+*(Add sequence diagram here)*
+
+
