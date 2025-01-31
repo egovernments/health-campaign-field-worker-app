@@ -170,27 +170,27 @@ As a part of the release, we have extracted the features of the Frontline Worker
 
 1.  [**Registration & Delivery Package**](#registration-delivery)
 
-2.  **Referral Reconciliation Package**
+2.  [**Referral Reconciliation Package**](#referral-reconciliation)
 
-3.  **Inventory Management Package**
+3.  [**Inventory Management Package**](#inventory-management)
 
-4.  **Attendance Management Package**
+4.  [**Attendance Management Package**](#attendance-management)
 
-5.  **Closed Household Package**
+5.  [**Closed Household Package**](#closed-household)
 
-6.  **DIGIT Scanner Package**
+6.  [**DIGIT Scanner Package**](#digit-scanner)
 
-7.  **DIGIT Showcase Package**
+7.  [**DIGIT Showcase Package**](#digit-showcase)
 
-8.  **Digit Data Model Package**
+8.  [**Digit Data Model Package**](#digit-data-model)
 
-9.  **DIGIT DSS Package**
+9.  [**DIGIT DSS Package**](#digit-dss)
 
-10. **Complaints Package**
+10. [**Complaints Package**](#complaints)
 
-11. **Survey Form Package**
+11. [**Survey Form Package**](#survey-form)
 
-12. **Sync Service Package**
+12. [**Sync Service Package**](#sync-service)
 
 These are the packages which are created for this.
 
@@ -263,7 +263,7 @@ By following these general steps, you can successfully integrate and use any of 
 * * * * *
 
 
-
+<a name="closed-household"></a>
 🏚️ **Closed Household Package**
 ====================
 
@@ -493,7 +493,7 @@ This ensures proper integration of **Registration & Delivery** within the **HCM 
 * * * * *
 
 
-
+<a name="inventory-management"></a>
 📦 **Inventory Management Package**
 ====================
 
@@ -539,7 +539,7 @@ To learn more about Inventory Management, click here.
 * * * * *
 
 
-
+<a name="referral-reconciliation"></a>
 🔄 **Referral Reconciliation Package**
 ====================
 
@@ -588,7 +588,7 @@ To learn more about Referral Reconciliation, click here.
 * * * * *
 
 
-
+<a name="attendance-management"></a>
 🕒 **Attendance Management Package**
 ====================
 
@@ -736,7 +736,7 @@ This will ensure the package route is properly integrated into **router.gr.dart*
 * * * * *
 
 
-
+<a name="digit-data-model"></a>
 🔢 Digit Data Model Package
 ====================
 
@@ -825,7 +825,7 @@ class ExampleRemoteRepository
 
 * * * * *
 
-
+<a name="digit-dss"></a>
 📊 DIGIT DSS Package
 ====================
 
@@ -858,7 +858,7 @@ class ExampleRemoteRepository
 * * * * *
 
 
-
+<a name="complaints"></a>
 📢 Complaints Package
 =====================
 
@@ -895,7 +895,7 @@ The **Complaints Package** provides a streamlined way for users to register comp
 * * * * *
 
 
-
+<a name="survey-form"></a>
 📝 Survey Form Package
 ======================
 
@@ -927,7 +927,7 @@ The **Survey Form Package** enables users to fill out **questionnaires** efficie
 * * * * *
 
 
-
+<a name="sync-service"></a>
 🔄 Sync Service Package
 =======================
 
@@ -973,7 +973,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
 
 * * * * *
 
-
+<a name="digit-scanner"></a>
 🔍 DIGIT Scanner Package
 ========================
 
@@ -1054,7 +1054,7 @@ BlocListener<DigitScannerBloc, DigitScannerState>(
 * * * * *
 
 
-
+<a name="digit-showcase"></a>
 📦 DIGIT Showcase Package
 ========================
 
