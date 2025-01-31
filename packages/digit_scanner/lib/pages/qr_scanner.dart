@@ -95,6 +95,15 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             initialCameraLensDirection: _cameraLensDirection,
                             onCameraLensDirectionChanged: (value) =>
                                 _cameraLensDirection = value,
+                            onBackButtonPressed: () {
+                              context
+                                  .read<DigitScannerBloc>()
+                                  .add(const DigitScannerEvent.handleScanner(
+                                    barCode: [],
+                                    qrCode: [],
+                                  ));
+                              Navigator.of(context).pop();
+                            },
                           ),
                         ),
                         Positioned(
