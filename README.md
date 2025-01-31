@@ -168,7 +168,7 @@ Supports tracking and delivery processes across multiple cycles.
 
 As a part of the release, we have extracted the features of the Frontline Worker's App as individual packages:
 
-1.  [**Registration & Delivery Package**](#📝-registration-&-delivery-package)
+1.  [**Registration & Delivery Package**](#registration-delivery)
 
 2.  **Referral Reconciliation Package**
 
