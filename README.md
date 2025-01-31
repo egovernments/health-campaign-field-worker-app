@@ -854,3 +854,38 @@ class ExampleRemoteRepository
 *(Add sequence diagram here)*
 
 
+
+* * * * *
+
+
+
+📢 Complaints Package
+=====================
+
+
+The **Complaints Package** provides a streamlined way for users to register complaints related to **health campaigns**. It enables users to:\
+✔️ File complaints specifying the type and detailed information\
+✔️ Choose from predefined categories to classify complaints\
+✔️ Access past complaint records
+
+🎭 Role
+-------
+
+👤 **DISTRIBUTOR**
+
+✨ Features
+----------
+
+-   📝 **Register complaints** easily
+
+-   📜 **Access past complaint records** for tracking
+
+-   📂 **Choose from predefined categories** to classify complaints
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+### Sequence Diagram
+
+*(Add sequence diagram here)*
