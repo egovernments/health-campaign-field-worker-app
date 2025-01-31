@@ -835,9 +835,9 @@ class ExampleRemoteRepository
 ✨ Features
 ----------
 
-✔️ Dynamic charts configuration\
-✔️ Support for **Metric Charts**\
-✔️ Support for **Table Charts**
+-  Dynamic charts configuration\
+-  Support for **Metric Charts**\
+-  Support for **Table Charts**
 
 🎭 Role
 -------
