@@ -965,3 +965,94 @@ class SyncServiceMapper extends SyncEntityMapperListener {
 }
 ```
 
+### Sequence Diagram
+
+*(Add sequence diagram here)*
+
+
+
+* * * * *
+
+
+🔍 DIGIT Scanner Package
+========================
+
+
+The **DIGIT Scanner Package** is used for scanning **QR codes** and **GS1 barcodes** in Flutter applications.
+
+✨ Features
+----------
+
+✔️ **Scan QR Codes & GS1 Barcodes**\
+✔️ **Manage Scanner State using Bloc**\
+✔️ **Navigate to Scanner Page with Custom Parameters**\
+✔️ **Listen & Retrieve Scanned Codes Easily**
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+🚀 How to Use
+-------------
+
+### 1️⃣ Initialize **DigitScannerBloc**
+
+```
+BlocProvider(
+  create: (_) => DigitScannerBloc(const DigitScannerState()),
+),
+```
+
+### 2️⃣ Clear the Scanner State
+
+```
+context.read<DigitScannerBloc>().add(
+  const DigitScannerEvent.handleScanner(),
+);
+```
+
+### 3️⃣ Navigate to the **DIGIT Scanner Page**
+
+```
+context.router.push(
+  DigitScannerRoute(
+    quantity: 1,     // Max number of codes to be scanned
+    isGS1code: false, // Set to true for GS1 barcode scanning
+    singleValue: true, // Set to false for scanning multiple codes
+  ),
+);
+```
+
+### 4️⃣ Listen to Scanner State Changes
+
+```
+BlocListener<DigitScannerBloc, DigitScannerState>(
+  listener: (context, scannerState) {
+    if (scannerState.qrCodes.isNotEmpty) {
+      // Handle scanned codes
+    }
+  },
+  child: BlocBuilder<DigitScannerBloc, DigitScannerState>(
+    builder: (context, scannerState) {
+      if (scannerState.qrCodes.isNotEmpty) {
+        return Text(scannerState.qrCodes.last);
+      } else {
+        return Container();
+      }
+    },
+  ),
+);
+```
+
+
+### Sequence Diagram
+
+*(Add sequence diagram here)*
+
+
+
+* * * * *
+
+
+
+
