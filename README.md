@@ -264,7 +264,7 @@ By following these general steps, you can successfully integrate and use any of 
 
 
 
-📊 **Closed Household Package**
+🏚️ **Closed Household Package**
 ====================
 
 The **Closed Household** package is a new module built as a Flutter package (`closed_household`). It will be a dependency for the **Registration and Delivery** package.
@@ -306,7 +306,7 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 
 
 
-📊 **Registration & Delivery Package**
+📝 **Registration & Delivery Package**
 ====================
 
 This package provides a way to register a household and individual members and deliver the resources to the registered households.
@@ -494,7 +494,7 @@ This ensures proper integration of **Registration & Delivery** within the **HCM 
 
 
 
-📊 **Inventory Management Package**
+📦 **Inventory Management Package**
 ====================
 
 This package enables the user to manage the stocks of a health campaign. The user can record the stocks received, issued, returned, damaged, and lost.
@@ -540,7 +540,7 @@ To learn more about Inventory Management, click here.
 
 
 
-📊 **Referral Reconciliation Package**
+🔄 **Referral Reconciliation Package**
 ====================
 
 This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally via the **Digit HCM app**.
@@ -589,7 +589,7 @@ To learn more about Referral Reconciliation, click here.
 
 
 
-📊 **Attendance Management Package**
+🕒 **Attendance Management Package**
 ====================
 
 The **Attendance Management package** is a comprehensive solution for tracking and managing attendance within the **Digit HCM app**.
@@ -737,7 +737,7 @@ This will ensure the package route is properly integrated into **router.gr.dart*
 
 
 
-📊 Digit Data Model Package
+🔢 Digit Data Model Package
 ====================
 
 The `digit_data_model` package is a comprehensive data modeling library for the project. It defines various **classes, enums, and functions** used throughout the project. The package is written in **Dart** and is primarily used in **Flutter applications**.
