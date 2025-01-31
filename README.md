@@ -162,7 +162,7 @@ Supports tracking and delivery processes across multiple cycles.
 
 
 📦 Packages
------------
+====================
 
 
 
@@ -201,7 +201,7 @@ These are the packages which are created for this.
 
 
 Getting Started (Generalized for All Packages)
-----------------------------------------------
+====================
 
 To get started with any package, follow these steps:
 
@@ -264,8 +264,8 @@ By following these general steps, you can successfully integrate and use any of 
 
 
 
-📦 **Closed Household Package**
-----------------------------
+📊 **Closed Household Package**
+====================
 
 The **Closed Household** package is a new module built as a Flutter package (`closed_household`). It will be a dependency for the **Registration and Delivery** package.
 
@@ -276,13 +276,15 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 
 
 
-### Role
+🎭 Role
+-------
 
--   **Distributor**
+👤 **Distributor**
 
 
 
-### Features:
+✨ Features
+----------
 
 -   **Create a Closed Household**: Enables creating a closed household record.
 
@@ -304,8 +306,8 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 
 
 
-📦 **Registration & Delivery Package**
------------------------------------
+📊 **Registration & Delivery Package**
+====================
 
 This package provides a way to register a household and individual members and deliver the resources to the registered households.
 
@@ -320,13 +322,15 @@ To learn more about Registration and Delivery, click here.
 
 
 
-### Role
+🎭 Role
+-------
 
--   **DISTRIBUTOR**
+👤 **DISTRIBUTOR**
 
 
 
-### Features:
+✨ Features
+----------
 
 -   **Register new households and individuals**: Register new records for households and individuals.
 
@@ -490,8 +494,8 @@ This ensures proper integration of **Registration & Delivery** within the **HCM 
 
 
 
-📦 **Inventory Management Package**
---------------------------------
+📊 **Inventory Management Package**
+====================
 
 This package enables the user to manage the stocks of a health campaign. The user can record the stocks received, issued, returned, damaged, and lost.
 
@@ -506,14 +510,16 @@ To learn more about Inventory Management, click here.
 
 
 
-### Role
+🎭 Role
+-------
 
--   **DISTRIBUTOR**
--   **WAREHOUSE_MANAGER**
+👤 **DISTRIBUTOR**
+👤 **WAREHOUSE_MANAGER**
 
 
 
-### Features:
+✨ Features
+----------
 
 -   **Manage Stocks**: Record the receipt, issue, return, damage, and loss of stocks.
 -   **Stock Reconciliation**: Reconcile the stock data.
@@ -534,8 +540,8 @@ To learn more about Inventory Management, click here.
 
 
 
-📦 **Referral Reconciliation Package**
------------------------------------
+📊 **Referral Reconciliation Package**
+====================
 
 This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally via the **Digit HCM app**.
 
@@ -550,13 +556,15 @@ To learn more about Referral Reconciliation, click here.
 
 
 
-### Role
+🎭 Role
+-------
 
--   **HEALTH_FACILITY_WORKER**
+👤 **HEALTH_FACILITY_WORKER**
 
 
 
-### Features:
+✨ Features
+----------
 
 -   **Track referrals made by on-field health workers**: Enables tracking of all referrals to various health facilities.
 
@@ -581,8 +589,8 @@ To learn more about Referral Reconciliation, click here.
 
 
 
-📦 **Attendance Management Package**
----------------------------------
+📊 **Attendance Management Package**
+====================
 
 The **Attendance Management package** is a comprehensive solution for tracking and managing attendance within the **Digit HCM app**.
 
@@ -598,13 +606,15 @@ The **Attendance Management package** is a comprehensive solution for tracking a
 
 
 
-### **Role**
+🎭 Role
+-------
 
--   **SUPERVISOR**
+👤 **SUPERVISOR**
 
 
 
-### **Features**
+✨ Features
+----------
 
 -   **Attendance Pages**:\
     The package includes several UI pages for attendance management:
@@ -727,8 +737,8 @@ This will ensure the package route is properly integrated into **router.gr.dart*
 
 
 
-📦 Digit Data Model Package
-------------------------
+📊 Digit Data Model Package
+====================
 
 The `digit_data_model` package is a comprehensive data modeling library for the project. It defines various **classes, enums, and functions** used throughout the project. The package is written in **Dart** and is primarily used in **Flutter applications**.
 
