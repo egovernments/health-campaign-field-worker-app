@@ -925,3 +925,43 @@ The **Survey Form Package** enables users to fill out **questionnaires** efficie
 
 
 * * * * *
+
+
+
+🔄 Sync Service Package
+=======================
+
+
+The **Sync Service Package** provides access to **sync-related configurations and listeners**, ensuring seamless data synchronization. It includes key components such as **SyncEntityMapperListener, syncDownRetryCount, and persistenceConfiguration**.
+
+✨ Features
+----------
+
+✔️ **SyncBloc:** Handles refresh and sync operations\
+✔️ **SyncEntityMapperListener:** Defines methods for sync entity mapping\
+✔️ **SyncService:** Performs sync operations like `performSync`, `writeToEntityDB`, and `getPendingSyncRecordsCount`\
+✔️ **Repositories:** Manages local and remote repositories with `getRemoteForType` and `getLocalForType`\
+✔️ **Sync Operations:** `PerformSyncDown` and `PerformSyncUp` for bidirectional sync\
+✔️ **Models:** Bandwidth Model
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+### 🛠 Usage
+
+#### 1️⃣ Extend the `SyncUpOperation` class and implement the required methods:
+
+```
+class CustomSyncRegistry implements SyncUpOperation {
+  CustomSyncRegistry({this.remote});
+}
+```
+
+#### 2️⃣ Extend the `SyncEntityMapperListener` class and implement the required methods:
+
+```
+class SyncServiceMapper extends SyncEntityMapperListener {
+  // Implement required methods
+}
+```
+
