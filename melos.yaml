@@ -23,7 +23,7 @@ scripts:
 
   generate-flutter:
     description: Generate code for all Flutter packages.
-    run: flutter packages run build_runner build --delete-conflicting-outputs
+    run: flutter packages run build_runner build --delete-conflicting-outputs --no-concurrency
     exec:
       concurrency: 1
     packageFilters:
@@ -33,7 +33,7 @@ scripts:
 
   generate-hooks:
     description: Generate hooks for all packages.
-    run: dart run build_runner build --delete-conflicting-outputs
+    run: dart run build_runner build --delete-conflicting-outputs --no-concurrency
     exec:
       concurrency: 1
     packageFilters:
