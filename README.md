@@ -889,3 +889,39 @@ The **Complaints Package** provides a streamlined way for users to register comp
 ### Sequence Diagram
 
 *(Add sequence diagram here)*
+
+
+
+* * * * *
+
+
+
+📝 Survey Form Package
+======================
+
+
+The **Survey Form Package** enables users to fill out **questionnaires** efficiently. It provides a user-friendly interface for submitting responses, ensuring that **health campaign-related feedback** and data are collected **accurately**.
+
+🎭 Role
+-------
+
+👤 **DISTRIBUTOR**
+
+✨ Features
+----------
+
+✔️ **Selection Box, Check-Box, and Text Fields** to support various data types\
+✔️ **Accurately captures employee-specific boundaries** for relevant survey responses\
+✔️ **Allows employees to view their submitted responses**
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+### Sequence Diagram
+
+*(Add sequence diagram here)*
+
+
+
+* * * * *
