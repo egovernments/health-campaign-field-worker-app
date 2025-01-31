@@ -286,7 +286,7 @@ int getBatchSizeToBandwidth(
   List<AppConfiguration> appConfiguration, {
   bool isDownSync = false,
 }) {
-  int batchSize = 1;
+  int batchSize = 100;
   final bandwidthBatchSizeConfig = isDownSync
       ? appConfiguration.first.downSyncBandwidthBatchSize
       : appConfiguration.first.bandwidthBatchSize;
