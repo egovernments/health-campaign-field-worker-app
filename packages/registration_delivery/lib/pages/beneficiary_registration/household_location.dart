@@ -214,7 +214,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                     addressModel,
                                   ),
                                 );
-                                router.push(HouseDetailsRoute());
+                                router.push(HouseHoldConsentRoute());
                               },
                               editHousehold: (
                                 address,
@@ -256,7 +256,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                     addressModel,
                                   ),
                                 );
-                                router.push(HouseDetailsRoute());
+                                router.push(HouseHoldConsentRoute());
                               },
                             );
                           },

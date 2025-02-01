@@ -71,7 +71,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.3+1"
+    version: "1.0.3"
   audioplayers:
     dependency: transitive
     description:
@@ -1853,7 +1853,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.5+3"
+    version: "1.0.5+2"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
@@ -2073,7 +2073,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "1.0.0"
   sync_http:
     dependency: transitive
     description:
