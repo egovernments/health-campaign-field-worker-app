@@ -71,9 +71,7 @@ class BeneficiaryAcknowledgementPageState
         description: localizations.translate(
           i18.acknowledgementSuccess.acknowledgementDescriptionText,
         ),
-        subLabel: getSubText(wrapper),
-        label: localizations
-            .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
+        additionalDetails: [getSubText(wrapper)],
       ),
     );
   }

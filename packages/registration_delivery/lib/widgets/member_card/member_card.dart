@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -86,39 +87,6 @@ class MemberCard extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  individual.identifiers != null
-                      ? Padding(
-                          padding: const EdgeInsets.all(spacer1),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: DigitTheme.instance.colorScheme.primary,
-                              ),
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(spacer1),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(
-                                spacer1,
-                              ),
-                              child: Text(
-                                individual.identifiers!
-                                        .lastWhere(
-                                          (e) =>
-                                              e.identifierType ==
-                                              IdentifierTypes
-                                                  .uniqueBeneficiaryID
-                                                  .toValue(),
-                                        )
-                                        .identifierId ??
-                                    localizations
-                                        .translate(i18.common.noResultsFound),
-                              ),
-                            ),
-                          ),
-                        )
-                      : const Offstage(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -194,6 +162,44 @@ class MemberCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (individual.identifiers != null &&
+                  individual.identifiers!
+                          .lastWhereOrNull(
+                            (e) =>
+                                e.identifierType ==
+                                IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                          )
+                          ?.identifierId !=
+                      null)
+                Padding(
+                  padding: const EdgeInsets.all(spacer1),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: DigitTheme.instance.colorScheme.primary,
+                      ),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(spacer1),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(
+                        spacer1,
+                      ),
+                      child: Text(
+                        individual.identifiers!
+                            .lastWhere(
+                              (e) =>
+                                  e.identifierType ==
+                                  IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                            )
+                            .identifierId!,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                const Offstage(),
               Padding(
                 padding: const EdgeInsets.all(spacer2),
                 child: Row(

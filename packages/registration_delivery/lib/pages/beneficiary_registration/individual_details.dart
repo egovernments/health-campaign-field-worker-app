@@ -55,6 +55,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   DateTime now = DateTime.now();
 
   @override
+  void initState() {
+    RegistrationDeliverySingleton().idTypeOptions!.add(IdentifierTypes
+        .uniqueBeneficiaryID.name
+        .toString()); // TODO: Remove this once it is added in MDMS
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
