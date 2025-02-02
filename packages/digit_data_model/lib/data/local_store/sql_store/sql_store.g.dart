@@ -16095,6 +16095,12 @@ class $IndividualTable extends Individual
       GeneratedColumn<int>('gender', aliasedName, true,
               type: DriftSqlType.int, requiredDuringInsert: false)
           .withConverter<Gender?>($IndividualTable.$convertergendern);
+  static const VerificationMeta _parentClientReferenceIdMeta =
+      const VerificationMeta('parentClientReferenceId');
+  @override
+  late final GeneratedColumn<String> parentClientReferenceId =
+      GeneratedColumn<String>('parent_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -16129,6 +16135,7 @@ class $IndividualTable extends Individual
         rowVersion,
         bloodGroup,
         gender,
+        parentClientReferenceId,
         additionalFields
       ];
   @override
@@ -16274,6 +16281,13 @@ class $IndividualTable extends Individual
     }
     context.handle(_bloodGroupMeta, const VerificationResult.success());
     context.handle(_genderMeta, const VerificationResult.success());
+    if (data.containsKey('parent_client_reference_id')) {
+      context.handle(
+          _parentClientReferenceIdMeta,
+          parentClientReferenceId.isAcceptableOrUnknown(
+              data['parent_client_reference_id']!,
+              _parentClientReferenceIdMeta));
+    }
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -16343,6 +16357,9 @@ class $IndividualTable extends Individual
       gender: $IndividualTable.$convertergendern.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}gender'])),
+      parentClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}parent_client_reference_id']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -16390,6 +16407,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
   final int? rowVersion;
   final BloodGroup? bloodGroup;
   final Gender? gender;
+  final String? parentClientReferenceId;
   final String? additionalFields;
   const IndividualData(
       {this.id,
@@ -16418,6 +16436,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
       this.rowVersion,
       this.bloodGroup,
       this.gender,
+      this.parentClientReferenceId,
       this.additionalFields});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -16500,6 +16519,10 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
       map['gender'] =
           Variable<int>($IndividualTable.$convertergendern.toSql(gender));
     }
+    if (!nullToAbsent || parentClientReferenceId != null) {
+      map['parent_client_reference_id'] =
+          Variable<String>(parentClientReferenceId);
+    }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
     }
@@ -16578,6 +16601,9 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           : Value(bloodGroup),
       gender:
           gender == null && nullToAbsent ? const Value.absent() : Value(gender),
+      parentClientReferenceId: parentClientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentClientReferenceId),
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
@@ -16617,6 +16643,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           .fromJson(serializer.fromJson<int?>(json['bloodGroup'])),
       gender: $IndividualTable.$convertergendern
           .fromJson(serializer.fromJson<int?>(json['gender'])),
+      parentClientReferenceId:
+          serializer.fromJson<String?>(json['parentClientReferenceId']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -16652,6 +16680,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           $IndividualTable.$converterbloodGroupn.toJson(bloodGroup)),
       'gender': serializer
           .toJson<int?>($IndividualTable.$convertergendern.toJson(gender)),
+      'parentClientReferenceId':
+          serializer.toJson<String?>(parentClientReferenceId),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -16683,6 +16713,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           Value<int?> rowVersion = const Value.absent(),
           Value<BloodGroup?> bloodGroup = const Value.absent(),
           Value<Gender?> gender = const Value.absent(),
+          Value<String?> parentClientReferenceId = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       IndividualData(
         id: id.present ? id.value : this.id,
@@ -16732,6 +16763,9 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
         bloodGroup: bloodGroup.present ? bloodGroup.value : this.bloodGroup,
         gender: gender.present ? gender.value : this.gender,
+        parentClientReferenceId: parentClientReferenceId.present
+            ? parentClientReferenceId.value
+            : this.parentClientReferenceId,
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
@@ -16765,6 +16799,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           ..write('rowVersion: $rowVersion, ')
           ..write('bloodGroup: $bloodGroup, ')
           ..write('gender: $gender, ')
+          ..write('parentClientReferenceId: $parentClientReferenceId, ')
           ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
@@ -16798,6 +16833,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
         rowVersion,
         bloodGroup,
         gender,
+        parentClientReferenceId,
         additionalFields
       ]);
   @override
@@ -16830,6 +16866,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           other.rowVersion == this.rowVersion &&
           other.bloodGroup == this.bloodGroup &&
           other.gender == this.gender &&
+          other.parentClientReferenceId == this.parentClientReferenceId &&
           other.additionalFields == this.additionalFields);
 }
 
@@ -16860,6 +16897,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
   final Value<int?> rowVersion;
   final Value<BloodGroup?> bloodGroup;
   final Value<Gender?> gender;
+  final Value<String?> parentClientReferenceId;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const IndividualCompanion({
@@ -16889,6 +16927,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     this.rowVersion = const Value.absent(),
     this.bloodGroup = const Value.absent(),
     this.gender = const Value.absent(),
+    this.parentClientReferenceId = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -16919,6 +16958,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     this.rowVersion = const Value.absent(),
     this.bloodGroup = const Value.absent(),
     this.gender = const Value.absent(),
+    this.parentClientReferenceId = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : clientReferenceId = Value(clientReferenceId);
@@ -16949,6 +16989,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     Expression<int>? rowVersion,
     Expression<int>? bloodGroup,
     Expression<int>? gender,
+    Expression<String>? parentClientReferenceId,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -16981,6 +17022,8 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
       if (rowVersion != null) 'row_version': rowVersion,
       if (bloodGroup != null) 'blood_group': bloodGroup,
       if (gender != null) 'gender': gender,
+      if (parentClientReferenceId != null)
+        'parent_client_reference_id': parentClientReferenceId,
       if (additionalFields != null) 'additional_fields': additionalFields,
       if (rowid != null) 'rowid': rowid,
     });
@@ -17013,6 +17056,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
       Value<int?>? rowVersion,
       Value<BloodGroup?>? bloodGroup,
       Value<Gender?>? gender,
+      Value<String?>? parentClientReferenceId,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return IndividualCompanion(
@@ -17042,6 +17086,8 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
       rowVersion: rowVersion ?? this.rowVersion,
       bloodGroup: bloodGroup ?? this.bloodGroup,
       gender: gender ?? this.gender,
+      parentClientReferenceId:
+          parentClientReferenceId ?? this.parentClientReferenceId,
       additionalFields: additionalFields ?? this.additionalFields,
       rowid: rowid ?? this.rowid,
     );
@@ -17130,6 +17176,10 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
       map['gender'] =
           Variable<int>($IndividualTable.$convertergendern.toSql(gender.value));
     }
+    if (parentClientReferenceId.present) {
+      map['parent_client_reference_id'] =
+          Variable<String>(parentClientReferenceId.value);
+    }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
@@ -17168,6 +17218,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
           ..write('rowVersion: $rowVersion, ')
           ..write('bloodGroup: $bloodGroup, ')
           ..write('gender: $gender, ')
+          ..write('parentClientReferenceId: $parentClientReferenceId, ')
           ..write('additionalFields: $additionalFields, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -45832,6 +45883,7 @@ typedef $$IndividualTableInsertCompanionBuilder = IndividualCompanion Function({
   Value<int?> rowVersion,
   Value<BloodGroup?> bloodGroup,
   Value<Gender?> gender,
+  Value<String?> parentClientReferenceId,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -45862,6 +45914,7 @@ typedef $$IndividualTableUpdateCompanionBuilder = IndividualCompanion Function({
   Value<int?> rowVersion,
   Value<BloodGroup?> bloodGroup,
   Value<Gender?> gender,
+  Value<String?> parentClientReferenceId,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -45912,6 +45965,7 @@ class $$IndividualTableTableManager extends RootTableManager<
             Value<int?> rowVersion = const Value.absent(),
             Value<BloodGroup?> bloodGroup = const Value.absent(),
             Value<Gender?> gender = const Value.absent(),
+            Value<String?> parentClientReferenceId = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -45942,6 +45996,7 @@ class $$IndividualTableTableManager extends RootTableManager<
             rowVersion: rowVersion,
             bloodGroup: bloodGroup,
             gender: gender,
+            parentClientReferenceId: parentClientReferenceId,
             additionalFields: additionalFields,
             rowid: rowid,
           ),
@@ -45972,6 +46027,7 @@ class $$IndividualTableTableManager extends RootTableManager<
             Value<int?> rowVersion = const Value.absent(),
             Value<BloodGroup?> bloodGroup = const Value.absent(),
             Value<Gender?> gender = const Value.absent(),
+            Value<String?> parentClientReferenceId = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -46002,6 +46058,7 @@ class $$IndividualTableTableManager extends RootTableManager<
             rowVersion: rowVersion,
             bloodGroup: bloodGroup,
             gender: gender,
+            parentClientReferenceId: parentClientReferenceId,
             additionalFields: additionalFields,
             rowid: rowid,
           ),
@@ -46157,6 +46214,11 @@ class $$IndividualTableFilterComposer
               column,
               joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get parentClientReferenceId => $state.composableBuilder(
+      column: $state.table.parentClientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
@@ -46295,6 +46357,12 @@ class $$IndividualTableOrderingComposer
       column: $state.table.gender,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get parentClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.parentClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,

@@ -1,3 +1,9 @@
+import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+
+import '../registration_delivery.dart';
+
 class Constants {
   static List<KeyValue> yesNo = [
     KeyValue('CORE_COMMON_YES', true),
@@ -19,6 +25,23 @@ class KeyValue {
   String label;
   dynamic key;
   KeyValue(this.label, this.key);
+}
+
+class ChildrenBeneficiaries {
+  HouseholdModel? household;
+  IndividualModel? individual;
+  ProjectBeneficiaryModel? projectBeneficiary;
+  List<TaskModel>? tasks;
+  List<SideEffectModel>? sideEffects;
+  List<ReferralModel>? referrals;
+  ChildrenBeneficiaries({
+    this.household,
+    this.individual,
+    this.projectBeneficiary,
+    this.tasks,
+    this.sideEffects,
+    this.referrals,
+  });
 }
 
 const String age = "age";

@@ -14,6 +14,7 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/utils/constants.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -415,16 +416,21 @@ class _HouseholdOverviewPageState
                                     }),
                                   ),
                                   Column(
-                                    children:
-                                        (state.householdMemberWrapper.members ??
-                                                [])
-                                            .map(
+                                    children: (state
+                                                .householdMemberWrapper.members
+                                                ?.where((m) =>
+                                                    m.parentClientReferenceId ==
+                                                    null) ??
+                                            [])
+                                        .map(
                                       (e) {
                                         final isHead = state
                                                 .householdMemberWrapper
                                                 .headOfHousehold
                                                 ?.clientReferenceId ==
                                             e.clientReferenceId;
+                                        final household = state
+                                            .householdMemberWrapper.household;
                                         final projectBeneficiaryId = state
                                             .householdMemberWrapper
                                             .projectBeneficiaries
@@ -437,8 +443,7 @@ class _HouseholdOverviewPageState
                                             .householdMemberWrapper
                                             .projectBeneficiaries
                                             ?.where(
-                                              (element) =>
-                                                  element
+                                              (element) => (element
                                                       .beneficiaryClientReferenceId ==
                                                   (RegistrationDeliverySingleton()
                                                               .beneficiaryType ==
@@ -448,8 +453,34 @@ class _HouseholdOverviewPageState
                                                       : state
                                                           .householdMemberWrapper
                                                           .household
-                                                          ?.clientReferenceId),
+                                                          ?.clientReferenceId)),
                                             )
+                                            .toList();
+
+                                        final childrenBeneficiaries = state
+                                            .householdMemberWrapper.members
+                                            ?.where((mem) =>
+                                                mem.parentClientReferenceId !=
+                                                    null &&
+                                                mem.parentClientReferenceId ==
+                                                    e.clientReferenceId)
+                                            .map((ind) => ChildrenBeneficiaries(
+                                                  household: state
+                                                      .householdMemberWrapper
+                                                      .household,
+                                                  individual: ind,
+                                                  projectBeneficiary: state
+                                                      .householdMemberWrapper
+                                                      .projectBeneficiaries
+                                                      ?.firstWhereOrNull((beneficiary) =>
+                                                         (beneficiary
+                                                                  .beneficiaryClientReferenceId ==
+                                                              (beneficiaryType == BeneficiaryType.individual ? ind
+                                                                  .clientReferenceId : state.householdMemberWrapper.household?.clientReferenceId ))),
+                                                  tasks: [],
+                                                  sideEffects: [],
+                                                  referrals: [],
+                                                ))
                                             .toList();
 
                                         final taskData = (projectBeneficiary ??
@@ -533,10 +564,12 @@ class _HouseholdOverviewPageState
                                         return MemberCard(
                                           isHead: isHead,
                                           individual: e,
+                                          household: household,
                                           projectBeneficiaries:
                                               projectBeneficiary ?? [],
                                           tasks: taskData,
                                           sideEffects: sideEffectData,
+                                          childrenBeneficiaries: childrenBeneficiaries,
                                           editMemberAction: () async {
                                             final bloc = ctx
                                                 .read<HouseholdOverviewBloc>();
@@ -759,9 +792,10 @@ class _HouseholdOverviewPageState
                                               [])
                                           .isEmpty,
                                       onPressed: () => addIndividual(
-                                        context,
-                                        state.householdMemberWrapper.household!,
-                                      ),
+                                          context,
+                                          state.householdMemberWrapper
+                                              .household!,
+                                          false),
                                       label: localizations.translate(
                                         i18.householdOverView
                                             .householdOverViewAddActionText,
@@ -786,7 +820,8 @@ class _HouseholdOverviewPageState
     );
   }
 
-  addIndividual(BuildContext context, HouseholdModel household) async {
+  addIndividual(
+      BuildContext context, HouseholdModel household, bool isChild) async {
     final bloc = context.read<HouseholdOverviewBloc>();
 
     final address = household.address;

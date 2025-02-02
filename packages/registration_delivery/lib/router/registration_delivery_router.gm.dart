@@ -244,6 +244,8 @@ abstract class $RegistrationDeliveryRoute extends _i26.AutoRouterModule {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isHeadOfHousehold: args.isHeadOfHousehold,
+          isChild: args.isChild,
+          parentClientReferenceId: args.parentClientReferenceId,
         ),
       );
     },
@@ -966,6 +968,8 @@ class IndividualDetailsRoute
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     bool isHeadOfHousehold = false,
+    bool isChild = false,
+    String? parentClientReferenceId,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           IndividualDetailsRoute.name,
@@ -973,6 +977,8 @@ class IndividualDetailsRoute
             key: key,
             appLocalizations: appLocalizations,
             isHeadOfHousehold: isHeadOfHousehold,
+            isChild: isChild,
+            parentClientReferenceId: parentClientReferenceId,
           ),
           initialChildren: children,
         );
@@ -988,6 +994,8 @@ class IndividualDetailsRouteArgs {
     this.key,
     this.appLocalizations,
     this.isHeadOfHousehold = false,
+    this.isChild = false,
+    this.parentClientReferenceId,
   });
 
   final _i27.Key? key;
@@ -996,9 +1004,13 @@ class IndividualDetailsRouteArgs {
 
   final bool isHeadOfHousehold;
 
+  final bool isChild;
+
+  final String? parentClientReferenceId;
+
   @override
   String toString() {
-    return 'IndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold}';
+    return 'IndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold, isChild: $isChild, parentClientReferenceId: $parentClientReferenceId}';
   }
 }
 

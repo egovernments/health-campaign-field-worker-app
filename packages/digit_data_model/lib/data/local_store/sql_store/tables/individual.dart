@@ -32,6 +32,7 @@ class Individual extends Table {
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get bloodGroup => intEnum<BloodGroup>().nullable()();
   IntColumn get gender => intEnum<Gender>().nullable()();
+  TextColumn get parentClientReferenceId => text().nullable()();
   
   TextColumn get additionalFields => text().nullable()();
 

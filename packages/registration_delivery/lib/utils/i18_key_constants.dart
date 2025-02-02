@@ -343,6 +343,16 @@ class IndividualDetails {
   String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
 
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
+
+
+  String get isPregnant => 'IS_PREGNANT';
+  String get howManyTTVaccinesTaken => 'HOW_MANY_TT_VACCINES_TAKEN';
+  String get noOfMonthsPregnant => 'NO_OF_MONTHS_PREGNANT';
+  String get noOfTimesVisitedHF => 'NO_OF_TIMES_VISITED_HF';
+  String get noChildrenLessThan5 => 'NO_OF_CHILDREN_LESS_THAN_5';
+  String get doesChildHaveVaccinationCondition => 'DOES_CHILD_HAVE_VACCINATION_CONDITION';
+  String get doesChildHaveVaccinationConditionError => 'DOES_CHILD_HAVE_VACCINATION_CONDITION_ERROR';
+  String get selectAntigensLabel => 'SELECT_ANTIGENS_LABEL';
 }
 
 class HouseholdLocation {
@@ -529,6 +539,8 @@ class HouseholdOverView {
 
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
+  String get addChildLabel =>
+      'HOUSEHOLD_ADD_CHILD';
 }
 
 class MemberCard {
