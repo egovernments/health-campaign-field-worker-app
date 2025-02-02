@@ -40,6 +40,11 @@ class IndividualSearchModelMapper
       v.clientReferenceId;
   static const Field<IndividualSearchModel, List<String>> _f$clientReferenceId =
       Field('clientReferenceId', _$clientReferenceId, opt: true);
+  static List<String>? _$parentClientReferenceId(IndividualSearchModel v) =>
+      v.parentClientReferenceId;
+  static const Field<IndividualSearchModel, List<String>>
+      _f$parentClientReferenceId =
+      Field('parentClientReferenceId', _$parentClientReferenceId, opt: true);
   static String? _$tenantId(IndividualSearchModel v) => v.tenantId;
   static const Field<IndividualSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
@@ -74,6 +79,7 @@ class IndividualSearchModelMapper
     #offset: _f$offset,
     #limit: _f$limit,
     #clientReferenceId: _f$clientReferenceId,
+    #parentClientReferenceId: _f$parentClientReferenceId,
     #tenantId: _f$tenantId,
     #name: _f$name,
     #gender: _f$gender,
@@ -101,6 +107,7 @@ class IndividualSearchModelMapper
         offset: data.dec(_f$offset),
         limit: data.dec(_f$limit),
         clientReferenceId: data.dec(_f$clientReferenceId),
+        parentClientReferenceId: data.dec(_f$parentClientReferenceId),
         tenantId: data.dec(_f$tenantId),
         name: data.dec(_f$name),
         gender: data.dec(_f$gender),
@@ -169,6 +176,8 @@ abstract class IndividualSearchModelCopyWith<
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get userUuid;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get parentClientReferenceId;
   NameSearchModelCopyWith<$R, NameSearchModel, NameSearchModel>? get name;
   ListCopyWith<
       $R,
@@ -183,6 +192,7 @@ abstract class IndividualSearchModelCopyWith<
       int? offset,
       int? limit,
       List<String>? clientReferenceId,
+      List<String>? parentClientReferenceId,
       String? tenantId,
       NameSearchModel? name,
       Gender? gender,
@@ -223,6 +233,14 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get parentClientReferenceId => $value.parentClientReferenceId != null
+          ? ListCopyWith(
+              $value.parentClientReferenceId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(parentClientReferenceId: v))
+          : null;
+  @override
   NameSearchModelCopyWith<$R, NameSearchModel, NameSearchModel>? get name =>
       $value.name?.copyWith.$chain((v) => call(name: v));
   @override
@@ -242,6 +260,7 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
           Object? offset = $none,
           Object? limit = $none,
           Object? clientReferenceId = $none,
+          Object? parentClientReferenceId = $none,
           Object? tenantId = $none,
           Object? name = $none,
           Object? gender = $none,
@@ -254,6 +273,8 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
         if (offset != $none) #offset: offset,
         if (limit != $none) #limit: limit,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
+        if (parentClientReferenceId != $none)
+          #parentClientReferenceId: parentClientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
         if (name != $none) #name: name,
         if (gender != $none) #gender: gender,
@@ -261,7 +282,8 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
-  IndividualSearchModel $make(CopyWithData data) =>
+  IndividualSearchModel $make(
+          CopyWithData data) =>
       IndividualSearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
           userUuid: data.get(#userUuid, or: $value.userUuid),
@@ -270,6 +292,8 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
           limit: data.get(#limit, or: $value.limit),
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
+          parentClientReferenceId: data.get(#parentClientReferenceId,
+              or: $value.parentClientReferenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
           name: data.get(#name, or: $value.name),
           gender: data.get(#gender, or: $value.gender),
@@ -364,6 +388,10 @@ class IndividualModelMapper extends SubClassMapperBase<IndividualModel> {
       v.identifiers;
   static const Field<IndividualModel, List<IdentifierModel>> _f$identifiers =
       Field('identifiers', _$identifiers, opt: true);
+  static String? _$parentClientReferenceId(IndividualModel v) =>
+      v.parentClientReferenceId;
+  static const Field<IndividualModel, String> _f$parentClientReferenceId =
+      Field('parentClientReferenceId', _$parentClientReferenceId, opt: true);
   static AuditDetails? _$auditDetails(IndividualModel v) => v.auditDetails;
   static const Field<IndividualModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -399,6 +427,7 @@ class IndividualModelMapper extends SubClassMapperBase<IndividualModel> {
     #address: _f$address,
     #gender: _f$gender,
     #identifiers: _f$identifiers,
+    #parentClientReferenceId: _f$parentClientReferenceId,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -437,6 +466,7 @@ class IndividualModelMapper extends SubClassMapperBase<IndividualModel> {
         address: data.dec(_f$address),
         gender: data.dec(_f$gender),
         identifiers: data.dec(_f$identifiers),
+        parentClientReferenceId: data.dec(_f$parentClientReferenceId),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -531,6 +561,7 @@ abstract class IndividualModelCopyWith<$R, $In extends IndividualModel, $Out>
       List<AddressModel>? address,
       Gender? gender,
       List<IdentifierModel>? identifiers,
+      String? parentClientReferenceId,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -598,6 +629,7 @@ class _IndividualModelCopyWithImpl<$R, $Out>
           Object? address = $none,
           Object? gender = $none,
           Object? identifiers = $none,
+          Object? parentClientReferenceId = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -624,6 +656,8 @@ class _IndividualModelCopyWithImpl<$R, $Out>
         if (address != $none) #address: address,
         if (gender != $none) #gender: gender,
         if (identifiers != $none) #identifiers: identifiers,
+        if (parentClientReferenceId != $none)
+          #parentClientReferenceId: parentClientReferenceId,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -656,6 +690,8 @@ class _IndividualModelCopyWithImpl<$R, $Out>
       address: data.get(#address, or: $value.address),
       gender: data.get(#gender, or: $value.gender),
       identifiers: data.get(#identifiers, or: $value.identifiers),
+      parentClientReferenceId: data.get(#parentClientReferenceId,
+          or: $value.parentClientReferenceId),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),

@@ -13,6 +13,7 @@ class IndividualSearchModel extends EntitySearchModel with IndividualSearchModel
   final int? offset;
   final int? limit;
   final List<String>? clientReferenceId;
+  final List<String>? parentClientReferenceId;
   final String? tenantId;
   final NameSearchModel? name;
   final Gender? gender;
@@ -25,6 +26,7 @@ class IndividualSearchModel extends EntitySearchModel with IndividualSearchModel
     this.offset,
     this.limit,
     this.clientReferenceId,
+    this.parentClientReferenceId,
     this.tenantId,
     this.name,
     this.gender,
@@ -41,6 +43,7 @@ class IndividualSearchModel extends EntitySearchModel with IndividualSearchModel
     this.offset,
     this.limit,
     this.clientReferenceId,
+    this.parentClientReferenceId,
     this.tenantId,
     this.name,
     this.gender,
@@ -56,6 +59,7 @@ class IndividualModel extends EntityModel with IndividualModelMappable {
 
   final String? id;
   final String? individualId;
+  final String? parentClientReferenceId;
   final String? userId;
   final String? userUuid;
   final String? dateOfBirth;
@@ -98,6 +102,7 @@ class IndividualModel extends EntityModel with IndividualModelMappable {
     this.address,
     this.gender,
     this.identifiers,
+    this.parentClientReferenceId,
     super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
   }): super();
@@ -131,6 +136,7 @@ class IndividualModel extends EntityModel with IndividualModelMappable {
       rowVersion: Value(rowVersion),
       bloodGroup: Value(bloodGroup),
       gender: Value(gender),
+      parentClientReferenceId: Value(parentClientReferenceId)
       );
   }
 }

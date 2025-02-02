@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_dob_picker.dart';
@@ -17,6 +20,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -31,11 +35,15 @@ import '../../widgets/showcase/showcase_button.dart';
 @RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
+  final bool isChild;
+  final String? parentClientReferenceId;
 
   const IndividualDetailsPage({
     super.key,
     super.appLocalizations,
     this.isHeadOfHousehold = false,
+    this.isChild = false,
+    this.parentClientReferenceId,
   });
 
   @override
@@ -49,6 +57,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
+  static const _isPregnantKey = 'isPregnant';
+  static const _ttVaccinesTakenKey = 'ttVaccinesTaken';
+  static const _noOfPregnantMonthsKey = 'noOfMonthsPregnant';
+  static const _noOfTimesVisitedHFKey = 'noOfTimesVisitedHF';
+  static const _noOfChildrenLessThan5Key = 'noOfChildrenLessThan5';
+  static const _isVaccinationConditionKey = 'isVaccinationCondition';
+  static const _antigensKey = 'antigens';
+
   bool isDuplicateTag = false;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
@@ -73,7 +89,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     return Scaffold(
       body: ReactiveFormBuilder(
         form: () => buildForm(bloc.state),
-        builder: (context, form, child) => BlocConsumer<
+        builder: (context, form, child)  {
+          return BlocConsumer<
             BeneficiaryRegistrationBloc, BeneficiaryRegistrationState>(
           listener: (context, state) {
             state.mapOrNull(
@@ -420,7 +437,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               onSelect: (value) {
                                 form.control(_idTypeKey).value = value.code;
                                 setState(() {
-                                  if (value ==
+                                  if (value.code ==
                                       IdentifierTypes.defaultID.toValue()) {
                                     form.control(_idNumberKey).value =
                                         IdGen.i.identifier.toString();
@@ -620,10 +637,225 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             ),
                           ),
                         ),
+                        Offstage(
+                        offstage: !widget.isChild,
+                          child: ReactiveWrapperField(
+                            formControlName: _isVaccinationConditionKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(i18.individualDetails.doesChildHaveVaccinationCondition) ,
+                              child: RadioList(
+                                errorMessage: form.control(_isVaccinationConditionKey).hasErrors
+                                    ? localizations.translate(
+                                  i18.individualDetails.doesChildHaveVaccinationConditionError,
+                                )
+                                    : null,
+                                radioDigitButtons: [
+                                  KeyValue(i18.common.coreCommonYes, true),
+                                  KeyValue(i18.common.coreCommonNo, false),
+                                ]
+                                    .map((e) => RadioButtonModel(
+                                  code: e.key.toString(),
+                                  name: localizations.translate(e.label),
+                                ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    form.control(_isVaccinationConditionKey).value =
+                                    value.code == "true"
+                                        ? true
+                                        : false;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Offstage(
+                        offstage: !widget.isChild || !(form.control(_isVaccinationConditionKey).value as bool? ?? false),
+                          child: ProductVariantBlocWrapper(
+                            child: BlocBuilder<ProductVariantBloc,
+                                ProductVariantState>(
+                                builder: (context, productState) {
+                                return productState.maybeWhen(
+                                  orElse: () => const Offstage(),
+                                  fetched: (productVariantsValue) {
+                                    final variants = productState.whenOrNull(
+                                      fetched: (productVariants) {
+                                        return productVariants;
+                                      },
+                                    );
+
+                                    return SelectionCard<ProductVariantModel>(
+                                      isRequired: form.control(_isVaccinationConditionKey).value == true ,
+                                      showParentContainer: true,
+                                      title: localizations.translate(
+                                        i18.individualDetails.selectAntigensLabel,
+                                      ),
+                                      allowMultipleSelection: true,
+                                      width: 126,
+                                      initialSelection:
+                                      form.control(_antigensKey).value != null
+                                          ? (form.control(_antigensKey).value as String?)?.split('|').map((id) {
+                                            final existingVariant = variants?.firstWhere((v) => v.id == id,
+                                            orElse: () => ProductVariantModel(id: id));
+
+                                            return existingVariant?.copyWith(id: id) ?? ProductVariantModel(id: id);
+                                      }).toList()
+                                          : [],
+                                      options: (variants?.map(
+                                            (e) => e,
+                                      )?? [])
+                                          .toList(),
+                                      onSelectionChanged: (value) {
+                                        setState(() {
+                                          if (value.isNotEmpty) {
+                                            form.control(_antigensKey).value = value.map((v) => v.id).join("|") ;
+                                          } else {
+                                            form.control(_antigensKey).value = null;
+                                            setState(() {
+                                              form
+                                                  .control(_antigensKey)
+                                                  .setErrors({'': true});
+                                            });
+                                          }
+                                        });
+                                      },
+                                      valueMapper: (value) {
+                                        return localizations.translate(value.sku.toString());
+                                      },
+                                      errorMessage: form.control(_antigensKey).hasErrors
+                                          ? localizations
+                                          .translate(i18.common.corecommonRequired)
+                                          : null,
+                                    );
+                                  },
+                                );
+                              }
+                            ),
+                          ),
+                        ),
+                        Offstage(
+                          offstage: !(form.control(_genderKey).value == Gender.female.toValue()) || widget.isChild,
+                          child: ReactiveWrapperField(
+                            formControlName: _isPregnantKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.isPregnant,
+                              ),
+                              child: DigitCheckbox(
+                                label: localizations.translate(
+                                  i18.individualDetails.isPregnant,
+                                ),
+                                value: form.control(_isPregnantKey).value,
+                                onChanged: (value) {
+                                  setState(() {
+                                    form.control(_isPregnantKey).value = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
                         // const SizedBox(height: spacer4),
+
+                        Offstage(
+                            offstage: !(form.control(_isPregnantKey).value == true) || widget.isChild,
+                            child: ReactiveWrapperField(
+                          formControlName: _ttVaccinesTakenKey,
+                          builder: (field) => LabeledField(
+                            label: localizations.translate(
+                              i18.individualDetails.howManyTTVaccinesTaken,
+                            ),
+                            child: DigitNumericFormInput(
+                              minValue: 0,
+                              initialValue: form
+                                  .control(_ttVaccinesTakenKey)
+                                  .value
+                                  .toString(),
+                              step: 1,
+                              onChange: (value) {
+                                form.control(_ttVaccinesTakenKey).value =
+                                    int.parse(value);
+                              },
+                            ),
+                          ),
+                        ),
+                        ),
+
+                        Offstage(
+                          offstage: !(form.control(_isPregnantKey).value == true) || widget.isChild,
+                          child: ReactiveWrapperField(
+                            formControlName: _noOfPregnantMonthsKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.noOfMonthsPregnant,
+                              ),
+                              child: DigitNumericFormInput(
+                                minValue: 0,
+                                initialValue: form
+                                    .control(_noOfPregnantMonthsKey)
+                                    .value
+                                    .toString(),
+                                step: 1,
+                                onChange: (value) {
+                                  form.control(_noOfPregnantMonthsKey).value =
+                                      int.parse(value);
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        Offstage(
+                          offstage: !(form.control(_isPregnantKey).value == true) || widget.isChild,
+                          child: ReactiveWrapperField(
+                            formControlName: _noOfTimesVisitedHFKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.noOfTimesVisitedHF,
+                              ),
+                              child: DigitNumericFormInput(
+                                minValue: 0,
+                                initialValue: form
+                                    .control(_noOfTimesVisitedHFKey)
+                                    .value
+                                    .toString(),
+                                step: 1,
+                                onChange: (value) {
+                                  form.control(_noOfTimesVisitedHFKey).value =
+                                      int.parse(value);
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        Offstage(
+                          offstage: !(form.control(_isPregnantKey).value == true),
+                          child: ReactiveWrapperField(
+                            formControlName: _noOfChildrenLessThan5Key,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.noChildrenLessThan5,
+                              ),
+                              child: DigitNumericFormInput(
+                                minValue: 0,
+                                initialValue: form
+                                    .control(_noOfChildrenLessThan5Key)
+                                    .value
+                                    .toString(),
+                                step: 1,
+                                onChange: (value) {
+                                  form.control(_noOfChildrenLessThan5Key).value =
+                                      int.parse(value);
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+
                         if ((RegistrationDeliverySingleton().beneficiaryType ==
-                                    BeneficiaryType.household &&
-                                widget.isHeadOfHousehold) ||
+                            BeneficiaryType.household &&
+                            widget.isHeadOfHousehold) ||
                             (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
                           BlocBuilder<DigitScannerBloc, DigitScannerState>(
@@ -631,91 +863,92 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               return true;
                             },
                             builder: (context, state) => state
-                                    .qrCodes.isNotEmpty
+                                .qrCodes.isNotEmpty
                                 ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          localizations.translate(
-                                            i18.deliverIntervention.voucherCode,
-                                          ),
-                                          style: textTheme.headingS,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          overflow: TextOverflow.ellipsis,
-                                          localizations
-                                              .translate(state.qrCodes.last),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: spacer2 * 2,
-                                        ),
-                                        child: IconButton(
-                                          color:
-                                              theme.colorTheme.primary.primary1,
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () {
-                                            Navigator.of(context).push(
-                                              //[TODO: Add the route to auto_route]
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const DigitScannerPage(
-                                                  quantity: 1,
-                                                  isGS1code: false,
-                                                  singleValue: true,
-                                                  isEditEnabled: true,
-                                                ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-
-                                    // ignore: no-empty-block
-                                  )
-                                : DigitButton(
-                                    type: DigitButtonType.secondary,
-                                    size: DigitButtonSize.large,
-                                    mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width:
+                                  MediaQuery.of(context).size.width /
+                                      3,
+                                  child: Text(
+                                    localizations.translate(
+                                      i18.deliverIntervention.voucherCode,
+                                    ),
+                                    style: textTheme.headingS,
+                                  ),
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    overflow: TextOverflow.ellipsis,
+                                    localizations
+                                        .translate(state.qrCodes.last),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    bottom: spacer2 * 2,
+                                  ),
+                                  child: IconButton(
+                                    color:
+                                    theme.colorTheme.primary.primary1,
+                                    icon: const Icon(Icons.edit),
                                     onPressed: () {
                                       Navigator.of(context).push(
-                                        // [TODO: Add the route to auto_route]
+                                        //[TODO: Add the route to auto_route]
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const DigitScannerPage(
+                                          const DigitScannerPage(
                                             quantity: 1,
                                             isGS1code: false,
                                             singleValue: true,
+                                            isEditEnabled: true,
                                           ),
                                           settings: const RouteSettings(
                                               name: '/qr-scanner'),
                                         ),
                                       );
                                     },
-                                    prefixIcon: Icons.qr_code,
-                                    label: localizations.translate(
-                                      i18.individualDetails
-                                          .linkVoucherToIndividual,
-                                    ),
                                   ),
+                                ),
+                              ],
+
+                              // ignore: no-empty-block
+                            )
+                                : DigitButton(
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.large,
+                              mainAxisSize: MainAxisSize.max,
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  // [TODO: Add the route to auto_route]
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                    const DigitScannerPage(
+                                      quantity: 1,
+                                      isGS1code: false,
+                                      singleValue: true,
+                                    ),
+                                    settings: const RouteSettings(
+                                        name: '/qr-scanner'),
+                                  ),
+                                );
+                              },
+                              prefixIcon: Icons.qr_code,
+                              label: localizations.translate(
+                                i18.individualDetails
+                                    .linkVoucherToIndividual,
+                              ),
+                            ),
                           ),
                       ]),
                 ),
               ],
             );
           },
-        ),
+        );
+  }
       ),
     );
   }
@@ -791,6 +1024,27 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       ),
     );
 
+    bool isPregnant = form.control(_isPregnantKey).value as bool? ?? false;
+    int noOfMonthsPregnant =  form.control(_noOfPregnantMonthsKey).value as int? ?? 0;
+    int noOfTimesVisitedHF =  form.control(_noOfTimesVisitedHFKey).value as int? ?? 0;
+    int ttVaccinesTaken =  form.control(_ttVaccinesTakenKey).value as int? ?? 0;
+    int noOfChildrenLessThan5 =  form.control(_noOfChildrenLessThan5Key).value as int? ?? 0;
+
+    IndividualAdditionalFields additionalFields = IndividualAdditionalFields(
+      version: 1,
+      fields: [
+        if(isPregnant) ...[
+          AdditionalField(_isPregnantKey, isPregnant.toString()),
+          AdditionalField(_ttVaccinesTakenKey, ttVaccinesTaken.toString()),
+          AdditionalField(_noOfPregnantMonthsKey, noOfMonthsPregnant.toString()),
+          AdditionalField(_noOfTimesVisitedHFKey, noOfTimesVisitedHF.toString()),
+          AdditionalField(_noOfChildrenLessThan5Key, noOfChildrenLessThan5.toString()),
+        ],
+        if(widget.parentClientReferenceId != null)
+          AdditionalField('parentClientReferenceId', widget.parentClientReferenceId),
+      ]
+    );
+
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
@@ -801,6 +1055,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           : Gender.values
               .byName(form.control(_genderKey).value.toString().toLowerCase()),
       mobileNumber: form.control(_mobileNumberKey).value,
+      parentClientReferenceId: widget.parentClientReferenceId,
       dateOfBirth: dobString,
       identifiers: [
         identifier.copyWith(
@@ -808,6 +1063,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           identifierType: form.control(_idTypeKey).value,
         ),
       ],
+      additionalFields: additionalFields,
     );
 
     return individual;
@@ -850,6 +1106,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       _idTypeKey: FormControl<String>(
         value: individual?.identifiers?.firstOrNull?.identifierType,
       ),
+      _isPregnantKey: FormControl<bool>(
+        value: (individual?.additionalFields?.fields.where((field) => field.key == _isPregnantKey) ?? []).isNotEmpty ?
+            bool.tryParse((individual?.additionalFields?.fields.where((field) => field.key == _isPregnantKey).firstOrNull?.value ?? false).toString()) ?? false : false,
+      ),
+      _isVaccinationConditionKey: FormControl<bool>(
+        value: (individual?.additionalFields?.fields.where((field) => field.key == _isVaccinationConditionKey) ?? []).isNotEmpty ?
+        bool.tryParse((individual?.additionalFields?.fields.where((field) => field.key == _isVaccinationConditionKey).firstOrNull?.value ?? false).toString()) ?? false : false,
+      ),
+      _antigensKey: FormControl<String>(),
       _idNumberKey: FormControl<String>(
         validators: [Validators.required],
         value: individual?.identifiers?.firstOrNull?.identifierId,
@@ -869,6 +1134,18 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 localizations.translate(i18.common.coreCommonMobileNumber)),
         Validators.maxLength(10)
       ]),
+      _ttVaccinesTakenKey:  FormControl<int>(
+        value: int.tryParse((individual?.additionalFields?.fields.where((field) => field.key == _ttVaccinesTakenKey).firstOrNull?.value ?? 0).toString()) ?? 0,
+      ),
+      _noOfPregnantMonthsKey :  FormControl<int>(
+        value: int.tryParse((individual?.additionalFields?.fields.where((field) => field.key == _noOfPregnantMonthsKey).firstOrNull?.value ?? 0).toString()) ?? 0,
+      ),
+      _noOfTimesVisitedHFKey:  FormControl<int>(
+        value: int.tryParse((individual?.additionalFields?.fields.where((field) => field.key == _noOfTimesVisitedHFKey).firstOrNull?.value ?? 0).toString()) ?? 0,
+      ),
+      _noOfChildrenLessThan5Key:  FormControl<int>(
+        value: int.tryParse((individual?.additionalFields?.fields.where((field) => field.key == _noOfChildrenLessThan5Key).firstOrNull?.value ?? 0).toString()) ?? 0,
+      ),
     });
   }
 

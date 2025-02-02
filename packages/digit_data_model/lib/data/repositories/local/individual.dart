@@ -105,6 +105,7 @@ class IndividualLocalRepository
               tenantId: individual.tenantId,
               individualId: individual.individualId,
               clientReferenceId: individual.clientReferenceId,
+              parentClientReferenceId: individual.parentClientReferenceId,
               dateOfBirth: individual.dateOfBirth,
               mobileNumber: individual.mobileNumber,
               userUuid: individual.userUuid,
@@ -129,6 +130,11 @@ class IndividualLocalRepository
                       lastModifiedTime: individual.auditModifiedTime,
                     )
                   : null,
+              additionalFields: individual.additionalFields == null
+                  ? null
+                  : IndividualAdditionalFieldsMapper.fromJson(
+                individual.additionalFields!,
+              ),
               name: name == null
                   ? null
                   : NameModel(
@@ -382,11 +388,14 @@ class IndividualLocalRepository
           [];
 
       final identifierCompanions = entity.identifiers?.map((e) {
-            return e
-                .copyWith(clientAuditDetails: entity.clientAuditDetails)
-                .companion;
-          }).toList() ??
-          [];
+        return e.copyWith(
+            clientAuditDetails: entity.clientAuditDetails
+        ).companion;
+      }).where((e) =>
+      e.auditCreatedBy.value != null &&
+          e.identifierType.value != null &&
+          e.identifierId.value != null
+      ).toList() ?? [];
 
       await sql.batch((batch) async {
         if (nameCompanion != null) {
