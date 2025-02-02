@@ -738,7 +738,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       return Align(
         alignment: Alignment.topLeft,
         child: LabeledField(
-            charCondition: true,
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
