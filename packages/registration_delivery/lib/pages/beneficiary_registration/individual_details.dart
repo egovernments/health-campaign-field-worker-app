@@ -1033,13 +1033,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     IndividualAdditionalFields additionalFields = IndividualAdditionalFields(
       version: 1,
       fields: [
-        if(isPregnant)
+        if(isPregnant) ...[
           AdditionalField(_isPregnantKey, isPregnant.toString()),
           AdditionalField(_ttVaccinesTakenKey, ttVaccinesTaken.toString()),
           AdditionalField(_noOfPregnantMonthsKey, noOfMonthsPregnant.toString()),
           AdditionalField(_noOfTimesVisitedHFKey, noOfTimesVisitedHF.toString()),
           AdditionalField(_noOfChildrenLessThan5Key, noOfChildrenLessThan5.toString()),
-
+        ],
+        if(widget.parentClientReferenceId != null)
+          AdditionalField('parentClientReferenceId', widget.parentClientReferenceId),
       ]
     );
 
