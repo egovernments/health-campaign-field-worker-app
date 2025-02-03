@@ -70,11 +70,8 @@ class _HouseHoldConsentPageState extends LocalizedState<HouseHoldConsentPage> {
                               loading,
                               isHeadOfHousehold,
                             ) {
-                              final isConsent =
-                                  form.control(_consent).value == 0
-                                      ? false
-                                      : true;
-                              if (!isConsent && address != null) {
+                              final isConsent = form.control(_consent).value;
+                              if (isConsent == false && address != null) {
                                 var addressModel = address.copyWith(
                                   latitude: locationState.latitude ??
                                       address.latitude,
@@ -138,8 +135,8 @@ class _HouseHoldConsentPageState extends LocalizedState<HouseHoldConsentPage> {
                                 searchBloc.add(
                                   const SearchHouseholdsClearEvent(),
                                 );
-                                context.router
-                                    .push(BeneficiaryAcknowledgementRoute());
+                                context.router.push(
+                                    ConsentHouseholdAcknowledgementRoute());
                               } else {
                                 context.router.push(HouseHoldDetailsRoute());
                               }
@@ -208,12 +205,15 @@ class _HouseHoldConsentPageState extends LocalizedState<HouseHoldConsentPage> {
                                       name: localizations.translate(e.label),
                                     ))
                                 .toList(),
+                            groupValue:
+                                form.control(_consent).value.toString() ?? '',
                             onChanged: (value) {
+                              if (form.control(_consent).disabled) return;
+
                               form.control(_consent).value =
-                                  value.code == i18.householdDetails.submitYes
-                                      ? true
-                                      : false;
+                                  value.code == 'true' ? true : false;
                             },
+                            capitalizeFirstLetter: false,
                           ),
                         ),
                       ],

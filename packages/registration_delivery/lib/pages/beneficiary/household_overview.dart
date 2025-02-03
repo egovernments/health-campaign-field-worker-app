@@ -472,11 +472,17 @@ class _HouseholdOverviewPageState
                                                   projectBeneficiary: state
                                                       .householdMemberWrapper
                                                       .projectBeneficiaries
-                                                      ?.firstWhereOrNull((beneficiary) =>
-                                                         (beneficiary
-                                                                  .beneficiaryClientReferenceId ==
-                                                              (beneficiaryType == BeneficiaryType.individual ? ind
-                                                                  .clientReferenceId : state.householdMemberWrapper.household?.clientReferenceId ))),
+                                                      ?.firstWhereOrNull((beneficiary) => (beneficiary
+                                                              .beneficiaryClientReferenceId ==
+                                                          (beneficiaryType ==
+                                                                  BeneficiaryType
+                                                                      .individual
+                                                              ? ind
+                                                                  .clientReferenceId
+                                                              : state
+                                                                  .householdMemberWrapper
+                                                                  .household
+                                                                  ?.clientReferenceId))),
                                                   tasks: [],
                                                   sideEffects: [],
                                                   referrals: [],
@@ -569,7 +575,8 @@ class _HouseholdOverviewPageState
                                               projectBeneficiary ?? [],
                                           tasks: taskData,
                                           sideEffects: sideEffectData,
-                                          childrenBeneficiaries: childrenBeneficiaries,
+                                          childrenBeneficiaries:
+                                              childrenBeneficiaries,
                                           editMemberAction: () async {
                                             final bloc = ctx
                                                 .read<HouseholdOverviewBloc>();

@@ -51,6 +51,7 @@ class BeneficiaryRegistrationBloc
     on(_handleUpdateIndividual);
     on(_handleAddMember);
     on(_handleSummary);
+    on(_handleSaveHouseholdConsent);
   }
 
   FutureOr<void> _handleSaveHouseholdConsent(
