@@ -5,6 +5,8 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -658,7 +660,70 @@ class MemberCard extends StatelessWidget {
                   ),
                 );
               },
-              deleteMemberAction: () {},
+              deleteMemberAction:  () {
+                final bloc = context.read<HouseholdOverviewBloc>();
+                showCustomPopup(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Popup(
+                        title: localizations
+                            .translate(i18
+                            .householdOverView
+                            .householdOverViewActionCardTitle),
+                        type: PopUpType.simple,
+                        actions: [
+                          DigitButton(
+                              label: localizations
+                                  .translate(i18
+                                  .householdOverView
+                                  .householdOverViewPrimaryActionLabel),
+                              onPressed: () {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator:
+                                  true,
+                                )
+                                  ..pop()
+                                  ..pop();
+                                bloc
+                                    .add(
+                                  HouseholdOverviewEvent
+                                      .selectedIndividual(
+                                    individualModel:
+                                    c.individual!,
+                                  ),
+                                );
+                                context.router.push(
+                                  ReasonForDeletionRoute(
+                                    isHousholdDelete:
+                                    false,
+                                  ),
+                                );
+                              },
+                              type: DigitButtonType
+                                  .primary,
+                              size: DigitButtonSize
+                                  .large),
+                          DigitButton(
+                              label: localizations
+                                  .translate(i18
+                                  .householdOverView
+                                  .householdOverViewSecondaryActionLabel),
+                              onPressed: () {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator:
+                                  true,
+                                ).pop();
+                              },
+                              type: DigitButtonType
+                                  .tertiary,
+                              size: DigitButtonSize
+                                  .large)
+                        ]);
+                  },
+                );
+              },
             ))
         .toList();
 

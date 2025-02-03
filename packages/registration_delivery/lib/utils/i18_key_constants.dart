@@ -361,6 +361,8 @@ class IndividualDetails {
       'DOES_CHILD_HAVE_VACCINATION_CONDITION_ERROR';
 
   String get selectAntigensLabel => 'SELECT_ANTIGENS_LABEL';
+
+  String get selectVaccinationBodyPartsLabel => 'SELECT_VACCINATION_BODY_PARTS_LABEL';
 }
 
 class HouseholdLocation {

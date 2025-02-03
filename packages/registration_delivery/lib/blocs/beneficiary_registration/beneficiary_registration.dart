@@ -670,6 +670,7 @@ class BeneficiaryRegistrationBloc
             ),
           );
           if (event.beneficiaryType == BeneficiaryType.individual) {
+
             await projectBeneficiaryRepository.create(
               ProjectBeneficiaryModel(
                 tag: event.tag,

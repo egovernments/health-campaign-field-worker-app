@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -99,13 +100,14 @@ class IndividualLocalRepository
             final name = e.readTableOrNull(sql.name);
             final address = e.readTableOrNull(sql.address);
             final identifier = e.readTableOrNull(sql.identifier);
+            final additionalFields = IndividualAdditionalFieldsMapper.fromJson(individual.additionalFields.toString());
 
             return IndividualModel(
               id: individual.id,
               tenantId: individual.tenantId,
               individualId: individual.individualId,
               clientReferenceId: individual.clientReferenceId,
-              parentClientReferenceId: individual.parentClientReferenceId,
+              parentClientReferenceId: individual.additionalFields != null ? additionalFields.fields.where((f) => f.key == 'parentClientReferenceId').firstOrNull?.value : individual.parentClientReferenceId,
               dateOfBirth: individual.dateOfBirth,
               mobileNumber: individual.mobileNumber,
               userUuid: individual.userUuid,

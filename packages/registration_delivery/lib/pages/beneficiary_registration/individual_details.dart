@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
@@ -62,6 +63,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const _noOfChildrenLessThan5Key = 'noOfChildrenLessThan5';
   static const _isVaccinationConditionKey = 'isVaccinationCondition';
   static const _antigensKey = 'antigens';
+  static const _bodyPartsVaccinationKey = 'bodyPartsVaccination';
 
   bool isDuplicateTag = false;
   static const maxLength = 200;
@@ -339,6 +341,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                           type: ToastType.error,
                                         );
                                       } else {
+                                        final antigensGiven = form.control(_antigensKey).value as String?;
                                         bloc.add(
                                           BeneficiaryRegistrationAddMemberEvent(
                                             beneficiaryType:
@@ -678,6 +681,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       .individualDetails
                                       .doesChildHaveVaccinationCondition),
                                   child: RadioList(
+                                    groupValue: form
+                                        .control(_isVaccinationConditionKey)
+                                        .value,
                                     errorMessage: form
                                             .control(_isVaccinationConditionKey)
                                             .hasErrors
@@ -700,10 +706,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       setState(() {
                                         form
                                             .control(_isVaccinationConditionKey)
-                                            .value = value.code ==
-                                                "true"
-                                            ? true
-                                            : false;
+                                            .value = value.code;
                                       });
                                     },
                                   ),
@@ -713,10 +716,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
                             Offstage(
                               offstage: !widget.isChild ||
-                                  !(form
-                                          .control(_isVaccinationConditionKey)
-                                          .value as bool? ??
-                                      false),
+                                  (form.control(_isVaccinationConditionKey)
+                                          .value as String?) != 'true',
                               child: ProductVariantBlocWrapper(
                                 child: BlocBuilder<ProductVariantBloc,
                                         ProductVariantState>(
@@ -800,6 +801,61 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                     },
                                   );
                                 }),
+                              ),
+                            ),
+                            Offstage(
+                              offstage: !widget.isChild ||
+                                  (form.control(_isVaccinationConditionKey)
+                                      .value as String?) != 'false',
+                              child: SelectionCard<String>(
+                                isRequired: false,
+                                showParentContainer: true,
+                                title: localizations.translate(
+                                  i18.individualDetails
+                                      .selectVaccinationBodyPartsLabel,
+                                ),
+                                allowMultipleSelection: true,
+                                width: 126,
+                                initialSelection: form
+                                    .control(_bodyPartsVaccinationKey)
+                                    .value !=
+                                    null
+                                    ? (form.control(_bodyPartsVaccinationKey).value
+                                as String?)
+                                    ?.split('|').toList()
+                                    : [],
+                                //[ TODO: Need to be moved to MDMS
+                                options: (["ARM", "BACK", "NECK"].map(
+                                      (e) => e,
+                                ) ??
+                                    [])
+                                    .toList(),
+                                onSelectionChanged: (value) {
+                                  setState(() {
+                                    if (value.isNotEmpty) {
+                                      form.control(_bodyPartsVaccinationKey).value =
+                                          value.join("|");
+                                    } else {
+                                      form.control(_bodyPartsVaccinationKey).value =
+                                      null;
+                                      setState(() {
+                                        form
+                                            .control(_bodyPartsVaccinationKey)
+                                            .setErrors({'': true});
+                                      });
+                                    }
+                                  });
+                                },
+                                valueMapper: (value) {
+                                  return localizations
+                                      .translate(value.toString());
+                                },
+                                errorMessage: form
+                                    .control(_bodyPartsVaccinationKey)
+                                    .hasErrors
+                                    ? localizations.translate(
+                                    i18.common.corecommonRequired)
+                                    : null,
                               ),
                             ),
                             Offstage(
@@ -1118,6 +1174,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     int ttVaccinesTaken = form.control(_ttVaccinesTakenKey).value as int? ?? 0;
     int noOfChildrenLessThan5 =
         form.control(_noOfChildrenLessThan5Key).value as int? ?? 0;
+    bool? isVaccinationGiven = bool.tryParse(form.control(_isVaccinationConditionKey).value as String? ?? "false");
+    String? antigensGiven = form.control(_antigensKey).value as String?;
+    String? vaccinationBodyParts = form.control(_bodyPartsVaccinationKey).value as String?;
 
     IndividualAdditionalFields additionalFields =
         IndividualAdditionalFields(version: 1, fields: [
@@ -1129,10 +1188,23 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         AdditionalField(
             _noOfChildrenLessThan5Key, noOfChildrenLessThan5.toString()),
       ],
-      if (widget.parentClientReferenceId != null)
-        AdditionalField(
+      if (widget.parentClientReferenceId != null) ...[
+          AdditionalField(
             'parentClientReferenceId', widget.parentClientReferenceId),
-    ]);
+        ],
+          if (widget.isChild) ...[
+            AdditionalField(
+                _isVaccinationConditionKey, isVaccinationGiven.toString()),
+          ],
+          if (widget.isChild && isVaccinationGiven == true && (antigensGiven ?? '').isNotEmpty) ...[
+            AdditionalField(
+                _antigensKey, antigensGiven.toString()),
+          ],
+          if (widget.isChild && isVaccinationGiven != true && (vaccinationBodyParts ?? '').isNotEmpty) ...[
+            AdditionalField(
+                _bodyPartsVaccinationKey, vaccinationBodyParts.toString()),
+          ],
+        ]);
 
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
@@ -1176,6 +1248,12 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       },
     );
 
+    final isVaccinationGiven = widget.isChild
+        ? (bool.tryParse(individual?.additionalFields?.fields
+        .firstWhere((field) => field.key == _isVaccinationConditionKey,)
+        .value ?? "")?.toString() ?? "")
+        : "";
+
     final searchQuery = state.mapOrNull<String>(
       create: (value) {
         return value.searchQuery;
@@ -1209,22 +1287,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 false
             : false,
       ),
-      _isVaccinationConditionKey: FormControl<bool>(
-        value: (individual?.additionalFields?.fields.where(
-                        (field) => field.key == _isVaccinationConditionKey) ??
-                    [])
-                .isNotEmpty
-            ? bool.tryParse((individual?.additionalFields?.fields
-                            .where((field) =>
-                                field.key == _isVaccinationConditionKey)
-                            .firstOrNull
-                            ?.value ??
-                        false)
-                    .toString()) ??
-                false
-            : false,
+      _isVaccinationConditionKey: FormControl<String>(
+        value: isVaccinationGiven,
       ),
-      _antigensKey: FormControl<String>(),
+      _antigensKey: FormControl<String>(
+        value: widget.isChild ? individual?.additionalFields?.fields.where((p) => p.key == _antigensKey).firstOrNull?.value: null
+      ),
+      _bodyPartsVaccinationKey : FormControl<String>(
+          value: widget.isChild ? individual?.additionalFields?.fields.where((p) => p.key == _bodyPartsVaccinationKey).firstOrNull?.value: null
+      ),
       _idNumberKey: FormControl<String>(
         validators: [Validators.required],
         value: individual?.identifiers?.firstOrNull?.identifierId,

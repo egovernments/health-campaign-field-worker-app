@@ -168,319 +168,320 @@ class ChildCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: spacer1, bottom: spacer2),
-                child: Offstage(
-                  offstage: beneficiaryType != BeneficiaryType.individual,
-                  child: !isDelivered ||
-                      isNotEligible ||
-                      isBeneficiaryRefused ||
-                      isBeneficiaryReferred
-                      ? Align(
-                    alignment: Alignment.centerLeft,
-                    child: DigitButton(
-                      prefixIcon: Icons.info_rounded,
-                      label: localizations.translate(
-                        isNotEligible
-                            ? i18.householdOverView
-                            .householdOverViewNotEligibleIconLabel
-                            : isBeneficiaryReferred
-                            ? i18.householdOverView
-                            .householdOverViewBeneficiaryReferredLabel
-                            : isBeneficiaryRefused
-                            ? Status.beneficiaryRefused.toValue()
-                            : i18.householdOverView
-                            .householdOverViewNotDeliveredIconLabel,
-                      ),
-                      textColor: DigitTheme.instance.colorScheme.error,
-                      iconColor: DigitTheme.instance.colorScheme.error,
-                      type: DigitButtonType.tertiary,
-                      size: DigitButtonSize.medium,
-                      isDisabled: true,
-                      onPressed: () {},
-                    ),
-                  )
-                      : Align(
-                    alignment: Alignment.centerLeft,
-                    child: DigitButton(
-                      prefixIcon: Icons.check_circle,
-                      label: localizations.translate(
-                        i18.householdOverView
-                            .householdOverViewDeliveredIconLabel,
-                      ),
-                      isDisabled: true,
-                      textColor: DigitTheme
-                          .instance.colorScheme.onSurfaceVariant,
-                      iconColor: DigitTheme
-                          .instance.colorScheme.onSurfaceVariant,
-                      type: DigitButtonType.tertiary,
-                      size: DigitButtonSize.medium,
-                      onPressed: () {},
-                    ),
-                  ),
-                ),
-              ),
-              Offstage(
-                offstage: beneficiaryType != BeneficiaryType.individual ||
-                    isNotEligible ||
-                    isBeneficiaryRefused ||
-                    isBeneficiaryReferred,
-                child: Padding(
-                  padding: const EdgeInsets.all(spacer1),
-                  child: Column(
-                    children: [
-                      isNotEligible ||
-                          isBeneficiaryRefused ||
-                          isBeneficiaryReferred
-                          ? const Offstage()
-                          : !isNotEligible
-                          ? DigitButton(
-                        mainAxisSize: MainAxisSize.max,
-                        isDisabled:
-                        (projectBeneficiaries ?? []).isEmpty
-                            ? true
-                            : false,
-                        type: DigitButtonType.primary,
-                        size: DigitButtonSize.large,
-                        label: allDosesDelivered(
-                          tasks,
-                          context.selectedCycle,
-                          sideEffects,
-                          individual,
-                        ) &&
-                            !checkStatus(
-                              tasks,
-                              context.selectedCycle,
-                            )
-                            ? localizations.translate(
-                          i18.householdOverView
-                              .viewDeliveryLabel,
-                        )
-                            : localizations.translate(
-                          i18.householdOverView
-                              .householdOverViewActionText,
-                        ),
-                        onPressed: () {
-                          final bloc =
-                          context.read<HouseholdOverviewBloc>();
-
-                          bloc.add(
-                            HouseholdOverviewEvent.selectedIndividual(
-                              individualModel: individual,
-                            ),
-                          );
-                          bloc.add(HouseholdOverviewReloadEvent(
-                            projectId: RegistrationDeliverySingleton()
-                                .projectId!,
-                            projectBeneficiaryType:
-                            RegistrationDeliverySingleton()
-                                .beneficiaryType ??
-                                BeneficiaryType.individual,
-                          ));
-
-                          final futureTaskList = tasks
-                              ?.where((task) =>
-                          task.status ==
-                              Status.delivered.toValue())
-                              .toList();
-
-                          if ((futureTaskList ?? []).isNotEmpty) {
-                            context.router.push(
-                              RecordPastDeliveryDetailsRoute(
-                                tasks: tasks,
-                              ),
-                            );
-                          } else {
-                            context.router
-                                .push(BeneficiaryDetailsRoute());
-                          }
-                        },
-                      )
-                          : const Offstage(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      (isNotEligible ||
-                          isBeneficiaryRefused ||
-                          isBeneficiaryReferred ||
-                          (allDosesDelivered(
-                            tasks,
-                            context.selectedCycle,
-                            sideEffects,
-                            individual,
-                          ) &&
-                              !checkStatus(tasks, context.selectedCycle)))
-                          ? const Offstage()
-                          : DigitButton(
-                        label: localizations.translate(
-                          i18.memberCard.unableToDeliverLabel,
-                        ),
-                        isDisabled: (projectBeneficiaries ?? []).isEmpty
-                            ? true
-                            : false,
-                        type: DigitButtonType.secondary,
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () async {
-                          await showDialog(
-                            context: context,
-                            builder: (ctx) => DigitActionCard(
-                              onOutsideTap: () {
-                                Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).pop();
-                              },
-                              actions: [
-                                DigitButton(
-                                  label: localizations.translate(
-                                    i18.memberCard
-                                        .beneficiaryRefusedLabel,
-                                  ),
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                  onPressed: () {
-                                    Navigator.of(context,
-                                        rootNavigator: true)
-                                        .pop();
-                                    context
-                                        .read<DeliverInterventionBloc>()
-                                        .add(
-                                      DeliverInterventionSubmitEvent(
-                                        task: TaskModel(
-                                          projectBeneficiaryClientReferenceId:
-                                          projectBeneficiaryClientReferenceId,
-                                          clientReferenceId:
-                                          IdGen.i.identifier,
-                                          tenantId:
-                                          RegistrationDeliverySingleton()
-                                              .tenantId,
-                                          rowVersion: 1,
-                                          auditDetails: AuditDetails(
-                                            createdBy:
-                                            RegistrationDeliverySingleton()
-                                                .loggedInUserUuid!,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          projectId:
-                                          RegistrationDeliverySingleton()
-                                              .projectId,
-                                          status: Status
-                                              .beneficiaryRefused
-                                              .toValue(),
-                                          clientAuditDetails:
-                                          ClientAuditDetails(
-                                            createdBy:
-                                            RegistrationDeliverySingleton()
-                                                .loggedInUserUuid!,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                            lastModifiedBy:
-                                            RegistrationDeliverySingleton()
-                                                .loggedInUserUuid,
-                                            lastModifiedTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          additionalFields:
-                                          TaskAdditionalFields(
-                                            version: 1,
-                                            fields: [
-                                              AdditionalField(
-                                                'taskStatus',
-                                                Status
-                                                    .beneficiaryRefused
-                                                    .toValue(),
-                                              ),
-                                            ],
-                                          ),
-                                          address: individual
-                                              .address?.first,
-                                        ),
-                                        isEditing: false,
-                                        boundaryModel:
-                                        RegistrationDeliverySingleton()
-                                            .boundary!,
-                                      ),
-                                    );
-                                    final reloadState = context
-                                        .read<HouseholdOverviewBloc>();
-                                    Future.delayed(
-                                      const Duration(milliseconds: 500),
-                                          () {
-                                        reloadState.add(
-                                          HouseholdOverviewReloadEvent(
-                                            projectId:
-                                            RegistrationDeliverySingleton()
-                                                .projectId!,
-                                            projectBeneficiaryType:
-                                            RegistrationDeliverySingleton()
-                                                .beneficiaryType!,
-                                          ),
-                                        );
-                                      },
-                                    ).then(
-                                          (value) => context.router.push(
-                                        HouseholdAcknowledgementRoute(
-                                          enableViewHousehold: true,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                DigitButton(
-                                  label: localizations.translate(
-                                    i18.memberCard.referBeneficiaryLabel,
-                                  ),
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                  onPressed: () async {
-                                    Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop();
-                                    await context.router.push(
-                                      ReferBeneficiaryRoute(
-                                        projectBeneficiaryClientRefId:
-                                        projectBeneficiaryClientReferenceId ??
-                                            '',
-                                      ),
-                                    );
-                                  },
-                                ),
-                                DigitButton(
-                                  label: localizations.translate(
-                                    i18.memberCard
-                                        .recordAdverseEventsLabel,
-                                  ),
-                                  isDisabled: tasks != null &&
-                                      (tasks ?? []).isNotEmpty
-                                      ? false
-                                      : true,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                  mainAxisSize: MainAxisSize.max,
-                                  onPressed: () async {
-                                    Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop();
-                                    await context.router.push(
-                                      SideEffectsRoute(
-                                        tasks: tasks!,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              //[TODO: Removed Delivery Actions
+              // Padding(
+              //   padding: const EdgeInsets.only(left: spacer1, bottom: spacer2),
+              //   child: Offstage(
+              //     offstage: beneficiaryType != BeneficiaryType.individual,
+              //     child: !isDelivered ||
+              //         isNotEligible ||
+              //         isBeneficiaryRefused ||
+              //         isBeneficiaryReferred
+              //         ? Align(
+              //       alignment: Alignment.centerLeft,
+              //       child: DigitButton(
+              //         prefixIcon: Icons.info_rounded,
+              //         label: localizations.translate(
+              //           isNotEligible
+              //               ? i18.householdOverView
+              //               .householdOverViewNotEligibleIconLabel
+              //               : isBeneficiaryReferred
+              //               ? i18.householdOverView
+              //               .householdOverViewBeneficiaryReferredLabel
+              //               : isBeneficiaryRefused
+              //               ? Status.beneficiaryRefused.toValue()
+              //               : i18.householdOverView
+              //               .householdOverViewNotDeliveredIconLabel,
+              //         ),
+              //         textColor: DigitTheme.instance.colorScheme.error,
+              //         iconColor: DigitTheme.instance.colorScheme.error,
+              //         type: DigitButtonType.tertiary,
+              //         size: DigitButtonSize.medium,
+              //         isDisabled: true,
+              //         onPressed: () {},
+              //       ),
+              //     )
+              //         : Align(
+              //       alignment: Alignment.centerLeft,
+              //       child: DigitButton(
+              //         prefixIcon: Icons.check_circle,
+              //         label: localizations.translate(
+              //           i18.householdOverView
+              //               .householdOverViewDeliveredIconLabel,
+              //         ),
+              //         isDisabled: true,
+              //         textColor: DigitTheme
+              //             .instance.colorScheme.onSurfaceVariant,
+              //         iconColor: DigitTheme
+              //             .instance.colorScheme.onSurfaceVariant,
+              //         type: DigitButtonType.tertiary,
+              //         size: DigitButtonSize.medium,
+              //         onPressed: () {},
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // Offstage(
+              //   offstage: beneficiaryType != BeneficiaryType.individual ||
+              //       isNotEligible ||
+              //       isBeneficiaryRefused ||
+              //       isBeneficiaryReferred,
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(spacer1),
+              //     child: Column(
+              //       children: [
+              //         isNotEligible ||
+              //             isBeneficiaryRefused ||
+              //             isBeneficiaryReferred
+              //             ? const Offstage()
+              //             : !isNotEligible
+              //             ? DigitButton(
+              //           mainAxisSize: MainAxisSize.max,
+              //           isDisabled:
+              //           (projectBeneficiaries ?? []).isEmpty
+              //               ? true
+              //               : false,
+              //           type: DigitButtonType.primary,
+              //           size: DigitButtonSize.large,
+              //           label: allDosesDelivered(
+              //             tasks,
+              //             context.selectedCycle,
+              //             sideEffects,
+              //             individual,
+              //           ) &&
+              //               !checkStatus(
+              //                 tasks,
+              //                 context.selectedCycle,
+              //               )
+              //               ? localizations.translate(
+              //             i18.householdOverView
+              //                 .viewDeliveryLabel,
+              //           )
+              //               : localizations.translate(
+              //             i18.householdOverView
+              //                 .householdOverViewActionText,
+              //           ),
+              //           onPressed: () {
+              //             final bloc =
+              //             context.read<HouseholdOverviewBloc>();
+              //
+              //             bloc.add(
+              //               HouseholdOverviewEvent.selectedIndividual(
+              //                 individualModel: individual,
+              //               ),
+              //             );
+              //             bloc.add(HouseholdOverviewReloadEvent(
+              //               projectId: RegistrationDeliverySingleton()
+              //                   .projectId!,
+              //               projectBeneficiaryType:
+              //               RegistrationDeliverySingleton()
+              //                   .beneficiaryType ??
+              //                   BeneficiaryType.individual,
+              //             ));
+              //
+              //             final futureTaskList = tasks
+              //                 ?.where((task) =>
+              //             task.status ==
+              //                 Status.delivered.toValue())
+              //                 .toList();
+              //
+              //             if ((futureTaskList ?? []).isNotEmpty) {
+              //               context.router.push(
+              //                 RecordPastDeliveryDetailsRoute(
+              //                   tasks: tasks,
+              //                 ),
+              //               );
+              //             } else {
+              //               context.router
+              //                   .push(BeneficiaryDetailsRoute());
+              //             }
+              //           },
+              //         )
+              //             : const Offstage(),
+              //         const SizedBox(
+              //           height: 10,
+              //         ),
+              //         (isNotEligible ||
+              //             isBeneficiaryRefused ||
+              //             isBeneficiaryReferred ||
+              //             (allDosesDelivered(
+              //               tasks,
+              //               context.selectedCycle,
+              //               sideEffects,
+              //               individual,
+              //             ) &&
+              //                 !checkStatus(tasks, context.selectedCycle)))
+              //             ? const Offstage()
+              //             : DigitButton(
+              //           label: localizations.translate(
+              //             i18.memberCard.unableToDeliverLabel,
+              //           ),
+              //           isDisabled: (projectBeneficiaries ?? []).isEmpty
+              //               ? true
+              //               : false,
+              //           type: DigitButtonType.secondary,
+              //           size: DigitButtonSize.large,
+              //           mainAxisSize: MainAxisSize.max,
+              //           onPressed: () async {
+              //             await showDialog(
+              //               context: context,
+              //               builder: (ctx) => DigitActionCard(
+              //                 onOutsideTap: () {
+              //                   Navigator.of(
+              //                     context,
+              //                     rootNavigator: true,
+              //                   ).pop();
+              //                 },
+              //                 actions: [
+              //                   DigitButton(
+              //                     label: localizations.translate(
+              //                       i18.memberCard
+              //                           .beneficiaryRefusedLabel,
+              //                     ),
+              //                     type: DigitButtonType.secondary,
+              //                     size: DigitButtonSize.large,
+              //                     onPressed: () {
+              //                       Navigator.of(context,
+              //                           rootNavigator: true)
+              //                           .pop();
+              //                       context
+              //                           .read<DeliverInterventionBloc>()
+              //                           .add(
+              //                         DeliverInterventionSubmitEvent(
+              //                           task: TaskModel(
+              //                             projectBeneficiaryClientReferenceId:
+              //                             projectBeneficiaryClientReferenceId,
+              //                             clientReferenceId:
+              //                             IdGen.i.identifier,
+              //                             tenantId:
+              //                             RegistrationDeliverySingleton()
+              //                                 .tenantId,
+              //                             rowVersion: 1,
+              //                             auditDetails: AuditDetails(
+              //                               createdBy:
+              //                               RegistrationDeliverySingleton()
+              //                                   .loggedInUserUuid!,
+              //                               createdTime: context
+              //                                   .millisecondsSinceEpoch(),
+              //                             ),
+              //                             projectId:
+              //                             RegistrationDeliverySingleton()
+              //                                 .projectId,
+              //                             status: Status
+              //                                 .beneficiaryRefused
+              //                                 .toValue(),
+              //                             clientAuditDetails:
+              //                             ClientAuditDetails(
+              //                               createdBy:
+              //                               RegistrationDeliverySingleton()
+              //                                   .loggedInUserUuid!,
+              //                               createdTime: context
+              //                                   .millisecondsSinceEpoch(),
+              //                               lastModifiedBy:
+              //                               RegistrationDeliverySingleton()
+              //                                   .loggedInUserUuid,
+              //                               lastModifiedTime: context
+              //                                   .millisecondsSinceEpoch(),
+              //                             ),
+              //                             additionalFields:
+              //                             TaskAdditionalFields(
+              //                               version: 1,
+              //                               fields: [
+              //                                 AdditionalField(
+              //                                   'taskStatus',
+              //                                   Status
+              //                                       .beneficiaryRefused
+              //                                       .toValue(),
+              //                                 ),
+              //                               ],
+              //                             ),
+              //                             address: individual
+              //                                 .address?.first,
+              //                           ),
+              //                           isEditing: false,
+              //                           boundaryModel:
+              //                           RegistrationDeliverySingleton()
+              //                               .boundary!,
+              //                         ),
+              //                       );
+              //                       final reloadState = context
+              //                           .read<HouseholdOverviewBloc>();
+              //                       Future.delayed(
+              //                         const Duration(milliseconds: 500),
+              //                             () {
+              //                           reloadState.add(
+              //                             HouseholdOverviewReloadEvent(
+              //                               projectId:
+              //                               RegistrationDeliverySingleton()
+              //                                   .projectId!,
+              //                               projectBeneficiaryType:
+              //                               RegistrationDeliverySingleton()
+              //                                   .beneficiaryType!,
+              //                             ),
+              //                           );
+              //                         },
+              //                       ).then(
+              //                             (value) => context.router.push(
+              //                           HouseholdAcknowledgementRoute(
+              //                             enableViewHousehold: true,
+              //                           ),
+              //                         ),
+              //                       );
+              //                     },
+              //                   ),
+              //                   DigitButton(
+              //                     label: localizations.translate(
+              //                       i18.memberCard.referBeneficiaryLabel,
+              //                     ),
+              //                     type: DigitButtonType.secondary,
+              //                     size: DigitButtonSize.large,
+              //                     onPressed: () async {
+              //                       Navigator.of(
+              //                         context,
+              //                         rootNavigator: true,
+              //                       ).pop();
+              //                       await context.router.push(
+              //                         ReferBeneficiaryRoute(
+              //                           projectBeneficiaryClientRefId:
+              //                           projectBeneficiaryClientReferenceId ??
+              //                               '',
+              //                         ),
+              //                       );
+              //                     },
+              //                   ),
+              //                   DigitButton(
+              //                     label: localizations.translate(
+              //                       i18.memberCard
+              //                           .recordAdverseEventsLabel,
+              //                     ),
+              //                     isDisabled: tasks != null &&
+              //                         (tasks ?? []).isNotEmpty
+              //                         ? false
+              //                         : true,
+              //                     type: DigitButtonType.secondary,
+              //                     size: DigitButtonSize.large,
+              //                     mainAxisSize: MainAxisSize.max,
+              //                     onPressed: () async {
+              //                       Navigator.of(
+              //                         context,
+              //                         rootNavigator: true,
+              //                       ).pop();
+              //                       await context.router.push(
+              //                         SideEffectsRoute(
+              //                           tasks: tasks!,
+              //                         ),
+              //                       );
+              //                     },
+              //                   ),
+              //                 ],
+              //               ),
+              //             );
+              //           },
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ]));
   }
 }
