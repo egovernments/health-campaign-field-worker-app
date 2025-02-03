@@ -61,6 +61,10 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                     initial: true,
                   ),
                   AutoRoute(
+                    page: MotherOverviewRoute.page,
+                    path: 'mother-overview',
+                  ),
+                  AutoRoute(
                     page: BeneficiaryDetailsRoute.page,
                     path: 'beneficiary-details',
                   ),

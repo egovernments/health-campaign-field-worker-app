@@ -3,15 +3,10 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/utils/date_utils.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
-import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
-import 'package:registration_delivery/widgets/member_card/child_card.dart';
 
 import '../../blocs/app_localization.dart';
 import '../../router/registration_delivery_router.gm.dart';
@@ -109,55 +104,58 @@ class MemberCard extends StatelessWidget {
                       alignment: Alignment.topRight,
                       child: Padding(
                         padding: const EdgeInsets.only(top: spacer2),
-                        child: DigitButton(
-                          isDisabled: (projectBeneficiaries ?? []).isEmpty,
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (ctx) => DigitActionCard(
-                              onOutsideTap: () {
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
-                              },
-                              actions: [
-                                DigitButton(
-                                  prefixIcon: Icons.person,
-                                  label: localizations.translate(
-                                    i18.memberCard.assignAsHouseholdhead,
-                                  ),
-                                  isDisabled: isHead ? true : false,
-                                  onPressed: setAsHeadAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                ),
-                                DigitButton(
-                                  prefixIcon: Icons.edit,
-                                  label: localizations.translate(
-                                    i18.memberCard.editIndividualDetails,
-                                  ),
-                                  onPressed: editMemberAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                ),
-                                DigitButton(
-                                  prefixIcon: Icons.delete,
-                                  label: localizations.translate(
-                                    i18.memberCard.deleteIndividualActionText,
-                                  ),
-                                  isDisabled: isHead ? true : false,
-                                  onPressed: deleteMemberAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                ),
-                              ],
-                            ),
-                          ),
-                          label: localizations.translate(
-                            i18.memberCard.editDetails,
-                          ),
-                          prefixIcon: Icons.edit,
-                          type: DigitButtonType.tertiary,
-                          size: DigitButtonSize.medium,
+                        child: buildListOfChildren(
+                          context,
                         ),
+                        // DigitButton(
+                        //   isDisabled: (projectBeneficiaries ?? []).isEmpty,
+                        //   onPressed: () => showDialog(
+                        //     context: context,
+                        //     builder: (ctx) => DigitActionCard(
+                        //       onOutsideTap: () {
+                        //         Navigator.of(context, rootNavigator: true)
+                        //             .pop();
+                        //       },
+                        //       actions: [
+                        //         DigitButton(
+                        //           prefixIcon: Icons.person,
+                        //           label: localizations.translate(
+                        //             i18.memberCard.assignAsHouseholdhead,
+                        //           ),
+                        //           isDisabled: isHead ? true : false,
+                        //           onPressed: setAsHeadAction,
+                        //           type: DigitButtonType.secondary,
+                        //           size: DigitButtonSize.large,
+                        //         ),
+                        //         DigitButton(
+                        //           prefixIcon: Icons.edit,
+                        //           label: localizations.translate(
+                        //             i18.memberCard.editIndividualDetails,
+                        //           ),
+                        //           onPressed: editMemberAction,
+                        //           type: DigitButtonType.secondary,
+                        //           size: DigitButtonSize.large,
+                        //         ),
+                        //         DigitButton(
+                        //           prefixIcon: Icons.delete,
+                        //           label: localizations.translate(
+                        //             i18.memberCard.deleteIndividualActionText,
+                        //           ),
+                        //           isDisabled: isHead ? true : false,
+                        //           onPressed: deleteMemberAction,
+                        //           type: DigitButtonType.secondary,
+                        //           size: DigitButtonSize.large,
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        //   label: localizations.translate(
+                        //     i18.memberCard.editDetails,
+                        //   ),
+                        //   prefixIcon: Icons.edit,
+                        //   type: DigitButtonType.tertiary,
+                        //   size: DigitButtonSize.medium,
+                        // ),
                       ),
                     ),
                   ),
@@ -225,9 +223,6 @@ class MemberCard extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-              buildListOfChildren(
-                context,
               ),
               const SizedBox(
                 height: spacer2,
@@ -594,141 +589,147 @@ class MemberCard extends StatelessWidget {
   Widget buildListOfChildren(BuildContext context) {
     final filteredChildren = (childrenBeneficiaries ?? [])
         .where((c) => c.individual != null)
-        .map((c) => ChildCard(
-              individual: c.individual!,
-              projectBeneficiaries:
-                  c.projectBeneficiary != null ? [c.projectBeneficiary!] : null,
-              projectBeneficiaryClientReferenceId:
-                  c.projectBeneficiary?.clientReferenceId,
-              name: c.individual!.name!.givenName!,
-              localizations: localizations,
-              gender: c.individual?.gender?.toValue(),
-              years: c.individual?.dateOfBirth != null
-                  ? DigitDateUtils.calculateAge(
-                      DigitDateUtils.getFormattedDateToDateTime(
-                            c.individual!.dateOfBirth!,
-                          ) ??
-                          DateTime.now(),
-                    ).years
-                  : 0,
-              months: c.individual?.dateOfBirth != null
-                  ? DigitDateUtils.calculateAge(
-                      DigitDateUtils.getFormattedDateToDateTime(
-                            c.individual!.dateOfBirth!,
-                          ) ??
-                          DateTime.now(),
-                    ).months
-                  : 0,
-              isDelivered: false,
-              editMemberAction: () async {
-                final bloc = context.read<HouseholdOverviewBloc>();
-
-                Navigator.of(
-                  context,
-                  rootNavigator: true,
-                ).pop();
-
-                final address = household?.address;
-                if (address == null) {
-                  return;
-                }
-
-                final projectId = RegistrationDeliverySingleton().projectId!;
-                bloc.add(
-                  HouseholdOverviewReloadEvent(
-                    projectId: projectId,
-                    projectBeneficiaryType:
-                        RegistrationDeliverySingleton().beneficiaryType ??
-                            BeneficiaryType.household,
-                  ),
-                );
-
-                await context.router.root.push(
-                  BeneficiaryRegistrationWrapperRoute(
-                    initialState: BeneficiaryRegistrationEditIndividualState(
-                      individualModel: c.individual!,
-                      householdModel: c.household!,
-                      addressModel: address,
-                      projectBeneficiaryModel: c.projectBeneficiary,
-                    ),
-                    children: [
-                      IndividualDetailsRoute(
-                          isChild: true,
-                          parentClientReferenceId:
-                              individual.clientReferenceId),
-                    ],
-                  ),
-                );
-              },
-              deleteMemberAction:  () {
-                final bloc = context.read<HouseholdOverviewBloc>();
-                showCustomPopup(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Popup(
-                        title: localizations
-                            .translate(i18
-                            .householdOverView
-                            .householdOverViewActionCardTitle),
-                        type: PopUpType.simple,
-                        actions: [
-                          DigitButton(
-                              label: localizations
-                                  .translate(i18
-                                  .householdOverView
-                                  .householdOverViewPrimaryActionLabel),
-                              onPressed: () {
-                                Navigator.of(
-                                  context,
-                                  rootNavigator:
-                                  true,
-                                )
-                                  ..pop()
-                                  ..pop();
-                                bloc
-                                    .add(
-                                  HouseholdOverviewEvent
-                                      .selectedIndividual(
-                                    individualModel:
-                                    c.individual!,
-                                  ),
-                                );
-                                context.router.push(
-                                  ReasonForDeletionRoute(
-                                    isHousholdDelete:
-                                    false,
-                                  ),
-                                );
-                              },
-                              type: DigitButtonType
-                                  .primary,
-                              size: DigitButtonSize
-                                  .large),
-                          DigitButton(
-                              label: localizations
-                                  .translate(i18
-                                  .householdOverView
-                                  .householdOverViewSecondaryActionLabel),
-                              onPressed: () {
-                                Navigator.of(
-                                  context,
-                                  rootNavigator:
-                                  true,
-                                ).pop();
-                              },
-                              type: DigitButtonType
-                                  .tertiary,
-                              size: DigitButtonSize
-                                  .large)
-                        ]);
-                  },
-                );
-              },
-            ))
+        .map((c) => c.individual)
         .toList();
 
-    return Column(
-      children: filteredChildren,
+    return Padding(
+      padding: const EdgeInsets.all(spacer2),
+      child: DigitButton(
+          label:
+              '${localizations.translate(i18.beneficiaryDetails.childrenCount)}:${filteredChildren.length}',
+          onPressed: () {
+            context.read<HouseholdOverviewBloc>().add(
+                HouseholdOverviewEvent.selectedIndividual(
+                    individualModel: individual));
+            context.router.push(MotherOverviewRoute());
+          },
+          type: DigitButtonType.link,
+          size: DigitButtonSize.medium),
     );
+
+    // final filteredChildren = (childrenBeneficiaries ?? [])
+    //     .where((c) => c.individual != null)
+    //     .map((c) => ChildCard(
+    //           individual: c.individual!,
+    //           projectBeneficiaries:
+    //               c.projectBeneficiary != null ? [c.projectBeneficiary!] : null,
+    //           projectBeneficiaryClientReferenceId:
+    //               c.projectBeneficiary?.clientReferenceId,
+    //           name: c.individual!.name!.givenName!,
+    //           localizations: localizations,
+    //           gender: c.individual?.gender?.toValue(),
+    //           years: c.individual?.dateOfBirth != null
+    //               ? DigitDateUtils.calculateAge(
+    //                   DigitDateUtils.getFormattedDateToDateTime(
+    //                         c.individual!.dateOfBirth!,
+    //                       ) ??
+    //                       DateTime.now(),
+    //                 ).years
+    //               : 0,
+    //           months: c.individual?.dateOfBirth != null
+    //               ? DigitDateUtils.calculateAge(
+    //                   DigitDateUtils.getFormattedDateToDateTime(
+    //                         c.individual!.dateOfBirth!,
+    //                       ) ??
+    //                       DateTime.now(),
+    //                 ).months
+    //               : 0,
+    //           isDelivered: false,
+    //           editMemberAction: () async {
+    //             final bloc = context.read<HouseholdOverviewBloc>();
+    //
+    //             Navigator.of(
+    //               context,
+    //               rootNavigator: true,
+    //             ).pop();
+    //
+    //             final address = household?.address;
+    //             if (address == null) {
+    //               return;
+    //             }
+    //
+    //             final projectId = RegistrationDeliverySingleton().projectId!;
+    //             bloc.add(
+    //               HouseholdOverviewReloadEvent(
+    //                 projectId: projectId,
+    //                 projectBeneficiaryType:
+    //                     RegistrationDeliverySingleton().beneficiaryType ??
+    //                         BeneficiaryType.household,
+    //               ),
+    //             );
+    //
+    //             await context.router.root.push(
+    //               BeneficiaryRegistrationWrapperRoute(
+    //                 initialState: BeneficiaryRegistrationEditIndividualState(
+    //                   individualModel: c.individual!,
+    //                   householdModel: c.household!,
+    //                   addressModel: address,
+    //                   projectBeneficiaryModel: c.projectBeneficiary,
+    //                 ),
+    //                 children: [
+    //                   IndividualDetailsRoute(
+    //                       isChild: true,
+    //                       parentClientReferenceId:
+    //                           individual.clientReferenceId),
+    //                 ],
+    //               ),
+    //             );
+    //           },
+    //           deleteMemberAction: () {
+    //             final bloc = context.read<HouseholdOverviewBloc>();
+    //             showCustomPopup(
+    //               context: context,
+    //               builder: (BuildContext context) {
+    //                 return Popup(
+    //                     title: localizations.translate(i18.householdOverView
+    //                         .householdOverViewActionCardTitle),
+    //                     type: PopUpType.simple,
+    //                     actions: [
+    //                       DigitButton(
+    //                           label: localizations.translate(i18
+    //                               .householdOverView
+    //                               .householdOverViewPrimaryActionLabel),
+    //                           onPressed: () {
+    //                             Navigator.of(
+    //                               context,
+    //                               rootNavigator: true,
+    //                             )
+    //                               ..pop()
+    //                               ..pop();
+    //                             bloc.add(
+    //                               HouseholdOverviewEvent.selectedIndividual(
+    //                                 individualModel: c.individual!,
+    //                               ),
+    //                             );
+    //                             context.router.push(
+    //                               ReasonForDeletionRoute(
+    //                                 isHousholdDelete: false,
+    //                               ),
+    //                             );
+    //                           },
+    //                           type: DigitButtonType.primary,
+    //                           size: DigitButtonSize.large),
+    //                       DigitButton(
+    //                           label: localizations.translate(i18
+    //                               .householdOverView
+    //                               .householdOverViewSecondaryActionLabel),
+    //                           onPressed: () {
+    //                             Navigator.of(
+    //                               context,
+    //                               rootNavigator: true,
+    //                             ).pop();
+    //                           },
+    //                           type: DigitButtonType.tertiary,
+    //                           size: DigitButtonSize.large)
+    //                     ]);
+    //               },
+    //             );
+    //           },
+    //         ))
+    //     .toList();
+    //
+    // return Column(
+    //   children: filteredChildren,
+    // );
   }
 }

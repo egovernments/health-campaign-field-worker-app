@@ -1,20 +1,14 @@
-import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/app_localization.dart';
-import '../../blocs/delivery_intervention/deliver_intervention.dart';
-import '../../blocs/household_overview/household_overview.dart';
 import '../../models/entities/side_effect.dart';
-import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
-import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 
@@ -108,7 +102,8 @@ class ChildCard extends StatelessWidget {
                             context: context,
                             builder: (ctx) => DigitActionCard(
                               onOutsideTap: () {
-                                Navigator.of(context, rootNavigator: true).pop();
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
                               },
                               actions: [
                                 DigitButton(
@@ -145,6 +140,46 @@ class ChildCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (individual.identifiers != null &&
+                  individual.identifiers!
+                          .lastWhereOrNull(
+                            (e) =>
+                                e.identifierType ==
+                                IdentifierTypes.uniqueBeneficiaryID
+                                    .name, // TODO: Revert to value
+                          )
+                          ?.identifierId !=
+                      null)
+                Padding(
+                  padding: const EdgeInsets.all(spacer1),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: DigitTheme.instance.colorScheme.primary,
+                      ),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(spacer1),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(
+                        spacer1,
+                      ),
+                      child: Text(
+                        individual.identifiers!
+                            .lastWhere(
+                              (e) =>
+                                  e.identifierType ==
+                                  IdentifierTypes.uniqueBeneficiaryID
+                                      .name, // TODO: Revert to value
+                            )
+                            .identifierId!,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                const Offstage(),
               Padding(
                 padding: const EdgeInsets.all(spacer2),
                 child: Row(
@@ -153,7 +188,7 @@ class ChildCard extends StatelessWidget {
                     Text(
                       gender != null
                           ? localizations
-                          .translate('CORE_COMMON_${gender?.toUpperCase()}')
+                              .translate('CORE_COMMON_${gender?.toUpperCase()}')
                           : ' -- ',
                       style: textTheme.bodyS,
                     ),
