@@ -298,8 +298,8 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 
 ### Sequence Diagram
 
-*(Add sequence diagram here)*
 
+![closed_household](https://github.com/user-attachments/assets/00af8e4c-ec07-4843-a573-fd01f090584d)
 
 
 * * * * *
@@ -486,8 +486,10 @@ This ensures proper integration of **Registration & Delivery** within the **HCM 
 
 ### Sequence Diagram
 
-*(Add sequence diagram here)*
 
+![registration4_sequence](https://github.com/user-attachments/assets/80596e68-1cc5-4caf-b0e5-f37bf11c1142)
+
+![registration5_sequence png](https://github.com/user-attachments/assets/f9e76ba5-015f-4c7d-8afc-1b1de600b794)
 
 
 * * * * *
@@ -532,8 +534,8 @@ To learn more about Inventory Management, click here.
 
 ### Sequence Diagram
 
-*(Add sequence diagram here)*
 
+![Inventory](https://github.com/user-attachments/assets/a7f26405-2af5-4148-8ca7-d8ed5bf1a92d)
 
 
 * * * * *
@@ -581,8 +583,8 @@ To learn more about Referral Reconciliation, click here.
 
 ### Sequence Diagram
 
-*(Add sequence diagram here)*
 
+![referral_reconcilation](https://github.com/user-attachments/assets/3165fccf-3b62-41ca-a8ca-0dbb875f2a59)
 
 
 * * * * *
@@ -730,7 +732,8 @@ This will ensure the package route is properly integrated into **router.gr.dart*
 
 ### Sequence Diagram
 
-*(Add sequence diagram here)*
+
+![attendance](https://github.com/user-attachments/assets/fb278b1d-9877-43a3-a2d5-551bae2db4e4)
 
 
 * * * * *
@@ -817,12 +820,6 @@ class ExampleRemoteRepository
 ```
 
 
-
-### Sequence Diagram
-
-*(Add sequence diagram here)*
-
-
 * * * * *
 
 <a name="digit-dss"></a>
@@ -851,8 +848,8 @@ class ExampleRemoteRepository
 
 ### Sequence Diagram
 
-*(Add sequence diagram here)*
 
+![Digit_dss](https://github.com/user-attachments/assets/d2a14ab2-19b7-4023-a5e5-aecd6c75d3ab)
 
 
 * * * * *
@@ -888,8 +885,8 @@ The **Complaints Package** provides a streamlined way for users to register comp
 
 ### Sequence Diagram
 
-*(Add sequence diagram here)*
 
+![complaints](https://github.com/user-attachments/assets/8bc35c49-700c-42da-b317-d2ab0c47cd0d)
 
 
 * * * * *
@@ -920,8 +917,8 @@ The **Survey Form Package** enables users to fill out **questionnaires** efficie
 
 ### Sequence Diagram
 
-*(Add sequence diagram here)*
 
+![survey](https://github.com/user-attachments/assets/d5815a0e-7fe1-405c-920e-845c818d0d7b)
 
 
 * * * * *
@@ -965,13 +962,9 @@ class SyncServiceMapper extends SyncEntityMapperListener {
 }
 ```
 
-### Sequence Diagram
-
-*(Add sequence diagram here)*
-
-
 
 * * * * *
+
 
 <a name="digit-scanner"></a>
 🔍 DIGIT Scanner Package
@@ -1045,10 +1038,7 @@ BlocListener<DigitScannerBloc, DigitScannerState>(
 ```
 
 
-### Sequence Diagram
-
-*(Add sequence diagram here)*
-
+![scanner](https://github.com/user-attachments/assets/613c2934-9379-4fb7-8103-d9ba7c0383ed)
 
 
 * * * * *
@@ -1105,10 +1095,9 @@ date.buildWith(
 );
 ```
 
-### Sequence Diagram
 
-*(Add sequence diagram here)*
-
+![showcase](https://github.com/user-attachments/assets/61ac10fa-5cbf-4b13-970a-d3f33f4cc346)
 
 
+![showcase2](https://github.com/user-attachments/assets/5cc40377-8c2e-4d03-8c73-609bcfd89a28)
 
