@@ -430,6 +430,10 @@ To enable better data access, we introduce **filters**:
 
 A **query builder** is used to fetch results dynamically (example below for an individual-based project).
 
+
+![registration1](https://github.com/user-attachments/assets/0811967a-19fd-4e8c-bfa0-9e55dba84f3f)
+
+
 * * * * *
 
 ### **✨ Fields in Registration Flow**
@@ -1095,9 +1099,8 @@ date.buildWith(
 );
 ```
 
+<img src="https://github.com/user-attachments/assets/61ac10fa-5cbf-4b13-970a-d3f33f4cc346" alt="Showcase" width="300">
 
-![showcase](https://github.com/user-attachments/assets/61ac10fa-5cbf-4b13-970a-d3f33f4cc346)
+<img src="https://github.com/user-attachments/assets/5cc40377-8c2e-4d03-8c73-609bcfd89a28" alt="Showcase" width="300">
 
-
-![showcase2](https://github.com/user-attachments/assets/5cc40377-8c2e-4d03-8c73-609bcfd89a28)
 
