@@ -460,6 +460,15 @@ class HouseholdDetails {
 
   String get noOfChildrenBelow5YearsLabel => 'NO_OF_CHILDREN_BELOW_5_YR_LABEL';
 
+
+String get noOfMothersWithChildBelow5Label => 'NO_OF_MOTHERS_WITH_CHILD_BELOW_5_YR_LABEL';
+String get noOfFirstTimePregnantCountLabel => 'NO_OF_FIRST_PREGNANT_WOMEN_LABEL';
+
+String get noOf9YearWomansLabel => 'NO_OF_WOMANS_OF_9_YR_LABEL';
+
+String get noOf15to49YearWomansLabel => 'NO_OF_WOMANS_BETWEEN_15_TO_49_YR_LABEL';
+
+
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
 

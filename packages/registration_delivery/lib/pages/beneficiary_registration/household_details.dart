@@ -40,7 +40,12 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   static const _memberCountKey = 'memberCount';
   static const _pregnantWomenCountKey = 'pregnantWomenCount';
   static const _childrenCountKey = 'childrenCount';
-
+  static const _motherchildlessthanfiveCountKey =
+      'motherchildlessthanfiveCount';
+  static const _firstTimePregnantCountKey = 'firstTimePregnantCount';
+  static const _nineyearsfemaleCountKey = 'nineyearsfemaleCount';
+  static const _fifteentofourtynineyearsfemaleCountKey =
+      'fifteentofourtynineyearsfemaleCount';
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -361,152 +366,236 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                 slivers: [
                   SliverToBoxAdapter(
                     child: DigitCard(
-                      margin: const EdgeInsets.all(spacer2),
+                        margin: const EdgeInsets.all(spacer2),
                         children: [
-                      DigitTextBlock(
-                        padding: const EdgeInsets.all(0),
-                        heading: localizations.translate(
-                          i18.householdDetails.householdDetailsLabel,
-                        ),
-                        description: localizations.translate(
-                          i18.householdDetails.householdDetailsDescription,
-                        ),
-                      ),
-                      householdDetailsShowcaseData.dateOfRegistration.buildWith(
-                        child: ReactiveWrapperField(
-                          formControlName: _dateOfRegistrationKey,
-                          builder: (field) => LabeledField(
-                            label: localizations.translate(
-                              i18.householdDetails.dateOfRegistrationLabel,
+                          DigitTextBlock(
+                            padding: const EdgeInsets.all(0),
+                            heading: localizations.translate(
+                              i18.householdDetails.householdDetailsLabel,
                             ),
-                            child: DigitDateFormInput(
-                              readOnly: true,
-                              confirmText: localizations.translate(
-                                i18.common.coreCommonOk,
-                              ),
-                              cancelText: localizations.translate(
-                                i18.common.coreCommonCancel,
-                              ),
-                              initialValue:
-                                  DateFormat(Constants().dateMonthYearFormat)
+                            description: localizations.translate(
+                              i18.householdDetails.householdDetailsDescription,
+                            ),
+                          ),
+                          householdDetailsShowcaseData.dateOfRegistration
+                              .buildWith(
+                            child: ReactiveWrapperField(
+                              formControlName: _dateOfRegistrationKey,
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(
+                                  i18.householdDetails.dateOfRegistrationLabel,
+                                ),
+                                child: DigitDateFormInput(
+                                  readOnly: true,
+                                  confirmText: localizations.translate(
+                                    i18.common.coreCommonOk,
+                                  ),
+                                  cancelText: localizations.translate(
+                                    i18.common.coreCommonCancel,
+                                  ),
+                                  initialValue: DateFormat(
+                                          Constants().dateMonthYearFormat)
                                       .format(form
                                           .control(_dateOfRegistrationKey)
                                           .value)
                                       .toString(),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      //[TODO: Use pregnant women form value based on project config
-                      householdDetailsShowcaseData
-                          .numberOfPregnantWomenInHousehold
-                          .buildWith(
-                        child: ReactiveWrapperField(
-                          formControlName: _pregnantWomenCountKey,
-                          builder: (field) => LabeledField(
-                            label: localizations.translate(
-                              i18.householdDetails.noOfPregnantWomenCountLabel,
-                            ),
-                            child: DigitNumericFormInput(
-                              minValue: 0,
-                              maxValue: 10,
-                              step: 1,
-                              initialValue: form
-                                  .control(_pregnantWomenCountKey)
-                                  .value
-                                  .toString(),
-                              onChange: (value) {
-                                form.control(_pregnantWomenCountKey).value =
-                                    int.parse(value);
-                                int pregnantWomen =
-                                    form.control(_pregnantWomenCountKey).value;
-                                int children =
-                                    form.control(_childrenCountKey).value;
-                                int memberCount =
-                                    form.control(_memberCountKey).value;
-                                form.control(_memberCountKey).value =
-                                    memberCount < (children + pregnantWomen)
-                                        ? children + pregnantWomen
-                                        : memberCount;
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                      householdDetailsShowcaseData
-                          .numberOfChildrenBelow5InHousehold
-                          .buildWith(
-                        child: ReactiveWrapperField(
-                          formControlName: _childrenCountKey,
-                          builder: (field) => LabeledField(
-                            label: localizations.translate(
-                              i18.householdDetails.noOfChildrenBelow5YearsLabel,
-                            ),
-                            child: DigitNumericFormInput(
-                              minValue: 0,
-                              maxValue: 20,
-                              step: 1,
-                              initialValue: form
-                                  .control(_childrenCountKey)
-                                  .value
-                                  .toString(),
-                              onChange: (value) {
-                                form.control(_childrenCountKey).value =
-                                    int.parse(value);
-                                int pregnantWomen =
-                                    form.control(_pregnantWomenCountKey).value;
-                                int children =
-                                    form.control(_childrenCountKey).value;
-                                int memberCount =
-                                    form.control(_memberCountKey).value;
-                                form.control(_memberCountKey).value =
-                                    memberCount <= (children + pregnantWomen)
-                                        ? children + pregnantWomen
-                                        : memberCount;
-                              },
+                          //[TODO: Use pregnant women form value based on project config
+                          householdDetailsShowcaseData
+                              .numberOfPregnantWomenInHousehold
+                              .buildWith(
+                            child: ReactiveWrapperField(
+                              formControlName: _pregnantWomenCountKey,
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(
+                                  i18.householdDetails
+                                      .noOfChildrenBelow5YearsLabel,
+                                ),
+                                child: DigitNumericFormInput(
+                                  minValue: 0,
+                                  maxValue: 10,
+                                  step: 1,
+                                  initialValue: form
+                                      .control(_pregnantWomenCountKey)
+                                      .value
+                                      .toString(),
+                                  onChange: (value) {
+                                    form.control(_pregnantWomenCountKey).value =
+                                        int.parse(value);
+                                    int pregnantWomen = form
+                                        .control(_pregnantWomenCountKey)
+                                        .value;
+                                    int children =
+                                        form.control(_childrenCountKey).value;
+                                    int memberCount =
+                                        form.control(_memberCountKey).value;
+                                    form.control(_memberCountKey).value =
+                                        memberCount < (children + pregnantWomen)
+                                            ? children + pregnantWomen
+                                            : memberCount;
+                                  },
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      householdDetailsShowcaseData
-                          .numberOfMembersLivingInHousehold
-                          .buildWith(
-                        child: ReactiveWrapperField(
-                          formControlName: _memberCountKey,
-                          builder: (field) => LabeledField(
-                            label: localizations.translate(
-                              i18.householdDetails.noOfMembersCountLabel,
-                            ),
-                            child: DigitNumericFormInput(
-                              minValue: children + pregnantWomen != 0
-                                  ? children + pregnantWomen
-                                  : 1,
-                              maxValue: 30,
-                              step: 1,
-                              initialValue: form
-                                  .control(_memberCountKey)
-                                  .value
-                                  .toString(),
-                              onChange: (value) {
-                                form.control(_memberCountKey).value =
-                                    int.parse(value);
-                                int pregnantWomen =
-                                    form.control(_pregnantWomenCountKey).value;
-                                int children =
-                                    form.control(_childrenCountKey).value;
-                                int memberCount =
-                                    form.control(_memberCountKey).value;
-                                if (memberCount <= pregnantWomen + children) {
-                                  form.control(_memberCountKey).value =
-                                      (children + pregnantWomen);
-                                }
-                              },
+                          householdDetailsShowcaseData
+                              .numberOfChildrenBelow5InHousehold
+                              .buildWith(
+                            child: ReactiveWrapperField(
+                              formControlName: _childrenCountKey,
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(
+                                  i18.householdDetails
+                                      .noOfMothersWithChildBelow5Label,
+                                ),
+                                child: DigitNumericFormInput(
+                                  minValue: 0,
+                                  maxValue: 20,
+                                  step: 1,
+                                  initialValue: form
+                                      .control(_childrenCountKey)
+                                      .value
+                                      .toString(),
+                                  onChange: (value) {
+                                    form.control(_childrenCountKey).value =
+                                        int.parse(value);
+                                    int pregnantWomen = form
+                                        .control(_pregnantWomenCountKey)
+                                        .value;
+                                    int children =
+                                        form.control(_childrenCountKey).value;
+                                    int memberCount =
+                                        form.control(_memberCountKey).value;
+                                    form.control(_memberCountKey).value =
+                                        memberCount <=
+                                                (children + pregnantWomen)
+                                            ? children + pregnantWomen
+                                            : memberCount;
+                                  },
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                    ]),
+                               ReactiveWrapperField(
+                              formControlName: _nineyearsfemaleCountKey,
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(
+                                  i18.householdDetails
+                                      .noOfFirstTimePregnantCountLabel,
+                                ),
+                                child: DigitNumericFormInput(
+                                  minValue: 0,
+                                  maxValue: 20,
+                                  step: 1,
+                                  initialValue: form
+                                      .control(_motherchildlessthanfiveCountKey)
+                                      .value
+                                      .toString(),
+                                  onChange: (value) {
+                                    form.control(_motherchildlessthanfiveCountKey).value =
+                                        int.parse(value);
+                                        int motherchildlessthanfive = form.control(_motherchildlessthanfiveCountKey).value =
+                                        int.parse(value);
+                                    int pregnantWomen = form
+                                        .control(_pregnantWomenCountKey)
+                                        .value;
+                                    int children =
+                                        form.control(_childrenCountKey).value;
+                                        
+                                    int memberCount =
+                                        form.control(_memberCountKey).value;
+                                    form.control(_memberCountKey).value =
+                                        memberCount <=
+                                                (children + pregnantWomen + motherchildlessthanfive)
+                                            ? children + pregnantWomen + motherchildlessthanfive
+                                            : memberCount;
+                                  },
+                                ),
+                              ),
+                            ),
+                          
+
+                           ReactiveWrapperField(
+                              formControlName: _motherchildlessthanfiveCountKey,
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(
+                                  i18.householdDetails
+                                      .noOf9YearWomansLabel,
+                                ),
+                                child: DigitNumericFormInput(
+                                  minValue: 0,
+                                  maxValue: 20,
+                                  step: 1,
+                                  initialValue: form
+                                      .control(_motherchildlessthanfiveCountKey)
+                                      .value
+                                      .toString(),
+                                  onChange: (value) {
+                                    form.control(_motherchildlessthanfiveCountKey).value =
+                                        int.parse(value);
+                                        int motherchildlessthanfive = form.control(_motherchildlessthanfiveCountKey).value =
+                                        int.parse(value);
+                                    int pregnantWomen = form
+                                        .control(_pregnantWomenCountKey)
+                                        .value;
+                                    int children =
+                                        form.control(_childrenCountKey).value;
+                                        
+                                    int memberCount =
+                                        form.control(_memberCountKey).value;
+                                    form.control(_memberCountKey).value =
+                                        memberCount <=
+                                                (children + pregnantWomen + motherchildlessthanfive)
+                                            ? children + pregnantWomen + motherchildlessthanfive
+                                            : memberCount;
+                                  },
+                                ),
+                              ),
+                            ),
+                          householdDetailsShowcaseData
+                              .numberOfMembersLivingInHousehold
+                              .buildWith(
+                            child: ReactiveWrapperField(
+                              formControlName: _memberCountKey,
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(
+                                  i18.householdDetails.noOf15to49YearWomansLabel,
+                                ),
+                                child: DigitNumericFormInput(
+                                  minValue: children + pregnantWomen != 0
+                                      ? children + pregnantWomen
+                                      : 1,
+                                  maxValue: 30,
+                                  step: 1,
+                                  initialValue: form
+                                      .control(_memberCountKey)
+                                      .value
+                                      .toString(),
+                                  onChange: (value) {
+                                    form.control(_memberCountKey).value =
+                                        int.parse(value);
+                                    int pregnantWomen = form
+                                        .control(_pregnantWomenCountKey)
+                                        .value;
+                                    int children =
+                                        form.control(_childrenCountKey).value;
+                                    int memberCount =
+                                        form.control(_memberCountKey).value;
+                                    if (memberCount <=
+                                        pregnantWomen + children) {
+                                      form.control(_memberCountKey).value =
+                                          (children + pregnantWomen);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                        ]),
                   ),
                 ],
               );
@@ -552,6 +641,18 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     .toString() ??
                 '0')
             : 0,
+      ),
+      _motherchildlessthanfiveCountKey: FormControl<int>(
+        value: 0,
+      ),
+      _nineyearsfemaleCountKey: FormControl<int>(
+        value: 0,
+      ),
+      _fifteentofourtynineyearsfemaleCountKey: FormControl<int>(
+        value: 0,
+      ),
+      _firstTimePregnantCountKey: FormControl<int>(
+        value: 0,
       ),
       _childrenCountKey: FormControl<int>(
         value: household?.additionalFields?.fields

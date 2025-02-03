@@ -71,7 +71,7 @@ class BeneficiaryAcknowledgementPageState
         description: localizations.translate(
           i18.acknowledgementSuccess.acknowledgementDescriptionText,
         ),
-        additionalDetails: [getSubText(wrapper)],
+        additionalDetails: (wrapper  is String) ? null: [Text( getSubText(wrapper))],
       ),
     );
   }
@@ -84,7 +84,7 @@ class BeneficiaryAcknowledgementPageState
                   (e) =>
                       e.identifierType ==
                       IdentifierTypes.uniqueBeneficiaryID.toValue(),
-                )!.identifierId ?? localizations.translate(i18.common.noResultsFound)}'
+                )?.identifierId    ?? localizations.translate(i18.common.noResultsFound)}'
         : '';
   }
 }

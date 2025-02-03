@@ -72,9 +72,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
   @override
   void initState() {
+   if( RegistrationDeliverySingleton().idTypeOptions!.length == 1){
     RegistrationDeliverySingleton().idTypeOptions!.add(IdentifierTypes
         .uniqueBeneficiaryID.name
-        .toString()); // TODO: Remove this once it is added in MDMS
+        .toString());
+    } // TODO: Remove this once it is added in MDMS
     super.initState();
   }
 
@@ -441,9 +443,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       IdentifierTypes.defaultID.toValue()) {
                                     form.control(_idNumberKey).value =
                                         IdGen.i.identifier.toString();
-                                  } else if (value ==
-                                      IdentifierTypes.uniqueBeneficiaryID
-                                          .toValue()) {
+                                  } else if (value.name ==
+                                      IdentifierTypes.uniqueBeneficiaryID.name.toString
+                                          ()) {
                                     setUniqueBeneficiaryId(form);
                                   } else {
                                     form.control(_idNumberKey).value = null;
