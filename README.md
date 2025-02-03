@@ -1099,8 +1099,270 @@ date.buildWith(
 );
 ```
 
+## Showcase Configuration
+
+Showcase is configured using [showcaseview](https://pub.dev/packages/showcaseview). A fork is created
+at `packages/digit_showcase` to handle customizations.
+
+### Configuration steps
+
+#### Add i18n strings
+
+Add constants to `lib/utils/i18_key_constants.dart`
+
+```dart
+
+const checklistDataShowcase = ChecklistDataShowcase();
+
+class ChecklistDataShowcase {
+  const ChecklistDataShowcase();
+
+  String get date {
+    return 'CHECKLIST_DATA_SHOWCASE_DATE';
+  }
+
+  String get administrativeUnit {
+    return 'CHECKLIST_DATA_SHOWCASE_ADMINISTRATIVE_UNIT';
+  }
+}
+```
+
+#### Add Showcase configuration
+
+##### Add `part` file
+
+`checklist_data.dart`
+
+```dart
+part of 'showcase_constants.dart';
+
+class _ChecklistDataShowcaseData {
+  static final _ChecklistDataShowcaseData _instance =
+  _ChecklistDataShowcaseData._();
+
+  _ChecklistDataShowcaseData._();
+
+  factory _ChecklistDataShowcaseData() => _instance;
+
+  List<ShowcaseItemBuilder> get showcaseData =>
+      [
+        date,
+        administrativeUnit,
+      ];
+
+  final date = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.checklistDataShowcase.date,
+  );
+
+  final administrativeUnit = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.checklistDataShowcase.administrativeUnit,
+  );
+}
+```
+
+##### Export as global variable
+
+`showcase_constants.dart`
+
+```dart
+import '../../../utils/i18_key_constants.dart' as i18;
+import '../showcase_wrappers.dart';
+
+part 'survey_form_data.dart';
+
+final checklistDataShowcaseData = _ChecklistDataShowcaseData();
+```
+
+#### Activate showcase on route navigation
+
+`showcase_button.dart`
+
+```dart
+import 'package:digit_showcase/showcase_widget.dart';
+import 'package:flutter/material.dart';
+
+import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18;
+import '../localized.dart';
+import 'config/showcase_constants.dart';
+
+class ShowcaseButton extends LocalizedStatefulWidget {
+  final Iterable<GlobalKey>? showcaseFor;
+
+  const ShowcaseButton({super.key, this.showcaseFor});
+
+  @override
+  LocalizedState<ShowcaseButton> createState() => _ShowcaseButtonState();
+}
+
+class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        if (widget.showcaseFor?.isNotEmpty == true) {
+          ShowcaseWidget.of(context).startShowCase(
+            widget.showcaseFor!.toList(),
+          );
+
+          return;
+        }
+
+        final current = context.router.current.name;
+        final paths = _showcasePathsForRoute(current);
+
+        if (paths == null) return;
+        if (paths.isEmpty) return;
+
+        ShowcaseWidget.of(context).startShowCase(paths.toList());
+      },
+      child: Row(
+        children: [
+          Text(localizations.translate(i18.common.coreCommonHelp)),
+          const Icon(Icons.help_outline),
+        ],
+      ),
+    );
+  }
+
+  Iterable<GlobalKey>? _showcasePathsForRoute(String routeName) {
+    return switch (routeName) {
+    // Add this config
+      ChecklistBoundaryViewRoute.name =>
+          checklistDataShowcaseData.showcaseData.map((e) => e.showcaseKey),
+      _ => null,
+    };
+  }
+}
+```
+
+#### Wrap target widget with showcase wrapper which acts as a HoC
+
+```dart
+class _ChecklistBoundaryViewPageState extends LocalizedState<ChecklistBoundaryViewPage> {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      body: ScrollableContent(
+        header: const Column(children: [
+          BackNavigationHelpHeaderWidget(
+            // Add showcase button
+            showcaseButton: ShowcaseButton(),
+          ),
+        ]),
+        footer: DigitCard(
+          child: DigitElevatedButton(
+            onPressed: () => context.router.push(ChecklistViewRoute()),
+            child: Text(localizations.translate(
+              i18.common.coreCommonContinue,
+            )),
+          ),
+        ),
+        slivers: [
+          SliverToBoxAdapter(
+            child: DigitCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    localizations.translate(
+                      i18.checklist.checklistDetailLabel,
+                    ),
+                    style: theme.textTheme.displayMedium,
+                  ),
+                  // Wrap with showcase wrapper
+                  checklistDataShowcaseData.date.buildWith(
+                    child: DigitTextField(
+                      readOnly: true,
+                      label: localizations.translate(
+                        i18.checklist.checklistdate,
+                      ),
+                      suffixIcon: const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(
+                          Icons.date_range_outlined,
+                        ),
+                      ),
+                      controller: TextEditingController(
+                        text: DateFormat('dd MMMM yyyy').format(DateTime.now()),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
 <img src="https://github.com/user-attachments/assets/61ac10fa-5cbf-4b13-970a-d3f33f4cc346" alt="Showcase" width="300">
 
 <img src="https://github.com/user-attachments/assets/5cc40377-8c2e-4d03-8c73-609bcfd89a28" alt="Showcase" width="300">
+
+
+
+* * * * *
+
+
+
+🔄 Data Sync
+========================
+
+Currently, the app is configured to run only on `PersistenceConfiguration.offlineFirst` mode. With the offline first
+approach the local data store is considered as the **Source of truth**. Data persisted in the local data store is synced
+to the remote data store.
+
+![Sync Sequence Diagram](puml/sync.png)
+
+### Data Creation
+
+The following steps describe the data creation process:
+
+1. The user initiates the data creation by performing a Submit action.
+2. The UI receives the action and requests the repository from the Network Manager.
+3. The Network Manager returns the Local repository.
+4. The UI creates the data and stores it in the Local repository.
+5. The Local repository creates an entry in the OpLog.
+6. Success is returned to the UI.
+7. The Local repository persists the data in the SQLite database.
+8. Success is returned to the UI.
+
+### Manual Sync
+
+The following steps describe the manual synchronization process:
+
+1. The user initiates the manual sync by selecting the Sync now option.
+2. The UI sends a SyncSyncUpEvent to the Sync Bloc.
+3. The Sync Bloc performs the sync operation.
+4. The Network Manager retrieves the items to be synced down from the Local repository.
+5. The Local repository queries the OpLog for pending down sync operations and returns a list of OpLog entries.
+6. The network manager groups the OpLog entries by type.
+7. For each entry group:
+    - The network manager sends a Bulk Search request to the Remote repository using the Client Reference IDs.
+    - The Remote repository returns the remote entities with Server Generated IDs.
+    - The network manager updates the server-generated ID in the OpLog and returns success.
+    - The network manager updates the server-generated ID in the SQLite database and returns success.
+8. Success is returned to complete the sync down process.
+
+9. The network manager retrieves the items to be synced up from the Local repository.
+10. The Local repository queries the OpLog for pending up sync operations and returns a list of OpLog entries.
+11. The network manager groups the OpLog entries by type and data operation.
+12. For each entry group:
+    - If it is a CREATE operation:
+        - The network manager sends a Bulk create request to the Remote repository and returns success.
+    - If it is an UPDATE operation:
+        - The network manager sends a Bulk update request to the Remote repository and returns success.
+    - If it is a DELETE operation:
+        - The network manager sends a Bulk delete request to the Remote repository and returns success.
+    - If it is a SINGLE_CREATE operation:
+        - The network manager sends a Single create request to the Remote repository and returns success.
+13. Success is returned to complete the sync up process.
 
 
