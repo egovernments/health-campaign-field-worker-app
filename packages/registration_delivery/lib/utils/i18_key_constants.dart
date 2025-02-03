@@ -344,14 +344,22 @@ class IndividualDetails {
 
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
 
-
   String get isPregnant => 'IS_PREGNANT';
+
   String get howManyTTVaccinesTaken => 'HOW_MANY_TT_VACCINES_TAKEN';
+
   String get noOfMonthsPregnant => 'NO_OF_MONTHS_PREGNANT';
+
   String get noOfTimesVisitedHF => 'NO_OF_TIMES_VISITED_HF';
+
   String get noChildrenLessThan5 => 'NO_OF_CHILDREN_LESS_THAN_5';
-  String get doesChildHaveVaccinationCondition => 'DOES_CHILD_HAVE_VACCINATION_CONDITION';
-  String get doesChildHaveVaccinationConditionError => 'DOES_CHILD_HAVE_VACCINATION_CONDITION_ERROR';
+
+  String get doesChildHaveVaccinationCondition =>
+      'DOES_CHILD_HAVE_VACCINATION_CONDITION';
+
+  String get doesChildHaveVaccinationConditionError =>
+      'DOES_CHILD_HAVE_VACCINATION_CONDITION_ERROR';
+
   String get selectAntigensLabel => 'SELECT_ANTIGENS_LABEL';
 }
 
@@ -460,14 +468,18 @@ class HouseholdDetails {
 
   String get noOfChildrenBelow5YearsLabel => 'NO_OF_CHILDREN_BELOW_5_YR_LABEL';
 
+  String get noOfMothersWithChildBelow5Label =>
+      'NO_OF_MOTHERS_WITH_CHILD_BELOW_5_YR_LABEL';
 
-String get noOfMothersWithChildBelow5Label => 'NO_OF_MOTHERS_WITH_CHILD_BELOW_5_YR_LABEL';
-String get noOfFirstTimePregnantCountLabel => 'NO_OF_FIRST_PREGNANT_WOMEN_LABEL';
+  String get noOfChildBelow15Label => 'NO_OF_CHILD_BELOW_15_YR_LABEL';
 
-String get noOf9YearWomansLabel => 'NO_OF_WOMANS_OF_9_YR_LABEL';
+  String get noOfFirstTimePregnantCountLabel =>
+      'NO_OF_FIRST_PREGNANT_WOMEN_LABEL';
 
-String get noOf15to49YearWomansLabel => 'NO_OF_WOMANS_BETWEEN_15_TO_49_YR_LABEL';
+  String get noOf9YearGirlLabel => 'NO_OF_GIRLS_OF_9_YR_LABEL';
 
+  String get noOf15to49YearWomanLabel =>
+      'NO_OF_WOMAN_BETWEEN_15_TO_49_YR_LABEL';
 
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
@@ -548,8 +560,8 @@ class HouseholdOverView {
 
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
-  String get addChildLabel =>
-      'HOUSEHOLD_ADD_CHILD';
+
+  String get addChildLabel => 'HOUSEHOLD_ADD_CHILD';
 }
 
 class MemberCard {

@@ -40,12 +40,15 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   static const _memberCountKey = 'memberCount';
   static const _pregnantWomenCountKey = 'pregnantWomenCount';
   static const _childrenCountKey = 'childrenCount';
-  static const _motherchildlessthanfiveCountKey =
-      'motherchildlessthanfiveCount';
-  static const _firstTimePregnantCountKey = 'firstTimePregnantCount';
-  static const _nineyearsfemaleCountKey = 'nineyearsfemaleCount';
-  static const _fifteentofourtynineyearsfemaleCountKey =
-      'fifteentofourtynineyearsfemaleCount';
+  static const _motherWithChildrenLessThanFiveCountKey =
+      'motherWithChildrenLessThanFiveCount';
+  static const _firstTimePregnantWomenCountKey = 'firstTimePregnantWomenCount';
+  static const _nineYearsFemaleCountKey = 'nineYearsFemaleCount';
+  static const _childrenUnderFifteenYearsCountKey =
+      'childrenUnderFifteenYearsCount';
+  static const _womenBetweenAge15To49YearsCountKey =
+      'womenBetweenAge15To49YearsCountKey';
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -210,27 +213,50 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                     additionalFields: HouseholdAdditionalFields(
                                         version: 1,
                                         fields: [
-                                          //[TODO: Use pregnant women form value based on project config
-                                          ...?householdModel
-                                              ?.additionalFields?.fields
-                                              .where((e) =>
-                                                  e.key !=
-                                                      AdditionalFieldsType
-                                                          .pregnantWomen
-                                                          .toValue() &&
-                                                  e.key !=
-                                                      AdditionalFieldsType
-                                                          .children
-                                                          .toValue()),
                                           AdditionalField(
-                                            AdditionalFieldsType.pregnantWomen
+                                            AdditionalFieldsType
+                                                .motherWithChildrenLessThanAge5
                                                 .toValue(),
-                                            pregnantWomen,
+                                            form
+                                                .control(
+                                                    _motherWithChildrenLessThanFiveCountKey)
+                                                .value as int,
                                           ),
                                           AdditionalField(
-                                            AdditionalFieldsType.children
+                                            AdditionalFieldsType
+                                                .firstTimePregnantWomenCount
                                                 .toValue(),
-                                            children,
+                                            form
+                                                .control(
+                                                    _firstTimePregnantWomenCountKey)
+                                                .value as int,
+                                          ),
+                                          AdditionalField(
+                                            AdditionalFieldsType
+                                                .nineYearsFemaleCount
+                                                .toValue(),
+                                            form
+                                                .control(
+                                                    _nineYearsFemaleCountKey)
+                                                .value as int,
+                                          ),
+                                          AdditionalField(
+                                            AdditionalFieldsType
+                                                .childrenUnderFifteenYearsCount
+                                                .toValue(),
+                                            form
+                                                .control(
+                                                    _childrenUnderFifteenYearsCountKey)
+                                                .value as int,
+                                          ),
+                                          AdditionalField(
+                                            AdditionalFieldsType
+                                                .womenBetweenAge15To49YearsCount
+                                                .toValue(),
+                                            form
+                                                .control(
+                                                    _womenBetweenAge15To49YearsCountKey)
+                                                .value as int,
                                           )
                                         ]));
 
@@ -283,27 +309,50 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                                 .additionalFields?.version ??
                                             1,
                                         fields: [
-                                          //[TODO: Use pregnant women form value based on project config
-                                          ...?householdModel
-                                              .additionalFields?.fields
-                                              .where((e) =>
-                                                  e.key !=
-                                                      AdditionalFieldsType
-                                                          .pregnantWomen
-                                                          .toValue() &&
-                                                  e.key !=
-                                                      AdditionalFieldsType
-                                                          .children
-                                                          .toValue()),
                                           AdditionalField(
-                                            AdditionalFieldsType.pregnantWomen
+                                            AdditionalFieldsType
+                                                .motherWithChildrenLessThanAge5
                                                 .toValue(),
-                                            pregnantWomen,
+                                            form
+                                                .control(
+                                                    _motherWithChildrenLessThanFiveCountKey)
+                                                .value as int,
                                           ),
                                           AdditionalField(
-                                            AdditionalFieldsType.children
+                                            AdditionalFieldsType
+                                                .firstTimePregnantWomenCount
                                                 .toValue(),
-                                            children,
+                                            form
+                                                .control(
+                                                    _firstTimePregnantWomenCountKey)
+                                                .value as int,
+                                          ),
+                                          AdditionalField(
+                                            AdditionalFieldsType
+                                                .nineYearsFemaleCount
+                                                .toValue(),
+                                            form
+                                                .control(
+                                                    _nineYearsFemaleCountKey)
+                                                .value as int,
+                                          ),
+                                          AdditionalField(
+                                            AdditionalFieldsType
+                                                .childrenUnderFifteenYearsCount
+                                                .toValue(),
+                                            form
+                                                .control(
+                                                    _childrenUnderFifteenYearsCountKey)
+                                                .value as int,
+                                          ),
+                                          AdditionalField(
+                                            AdditionalFieldsType
+                                                .womenBetweenAge15To49YearsCount
+                                                .toValue(),
+                                            form
+                                                .control(
+                                                    _womenBetweenAge15To49YearsCountKey)
+                                                .value as int,
                                           )
                                         ]));
 
@@ -403,194 +452,144 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               ),
                             ),
                           ),
-                          //[TODO: Use pregnant women form value based on project config
-                          householdDetailsShowcaseData
-                              .numberOfPregnantWomenInHousehold
-                              .buildWith(
-                            child: ReactiveWrapperField(
-                              formControlName: _pregnantWomenCountKey,
-                              builder: (field) => LabeledField(
-                                label: localizations.translate(
-                                  i18.householdDetails
-                                      .noOfChildrenBelow5YearsLabel,
-                                ),
-                                child: DigitNumericFormInput(
-                                  minValue: 0,
-                                  maxValue: 10,
-                                  step: 1,
-                                  initialValue: form
+                          ReactiveWrapperField(
+                            formControlName:
+                                _motherWithChildrenLessThanFiveCountKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.householdDetails
+                                    .noOfMothersWithChildBelow5Label,
+                              ),
+                              child: DigitNumericFormInput(
+                                minValue: 0,
+                                maxValue: 20,
+                                step: 1,
+                                initialValue: form
+                                    .control(
+                                        _motherWithChildrenLessThanFiveCountKey)
+                                    .value
+                                    .toString(),
+                                onChange: (value) {
+                                  form
+                                      .control(
+                                          _motherWithChildrenLessThanFiveCountKey)
+                                      .value = int.parse(value);
+                                },
+                              ),
+                            ),
+                          ),
+                          ReactiveWrapperField(
+                            formControlName: _firstTimePregnantWomenCountKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.householdDetails
+                                    .noOfFirstTimePregnantCountLabel,
+                              ),
+                              child: DigitNumericFormInput(
+                                minValue: 0,
+                                maxValue: 20,
+                                step: 1,
+                                initialValue: form
+                                    .control(
+                                        _motherWithChildrenLessThanFiveCountKey)
+                                    .value
+                                    .toString(),
+                                onChange: (value) {
+                                  form
+                                      .control(
+                                          _motherWithChildrenLessThanFiveCountKey)
+                                      .value = int.parse(value);
+                                  int motherWithChildLessThanFive = form
+                                      .control(
+                                          _motherWithChildrenLessThanFiveCountKey)
+                                      .value = int.parse(value);
+                                  int pregnantWomen = form
                                       .control(_pregnantWomenCountKey)
-                                      .value
-                                      .toString(),
-                                  onChange: (value) {
-                                    form.control(_pregnantWomenCountKey).value =
-                                        int.parse(value);
-                                    int pregnantWomen = form
-                                        .control(_pregnantWomenCountKey)
-                                        .value;
-                                    int children =
-                                        form.control(_childrenCountKey).value;
-                                    int memberCount =
-                                        form.control(_memberCountKey).value;
-                                    form.control(_memberCountKey).value =
-                                        memberCount < (children + pregnantWomen)
-                                            ? children + pregnantWomen
-                                            : memberCount;
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                          householdDetailsShowcaseData
-                              .numberOfChildrenBelow5InHousehold
-                              .buildWith(
-                            child: ReactiveWrapperField(
-                              formControlName: _childrenCountKey,
-                              builder: (field) => LabeledField(
-                                label: localizations.translate(
-                                  i18.householdDetails
-                                      .noOfMothersWithChildBelow5Label,
-                                ),
-                                child: DigitNumericFormInput(
-                                  minValue: 0,
-                                  maxValue: 20,
-                                  step: 1,
-                                  initialValue: form
-                                      .control(_childrenCountKey)
-                                      .value
-                                      .toString(),
-                                  onChange: (value) {
-                                    form.control(_childrenCountKey).value =
-                                        int.parse(value);
-                                    int pregnantWomen = form
-                                        .control(_pregnantWomenCountKey)
-                                        .value;
-                                    int children =
-                                        form.control(_childrenCountKey).value;
-                                    int memberCount =
-                                        form.control(_memberCountKey).value;
-                                    form.control(_memberCountKey).value =
-                                        memberCount <=
-                                                (children + pregnantWomen)
-                                            ? children + pregnantWomen
-                                            : memberCount;
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                               ReactiveWrapperField(
-                              formControlName: _nineyearsfemaleCountKey,
-                              builder: (field) => LabeledField(
-                                label: localizations.translate(
-                                  i18.householdDetails
-                                      .noOfFirstTimePregnantCountLabel,
-                                ),
-                                child: DigitNumericFormInput(
-                                  minValue: 0,
-                                  maxValue: 20,
-                                  step: 1,
-                                  initialValue: form
-                                      .control(_motherchildlessthanfiveCountKey)
-                                      .value
-                                      .toString(),
-                                  onChange: (value) {
-                                    form.control(_motherchildlessthanfiveCountKey).value =
-                                        int.parse(value);
-                                        int motherchildlessthanfive = form.control(_motherchildlessthanfiveCountKey).value =
-                                        int.parse(value);
-                                    int pregnantWomen = form
-                                        .control(_pregnantWomenCountKey)
-                                        .value;
-                                    int children =
-                                        form.control(_childrenCountKey).value;
-                                        
-                                    int memberCount =
-                                        form.control(_memberCountKey).value;
-                                    form.control(_memberCountKey).value =
-                                        memberCount <=
-                                                (children + pregnantWomen + motherchildlessthanfive)
-                                            ? children + pregnantWomen + motherchildlessthanfive
-                                            : memberCount;
-                                  },
-                                ),
-                              ),
-                            ),
-                          
+                                      .value;
+                                  int children =
+                                      form.control(_childrenCountKey).value;
 
-                           ReactiveWrapperField(
-                              formControlName: _motherchildlessthanfiveCountKey,
-                              builder: (field) => LabeledField(
-                                label: localizations.translate(
-                                  i18.householdDetails
-                                      .noOf9YearWomansLabel,
-                                ),
-                                child: DigitNumericFormInput(
-                                  minValue: 0,
-                                  maxValue: 20,
-                                  step: 1,
-                                  initialValue: form
-                                      .control(_motherchildlessthanfiveCountKey)
-                                      .value
-                                      .toString(),
-                                  onChange: (value) {
-                                    form.control(_motherchildlessthanfiveCountKey).value =
-                                        int.parse(value);
-                                        int motherchildlessthanfive = form.control(_motherchildlessthanfiveCountKey).value =
-                                        int.parse(value);
-                                    int pregnantWomen = form
-                                        .control(_pregnantWomenCountKey)
-                                        .value;
-                                    int children =
-                                        form.control(_childrenCountKey).value;
-                                        
-                                    int memberCount =
-                                        form.control(_memberCountKey).value;
-                                    form.control(_memberCountKey).value =
-                                        memberCount <=
-                                                (children + pregnantWomen + motherchildlessthanfive)
-                                            ? children + pregnantWomen + motherchildlessthanfive
-                                            : memberCount;
-                                  },
-                                ),
+                                  int memberCount =
+                                      form.control(_memberCountKey).value;
+                                  form.control(_memberCountKey).value =
+                                      memberCount <=
+                                              (children +
+                                                  pregnantWomen +
+                                                  motherWithChildLessThanFive)
+                                          ? children +
+                                              pregnantWomen +
+                                              motherWithChildLessThanFive
+                                          : memberCount;
+                                },
                               ),
                             ),
-                          householdDetailsShowcaseData
-                              .numberOfMembersLivingInHousehold
-                              .buildWith(
-                            child: ReactiveWrapperField(
-                              formControlName: _memberCountKey,
-                              builder: (field) => LabeledField(
-                                label: localizations.translate(
-                                  i18.householdDetails.noOf15to49YearWomansLabel,
-                                ),
-                                child: DigitNumericFormInput(
-                                  minValue: children + pregnantWomen != 0
-                                      ? children + pregnantWomen
-                                      : 1,
-                                  maxValue: 30,
-                                  step: 1,
-                                  initialValue: form
-                                      .control(_memberCountKey)
-                                      .value
-                                      .toString(),
-                                  onChange: (value) {
-                                    form.control(_memberCountKey).value =
-                                        int.parse(value);
-                                    int pregnantWomen = form
-                                        .control(_pregnantWomenCountKey)
-                                        .value;
-                                    int children =
-                                        form.control(_childrenCountKey).value;
-                                    int memberCount =
-                                        form.control(_memberCountKey).value;
-                                    if (memberCount <=
-                                        pregnantWomen + children) {
-                                      form.control(_memberCountKey).value =
-                                          (children + pregnantWomen);
-                                    }
-                                  },
-                                ),
+                          ),
+                          ReactiveWrapperField(
+                            formControlName: _nineYearsFemaleCountKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.householdDetails.noOf9YearGirlLabel,
+                              ),
+                              child: DigitNumericFormInput(
+                                minValue: 0,
+                                maxValue: 20,
+                                step: 1,
+                                initialValue: form
+                                    .control(_nineYearsFemaleCountKey)
+                                    .value
+                                    .toString(),
+                                onChange: (value) {
+                                  form.control(_nineYearsFemaleCountKey).value =
+                                      int.parse(value);
+                                },
+                              ),
+                            ),
+                          ),
+                          ReactiveWrapperField(
+                            formControlName: _childrenUnderFifteenYearsCountKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.householdDetails.noOfChildBelow15Label,
+                              ),
+                              child: DigitNumericFormInput(
+                                minValue: 0,
+                                maxValue: 20,
+                                step: 1,
+                                initialValue: form
+                                    .control(_childrenUnderFifteenYearsCountKey)
+                                    .value
+                                    .toString(),
+                                onChange: (value) {
+                                  form
+                                      .control(
+                                          _childrenUnderFifteenYearsCountKey)
+                                      .value = int.parse(value);
+                                },
+                              ),
+                            ),
+                          ),
+                          ReactiveWrapperField(
+                            formControlName:
+                                _womenBetweenAge15To49YearsCountKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.householdDetails.noOf15to49YearWomanLabel,
+                              ),
+                              child: DigitNumericFormInput(
+                                minValue: 1,
+                                maxValue: 30,
+                                step: 1,
+                                initialValue: form
+                                    .control(
+                                        _womenBetweenAge15To49YearsCountKey)
+                                    .value
+                                    .toString(),
+                                onChange: (value) {
+                                  form
+                                      .control(
+                                          _womenBetweenAge15To49YearsCountKey)
+                                      .value = int.parse(value);
+                                },
                               ),
                             ),
                           ),
@@ -642,17 +641,103 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                 '0')
             : 0,
       ),
-      _motherchildlessthanfiveCountKey: FormControl<int>(
-        value: 0,
+      _motherWithChildrenLessThanFiveCountKey: FormControl<int>(
+        value: household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key ==
+                        AdditionalFieldsType.motherWithChildrenLessThanAge5
+                            .toValue())
+                    .firstOrNull
+                    ?.value !=
+                null
+            ? int.tryParse(household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key ==
+                        AdditionalFieldsType.motherWithChildrenLessThanAge5
+                            .toValue())
+                    .firstOrNull
+                    ?.value
+                    .toString() ??
+                '0')
+            : 0,
       ),
-      _nineyearsfemaleCountKey: FormControl<int>(
-        value: 0,
+      _nineYearsFemaleCountKey: FormControl<int>(
+        value: household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key ==
+                        AdditionalFieldsType.nineYearsFemaleCount.toValue())
+                    .firstOrNull
+                    ?.value !=
+                null
+            ? int.tryParse(household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key ==
+                        AdditionalFieldsType.nineYearsFemaleCount.toValue())
+                    .firstOrNull
+                    ?.value
+                    .toString() ??
+                '0')
+            : 0,
       ),
-      _fifteentofourtynineyearsfemaleCountKey: FormControl<int>(
-        value: 0,
+      _childrenUnderFifteenYearsCountKey: FormControl<int>(
+        value: household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key ==
+                        AdditionalFieldsType.childrenUnderFifteenYearsCount
+                            .toValue())
+                    .firstOrNull
+                    ?.value !=
+                null
+            ? int.tryParse(household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key ==
+                        AdditionalFieldsType.childrenUnderFifteenYearsCount
+                            .toValue())
+                    .firstOrNull
+                    ?.value
+                    .toString() ??
+                '0')
+            : 0,
       ),
-      _firstTimePregnantCountKey: FormControl<int>(
-        value: 0,
+      _womenBetweenAge15To49YearsCountKey: FormControl<int>(
+        value: household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key ==
+                        AdditionalFieldsType.motherWithChildrenLessThanAge5
+                            .toValue())
+                    .firstOrNull
+                    ?.value !=
+                null
+            ? int.tryParse(household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key ==
+                        AdditionalFieldsType.motherWithChildrenLessThanAge5
+                            .toValue())
+                    .firstOrNull
+                    ?.value
+                    .toString() ??
+                '0')
+            : 0,
+      ),
+      _firstTimePregnantWomenCountKey: FormControl<int>(
+        value: household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key ==
+                        AdditionalFieldsType.firstTimePregnantWomenCount
+                            .toValue())
+                    .firstOrNull
+                    ?.value !=
+                null
+            ? int.tryParse(household?.additionalFields?.fields
+                    .where((h) =>
+                        h.key ==
+                        AdditionalFieldsType.firstTimePregnantWomenCount
+                            .toValue())
+                    .firstOrNull
+                    ?.value
+                    .toString() ??
+                '0')
+            : 0,
       ),
       _childrenCountKey: FormControl<int>(
         value: household?.additionalFields?.fields

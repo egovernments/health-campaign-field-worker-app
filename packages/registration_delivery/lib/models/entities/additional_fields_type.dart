@@ -41,6 +41,16 @@ enum AdditionalFieldsType {
   longitude,
   @MappableValue("pregnantWomen")
   pregnantWomen,
+  @MappableValue("motherWithChildrenLessThanAge5")
+  motherWithChildrenLessThanAge5,
+  @MappableValue("firstTimePregnantWomenCount")
+  firstTimePregnantWomenCount,
+  @MappableValue("nineYearsFemaleCount")
+  nineYearsFemaleCount,
+  @MappableValue("womenBetweenAge15To49YearsCount")
+  womenBetweenAge15To49YearsCount,
+  @MappableValue("childrenUnderFifteenYearsCount")
+  childrenUnderFifteenYearsCount,
   @MappableValue("children")
   children,
   @MappableValue("noOfRooms")

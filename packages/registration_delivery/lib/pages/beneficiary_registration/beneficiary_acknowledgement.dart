@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/identifier_types.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,7 +72,15 @@ class BeneficiaryAcknowledgementPageState
         description: localizations.translate(
           i18.acknowledgementSuccess.acknowledgementDescriptionText,
         ),
-        additionalDetails: (wrapper  is String) ? null: [Text( getSubText(wrapper))],
+        additionalDetails: (wrapper is String)
+            ? null
+            : [
+                Text(
+                  getSubText(wrapper),
+                  style: TextStyle(
+                      color: Theme.of(context).colorTheme.paper.primary),
+                )
+              ],
       ),
     );
   }
@@ -83,8 +92,9 @@ class BeneficiaryAcknowledgementPageState
             '${wrapper.members?.lastOrNull!.identifiers!.lastWhereOrNull(
                   (e) =>
                       e.identifierType ==
-                      IdentifierTypes.uniqueBeneficiaryID.toValue(),
-                )?.identifierId    ?? localizations.translate(i18.common.noResultsFound)}'
+                      IdentifierTypes
+                          .uniqueBeneficiaryID.name, // TODO: Revert to value
+                )?.identifierId ?? localizations.translate(i18.common.noResultsFound)}'
         : '';
   }
 }

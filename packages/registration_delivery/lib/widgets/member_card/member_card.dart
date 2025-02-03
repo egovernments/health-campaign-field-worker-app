@@ -7,12 +7,10 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/constants.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
-import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/member_card/child_card.dart';
+
 import '../../blocs/app_localization.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -168,7 +166,8 @@ class MemberCard extends StatelessWidget {
                           .lastWhereOrNull(
                             (e) =>
                                 e.identifierType ==
-                                IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                                IdentifierTypes.uniqueBeneficiaryID
+                                    .name, // TODO: Revert to value
                           )
                           ?.identifierId !=
                       null)
@@ -192,7 +191,8 @@ class MemberCard extends StatelessWidget {
                             .lastWhere(
                               (e) =>
                                   e.identifierType ==
-                                  IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                                  IdentifierTypes.uniqueBeneficiaryID
+                                      .name, // TODO: Revert to value
                             )
                             .identifierId!,
                       ),
@@ -224,7 +224,9 @@ class MemberCard extends StatelessWidget {
                   ],
                 ),
               ),
-              buildListOfChildren(context,),
+              buildListOfChildren(
+                context,
+              ),
               const SizedBox(
                 height: spacer2,
               ),
@@ -232,7 +234,7 @@ class MemberCard extends StatelessWidget {
                 child: DigitButton(
                   isDisabled: false,
                   onPressed: () async {
-                    if(household != null) {
+                    if (household != null) {
                       final bloc = context.read<HouseholdOverviewBloc>();
 
                       final address = household?.address;
@@ -242,7 +244,7 @@ class MemberCard extends StatelessWidget {
                         HouseholdOverviewReloadEvent(
                           projectId: RegistrationDeliverySingleton().projectId!,
                           projectBeneficiaryType:
-                          RegistrationDeliverySingleton().beneficiaryType!,
+                              RegistrationDeliverySingleton().beneficiaryType!,
                         ),
                       );
                       await context.router.push(
@@ -253,22 +255,21 @@ class MemberCard extends StatelessWidget {
                           ),
                           children: [
                             IndividualDetailsRoute(
-                              isChild: true,
-                              parentClientReferenceId: individual.clientReferenceId
-                            ),
+                                isChild: true,
+                                parentClientReferenceId:
+                                    individual.clientReferenceId),
                           ],
                         ),
                       );
                     }
                   },
                   label: localizations.translate(
-                    i18.householdOverView
-                        .addChildLabel,
+                    i18.householdOverView.addChildLabel,
                   ),
                   prefixIcon: Icons.add_circle,
                   type: DigitButtonType.tertiary,
                   size: DigitButtonSize.medium,
-              ),
+                ),
               ),
 
               // [TODO: Delivery Actions Commented Out
@@ -592,80 +593,77 @@ class MemberCard extends StatelessWidget {
     final filteredChildren = (childrenBeneficiaries ?? [])
         .where((c) => c.individual != null)
         .map((c) => ChildCard(
-      individual: c.individual!,
-      projectBeneficiaries: c.projectBeneficiary != null ? [c.projectBeneficiary!]: null,
-      projectBeneficiaryClientReferenceId: c.projectBeneficiary?.clientReferenceId,
-      name: c.individual!.name!.givenName!,
-      localizations: localizations,
-      gender: c.individual?.gender?.toValue(),
-      years: c.individual?.dateOfBirth != null
-          ? DigitDateUtils.calculateAge(
-        DigitDateUtils
-            .getFormattedDateToDateTime(
-          c.individual!.dateOfBirth!,
-        ) ??
-            DateTime.now(),
-      ).years
-          : 0,
-      months: c.individual?.dateOfBirth != null
-          ? DigitDateUtils.calculateAge(
-        DigitDateUtils
-            .getFormattedDateToDateTime(
-          c.individual!.dateOfBirth!,
-        ) ??
-            DateTime.now(),
-      ).months
-          : 0,
-      isDelivered: false,
-      editMemberAction: () async {
-        final bloc = context.read<HouseholdOverviewBloc>();
+              individual: c.individual!,
+              projectBeneficiaries:
+                  c.projectBeneficiary != null ? [c.projectBeneficiary!] : null,
+              projectBeneficiaryClientReferenceId:
+                  c.projectBeneficiary?.clientReferenceId,
+              name: c.individual!.name!.givenName!,
+              localizations: localizations,
+              gender: c.individual?.gender?.toValue(),
+              years: c.individual?.dateOfBirth != null
+                  ? DigitDateUtils.calculateAge(
+                      DigitDateUtils.getFormattedDateToDateTime(
+                            c.individual!.dateOfBirth!,
+                          ) ??
+                          DateTime.now(),
+                    ).years
+                  : 0,
+              months: c.individual?.dateOfBirth != null
+                  ? DigitDateUtils.calculateAge(
+                      DigitDateUtils.getFormattedDateToDateTime(
+                            c.individual!.dateOfBirth!,
+                          ) ??
+                          DateTime.now(),
+                    ).months
+                  : 0,
+              isDelivered: false,
+              editMemberAction: () async {
+                final bloc = context.read<HouseholdOverviewBloc>();
 
-        Navigator.of(
-          context,
-          rootNavigator: true,
-        ).pop();
+                Navigator.of(
+                  context,
+                  rootNavigator: true,
+                ).pop();
 
-        final address = household?.address;
-        if (address == null) {
-          return;
-        }
+                final address = household?.address;
+                if (address == null) {
+                  return;
+                }
 
-        final projectId =
-        RegistrationDeliverySingleton()
-            .projectId!;
-        bloc.add(
-          HouseholdOverviewReloadEvent(
-            projectId: projectId,
-            projectBeneficiaryType:
-            RegistrationDeliverySingleton().beneficiaryType ?? BeneficiaryType.household,
-          ),
-        );
+                final projectId = RegistrationDeliverySingleton().projectId!;
+                bloc.add(
+                  HouseholdOverviewReloadEvent(
+                    projectId: projectId,
+                    projectBeneficiaryType:
+                        RegistrationDeliverySingleton().beneficiaryType ??
+                            BeneficiaryType.household,
+                  ),
+                );
 
-        await context.router.root.push(
-          BeneficiaryRegistrationWrapperRoute(
-            initialState:
-            BeneficiaryRegistrationEditIndividualState(
-              individualModel: c.individual!,
-              householdModel: c.household!,
-              addressModel: address,
-              projectBeneficiaryModel: c.projectBeneficiary,
-            ),
-            children: [
-              IndividualDetailsRoute(
-                isChild: true,
-                parentClientReferenceId: individual.clientReferenceId
-              ),
-            ],
-          ),
-        );
-      },
-      deleteMemberAction: () {},
-    ))
+                await context.router.root.push(
+                  BeneficiaryRegistrationWrapperRoute(
+                    initialState: BeneficiaryRegistrationEditIndividualState(
+                      individualModel: c.individual!,
+                      householdModel: c.household!,
+                      addressModel: address,
+                      projectBeneficiaryModel: c.projectBeneficiary,
+                    ),
+                    children: [
+                      IndividualDetailsRoute(
+                          isChild: true,
+                          parentClientReferenceId:
+                              individual.clientReferenceId),
+                    ],
+                  ),
+                );
+              },
+              deleteMemberAction: () {},
+            ))
         .toList();
 
     return Column(
       children: filteredChildren,
     );
   }
-
 }

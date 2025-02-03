@@ -61,6 +61,16 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return AdditionalFieldsType.longitude;
       case "pregnantWomen":
         return AdditionalFieldsType.pregnantWomen;
+      case "motherWithChildrenLessThanAge5":
+        return AdditionalFieldsType.motherWithChildrenLessThanAge5;
+      case "firstTimePregnantWomenCount":
+        return AdditionalFieldsType.firstTimePregnantWomenCount;
+      case "nineYearsFemaleCount":
+        return AdditionalFieldsType.nineYearsFemaleCount;
+      case "womenBetweenAge15To49YearsCount":
+        return AdditionalFieldsType.womenBetweenAge15To49YearsCount;
+      case "childrenUnderFifteenYearsCount":
+        return AdditionalFieldsType.childrenUnderFifteenYearsCount;
       case "children":
         return AdditionalFieldsType.children;
       case "noOfRooms":
@@ -113,6 +123,16 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return "longitude";
       case AdditionalFieldsType.pregnantWomen:
         return "pregnantWomen";
+      case AdditionalFieldsType.motherWithChildrenLessThanAge5:
+        return "motherWithChildrenLessThanAge5";
+      case AdditionalFieldsType.firstTimePregnantWomenCount:
+        return "firstTimePregnantWomenCount";
+      case AdditionalFieldsType.nineYearsFemaleCount:
+        return "nineYearsFemaleCount";
+      case AdditionalFieldsType.womenBetweenAge15To49YearsCount:
+        return "womenBetweenAge15To49YearsCount";
+      case AdditionalFieldsType.childrenUnderFifteenYearsCount:
+        return "childrenUnderFifteenYearsCount";
       case AdditionalFieldsType.children:
         return "children";
       case AdditionalFieldsType.noOfRooms:
