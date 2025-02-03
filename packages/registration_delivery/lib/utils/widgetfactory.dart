@@ -1,7 +1,10 @@
+import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/atoms/checkbox_icon.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_picker.dart';
 import 'package:digit_components/widgets/atoms/digit_integer_form_picker.dart';
+import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:digit_components/widgets/atoms/digit_reactive_search_dropdown.dart';
 import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
@@ -9,6 +12,7 @@ import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
+import 'constants.dart';
 import 'models/widget_config_model.dart';
 
 class WidgetBuilderFactory {
@@ -97,9 +101,12 @@ class WidgetBuilderFactory {
         );
         break;
       case 'checkbox':
-        widget = DigitCheckbox(
-          label: localizations.translate(fieldConfig['label']),
-          value: fieldConfig['initialValue'] ?? false,
+        widget = Checkbox(
+          label: localizations.translate(
+    '${fieldConfig['label']}${fieldConfig['isRequired'] ?? false ? '*' : ''}'),
+          onChanged: (val) => {
+            form.control(key).value = val,
+          },
         );
         break;
       case 'dobPicker':
@@ -152,6 +159,22 @@ class WidgetBuilderFactory {
           ),
         );
         break;
+      case 'radioButton':
+        widget = DigitRadioButtonList<KeyValue>(
+          labelText: localizations.translate(
+            fieldConfig['label'],
+          ),
+            labelStyle: DigitTheme
+              .instance.mobileTheme.textTheme.bodyLarge,
+            contentPadding: EdgeInsets.zero,
+            formControlName: key,
+            valueMapper: (val) => localizations.translate(val.label),
+            options: Constants.yesNo,
+            isRequired: fieldConfig['isRequired'] ?? false,
+            errorMessage: form.control(key).hasErrors && form.control(key).touched ? localizations.translate(
+              i18.common.corecommonRequired,
+            ) : "");
+        break;
       case 'selectionbox':
         widget = AbsorbPointer(
           absorbing: fieldConfig['readOnly'] ?? false,
@@ -194,5 +217,66 @@ class WidgetBuilderFactory {
     }
 
     return widget;
+  }
+}
+
+class Checkbox extends StatefulWidget {
+  final String label;
+  final ValueChanged<bool>? onChanged;
+  final EdgeInsetsGeometry padding;
+  final bool initialValue;
+
+  // Constructor for the DigitCheckbox widget with required parameters
+  const Checkbox({
+    super.key,
+    required this.label,
+    this.onChanged,
+    this.initialValue = false,
+    this.padding = const EdgeInsets.only(left: 4.0),
+  });
+
+  @override
+  _CheckboxState createState() => _CheckboxState();
+}
+
+class _CheckboxState extends State<Checkbox> {
+  late bool _value;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.initialValue;
+  }
+
+  void _toggleCheckbox() {
+    setState(() {
+      _value = !_value;
+    });
+    widget.onChanged?.call(_value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: widget.padding,
+      child: InkWell(
+        onTap: _toggleCheckbox,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 24,
+              width: 24,
+              child: CheckboxIcon(value: _value),
+            ),
+            const SizedBox(width: 16),
+            Text(
+              widget.label,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

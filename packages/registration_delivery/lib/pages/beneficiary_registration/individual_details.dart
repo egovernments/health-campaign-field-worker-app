@@ -162,6 +162,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
 
     void validate(final form, final key, final fieldConfig) {
+      if(form.control(key).value == "") {
+        form.control(key).value = null;
+      }
       if (fieldConfig?['attribute'] != 'textField' &&
           fieldConfig?['attribute'] != 'dateFormPicker' &&
           fieldConfig?['attribute'] != 'dobPicker') {

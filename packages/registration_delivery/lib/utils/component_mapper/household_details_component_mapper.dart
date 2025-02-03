@@ -30,54 +30,74 @@ class HouseholdDetailsComponentMapper {
   static const _childrenCountKey = HouseHoldDetailsPageState.childrenCountKey;
 
   Map<String, dynamic> configs = {
-    "name": "HouseDetails",
+    "name": "HouseholdDetails",
     "type": "page",
     "components": [
       {
-        "title": "House Details",
+        "title": "Household Details",
         "description":
             "Make sure the village name matches the one where you are today.",
         "order": 1,
         "attributes": [
           {
-            'name': 'dateOfRegistration',
-            'isEnabled': true,
-            'readOnly': true,
-            'isRequired': true,
-            'order': 4,
-          },
-          {
-            'name': 'memberCount',
+            'name': 'motherWithChildrenLessThanFiveCount',
             'isEnabled': true,
             'readOnly': false,
             'isRequired': true,
             'order': 1,
+            'initialValue': 0,
+            'type': 'additionalField',
+            'label': 'How many mothers of child < 5',
+            'attribute': 'integerFormPicker',
+            'formDataType': 'int'
           },
           {
-            'name': 'pregnantWomenCount',
+            'name': 'firstTimePregnantWomenCount',
             'isEnabled': true,
             'readOnly': false,
             'isRequired': true,
             'order': 2,
+            'initialValue': 0,
+            'type': 'additionalField',
+            'label': 'How many pregnant women who are not mothers',
+            'attribute': 'integerFormPicker',
+            'formDataType': 'int'
           },
           {
-            'name': 'childrenCount',
+            'name': 'womenBetweenAge15To49YearsCountKey',
             'isEnabled': true,
             'readOnly': false,
-            'isRequired': false,
-            'order': 4,
+            'isRequired': true,
+            'order': 3,
+            'initialValue': 0,
+            'type': 'additionalField',
+            'label': 'How many women aged between 15-49 years',
+            'attribute': 'integerFormPicker',
+            'formDataType': 'int'
           },
           {
-            'name': 'abcd',
+            'name': 'nineYearsFemaleCount',
+            'isEnabled': true,
+            'readOnly': false,
+            'isRequired': true,
+            'order': 4,
+            'initialValue': 0,
             'type': 'additionalField',
-            'label': 'abcd',
-            'attribute': 'dateFormPicker',
-            'initialValue': DateTime.now(),
-            'formDataType': 'DateTime',
+            'label': 'How many 9 years old girls',
+            'attribute': 'integerFormPicker',
+            'formDataType': 'int'
+          },
+          {
+            'name': 'childrenUnderFifteenYearsCount',
             'isEnabled': true,
             'readOnly': false,
             'isRequired': true,
             'order': 5,
+            'initialValue': 0,
+            'type': 'additionalField',
+            'label': 'How many child under 15 years',
+            'attribute': 'integerFormPicker',
+            'formDataType': 'int'
           }
         ]
       }
