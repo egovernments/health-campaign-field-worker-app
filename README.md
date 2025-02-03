@@ -1366,3 +1366,96 @@ The following steps describe the manual synchronization process:
 13. Success is returned to complete the sync up process.
 
 
+* * * * *
+
+
+Codebase
+--------
+
+The source code is available on GitHub: [**Health Campaign Field Worker App Repository**](https://github.com/egovernments/health-campaign-field-worker-app)
+
+Installation
+------------
+
+### Prerequisites
+
+-   Flutter SDK (latest stable version)
+
+-   Android device or emulator
+
+### Steps
+
+1.  Clone the repository:
+
+    ```
+    git clone https://github.com/egovernments/health-campaign-field-worker-app.git
+    ```
+
+2.  Navigate to the project directory:
+
+    ```
+    cd health-campaign-field-worker-app
+    ```
+
+3.  Install dependencies:
+
+    ```
+    flutter pub get
+    ```
+
+4.  Create a `.env` file and add the following environment variables:
+
+    ```
+    BASE_URL=
+    MDMS_API_PATH=
+    TENANT_ID=
+    ACTIONS_API_PATH=
+    SYNC_DOWN_RETRY_COUNT=
+    RETRY_TIME_INTERVAL=
+    CONNECT_TIMEOUT=
+    RECEIVE_TIMEOUT=
+    SEND_TIMEOUT=
+    HIERARCHY_TYPE="MICROPLAN"
+    CHECK_BANDWIDTH_API="/project/check/bandwidth"
+    ENV_NAME="DEMO"
+    ```
+
+5.  Run the app:
+
+    ```
+    flutter run
+    ```
+
+Contributing
+------------
+
+Contributions are welcome! Follow these steps to contribute:
+
+1.  Fork the repository.
+
+2.  Create a feature branch:
+
+    ```
+    git checkout -b feature-name
+    ```
+
+3.  Commit your changes:
+
+    ```
+    git commit -m "Add some feature"
+    ```
+
+4.  Push to the branch:
+
+    ```
+    git push origin feature-name
+    ```
+
+5.  Open a pull request.
+
+
+Documentation
+-------------
+
+For more detailed documentation, visit the [DIGIT Health Platform](https://health.digit.org/).
+
