@@ -286,54 +286,55 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   ),
                                 ]),
                           ]),
-                      DigitCard(
-                          margin: const EdgeInsets.all(spacer2),
-                          children: [
-                            LabelValueSummary(
-                                padding: EdgeInsets.zero,
-                                heading: localizations.translate(
-                                    i18.householdDetails.houseDetailsLabel),
-                                items: [
-                                  LabelValueItem(
-                                    label: localizations.translate(
-                                        i18.householdDetails.noOfRoomsLabel),
-                                    value: householdState.householdModel
-                                            ?.additionalFields?.fields
-                                            .where((h) =>
-                                                h.key ==
-                                                AdditionalFieldsType.noOfRooms
-                                                    .toValue())
-                                            .firstOrNull
-                                            ?.value
-                                            .toString() ??
-                                        '0',
-                                    isInline: true,
-                                    labelFlex: 5,
-                                  ),
-                                  LabelValueItem(
-                                    label: localizations.translate(
-                                        i18.householdDetails.typeOfStructure),
-                                    value: (householdState.householdModel
-                                                ?.additionalFields?.fields
-                                                .where((h) =>
-                                                    h.key ==
-                                                    AdditionalFieldsType
-                                                        .houseStructureTypes
-                                                        .toValue())
-                                                .firstOrNull
-                                                ?.value ??
-                                            [])
-                                        .toString()
-                                        .split('|')
-                                        .map(
-                                            (item) => getLocalizedMessage(item))
-                                        .toList()
-                                        .join(', '),
-                                    isInline: true,
-                                    labelFlex: 5,
-                                  ),
-                                ]),
-                          ]),
+                      //[ TODO: House Details Commented Out
+                      // DigitCard(
+                      //     margin: const EdgeInsets.all(spacer2),
+                      //     children: [
+                      //       LabelValueSummary(
+                      //           padding: EdgeInsets.zero,
+                      //           heading: localizations.translate(
+                      //               i18.householdDetails.houseDetailsLabel),
+                      //           items: [
+                      //             LabelValueItem(
+                      //               label: localizations.translate(
+                      //                   i18.householdDetails.noOfRoomsLabel),
+                      //               value: householdState.householdModel
+                      //                       ?.additionalFields?.fields
+                      //                       .where((h) =>
+                      //                           h.key ==
+                      //                           AdditionalFieldsType.noOfRooms
+                      //                               .toValue())
+                      //                       .firstOrNull
+                      //                       ?.value
+                      //                       .toString() ??
+                      //                   '0',
+                      //               isInline: true,
+                      //               labelFlex: 5,
+                      //             ),
+                      //             LabelValueItem(
+                      //               label: localizations.translate(
+                      //                   i18.householdDetails.typeOfStructure),
+                      //               value: (householdState.householdModel
+                      //                           ?.additionalFields?.fields
+                      //                           .where((h) =>
+                      //                               h.key ==
+                      //                               AdditionalFieldsType
+                      //                                   .houseStructureTypes
+                      //                                   .toValue())
+                      //                           .firstOrNull
+                      //                           ?.value ??
+                      //                       [])
+                      //                   .toString()
+                      //                   .split('|')
+                      //                   .map(
+                      //                       (item) => getLocalizedMessage(item))
+                      //                   .toList()
+                      //                   .join(', '),
+                      //               isInline: true,
+                      //               labelFlex: 5,
+                      //             ),
+                      //           ]),
+                      //     ]),
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
@@ -342,85 +343,49 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                 heading: localizations.translate(i18
                                     .individualDetails
                                     .individualsDetailsLabelText),
-                                items: [
-                                  LabelValueItem(
-                                    label: localizations.translate(
-                                        i18.individualDetails.nameLabelText),
-                                    value: householdState.maybeWhen(
-                                        orElse: () => localizations
-                                            .translate(i18.common.coreCommonNA),
-                                        summary: (
-                                          navigateToRoot,
-                                          householdModel,
-                                          individualModel,
-                                          projectBeneficiaryModel,
-                                          registrationDate,
-                                          addressModel,
-                                          loading,
-                                          isHeadOfHousehold,
-                                        ) =>
-                                            individualModel?.name?.givenName ??
-                                            localizations.translate(
-                                                i18.common.coreCommonNA)),
-                                    labelFlex: 5,
-                                  ),
-                                  LabelValueItem(
-                                    label: localizations.translate(
-                                        i18.individualDetails.dobLabelText),
-                                    value: householdState.maybeWhen(
-                                        orElse: () => localizations
-                                            .translate(i18.common.coreCommonNA),
-                                        summary: (
-                                          navigateToRoot,
-                                          householdModel,
-                                          individualModel,
-                                          projectBeneficiaryModel,
-                                          registrationDate,
-                                          addressModel,
-                                          loading,
-                                          isHeadOfHousehold,
-                                        ) =>
-                                            individualModel?.dateOfBirth != null
-                                                ? DigitDateUtils.getFilteredDate(
-                                                        DigitDateUtils.getFormattedDateToDateTime(
-                                                                individualModel
-                                                                        ?.dateOfBirth ??
-                                                                    '')
-                                                            .toString(),
-                                                        dateFormat: Constants()
-                                                            .dateMonthYearFormat)
-                                                    .toString()
-                                                : localizations.translate(
-                                                    i18.common.coreCommonNA)),
-                                    labelFlex: 5,
-                                  ),
-                                  LabelValueItem(
-                                    label: localizations.translate(
-                                        i18.individualDetails.genderLabelText),
-                                    value: householdState.maybeWhen(
-                                        orElse: () => localizations
-                                            .translate(i18.common.coreCommonNA),
-                                        summary: (
-                                          navigateToRoot,
-                                          householdModel,
-                                          individualModel,
-                                          projectBeneficiaryModel,
-                                          registrationDate,
-                                          addressModel,
-                                          loading,
-                                          isHeadOfHousehold,
-                                        ) =>
-                                            individualModel?.gender != null
-                                                ? localizations.translate(
-                                                    individualModel
-                                                            ?.gender?.name
-                                                            .toUpperCase() ??
-                                                        '')
-                                                : localizations.translate(
-                                                    i18.common.coreCommonNA)),
-                                    labelFlex: 5,
-                                  ),
-                                ]),
+                                items: householdState.maybeWhen(orElse: () => [],
+                                  summary: (
+                                  navigateToRoot,
+                                  householdModel,
+                                  individualModel,
+                                  projectBeneficiaryModel,
+                                  registrationDate,
+                                  addressModel,
+                                  loading,
+                                  isHeadOfHousehold,
+                                  ) => [
+                                    LabelValueItem(
+                                      label: localizations.translate(i18.individualDetails.nameLabelText),
+                                      value: individualModel?.name?.givenName ?? localizations.translate(i18.common.coreCommonNA),
+                                      labelFlex: 5,
+                                    ),
+                                    LabelValueItem(
+                                      label: localizations.translate(i18.individualDetails.dobLabelText),
+                                      value: individualModel?.dateOfBirth != null
+                                          ? DigitDateUtils.getFilteredDate(
+                                        DigitDateUtils.getFormattedDateToDateTime(individualModel?.dateOfBirth ?? '').toString(),
+                                        dateFormat: Constants().dateMonthYearFormat,
+                                      ).toString()
+                                          : localizations.translate(i18.common.coreCommonNA),
+                                      labelFlex: 5,
+                                    ),
+                                    LabelValueItem(
+                                      label: localizations.translate(i18.individualDetails.genderLabelText),
+                                      value: individualModel?.gender != null
+                                          ? localizations.translate(individualModel?.gender?.name.toUpperCase() ?? '')
+                                          : localizations.translate(i18.common.coreCommonNA),
+                                      labelFlex: 5,
+                                    ),
+                                    // Dynamically Add Additional Fields
+                                    if (individualModel?.additionalFields?.fields != null)
+                                      ...individualModel!.additionalFields!.fields.map((field) => LabelValueItem(
+                                        label: localizations.translate(field.key.toUpperCase()), // Translate key if needed
+                                        value: field.value ?? localizations.translate(i18.common.coreCommonNA),
+                                        labelFlex: 5,
+                                      )),
+                                  ]
+                                ),
+                            ),
                           ]),
                     ],
                   ),
