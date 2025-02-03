@@ -62,6 +62,11 @@ dependencies:
   digit_scanner: ^1.0.4
   inventory_management: ^1.0.4
   referral_reconciliation: ^1.0.3
+  digit_data_model:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: hcmpre-1250-beneficiary
+      path: ./packages/digit_data_model
   registration_delivery:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
@@ -77,6 +82,11 @@ dependencies:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
       ref: hcmpre-1250-beneficiary
       path: ./packages/survey_form
+  complaints:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: hcmpre-1250-beneficiary
+      path: ./packages/complaints
 
 dev_dependencies:
   flutter_test:
