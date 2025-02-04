@@ -265,7 +265,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -563,10 +563,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "57c4da5237be6025783e7357a02b6b492f02e38f711d674bf46f5f8c8a93ad76"
+      sha256: "4d79a36d9a3bfce4616066f2bf5c5d6dfb6c301315e6fa21a1d6d0f76d98dbeb"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.4"
+    version: "0.0.2-dev.6"
   dio:
     dependency: "direct main"
     description:
@@ -2075,7 +2075,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.0+1"
   sync_http:
     dependency: transitive
     description:
@@ -2156,6 +2156,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  transit_post:
+    dependency: "direct main"
+    description:
+      path: "../../packages/transit_post"
+      relative: true
+    source: path
+    version: "0.0.1"
   type_plus:
     dependency: transitive
     description:
