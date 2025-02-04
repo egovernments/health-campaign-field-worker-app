@@ -221,6 +221,25 @@ class MemberCard extends StatelessWidget {
                         style: textTheme.bodyS,
                       ),
                     ),
+                    individual.gender?.toValue() == Gender.female.toValue() &&
+                            individual.additionalFields!.fields.any(
+                                    (field) => field.key == 'isPregnant') ==
+                                true
+                        ? Row(
+                            children: [
+                              Text(
+                                'PREGNANT',
+                                style: textTheme.bodyS,
+                              ),
+                              isPregnant() == 'true'
+                                  ? const Icon(
+                                      Icons.circle,
+                                      color: Colors.red,
+                                    )
+                                  : const Icon(Icons.circle_outlined),
+                            ],
+                          )
+                        : const SizedBox.shrink()
                   ],
                 ),
               ),
@@ -608,5 +627,15 @@ class MemberCard extends StatelessWidget {
                 size: DigitButtonSize.medium),
           )
         : const Offstage();
+  }
+
+  isPregnant() {
+    var result = individual.additionalFields?.fields
+        .firstWhere(
+          (e) => e.key == 'isPregnant',
+        )
+        .value;
+
+    return result;
   }
 }
