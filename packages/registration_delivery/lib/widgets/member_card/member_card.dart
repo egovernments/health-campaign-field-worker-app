@@ -592,144 +592,21 @@ class MemberCard extends StatelessWidget {
         .map((c) => c.individual)
         .toList();
 
-    return Padding(
-      padding: const EdgeInsets.all(spacer2),
-      child: DigitButton(
-          label:
-              '${localizations.translate(i18.beneficiaryDetails.childrenCount)}:${filteredChildren.length}',
-          onPressed: () {
-            context.read<HouseholdOverviewBloc>().add(
-                HouseholdOverviewEvent.selectedIndividual(
-                    individualModel: individual));
-            context.router.push(MotherOverviewRoute());
-          },
-          type: DigitButtonType.link,
-          size: DigitButtonSize.medium),
-    );
-
-    // final filteredChildren = (childrenBeneficiaries ?? [])
-    //     .where((c) => c.individual != null)
-    //     .map((c) => ChildCard(
-    //           individual: c.individual!,
-    //           projectBeneficiaries:
-    //               c.projectBeneficiary != null ? [c.projectBeneficiary!] : null,
-    //           projectBeneficiaryClientReferenceId:
-    //               c.projectBeneficiary?.clientReferenceId,
-    //           name: c.individual!.name!.givenName!,
-    //           localizations: localizations,
-    //           gender: c.individual?.gender?.toValue(),
-    //           years: c.individual?.dateOfBirth != null
-    //               ? DigitDateUtils.calculateAge(
-    //                   DigitDateUtils.getFormattedDateToDateTime(
-    //                         c.individual!.dateOfBirth!,
-    //                       ) ??
-    //                       DateTime.now(),
-    //                 ).years
-    //               : 0,
-    //           months: c.individual?.dateOfBirth != null
-    //               ? DigitDateUtils.calculateAge(
-    //                   DigitDateUtils.getFormattedDateToDateTime(
-    //                         c.individual!.dateOfBirth!,
-    //                       ) ??
-    //                       DateTime.now(),
-    //                 ).months
-    //               : 0,
-    //           isDelivered: false,
-    //           editMemberAction: () async {
-    //             final bloc = context.read<HouseholdOverviewBloc>();
-    //
-    //             Navigator.of(
-    //               context,
-    //               rootNavigator: true,
-    //             ).pop();
-    //
-    //             final address = household?.address;
-    //             if (address == null) {
-    //               return;
-    //             }
-    //
-    //             final projectId = RegistrationDeliverySingleton().projectId!;
-    //             bloc.add(
-    //               HouseholdOverviewReloadEvent(
-    //                 projectId: projectId,
-    //                 projectBeneficiaryType:
-    //                     RegistrationDeliverySingleton().beneficiaryType ??
-    //                         BeneficiaryType.household,
-    //               ),
-    //             );
-    //
-    //             await context.router.root.push(
-    //               BeneficiaryRegistrationWrapperRoute(
-    //                 initialState: BeneficiaryRegistrationEditIndividualState(
-    //                   individualModel: c.individual!,
-    //                   householdModel: c.household!,
-    //                   addressModel: address,
-    //                   projectBeneficiaryModel: c.projectBeneficiary,
-    //                 ),
-    //                 children: [
-    //                   IndividualDetailsRoute(
-    //                       isChild: true,
-    //                       parentClientReferenceId:
-    //                           individual.clientReferenceId),
-    //                 ],
-    //               ),
-    //             );
-    //           },
-    //           deleteMemberAction: () {
-    //             final bloc = context.read<HouseholdOverviewBloc>();
-    //             showCustomPopup(
-    //               context: context,
-    //               builder: (BuildContext context) {
-    //                 return Popup(
-    //                     title: localizations.translate(i18.householdOverView
-    //                         .householdOverViewActionCardTitle),
-    //                     type: PopUpType.simple,
-    //                     actions: [
-    //                       DigitButton(
-    //                           label: localizations.translate(i18
-    //                               .householdOverView
-    //                               .householdOverViewPrimaryActionLabel),
-    //                           onPressed: () {
-    //                             Navigator.of(
-    //                               context,
-    //                               rootNavigator: true,
-    //                             )
-    //                               ..pop()
-    //                               ..pop();
-    //                             bloc.add(
-    //                               HouseholdOverviewEvent.selectedIndividual(
-    //                                 individualModel: c.individual!,
-    //                               ),
-    //                             );
-    //                             context.router.push(
-    //                               ReasonForDeletionRoute(
-    //                                 isHousholdDelete: false,
-    //                               ),
-    //                             );
-    //                           },
-    //                           type: DigitButtonType.primary,
-    //                           size: DigitButtonSize.large),
-    //                       DigitButton(
-    //                           label: localizations.translate(i18
-    //                               .householdOverView
-    //                               .householdOverViewSecondaryActionLabel),
-    //                           onPressed: () {
-    //                             Navigator.of(
-    //                               context,
-    //                               rootNavigator: true,
-    //                             ).pop();
-    //                           },
-    //                           type: DigitButtonType.tertiary,
-    //                           size: DigitButtonSize.large)
-    //                     ]);
-    //               },
-    //             );
-    //           },
-    //         ))
-    //     .toList();
-    //
-    // return Column(
-    //   children: filteredChildren,
-    // );
+    return filteredChildren.isNotEmpty
+        ? Padding(
+            padding: const EdgeInsets.all(spacer2),
+            child: DigitButton(
+                label:
+                    '${localizations.translate(i18.beneficiaryDetails.childrenCount)}:${filteredChildren.length}',
+                onPressed: () {
+                  context.read<HouseholdOverviewBloc>().add(
+                      HouseholdOverviewEvent.selectedIndividual(
+                          individualModel: individual));
+                  context.router.push(MotherOverviewRoute());
+                },
+                type: DigitButtonType.link,
+                size: DigitButtonSize.medium),
+          )
+        : const Offstage();
   }
 }

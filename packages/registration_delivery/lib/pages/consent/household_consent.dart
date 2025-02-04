@@ -186,7 +186,7 @@ class _HouseHoldConsentPageState extends LocalizedState<HouseHoldConsentPage> {
                           localizations.translate(
                             i18.householdDetails.cardTitle,
                           ),
-                          style: theme.textTheme.displayMedium,
+                          style: theme.textTheme.bodyLarge,
                         ),
                         ReactiveWrapperField(
                           formControlName: _consent,

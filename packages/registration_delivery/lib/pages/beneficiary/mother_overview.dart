@@ -227,8 +227,26 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
                                               localizations.translate(
                                                 i18.householdOverView
                                                     .childrenCountText,
-                                              ): state
-                                                  .selectedIndividual?.gender,
+                                              ): localizations.translate(state
+                                                  .selectedIndividual?.gender
+                                                  ?.toValue()),
+                                              if (state
+                                                      .selectedIndividual
+                                                      ?.additionalFields
+                                                      ?.fields !=
+                                                  null)
+                                                ...Map.fromEntries(
+                                                  state.selectedIndividual!
+                                                      .additionalFields!.fields
+                                                      .map((field) => MapEntry(
+                                                            localizations
+                                                                .translate(field
+                                                                    .key
+                                                                    .toUpperCase()),
+                                                            field.value
+                                                                .toString(),
+                                                          )),
+                                                ),
                                             },
                                           ),
                                         ],
@@ -665,6 +683,10 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
           ).months
         : 0;
 
-    return ageInYears + ageInMonths;
+    final age = ageInMonths != null
+        ? "$ageInYears ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $ageInMonths ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}"
+        : "|   --";
+
+    return age;
   }
 }

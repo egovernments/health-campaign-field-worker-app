@@ -146,7 +146,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 final boundary = selectedProject.address?.boundary;
 
                 if (boundary != null) {
-                  triggerLocationTracking(state.selectedProject!);
+                  // triggerLocationTracking(state.selectedProject!); // TODO: Uncomment to enable location tracking
                   navigateToBoundary(boundary);
                 } else {
                   DigitToast.show(
