@@ -340,9 +340,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                           type: ToastType.error,
                                         );
                                       } else {
-                                        final antigensGiven = form
-                                            .control(_antigensKey)
-                                            .value as String?;
                                         bloc.add(
                                           BeneficiaryRegistrationAddMemberEvent(
                                             beneficiaryType:
@@ -861,22 +858,17 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 !widget.isChild)
                               ReactiveWrapperField(
                                 formControlName: _isPregnantKey,
-                                builder: (field) => LabeledField(
+                                builder: (field) => DigitCheckbox(
                                   label: localizations.translate(
                                     i18.individualDetails.isPregnant,
                                   ),
-                                  child: DigitCheckbox(
-                                    label: localizations.translate(
-                                      i18.individualDetails.isPregnant,
-                                    ),
-                                    value: form.control(_isPregnantKey).value,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        form.control(_isPregnantKey).value =
-                                            value;
-                                      });
-                                    },
-                                  ),
+                                  value: form.control(_isPregnantKey).value,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      form.control(_isPregnantKey).value =
+                                          value;
+                                    });
+                                  },
                                 ),
                               ),
                             if ((form.control(_isPregnantKey).value == true) &&

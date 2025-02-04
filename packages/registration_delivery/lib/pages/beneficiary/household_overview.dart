@@ -408,7 +408,9 @@ class _HouseholdOverviewPageState
                                                   getStatusAttributes(state,
                                                           deliverInterventionState)[
                                                       'textLabel'],
-                                                )
+                                                ),
+                                              ...{for (var field in (state.householdMemberWrapper
+                                                  .household?.additionalFields?.fields ?? [])) localizations.translate(toUpperCaseWithUnderscores(field.key)) : field.value}
                                             },
                                           ),
                                         ],
