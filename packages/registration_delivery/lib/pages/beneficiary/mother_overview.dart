@@ -6,7 +6,6 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/digit_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -93,7 +92,7 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: DigitButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           final projectId =
                                               RegistrationDeliverySingleton()
                                                   .projectId!;
@@ -107,89 +106,51 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
                                                   beneficiaryType,
                                             ),
                                           );
-                                          showDialog(
-                                            context: context,
-                                            builder: (ctx) => DigitActionCard(
-                                              actions: [
-                                                DigitButton(
-                                                  prefixIcon: Icons.edit,
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.householdOverView
-                                                        .householdOverViewEditLabel,
-                                                  ),
-                                                  type:
-                                                      DigitButtonType.secondary,
-                                                  size: DigitButtonSize.large,
-                                                  onPressed: () async {
-                                                    Navigator.of(
-                                                      context,
-                                                      rootNavigator: true,
-                                                    ).pop();
 
-                                                    HouseholdMemberWrapper
-                                                        wrapper = state
-                                                            .householdMemberWrapper;
+                                          final address = state
+                                              .householdMemberWrapper
+                                              .household
+                                              ?.address;
+                                          if (address == null) {
+                                            return;
+                                          }
+                                          bloc.add(
+                                            HouseholdOverviewReloadEvent(
+                                              projectId: projectId,
+                                              projectBeneficiaryType:
+                                                  RegistrationDeliverySingleton()
+                                                          .beneficiaryType ??
+                                                      BeneficiaryType.household,
+                                            ),
+                                          );
 
-                                                    final timestamp = wrapper
-                                                        .headOfHousehold
-                                                        ?.clientAuditDetails
-                                                        ?.createdTime;
-                                                    final date = DateTime
-                                                        .fromMillisecondsSinceEpoch(
-                                                      timestamp ??
-                                                          DateTime.now()
-                                                              .millisecondsSinceEpoch,
-                                                    );
-
-                                                    final address = wrapper
-                                                        .household?.address;
-
-                                                    if (address == null) return;
-
-                                                    final projectBeneficiary = state
-                                                        .householdMemberWrapper
-                                                        .projectBeneficiaries
-                                                        ?.firstWhereOrNull(
-                                                      (element) =>
-                                                          element
-                                                              .beneficiaryClientReferenceId ==
-                                                          wrapper.household
-                                                              ?.clientReferenceId,
-                                                    );
-
-                                                    await context.router.root
-                                                        .push(
-                                                      BeneficiaryRegistrationWrapperRoute(
-                                                        initialState:
-                                                            BeneficiaryRegistrationEditHouseholdState(
-                                                          addressModel: address,
-                                                          individualModel: state
-                                                                  .householdMemberWrapper
-                                                                  .members ??
-                                                              [],
-                                                          householdModel: state
-                                                              .householdMemberWrapper
-                                                              .household!,
-                                                          registrationDate:
-                                                              date,
-                                                          projectBeneficiaryModel:
-                                                              projectBeneficiary,
-                                                        ),
-                                                        children: [
-                                                          HouseholdLocationRoute(),
-                                                        ],
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
+                                          await context.router.root.push(
+                                            BeneficiaryRegistrationWrapperRoute(
+                                              initialState:
+                                                  BeneficiaryRegistrationEditIndividualState(
+                                                individualModel:
+                                                    state.selectedIndividual!,
+                                                householdModel: state
+                                                    .householdMemberWrapper
+                                                    .household!,
+                                                addressModel: address,
+                                                projectBeneficiaryModel: state
+                                                    .householdMemberWrapper
+                                                    .projectBeneficiaries
+                                                    ?.where((e) =>
+                                                        e.beneficiaryClientReferenceId ==
+                                                        state.selectedIndividual
+                                                            ?.clientReferenceId)
+                                                    .firstOrNull,
+                                              ),
+                                              children: [
+                                                IndividualDetailsRoute(),
                                               ],
                                             ),
                                           );
                                         },
                                         label: localizations.translate(
-                                          i18.householdOverView
-                                              .householdOverViewEditIconText,
+                                          i18.memberCard.editIndividualDetails,
                                         ),
                                         type: DigitButtonType.tertiary,
                                         size: DigitButtonSize.medium,
