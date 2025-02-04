@@ -61,7 +61,6 @@ class MemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
     final textTheme = theme.digitTextTheme(context);
 
     return Container(
@@ -227,7 +226,8 @@ class MemberCard extends StatelessWidget {
               const SizedBox(
                 height: spacer2,
               ),
-              Center(
+              Align(
+                alignment: Alignment.bottomRight,
                 child: DigitButton(
                   isDisabled: false,
                   onPressed: () async {
@@ -263,6 +263,7 @@ class MemberCard extends StatelessWidget {
                   label: localizations.translate(
                     i18.householdOverView.addChildLabel,
                   ),
+                  capitalizeLetters: true,
                   prefixIcon: Icons.add_circle,
                   type: DigitButtonType.tertiary,
                   size: DigitButtonSize.medium,

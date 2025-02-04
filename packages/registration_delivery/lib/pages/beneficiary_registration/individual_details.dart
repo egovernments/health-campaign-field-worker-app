@@ -16,7 +16,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
@@ -341,7 +340,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                           type: ToastType.error,
                                         );
                                       } else {
-                                        final antigensGiven = form.control(_antigensKey).value as String?;
                                         bloc.add(
                                           BeneficiaryRegistrationAddMemberEvent(
                                             beneficiaryType:
@@ -864,22 +862,17 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   widget.isChild,
                               child: ReactiveWrapperField(
                                 formControlName: _isPregnantKey,
-                                builder: (field) => LabeledField(
+                                builder: (field) => DigitCheckbox(
                                   label: localizations.translate(
                                     i18.individualDetails.isPregnant,
                                   ),
-                                  child: DigitCheckbox(
-                                    label: localizations.translate(
-                                      i18.individualDetails.isPregnant,
-                                    ),
-                                    value: form.control(_isPregnantKey).value,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        form.control(_isPregnantKey).value =
-                                            value;
-                                      });
-                                    },
-                                  ),
+                                  value: form.control(_isPregnantKey).value,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      form.control(_isPregnantKey).value =
+                                          value;
+                                    });
+                                  },
                                 ),
                               ),
                             ),

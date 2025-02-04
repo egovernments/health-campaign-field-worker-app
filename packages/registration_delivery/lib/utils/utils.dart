@@ -32,6 +32,16 @@ class CustomValidator {
   }
 }
 
+String toUpperCaseWithUnderscores(String input) {
+  // Add an underscore before each uppercase letter and convert to uppercase
+  final result = input.replaceAllMapped(
+    RegExp(r'([a-z])([A-Z])'),
+        (Match match) => '${match.group(1)}_${match.group(2)}',
+  ).toUpperCase();
+
+  return result;
+}
+
 bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   if (currentCycle == null) {
     return false;
