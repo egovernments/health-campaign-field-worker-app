@@ -256,7 +256,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                     addressModel,
                                   ),
                                 );
-                                router.push(HouseDetailsRoute());
+                                router.push(HouseHoldDetailsRoute());
                               },
                             );
                           },
