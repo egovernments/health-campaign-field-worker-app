@@ -218,7 +218,10 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
                                                 .householdMemberWrapper.members
                                                 ?.where((m) =>
                                                     m.parentClientReferenceId ==
-                                                    null && m.clientReferenceId == state.selectedIndividual?.clientReferenceId) ??
+                                                        null &&
+                                                    m.clientReferenceId ==
+                                                        state.selectedIndividual
+                                                            ?.clientReferenceId) ??
                                             [])
                                         .map(
                                       (e) {
@@ -386,10 +389,10 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
                                           context,
                                           state.householdMemberWrapper
                                               .household!,
-                                          false),
+                                          false,
+                                          state.selectedIndividual!),
                                       label: localizations.translate(
-                                        i18.householdOverView
-                                            .householdOverViewAddActionText,
+                                        i18.householdOverView.addChildLabel,
                                       ),
                                       prefixIcon: Icons.add_circle,
                                       type: DigitButtonType.tertiary,
@@ -411,31 +414,35 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
     );
   }
 
-  addIndividual(
-      BuildContext context, HouseholdModel household, bool isChild) async {
-    final bloc = context.read<HouseholdOverviewBloc>();
+  addIndividual(BuildContext context, HouseholdModel household, bool isChild,
+      IndividualModel individual) async {
+    if (household != null) {
+      final bloc = context.read<HouseholdOverviewBloc>();
 
-    final address = household.address;
+      final address = household?.address;
 
-    if (address == null) return;
-    bloc.add(
-      HouseholdOverviewReloadEvent(
-        projectId: RegistrationDeliverySingleton().projectId!,
-        projectBeneficiaryType:
-            RegistrationDeliverySingleton().beneficiaryType!,
-      ),
-    );
-    await context.router.push(
-      BeneficiaryRegistrationWrapperRoute(
-        initialState: BeneficiaryRegistrationAddMemberState(
-          addressModel: address,
-          householdModel: household,
+      if (address == null) return;
+      bloc.add(
+        HouseholdOverviewReloadEvent(
+          projectId: RegistrationDeliverySingleton().projectId!,
+          projectBeneficiaryType:
+              RegistrationDeliverySingleton().beneficiaryType!,
         ),
-        children: [
-          IndividualDetailsRoute(),
-        ],
-      ),
-    );
+      );
+      await context.router.push(
+        BeneficiaryRegistrationWrapperRoute(
+          initialState: BeneficiaryRegistrationAddMemberState(
+            addressModel: address,
+            householdModel: household!,
+          ),
+          children: [
+            IndividualDetailsRoute(
+                isChild: true,
+                parentClientReferenceId: individual.clientReferenceId),
+          ],
+        ),
+      );
+    }
   }
 
   bool isOutsideProjectDateRange() {
