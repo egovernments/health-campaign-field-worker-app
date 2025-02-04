@@ -74,7 +74,13 @@ class CustomStockDetailsPageState
         Validators.min(0),
         Validators.max(10000),
       ]),
-      _transactionReasonKey: FormControl<String>(),
+      _transactionReasonKey: FormControl<String>(
+          validators: ([
+        StockRecordEntryType.loss,
+        StockRecordEntryType.damaged,
+      ].contains(stockType))
+              ? [Validators.required]
+              : []),
       _waybillNumberKey: FormControl<String>(
         validators: [Validators.minLength(2), Validators.maxLength(200)],
       ),

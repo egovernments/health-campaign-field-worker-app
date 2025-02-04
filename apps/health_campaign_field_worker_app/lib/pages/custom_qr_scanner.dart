@@ -15,6 +15,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import '../utils/constants.dart';
+import '../utils/custom_digit_scanner_utils.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18Local;
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -606,7 +607,7 @@ class _CustomDigitScannerPageState
   }
 
   Future<void> _processImage(InputImage inputImage) async {
-    await DigitScannerUtils().processImage(
+    await CustomDigitScannerUtils().processImage(
       context: currentContext,
       inputImage: inputImage,
       canProcess: _canProcess,
@@ -645,7 +646,17 @@ class _CustomDigitScannerPageState
   }
 
   Future<void> storeCodeWrapper(String code) async {
-    if (codes.length < widget.quantity) {
+    if (pattern.hasMatch(code) == false) {
+      await DigitToast.show(
+        currentContext,
+        options: DigitToastOptions(
+          localizations
+              .translate(i18Local.deliverIntervention.patternValidationFailed),
+          true,
+          Theme.of(currentContext),
+        ),
+      );
+    } else if (codes.length < widget.quantity) {
       if (widget.scanType == ScanType.stock &&
           code.contains(Constants.pipeSeparator)) {
         code = code.split(Constants.pipeSeparator).last.trim();
