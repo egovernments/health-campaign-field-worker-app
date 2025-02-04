@@ -491,6 +491,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.transitPostLabel: homeShowcaseData.transitPost.buildWith(
+          child: HomeItemCard(
+        icon: Icons.vaccines_outlined,
+        label: i18.home.transitPostLabel,
+        onPressed: () {},
+      )),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -515,6 +521,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+      i18.home.transitPostLabel: homeShowcaseData.transitPost.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -531,6 +538,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel,
       i18.home.db,
       i18.home.dashboard,
+      i18.home.transitPostLabel,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
