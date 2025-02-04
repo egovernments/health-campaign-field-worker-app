@@ -58,7 +58,7 @@ class ChildCard extends StatelessWidget {
 
     return Container(
         decoration: BoxDecoration(
-            color: theme.colorTheme.paper.primary,
+            color: theme.colorTheme.generic.background,
             border: Border.all(
               color: DigitTheme.instance.colorScheme.outline,
               width: 0.5,

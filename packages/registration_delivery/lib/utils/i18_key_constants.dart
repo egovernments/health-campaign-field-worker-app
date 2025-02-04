@@ -563,7 +563,7 @@ class HouseholdOverView {
 
   String get individualName => 'INDIVIDUAL_NAME_LABEL';
 
-  String get ageText => 'AGE_TEXT';
+  String get ageText => 'AGE_LABEL_TEXT';
 
   String get genderText => 'GENDER_TEXT';
 
@@ -618,6 +618,7 @@ class MemberCard {
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
 
   String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
+  String get pregnantLabel => 'PREGNANT_LABEL';
 }
 
 class DeliverIntervention {
