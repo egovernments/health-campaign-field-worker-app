@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -103,58 +104,58 @@ class MemberCard extends StatelessWidget {
                       alignment: Alignment.topRight,
                       child: Padding(
                         padding: const EdgeInsets.only(top: spacer2),
-                        child: buildListOfChildren(
+                        child: (childrenBeneficiaries ?? []).isNotEmpty ?  buildListOfChildren(
                           context,
+                        ) :
+                        DigitButton(
+                          isDisabled: (projectBeneficiaries ?? []).isEmpty,
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (ctx) => DigitActionCard(
+                              onOutsideTap: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                              },
+                              actions: [
+                                DigitButton(
+                                  prefixIcon: Icons.person,
+                                  label: localizations.translate(
+                                    i18.memberCard.assignAsHouseholdhead,
+                                  ),
+                                  isDisabled: isHead ? true : false,
+                                  onPressed: setAsHeadAction,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
+                                ),
+                                DigitButton(
+                                  prefixIcon: Icons.edit,
+                                  label: localizations.translate(
+                                    i18.memberCard.editIndividualDetails,
+                                  ),
+                                  onPressed: editMemberAction,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
+                                ),
+                                DigitButton(
+                                  prefixIcon: Icons.delete,
+                                  label: localizations.translate(
+                                    i18.memberCard.deleteIndividualActionText,
+                                  ),
+                                  isDisabled: isHead ? true : false,
+                                  onPressed: deleteMemberAction,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
+                                ),
+                              ],
+                            ),
+                          ),
+                          label: localizations.translate(
+                            i18.memberCard.editDetails,
+                          ),
+                          prefixIcon: Icons.edit,
+                          type: DigitButtonType.tertiary,
+                          size: DigitButtonSize.medium,
                         ),
-                        // DigitButton(
-                        //   isDisabled: (projectBeneficiaries ?? []).isEmpty,
-                        //   onPressed: () => showDialog(
-                        //     context: context,
-                        //     builder: (ctx) => DigitActionCard(
-                        //       onOutsideTap: () {
-                        //         Navigator.of(context, rootNavigator: true)
-                        //             .pop();
-                        //       },
-                        //       actions: [
-                        //         DigitButton(
-                        //           prefixIcon: Icons.person,
-                        //           label: localizations.translate(
-                        //             i18.memberCard.assignAsHouseholdhead,
-                        //           ),
-                        //           isDisabled: isHead ? true : false,
-                        //           onPressed: setAsHeadAction,
-                        //           type: DigitButtonType.secondary,
-                        //           size: DigitButtonSize.large,
-                        //         ),
-                        //         DigitButton(
-                        //           prefixIcon: Icons.edit,
-                        //           label: localizations.translate(
-                        //             i18.memberCard.editIndividualDetails,
-                        //           ),
-                        //           onPressed: editMemberAction,
-                        //           type: DigitButtonType.secondary,
-                        //           size: DigitButtonSize.large,
-                        //         ),
-                        //         DigitButton(
-                        //           prefixIcon: Icons.delete,
-                        //           label: localizations.translate(
-                        //             i18.memberCard.deleteIndividualActionText,
-                        //           ),
-                        //           isDisabled: isHead ? true : false,
-                        //           onPressed: deleteMemberAction,
-                        //           type: DigitButtonType.secondary,
-                        //           size: DigitButtonSize.large,
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        //   label: localizations.translate(
-                        //     i18.memberCard.editDetails,
-                        //   ),
-                        //   prefixIcon: Icons.edit,
-                        //   type: DigitButtonType.tertiary,
-                        //   size: DigitButtonSize.medium,
-                        // ),
                       ),
                     ),
                   ),
