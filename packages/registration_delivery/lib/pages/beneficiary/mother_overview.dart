@@ -186,8 +186,8 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
                                               ): getAge(
                                                   state.selectedIndividual!),
                                               localizations.translate(
-                                                i18.householdOverView
-                                                    .childrenCountText,
+                                                i18.individualDetails
+                                                    .genderLabelText,
                                               ): localizations.translate(state
                                                   .selectedIndividual?.gender
                                                   ?.toValue()),
@@ -200,10 +200,9 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
                                                   state.selectedIndividual!
                                                       .additionalFields!.fields
                                                       .map((field) => MapEntry(
-                                                            localizations
-                                                                .translate(field
-                                                                    .key
-                                                                    .toUpperCase()),
+                                                            localizations.translate(
+                                                                toUpperCaseWithUnderscores(
+                                                                    field.key)),
                                                             field.value
                                                                 .toString(),
                                                           )),
