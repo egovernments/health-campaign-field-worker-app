@@ -491,35 +491,17 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 step: 1,
                                 initialValue: form
                                     .control(
-                                        _motherWithChildrenLessThanFiveCountKey)
+                                        _firstTimePregnantWomenCountKey)
                                     .value
                                     .toString(),
                                 onChange: (value) {
                                   form
                                       .control(
-                                          _motherWithChildrenLessThanFiveCountKey)
+                                          _firstTimePregnantWomenCountKey)
                                       .value = int.parse(value);
-                                  int motherWithChildLessThanFive = form
-                                      .control(
-                                          _motherWithChildrenLessThanFiveCountKey)
-                                      .value = int.parse(value);
-                                  int pregnantWomen = form
-                                      .control(_pregnantWomenCountKey)
-                                      .value;
-                                  int children =
-                                      form.control(_childrenCountKey).value;
+                                 
 
-                                  int memberCount =
-                                      form.control(_memberCountKey).value;
-                                  form.control(_memberCountKey).value =
-                                      memberCount <=
-                                              (children +
-                                                  pregnantWomen +
-                                                  motherWithChildLessThanFive)
-                                          ? children +
-                                              pregnantWomen +
-                                              motherWithChildLessThanFive
-                                          : memberCount;
+                            
                                 },
                               ),
                             ),

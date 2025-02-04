@@ -293,6 +293,8 @@ class BeneficiaryDetails {
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
 
   String get totalMembers => 'TOTAL_HOUSEHOLD_MEMBERS';
+
+  String get childrenCount => 'CHILDREN_COUNT';
 }
 
 class IndividualDetails {
@@ -362,7 +364,8 @@ class IndividualDetails {
 
   String get selectAntigensLabel => 'SELECT_ANTIGENS_LABEL';
 
-  String get selectVaccinationBodyPartsLabel => 'SELECT_VACCINATION_BODY_PARTS_LABEL';
+  String get selectVaccinationBodyPartsLabel =>
+      'SELECT_VACCINATION_BODY_PARTS_LABEL';
 }
 
 class HouseholdLocation {
@@ -553,6 +556,22 @@ class HouseholdOverView {
 
   String get householdOverViewHouseholdHeadNameLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL';
+
+  String get motherOverViewLabel => 'MOTHER_OVER_VIEW_LABEL';
+
+  String get childrenCountText => 'CHILDREN_COUNT_TEXT';
+
+  String get individualName => 'INDIVIDUAL_NAME_LABEL';
+
+  String get ageText => 'AGE_TEXT';
+
+  String get genderText => 'GENDER_TEXT';
+
+  String get mobileNumber => 'MOBILE_NUMBER';
+
+  String get isPregnant => 'IS_PREGNANT_TEXT';
+
+  String get ttVaccine => 'TT_VACCINE_TEXT';
 
   String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ACTION_TEXT';
 
