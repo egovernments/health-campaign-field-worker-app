@@ -18,7 +18,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
-import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -26,6 +25,7 @@ import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
+import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/showcase/showcase_button.dart';
@@ -412,9 +412,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 ),
                               ),
                             ),
-                            Offstage(
-                              offstage: !widget.isHeadOfHousehold,
-                              child: DigitCheckbox(
+                            if (widget.isHeadOfHousehold)
+                              DigitCheckbox(
                                 label: localizations.translate(
                                   i18.individualDetails.checkboxLabelText,
                                 ),
@@ -422,7 +421,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 readOnly: widget.isHeadOfHousehold,
                                 onChanged: (_) {},
                               ),
-                            ),
                             ReactiveWrapperField(
                               formControlName: _idTypeKey,
                               validationMessages: {
@@ -670,9 +668,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 ),
                               ),
                             ),
-                            Offstage(
-                              offstage: !widget.isChild,
-                              child: ReactiveWrapperField(
+                            if (widget.isChild)
+                              ReactiveWrapperField(
                                 formControlName: _isVaccinationConditionKey,
                                 builder: (field) => LabeledField(
                                   label: localizations.translate(i18
@@ -710,13 +707,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   ),
                                 ),
                               ),
-                            ),
-
-                            Offstage(
-                              offstage: !widget.isChild ||
-                                  (form.control(_isVaccinationConditionKey)
-                                          .value as String?) != 'true',
-                              child: ProductVariantBlocWrapper(
+                            if (widget.isChild &&
+                                (form.control(_isVaccinationConditionKey).value
+                                        as String?) ==
+                                    'true')
+                              ProductVariantBlocWrapper(
                                 child: BlocBuilder<ProductVariantBloc,
                                         ProductVariantState>(
                                     builder: (context, productState) {
@@ -800,12 +795,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   );
                                 }),
                               ),
-                            ),
-                            Offstage(
-                              offstage: !widget.isChild ||
-                                  (form.control(_isVaccinationConditionKey)
-                                      .value as String?) != 'false',
-                              child: SelectionCard<String>(
+                            if (widget.isChild &&
+                                (form.control(_isVaccinationConditionKey).value
+                                        as String?) ==
+                                    'false')
+                              SelectionCard<String>(
                                 isRequired: false,
                                 showParentContainer: true,
                                 title: localizations.translate(
@@ -815,27 +809,31 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 allowMultipleSelection: true,
                                 width: 126,
                                 initialSelection: form
-                                    .control(_bodyPartsVaccinationKey)
-                                    .value !=
-                                    null
-                                    ? (form.control(_bodyPartsVaccinationKey).value
-                                as String?)
-                                    ?.split('|').toList()
+                                            .control(_bodyPartsVaccinationKey)
+                                            .value !=
+                                        null
+                                    ? (form
+                                            .control(_bodyPartsVaccinationKey)
+                                            .value as String?)
+                                        ?.split('|')
+                                        .toList()
                                     : [],
                                 //[ TODO: Need to be moved to MDMS
                                 options: (["ARM", "BACK", "NECK"].map(
-                                      (e) => e,
-                                ) ??
-                                    [])
+                                          (e) => e,
+                                        ) ??
+                                        [])
                                     .toList(),
                                 onSelectionChanged: (value) {
                                   setState(() {
                                     if (value.isNotEmpty) {
-                                      form.control(_bodyPartsVaccinationKey).value =
-                                          value.join("|");
+                                      form
+                                          .control(_bodyPartsVaccinationKey)
+                                          .value = value.join("|");
                                     } else {
-                                      form.control(_bodyPartsVaccinationKey).value =
-                                      null;
+                                      form
+                                          .control(_bodyPartsVaccinationKey)
+                                          .value = null;
                                       setState(() {
                                         form
                                             .control(_bodyPartsVaccinationKey)
@@ -849,18 +847,16 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       .translate(value.toString());
                                 },
                                 errorMessage: form
-                                    .control(_bodyPartsVaccinationKey)
-                                    .hasErrors
+                                        .control(_bodyPartsVaccinationKey)
+                                        .hasErrors
                                     ? localizations.translate(
-                                    i18.common.corecommonRequired)
+                                        i18.common.corecommonRequired)
                                     : null,
                               ),
-                            ),
-                            Offstage(
-                              offstage: !(form.control(_genderKey).value ==
-                                      Gender.female.toValue()) ||
-                                  widget.isChild,
-                              child: ReactiveWrapperField(
+                            if ((form.control(_genderKey).value ==
+                                    Gender.female.toValue()) &&
+                                !widget.isChild)
+                              ReactiveWrapperField(
                                 formControlName: _isPregnantKey,
                                 builder: (field) => DigitCheckbox(
                                   label: localizations.translate(
@@ -875,14 +871,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   },
                                 ),
                               ),
-                            ),
-                            // const SizedBox(height: spacer4),
-
-                            Offstage(
-                              offstage: !(form.control(_isPregnantKey).value ==
-                                      true) ||
-                                  widget.isChild,
-                              child: ReactiveWrapperField(
+                            if ((form.control(_isPregnantKey).value == true) &&
+                                !widget.isChild)
+                              ReactiveWrapperField(
                                 formControlName: _ttVaccinesTakenKey,
                                 builder: (field) => LabeledField(
                                   label: localizations.translate(
@@ -903,13 +894,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   ),
                                 ),
                               ),
-                            ),
-
-                            Offstage(
-                              offstage: !(form.control(_isPregnantKey).value ==
-                                      true) ||
-                                  widget.isChild,
-                              child: ReactiveWrapperField(
+                            if ((form.control(_isPregnantKey).value == true) &&
+                                !widget.isChild)
+                              ReactiveWrapperField(
                                 formControlName: _noOfPregnantMonthsKey,
                                 builder: (field) => LabeledField(
                                   label: localizations.translate(
@@ -930,12 +917,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   ),
                                 ),
                               ),
-                            ),
-                            Offstage(
-                              offstage: !(form.control(_isPregnantKey).value ==
-                                      true) ||
-                                  widget.isChild,
-                              child: ReactiveWrapperField(
+                            if ((form.control(_isPregnantKey).value == true) &&
+                                !widget.isChild)
+                              ReactiveWrapperField(
                                 formControlName: _noOfTimesVisitedHFKey,
                                 builder: (field) => LabeledField(
                                   label: localizations.translate(
@@ -956,11 +940,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   ),
                                 ),
                               ),
-                            ),
-                            Offstage(
-                              offstage:
-                                  !(form.control(_isPregnantKey).value == true),
-                              child: ReactiveWrapperField(
+                            if ((form.control(_isPregnantKey).value == true))
+                              ReactiveWrapperField(
                                 formControlName: _noOfChildrenLessThan5Key,
                                 builder: (field) => LabeledField(
                                   label: localizations.translate(
@@ -981,8 +962,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   ),
                                 ),
                               ),
-                            ),
-
                             if ((RegistrationDeliverySingleton()
                                             .beneficiaryType ==
                                         BeneficiaryType.household &&
@@ -1167,9 +1146,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     int ttVaccinesTaken = form.control(_ttVaccinesTakenKey).value as int? ?? 0;
     int noOfChildrenLessThan5 =
         form.control(_noOfChildrenLessThan5Key).value as int? ?? 0;
-    bool? isVaccinationGiven = bool.tryParse(form.control(_isVaccinationConditionKey).value as String? ?? "false");
+    bool? isVaccinationGiven = bool.tryParse(
+        form.control(_isVaccinationConditionKey).value as String? ?? "false");
     String? antigensGiven = form.control(_antigensKey).value as String?;
-    String? vaccinationBodyParts = form.control(_bodyPartsVaccinationKey).value as String?;
+    String? vaccinationBodyParts =
+        form.control(_bodyPartsVaccinationKey).value as String?;
 
     IndividualAdditionalFields additionalFields =
         IndividualAdditionalFields(version: 1, fields: [
@@ -1182,22 +1163,25 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             _noOfChildrenLessThan5Key, noOfChildrenLessThan5.toString()),
       ],
       if (widget.parentClientReferenceId != null) ...[
-          AdditionalField(
+        AdditionalField(
             'parentClientReferenceId', widget.parentClientReferenceId),
-        ],
-          if (widget.isChild) ...[
-            AdditionalField(
-                _isVaccinationConditionKey, isVaccinationGiven.toString()),
-          ],
-          if (widget.isChild && isVaccinationGiven == true && (antigensGiven ?? '').isNotEmpty) ...[
-            AdditionalField(
-                _antigensKey, antigensGiven.toString()),
-          ],
-          if (widget.isChild && isVaccinationGiven != true && (vaccinationBodyParts ?? '').isNotEmpty) ...[
-            AdditionalField(
-                _bodyPartsVaccinationKey, vaccinationBodyParts.toString()),
-          ],
-        ]);
+      ],
+      if (widget.isChild) ...[
+        AdditionalField(
+            _isVaccinationConditionKey, isVaccinationGiven.toString()),
+      ],
+      if (widget.isChild &&
+          isVaccinationGiven == true &&
+          (antigensGiven ?? '').isNotEmpty) ...[
+        AdditionalField(_antigensKey, antigensGiven.toString()),
+      ],
+      if (widget.isChild &&
+          isVaccinationGiven != true &&
+          (vaccinationBodyParts ?? '').isNotEmpty) ...[
+        AdditionalField(
+            _bodyPartsVaccinationKey, vaccinationBodyParts.toString()),
+      ],
+    ]);
 
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
@@ -1243,8 +1227,13 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
     final isVaccinationGiven = widget.isChild
         ? (bool.tryParse(individual?.additionalFields?.fields
-        .firstWhere((field) => field.key == _isVaccinationConditionKey,)
-        .value ?? "")?.toString() ?? "")
+                        .firstWhere(
+                          (field) => field.key == _isVaccinationConditionKey,
+                        )
+                        .value ??
+                    "")
+                ?.toString() ??
+            "")
         : "";
 
     final searchQuery = state.mapOrNull<String>(
@@ -1284,11 +1273,19 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         value: isVaccinationGiven,
       ),
       _antigensKey: FormControl<String>(
-        value: widget.isChild ? individual?.additionalFields?.fields.where((p) => p.key == _antigensKey).firstOrNull?.value: null
-      ),
-      _bodyPartsVaccinationKey : FormControl<String>(
-          value: widget.isChild ? individual?.additionalFields?.fields.where((p) => p.key == _bodyPartsVaccinationKey).firstOrNull?.value: null
-      ),
+          value: widget.isChild
+              ? individual?.additionalFields?.fields
+                  .where((p) => p.key == _antigensKey)
+                  .firstOrNull
+                  ?.value
+              : null),
+      _bodyPartsVaccinationKey: FormControl<String>(
+          value: widget.isChild
+              ? individual?.additionalFields?.fields
+                  .where((p) => p.key == _bodyPartsVaccinationKey)
+                  .firstOrNull
+                  ?.value
+              : null),
       _idNumberKey: FormControl<String>(
         validators: [Validators.required],
         value: individual?.identifiers?.firstOrNull?.identifierId,
