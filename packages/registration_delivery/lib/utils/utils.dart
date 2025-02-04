@@ -1,7 +1,7 @@
 // Importing necessary packages and modules
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -42,6 +42,28 @@ String toUpperCaseWithUnderscores(String input) {
   return result;
 }
 
+dynamic parseStringValue(String input) {
+  // Check if the input is a valid boolean
+  if (input.toLowerCase() == 'true') {
+    return i18.common.coreCommonYes;
+  } else if (input.toLowerCase() == 'false') {
+    return i18.common.coreCommonNo;
+  }
+
+  // Try parsing the input as an integer
+  final intValue = int.tryParse(input);
+  if (intValue != null) {
+    return intValue;
+  }
+
+  // Check if the input contains '|', if so, split it into an array
+  if (input.contains('|')) {
+    return input.split('|').map((e) => e.trim()).join(', ');
+  }
+
+  // Return the original string if no conditions match
+  return input;
+}
 bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   if (currentCycle == null) {
     return false;

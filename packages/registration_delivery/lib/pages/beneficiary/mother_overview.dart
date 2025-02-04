@@ -218,7 +218,7 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
                                                 .householdMemberWrapper.members
                                                 ?.where((m) =>
                                                     m.parentClientReferenceId ==
-                                                    null) ??
+                                                    null && m.clientReferenceId == state.selectedIndividual?.clientReferenceId) ??
                                             [])
                                         .map(
                                       (e) {

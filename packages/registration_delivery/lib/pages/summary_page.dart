@@ -379,7 +379,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                     // Dynamically Add Additional Fields
                                     if (individualModel?.additionalFields?.fields != null)
                                       ...individualModel!.additionalFields!.fields.map((field) => LabelValueItem(
-                                        label: localizations.translate(field.key.toUpperCase()), // Translate key if needed
+                                        label: localizations.translate(toUpperCaseWithUnderscores(field.key)), // Translate key if needed
                                         value: field.value ?? localizations.translate(i18.common.coreCommonNA),
                                         labelFlex: 5,
                                       )),
