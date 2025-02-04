@@ -490,18 +490,38 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 maxValue: 20,
                                 step: 1,
                                 initialValue: form
+                                    .control(_firstTimePregnantWomenCountKey)
+                                    .value
+                                    .toString(),
+                                onChange: (value) {
+                                  form
+                                      .control(_firstTimePregnantWomenCountKey)
+                                      .value = int.parse(value);
+                                },
+                              ),
+                            ),
+                          ),
+                          ReactiveWrapperField(
+                            formControlName:
+                                _womenBetweenAge15To49YearsCountKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.householdDetails.noOf15to49YearWomanLabel,
+                              ),
+                              child: DigitNumericFormInput(
+                                minValue: 1,
+                                maxValue: 30,
+                                step: 1,
+                                initialValue: form
                                     .control(
-                                        _firstTimePregnantWomenCountKey)
+                                        _womenBetweenAge15To49YearsCountKey)
                                     .value
                                     .toString(),
                                 onChange: (value) {
                                   form
                                       .control(
-                                          _firstTimePregnantWomenCountKey)
+                                          _womenBetweenAge15To49YearsCountKey)
                                       .value = int.parse(value);
-                                 
-
-                            
                                 },
                               ),
                             ),
@@ -545,31 +565,6 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   form
                                       .control(
                                           _childrenUnderFifteenYearsCountKey)
-                                      .value = int.parse(value);
-                                },
-                              ),
-                            ),
-                          ),
-                          ReactiveWrapperField(
-                            formControlName:
-                                _womenBetweenAge15To49YearsCountKey,
-                            builder: (field) => LabeledField(
-                              label: localizations.translate(
-                                i18.householdDetails.noOf15to49YearWomanLabel,
-                              ),
-                              child: DigitNumericFormInput(
-                                minValue: 1,
-                                maxValue: 30,
-                                step: 1,
-                                initialValue: form
-                                    .control(
-                                        _womenBetweenAge15To49YearsCountKey)
-                                    .value
-                                    .toString(),
-                                onChange: (value) {
-                                  form
-                                      .control(
-                                          _womenBetweenAge15To49YearsCountKey)
                                       .value = int.parse(value);
                                 },
                               ),
