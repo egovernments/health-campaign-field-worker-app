@@ -174,8 +174,8 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
                                           DigitTableCard(
                                             element: {
                                               localizations.translate(i18
-                                                  .householdOverView
-                                                  .individualName): state
+                                                  .individualDetails
+                                                  .nameLabelText): state
                                                       .selectedIndividual
                                                       ?.name
                                                       ?.givenName ??

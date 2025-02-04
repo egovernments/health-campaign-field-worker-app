@@ -227,13 +227,14 @@ class MemberCard extends StatelessWidget {
                         ? Row(
                             children: [
                               Text(
-                                'PREGNANT',
+                                localizations.translate(i18.memberCard.pregnantLabel),
                                 style: textTheme.bodyS,
                               ),
                               isPregnant() == 'true'
                                   ? const Icon(
                                       Icons.circle,
                                       color: Colors.red,
+                                      size: spacer4,
                                     )
                                   : const Icon(Icons.circle_outlined),
                             ],
