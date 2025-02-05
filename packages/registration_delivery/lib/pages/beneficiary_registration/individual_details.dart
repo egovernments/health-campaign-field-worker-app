@@ -399,6 +399,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(
                                     i18.individualDetails.nameLabelText,
                                   ),
+                                  capitalizedFirstLetter: false,
                                   charCondition: true,
                                   isRequired: true,
                                   child: DigitTextFormInput(
@@ -433,6 +434,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 label: localizations.translate(
                                   i18.individualDetails.idTypeLabelText,
                                 ),
+                                capitalizedFirstLetter: false,
                                 charCondition: true,
                                 isRequired: true,
                                 child: DigitDropdown<String>(
@@ -462,7 +464,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                             IdGen.i.identifier.toString();
                                       } else if (value.name ==
                                           IdentifierTypes.uniqueBeneficiaryID
-                                              .name // TODO: Revert to value
+                                              .toValue() // TODO: Revert to value
                                               .toString()) {
                                         setUniqueBeneficiaryId(form);
                                       } else {
@@ -504,6 +506,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                             i18.individualDetails
                                                 .idNumberLabelText,
                                           ),
+                                          capitalizedFirstLetter: false,
                                           charCondition: true,
                                           isRequired: form
                                               .control(_idNumberKey)
@@ -655,6 +658,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(
                                     i18.individualDetails.mobileNumberLabelText,
                                   ),
+                                  capitalizedFirstLetter: false,
                                   charCondition: true,
                                   child: DigitTextFormInput(
                                     keyboardType: TextInputType.number,
@@ -686,6 +690,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       .individualDetails
                                       .doesChildHaveVaccinationCondition),
                                   charCondition: true,
+                                  capitalizedFirstLetter: false,
                                   child: RadioList(
                                     groupValue: form
                                         .control(_isVaccinationConditionKey)
@@ -892,6 +897,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                     i18.individualDetails
                                         .howManyTTVaccinesTaken,
                                   ),
+                                  capitalizedFirstLetter: false,
                                   charCondition: true,
                                   child: DigitNumericFormInput(
                                     minValue: 0,
@@ -915,6 +921,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(
                                     i18.individualDetails.noOfMonthsPregnant,
                                   ),
+                                  capitalizedFirstLetter: false,
                                   charCondition: true,
                                   child: DigitNumericFormInput(
                                     minValue: 0,
@@ -939,6 +946,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(
                                     i18.individualDetails.noOfTimesVisitedHF,
                                   ),
+                                  capitalizedFirstLetter: false,
                                   charCondition: true,
                                   child: DigitNumericFormInput(
                                     minValue: 0,
@@ -962,6 +970,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(
                                     i18.individualDetails.noChildrenLessThan5,
                                   ),
+                                  capitalizedFirstLetter: false,
                                   charCondition: true,
                                   child: DigitNumericFormInput(
                                     minValue: 0,
