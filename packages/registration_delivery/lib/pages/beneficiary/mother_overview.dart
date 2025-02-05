@@ -203,8 +203,8 @@ class _HouseholdOverviewPageState extends LocalizedState<MotherOverviewPage> {
                                                             localizations.translate(
                                                                 toUpperCaseWithUnderscores(
                                                                     field.key)),
-                                                            field.value
-                                                                .toString(),
+                                          parseStringValue(field.value
+                                                                .toString()),
                                                           )),
                                                 ),
                                             },

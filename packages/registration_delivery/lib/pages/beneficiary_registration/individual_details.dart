@@ -830,12 +830,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                         .toList()
                                     : [],
                                 //[ TODO: Need to be moved to MDMS
-                                options:
-                                    (["ORAL", "UPPER_ARM", "MID_THIGH"].map(
-                                              (e) => e,
-                                            ) ??
-                                            [])
-                                        .toList(),
+                                options: (["ARM", "BACK", "NECK"].map(
+                                          (e) => e,
+                                        ) ??
+                                        [])
+                                    .toList(),
                                 onSelectionChanged: (value) {
                                   setState(() {
                                     if (value.isNotEmpty) {
