@@ -10,6 +10,7 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/referral_management/referral_management.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../blocs/side_effects/side_effects.dart';
+import '../../data/repositories/local/individual_global_search.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/project_beneficiary.dart';
@@ -57,6 +58,9 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     final referral =
         context.repository<ReferralModel, ReferralSearchModel>(context);
 
+    final individualGlobalSearchRepository =
+        context.read<IndividualGlobalSearchRepository>();
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -99,6 +103,8 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               taskDataRepository: task,
               sideEffectDataRepository: sideEffect,
               referralDataRepository: referral,
+              individualGlobalSearchRepository:
+                  individualGlobalSearchRepository,
               beneficiaryType:
                   RegistrationDeliverySingleton().beneficiaryType!),
         ),
@@ -139,7 +145,10 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             )..add(DeliverInterventionSearchEvent(
                   taskSearch: TaskSearchModel(
                 projectBeneficiaryClientReferenceId: houseHoldOverviewState
-                    .householdMemberWrapper.projectBeneficiaries?.where((element) => element.projectId == RegistrationDeliverySingleton().projectId)
+                    .householdMemberWrapper.projectBeneficiaries
+                    ?.where((element) =>
+                        element.projectId ==
+                        RegistrationDeliverySingleton().projectId)
                     .map((e) => e.clientReferenceId)
                     .toList(),
               ))),
