@@ -56,7 +56,7 @@ dynamic parseStringValue(String? input) {
   // Try parsing the input as an integer
   final intValue = input != null ? int.tryParse(input) : 0;
   if (intValue != null) {
-    return intValue;
+    return intValue.toString();
   }
 
   // Check if the input contains '|', if so, split it into an array
