@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -369,9 +370,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                         Offstage(
                           offstage: !widget.isHeadOfHousehold,
                           child: DigitCheckbox(
-                            label: localizations.translate(
-                              i18.individualDetails.checkboxLabelText,
-                            ),
+                            capitalizeFirstLetter: false,
+                            label: (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.community)
+                                ? localizations.translate(
+                                    i18.individualDetails.clfCheckboxLabelText)
+                                : localizations.translate(
+                                    i18.individualDetails.checkboxLabelText,
+                                  ),
                             value: widget.isHeadOfHousehold,
                             readOnly: widget.isHeadOfHousehold,
                             onChanged: (_) {},
@@ -816,7 +823,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
               (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery?.trim(),
+        value: individual?.name?.givenName ??
+            ((RegistrationDeliverySingleton().householdType ==
+                    HouseholdType.community)
+                ? null
+                : searchQuery?.trim()),
       ),
       _idTypeKey: FormControl<String>(
         value: individual?.identifiers?.firstOrNull?.identifierType,

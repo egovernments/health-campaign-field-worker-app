@@ -203,6 +203,10 @@ class HomeShowcase {
   String get deleteAll {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
   }
+
+  String get clf {
+    return "COMMUNAL_LIVING_FACILITY_SHOWCASE";
+  }
 }
 
 class SelectStockShowcase {
@@ -562,6 +566,8 @@ class Home {
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
+
+  String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
 }
 
 class AcknowledgementSuccess {

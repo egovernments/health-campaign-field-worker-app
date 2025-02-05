@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
@@ -157,6 +158,11 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           (taskData ?? []).isNotEmpty ? taskData?.last : null,
           sideEffects,
         );
+        final isSideEffectRecorded = recordedSideEffect(
+          currentCycle,
+          (taskData ?? []).isNotEmpty ? taskData?.last : null,
+          sideEffects,
+        );
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskData);
         final isBeneficiaryReferred = checkIfBeneficiaryReferred(
           referralData,
@@ -282,78 +288,96 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         t.projectBeneficiaryClientReferenceId ==
         projectBeneficiary?.clientReferenceId);
 
-    return DigitCard(margin: const EdgeInsets.all(spacer2), children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return DigitCard(
+        margin: const EdgeInsets.only(top: spacer2, bottom: spacer2),
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 1.8,
-            child: BeneficiaryCard(
-              description: [
-                householdMember.household?.address?.doorNo,
-                householdMember.household?.address?.addressLine1,
-                householdMember.household?.address?.addressLine2,
-                householdMember.household?.address?.landmark,
-                householdMember.household?.address?.city,
-                householdMember.household?.address?.pincode,
-              ].whereNotNull().take(2).join(' '),
-              subtitle: widget.distance != null
-                  ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
-                  : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
-              status: getStatus(
-                  tasks ?? [],
-                  householdMember.projectBeneficiaries ?? [],
-                  RegistrationDeliverySingleton().beneficiaryType ==
-                          BeneficiaryType.individual
-                      ? isNotEligible
-                      : false,
-                  isBeneficiaryRefused),
-              title: [
-                householdMember.headOfHousehold?.name?.givenName ??
-                    localizations.translate(i18.common.coreCommonNA),
-                householdMember.headOfHousehold?.name?.familyName,
-              ].whereNotNull().join(''),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.8,
+                child: BeneficiaryCard(
+                  description: [
+                    householdMember.household?.address?.doorNo,
+                    householdMember.household?.address?.addressLine1,
+                    householdMember.household?.address?.addressLine2,
+                    householdMember.household?.address?.landmark,
+                    householdMember.household?.address?.city,
+                    householdMember.household?.address?.pincode,
+                  ].whereNotNull().take(2).join(' '),
+                  subtitle: (RegistrationDeliverySingleton().householdType ==
+                          HouseholdType.family)
+                      ? widget.distance != null
+                          ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
+                          : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}'
+                      : (widget.distance != null)
+                          ? ((widget.distance!) * 1000).round() > 999
+                              ? '(${((widget.distance!).round())} km)'
+                              : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'
+                          : null,
+                  status: (RegistrationDeliverySingleton().householdType ==
+                          HouseholdType.community)
+                      ? null
+                      : getStatus(
+                          tasks ?? [],
+                          householdMember.projectBeneficiaries ?? [],
+                          RegistrationDeliverySingleton().beneficiaryType ==
+                                  BeneficiaryType.individual
+                              ? isNotEligible
+                              : false,
+                          isBeneficiaryRefused),
+                  title: (RegistrationDeliverySingleton().householdType ==
+                          HouseholdType.community)
+                      ? householdMember.household?.address?.buildingName ??
+                          localizations.translate(i18.common.coreCommonNA)
+                      : [
+                          householdMember.headOfHousehold?.name?.givenName ??
+                              localizations.translate(i18.common.coreCommonNA),
+                          householdMember.headOfHousehold?.name?.familyName,
+                        ].whereNotNull().join(''),
+                ),
+              ),
+              Flexible(
+                child: DigitButton(
+                  label:
+                      localizations.translate(i18.searchBeneficiary.iconLabel),
+                  onPressed: widget.onOpenPressed,
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.medium,
+                ),
+              ),
+            ],
+          ),
+          if (RegistrationDeliverySingleton().householdType ==
+              HouseholdType.family) ...[
+            Offstage(
+              offstage: !isCardExpanded,
+              child: DigitTable(
+                enableBorder: true,
+                showPagination: false,
+                columns: filteredHeaderList,
+                rows: tableData ?? [],
+              ),
             ),
-          ),
-          Flexible(
-            child: DigitButton(
-              label: localizations.translate(i18.searchBeneficiary.iconLabel),
-              onPressed: widget.onOpenPressed,
-              type: DigitButtonType.secondary,
-              size: DigitButtonSize.medium,
+            Container(
+              height: 24,
+              margin: const EdgeInsets.all(4),
+              child: Center(
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Icon(
+                    isCardExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                    size: 24,
+                  ),
+                  onPressed: () => isCardExpanded = !isCardExpanded,
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
-      if (isCardExpanded)
-        Offstage(
-          offstage: !isCardExpanded,
-          child: DigitTable(
-            enableBorder: true,
-            showPagination: false,
-            showSelectedState: false,
-            columns: filteredHeaderList,
-            rows: tableData ?? [],
-          ),
-        ),
-      Container(
-        height: 24,
-        margin: const EdgeInsets.all(4),
-        child: Center(
-          child: IconButton(
-            padding: EdgeInsets.zero,
-            icon: Icon(
-              isCardExpanded
-                  ? Icons.keyboard_arrow_up
-                  : Icons.keyboard_arrow_down,
-              size: 24,
-            ),
-            onPressed: () => isCardExpanded = !isCardExpanded,
-          ),
-        ),
-      ),
-    ]);
+          ]
+        ]);
   }
 
   String getTableCellText(

@@ -12,6 +12,7 @@ import '../../../models/entities/beneficiary_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
 import '../../../models/entities/pgr_application_status.dart';
+import '../../../models/entities/household_type.dart';
 import 'tables/address.dart';
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';
@@ -176,6 +177,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
           if (from < 6) {
             try {
+              await migrator.addColumn(household, household.householdType);
               await migrator.addColumn(
                   attendanceRegister, attendanceRegister.localityCode);
               await migrator.addColumn(

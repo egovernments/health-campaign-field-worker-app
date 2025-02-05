@@ -51,6 +51,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
     final results = await houseHoldGlobalSearchRepository.houseHoldGlobalSearch(
       GlobalSearchParameters(
+          householdType: event.globalSearchParams.householdType,
           projectId: event.globalSearchParams.projectId,
           isProximityEnabled: event.globalSearchParams.isProximityEnabled,
           latitude: event.globalSearchParams.latitude,
