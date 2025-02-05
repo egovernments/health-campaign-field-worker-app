@@ -3,6 +3,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,12 +47,22 @@ class _HouseHoldConsentPageState extends LocalizedState<HouseHoldConsentPage> {
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
+              enableFixedDigitButton: true,
               footer: DigitCard(
-                margin: const EdgeInsets.fromLTRB(0, spacer1, 0, 0),
+                margin: const EdgeInsets.only(top: spacer2,),
                 children: [
                   BlocBuilder<LocationBloc, LocationState>(
                     builder: (context, locationState) {
-                      return ElevatedButton(
+                      return DigitButton(
+                        label: registrationState.mapOrNull(
+                          editHousehold: (value) => localizations
+                              .translate(i18.common.coreCommonSave),
+                        ) ??
+                            localizations.translate(
+                                i18.householdDetails.actionLabel),
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
                         onPressed: () {
                           form.markAllAsTouched();
                           if (!form.valid) return;
@@ -154,71 +165,55 @@ class _HouseHoldConsentPageState extends LocalizedState<HouseHoldConsentPage> {
                             },
                           );
                         },
-                        child: Center(
-                          child: Text(
-                            registrationState.mapOrNull(
-                                  editHousehold: (value) => localizations
-                                      .translate(i18.common.coreCommonSave),
-                                ) ??
-                                localizations.translate(
-                                    i18.householdDetails.actionLabel),
-                          ),
-                        ),
                       );
                     },
                   )
                 ],
               ),
-              children: [
-                DigitCard(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          localizations.translate(
-                            i18.householdDetails.householdConsentLabel,
-                          ),
-                          style: theme.textTheme.displaySmall,
+              slivers: [
+                SliverToBoxAdapter(
+                  child: DigitCard(
+                    margin: const EdgeInsets.all(spacer2),
+                    children: [
+                      DigitTextBlock(
+                        padding: const EdgeInsets.all(0),
+                        heading: localizations.translate(
+                          i18.householdDetails.householdConsentLabel,
                         ),
-                        Text(
-                          localizations.translate(
-                            i18.householdDetails.cardTitle,
-                          ),
-                          style: theme.textTheme.bodyLarge,
+                        description: localizations.translate(
+                          i18.householdDetails.cardTitle,
                         ),
-                        ReactiveWrapperField(
-                          formControlName: _consent,
-                          builder: (field) => RadioList(
-                            errorMessage: form.control(_consent).hasErrors
-                                ? localizations.translate(
-                                    i18.householdDetails.validationForSelection,
-                                  )
-                                : null,
-                            radioDigitButtons: [
-                              KeyValue(i18.householdDetails.submitYes, true),
-                              KeyValue(i18.householdDetails.submitNo, false),
-                            ]
-                                .map((e) => RadioButtonModel(
-                                      code: e.key.toString(),
-                                      name: localizations.translate(e.label),
-                                    ))
-                                .toList(),
-                            groupValue:
-                                form.control(_consent).value.toString() ?? '',
-                            onChanged: (value) {
-                              if (form.control(_consent).disabled) return;
+                      ),
+                      ReactiveWrapperField(
+                        formControlName: _consent,
+                        builder: (field) => RadioList(
+                          errorMessage: form.control(_consent).hasErrors
+                              ? localizations.translate(
+                                  i18.householdDetails.validationForSelection,
+                                )
+                              : null,
+                          radioDigitButtons: [
+                            KeyValue(i18.householdDetails.submitYes, true),
+                            KeyValue(i18.householdDetails.submitNo, false),
+                          ]
+                              .map((e) => RadioButtonModel(
+                                    code: e.key.toString(),
+                                    name: localizations.translate(e.label),
+                                  ))
+                              .toList(),
+                          groupValue:
+                              form.control(_consent).value.toString() ?? '',
+                          onChanged: (value) {
+                            if (form.control(_consent).disabled) return;
 
-                              form.control(_consent).value =
-                                  value.code == 'true' ? true : false;
-                            },
-                            capitalizeFirstLetter: false,
-                          ),
+                            form.control(_consent).value =
+                                value.code == 'true' ? true : false;
+                          },
+                          capitalizeFirstLetter: false,
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             );
