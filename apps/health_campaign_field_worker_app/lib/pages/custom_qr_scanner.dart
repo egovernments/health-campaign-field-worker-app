@@ -660,6 +660,7 @@ class _CustomDigitScannerPageState
           Theme.of(currentContext),
         ),
       );
+      await Future.delayed(const Duration(seconds: 2));
     } else if (codes.length < widget.quantity) {
       if (widget.scanType == ScanType.stock &&
           code.contains(Constants.pipeSeparator)) {
