@@ -456,7 +456,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
         value: localizations
-            .translate(RegistrationDeliverySingleton().boundary!.name ?? ''),
+            .translate(RegistrationDeliverySingleton().boundary!.code ?? ''),
         validators: [Validators.required],
       ),
       _addressLine1Key:
