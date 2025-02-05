@@ -439,6 +439,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 label: localizations.translate(
                                   i18.householdDetails.dateOfRegistrationLabel,
                                 ),
+                                charCondition: true,
                                 child: DigitDateFormInput(
                                   readOnly: true,
                                   confirmText: localizations.translate(
@@ -465,6 +466,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 i18.householdDetails
                                     .noOfMothersWithChildBelow5Label,
                               ),
+                              charCondition: true,
                               child: DigitNumericFormInput(
                                 minValue: 0,
                                 maxValue: 20,
@@ -490,6 +492,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 i18.householdDetails
                                     .noOfFirstTimePregnantCountLabel,
                               ),
+                              charCondition: true,
                               child: DigitNumericFormInput(
                                 minValue: 0,
                                 maxValue: 20,
@@ -513,6 +516,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               label: localizations.translate(
                                 i18.householdDetails.noOf15to49YearWomanLabel,
                               ),
+                              charCondition: true,
                               child: DigitNumericFormInput(
                                 minValue: 1,
                                 maxValue: 30,
@@ -537,6 +541,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               label: localizations.translate(
                                 i18.householdDetails.noOf9YearGirlLabel,
                               ),
+                              charCondition: true,
                               child: DigitNumericFormInput(
                                 minValue: 0,
                                 maxValue: 20,
@@ -558,6 +563,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               label: localizations.translate(
                                 i18.householdDetails.noOfChildBelow15Label,
                               ),
+                              charCondition: true,
                               child: DigitNumericFormInput(
                                 minValue: 0,
                                 maxValue: 20,

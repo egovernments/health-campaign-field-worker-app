@@ -399,6 +399,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(
                                     i18.individualDetails.nameLabelText,
                                   ),
+                                  charCondition: true,
                                   isRequired: true,
                                   child: DigitTextFormInput(
                                     initialValue:
@@ -432,6 +433,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 label: localizations.translate(
                                   i18.individualDetails.idTypeLabelText,
                                 ),
+                                charCondition: true,
                                 isRequired: true,
                                 child: DigitDropdown<String>(
                                   selectedOption: (form
@@ -502,6 +504,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                             i18.individualDetails
                                                 .idNumberLabelText,
                                           ),
+                                          charCondition: true,
                                           isRequired: form
                                               .control(_idNumberKey)
                                               .validators
@@ -652,6 +655,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(
                                     i18.individualDetails.mobileNumberLabelText,
                                   ),
+                                  charCondition: true,
                                   child: DigitTextFormInput(
                                     keyboardType: TextInputType.number,
                                     errorMessage: form
@@ -681,6 +685,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(i18
                                       .individualDetails
                                       .doesChildHaveVaccinationCondition),
+                                  charCondition: true,
                                   child: RadioList(
                                     groupValue: form
                                         .control(_isVaccinationConditionKey)
@@ -887,6 +892,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                     i18.individualDetails
                                         .howManyTTVaccinesTaken,
                                   ),
+                                  charCondition: true,
                                   child: DigitNumericFormInput(
                                     minValue: 0,
                                     initialValue: form
@@ -909,6 +915,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(
                                     i18.individualDetails.noOfMonthsPregnant,
                                   ),
+                                  charCondition: true,
                                   child: DigitNumericFormInput(
                                     minValue: 0,
                                     initialValue: form
@@ -932,6 +939,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(
                                     i18.individualDetails.noOfTimesVisitedHF,
                                   ),
+                                  charCondition: true,
                                   child: DigitNumericFormInput(
                                     minValue: 0,
                                     initialValue: form
@@ -954,6 +962,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   label: localizations.translate(
                                     i18.individualDetails.noChildrenLessThan5,
                                   ),
+                                  charCondition: true,
                                   child: DigitNumericFormInput(
                                     minValue: 0,
                                     initialValue: form
