@@ -299,12 +299,16 @@ int getBatchSizeToBandwidth(
   if (batchResult != null) {
     if (batchResult.isNotEmpty) {
       batchSize = int.parse(batchResult.first.batchSize.toString());
-    } else if (speed >=
-        appConfiguration.first.bandwidthBatchSize!.last.maxRange) {
-      batchSize = appConfiguration.first.bandwidthBatchSize!.last.batchSize;
-    } else if (speed <=
-        appConfiguration.first.bandwidthBatchSize!.first.maxRange) {
-      batchSize = appConfiguration.first.bandwidthBatchSize!.first.batchSize;
+    } else {
+      appConfiguration.first.bandwidthBatchSize!.sort(
+        (a, b) => a.maxRange.compareTo(b.maxRange),
+      );
+      if (speed >= appConfiguration.first.bandwidthBatchSize!.last.maxRange) {
+        batchSize = appConfiguration.first.bandwidthBatchSize!.last.batchSize;
+      } else if (speed <=
+          appConfiguration.first.bandwidthBatchSize!.first.maxRange) {
+        batchSize = appConfiguration.first.bandwidthBatchSize!.first.batchSize;
+      }
     }
   }
 
