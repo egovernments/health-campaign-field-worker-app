@@ -77,8 +77,11 @@ class BeneficiaryAcknowledgementPageState
             : [
                 Text(
                   getSubText(wrapper),
-                  style: TextStyle(
-                      color: Theme.of(context).colorTheme.paper.primary),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .digitTextTheme(context)
+                      .headingM
+                      .apply(color: const DigitColors().light.paperPrimary),
                 )
               ],
       ),
