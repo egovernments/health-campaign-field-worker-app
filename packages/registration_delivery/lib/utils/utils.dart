@@ -1,7 +1,7 @@
 // Importing necessary packages and modules
 import 'dart:convert';
 import 'dart:math';
-import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+
 import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -11,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';
@@ -34,36 +35,39 @@ class CustomValidator {
 
 String toUpperCaseWithUnderscores(String input) {
   // Add an underscore before each uppercase letter and convert to uppercase
-  final result = input.replaceAllMapped(
-    RegExp(r'([a-z])([A-Z])'),
+  final result = input
+      .replaceAllMapped(
+        RegExp(r'([a-z])([A-Z])'),
         (Match match) => '${match.group(1)}_${match.group(2)}',
-  ).toUpperCase();
+      )
+      .toUpperCase();
 
   return result;
 }
 
-dynamic parseStringValue(String input) {
+dynamic parseStringValue(String? input) {
   // Check if the input is a valid boolean
-  if (input.toLowerCase() == 'true') {
+  if (input?.toLowerCase() == 'true') {
     return i18.common.coreCommonYes;
-  } else if (input.toLowerCase() == 'false') {
+  } else if (input?.toLowerCase() == 'false') {
     return i18.common.coreCommonNo;
   }
 
   // Try parsing the input as an integer
-  final intValue = int.tryParse(input);
+  final intValue = input != null ? int.tryParse(input) : 0;
   if (intValue != null) {
     return intValue;
   }
 
   // Check if the input contains '|', if so, split it into an array
-  if (input.contains('|')) {
-    return input.split('|').map((e) => e.trim()).join(', ');
+  if ((input ?? '').contains('|')) {
+    return input?.split('|').map((e) => e.trim()).join(', ');
   }
 
   // Return the original string if no conditions match
   return input;
 }
+
 bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   if (currentCycle == null) {
     return false;

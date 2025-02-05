@@ -25,7 +25,6 @@ import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/showcase/showcase_button.dart';
@@ -56,6 +55,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
   static const _isPregnantKey = 'isPregnant';
+  static const _isNewBorn = 'isNewBorn';
   static const _ttVaccinesTakenKey = 'ttVaccinesTaken';
   static const _noOfPregnantMonthsKey = 'noOfMonthsPregnant';
   static const _noOfTimesVisitedHFKey = 'noOfTimesVisitedHF';
@@ -443,16 +443,13 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                               .value !=
                                           null)
                                       ? DropdownItem(
-                                          name: localizations.translate(
-                                              form.control(_idTypeKey).value),
+                                          name: form.control(_idTypeKey).value,
                                           code: form.control(_idTypeKey).value)
                                       : const DropdownItem(name: '', code: ''),
                                   items: RegistrationDeliverySingleton()
                                       .idTypeOptions!
                                       .map(
-                                        (e) => DropdownItem(
-                                            name: localizations.translate(e),
-                                            code: e),
+                                        (e) => DropdownItem(name: e, code: e),
                                       )
                                       .toList(),
                                   onSelect: (value) {
@@ -464,7 +461,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                             IdGen.i.identifier.toString();
                                       } else if (value.name ==
                                           IdentifierTypes.uniqueBeneficiaryID
-                                              .toValue() // TODO: Revert to value
+                                              .name // TODO: Revert to value
                                               .toString()) {
                                         setUniqueBeneficiaryId(form);
                                       } else {
@@ -727,91 +724,78 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 (form.control(_isVaccinationConditionKey).value
                                         as String?) ==
                                     'true')
-                              ProductVariantBlocWrapper(
-                                child: BlocBuilder<ProductVariantBloc,
-                                        ProductVariantState>(
-                                    builder: (context, productState) {
-                                  return productState.maybeWhen(
-                                    orElse: () => const Offstage(),
-                                    fetched: (productVariantsValue) {
-                                      final variants = productState.whenOrNull(
-                                        fetched: (productVariants) {
-                                          return productVariants;
-                                        },
-                                      );
-
-                                      return SelectionCard<ProductVariantModel>(
-                                        isRequired: form
-                                                .control(
-                                                    _isVaccinationConditionKey)
-                                                .value ==
-                                            true,
-                                        showParentContainer: true,
-                                        title: localizations.translate(
-                                          i18.individualDetails
-                                              .selectAntigensLabel,
-                                        ),
-                                        allowMultipleSelection: true,
-                                        width: 126,
-                                        initialSelection: form
-                                                    .control(_antigensKey)
-                                                    .value !=
-                                                null
-                                            ? (form.control(_antigensKey).value
-                                                    as String?)
-                                                ?.split('|')
-                                                .map((id) {
-                                                final existingVariant =
-                                                    variants?.firstWhere(
-                                                        (v) => v.id == id,
-                                                        orElse: () =>
-                                                            ProductVariantModel(
-                                                                id: id));
-
-                                                return existingVariant
-                                                        ?.copyWith(id: id) ??
-                                                    ProductVariantModel(id: id);
-                                              }).toList()
-                                            : [],
-                                        options: (variants?.map(
-                                                  (e) => e,
-                                                ) ??
-                                                [])
-                                            .toList(),
-                                        onSelectionChanged: (value) {
-                                          setState(() {
-                                            if (value.isNotEmpty) {
-                                              form.control(_antigensKey).value =
-                                                  value
-                                                      .map((v) => v.id)
-                                                      .join("|");
-                                            } else {
-                                              form.control(_antigensKey).value =
-                                                  null;
-                                              setState(() {
-                                                form
-                                                    .control(_antigensKey)
-                                                    .setErrors({'': true});
-                                              });
-                                            }
-                                          });
-                                        },
-                                        valueMapper: (value) {
-                                          return localizations
-                                              .translate(value.sku.toString());
-                                        },
-                                        errorMessage: form
-                                                .control(_antigensKey)
-                                                .hasErrors
-                                            ? localizations.translate(
-                                                i18.common.corecommonRequired)
-                                            : null,
-                                      );
-                                    },
-                                  );
-                                }),
+                              SelectionCard<String>(
+                                isRequired: false,
+                                showParentContainer: true,
+                                title: localizations.translate(
+                                  i18.individualDetails.selectAntigensLabel,
+                                ),
+                                allowMultipleSelection: true,
+                                width: 126,
+                                initialSelection:
+                                    form.control(_antigensKey).value != null
+                                        ? (form.control(_antigensKey).value
+                                                as String?)
+                                            ?.split('|')
+                                            .toList()
+                                        : [],
+                                //[ TODO: Need to be moved to MDMS
+                                options: ([
+                                          "VACCINE1",
+                                          "VACCINE2",
+                                          "VACCINE3",
+                                          "VACCINE4"
+                                        ].map(
+                                          (e) => e,
+                                        ) ??
+                                        [])
+                                    .toList(),
+                                onSelectionChanged: (value) {
+                                  setState(() {
+                                    if (value.isNotEmpty) {
+                                      form.control(_antigensKey).value =
+                                          value.join("|");
+                                    } else {
+                                      form.control(_antigensKey).value = null;
+                                      setState(() {
+                                        form
+                                            .control(_antigensKey)
+                                            .setErrors({'': true});
+                                      });
+                                    }
+                                  });
+                                },
+                                valueMapper: (value) {
+                                  return localizations
+                                      .translate(value.toString());
+                                },
+                                errorMessage:
+                                    form.control(_antigensKey).hasErrors
+                                        ? localizations.translate(
+                                            i18.common.corecommonRequired)
+                                        : null,
                               ),
                             if (widget.isChild &&
+                                (form.control(_isVaccinationConditionKey).value
+                                        as String?) ==
+                                    'false')
+                              ReactiveWrapperField(
+                                formControlName: _isNewBorn,
+                                builder: (field) => DigitCheckbox(
+                                  label: localizations.translate(
+                                    i18.individualDetails.isNewBorn,
+                                  ),
+                                  value: form.control(_isNewBorn).value,
+                                  capitalizeFirstLetter: false,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      form.control(_isNewBorn).value = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                            if (widget.isChild &&
+                                (form.control(_isNewBorn).value) == false &&
                                 (form.control(_isVaccinationConditionKey).value
                                         as String?) ==
                                     'false')
@@ -1171,6 +1155,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     int ttVaccinesTaken = form.control(_ttVaccinesTakenKey).value as int? ?? 0;
     int noOfChildrenLessThan5 =
         form.control(_noOfChildrenLessThan5Key).value as int? ?? 0;
+    bool isNewBorn = form.control(_isNewBorn).value as bool? ?? false;
     bool? isVaccinationGiven = bool.tryParse(
         form.control(_isVaccinationConditionKey).value as String? ?? "false");
     String? antigensGiven = form.control(_antigensKey).value as String?;
@@ -1200,8 +1185,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           (antigensGiven ?? '').isNotEmpty) ...[
         AdditionalField(_antigensKey, antigensGiven.toString()),
       ],
+      if (widget.isChild && isVaccinationGiven == false) ...[
+        AdditionalField(_isNewBorn, isNewBorn.toString()),
+      ],
       if (widget.isChild &&
-          isVaccinationGiven != true &&
+          isNewBorn != true &&
           (vaccinationBodyParts ?? '').isNotEmpty) ...[
         AdditionalField(
             _bodyPartsVaccinationKey, vaccinationBodyParts.toString()),
@@ -1287,6 +1275,20 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 .isNotEmpty
             ? bool.tryParse((individual?.additionalFields?.fields
                             .where((field) => field.key == _isPregnantKey)
+                            .firstOrNull
+                            ?.value ??
+                        false)
+                    .toString()) ??
+                false
+            : false,
+      ),
+      _isNewBorn: FormControl<bool>(
+        value: (individual?.additionalFields?.fields
+                        .where((field) => field.key == _isNewBorn) ??
+                    [])
+                .isNotEmpty
+            ? bool.tryParse((individual?.additionalFields?.fields
+                            .where((field) => field.key == _isNewBorn)
                             .firstOrNull
                             ?.value ??
                         false)

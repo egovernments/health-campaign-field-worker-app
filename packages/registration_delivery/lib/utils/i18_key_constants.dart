@@ -348,6 +348,8 @@ class IndividualDetails {
 
   String get isPregnant => 'IS_PREGNANT';
 
+  String get isNewBorn => 'IS_NEW_BORN';
+
   String get howManyTTVaccinesTaken => 'HOW_MANY_TT_VACCINES_TAKEN';
 
   String get noOfMonthsPregnant => 'NO_OF_MONTHS_PREGNANT';
@@ -618,6 +620,7 @@ class MemberCard {
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
 
   String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
+
   String get pregnantLabel => 'PREGNANT_LABEL';
 }
 

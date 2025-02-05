@@ -409,8 +409,19 @@ class _HouseholdOverviewPageState
                                                           deliverInterventionState)[
                                                       'textLabel'],
                                                 ),
-                                              ...{for (var field in (state.householdMemberWrapper
-                                                  .household?.additionalFields?.fields ?? [])) localizations.translate(toUpperCaseWithUnderscores(field.key)) : localizations.translate(parseStringValue(field.value))}
+                                              ...{
+                                                for (var field in (state
+                                                        .householdMemberWrapper
+                                                        .household
+                                                        ?.additionalFields
+                                                        ?.fields ??
+                                                    []))
+                                                  localizations.translate(
+                                                      toUpperCaseWithUnderscores(
+                                                          field
+                                                              .key)): localizations
+                                                      .translate(field?.value)
+                                              }
                                             },
                                           ),
                                         ],
