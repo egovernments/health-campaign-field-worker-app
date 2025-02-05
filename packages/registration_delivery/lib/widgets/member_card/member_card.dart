@@ -312,26 +312,41 @@ class MemberCard extends StatelessWidget {
                                         ),
                                       );
                                     } else {
-                                      serviceDefinitionBloc.when(
-                                          empty: () {},
-                                          isloading: () {},
-                                          serviceDefinitionFetch:
-                                              (value, model) {
-                                            if (value
-                                                .where((element) => element.code
-                                                    .toString()
-                                                    .contains(
-                                                        '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
-                                                .toList()
-                                                .isEmpty) {
-                                              context.router.push(
-                                                DeliverInterventionRoute(),
-                                              );
-                                            } else {
-                                              navigateToChecklist(context,
-                                                  individual.clientReferenceId);
-                                            }
-                                          });
+                                      if (allDosesDelivered(
+                                            tasks,
+                                            context.selectedCycle,
+                                            sideEffects,
+                                            individual,
+                                          ) &&
+                                          !checkStatus(
+                                            tasks,
+                                            context.selectedCycle,
+                                          )) {
+                                        context.router
+                                            .push(BeneficiaryDetailsRoute());
+                                      } else {
+                                        serviceDefinitionBloc.when(
+                                            empty: () {},
+                                            isloading: () {},
+                                            serviceDefinitionFetch:
+                                                (value, model) {
+                                              if (value
+                                                  .where((element) => element
+                                                      .code
+                                                      .toString()
+                                                      .contains(
+                                                          '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                  .toList()
+                                                  .isEmpty) {
+                                                context.router.push(
+                                                  DeliverInterventionRoute(),
+                                                );
+                                              } else {
+                                                navigateToChecklist(context,
+                                                    projectBeneficiaryClientReferenceId);
+                                              }
+                                            });
+                                      }
                                     }
                                   },
                                 )

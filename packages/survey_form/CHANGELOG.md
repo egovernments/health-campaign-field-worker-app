@@ -2,6 +2,13 @@
 
 * Upgrade digit_ui_components to ^0.0.2-dev.6
 
+## 1.0.0+1
+
+* Modified ServiceSearchModel with relatedClientReferenceId and search query
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+* Removed isHealthFacilityWorker variable from Singleton
+
 ## 1.0.0
 
 * Upgrade to Flutter 3.22

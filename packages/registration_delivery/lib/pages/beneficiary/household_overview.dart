@@ -142,7 +142,8 @@ class _HouseholdOverviewPageState
                                                     navigateToChecklist(
                                                         ctx,
                                                         state
-                                                            .selectedIndividual!
+                                                            .householdMemberWrapper
+                                                            .household!
                                                             .clientReferenceId);
                                                   }
                                                 });
@@ -209,8 +210,17 @@ class _HouseholdOverviewPageState
                                                 } else {
                                                   navigateToChecklist(
                                                       ctx,
-                                                      state.selectedIndividual!
-                                                          .clientReferenceId);
+                                                      RegistrationDeliverySingleton()
+                                                                  .beneficiaryType ==
+                                                              BeneficiaryType
+                                                                  .individual
+                                                          ? state
+                                                              .selectedIndividual!
+                                                              .clientReferenceId
+                                                          : state
+                                                              .householdMemberWrapper
+                                                              .household!
+                                                              .clientReferenceId);
                                                 }
                                               });
                                         },
@@ -639,7 +649,7 @@ class _HouseholdOverviewPageState
                                           deleteMemberAction: () {
                                             showCustomPopup(
                                               context: context,
-                                              builder: (BuildContext) {
+                                              builder: (BuildContext context) {
                                                 return Popup(
                                                     title: localizations
                                                         .translate(i18

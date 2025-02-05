@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -15,11 +16,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
-import 'package:registration_delivery/utils/constants.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../../models/entities/status.dart';
 import '../../router/registration_delivery_router.gm.dart';
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
@@ -78,13 +79,10 @@ class _BeneficiaryChecklistPageState
             state.mapOrNull(
               serviceDefinitionFetch: (value) {
                 selectedServiceDefinition = value.serviceDefinitionList
-                    .where((element) =>
-                        element.code.toString().contains(
-                            '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
-                        element.code.toString().contains(
-                            '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                    .where((element) => element.code.toString().contains(
+                        '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                     .toList()
-                    .first;
+                    .firstOrNull;
 
                 initialAttributes = selectedServiceDefinition?.attributes;
                 if (!isControllersInitialized) {
@@ -136,6 +134,7 @@ class _BeneficiaryChecklistPageState
                               return;
                             }
                             final itemsAttributes = initialAttributes;
+                            var validChecklist = true;
 
                             for (int i = 0; i < controller.length; i++) {
                               if (itemsAttributes?[i].required == true &&
@@ -149,66 +148,63 @@ class _BeneficiaryChecklistPageState
                                           (controller[i].text == '')))) {
                                 return;
                               }
+                              if (itemsAttributes?[i].required == true &&
+                                  ((itemsAttributes?[i].dataType == 'Boolean' &&
+                                      (controller[i].text == '')))) {
+                                setState(() {
+                                  validFields = false;
+                                  validChecklist = false;
+                                });
+                              }
                             }
+
+                            if (!validChecklist) {
+                              return;
+                            }
+
+                            var decidedFlow = assessEligibility(
+                                selectedServiceDefinition!, initialAttributes!);
 
                             showCustomPopup(
                                 context: context,
                                 builder: (popUpContext) => Popup(
-                                        title: localizations.translate(
-                                            RegistrationDeliverySingleton()
-                                                    .projectType!
-                                                    .code
-                                                    .toString() +
-                                                i18.deliverIntervention
-                                                    .beneficiaryChecklistDialogTitle),
+                                        title: localizations.translate(i18
+                                            .deliverIntervention.dialogTitle),
                                         type: PopUpType.simple,
+                                        description: localizations
+                                            .translate(
+                                              i18.deliverIntervention
+                                                  .beneficiaryChecklistDialogDescription,
+                                            )
+                                            .replaceFirst(
+                                                '{}',
+                                                localizations
+                                                    .translate(decidedFlow)),
                                         actions: [
                                           DigitButton(
                                               label: localizations.translate(
-                                                i18.common.coreCommonYes,
+                                                i18.beneficiaryDetails
+                                                    .ctaProceed,
                                               ),
                                               onPressed: () {
-                                                selectedServiceDefinition = value
-                                                    .serviceDefinitionList
-                                                    .where((element) => element
-                                                        .code
-                                                        .toString()
-                                                        .contains(
-                                                            '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
-                                                    .toList()
-                                                    .first;
-
-                                                if (selectedServiceDefinition !=
-                                                    null) {
-                                                  var decidedFlow =
-                                                      assessEligibility(
-                                                          selectedServiceDefinition!);
-                                                  createSubmitRequest(
-                                                      decidedFlow: decidedFlow);
-                                                  Navigator.of(context).pop();
-                                                  navigateToDecidedFlow(
-                                                      context, decidedFlow);
-                                                } else {
-                                                  createSubmitRequest();
-                                                  Navigator.of(context).pop();
-                                                  context.router.push(
-                                                    DeliverInterventionRoute(),
-                                                  );
-                                                }
+                                                createSubmitRequest(
+                                                    decidedFlow: decidedFlow);
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop();
+                                                navigateToDecidedFlow(
+                                                    context, decidedFlow);
                                               },
                                               type: DigitButtonType.primary,
                                               size: DigitButtonSize.large),
                                           DigitButton(
                                               label: localizations.translate(
-                                                i18.common.coreCommonNo,
+                                                i18.common.coreCommonCancel,
                                               ),
                                               onPressed: () {
-                                                createSubmitRequest();
-
-                                                Navigator.of(context).pop();
-                                                context.router.push(
-                                                  RefusedDeliveryRoute(),
-                                                );
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop();
                                               },
                                               type: DigitButtonType.secondary,
                                               size: DigitButtonSize.large)
@@ -222,6 +218,15 @@ class _BeneficiaryChecklistPageState
                       child: DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: spacer2),
+                              child: Text(
+                                '${localizations.translate(
+                                  selectedServiceDefinition!.code.toString(),
+                                )} ${localizations.translate(i18.checklist.checklist)}',
+                                style: textTheme.headingXl,
+                              ),
+                            ),
                             ...initialAttributes!.map((
                               e,
                             ) {
@@ -637,9 +642,7 @@ class _BeneficiaryChecklistPageState
       return FormField<String>(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) {
-            if (((controller[index].text == null ||
-                    controller[index].text == '') &&
-                item.required == true)) {
+            if (((controller[index].text == '') && item.required == true)) {
               return localizations.translate("${item.code}_REQUIRED");
             }
             if (item.regex != null) {
@@ -677,9 +680,7 @@ class _BeneficiaryChecklistPageState
       return FormField<String>(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) {
-            if (((controller[index].text == null ||
-                    controller[index].text == '') &&
-                item.required == true)) {
+            if (((controller[index].text == '') && item.required == true)) {
               return localizations.translate(
                 i18.common.corecommonRequired,
               );
@@ -781,8 +782,7 @@ class _BeneficiaryChecklistPageState
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
                     if (item.required == true &&
-                        (controller[index].text == null ||
-                            controller[index].text == '')) {
+                        (controller[index].text == '')) {
                       return localizations.translate(
                         i18.common.coreCommonReasonRequired,
                       );
@@ -873,15 +873,20 @@ class _BeneficiaryChecklistPageState
     );
   }
 
-  String assessEligibility(ServiceDefinitionModel serviceDefinition) {
+  String assessEligibility(ServiceDefinitionModel serviceDefinition,
+      List<AttributesModel> initialAttributes) {
     Map<String, int> scores = {};
-    int highestPoints = 0;
     String? precedenceFlowAnswer;
     Map<String, String> precedenceFlowMapping = {};
 
     var flows = serviceDefinition.additionalFields?.fields
         .firstWhere((element) => element.key == 'flow')
         .value;
+
+    // Debugging: Print flows
+    if (kDebugMode) {
+      print('Flows: $flows');
+    }
 
     // Initialize scores for each flow type
     for (var flowType in flows) {
@@ -894,48 +899,55 @@ class _BeneficiaryChecklistPageState
         .value;
 
     AttributesModel? precedenceAttribute =
-        serviceDefinition.attributes?.firstWhere(
+        serviceDefinition.attributes?.firstWhereOrNull(
       (attribute) => attribute.code == precedenceFlowCode,
     );
 
-    for (var attribute in serviceDefinition.attributes!) {
+    // Initialize a set to track processed inputs for all attributes
+    Set<String> processedInputs = {};
+
+    for (int i = 0; i < controller.length; i++) {
+      AttributesModel attribute = initialAttributes[i];
+
       Map<String, dynamic>? pointsMapping = attribute.additionalFields?.fields
           .firstWhere((element) => element.key == 'pointsMapping')
           .value;
 
-      // Only set precedence mappings if this is the precedence attribute
-      if (attribute == precedenceAttribute && pointsMapping != null) {
-        precedenceFlowMapping = pointsMapping.map((option, mapping) {
-          // Ensure correct types for `reduce` function
-          var highestScoringFlow = (mapping as Map<String, dynamic>)
-              .entries
-              .reduce(
-                  (MapEntry<String, dynamic> a, MapEntry<String, dynamic> b) =>
-                      a.value > b.value ? a : b);
-          return MapEntry(option, highestScoringFlow.key);
-        });
-      }
+      String? input = controller[i].text.trim(); // Sanitize input
+      String key =
+          '${attribute.code}_$input'; // Combine attribute code and input for uniqueness
 
-      for (int i = 0; i < controller.length; i++) {
-        String? input = controller[i].text;
+      if (input.isNotEmpty && pointsMapping?.containsKey(input) == true) {
+        if (!processedInputs.contains(key)) {
+          processedInputs
+              .add(key); // Mark this attribute-input combination as processed
 
-        // Check if the current attribute is the precedence attribute and assign only if precedenceFlowAnswer is null
-        if (selectedServiceDefinition?.attributes?[i].code ==
-                precedenceFlowCode &&
-            precedenceFlowAnswer == null &&
-            input.isNotEmpty) {
-          if (pointsMapping!.containsKey(input)) {
+          var flowPoints = pointsMapping![input];
+
+          flowPoints.forEach((flowType, points) {
+            scores[flowType] =
+                (scores[flowType] ?? 0) + (points as num).toInt();
+          });
+
+          // Assign precedenceFlowAnswer only for precedence attribute
+          if (attribute.code == precedenceFlowCode &&
+              precedenceFlowAnswer == null) {
             precedenceFlowAnswer = input;
           }
-        }
 
-        // Update scores for each flow based on points mapping for any input
-        if (pointsMapping!.containsKey(input)) {
-          var flowPoints = pointsMapping[input]!;
-          flowPoints.forEach((flowType, points) {
-            scores[flowType] = ((scores[flowType] ?? 0) + points).toInt();
-            if (points > highestPoints) highestPoints = points;
-          });
+          // Debugging: Print flowPoints and updated scores
+          if (kDebugMode) {
+            print('Input: $input, Flow Points: $flowPoints');
+            print('Updated Scores: $scores');
+          }
+        } else {
+          if (kDebugMode) {
+            print('Input already processed for attribute: $key');
+          }
+        }
+      } else {
+        if (kDebugMode) {
+          print('No valid mapping or input for attribute: ${attribute.code}');
         }
       }
     }
@@ -974,10 +986,12 @@ class _BeneficiaryChecklistPageState
       if (eligibleFlows.contains(precedenceFlowFromAnswer)) {
         finalFlow = precedenceFlowFromAnswer!;
       } else {
-        finalFlow = eligibleFlows.first;
+        finalFlow = finalFlow =
+            scores.entries.reduce((a, b) => a.value > b.value ? a : b).key;
       }
     } else if (eligibleFlows.isNotEmpty) {
-      finalFlow = eligibleFlows.first;
+      finalFlow = finalFlow =
+          scores.entries.reduce((a, b) => a.value > b.value ? a : b).key;
     } else {
       finalFlow =
           scores.entries.reduce((a, b) => a.value > b.value ? a : b).key;
@@ -997,13 +1011,14 @@ class _BeneficiaryChecklistPageState
 
   void createSubmitRequest({String? decidedFlow}) {
     List<ServiceAttributesModel> attributes = [];
+    var referenceId = IdGen.i.identifier;
     for (int i = 0; i < controller.length; i++) {
       final attribute = initialAttributes;
       attributes.add(ServiceAttributesModel(
         attributeCode: '${attribute?[i].code}',
         dataType: attribute?[i].dataType,
         clientReferenceId: IdGen.i.identifier,
-        referenceId: widget.beneficiaryClientRefId,
+        referenceId: referenceId,
         value: attribute?[i].dataType != 'SingleValueList'
             ? controller[i].text.toString().trim().isNotEmpty
                 ? controller[i].text.toString()
@@ -1024,8 +1039,8 @@ class _BeneficiaryChecklistPageState
                 DateTime.now().toLocal().millisecondsSinceEpoch,
                 dateFormat: Constants.checklistViewDateFormat,
               ),
-              tenantId: selectedServiceDefinition!.tenantId,
-              clientId: widget.beneficiaryClientRefId.toString(),
+              tenantId: selectedServiceDefinition?.tenantId,
+              clientId: referenceId,
               serviceDefId: selectedServiceDefinition?.id,
               attributes: attributes,
               rowVersion: 1,
@@ -1034,6 +1049,8 @@ class _BeneficiaryChecklistPageState
                 "boundaryCode": RegistrationDeliverySingleton().boundary?.code
               },
               additionalFields: ServiceAdditionalFields(version: 1, fields: [
+                AdditionalField(
+                    'relatedClientReferenceId', widget.beneficiaryClientRefId),
                 AdditionalField('localityCode',
                     RegistrationDeliverySingleton().boundary!.code),
                 if (decidedFlow != null)
