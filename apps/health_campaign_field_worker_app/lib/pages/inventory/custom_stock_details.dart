@@ -1698,6 +1698,9 @@ class CustomStockDetailsPageState
                                                               quantity:
                                                                   balesQuantityInInt,
                                                               isGS1code: true,
+                                                              gs1CodeList:
+                                                                  scannerState
+                                                                      .barCodes,
                                                               singleValue:
                                                                   false,
                                                               manualEnabled:

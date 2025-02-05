@@ -28,6 +28,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
   final bool singleValue;
   final int quantity;
   final bool isGS1code;
+  final List<GS1Barcode> gs1CodeList;
   final bool isEditEnabled;
   final bool manualEnabled;
   final ScanType scanType;
@@ -37,6 +38,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
     super.appLocalizations,
     required this.quantity,
     required this.isGS1code,
+    this.gs1CodeList = const [],
     this.singleValue = false,
     this.isEditEnabled = false,
     this.manualEnabled = true,
@@ -91,7 +93,9 @@ class _CustomDigitScannerPageState
           r'^2025-' + phase + '-' + districtRange + r'-\d{2}-\d{2}-\d{2}$');
     }
 
-    if (!widget.isEditEnabled) {
+    if (widget.gs1CodeList.isNotEmpty) {
+      result = widget.gs1CodeList;
+    } else if (!widget.isEditEnabled) {
       context
           .read<DigitScannerBloc>()
           .add(const DigitScannerEvent.handleScanner());
