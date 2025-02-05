@@ -632,11 +632,12 @@ class MemberCard extends StatelessWidget {
                               individualModel: individual));
                       context.router.push(MotherOverviewRoute());
                     },
-                    type: DigitButtonType.link,
+                    type: DigitButtonType.tertiary,
                     size: DigitButtonSize.medium),
                 Text(
                   ' ${filteredChildren.length}',
-                  style: textTheme.headingM,
+                  style: textTheme.headingM
+                      .apply(color: const DigitColors().light.primary1),
                 )
               ],
             ),
