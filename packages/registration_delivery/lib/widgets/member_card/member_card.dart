@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/TextTheme/digit_text_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:flutter/material.dart';
@@ -104,58 +105,59 @@ class MemberCard extends StatelessWidget {
                       alignment: Alignment.topRight,
                       child: Padding(
                         padding: const EdgeInsets.only(top: spacer2),
-                        child: (childrenBeneficiaries ?? []).isNotEmpty ?  buildListOfChildren(
-                          context,
-                        ) :
-                        DigitButton(
-                          isDisabled: (projectBeneficiaries ?? []).isEmpty,
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (ctx) => DigitActionCard(
-                              onOutsideTap: () {
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
-                              },
-                              actions: [
-                                DigitButton(
-                                  prefixIcon: Icons.person,
-                                  label: localizations.translate(
-                                    i18.memberCard.assignAsHouseholdhead,
+                        child: (childrenBeneficiaries ?? []).isNotEmpty
+                            ? buildListOfChildren(context, textTheme)
+                            : DigitButton(
+                                isDisabled:
+                                    (projectBeneficiaries ?? []).isEmpty,
+                                onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (ctx) => DigitActionCard(
+                                    onOutsideTap: () {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop();
+                                    },
+                                    actions: [
+                                      DigitButton(
+                                        prefixIcon: Icons.person,
+                                        label: localizations.translate(
+                                          i18.memberCard.assignAsHouseholdhead,
+                                        ),
+                                        isDisabled: isHead ? true : false,
+                                        onPressed: setAsHeadAction,
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large,
+                                      ),
+                                      DigitButton(
+                                        prefixIcon: Icons.edit,
+                                        label: localizations.translate(
+                                          i18.memberCard.editIndividualDetails,
+                                        ),
+                                        onPressed: editMemberAction,
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large,
+                                      ),
+                                      DigitButton(
+                                        prefixIcon: Icons.delete,
+                                        label: localizations.translate(
+                                          i18.memberCard
+                                              .deleteIndividualActionText,
+                                        ),
+                                        isDisabled: isHead ? true : false,
+                                        onPressed: deleteMemberAction,
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large,
+                                      ),
+                                    ],
                                   ),
-                                  isDisabled: isHead ? true : false,
-                                  onPressed: setAsHeadAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
                                 ),
-                                DigitButton(
-                                  prefixIcon: Icons.edit,
-                                  label: localizations.translate(
-                                    i18.memberCard.editIndividualDetails,
-                                  ),
-                                  onPressed: editMemberAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
+                                label: localizations.translate(
+                                  i18.memberCard.editDetails,
                                 ),
-                                DigitButton(
-                                  prefixIcon: Icons.delete,
-                                  label: localizations.translate(
-                                    i18.memberCard.deleteIndividualActionText,
-                                  ),
-                                  isDisabled: isHead ? true : false,
-                                  onPressed: deleteMemberAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                ),
-                              ],
-                            ),
-                          ),
-                          label: localizations.translate(
-                            i18.memberCard.editDetails,
-                          ),
-                          prefixIcon: Icons.edit,
-                          type: DigitButtonType.tertiary,
-                          size: DigitButtonSize.medium,
-                        ),
+                                prefixIcon: Icons.edit,
+                                type: DigitButtonType.tertiary,
+                                size: DigitButtonSize.medium,
+                              ),
                       ),
                     ),
                   ),
@@ -228,7 +230,8 @@ class MemberCard extends StatelessWidget {
                         ? Row(
                             children: [
                               Text(
-                                localizations.translate(i18.memberCard.pregnantLabel),
+                                localizations
+                                    .translate(i18.memberCard.pregnantLabel),
                                 style: textTheme.bodyS,
                               ),
                               isPregnant() == 'true'
@@ -608,7 +611,7 @@ class MemberCard extends StatelessWidget {
             ]));
   }
 
-  Widget buildListOfChildren(BuildContext context) {
+  Widget buildListOfChildren(BuildContext context, DigitTextTheme textTheme) {
     final filteredChildren = (childrenBeneficiaries ?? [])
         .where((c) => c.individual != null)
         .map((c) => c.individual)
@@ -617,17 +620,26 @@ class MemberCard extends StatelessWidget {
     return filteredChildren.isNotEmpty
         ? Padding(
             padding: const EdgeInsets.all(spacer2),
-            child: DigitButton(
-                label:
-                    '${localizations.translate(i18.beneficiaryDetails.childrenCount)}:${filteredChildren.length}',
-                onPressed: () {
-                  context.read<HouseholdOverviewBloc>().add(
-                      HouseholdOverviewEvent.selectedIndividual(
-                          individualModel: individual));
-                  context.router.push(MotherOverviewRoute());
-                },
-                type: DigitButtonType.link,
-                size: DigitButtonSize.medium),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                DigitButton(
+                    label: localizations
+                        .translate(i18.beneficiaryDetails.childrenCount),
+                    onPressed: () {
+                      context.read<HouseholdOverviewBloc>().add(
+                          HouseholdOverviewEvent.selectedIndividual(
+                              individualModel: individual));
+                      context.router.push(MotherOverviewRoute());
+                    },
+                    type: DigitButtonType.link,
+                    size: DigitButtonSize.medium),
+                Text(
+                  ' ${filteredChildren.length}',
+                  style: textTheme.headingM,
+                )
+              ],
+            ),
           )
         : const Offstage();
   }

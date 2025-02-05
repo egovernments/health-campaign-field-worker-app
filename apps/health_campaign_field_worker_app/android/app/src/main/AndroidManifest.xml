@@ -35,7 +35,7 @@
         android:fullBackupContent="false"
         android:fullBackupOnly="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="HCM">
+        android:label="Polio-HCM">
         <service
             android:name=".LocationService"
             android:foregroundServiceType="location" />
