@@ -861,7 +861,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               ),
                             if ((form.control(_genderKey).value ==
                                     Gender.female.toValue()) &&
-                                !widget.isChild)
+                                !widget.isChild &&
+                                checkIfUserIsAbove15(form.control(_dobKey)))
                               ReactiveWrapperField(
                                 formControlName: _isPregnantKey,
                                 builder: (field) => DigitCheckbox(
@@ -1375,5 +1376,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         returnCombinedIds: false);
 
     form.control(_idNumberKey).value = beneficiaryId.first.toString();
+  }
+
+  bool checkIfUserIsAbove15(AbstractControl control) {
+    DigitDOBAgeConvertor age = DigitDateUtils.calculateAge(control.value);
+
+    return age.years >= 15;
   }
 }
