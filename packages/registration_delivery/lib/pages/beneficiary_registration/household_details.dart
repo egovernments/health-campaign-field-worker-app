@@ -220,7 +220,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                             form
                                                 .control(
                                                     _motherWithChildrenLessThanFiveCountKey)
-                                                .value as int,
+                                                .value
+                                                .toString(),
                                           ),
                                           AdditionalField(
                                             AdditionalFieldsType
@@ -229,7 +230,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                             form
                                                 .control(
                                                     _firstTimePregnantWomenCountKey)
-                                                .value as int,
+                                                .value
+                                                .toString(),
                                           ),
                                           AdditionalField(
                                             AdditionalFieldsType
@@ -238,7 +240,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                             form
                                                 .control(
                                                     _nineYearsFemaleCountKey)
-                                                .value as int,
+                                                .value
+                                                .toString(),
                                           ),
                                           AdditionalField(
                                             AdditionalFieldsType
@@ -247,7 +250,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                             form
                                                 .control(
                                                     _childrenUnderFifteenYearsCountKey)
-                                                .value as int,
+                                                .value
+                                                .toString(),
                                           ),
                                           AdditionalField(
                                             AdditionalFieldsType
@@ -256,7 +260,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                             form
                                                 .control(
                                                     _womenBetweenAge15To49YearsCountKey)
-                                                .value as int,
+                                                .value
+                                                .toString(),
                                           )
                                         ]));
 

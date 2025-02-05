@@ -654,7 +654,13 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   ),
                                   child: DigitTextFormInput(
                                     keyboardType: TextInputType.number,
-                                    maxLength: 10,
+                                    errorMessage: form
+                                            .control(_genderKey)
+                                            .hasErrors
+                                        ? localizations.translate(i18
+                                            .individualDetails
+                                            .mobileNumberLengthValidationMessage)
+                                        : null,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly,
                                     ],
