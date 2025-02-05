@@ -203,13 +203,17 @@ class ChildCard extends StatelessWidget {
                   ],
                 ),
               ),
-              ...(individual.additionalFields?.fields.where((f) => f.key != 'parentClientReferenceId').map((field) => Padding(
-                padding: const EdgeInsets.all(spacer2),
-                child: Text(
-                  '${localizations.translate(field.key.toUpperCase())}: ${localizations.translate(parseStringValue(field.value))}',
-                  style: textTheme.bodyS,
-                ),
-              )).toList() ?? []),
+              ...(individual.additionalFields?.fields
+                      .where((f) => f.key != 'parentClientReferenceId')
+                      .map((field) => Padding(
+                            padding: const EdgeInsets.all(spacer2),
+                            child: Text(
+                              '${localizations.translate(field.key.toUpperCase())}: ${localizations.translate(parseStringValue(field.value))}',
+                              style: textTheme.bodyS,
+                            ),
+                          ))
+                      .toList() ??
+                  []),
               // [TODO: Removed Delivery Actions
               // Padding(
               //   padding: const EdgeInsets.only(left: spacer1, bottom: spacer2),
