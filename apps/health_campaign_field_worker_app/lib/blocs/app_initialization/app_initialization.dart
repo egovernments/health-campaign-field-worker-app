@@ -106,6 +106,7 @@ class AppInitializationBloc
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
+                    MasterEnums.searchCLFFilters.toValue()
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -242,6 +243,7 @@ class AppInitializationState with _$AppInitializationState {
   const factory AppInitializationState.uninitialized() = AppUninitialized;
 
   const factory AppInitializationState.loading() = AppInitializing;
+
   const factory AppInitializationState.failed() = AppInitializationFailed;
 
   const factory AppInitializationState.initialized({
@@ -312,7 +314,6 @@ class MdmsConfig {
   final List<AppConfiguration> appConfigs;
   final List<ServiceRegistry> serviceRegistryList;
   final DashboardConfigSchema? dashboardConfigSchema;
-
 
   const MdmsConfig(
       {required this.appConfigs,

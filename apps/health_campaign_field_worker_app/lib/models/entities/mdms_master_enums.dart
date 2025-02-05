@@ -49,6 +49,8 @@ enum MasterEnums {
   firebaseConfig,
   @MappableValue("SEARCH_HOUSEHOLD_FILTERS")
   searchHouseHoldFilters,
+  @MappableValue("SEARCH_CLF_FILTERS")
+  searchCLFFilters,
   @MappableValue("PrivacyPolicy")
   privacyPolicy,
   @MappableValue("dashboardConfig")
