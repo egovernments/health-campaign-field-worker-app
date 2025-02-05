@@ -410,7 +410,7 @@ class _HouseholdOverviewPageState
                                                       'textLabel'],
                                                 ),
                                               ...{for (var field in (state.householdMemberWrapper
-                                                  .household?.additionalFields?.fields ?? [])) localizations.translate(toUpperCaseWithUnderscores(field.key)) : parseStringValue(field.value)}
+                                                  .household?.additionalFields?.fields ?? [])) localizations.translate(toUpperCaseWithUnderscores(field.key)) : localizations.translate(parseStringValue(field.value))}
                                             },
                                           ),
                                         ],
