@@ -1,4 +1,4 @@
-📦 Health Campaign Management V1.6 - Field Worker's App
+📦 Health Campaign Management - Field Worker's App
 ====================================================
 
 
