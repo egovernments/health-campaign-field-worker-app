@@ -312,13 +312,9 @@ The **Closed Household** package is a new module built as a Flutter package (`cl
 This package provides a way to register a household and individual members and deliver the resources to the registered households.
 
 
-To learn more about Registration and Delivery, click here.
-
-
-
 ### Link to the Pub Package:
 
--   registration_delivery | Flutter package
+-   [registration_delivery | Flutter package](https://pub.dev/packages/registration_delivery)
 
 
 
@@ -506,13 +502,9 @@ This ensures proper integration of **Registration & Delivery** within the **HCM 
 This package enables the user to manage the stocks of a health campaign. The user can record the stocks received, issued, returned, damaged, and lost.
 
 
-To learn more about Inventory Management, click here.
-
-
-
 ### Link to the Pub Package:
 
--   inventory_management | Flutter package
+-   [inventory_management | Flutter package](https://pub.dev/packages/inventory_management)
 
 
 
@@ -552,13 +544,9 @@ To learn more about Inventory Management, click here.
 This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally via the **Digit HCM app**.
 
 
-To learn more about Referral Reconciliation, click here.
-
-
-
 ### Link to the Pub Package:
 
--   referral_reconciliation | Flutter package
+-   [referral_reconciliation | Flutter package](https://pub.dev/packages/referral_reconciliation)
 
 
 
@@ -602,13 +590,9 @@ The **Attendance Management package** is a comprehensive solution for tracking a
 
 
 
-### **To learn more about Attendance Management, click here.**
-
-
-
 ### **Link to the Pub Package:**
 
--   attendance_management | Flutter package
+-   [attendance_management | Flutter package](https://pub.dev/packages/attendance_management)
 
 
 
@@ -749,6 +733,9 @@ This will ensure the package route is properly integrated into **router.gr.dart*
 
 The `digit_data_model` package is a comprehensive data modeling library for the project. It defines various **classes, enums, and functions** used throughout the project. The package is written in **Dart** and is primarily used in **Flutter applications**.
 
+### **Link to the Pub Package:**
+
+-   [digit data model | Flutter package](https://pub.dev/packages/digit_data_model)
 
 
 ✨ Features
@@ -833,6 +820,12 @@ class ExampleRemoteRepository
 
 **Digit_dss** is a Flutter package designed to facilitate the seamless integration of dynamic dashboards into your mobile application. This package allows developers to configure and render various types of charts directly from a dashboard configuration, enabling a flexible and customizable approach to data visualization.
 
+
+### **Link to the Pub Package:**
+
+-   [digit dss | Flutter package](https://pub.dev/packages/digit_dss)
+
+
 ✨ Features
 ----------
 
@@ -869,6 +862,12 @@ The **Complaints Package** provides a streamlined way for users to register comp
 ✔️ Choose from predefined categories to classify complaints\
 ✔️ Access past complaint records
 
+
+### **Link to the Pub Package:**
+
+-   [complaints | Flutter package](https://pub.dev/packages/complaints)
+
+
 🎭 Role
 -------
 
@@ -903,6 +902,12 @@ The **Complaints Package** provides a streamlined way for users to register comp
 
 The **Survey Form Package** enables users to fill out **questionnaires** efficiently. It provides a user-friendly interface for submitting responses, ensuring that **health campaign-related feedback** and data are collected **accurately**.
 
+
+### **Link to the Pub Package:**
+
+-   [survey form | Flutter package](https://pub.dev/packages/survey_form)
+
+
 🎭 Role
 -------
 
@@ -934,6 +939,11 @@ The **Survey Form Package** enables users to fill out **questionnaires** efficie
 
 
 The **Sync Service Package** provides access to **sync-related configurations and listeners**, ensuring seamless data synchronization. It includes key components such as **SyncEntityMapperListener, syncDownRetryCount, and persistenceConfiguration**.
+
+### **Link to the Pub Package:**
+
+-   [sync service | Flutter package](https://pub.dev/packages/sync_service)
+
 
 ✨ Features
 ----------
@@ -976,6 +986,12 @@ class SyncServiceMapper extends SyncEntityMapperListener {
 
 
 The **DIGIT Scanner Package** is used for scanning **QR codes** and **GS1 barcodes** in Flutter applications.
+
+
+### **Link to the Pub Package:**
+
+-   [digit scanner | Flutter package](https://pub.dev/packages/digit_scanner)
+
 
 ✨ Features
 ----------
@@ -1054,6 +1070,11 @@ BlocListener<DigitScannerBloc, DigitScannerState>(
 
 
 The **Digit Showcase Package** provides an easy way to **highlight** or **showcase** widgets in your Flutter application. It helps guide users by visually emphasizing UI elements.
+
+
+### **Link to the Pub Package:**
+
+-   [digit showcase | Flutter package](https://pub.dev/packages/digit_showcase)
 
 ✨ Features
 ----------
