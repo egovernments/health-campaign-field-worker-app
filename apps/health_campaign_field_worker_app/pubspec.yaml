@@ -18,8 +18,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.11+1
   path_provider: ^2.1.3
   path: ^1.9.0
-  digit_ui_components: ^0.0.2-dev.4
-  digit_components: ^1.0.3
+  digit_ui_components: ^0.0.2-dev.6
   auto_route: ^8.3.0
   flutter_bloc: ^8.1.5
   collection: ^1.18.0
@@ -105,6 +104,7 @@ flutter:
     - ./
     - assets/icons/svg/
     - assets/animated_json/
+    - assets/images/
 
   fonts:
     - family: Roboto

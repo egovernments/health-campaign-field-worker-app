@@ -272,7 +272,6 @@ class RegisterCard extends StatelessWidget {
     var localization = AttendanceLocalization.of(context);
 
     return DigitCard(
-        padding: EdgeInsets.all(theme.spacerTheme.spacer2),
         margin: EdgeInsets.all(theme.spacerTheme.spacer2),
         children: [
           LabelValueSummary(
