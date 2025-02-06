@@ -122,12 +122,16 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
-                            final age = DigitDateUtils.calculateAge(
-                              form.control(_dobKey).value as DateTime,
-                            );
-                            if ((age.years == 0 && age.months == 0) ||
-                                age.years >= 150 && age.months > 0) {
+                            if (form.control(_dobKey).value == null) {
                               form.control(_dobKey).setErrors({'': true});
+                            } else {
+                              final age = DigitDateUtils.calculateAge(
+                                form.control(_dobKey).value as DateTime,
+                              );
+                              if ((age.years == 0 && age.months == 0) ||
+                                  age.years >= 150 && age.months > 0) {
+                                form.control(_dobKey).setErrors({'': true});
+                              }
                             }
                             if (form.control(_idTypeKey).value == null) {
                               form.control(_idTypeKey).setErrors({'': true});

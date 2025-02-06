@@ -393,6 +393,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                               )
                                             : null,
                                         isRequired: e.required ?? false,
+                                        capitalizedFirstLetter: false,
                                         child: DigitTextFormInput(
                                           onChange: (value) {
                                             field.didChange(value);
@@ -706,12 +707,12 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       return Align(
         alignment: Alignment.topLeft,
         child: LabeledField(
-            charCondition: true,
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
             capitalizedFirstLetter: false,
             isRequired: item.required ?? false,
+            capitalizedFirstLetter: false,
             child: Column(children: [
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {

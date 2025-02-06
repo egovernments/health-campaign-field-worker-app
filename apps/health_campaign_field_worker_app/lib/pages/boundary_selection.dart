@@ -45,6 +45,7 @@ class _BoundarySelectionPageState
 
   Map<String, TextEditingController> dropdownControllers = {};
   late StreamSubscription syncSubscription;
+  var leastLevelBoundaries;
 
   @override
   void initState() {
@@ -68,6 +69,7 @@ class _BoundarySelectionPageState
 
   @override
   void dispose() {
+    clickedStatus.value = true;
     clickedStatus.dispose();
     syncSubscription.cancel();
     super.dispose();
@@ -633,14 +635,7 @@ class _BoundarySelectionPageState
                                                           ),
                                                         );
                                                   } else {
-                                                    Future.delayed(
-                                                      const Duration(
-                                                        milliseconds: 100,
-                                                      ),
-                                                      () => context.router
-                                                          .maybePop(),
-                                                    );
-                                                  }
+                                                    
                                                   clickedStatus.value = true;
                                                   LocalizationParams()
                                                       .setModule(
@@ -656,7 +651,9 @@ class _BoundarySelectionPageState
                                                                   AppSharedPreferences()
                                                                       .getSelectedLocale),
                                                           code: AppSharedPreferences()
-                                                              .getSelectedLocale!));
+                                                              .getSelectedLocale!));context.router.replaceAll(
+                                                          [HomeRoute()]);
+                                                    }
                                                 }
                                               }
                                             },
@@ -684,6 +681,7 @@ class _BoundarySelectionPageState
     final labelList = state.selectedBoundaryMap.keys.toList();
     final parentIndex = labelList.indexOf(parentLabel);
     if (state.boundaryList.isNotEmpty) {
+      leastLevelBoundaries = (state.boundaryList.map((e) => e.code!).toList());
       LocalizationParams()
           .setCode(state.boundaryList.map((e) => e.code!).toList());
     }

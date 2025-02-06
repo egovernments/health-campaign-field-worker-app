@@ -465,7 +465,7 @@ class _SearchBeneficiaryPageState
                   label: localizations.translate(
                     i18.deliverIntervention.scannerLabel,
                   ),
-                ),
+                capitalizeLetters: false,),
               ]),
         ),
       ),
@@ -523,7 +523,6 @@ class _SearchBeneficiaryPageState
     if (!isPagination) {
       blocWrapper.clearEvent();
     }
-
     if (RegistrationDeliverySingleton().beneficiaryType ==
         BeneficiaryType.individual) {
       if (isProximityEnabled ||

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -9,6 +10,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 class CameraView extends LocalizedStatefulWidget {
@@ -20,6 +22,7 @@ class CameraView extends LocalizedStatefulWidget {
     this.onDetectorViewModeChanged,
     this.onCameraLensDirectionChanged,
     this.initialCameraLensDirection = CameraLensDirection.back,
+    this.onBackButtonPressed,
     required this.cameraController,
     required this.cameras,
   });
@@ -32,6 +35,7 @@ class CameraView extends LocalizedStatefulWidget {
   final CameraLensDirection initialCameraLensDirection;
   final CameraController? cameraController;
   final List<CameraDescription> cameras;
+  final VoidCallback? onBackButtonPressed;
 
   @override
   State<CameraView> createState() => _CameraViewState();
@@ -117,9 +121,9 @@ class _CameraViewState extends State<CameraView> {
           width: 50.0,
           child: FloatingActionButton(
             heroTag: Object(),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: widget.onBackButtonPressed,
             backgroundColor: Theme.of(context).colorTheme.generic.background,
-            child:  Icon(
+            child: Icon(
               Icons.arrow_back_ios_outlined,
               size: 20,
               color: Theme.of(context).colorTheme.text.primary,
@@ -204,7 +208,8 @@ class _CameraViewState extends State<CameraView> {
                     child: Center(
                       child: Text(
                         '${_currentZoomLevel.toStringAsFixed(1)}x',
-                        style: TextStyle(color: const DigitColors().light.paperPrimary),
+                        style: TextStyle(
+                            color: const DigitColors().light.paperPrimary),
                       ),
                     ),
                   ),

@@ -187,7 +187,7 @@ class ClosedHouseholdDetailsPageState
                                   i18.closeHousehold.accuracyLabel,
                                 ),
                                 capitalizedFirstLetter: false,
-                                child: DigitTextFormInput(
+                                capitalizedFirstLetter: false,child: DigitTextFormInput(
                                   errorMessage: field.errorText,
                                   readOnly: true,
                                   initialValue: (form
@@ -257,7 +257,7 @@ class ClosedHouseholdDetailsPageState
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
         value: localizations
-            .translate(ClosedHouseholdSingleton().boundary!.name.toString()),
+            .translate(ClosedHouseholdSingleton().boundary!.code.toString()),
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(
