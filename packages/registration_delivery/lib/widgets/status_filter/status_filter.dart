@@ -8,7 +8,6 @@ import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../localized.dart';
 
 class StatusFilter extends LocalizedStatefulWidget {
   final List<String>? selectedFilters;
