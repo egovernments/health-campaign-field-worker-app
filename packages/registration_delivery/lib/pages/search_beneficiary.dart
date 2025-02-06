@@ -402,9 +402,8 @@ class _SearchBeneficiaryPageState
         ),
         bottomNavigationBar: Offstage(
           offstage: RegistrationDeliverySingleton().householdType ==
-                      HouseholdType.community &&
-                  (searchHouseholdsState.searchQuery == null) ||
-              (searchHouseholdsState.searchQuery!.length < 3),
+                  HouseholdType.community &&
+              searchController.text.length < 3,
           child: DigitCard(
               margin: const EdgeInsets.only(top: spacer2),
               padding: const EdgeInsets.all(spacer4),
