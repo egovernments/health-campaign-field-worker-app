@@ -1127,6 +1127,14 @@ class StockDetails {
   String get manualScanCommentRequired => 'MANUAL_SCAN_COMMENT_REQUIRED';
 
   String get reconciliationCommentRequired => 'RECONCILIATION_COMMENT_REQUIRED';
+
+  String get countDialogTitle => 'STOCK_DETAILS_COUNT_DIALOG_TITLE';
+  String get countContent => 'STOCK_DETAILS_COUNT_DIALOG_CONTENT';
+  String get countDialogSuccess =>
+      'STOCK_DETAILS_COUNT_DIALOG_SUCCESS_ACTION_LABEL';
+
+  String get countDialogCancel =>
+      'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';
 }
 
 class BeneficiaryDetails {

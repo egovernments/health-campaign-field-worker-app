@@ -9,6 +9,7 @@ import 'package:digit_ui_components/widgets/atoms/reactive_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
@@ -134,6 +135,8 @@ class CustomStockDetailsPageState
   Widget build(BuildContext context) {
     bool isWaybillQuantityInit = false;
     final theme = Theme.of(context);
+    final stockReconciliationBloc =
+        BlocProvider.of<StockReconciliationBloc>(context);
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
     // final parser = GS1BarcodeParser.defaultParser();
@@ -513,6 +516,58 @@ class CustomStockDetailsPageState
                                                 ),
                                               );
                                               qrCodeCount = qrCodeCount + 1;
+                                            }
+                                          }
+
+                                          final stockReconciliationState =
+                                              stockReconciliationBloc.state;
+
+                                          if (stockReconciliationState
+                                                      .stockInHand <
+                                                  int.parse(
+                                                      quantity.toString()) &&
+                                              entryType ==
+                                                  StockRecordEntryType
+                                                      .dispatch) {
+                                            final alert =
+                                                await DigitDialog.show<bool>(
+                                              context,
+                                              options: DigitDialogOptions(
+                                                titleText:
+                                                    localizations.translate(
+                                                  i18_local.stockDetails
+                                                      .countDialogTitle,
+                                                ),
+                                                contentText: localizations
+                                                    .translate(
+                                                      i18_local.stockDetails
+                                                          .countContent,
+                                                    )
+                                                    .replaceAll(
+                                                      '{}',
+                                                      stockReconciliationState
+                                                          .stockInHand
+                                                          .toString(),
+                                                    ),
+                                                primaryAction:
+                                                    DigitDialogActions(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18_local.stockDetails
+                                                        .countDialogSuccess,
+                                                  ),
+                                                  action: (context) {
+                                                    Navigator.of(
+                                                      context,
+                                                      rootNavigator: true,
+                                                    ).pop(false);
+                                                  },
+                                                ),
+                                              ),
+                                            );
+
+                                            if (!(alert ?? false)) {
+                                              return;
                                             }
                                           }
 
