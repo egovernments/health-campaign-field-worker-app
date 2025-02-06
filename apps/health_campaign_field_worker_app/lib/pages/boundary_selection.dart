@@ -606,9 +606,8 @@ class _BoundarySelectionPageState
     final labelList = state.selectedBoundaryMap.keys.toList();
 
     for (final label in labelList) {
-      BoundaryModel? data = state.selectedBoundaryMap[label];
       formControls[label] = FormControl<BoundaryModel>(
-        value: data,
+        value: state.selectedBoundaryMap[label],
       );
     }
 
