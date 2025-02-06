@@ -187,7 +187,8 @@ class ClosedHouseholdDetailsPageState
                                   i18.closeHousehold.accuracyLabel,
                                 ),
                                 capitalizedFirstLetter: false,
-                                capitalizedFirstLetter: false,child: DigitTextFormInput(
+                                capitalizedFirstLetter: false,
+                                child: DigitTextFormInput(
                                   errorMessage: field.errorText,
                                   readOnly: true,
                                   initialValue: (form

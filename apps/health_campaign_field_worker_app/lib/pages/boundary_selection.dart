@@ -635,25 +635,22 @@ class _BoundarySelectionPageState
                                                           ),
                                                         );
                                                   } else {
-                                                    
-                                                  clickedStatus.value = true;
-                                                  LocalizationParams()
-                                                      .setModule(
-                                                          'boundary', true);
-                                                  context
-                                                      .read<LocalizationBloc>()
-                                                      .add(LocalizationEvent.onUpdateLocalizationIndex(
-                                                          index: appConfiguration
-                                                              .languages!
-                                                              .indexWhere((element) =>
-                                                                  element
-                                                                      .value ==
-                                                                  AppSharedPreferences()
-                                                                      .getSelectedLocale),
-                                                          code: AppSharedPreferences()
-                                                              .getSelectedLocale!));context.router.replaceAll(
-                                                          [HomeRoute()]);
-                                                    }
+                                                    clickedStatus.value = true;
+                                                    LocalizationParams()
+                                                        .setModule(
+                                                            'boundary', true);
+                                                    context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
+                                                        index: appConfiguration
+                                                            .languages!
+                                                            .indexWhere((element) =>
+                                                                element.value ==
+                                                                AppSharedPreferences()
+                                                                    .getSelectedLocale),
+                                                        code: AppSharedPreferences()
+                                                            .getSelectedLocale!));
+                                                    context.router.replaceAll(
+                                                        [HomeRoute()]);
+                                                  }
                                                 }
                                               }
                                             },
