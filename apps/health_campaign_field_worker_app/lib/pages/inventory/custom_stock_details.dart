@@ -75,7 +75,7 @@ class CustomStockDetailsPageState
         Validators.min(0),
         Validators.max(10000),
       ]),
-      _transactionReasonKey: FormControl<String>(),
+      _transactionReasonKey: FormControl<String>(validators: []),
       _waybillNumberKey: FormControl<String>(
         validators: [Validators.minLength(2), Validators.maxLength(200)],
       ),
@@ -1747,6 +1747,9 @@ class CustomStockDetailsPageState
                                                               quantity:
                                                                   balesQuantityInInt,
                                                               isGS1code: true,
+                                                              gs1CodeList:
+                                                                  scannerState
+                                                                      .barCodes,
                                                               singleValue:
                                                                   false,
                                                               manualEnabled:

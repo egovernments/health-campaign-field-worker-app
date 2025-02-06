@@ -7,6 +7,7 @@ import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -17,13 +18,14 @@ import 'package:inventory_management/widgets/component_wrapper/product_variant_b
 import 'package:inventory_management/widgets/inventory/no_facilities_assigned_dialog.dart';
 import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/widgets/reports/readonly_pluto_grid.dart';
-import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
+
+import 'bloc/custom_inventory_report.dart';
 
 @RoutePage()
 class CustomInventoryReportDetailsPage extends LocalizedStatefulWidget {
@@ -67,7 +69,7 @@ class CustomInventoryReportDetailsPageState
   /// @param form The [FormGroup] that contains the controls for the facility and product variant.
   /// @param inventoryReportBloc The [InventoryReportBloc] to which the events are dispatched.
   void handleSelection(
-      FormGroup form, InventoryReportBloc inventoryReportBloc) {
+      FormGroup form, CustomInventoryReportBloc inventoryReportBloc) {
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
             facilityId: form.control(_facilityKey).value != null
@@ -113,8 +115,8 @@ class CustomInventoryReportDetailsPageState
   Widget build(BuildContext context) {
     bool isWareHouseManager = InventorySingleton().isWareHouseMgr;
 
-    return BlocProvider<InventoryReportBloc>(
-      create: (context) => InventoryReportBloc(
+    return BlocProvider<CustomInventoryReportBloc>(
+      create: (context) => CustomInventoryReportBloc(
         stockReconciliationRepository: context.repository<
             StockReconciliationModel, StockReconciliationSearchModel>(context),
         stockRepository:
@@ -134,7 +136,7 @@ class CustomInventoryReportDetailsPageState
             ),
           ],
         ),
-        body: BlocBuilder<InventoryReportBloc, InventoryReportState>(
+        body: BlocBuilder<CustomInventoryReportBloc, InventoryReportState>(
           builder: (context, inventoryReportState) {
             final noRecordsMessage = localizations.translate(
               i18.inventoryReportDetails.noRecordsMessage,
@@ -260,7 +262,7 @@ class CustomInventoryReportDetailsPageState
                                                       handleSelection(
                                                           form,
                                                           context.read<
-                                                              InventoryReportBloc>());
+                                                              CustomInventoryReportBloc>());
                                                     }
                                                   }
                                                 },
@@ -319,7 +321,7 @@ class CustomInventoryReportDetailsPageState
                                                       handleSelection(
                                                           form,
                                                           context.read<
-                                                              InventoryReportBloc>());
+                                                              CustomInventoryReportBloc>());
                                                     }
                                                     return LabeledField(
                                                       isRequired: true,
@@ -372,7 +374,7 @@ class CustomInventoryReportDetailsPageState
                                                           handleSelection(
                                                               form,
                                                               context.read<
-                                                                  InventoryReportBloc>());
+                                                                  CustomInventoryReportBloc>());
                                                         },
                                                       ),
                                                     );

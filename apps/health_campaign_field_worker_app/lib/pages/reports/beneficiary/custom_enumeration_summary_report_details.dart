@@ -119,21 +119,35 @@ class _CustomEumerationSummaryReportDetailsState
                                     .householdRegisteredLabel,
                               ),
                               key: _householdKey,
-                              width: 170,
+                              width: localizations
+                                      .translate(
+                                        i18Local.inventoryReportDetails
+                                            .householdRegisteredLabel,
+                                      )
+                                      .length *
+                                  8,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
                                   .projectBeneficiaryRegisteredLabel),
                               key: _projectBeneficiaryKey,
-                              width: 120,
+                              width: localizations
+                                      .translate(i18Local.inventoryReportDetails
+                                          .projectBeneficiaryRegisteredLabel)
+                                      .length *
+                                  8,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
                                   .closedHouseholdRegisteredLabel),
                               key: _closedHouseholdKey,
-                              width: 130,
+                              width: localizations
+                                      .translate(i18Local.inventoryReportDetails
+                                          .closedHouseholdRegisteredLabel)
+                                      .length *
+                                  8,
                             ),
                           ],
                           rows: [

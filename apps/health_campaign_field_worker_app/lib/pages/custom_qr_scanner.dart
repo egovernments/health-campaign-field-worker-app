@@ -15,6 +15,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import '../utils/constants.dart';
+import '../utils/custom_digit_scanner_utils.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18Local;
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -27,6 +28,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
   final bool singleValue;
   final int quantity;
   final bool isGS1code;
+  final List<GS1Barcode> gs1CodeList;
   final bool isEditEnabled;
   final bool manualEnabled;
   final ScanType scanType;
@@ -36,6 +38,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
     super.appLocalizations,
     required this.quantity,
     required this.isGS1code,
+    this.gs1CodeList = const [],
     this.singleValue = false,
     this.isEditEnabled = false,
     this.manualEnabled = true,
@@ -90,7 +93,9 @@ class _CustomDigitScannerPageState
           r'^2025-' + phase + '-' + districtRange + r'-\d{2}-\d{2}-\d{2}$');
     }
 
-    if (!widget.isEditEnabled) {
+    if (widget.gs1CodeList.isNotEmpty) {
+      result = widget.gs1CodeList;
+    } else if (!widget.isEditEnabled) {
       context
           .read<DigitScannerBloc>()
           .add(const DigitScannerEvent.handleScanner());
@@ -606,7 +611,7 @@ class _CustomDigitScannerPageState
   }
 
   Future<void> _processImage(InputImage inputImage) async {
-    await DigitScannerUtils().processImage(
+    await CustomDigitScannerUtils().processImage(
       context: currentContext,
       inputImage: inputImage,
       canProcess: _canProcess,
@@ -645,7 +650,18 @@ class _CustomDigitScannerPageState
   }
 
   Future<void> storeCodeWrapper(String code) async {
-    if (codes.length < widget.quantity) {
+    if (pattern.hasMatch(code) == false) {
+      await DigitToast.show(
+        currentContext,
+        options: DigitToastOptions(
+          localizations
+              .translate(i18Local.deliverIntervention.patternValidationFailed),
+          true,
+          Theme.of(currentContext),
+        ),
+      );
+      await Future.delayed(const Duration(seconds: 2));
+    } else if (codes.length < widget.quantity) {
       if (widget.scanType == ScanType.stock &&
           code.contains(Constants.pipeSeparator)) {
         code = code.split(Constants.pipeSeparator).last.trim();
