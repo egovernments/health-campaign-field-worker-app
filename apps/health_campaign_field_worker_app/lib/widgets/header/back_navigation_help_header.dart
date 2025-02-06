@@ -18,6 +18,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showLogoutCTA;
   final VoidCallback? helpClicked;
   final VoidCallback? handleback;
+  final bool defaultPopRoute;
   final ShowcaseButton? showcaseButton;
 
   const BackNavigationHelpHeaderWidget({
@@ -27,6 +28,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     this.showLogoutCTA = false,
     this.helpClicked,
     this.handleback,
+    this.defaultPopRoute = true,
     this.showcaseButton,
   });
 
@@ -53,7 +55,9 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                       ),
                     ),
                     handleBack: () {
-                      context.router.maybePop();
+                      if(defaultPopRoute){
+                          context.router.maybePop();
+                        }
                       handleback != null ? handleback!() : null;
                     },
                     label: AppLocalizations.of(context).translate(

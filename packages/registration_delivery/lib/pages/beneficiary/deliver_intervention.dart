@@ -6,7 +6,9 @@ import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_stepper.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -218,12 +220,30 @@ class DeliverInterventionPageState
                       final steps = generateSteps(numberOfDoses);
                       if ((productVariants ?? []).isEmpty && context.mounted) {
                         SchedulerBinding.instance.addPostFrameCallback((_) {
-                          Toast.showToast(context,
-                              message: localizations.translate(
-                                i18.deliverIntervention
-                                    .checkForProductVariantsConfig,
-                              ),
-                              type: ToastType.error);
+                          showCustomPopup(
+                              context: context,
+                              builder: (popUpContext) => Popup(
+                                      title: localizations.translate(
+                                        i18.common.noResultsFound,
+                                      ),
+                                      description: localizations.translate(
+                                        i18.deliverIntervention
+                                            .checkForProductVariantsConfig,
+                                      ),
+                                      type: PopUpType.alert,
+                                      actions: [
+                                        DigitButton(
+                                          label: localizations.translate(
+                                            i18.common.coreCommonOk,
+                                          ),
+                                          onPressed: () {
+                                            context.router.maybePop();
+                                            Navigator.of(popUpContext).pop();
+                                          },
+                                          type: DigitButtonType.primary,
+                                          size: DigitButtonSize.large,
+                                        ),
+                                      ]));
                         });
                       }
 

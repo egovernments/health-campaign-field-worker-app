@@ -407,8 +407,8 @@ class IndividualLocalRepository
           ),
         );
 
-        batch.insertAllOnConflictUpdate(sql.address, addressCompanions);
-        batch.insertAllOnConflictUpdate(sql.identifier, identifierCompanions);
+        batch.replaceAll(sql.address, addressCompanions);
+        batch.replaceAll(sql.identifier, identifierCompanions);
       });
 
       await super.update(entity, createOpLog: createOpLog);

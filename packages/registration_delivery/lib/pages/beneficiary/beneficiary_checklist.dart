@@ -259,6 +259,7 @@ class _BeneficiaryChecklistPageState
                                         '${selectedServiceDefinition?.code}.${e.code}',
                                       ),
                                       isRequired: e.required ?? false,
+                                      capitalizedFirstLetter: false,
                                       child: DigitTextFormInput(
                                         onChange: (value) {
                                           field.didChange(value);
@@ -306,6 +307,7 @@ class _BeneficiaryChecklistPageState
                                           )
                                           .trim(),
                                       isRequired: e.required ?? false,
+                                      capitalizedFirstLetter: false,
                                       child: DigitTextFormInput(
                                         onChange: (value) {
                                           field.didChange(value);
@@ -400,61 +402,70 @@ class _BeneficiaryChecklistPageState
                                       builder: (context, state) {
                                         return Align(
                                           alignment: Alignment.topLeft,
-                                          child: SelectionCard<bool>(
-                                            showParentContainer: true,
-                                            title: localizations.translate(
+                                          child: LabeledField(
+                                            label: localizations.translate(
                                               '${selectedServiceDefinition?.code}.${e.code}',
                                             ),
-                                            isRequired: e.required ?? false,
-                                            allowMultipleSelection: false,
-                                            width: 110,
-                                            valueMapper: (value) {
-                                              return value
-                                                  ? localizations.translate(
-                                                      i18.common.coreCommonYes,
-                                                    )
-                                                  : localizations.translate(
-                                                      i18.common.coreCommonNo,
+                                            capitalizedFirstLetter: false,
+                                            child: SelectionCard<bool>(
+                                              showParentContainer: true,
+                                              isRequired: e.required ?? false,
+                                              allowMultipleSelection: false,
+                                              width: 110,
+                                              valueMapper: (value) {
+                                                return value
+                                                    ? localizations.translate(
+                                                        i18.common
+                                                            .coreCommonYes,
+                                                      )
+                                                    : localizations.translate(
+                                                        i18.common.coreCommonNo,
+                                                      );
+                                              },
+                                              errorMessage: (!validFields &&
+                                                      (controller[index].text ==
+                                                          ''))
+                                                  ? localizations.translate(i18
+                                                      .common
+                                                      .corecommonRequired)
+                                                  : null,
+                                              initialSelection:
+                                                  controller[index].text ==
+                                                          'true'
+                                                      ? [true]
+                                                      : controller[index]
+                                                                  .text ==
+                                                              'false'
+                                                          ? [false]
+                                                          : [],
+                                              options: const [true, false],
+                                              onSelectionChanged: (curValue) {
+                                                if (curValue.isNotEmpty) {
+                                                  context
+                                                      .read<ServiceBloc>()
+                                                      .add(
+                                                        ServiceSurveyFormEvent(
+                                                          value: curValue
+                                                              .toString(),
+                                                          submitTriggered:
+                                                              submitTriggered,
+                                                        ),
+                                                      );
+                                                  setState(() {
+                                                    controller[index].value =
+                                                        TextEditingValue(
+                                                      text: curValue.first
+                                                          .toString(),
                                                     );
-                                            },
-                                            errorMessage: (!validFields &&
-                                                    (controller[index].text ==
-                                                        ''))
-                                                ? localizations.translate(i18
-                                                    .common.corecommonRequired)
-                                                : null,
-                                            initialSelection:
-                                                controller[index].text == 'true'
-                                                    ? [true]
-                                                    : controller[index].text ==
-                                                            'false'
-                                                        ? [false]
-                                                        : [],
-                                            options: const [true, false],
-                                            onSelectionChanged: (curValue) {
-                                              if (curValue.isNotEmpty) {
-                                                context.read<ServiceBloc>().add(
-                                                      ServiceSurveyFormEvent(
-                                                        value:
-                                                            curValue.toString(),
-                                                        submitTriggered:
-                                                            submitTriggered,
-                                                      ),
-                                                    );
-                                                setState(() {
+                                                  });
+                                                } else {
                                                   controller[index].value =
-                                                      TextEditingValue(
-                                                    text: curValue.first
-                                                        .toString(),
+                                                      const TextEditingValue(
+                                                    text: '',
                                                   );
-                                                });
-                                              } else {
-                                                controller[index].value =
-                                                    const TextEditingValue(
-                                                  text: '',
-                                                );
-                                              }
-                                            },
+                                                }
+                                              },
+                                            ),
                                           ),
                                         );
                                       },
@@ -659,6 +670,7 @@ class _BeneficiaryChecklistPageState
                 '${selectedServiceDefinition?.code}.${item.code}',
               ),
               isRequired: item.required ?? false,
+              capitalizedFirstLetter: false,
               child: DigitTextFormInput(
                 maxLength: 1000,
                 charCount: true,
@@ -701,6 +713,7 @@ class _BeneficiaryChecklistPageState
                   )
                   .trim(),
               isRequired: item.required ?? false,
+              capitalizedFirstLetter: false,
               child: DigitTextFormInput(
                 onChange: (value) {
                   field.didChange(value);
@@ -727,6 +740,7 @@ class _BeneficiaryChecklistPageState
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
             isRequired: item.required ?? false,
+            capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
                 return Column(
@@ -776,6 +790,7 @@ class _BeneficiaryChecklistPageState
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
             isRequired: item.required ?? false,
+            capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
                 return FormField<bool>(

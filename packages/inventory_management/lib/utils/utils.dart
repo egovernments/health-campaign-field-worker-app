@@ -45,12 +45,17 @@ class InventorySingleton {
   UserModel? _loggedInUser;
   String? _loggedInUserUuid = '';
   String? _boundaryName = '';
+  BoundaryModel? _boundaryModel;
   String? _tenantId = '';
   bool _isDistributor = false;
   bool _isWareHouseMgr = false;
   List<InventoryTransportTypes>? _transportType = [];
   PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
+
+  void setBoundary({required BoundaryModel boundary}) {
+    _boundaryModel = boundary;
+  }
 
   // Sets the initial data for the inventory.
   void setInitialData({
@@ -86,6 +91,7 @@ class InventorySingleton {
   get projectId => _projectId;
   get loggedInUserUuid => _loggedInUserUuid;
   get boundaryName => _boundaryName;
+  BoundaryModel? get boundary => _boundaryModel;
   get isDistributor => _isDistributor;
   get isWareHouseMgr => _isWareHouseMgr;
   get transportType => _transportType;
