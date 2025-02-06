@@ -551,6 +551,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         index,
                                         value.selectedServiceDefinition,
                                         context,
+                                        description,
                                       ),
                                     ]),
                             ] else if (e.dataType == 'Boolean') ...[
@@ -567,6 +568,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                             label: localizations.translate(
                                               '${selectedServiceDefinition?.code}.${e.code}',
                                             ),
+                                            description: description != null
+                                                ? localizations.translate(
+                                                    '${value.selectedServiceDefinition?.code}.$description',
+                                                  )
+                                                : null,
                                             isRequired: e.required ?? false,
                                             capitalizedFirstLetter: false,
                                             child: BlocBuilder<ServiceBloc,
@@ -676,11 +682,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }
 
   Widget _buildSurveyForm(
-    AttributesModel item,
-    int index,
-    ServiceDefinitionModel? selectedServiceDefinition,
-    BuildContext context,
-  ) {
+      AttributesModel item,
+      int index,
+      ServiceDefinitionModel? selectedServiceDefinition,
+      BuildContext context,
+      String? description) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
     /* Check the data type of the attribute*/
@@ -710,6 +716,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
             capitalizedFirstLetter: false,
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
@@ -829,6 +840,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                   label: localizations.translate(
                                     '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
                                   ),
+                                  description: description != null
+                                      ? localizations.translate(
+                                          '${selectedServiceDefinition?.code}.$description',
+                                        )
+                                      : null,
                                   isRequired: item.required ?? false,
                                   capitalizedFirstLetter: false,
                                   child: DigitTextFormInput(
@@ -854,6 +870,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   index,
                   controller[index].text.trim(),
                   context,
+                  description,
                 ),
               ],
             ])),
@@ -880,6 +897,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               label: localizations.translate(
                 '${selectedServiceDefinition?.code}.${item.code}',
               ),
+              description: description != null
+                  ? localizations.translate(
+                      '${selectedServiceDefinition?.code}.$description',
+                    )
+                  : null,
               isRequired: item.required ?? false,
               capitalizedFirstLetter: false,
               child: DigitTextFormInput(
@@ -925,6 +947,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                     '${selectedServiceDefinition?.code}.${item.code}',
                   )
                   .trim(),
+              description: description != null
+                  ? localizations.translate(
+                      '${selectedServiceDefinition?.code}.$description',
+                    )
+                  : null,
               isRequired: item.required ?? false,
               capitalizedFirstLetter: false,
               child: DigitTextFormInput(
@@ -952,6 +979,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
@@ -1002,6 +1034,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
@@ -1068,12 +1105,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }
 
   // Function to build nested SurveyForm for child attributes
-  Widget _buildNestedSurveyForm(
-    String parentCode,
-    int parentIndex,
-    String parentControllerValue,
-    BuildContext context,
-  ) {
+  Widget _buildNestedSurveyForm(String parentCode, int parentIndex,
+      String parentControllerValue, BuildContext context, String? description) {
     // Retrieve child items for the given parent code
     final childItems = getNextQuestions(
       parentCode,
@@ -1091,12 +1124,13 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   bottom: spacer2, left: spacer1, right: spacer1),
               children: [
                 _buildSurveyForm(
-                  matchingChildItem,
-                  initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
-                  // Pass parentIndex here as we're building at the same level
-                  selectedServiceDefinition,
-                  context,
-                ),
+                    matchingChildItem,
+                    initialAttributes?.indexOf(matchingChildItem) ??
+                        parentIndex,
+                    // Pass parentIndex here as we're building at the same level
+                    selectedServiceDefinition,
+                    context,
+                    description),
               ]),
       ],
     );

@@ -3,11 +3,10 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:digit_ui_components/utils/app_logger.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -344,7 +343,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final facilities = await facilityRemoteRepository.search(
       FacilitySearchModel(tenantId: envConfig.variables.tenantId),
-      limit: batchSize,
+      limit: 500,
     );
 
     await facilityLocalRepository.bulkCreate(facilities);
