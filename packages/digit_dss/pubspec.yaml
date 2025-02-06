@@ -26,7 +26,7 @@ dependencies:
   dio: ^5.4.3+1
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
-  attendance_management: ^1.0.3
+  attendance_management: 1.0.3-dev.1
 
 dev_dependencies:
   flutter_test:

@@ -49,6 +49,8 @@ class Variables {
   final DotEnv _dotEnv;
   final bool useFallbackValues;
 
+  String? _customHierarchyType;
+
   static const _connectTimeoutValue = 6000;
   static const _receiveTimeoutValue = 6000;
   static const _sendTimeoutValue = 6000;
@@ -119,7 +121,7 @@ class Variables {
     'ADMIN',
   );
 
-  const Variables({
+  Variables({
     this.useFallbackValues = false,
     required DotEnv dotEnv,
   }) : _dotEnv = dotEnv;
@@ -136,9 +138,11 @@ class Variables {
       ? _mdmsApi.value
       : _dotEnv.get(_mdmsApi.key, fallback: _mdmsApi.value);
 
-  String get hierarchyType => useFallbackValues
-      ? _hierarchyType.value
-      : _dotEnv.get(_hierarchyType.key, fallback: _hierarchyType.value);
+  String get hierarchyType => _customHierarchyType ?? _hierarchyType.value;
+
+  set hierarchyType(String value) {
+    _customHierarchyType = value;
+  }
 
   String get actionMapApiPath => useFallbackValues
       ? _actionMapUrl.value

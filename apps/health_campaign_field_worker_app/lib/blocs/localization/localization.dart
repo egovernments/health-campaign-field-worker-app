@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../data/repositories/local/localization.dart';
 import '../../data/repositories/remote/localization.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 import 'app_localization.dart';
 
@@ -51,7 +52,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
         var localResults = await LocalizationLocalRepository()
             .fetchLocalization(
                 sql: sql, locale: event.locale, module: allModules.join(','));
-        if (localResults.isEmpty) {
+        if (localResults.isEmpty || event.module == "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()}") {
           var results = await localizationRepository.loadLocalization(
             path: event.path,
             locale: event.locale,
