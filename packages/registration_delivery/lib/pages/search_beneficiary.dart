@@ -463,7 +463,6 @@ class _SearchBeneficiaryPageState
                   label: localizations.translate(
                     i18.deliverIntervention.scannerLabel,
                   ),
-                  capitalizeLetters: false,
                 ),
               ]),
         ),
