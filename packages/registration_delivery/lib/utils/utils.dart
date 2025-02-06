@@ -238,12 +238,12 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
           List expressionParser = [];
           for (var element in conditions) {
             final expression = FormulaParser(
-            element,
+              element,
               {
-              'age': individualAgeInMonths,
-              if (gender != null) 'gender': gender,
-              if (memberCount != null) 'memberCount': memberCount,
-              if (roomCount != null) 'roomCount': roomCount
+                'age': individualAgeInMonths,
+                if (gender != null) 'gender': gender,
+                if (memberCount != null) 'memberCount': memberCount,
+                if (roomCount != null) 'roomCount': roomCount
               },
             );
             final error = expression.parse;

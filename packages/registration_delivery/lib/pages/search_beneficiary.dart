@@ -12,7 +12,6 @@ import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -465,7 +464,8 @@ class _SearchBeneficiaryPageState
                   label: localizations.translate(
                     i18.deliverIntervention.scannerLabel,
                   ),
-                capitalizeLetters: false,),
+                  capitalizeLetters: false,
+                ),
               ]),
         ),
       ),
