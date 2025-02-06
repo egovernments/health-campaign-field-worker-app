@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -416,8 +417,8 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             !isBeneficiaryRefused &&
             !isNotEligible &&
             !isStatusReset
-        ? theme.colorScheme.onSurfaceVariant
-        : theme.colorScheme.error;
+        ? theme.colorTheme.alert.success
+        : theme.colorTheme.alert.error;
   }
 
   getStatus(

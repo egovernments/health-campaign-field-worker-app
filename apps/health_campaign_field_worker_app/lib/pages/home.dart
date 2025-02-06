@@ -7,9 +7,6 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
@@ -17,6 +14,8 @@ import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -164,7 +163,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             version: Constants().version,
           ),
           children: [
-            const SizedBox(height: kPadding * 2),
+            const SizedBox(height: spacer2 * 2),
             // INFO : Need to add sync bloc of package Here
             BlocConsumer<SyncBloc, SyncState>(
               listener: (context, state) {
@@ -192,7 +191,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     if (context.mounted) {
                       DigitSyncDialog.show(
                         context,
-                        type: DigitSyncDialogType.inProgress,
+                        type: DialogType.inProgress,
                         label: localizations.translate(
                           i18.syncDialog.syncInProgressTitle,
                         ),
@@ -204,21 +203,20 @@ class _HomePageState extends LocalizedState<HomePage> {
                     Navigator.of(context, rootNavigator: true).pop();
                     await localSecureStore.setManualSyncTrigger(true);
                     if (context.mounted) {
-                      DigitSyncDialog.show(
-                        context,
-                        type: DigitSyncDialogType.complete,
-                        label: localizations.translate(
-                          i18.syncDialog.dataSyncedTitle,
-                        ),
-                        primaryAction: DigitDialogActions(
+                      DigitSyncDialog.show(context,
+                          type: DialogType.complete,
                           label: localizations.translate(
-                            i18.syncDialog.closeButtonLabel,
+                            i18.syncDialog.dataSyncedTitle,
                           ),
-                          action: (ctx) {
-                            Navigator.pop(ctx);
-                          },
-                        ),
-                      );
+                          primaryAction: DigitDialogActions(
+                            label: localizations.translate(
+                              i18.syncDialog.closeButtonLabel,
+                            ),
+                            action: (ctx) {
+                              Navigator.pop(ctx);
+                            },
+                          ),
+                          barrierDismissible: true);
                     }
                   },
                   failedSync: () async {
@@ -262,16 +260,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                   pendingSync: (count) {
                     return count == 0
                         ? const Offstage()
-                        : DigitInfoCard(
-                            icon: Icons.info,
-                            backgroundColor:
-                                theme.colorScheme.tertiaryContainer,
-                            iconColor: theme.colorScheme.surfaceTint,
-                            description: localizations
-                                .translate(i18.home.dataSyncInfoContent)
-                                .replaceAll('{}', count.toString()),
-                            title: localizations.translate(
-                              i18.home.dataSyncInfoLabel,
+                        : Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: spacer2,
+                            ),
+                            child: InfoCard(
+                              type: InfoType.info,
+                              description: localizations
+                                  .translate(i18.home.dataSyncInfoContent)
+                                  .replaceAll('{}', count.toString()),
+                              title: localizations.translate(
+                                i18.home.dataSyncInfoLabel,
+                              ),
                             ),
                           );
                   },
@@ -292,7 +292,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     DigitSyncDialog.show(
       context,
-      type: DigitSyncDialogType.failed,
+      type: DialogType.failed,
       label: message,
       primaryAction: DigitDialogActions(
         label: localizations.translate(
@@ -370,7 +370,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.home,
           enableCustomIcon: true,
-          customIconSize: 48,
+          customIconSize: 40,
           customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () {
@@ -429,14 +429,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                   if (context.mounted) _attemptSyncUp(context);
                 } else {
                   if (context.mounted) {
-                    DigitToast.show(
+                    Toast.showToast(
                       context,
-                      options: DigitToastOptions(
-                        localizations
-                            .translate(i18.common.coreCommonSyncInProgress),
-                        false,
-                        Theme.of(context),
-                      ),
+                      message: localizations
+                          .translate(i18.common.coreCommonSyncInProgress),
+                      type: ToastType.success,
                     );
                   }
                 }

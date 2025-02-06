@@ -433,8 +433,6 @@ class _RecordReferralDetailsPageState
                                   ]),
                               serviceSearch: (value1, value2, value3) {
                                 return DigitCard(
-                                    padding: EdgeInsets.all(
-                                        theme.spacerTheme.spacer2),
                                     cardType: CardType.primary,
                                     children: [
                                       ValueListenableBuilder(
@@ -799,6 +797,7 @@ class _RecordReferralDetailsPageState
                               children: [
                                 DigitCard(
                                     cardType: CardType.primary,
+                                    margin: const EdgeInsets.all(spacer2),
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -810,8 +809,7 @@ class _RecordReferralDetailsPageState
                                                 i18.referralReconciliation
                                                     .referralDetails,
                                               ),
-                                              style:
-                                                 textTheme.headingXl,
+                                              style: textTheme.headingXl,
                                             ),
                                           ),
                                         ],
@@ -1113,6 +1111,7 @@ class _RecordReferralDetailsPageState
                                   );
                                   return DigitCard(
                                       cardType: CardType.primary,
+                                      margin: const EdgeInsets.all(spacer2),
                                       children: [
                                         SizedBox(
                                           width: double.infinity,

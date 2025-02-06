@@ -149,7 +149,6 @@ class BeneficiaryDetailsPageState
                                     ? DigitCard(
                                         margin:
                                             const EdgeInsets.only(top: spacer2),
-                                        padding: const EdgeInsets.all(spacer2),
                                         children: [
                                             DigitButton(
                                               label:
@@ -231,7 +230,6 @@ class BeneficiaryDetailsPageState
                                     : const SizedBox.shrink()
                                 : DigitCard(
                                     margin: const EdgeInsets.only(top: spacer2),
-                                    padding: const EdgeInsets.all(spacer2),
                                     children: [
                                         DigitButton(
                                           label: localizations.translate(i18

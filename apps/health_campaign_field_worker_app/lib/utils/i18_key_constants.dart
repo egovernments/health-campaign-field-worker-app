@@ -348,6 +348,8 @@ class Login {
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+
+  String get unableToLoginText => 'UNABLE_TO_LOGIN';
 }
 
 class SelectSurveyFormShowcase {
@@ -605,6 +607,8 @@ class ProjectSelection {
   String get contactSysAdmin => 'CONTACT_SYS_ADMIN';
 
   String get onProjectMapped => 'NO_PROJECT_MAPPED';
+
+  String get fetchBoundaryFailed => 'FETCH_BOUNDARY_FAILED';
 }
 
 class Complaints {

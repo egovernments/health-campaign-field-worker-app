@@ -1,6 +1,8 @@
 library json_schema_builder;
 
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_checkbox.dart';
+import 'package:digit_ui_components/widgets/atoms/labelled_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forms_engine/models/property_schema/property_schema.dart';

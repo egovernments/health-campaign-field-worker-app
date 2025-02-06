@@ -1,4 +1,5 @@
-import 'package:digit_components/digit_components.dart'; // Import components from Digit Components package
+import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:flutter/material.dart'; // Import Flutter Material library
 import 'package:flutter_test/flutter_test.dart'; // Import Flutter test library
 import 'package:intl/intl.dart'; // Import intl library for date formatting
@@ -26,7 +27,7 @@ Future<void> testViewReportsPage(WidgetTester widgetTester) async {
 // Function to test each page
 Future<void> testOnePage(WidgetTester widgetTester, int i) async {
   // Tap on the DigitListView at index i
-  await widgetTester.tap(find.byType(DigitListView).at(i));
+  await widgetTester.tap(find.byType(LabelValueItem).at(i));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 2000));
 
   // Tap on facility
@@ -48,7 +49,6 @@ Future<void> testOnePage(WidgetTester widgetTester, int i) async {
       findsAtLeast(1));
 
   // Go back to the home page
-  await widgetTester
-      .tap(find.widgetWithText(DigitElevatedButton, 'Back To Home'));
+  await widgetTester.tap(find.widgetWithText(DigitButton, 'Back To Home'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 }
