@@ -377,6 +377,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.community);
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
