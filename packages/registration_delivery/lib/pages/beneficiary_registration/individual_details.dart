@@ -123,15 +123,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
                             if (form.control(_dobKey).value == null) {
-                              form.control(_dobKey).setErrors({'': true});
-                            } else {
-                              final age = DigitDateUtils.calculateAge(
-                                form.control(_dobKey).value as DateTime,
-                              );
-                              if ((age.years == 0 && age.months == 0) ||
-                                  age.years >= 150 && age.months > 0) {
+                              setState(() {
                                 form.control(_dobKey).setErrors({'': true});
-                              }
+                              });
                             }
                             if (form.control(_idTypeKey).value == null) {
                               form.control(_idTypeKey).setErrors({'': true});
@@ -510,21 +504,24 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             initialDate: before150Years,
                             initialValue: getInitialDateValue(form),
                             onChangeOfFormControl: (value) {
-                              if (value == null) {
-                                form.control(_dobKey).setErrors({'': true});
-                              } else {
-                                DigitDOBAgeConvertor age =
+                                setState(() {
+                                  if (value == null) {
+                                    form.control(_dobKey).setErrors({'': true});
+                                  } else {
+                                    DigitDOBAgeConvertor age =
                                     DigitDateUtils.calculateAge(value);
-                                if ((age.years == 0 && age.months == 0) ||
-                                    age.months > 11 ||
-                                    (age.years >= 150 && age.months >= 0)) {
-                                  form.control(_dobKey).setErrors({'': true});
-                                } else {
-                                  form.control(_dobKey).removeError('');
-                                }
-                              }
+                                    if ((age.years == 0 && age.months == 0) ||
+                                        (age.months > 11) ||
+                                        (age.years >= 150 && age.months >= 0)) {
+                                      form.control(_dobKey).setErrors({'': true});
+                                    } else {
+                                      form.control(_dobKey).value = value;
+                                      form.control(_dobKey).removeError('');
+                                    }
+                                  }
+                                });
                               // Handle changes to the control's value here
-                              form.control(_dobKey).value = value;
+
                             },
                             cancelText: localizations
                                 .translate(i18.common.coreCommonCancel),
