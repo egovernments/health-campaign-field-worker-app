@@ -7,6 +7,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/data/repositories/remote/bandwidth_check.dart';
+import 'package:inventory_management/blocs/stock_reconciliation.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
@@ -98,6 +100,7 @@ class MainApplicationState extends State<MainApplication>
           child: MultiBlocProvider(
             providers: [
               // INFO : Need to add bloc of package Here
+
               BlocProvider(
                 create: (_) {
                   return DigitScannerBloc(
@@ -317,6 +320,19 @@ class MainApplicationState extends State<MainApplication>
                             projectFacilityDataRepository: context.repository<
                                 ProjectFacilityModel,
                                 ProjectFacilitySearchModel>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => StockReconciliationBloc(
+                            StockReconciliationState(
+                              projectId: InventorySingleton().projectId,
+                              dateOfReconciliation: DateTime.now(),
+                            ),
+                            stockReconciliationRepository: context.repository<
+                                StockReconciliationModel,
+                                StockReconciliationSearchModel>(),
+                            stockRepository: context
+                                .repository<StockModel, StockSearchModel>(),
                           ),
                         ),
                       ],
