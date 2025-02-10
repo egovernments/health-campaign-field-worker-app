@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -121,12 +122,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
-                            final age = DigitDateUtils.calculateAge(
-                              form.control(_dobKey).value as DateTime,
-                            );
-                            if ((age.years == 0 && age.months == 0) ||
-                                age.years >= 150 && age.months > 0) {
-                              form.control(_dobKey).setErrors({'': true});
+                            if (form.control(_dobKey).value == null) {
+                              setState(() {
+                                form.control(_dobKey).setErrors({'': true});
+                              });
                             }
                             if (form.control(_idTypeKey).value == null) {
                               form.control(_idTypeKey).setErrors({'': true});
@@ -369,9 +368,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                         Offstage(
                           offstage: !widget.isHeadOfHousehold,
                           child: DigitCheckbox(
-                            label: localizations.translate(
-                              i18.individualDetails.checkboxLabelText,
-                            ),
+                            capitalizeFirstLetter: false,
+                            label: (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.community)
+                                ? localizations.translate(
+                                    i18.individualDetails.clfCheckboxLabelText)
+                                : localizations.translate(
+                                    i18.individualDetails.checkboxLabelText,
+                                  ),
                             value: widget.isHeadOfHousehold,
                             readOnly: widget.isHeadOfHousehold,
                             onChanged: (_) {},
@@ -499,21 +504,24 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             initialDate: before150Years,
                             initialValue: getInitialDateValue(form),
                             onChangeOfFormControl: (value) {
-                              if (value == null) {
-                                form.control(_dobKey).setErrors({'': true});
-                              } else {
-                                DigitDOBAgeConvertor age =
+                                setState(() {
+                                  if (value == null) {
+                                    form.control(_dobKey).setErrors({'': true});
+                                  } else {
+                                    DigitDOBAgeConvertor age =
                                     DigitDateUtils.calculateAge(value);
-                                if ((age.years == 0 && age.months == 0) ||
-                                    age.months > 11 ||
-                                    (age.years >= 150 && age.months >= 0)) {
-                                  form.control(_dobKey).setErrors({'': true});
-                                } else {
-                                  form.control(_dobKey).removeError('');
-                                }
-                              }
+                                    if ((age.years == 0 && age.months == 0) ||
+                                        (age.months > 11) ||
+                                        (age.years >= 150 && age.months >= 0)) {
+                                      form.control(_dobKey).setErrors({'': true});
+                                    } else {
+                                      form.control(_dobKey).value = value;
+                                      form.control(_dobKey).removeError('');
+                                    }
+                                  }
+                                });
                               // Handle changes to the control's value here
-                              form.control(_dobKey).value = value;
+
                             },
                             cancelText: localizations
                                 .translate(i18.common.coreCommonCancel),
@@ -816,7 +824,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
               (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery?.trim(),
+        value: individual?.name?.givenName ??
+            ((RegistrationDeliverySingleton().householdType ==
+                    HouseholdType.community)
+                ? null
+                : searchQuery?.trim()),
       ),
       _idTypeKey: FormControl<String>(
         value: individual?.identifiers?.firstOrNull?.identifierType,

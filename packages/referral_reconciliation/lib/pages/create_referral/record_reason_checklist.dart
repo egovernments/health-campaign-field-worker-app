@@ -93,7 +93,7 @@ class _ReferralReasonChecklistPageState
                   enableFixedDigitButton: true,
                   footer: DigitCard(
                       cardType: CardType.primary,
-                      padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                      margin: const EdgeInsets.only(top: spacer2),
                       children: [
                         DigitButton(
                           size: DigitButtonSize.large,
@@ -291,187 +291,198 @@ class _ReferralReasonChecklistPageState
                   children: [
                     Form(
                       key: checklistFormKey, //assigning key to form
-                      child: DigitCard(cardType: CardType.primary, children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Text(
-                            '${localizations.translate(
-                              value.selectedServiceDefinition!.code.toString(),
-                            )} ${localizations.translate(i18.checklist.checklist)}',
-                            style: textTheme.headingXl,
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        ...initialAttributes!.map((
-                          e,
-                        ) {
-                          int index = (initialAttributes ?? []).indexOf(e);
+                      child: DigitCard(
+                          cardType: CardType.primary,
+                          margin: const EdgeInsets.all(spacer2),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Text(
+                                '${localizations.translate(
+                                  value.selectedServiceDefinition!.code
+                                      .toString(),
+                                )} ${localizations.translate(i18.checklist.checklist)}',
+                                style: textTheme.headingXl,
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                            ...initialAttributes!.map((
+                              e,
+                            ) {
+                              int index = (initialAttributes ?? []).indexOf(e);
 
-                          return Column(children: [
-                            if (e.dataType == 'String' &&
-                                !(e.code ?? '').contains('.')) ...[
-                              FormField<String>(validator: (value) {
-                                if (((controller[index].text == '') &&
-                                    e.required == true)) {
-                                  return localizations
-                                      .translate("${e.code}_REQUIRED");
-                                }
-                                if (e.regex != null) {
-                                  return (RegExp(e.regex!)
-                                          .hasMatch(controller[index].text))
-                                      ? null
-                                      : localizations
-                                          .translate("${e.code}_REGEX");
-                                }
+                              return Column(children: [
+                                if (e.dataType == 'String' &&
+                                    !(e.code ?? '').contains('.')) ...[
+                                  FormField<String>(validator: (value) {
+                                    if (((controller[index].text == '') &&
+                                        e.required == true)) {
+                                      return localizations
+                                          .translate("${e.code}_REQUIRED");
+                                    }
+                                    if (e.regex != null) {
+                                      return (RegExp(e.regex!)
+                                              .hasMatch(controller[index].text))
+                                          ? null
+                                          : localizations
+                                              .translate("${e.code}_REGEX");
+                                    }
 
-                                return null;
-                              }, builder: (FormFieldState<String> field) {
-                                return InputField(
-                                  onChange: (value) {
-                                    controller[index].text = value;
-                                    checklistFormKey.currentState?.validate();
-                                  },
-                                  errorMessage: field.errorText,
-                                  isRequired: false,
-                                  controller: controller[index],
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp(
-                                      "[a-zA-Z0-9]",
-                                    )),
-                                  ],
-                                  type: InputType.text,
-                                  label: localizations.translate(
-                                    '${value.selectedServiceDefinition?.code}.${e.code}',
-                                  ),
-                                );
-                              })
-                            ] else if (e.dataType == 'Number' &&
-                                !(e.code ?? '').contains('.')) ...[
-                              FormField<String>(validator: (value) {
-                                if (((controller[index].text == '') &&
-                                    e.required == true)) {
-                                  return localizations.translate(
-                                    i18.common.corecommonRequired,
-                                  );
-                                }
-                                if (e.regex != null) {
-                                  return (RegExp(e.regex!)
-                                          .hasMatch(controller[index].text))
-                                      ? null
-                                      : localizations
-                                          .translate("${e.code}_REGEX");
-                                }
-
-                                return null;
-                              }, builder: (FormFieldState<String> field) {
-                                return InputField(
-                                  onChange: (value) {
-                                    controller[index].text = value;
-                                    checklistFormKey.currentState?.validate();
-                                  },
-                                  controller: controller[index],
-                                  errorMessage: field.errorText,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp(
-                                      "[0-9]",
-                                    )),
-                                  ],
-                                  type: InputType.text,
-                                  keyboardType: TextInputType.number,
-                                  label: '${localizations.translate(
+                                    return null;
+                                  }, builder: (FormFieldState<String> field) {
+                                    return InputField(
+                                      onChange: (value) {
+                                        controller[index].text = value;
+                                        checklistFormKey.currentState
+                                            ?.validate();
+                                      },
+                                      errorMessage: field.errorText,
+                                      isRequired: false,
+                                      controller: controller[index],
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(
+                                          "[a-zA-Z0-9]",
+                                        )),
+                                      ],
+                                      type: InputType.text,
+                                      label: localizations.translate(
                                         '${value.selectedServiceDefinition?.code}.${e.code}',
-                                      ).trim()} ${e.required == true ? '*' : ''}',
-                                );
-                              })
-                            ] else if (e.dataType == 'MultiValueList' &&
-                                !(e.code ?? '').contains('.')) ...[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        '${localizations.translate(
-                                          '${value.selectedServiceDefinition?.code}.${e.code}',
-                                        )} ${e.required == true ? '*' : ''}',
-                                        style: textTheme.headingS,
                                       ),
-                                    ],
+                                    );
+                                  })
+                                ] else if (e.dataType == 'Number' &&
+                                    !(e.code ?? '').contains('.')) ...[
+                                  FormField<String>(validator: (value) {
+                                    if (((controller[index].text == '') &&
+                                        e.required == true)) {
+                                      return localizations.translate(
+                                        i18.common.corecommonRequired,
+                                      );
+                                    }
+                                    if (e.regex != null) {
+                                      return (RegExp(e.regex!)
+                                              .hasMatch(controller[index].text))
+                                          ? null
+                                          : localizations
+                                              .translate("${e.code}_REGEX");
+                                    }
+
+                                    return null;
+                                  }, builder: (FormFieldState<String> field) {
+                                    return InputField(
+                                      onChange: (value) {
+                                        controller[index].text = value;
+                                        checklistFormKey.currentState
+                                            ?.validate();
+                                      },
+                                      controller: controller[index],
+                                      errorMessage: field.errorText,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(
+                                          "[0-9]",
+                                        )),
+                                      ],
+                                      type: InputType.text,
+                                      keyboardType: TextInputType.number,
+                                      label: '${localizations.translate(
+                                            '${value.selectedServiceDefinition?.code}.${e.code}',
+                                          ).trim()} ${e.required == true ? '*' : ''}',
+                                    );
+                                  })
+                                ] else if (e.dataType == 'MultiValueList' &&
+                                    !(e.code ?? '').contains('.')) ...[
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            '${localizations.translate(
+                                              '${value.selectedServiceDefinition?.code}.${e.code}',
+                                            )} ${e.required == true ? '*' : ''}',
+                                            style: textTheme.headingS,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              BlocBuilder<ServiceBloc, ServiceState>(
-                                builder: (context, state) {
-                                  return Column(
-                                    children: e.values!
-                                        .map((e) => Column(
-                                              children: [
-                                                DigitCheckbox(
-                                                  label: e,
-                                                  value: controller[index]
-                                                      .text
-                                                      .split('.')
-                                                      .contains(e),
-                                                  onChanged: (value) {
-                                                    context
-                                                        .read<ServiceBloc>()
-                                                        .add(
-                                                          ServiceSurveyFormEvent(
-                                                            value: e.toString(),
-                                                            submitTriggered:
-                                                                submitTriggered,
+                                  BlocBuilder<ServiceBloc, ServiceState>(
+                                    builder: (context, state) {
+                                      return Column(
+                                        children: e.values!
+                                            .map((e) => Column(
+                                                  children: [
+                                                    DigitCheckbox(
+                                                      label: e,
+                                                      value: controller[index]
+                                                          .text
+                                                          .split('.')
+                                                          .contains(e),
+                                                      onChanged: (value) {
+                                                        context
+                                                            .read<ServiceBloc>()
+                                                            .add(
+                                                              ServiceSurveyFormEvent(
+                                                                value: e
+                                                                    .toString(),
+                                                                submitTriggered:
+                                                                    submitTriggered,
+                                                              ),
+                                                            );
+                                                        final String ele;
+                                                        var val =
+                                                            controller[index]
+                                                                .text
+                                                                .split('.');
+                                                        if (val.contains(e)) {
+                                                          val.remove(e);
+                                                          ele = val.join(".");
+                                                        } else {
+                                                          ele =
+                                                              "${controller[index].text}.$e";
+                                                        }
+                                                        controller[index]
+                                                                .value =
+                                                            TextEditingController
+                                                                .fromValue(
+                                                          TextEditingValue(
+                                                            text: ele,
                                                           ),
-                                                        );
-                                                    final String ele;
-                                                    var val = controller[index]
-                                                        .text
-                                                        .split('.');
-                                                    if (val.contains(e)) {
-                                                      val.remove(e);
-                                                      ele = val.join(".");
-                                                    } else {
-                                                      ele =
-                                                          "${controller[index].text}.$e";
-                                                    }
-                                                    controller[index].value =
-                                                        TextEditingController
-                                                            .fromValue(
-                                                      TextEditingValue(
-                                                        text: ele,
-                                                      ),
-                                                    ).value;
-                                                  },
-                                                ),
-                                                SizedBox(
-                                                  height:
-                                                      theme.spacerTheme.spacer3,
-                                                )
-                                              ],
-                                            ))
-                                        .toList(),
-                                  );
-                                },
-                              ),
-                            ] else if (e.dataType == 'SingleValueList') ...[
-                              if (!(e.code ?? '').contains('.'))
-                                DigitCard(
-                                    cardType: CardType.primary,
-                                    children: [
-                                      _buildChecklist(
-                                        e,
-                                        index,
-                                        value.selectedServiceDefinition,
-                                        context,
-                                      ),
-                                    ]),
-                            ],
-                          ]);
-                        }),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                      ]),
+                                                        ).value;
+                                                      },
+                                                    ),
+                                                    SizedBox(
+                                                      height: theme
+                                                          .spacerTheme.spacer3,
+                                                    )
+                                                  ],
+                                                ))
+                                            .toList(),
+                                      );
+                                    },
+                                  ),
+                                ] else if (e.dataType == 'SingleValueList') ...[
+                                  if (!(e.code ?? '').contains('.'))
+                                    DigitCard(
+                                        cardType: CardType.primary,
+                                        children: [
+                                          _buildChecklist(
+                                            e,
+                                            index,
+                                            value.selectedServiceDefinition,
+                                            context,
+                                          ),
+                                        ]),
+                                ],
+                              ]);
+                            }),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                          ]),
                     ),
                   ],
                 );

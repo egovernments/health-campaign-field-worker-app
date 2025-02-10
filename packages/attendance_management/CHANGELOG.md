@@ -1,6 +1,10 @@
+## 1.0.3-dev.1
+
+* Added localityCode and comment field to support Payments feature
+
 ## 1.0.3+1
 
-* Added localityCode for register
+* Added mobile number field for attendees in Mark Attendance Screen
 
 ## 1.0.3
 

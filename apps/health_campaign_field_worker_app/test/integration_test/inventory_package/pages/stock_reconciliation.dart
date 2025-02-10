@@ -1,4 +1,4 @@
-import 'package:digit_components/digit_components.dart'; // Import components from Digit Components package
+import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:flutter/material.dart'; // Import Flutter Material library
 import 'package:flutter_test/flutter_test.dart'; // Import Flutter test library
 
@@ -58,7 +58,8 @@ Future<void> testStockReconciliationPage(WidgetTester widgetTester) async {
   // Select product
   await widgetTester.tap(find.byKey(const Key('productVariant')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
-  await widgetTester.tap(find.bySemanticsLabel(RegExp(testVariables['productName'])).last);
+  await widgetTester
+      .tap(find.bySemanticsLabel(RegExp(testVariables['productName'])).last);
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
 
   // Fetch stock details
@@ -79,7 +80,7 @@ Future<void> testStockReconciliationPage(WidgetTester widgetTester) async {
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
 
   // Submit the form
-  await widgetTester.tap(find.widgetWithText(DigitElevatedButton, 'Submit'));
+  await widgetTester.tap(find.widgetWithText(DigitButton, 'Submit'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
 
   // TODO: Test scan bales
@@ -87,10 +88,10 @@ Future<void> testStockReconciliationPage(WidgetTester widgetTester) async {
   // Tap on the submit button in the dialog
   await widgetTester.tap(find.descendant(
       of: find.byKey(const Key('submitDialog')),
-      matching: find.byType(DigitElevatedButton).last));
+      matching: find.byType(DigitButton).last));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
   // Go back to the home page
-  await widgetTester.tap(find.widgetWithText(DigitElevatedButton, 'Go Back'));
+  await widgetTester.tap(find.widgetWithText(DigitButton, 'Go Back'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 }

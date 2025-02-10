@@ -14,9 +14,7 @@ class JsonSchemaBooleanBuilder extends JsonSchemaBuilder<bool> {
     return ReactiveFormConsumer(
       builder: (context, formGroup, child) {
         final control = formGroup.control(formControlName);
-        return DigitCheckboxTile(
-          margin: const EdgeInsets.only(top: 16),
-          padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+        return DigitCheckbox(
           label: hint ?? 'Some',
           value: (control.value ?? false) as bool,
           onChanged: (value) => control.value = value,

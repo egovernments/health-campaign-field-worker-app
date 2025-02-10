@@ -1,4 +1,4 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/models/data_model.dart';
 import 'package:health_campaign_field_worker_app/models/tenant_boundary/tenant_boundary_model.dart';
@@ -20,7 +20,7 @@ Future<void> testBoundarySelection(WidgetTester widgetTester) async {
     final boundaryCondition = key;
     // Find the dropdown with the given boundary condition
     final finder = find.widgetWithText(
-      DigitReactiveSearchDropdown<BoundaryModel>,
+      DigitDropdown<BoundaryModel>,
       "$boundaryCondition*",
     );
 

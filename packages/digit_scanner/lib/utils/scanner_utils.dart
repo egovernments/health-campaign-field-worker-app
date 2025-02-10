@@ -35,7 +35,7 @@ class DigitScannerUtils {
         onOutsideTap: () {
           Navigator.of(popupContext).pop();
         },
-        description:contentLocalization,
+        description: contentLocalization,
         type: PopUpType.simple,
         actions: [
           DigitButton(
@@ -145,13 +145,13 @@ class DigitScannerUtils {
               await storeValue(parsedResult);
             } else {
               // Handle error if there is a mismatch in the scanned resource count
-              await handleError(localizations
-                  .translate(i18.scanner.scannedResourceCountMisMatch));
+              await handleError(
+                  localizations.translate(i18.scanner.invalidBarcode));
             }
           } catch (e) {
             // Handle error if parsing fails
-            await handleError(localizations
-                .translate(i18.scanner.scannedResourceCountMisMatch));
+            await handleError(
+                localizations.translate(i18.scanner.resourcesScanFailed));
           }
         } else {
           // For non-GS1 codes

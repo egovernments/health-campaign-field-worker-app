@@ -593,6 +593,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                         ),
                         children: [
                           DigitCard(
+                            margin: const EdgeInsets.all(spacer2),
                             children: [
                               Text(
                                 localizations.translate(pageTitle),

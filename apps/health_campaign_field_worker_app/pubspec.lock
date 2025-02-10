@@ -342,7 +342,7 @@ packages:
       path: "../../packages/closed_household"
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.4"
   code_builder:
     dependency: transitive
     description:
@@ -362,11 +362,10 @@ packages:
   complaints:
     dependency: "direct main"
     description:
-      name: complaints
-      sha256: "6e383d4be32cee58696258c2f58176ef9869b2afc4aeed252e4b3757eb4bfb76"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
+      path: "../../packages/complaints"
+      relative: true
+    source: path
+    version: "1.0.1"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -504,14 +503,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.1"
-  digit_components:
-    dependency: "direct main"
-    description:
-      name: digit_components
-      sha256: "7097c7e8bd2fa96415eb4049a7fc2e4cb3dcb5a913d63703ca69cb785a069300"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -546,11 +537,10 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: c33af61ed9ab3d7740fc3c8948af4b763d946cba5e902f8bfb00948d4d69d60a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
+    version: "1.0.5"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -563,10 +553,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "57c4da5237be6025783e7357a02b6b492f02e38f711d674bf46f5f8c8a93ad76"
+      sha256: "9a0103897ea089c240619392f0d3229476e640eb660775dbd18ec9077f78807d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.4"
+    version: "0.0.2-dev.7"
   dio:
     dependency: "direct main"
     description:
@@ -631,14 +621,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.0"
-  easy_stepper:
-    dependency: transitive
-    description:
-      name: easy_stepper
-      sha256: "63f66314a509ec690c8152a41288961fd96ba9e92ef184299f068a5e78bd16ad"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.5+1"
   equatable:
     dependency: transitive
     description:
@@ -849,14 +831,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.13"
-  flutter_focus_watcher:
-    dependency: transitive
-    description:
-      name: flutter_focus_watcher
-      sha256: a72ee539ae0237961308a25839887ca93a0b1cb6f87b0d492b139c8fccff8e79
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   flutter_keyboard_visibility:
     dependency: "direct main"
     description:
@@ -1043,14 +1017,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_typeahead:
-    dependency: transitive
-    description:
-      name: flutter_typeahead
-      sha256: b9942bd5b7611a6ec3f0730c477146cffa4cd4b051077983ba67ddfc9e7ee818
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.8.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1360,7 +1326,7 @@ packages:
       path: "../../packages/inventory_management"
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.0.5"
   io:
     dependency: transitive
     description:
@@ -1745,14 +1711,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.0.0"
-  pointer_interceptor:
-    dependency: transitive
-    description:
-      name: pointer_interceptor
-      sha256: adf7a637f97c077041d36801b43be08559fd4322d2127b3f20bb7be1b9eebc22
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.9.3+7"
   pool:
     dependency: transitive
     description:
@@ -1817,14 +1775,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  reactive_flutter_typeahead:
-    dependency: transitive
-    description:
-      name: reactive_flutter_typeahead
-      sha256: a5dbca4b537bd9dde245d4228e1a6ce937c05cd77c57ed45b9c05135540d5f1a
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   reactive_forms:
     dependency: "direct main"
     description:
@@ -1856,14 +1806,6 @@ packages:
       relative: true
     source: path
     version: "1.0.5+3"
-  remove_emoji_input_formatter:
-    dependency: transitive
-    description:
-      name: remove_emoji_input_formatter
-      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+1"
   rxdart:
     dependency: transitive
     description:
@@ -2075,7 +2017,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   sync_http:
     dependency: transitive
     description:

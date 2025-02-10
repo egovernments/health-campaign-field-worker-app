@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Upgrade digit_ui_components to ^0.0.2-dev.6
+
 ## 1.0.3+1
 
 * Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
