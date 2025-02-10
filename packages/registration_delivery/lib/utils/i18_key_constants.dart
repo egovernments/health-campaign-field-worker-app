@@ -92,6 +92,8 @@ class Common {
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 
+  String get min3CharsRequired => 'MIN_3_CHARS_REQUIRED';
+
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
   String get maxValue => 'MAX_VALUE_ALLOWED';
@@ -133,6 +135,13 @@ class Common {
 class SearchBeneficiary {
   const SearchBeneficiary();
 
+  String get communityProximityLabel =>
+      'BENEFICIARY_SEARCH_COMMUNITY_PROXIMITY_LABEL_TEXT';
+
+  String get clfSearchHintText => 'BENEFICIARY_CLF_SEARCH_HINT_TEXT';
+
+  String get searchCLFLabel => 'BENEFICIARY_SEARCH_CLF_LABEL_TEXT';
+
   String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
 
   String get searchIndividualLabelText =>
@@ -151,7 +160,11 @@ class SearchBeneficiary {
 
   String get beneficiaryInfoTitle => 'BENEFICIARY_INFO_TITLE';
 
+  String get clfInfoTitle => 'BENEFICIARY_CLF_INFO_TITLE';
+
   String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
+
+  String get clfAddActionLabel => 'BENEFICIARY_ADD_CLF_ACTION_LABEL';
 
   String get iconLabel => 'ICON_LABEL';
 
@@ -296,6 +309,8 @@ class BeneficiaryDetails {
 class IndividualDetails {
   const IndividualDetails();
 
+  String get clfCheckboxLabelText => 'INDIVIDUAL_CLF_CHECKBOX_LABEL_TEXT';
+
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
 
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
@@ -345,6 +360,10 @@ class IndividualDetails {
 
 class HouseholdLocation {
   const HouseholdLocation();
+
+  String get buildingNameLabel => 'CLF_BUILDING_NAME_LABEL_TEXT';
+
+  String get clfLocationLabelText => 'CLF_LOCATION_LABEL_TEXT';
 
   String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
 
@@ -467,14 +486,24 @@ class HouseholdOverView {
 
   String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
 
+  String get instituteNameLabel => 'HOUSEHOLD_OVER_VIEW_INSTITUTE_NAME_LABEL';
+
+  String get instituteTypeLabel => 'HOUSEHOLD_OVER_VIEW_INSTITUTE_TYPE_LABEL';
+
+  String get clfOverviewLabel => 'HOUSEHOLD_OVER_VIEW_CLF_LABEL';
+
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
+
+  String get clfOverViewEditLabel => 'CLF_OVER_VIEW_EDIT_ICON_LABEL';
 
   String get householdOverViewDeleteLabel =>
       'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
 
   String get householdOverViewEditIconText =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
+
+  String get clfOverViewEditIconText => 'CLF_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
 
   String get householdOverViewActionCardTitle =>
       'HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE';
@@ -523,6 +552,8 @@ class MemberCard {
   const MemberCard();
 
   String get assignAsHouseholdhead => 'MEMBER_CARD_ASSIGN_AS_HEAD';
+
+  String get assignAsClfhead => 'MEMBER_CARD_ASSIGN_AS_CLF';
 
   String get editIndividualDetails => 'MEMBER_CARD_EDIT_INDIVIDUAL_DETAILS';
 
@@ -842,6 +873,10 @@ String get registerNewHousehold {
 
 class HouseholdLocationShowcase {
   const HouseholdLocationShowcase();
+
+  String get buildingName {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_BUILDING_NAME';
+  }
 
   String get administrativeArea {
     return 'HOUSEHOLD_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';

@@ -3,9 +3,11 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import '../../data/repositories/local/household_global_search.dart';
@@ -184,6 +186,10 @@ class SearchHouseholdsBloc
       HouseholdMemberSearchModel(
         individualClientReferenceIds: individualClientReferenceIds,
         householdClientReferenceIds: householdClientReferenceIds,
+        isHeadOfHousehold: RegistrationDeliverySingleton().householdType ==
+                HouseholdType.community
+            ? true
+            : null,
       ),
     );
   }

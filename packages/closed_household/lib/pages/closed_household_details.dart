@@ -145,103 +145,105 @@ class ClosedHouseholdDetailsPageState
               slivers: [
                 SliverToBoxAdapter(
                   child: DigitCard(
-                    margin: const EdgeInsets.all(spacer2),
+                      margin: const EdgeInsets.all(spacer2),
                       children: [
-                    DigitTextBlock(
-                      padding: const EdgeInsets.all(0),
-                      heading: localizations.translate(
-                        i18.closeHousehold.closeHouseHoldDetailLabel,
-                      ),
-                      headingStyle: textTheme.headingXl,
-                      description: localizations.translate(
-                        i18.closeHousehold.closeHouseHoldDetailDescLabel,
-                      ),
-                    ),
-                      ReactiveWrapperField<String>(
-                          formControlName: _administrationAreaKey,
-                          showErrors: (control) =>
-                              control.invalid && control.touched,
-                          // Ensures error is shown if invalid and touched
-                          builder: (field) {
-                            return LabeledField(
-                              label: localizations.translate(
-                                i18.closeHousehold.villageName,
-                              ),
-                              child: DigitTextFormInput(
-                                errorMessage: field.errorText,
-                                readOnly: true,
-                                initialValue:
-                                    form.control(_administrationAreaKey).value,
-                              ),
-                            );
-                          }),
-                      ReactiveWrapperField<double>(
-                          formControlName: _accuracyKey,
-                          showErrors: (control) =>
-                              control.invalid && control.touched,
-                          // Ensures error is shown if invalid and touched
-                          builder: (field) {
-                            return LabeledField(
-                              label: localizations.translate(
-                                i18.closeHousehold.accuracyLabel,
-                              ),
-                              child: DigitTextFormInput(
-                                errorMessage: field.errorText,
-                                readOnly: true,
-                                initialValue: (form
+                        DigitTextBlock(
+                          padding: const EdgeInsets.all(0),
+                          heading: localizations.translate(
+                            i18.closeHousehold.closeHouseHoldDetailLabel,
+                          ),
+                          headingStyle: textTheme.headingXl,
+                          description: localizations.translate(
+                            i18.closeHousehold.closeHouseHoldDetailDescLabel,
+                          ),
+                        ),
+                        ReactiveWrapperField<String>(
+                            formControlName: _administrationAreaKey,
+                            showErrors: (control) =>
+                                control.invalid && control.touched,
+                            // Ensures error is shown if invalid and touched
+                            builder: (field) {
+                              return LabeledField(
+                                label: localizations.translate(
+                                  i18.closeHousehold.villageName,
+                                ),
+                                child: DigitTextFormInput(
+                                  errorMessage: field.errorText,
+                                  readOnly: true,
+                                  initialValue: form
+                                      .control(_administrationAreaKey)
+                                      .value,
+                                ),
+                              );
+                            }),
+                        ReactiveWrapperField<double>(
+                            formControlName: _accuracyKey,
+                            showErrors: (control) =>
+                                control.invalid && control.touched,
+                            // Ensures error is shown if invalid and touched
+                            builder: (field) {
+                              return LabeledField(
+                                label: localizations.translate(
+                                  i18.closeHousehold.accuracyLabel,
+                                ),
+                                capitalizedFirstLetter: false,
+                                child: DigitTextFormInput(
+                                  errorMessage: field.errorText,
+                                  readOnly: true,
+                                  initialValue: (form
+                                          .control(
+                                            _accuracyKey,
+                                          )
+                                          .value)
+                                      .toString(),
+                                ),
+                              );
+                            }),
+                        ReactiveWrapperField<String>(
+                            validationMessages: {
+                              'maxLength': (_) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
+                              'minLength': (_) => localizations
+                                  .translate(i18.common.min2CharsRequired)
+                                  .replaceAll('{}', '2'),
+                            },
+                            formControlName: _householdHeadNameKey,
+                            showErrors: (control) =>
+                                control.invalid &&
+                                control.touched &&
+                                control.value != '',
+                            // Ensures error is shown if invalid and touched
+                            builder: (field) {
+                              return LabeledField(
+                                label: localizations.translate(
+                                  i18.closeHousehold.headNameLabel,
+                                ),
+                                child: DigitTextFormInput(
+                                  maxLength: 64,
+                                  charCount: true,
+                                  onChange: (val) => {
+                                    form
                                         .control(
-                                          _accuracyKey,
+                                          _householdHeadNameKey,
                                         )
-                                        .value)
-                                    .toString(),
-                              ),
-                            );
-                          }),
-                      ReactiveWrapperField<String>(
-                          validationMessages: {
-                            'maxLength': (_) => localizations
-                                .translate(i18.common.maxCharsRequired)
-                                .replaceAll('{}', maxLength.toString()),
-                            'minLength': (_) => localizations
-                                .translate(i18.common.min2CharsRequired)
-                                .replaceAll('{}', '2'),
-                          },
-                          formControlName: _householdHeadNameKey,
-                          showErrors: (control) =>
-                              control.invalid &&
-                              control.touched &&
-                              control.value != '',
-                          // Ensures error is shown if invalid and touched
-                          builder: (field) {
-                            return LabeledField(
-                              label: localizations.translate(
-                                i18.closeHousehold.headNameLabel,
-                              ),
-                              child: DigitTextFormInput(
-                                maxLength: 64,
-                                charCount: true,
-                                onChange: (val) => {
-                                  form
+                                        .markAsTouched(),
+                                    form
+                                        .control(
+                                          _householdHeadNameKey,
+                                        )
+                                        .value = val,
+                                  },
+                                  errorMessage: field.errorText,
+                                  initialValue: form
                                       .control(
                                         _householdHeadNameKey,
                                       )
-                                      .markAsTouched(),
-                                  form
-                                      .control(
-                                        _householdHeadNameKey,
-                                      )
-                                      .value = val,
-                                },
-                                errorMessage: field.errorText,
-                                initialValue: form
-                                    .control(
-                                      _householdHeadNameKey,
-                                    )
-                                    .value,
-                              ),
-                            );
-                          }),
-                  ]),
+                                      .value,
+                                ),
+                              );
+                            }),
+                      ]),
                 ),
               ],
             );
@@ -255,7 +257,7 @@ class ClosedHouseholdDetailsPageState
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
         value: localizations
-            .translate(ClosedHouseholdSingleton().boundary!.name.toString()),
+            .translate(ClosedHouseholdSingleton().boundary!.code.toString()),
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(

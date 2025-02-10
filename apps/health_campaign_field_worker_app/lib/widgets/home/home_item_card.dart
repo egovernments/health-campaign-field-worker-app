@@ -1,4 +1,7 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/enum/app_enums.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -25,47 +28,50 @@ class HomeItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return DigitCard(
-      onPressed: onPressed,
-      padding: const EdgeInsets.all(kPadding / 2).copyWith(top: kPadding / 2),
-      margin: const EdgeInsets.all(kPadding),
-      child: Align(
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            if (enableCustomIcon)
-              SvgPicture.asset(
+        onPressed: onPressed,
+        padding: const EdgeInsets.all(spacer1).copyWith(top: spacer1),
+        margin: const EdgeInsets.all(spacer2),
+        inline: true,
+        children: [
+          const Padding(padding: EdgeInsets.only(top: spacer1)),
+          if (enableCustomIcon)
+            Align(
+              alignment: Alignment.center,
+              child: SvgPicture.asset(
                 customIcon,
                 width: customIconSize ?? 25,
                 height: customIconSize ?? 25,
               ),
-            if (!enableCustomIcon)
-              Icon(
+            ),
+          if (!enableCustomIcon)
+            Align(
+              alignment: Alignment.center,
+              child: Icon(
                 icon,
                 color: onPressed == null
                     ? theme.disabledColor
-                    : theme.colorScheme.secondary,
+                    : theme.colorTheme.primary.primary1,
                 size: 40,
               ),
-            Wrap(
+            ),
+          Align(
+            alignment: Alignment.center,
+            child: Wrap(
               children: [
                 Text(
                   AppLocalizations.of(context).translate(
                     label,
                   ),
-                  style: theme.textTheme.bodyMedium,
+                  style: textTheme.bodyS,
                   textAlign: TextAlign.center,
                   // overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ]);
   }
 }

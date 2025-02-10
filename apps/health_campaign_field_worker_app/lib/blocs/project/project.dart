@@ -4,9 +4,9 @@ import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -27,6 +27,7 @@ import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils.dart';
 
 part 'project.freezed.dart';
@@ -319,6 +320,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         selectedProject: selectedProject,
       ),
     );
+
+    /* An empty BoundarySearchModel is sent to retrieve all boundaries from the repository.
+    This ensures that the entire dataset is fetched, as no specific filters or constraints are applied.
+    The retrieved boundaries are then processed to find the least level boundaries and set them in the singleton.*/
+    final boundaries = await boundaryLocalRepository.search(
+      BoundarySearchModel(),
+    );
+    LeastLevelBoundarySingleton()
+        .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
   }
 
   FutureOr<void> _loadProjectFacilities(
@@ -588,6 +598,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           );
         }
         await boundaryLocalRepository.bulkCreate(boundaries);
+        LeastLevelBoundarySingleton()
+            .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
         await localSecureStore.setSelectedProject(event.model);
       }
       await localSecureStore.setProjectSetUpComplete(event.model.id, true);

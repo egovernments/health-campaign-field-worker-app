@@ -29,6 +29,10 @@ class _HouseholdLocationShowcaseData {
     messageLocalizationKey: i18.householdLocationShowcase.landmark,
   );
 
+  final buildingName = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.householdLocationShowcase.buildingName,
+  );
+
   final addressLine1 = ShowcaseItemBuilder(
     messageLocalizationKey: i18.householdLocationShowcase.address,
   );

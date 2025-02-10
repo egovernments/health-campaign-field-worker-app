@@ -2,15 +2,13 @@ import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:complaints/complaints.dart';
-import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/widgets/digit_card.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
-import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_location_tracker/data/oplog/oplog.dart';
 import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
 import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,14 +67,15 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                 failed: () => ScrollableContent(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  footer: DigitCard(
-                    child: DigitElevatedButton(
+                  footer: DigitCard(children: [
+                    DigitButton(
+                      label: 'Close',
+                      mainAxisSize: MainAxisSize.max,
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large,
                       onPressed: () => exit(0),
-                      child: const Center(
-                        child: Text('Close'),
-                      ),
                     ),
-                  ),
+                  ]),
                   children: const [
                     Center(
                       child: Text('Internet not available. Try later.'),
