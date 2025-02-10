@@ -343,7 +343,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final facilities = await facilityRemoteRepository.search(
       FacilitySearchModel(tenantId: envConfig.variables.tenantId),
-      limit: 500,
+      limit: batchSize,
     );
 
     await facilityLocalRepository.bulkCreate(facilities);
