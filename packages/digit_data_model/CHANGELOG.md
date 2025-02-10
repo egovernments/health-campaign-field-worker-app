@@ -1,4 +1,4 @@
-## 1.0.5+1
+## 1.0.5-dev.2
 
 * Added localityCode in attendance table and modified migration script
 * Added relatedClientReferenceId in service table and modified migration script

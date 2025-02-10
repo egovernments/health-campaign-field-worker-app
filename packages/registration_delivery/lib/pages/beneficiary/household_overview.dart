@@ -160,11 +160,8 @@ class _HouseholdOverviewPageState
                                                         (value, model) {
                                                       if (value
                                                           .where((element) =>
-                                                              element.code
-                                                                  .toString()
-                                                                  .contains(
-                                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
-                                                              element.code
+                                                              element
+                                                                  .code
                                                                   .toString()
                                                                   .contains(
                                                                       '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
