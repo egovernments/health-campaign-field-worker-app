@@ -7,6 +7,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -187,6 +188,11 @@ class _BeneficiaryChecklistPageState
                                                     .ctaProceed,
                                               ),
                                               onPressed: () {
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop();
+                                                DigitLoaders.overlayLoader(
+                                                    context: context);
                                                 createSubmitRequest(
                                                     decidedFlow: decidedFlow);
                                                 Navigator.of(context,
@@ -195,6 +201,7 @@ class _BeneficiaryChecklistPageState
                                                 navigateToDecidedFlow(
                                                     context, decidedFlow);
                                               },
+                                              capitalizeLetters: false,
                                               type: DigitButtonType.primary,
                                               size: DigitButtonSize.large),
                                           DigitButton(
@@ -206,6 +213,7 @@ class _BeneficiaryChecklistPageState
                                                         rootNavigator: true)
                                                     .pop();
                                               },
+                                              capitalizeLetters: false,
                                               type: DigitButtonType.secondary,
                                               size: DigitButtonSize.large)
                                         ]));
@@ -600,6 +608,7 @@ class _BeneficiaryChecklistPageState
         alignment: Alignment.topLeft,
         child: LabeledField(
             charCondition: true,
+            capitalizedFirstLetter: false,
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
@@ -642,6 +651,7 @@ class _BeneficiaryChecklistPageState
                                         .toList()
                                     : [],
                                 errorMessage: field.errorText,
+                                capitalizeFirstLetter: false,
                                 groupValue: controller[index].text.trim(),
                                 onChanged: (value) {
                                   field.didChange(value);
@@ -730,6 +740,7 @@ class _BeneficiaryChecklistPageState
                                         )
                                       : null,
                                   isRequired: item.required ?? false,
+                                  capitalizedFirstLetter: false,
                                   child: DigitTextFormInput(
                                     onChange: (value) {
                                       field.didChange(value);
