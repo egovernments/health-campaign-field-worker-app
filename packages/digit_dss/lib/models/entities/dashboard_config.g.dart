@@ -29,6 +29,8 @@ _$DashboardConfigWrapperImpl _$$DashboardConfigWrapperImplFromJson(
       charts: (json['charts'] as List<dynamic>?)
           ?.map((e) => ChartConfigModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      projectTypeCode: json['projectTypeCode'] as String,
+      projectTypeId: json['projectTypeId'] as String?,
     );
 
 Map<String, dynamic> _$$DashboardConfigWrapperImplToJson(
@@ -36,6 +38,8 @@ Map<String, dynamic> _$$DashboardConfigWrapperImplToJson(
     <String, dynamic>{
       'enableDashboard': instance.enableDashboard,
       'charts': instance.charts,
+      'projectTypeCode': instance.projectTypeCode,
+      'projectTypeId': instance.projectTypeId,
     };
 
 _$ChartConfigModelImpl _$$ChartConfigModelImplFromJson(
