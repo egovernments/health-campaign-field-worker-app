@@ -12516,6 +12516,11 @@ class $ProjectProductVariantTable extends ProjectProductVariant
   late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
       'row_version', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -12539,6 +12544,7 @@ class $ProjectProductVariantTable extends ProjectProductVariant
         tenantId,
         isDeleted,
         rowVersion,
+        name,
         additionalFields
       ];
   @override
@@ -12638,6 +12644,10 @@ class $ProjectProductVariantTable extends ProjectProductVariant
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -12684,6 +12694,8 @@ class $ProjectProductVariantTable extends ProjectProductVariant
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -12712,6 +12724,7 @@ class ProjectProductVariantData extends DataClass
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
+  final String? name;
   final String? additionalFields;
   const ProjectProductVariantData(
       {required this.productVariantId,
@@ -12729,6 +12742,7 @@ class ProjectProductVariantData extends DataClass
       this.tenantId,
       this.isDeleted,
       this.rowVersion,
+      this.name,
       this.additionalFields});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -12775,6 +12789,9 @@ class ProjectProductVariantData extends DataClass
     }
     if (!nullToAbsent || rowVersion != null) {
       map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -12825,6 +12842,7 @@ class ProjectProductVariantData extends DataClass
       rowVersion: rowVersion == null && nullToAbsent
           ? const Value.absent()
           : Value(rowVersion),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
@@ -12851,6 +12869,7 @@ class ProjectProductVariantData extends DataClass
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      name: serializer.fromJson<String?>(json['name']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -12873,6 +12892,7 @@ class ProjectProductVariantData extends DataClass
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
+      'name': serializer.toJson<String?>(name),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -12893,6 +12913,7 @@ class ProjectProductVariantData extends DataClass
           Value<String?> tenantId = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
+          Value<String?> name = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       ProjectProductVariantData(
         productVariantId: productVariantId ?? this.productVariantId,
@@ -12929,6 +12950,7 @@ class ProjectProductVariantData extends DataClass
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        name: name.present ? name.value : this.name,
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
@@ -12951,6 +12973,7 @@ class ProjectProductVariantData extends DataClass
           ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('name: $name, ')
           ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
@@ -12973,6 +12996,7 @@ class ProjectProductVariantData extends DataClass
       tenantId,
       isDeleted,
       rowVersion,
+      name,
       additionalFields);
   @override
   bool operator ==(Object other) =>
@@ -12993,6 +13017,7 @@ class ProjectProductVariantData extends DataClass
           other.tenantId == this.tenantId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
+          other.name == this.name &&
           other.additionalFields == this.additionalFields);
 }
 
@@ -13013,6 +13038,7 @@ class ProjectProductVariantCompanion
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
+  final Value<String?> name;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const ProjectProductVariantCompanion({
@@ -13031,6 +13057,7 @@ class ProjectProductVariantCompanion
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.name = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -13050,6 +13077,7 @@ class ProjectProductVariantCompanion
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.name = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : productVariantId = Value(productVariantId);
@@ -13069,6 +13097,7 @@ class ProjectProductVariantCompanion
     Expression<String>? tenantId,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
+    Expression<String>? name,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -13090,6 +13119,7 @@ class ProjectProductVariantCompanion
       if (tenantId != null) 'tenant_id': tenantId,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
+      if (name != null) 'name': name,
       if (additionalFields != null) 'additional_fields': additionalFields,
       if (rowid != null) 'rowid': rowid,
     });
@@ -13111,6 +13141,7 @@ class ProjectProductVariantCompanion
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
+      Value<String?>? name,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return ProjectProductVariantCompanion(
@@ -13129,6 +13160,7 @@ class ProjectProductVariantCompanion
       tenantId: tenantId ?? this.tenantId,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
+      name: name ?? this.name,
       additionalFields: additionalFields ?? this.additionalFields,
       rowid: rowid ?? this.rowid,
     );
@@ -13182,6 +13214,9 @@ class ProjectProductVariantCompanion
     if (rowVersion.present) {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
@@ -13209,6 +13244,7 @@ class ProjectProductVariantCompanion
           ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('name: $name, ')
           ..write('additionalFields: $additionalFields, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -39294,6 +39330,1034 @@ class LocalizationCompanion extends UpdateCompanion<LocalizationData> {
   }
 }
 
+class $UserActionTable extends UserAction
+    with TableInfo<$UserActionTable, UserActionData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserActionTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<String> latitude = GeneratedColumn<String>(
+      'latitude', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _longitudeMeta =
+      const VerificationMeta('longitude');
+  @override
+  late final GeneratedColumn<String> longitude = GeneratedColumn<String>(
+      'longitude', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _locationAccuracyMeta =
+      const VerificationMeta('locationAccuracy');
+  @override
+  late final GeneratedColumn<String> locationAccuracy = GeneratedColumn<String>(
+      'location_accuracy', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isSyncMeta = const VerificationMeta('isSync');
+  @override
+  late final GeneratedColumn<bool> isSync = GeneratedColumn<bool>(
+      'is_sync', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_sync" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _timestampMeta =
+      const VerificationMeta('timestamp');
+  @override
+  late final GeneratedColumn<int> timestamp = GeneratedColumn<int>(
+      'timestamp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _projectIdMeta =
+      const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+      'project_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _boundaryCodeMeta =
+      const VerificationMeta('boundaryCode');
+  @override
+  late final GeneratedColumn<String> boundaryCode = GeneratedColumn<String>(
+      'boundary_code', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _actionMeta = const VerificationMeta('action');
+  @override
+  late final GeneratedColumn<String> action = GeneratedColumn<String>(
+      'action', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        latitude,
+        longitude,
+        locationAccuracy,
+        clientReferenceId,
+        isSync,
+        timestamp,
+        nonRecoverableError,
+        tenantId,
+        rowVersion,
+        projectId,
+        boundaryCode,
+        action,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        auditCreatedBy,
+        isDeleted,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_action';
+  @override
+  VerificationContext validateIntegrity(Insertable<UserActionData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    } else if (isInserting) {
+      context.missing(_latitudeMeta);
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    } else if (isInserting) {
+      context.missing(_longitudeMeta);
+    }
+    if (data.containsKey('location_accuracy')) {
+      context.handle(
+          _locationAccuracyMeta,
+          locationAccuracy.isAcceptableOrUnknown(
+              data['location_accuracy']!, _locationAccuracyMeta));
+    } else if (isInserting) {
+      context.missing(_locationAccuracyMeta);
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('is_sync')) {
+      context.handle(_isSyncMeta,
+          isSync.isAcceptableOrUnknown(data['is_sync']!, _isSyncMeta));
+    }
+    if (data.containsKey('timestamp')) {
+      context.handle(_timestampMeta,
+          timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta));
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
+    if (data.containsKey('boundary_code')) {
+      context.handle(
+          _boundaryCodeMeta,
+          boundaryCode.isAcceptableOrUnknown(
+              data['boundary_code']!, _boundaryCodeMeta));
+    } else if (isInserting) {
+      context.missing(_boundaryCodeMeta);
+    }
+    if (data.containsKey('action')) {
+      context.handle(_actionMeta,
+          action.isAcceptableOrUnknown(data['action']!, _actionMeta));
+    } else if (isInserting) {
+      context.missing(_actionMeta);
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {clientReferenceId};
+  @override
+  UserActionData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserActionData(
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}latitude'])!,
+      longitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}longitude'])!,
+      locationAccuracy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}location_accuracy'])!,
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      isSync: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_sync'])!,
+      timestamp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}timestamp'])!,
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      projectId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}project_id'])!,
+      boundaryCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}boundary_code'])!,
+      action: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action'])!,
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+    );
+  }
+
+  @override
+  $UserActionTable createAlias(String alias) {
+    return $UserActionTable(attachedDatabase, alias);
+  }
+}
+
+class UserActionData extends DataClass implements Insertable<UserActionData> {
+  final String latitude;
+  final String longitude;
+  final String locationAccuracy;
+  final String clientReferenceId;
+  final bool isSync;
+  final int timestamp;
+  final bool? nonRecoverableError;
+  final String? tenantId;
+  final int? rowVersion;
+  final String projectId;
+  final String boundaryCode;
+  final String action;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String? auditCreatedBy;
+  final bool? isDeleted;
+  final String? additionalFields;
+  const UserActionData(
+      {required this.latitude,
+      required this.longitude,
+      required this.locationAccuracy,
+      required this.clientReferenceId,
+      required this.isSync,
+      required this.timestamp,
+      this.nonRecoverableError,
+      this.tenantId,
+      this.rowVersion,
+      required this.projectId,
+      required this.boundaryCode,
+      required this.action,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      this.auditCreatedBy,
+      this.isDeleted,
+      this.additionalFields});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['latitude'] = Variable<String>(latitude);
+    map['longitude'] = Variable<String>(longitude);
+    map['location_accuracy'] = Variable<String>(locationAccuracy);
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    map['is_sync'] = Variable<bool>(isSync);
+    map['timestamp'] = Variable<int>(timestamp);
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    map['project_id'] = Variable<String>(projectId);
+    map['boundary_code'] = Variable<String>(boundaryCode);
+    map['action'] = Variable<String>(action);
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    return map;
+  }
+
+  UserActionCompanion toCompanion(bool nullToAbsent) {
+    return UserActionCompanion(
+      latitude: Value(latitude),
+      longitude: Value(longitude),
+      locationAccuracy: Value(locationAccuracy),
+      clientReferenceId: Value(clientReferenceId),
+      isSync: Value(isSync),
+      timestamp: Value(timestamp),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      projectId: Value(projectId),
+      boundaryCode: Value(boundaryCode),
+      action: Value(action),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory UserActionData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserActionData(
+      latitude: serializer.fromJson<String>(json['latitude']),
+      longitude: serializer.fromJson<String>(json['longitude']),
+      locationAccuracy: serializer.fromJson<String>(json['locationAccuracy']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      isSync: serializer.fromJson<bool>(json['isSync']),
+      timestamp: serializer.fromJson<int>(json['timestamp']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      boundaryCode: serializer.fromJson<String>(json['boundaryCode']),
+      action: serializer.fromJson<String>(json['action']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'latitude': serializer.toJson<String>(latitude),
+      'longitude': serializer.toJson<String>(longitude),
+      'locationAccuracy': serializer.toJson<String>(locationAccuracy),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'isSync': serializer.toJson<bool>(isSync),
+      'timestamp': serializer.toJson<int>(timestamp),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'projectId': serializer.toJson<String>(projectId),
+      'boundaryCode': serializer.toJson<String>(boundaryCode),
+      'action': serializer.toJson<String>(action),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  UserActionData copyWith(
+          {String? latitude,
+          String? longitude,
+          String? locationAccuracy,
+          String? clientReferenceId,
+          bool? isSync,
+          int? timestamp,
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<String?> tenantId = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          String? projectId,
+          String? boundaryCode,
+          String? action,
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
+      UserActionData(
+        latitude: latitude ?? this.latitude,
+        longitude: longitude ?? this.longitude,
+        locationAccuracy: locationAccuracy ?? this.locationAccuracy,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        isSync: isSync ?? this.isSync,
+        timestamp: timestamp ?? this.timestamp,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        projectId: projectId ?? this.projectId,
+        boundaryCode: boundaryCode ?? this.boundaryCode,
+        action: action ?? this.action,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserActionData(')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('isSync: $isSync, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('projectId: $projectId, ')
+          ..write('boundaryCode: $boundaryCode, ')
+          ..write('action: $action, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        latitude,
+        longitude,
+        locationAccuracy,
+        clientReferenceId,
+        isSync,
+        timestamp,
+        nonRecoverableError,
+        tenantId,
+        rowVersion,
+        projectId,
+        boundaryCode,
+        action,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        auditCreatedBy,
+        isDeleted,
+        additionalFields
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserActionData &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.locationAccuracy == this.locationAccuracy &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.isSync == this.isSync &&
+          other.timestamp == this.timestamp &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.tenantId == this.tenantId &&
+          other.rowVersion == this.rowVersion &&
+          other.projectId == this.projectId &&
+          other.boundaryCode == this.boundaryCode &&
+          other.action == this.action &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.isDeleted == this.isDeleted &&
+          other.additionalFields == this.additionalFields);
+}
+
+class UserActionCompanion extends UpdateCompanion<UserActionData> {
+  final Value<String> latitude;
+  final Value<String> longitude;
+  final Value<String> locationAccuracy;
+  final Value<String> clientReferenceId;
+  final Value<bool> isSync;
+  final Value<int> timestamp;
+  final Value<bool?> nonRecoverableError;
+  final Value<String?> tenantId;
+  final Value<int?> rowVersion;
+  final Value<String> projectId;
+  final Value<String> boundaryCode;
+  final Value<String> action;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> isDeleted;
+  final Value<String?> additionalFields;
+  final Value<int> rowid;
+  const UserActionCompanion({
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.locationAccuracy = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.isSync = const Value.absent(),
+    this.timestamp = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.boundaryCode = const Value.absent(),
+    this.action = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UserActionCompanion.insert({
+    required String latitude,
+    required String longitude,
+    required String locationAccuracy,
+    required String clientReferenceId,
+    this.isSync = const Value.absent(),
+    required int timestamp,
+    this.nonRecoverableError = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    required String projectId,
+    required String boundaryCode,
+    required String action,
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : latitude = Value(latitude),
+        longitude = Value(longitude),
+        locationAccuracy = Value(locationAccuracy),
+        clientReferenceId = Value(clientReferenceId),
+        timestamp = Value(timestamp),
+        projectId = Value(projectId),
+        boundaryCode = Value(boundaryCode),
+        action = Value(action);
+  static Insertable<UserActionData> custom({
+    Expression<String>? latitude,
+    Expression<String>? longitude,
+    Expression<String>? locationAccuracy,
+    Expression<String>? clientReferenceId,
+    Expression<bool>? isSync,
+    Expression<int>? timestamp,
+    Expression<bool>? nonRecoverableError,
+    Expression<String>? tenantId,
+    Expression<int>? rowVersion,
+    Expression<String>? projectId,
+    Expression<String>? boundaryCode,
+    Expression<String>? action,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? isDeleted,
+    Expression<String>? additionalFields,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (locationAccuracy != null) 'location_accuracy': locationAccuracy,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (isSync != null) 'is_sync': isSync,
+      if (timestamp != null) 'timestamp': timestamp,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (projectId != null) 'project_id': projectId,
+      if (boundaryCode != null) 'boundary_code': boundaryCode,
+      if (action != null) 'action': action,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UserActionCompanion copyWith(
+      {Value<String>? latitude,
+      Value<String>? longitude,
+      Value<String>? locationAccuracy,
+      Value<String>? clientReferenceId,
+      Value<bool>? isSync,
+      Value<int>? timestamp,
+      Value<bool?>? nonRecoverableError,
+      Value<String?>? tenantId,
+      Value<int?>? rowVersion,
+      Value<String>? projectId,
+      Value<String>? boundaryCode,
+      Value<String>? action,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? isDeleted,
+      Value<String?>? additionalFields,
+      Value<int>? rowid}) {
+    return UserActionCompanion(
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      locationAccuracy: locationAccuracy ?? this.locationAccuracy,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      isSync: isSync ?? this.isSync,
+      timestamp: timestamp ?? this.timestamp,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      tenantId: tenantId ?? this.tenantId,
+      rowVersion: rowVersion ?? this.rowVersion,
+      projectId: projectId ?? this.projectId,
+      boundaryCode: boundaryCode ?? this.boundaryCode,
+      action: action ?? this.action,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      isDeleted: isDeleted ?? this.isDeleted,
+      additionalFields: additionalFields ?? this.additionalFields,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (latitude.present) {
+      map['latitude'] = Variable<String>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<String>(longitude.value);
+    }
+    if (locationAccuracy.present) {
+      map['location_accuracy'] = Variable<String>(locationAccuracy.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (isSync.present) {
+      map['is_sync'] = Variable<bool>(isSync.value);
+    }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<int>(timestamp.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (boundaryCode.present) {
+      map['boundary_code'] = Variable<String>(boundaryCode.value);
+    }
+    if (action.present) {
+      map['action'] = Variable<String>(action.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserActionCompanion(')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('isSync: $isSync, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('projectId: $projectId, ')
+          ..write('boundaryCode: $boundaryCode, ')
+          ..write('action: $action, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e) : super(e);
   _$LocalSqlDataStoreManager get managers => _$LocalSqlDataStoreManager(this);
@@ -39348,6 +40412,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $SideEffectTable sideEffect = $SideEffectTable(this);
   late final $ReferralTable referral = $ReferralTable(this);
   late final $LocalizationTable localization = $LocalizationTable(this);
+  late final $UserActionTable userAction = $UserActionTable(this);
   late final Index attendanceClientref = Index('attendance_clientref',
       'CREATE INDEX attendance_clientref ON attendance (client_reference_id)');
   late final Index attendanceIndividualid = Index('attendance_individualid',
@@ -39461,6 +40526,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         sideEffect,
         referral,
         localization,
+        userAction,
         attendanceClientref,
         attendanceIndividualid,
         projectClinetref,
@@ -44466,6 +45532,7 @@ typedef $$ProjectProductVariantTableInsertCompanionBuilder
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
+  Value<String?> name,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -44486,6 +45553,7 @@ typedef $$ProjectProductVariantTableUpdateCompanionBuilder
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
+  Value<String?> name,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -44526,6 +45594,7 @@ class $$ProjectProductVariantTableTableManager extends RootTableManager<
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
+            Value<String?> name = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -44545,6 +45614,7 @@ class $$ProjectProductVariantTableTableManager extends RootTableManager<
             tenantId: tenantId,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
+            name: name,
             additionalFields: additionalFields,
             rowid: rowid,
           ),
@@ -44564,6 +45634,7 @@ class $$ProjectProductVariantTableTableManager extends RootTableManager<
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
+            Value<String?> name = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -44583,6 +45654,7 @@ class $$ProjectProductVariantTableTableManager extends RootTableManager<
             tenantId: tenantId,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
+            name: name,
             additionalFields: additionalFields,
             rowid: rowid,
           ),
@@ -44677,6 +45749,11 @@ class $$ProjectProductVariantTableFilterComposer
 
   ColumnFilters<int> get rowVersion => $state.composableBuilder(
       column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -44775,6 +45852,11 @@ class $$ProjectProductVariantTableOrderingComposer
 
   ColumnOrderings<int> get rowVersion => $state.composableBuilder(
       column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -55212,6 +56294,419 @@ class $$LocalizationTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$UserActionTableInsertCompanionBuilder = UserActionCompanion Function({
+  required String latitude,
+  required String longitude,
+  required String locationAccuracy,
+  required String clientReferenceId,
+  Value<bool> isSync,
+  required int timestamp,
+  Value<bool?> nonRecoverableError,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  required String projectId,
+  required String boundaryCode,
+  required String action,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<bool?> isDeleted,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$UserActionTableUpdateCompanionBuilder = UserActionCompanion Function({
+  Value<String> latitude,
+  Value<String> longitude,
+  Value<String> locationAccuracy,
+  Value<String> clientReferenceId,
+  Value<bool> isSync,
+  Value<int> timestamp,
+  Value<bool?> nonRecoverableError,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String> projectId,
+  Value<String> boundaryCode,
+  Value<String> action,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> auditCreatedBy,
+  Value<bool?> isDeleted,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$UserActionTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $UserActionTable,
+    UserActionData,
+    $$UserActionTableFilterComposer,
+    $$UserActionTableOrderingComposer,
+    $$UserActionTableProcessedTableManager,
+    $$UserActionTableInsertCompanionBuilder,
+    $$UserActionTableUpdateCompanionBuilder> {
+  $$UserActionTableTableManager(_$LocalSqlDataStore db, $UserActionTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$UserActionTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$UserActionTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$UserActionTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> latitude = const Value.absent(),
+            Value<String> longitude = const Value.absent(),
+            Value<String> locationAccuracy = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<bool> isSync = const Value.absent(),
+            Value<int> timestamp = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String> projectId = const Value.absent(),
+            Value<String> boundaryCode = const Value.absent(),
+            Value<String> action = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UserActionCompanion(
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
+            clientReferenceId: clientReferenceId,
+            isSync: isSync,
+            timestamp: timestamp,
+            nonRecoverableError: nonRecoverableError,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            projectId: projectId,
+            boundaryCode: boundaryCode,
+            action: action,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            isDeleted: isDeleted,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String latitude,
+            required String longitude,
+            required String locationAccuracy,
+            required String clientReferenceId,
+            Value<bool> isSync = const Value.absent(),
+            required int timestamp,
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            required String projectId,
+            required String boundaryCode,
+            required String action,
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UserActionCompanion.insert(
+            latitude: latitude,
+            longitude: longitude,
+            locationAccuracy: locationAccuracy,
+            clientReferenceId: clientReferenceId,
+            isSync: isSync,
+            timestamp: timestamp,
+            nonRecoverableError: nonRecoverableError,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            projectId: projectId,
+            boundaryCode: boundaryCode,
+            action: action,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
+            auditCreatedBy: auditCreatedBy,
+            isDeleted: isDeleted,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$UserActionTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $UserActionTable,
+    UserActionData,
+    $$UserActionTableFilterComposer,
+    $$UserActionTableOrderingComposer,
+    $$UserActionTableProcessedTableManager,
+    $$UserActionTableInsertCompanionBuilder,
+    $$UserActionTableUpdateCompanionBuilder> {
+  $$UserActionTableProcessedTableManager(super.$state);
+}
+
+class $$UserActionTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $UserActionTable> {
+  $$UserActionTableFilterComposer(super.$state);
+  ColumnFilters<String> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isSync => $state.composableBuilder(
+      column: $state.table.isSync,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get timestamp => $state.composableBuilder(
+      column: $state.table.timestamp,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get boundaryCode => $state.composableBuilder(
+      column: $state.table.boundaryCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get action => $state.composableBuilder(
+      column: $state.table.action,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$UserActionTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $UserActionTable> {
+  $$UserActionTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get locationAccuracy => $state.composableBuilder(
+      column: $state.table.locationAccuracy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isSync => $state.composableBuilder(
+      column: $state.table.isSync,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get timestamp => $state.composableBuilder(
+      column: $state.table.timestamp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectId => $state.composableBuilder(
+      column: $state.table.projectId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get boundaryCode => $state.composableBuilder(
+      column: $state.table.boundaryCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get action => $state.composableBuilder(
+      column: $state.table.action,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$LocalSqlDataStoreManager {
   final _$LocalSqlDataStore _db;
   _$LocalSqlDataStoreManager(this._db);
@@ -55294,4 +56789,6 @@ class _$LocalSqlDataStoreManager {
       $$ReferralTableTableManager(_db, _db.referral);
   $$LocalizationTableTableManager get localization =>
       $$LocalizationTableTableManager(_db, _db.localization);
+  $$UserActionTableTableManager get userAction =>
+      $$UserActionTableTableManager(_db, _db.userAction);
 }

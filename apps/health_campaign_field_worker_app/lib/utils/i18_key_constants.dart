@@ -510,7 +510,6 @@ class ComplaintsInboxShowcase {
   }
 }
 
-
 class ForgotPassword {
   const ForgotPassword();
 
@@ -559,6 +558,7 @@ class Home {
   String get dashboard => 'HOME_DASHBOARD_LABEL';
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
+  String get transitPostLabel => 'HOME_TRANSIT_POST_LABEL';
 
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 }
@@ -1014,7 +1014,6 @@ class PrivacyPolicy {
   String get privacyNoticeText => 'PRIVACY_POLICY_TEXT';
   String get privacyPolicyLinkText => 'PRIVACY_POLICY_LINK_TEXT';
   String get privacyPolicyValidationText => 'PRIVACY_POLICY_VALIDATION_TEXT';
-
 }
 
 class Dashboard {

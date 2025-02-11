@@ -32,6 +32,10 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
+import 'package:transit_post/router/transit_post_router.gm.dart';
+import 'package:transit_post/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -495,7 +499,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           child: HomeItemCard(
         icon: Icons.vaccines_outlined,
         label: i18.home.transitPostLabel,
-        onPressed: () {},
+        onPressed: () {
+          context.router.push(const TransitPostWrapperRoute());
+        },
       )),
     };
 
@@ -527,6 +533,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
+      i18.home.transitPostLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
@@ -538,7 +545,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel,
       i18.home.db,
       i18.home.dashboard,
-      i18.home.transitPostLabel,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -547,7 +553,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.transitPostLabel)
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -608,7 +615,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
                 context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>()
+                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
+                context.read<UserActionLocalRepository>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -642,6 +650,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                         AttendanceLogSearchModel>>(),
                 context.read<
                     RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+                context.read<UserActionRemoteRepository>(),
               ],
             ),
           );
@@ -660,6 +669,13 @@ void setPackagesSingleton(BuildContext context) {
       ) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
+        TransitPostSingleton().setInitialData(
+          resources: context.selectedProjectType?.resources,
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.selectedProject.id,
+          minAge: context.selectedProjectType?.validMinAge,
+          maxAge: context.selectedProjectType?.validMaxAge,
+        );
         ComplaintsSingleton().setInitialData(
           tenantId: envConfig.variables.tenantId,
           loggedInUserUuid: context.loggedInUserUuid,
