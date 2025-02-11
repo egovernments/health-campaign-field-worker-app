@@ -283,7 +283,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           leftOuterJoin(
               sql.projectBeneficiary,
               sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(sql.household.clientReferenceId))
+                  .equalsExp(sql.individual.clientReferenceId))
         ]).where(buildAnd([
           if (params.householdType == HouseholdType.community &&
               params.householdClientReferenceId == null)
