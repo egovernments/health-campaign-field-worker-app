@@ -23,6 +23,10 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_radio_list.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_text_form_input.dart';
 
 import '../../router/app_router.dart';
 
@@ -46,6 +50,12 @@ class CustomHouseholdLocationPageState
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
   static const _buildingNameKey = 'buildingName';
+  static const _communityTypeKey = 'communityType';
+  static const __refugeeCampsKey = 'refugeeCamps';
+  List<String> refugeeCampsList = ["camp1", "camp2", "camp3"];
+  List<String> radioOptions = ["Yes", "No"];
+  bool ifRefugeeCamp = false;
+  bool isCommunity = false;
 
   @override
   void initState() {
@@ -278,6 +288,70 @@ class CustomHouseholdLocationPageState
                               },
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding, kPadding, 0, kPadding),
+                            child: LabeledField(
+                              label: "Is it a Refugee Camp?",
+                              isRequired: true,
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: AlignmentDirectional.centerStart,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(top: spacer1),
+                                      child: RadioList(
+                                        containerPadding:
+                                            const EdgeInsets.fromLTRB(
+                                                kPadding * 2,
+                                                kPadding / 6,
+                                                kPadding * 2,
+                                                kPadding / 6),
+                                        radioDigitButtons: radioOptions
+                                            .map((item) => RadioButtonModel(
+                                                  code: item,
+                                                  name: localizations
+                                                      .translate(item.trim()),
+                                                ))
+                                            .toList(),
+                                        groupValue: form
+                                                .control(_communityTypeKey)
+                                                .value ??
+                                            "",
+                                        onChanged: (changedValue) {
+                                          setState(() {
+                                            form
+                                                .control(_communityTypeKey)
+                                                .value = changedValue.code;
+                                            if (changedValue.code == "Yes") {
+                                              ifRefugeeCamp = true;
+                                            } else {
+                                              ifRefugeeCamp = false;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Offstage(
+                            offstage: !ifRefugeeCamp,
+                            child: DigitReactiveDropdown<String>(
+                              key: const Key(__refugeeCampsKey),
+                              label: localizations.translate(
+                                'Refugee Camps List',
+                              ),
+                              menuItems: refugeeCampsList ?? [],
+                              formControlName: __refugeeCampsKey,
+                              valueMapper: (value) =>
+                                  localizations.translate(value),
+                              // isRequired: true,
+                            ),
+                          ),
                           if (RegistrationDeliverySingleton().householdType ==
                               HouseholdType.community)
                             householdLocationShowcaseData.buildingName
@@ -355,6 +429,8 @@ class CustomHouseholdLocationPageState
       _accuracyKey: FormControl<double>(
         value: addressModel?.locationAccuracy,
       ),
+      _communityTypeKey: FormControl<String>(),
+      __refugeeCampsKey: FormControl<String>(),
       if (RegistrationDeliverySingleton().householdType ==
           HouseholdType.community)
         _buildingNameKey: FormControl<String>(
