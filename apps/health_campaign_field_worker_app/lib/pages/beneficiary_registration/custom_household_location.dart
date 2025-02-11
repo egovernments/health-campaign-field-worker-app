@@ -50,8 +50,8 @@ class CustomHouseholdLocationPageState
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
   static const _buildingNameKey = 'buildingName';
-  static const _communityTypeKey = 'communityType';
-  static const __refugeeCampsKey = 'refugeeCamps';
+  static const _refugeeKey = 'refugee';
+  static const __refugeeCampsTypeKey = 'refugeeCamps';
   List<String> refugeeCampsList = ["camp1", "camp2", "camp3"];
   List<String> radioOptions = ["Yes", "No"];
   bool ifRefugeeCamp = false;
@@ -315,15 +315,13 @@ class CustomHouseholdLocationPageState
                                                       .translate(item.trim()),
                                                 ))
                                             .toList(),
-                                        groupValue: form
-                                                .control(_communityTypeKey)
-                                                .value ??
-                                            "",
+                                        groupValue:
+                                            form.control(_refugeeKey).value ??
+                                                "",
                                         onChanged: (changedValue) {
                                           setState(() {
-                                            form
-                                                .control(_communityTypeKey)
-                                                .value = changedValue.code;
+                                            form.control(_refugeeKey).value =
+                                                changedValue.code;
                                             if (changedValue.code == "Yes") {
                                               ifRefugeeCamp = true;
                                             } else {
@@ -341,12 +339,12 @@ class CustomHouseholdLocationPageState
                           Offstage(
                             offstage: !ifRefugeeCamp,
                             child: DigitReactiveDropdown<String>(
-                              key: const Key(__refugeeCampsKey),
+                              key: const Key(__refugeeCampsTypeKey),
                               label: localizations.translate(
                                 'Refugee Camps List',
                               ),
                               menuItems: refugeeCampsList ?? [],
-                              formControlName: __refugeeCampsKey,
+                              formControlName: __refugeeCampsTypeKey,
                               valueMapper: (value) =>
                                   localizations.translate(value),
                               // isRequired: true,
@@ -429,8 +427,8 @@ class CustomHouseholdLocationPageState
       _accuracyKey: FormControl<double>(
         value: addressModel?.locationAccuracy,
       ),
-      _communityTypeKey: FormControl<String>(),
-      __refugeeCampsKey: FormControl<String>(),
+      _refugeeKey: FormControl<String>(),
+      __refugeeCampsTypeKey: FormControl<String>(),
       if (RegistrationDeliverySingleton().householdType ==
           HouseholdType.community)
         _buildingNameKey: FormControl<String>(
