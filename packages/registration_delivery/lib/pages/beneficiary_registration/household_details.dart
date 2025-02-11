@@ -6,6 +6,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -413,8 +414,14 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       .noOfPregnantWomenCountLabel,
                                 ),
                                 child: DigitNumericFormInput(
+                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                   minValue: 0,
-                                  maxValue: 10,
+                                  maxValue: RegistrationDeliverySingleton()
+                                              .householdType !=
+                                          HouseholdType.community
+                                      ? 10
+                                      : 100000,
+                                  maxLength: 5,
                                   step: 1,
                                   editable: RegistrationDeliverySingleton()
                                           .householdType ==
@@ -424,19 +431,23 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       .value
                                       .toString(),
                                   onChange: (value) {
-                                    form.control(_pregnantWomenCountKey).value =
-                                        int.parse(value);
-                                    int pregnantWomen = form
-                                        .control(_pregnantWomenCountKey)
-                                        .value;
-                                    int children =
-                                        form.control(_childrenCountKey).value;
-                                    int memberCount =
-                                        form.control(_memberCountKey).value;
-                                    form.control(_memberCountKey).value =
-                                        memberCount < (children + pregnantWomen)
-                                            ? children + pregnantWomen
-                                            : memberCount;
+                                    if(value.isEmpty){
+                                        form.control(_pregnantWomenCountKey).value = 0;
+                                    }else{
+                                      form.control(_pregnantWomenCountKey).value =
+                                          int.parse(value);
+                                      int pregnantWomen = form
+                                          .control(_pregnantWomenCountKey)
+                                          .value;
+                                      int children =
+                                          form.control(_childrenCountKey).value;
+                                      int memberCount =
+                                          form.control(_memberCountKey).value;
+                                      form.control(_memberCountKey).value =
+                                      memberCount < (children + pregnantWomen)
+                                          ? children + pregnantWomen
+                                          : memberCount;
+                                    }
                                   },
                                 ),
                               ),
@@ -453,8 +464,14 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       .noOfChildrenBelow5YearsLabel,
                                 ),
                                 child: DigitNumericFormInput(
+                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                   minValue: 0,
-                                  maxValue: 20,
+                                  maxValue: RegistrationDeliverySingleton()
+                                      .householdType !=
+                                      HouseholdType.community
+                                      ? 20
+                                      : 100000,
+                                  maxLength: 5,
                                   step: 1,
                                   editable: RegistrationDeliverySingleton()
                                           .householdType ==
@@ -464,6 +481,10 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       .value
                                       .toString(),
                                   onChange: (value) {
+                                    if(value.isEmpty){
+                                      form.control(_childrenCountKey).value = 0;
+                                      return;
+                                    }
                                     form.control(_childrenCountKey).value =
                                         int.parse(value);
                                     int pregnantWomen = form
@@ -493,10 +514,16 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   i18.householdDetails.noOfMembersCountLabel,
                                 ),
                                 child: DigitNumericFormInput(
+                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                   minValue: children + pregnantWomen != 0
                                       ? children + pregnantWomen
                                       : 1,
-                                  maxValue: 30,
+                                  maxValue: RegistrationDeliverySingleton()
+                                      .householdType !=
+                                      HouseholdType.community
+                                      ? 30
+                                      : 1000000,
+                                  maxLength: 5,
                                   step: 1,
                                   editable: RegistrationDeliverySingleton()
                                           .householdType ==
@@ -506,6 +533,10 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       .value
                                       .toString(),
                                   onChange: (value) {
+                                    if(value.isEmpty){
+                                      form.control(_memberCountKey).value = 1;
+                                      return;
+                                    }
                                     form.control(_memberCountKey).value =
                                         int.parse(value);
                                     int pregnantWomen = form
