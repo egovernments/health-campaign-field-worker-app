@@ -1,3 +1,7 @@
+## 1.0.5-dev.3
+
+* Added household type in household table to support CLF
+
 ## 1.0.5-dev.2
 
 * Added localityCode in attendance table and modified migration script

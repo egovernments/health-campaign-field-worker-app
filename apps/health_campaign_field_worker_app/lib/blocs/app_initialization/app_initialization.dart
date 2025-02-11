@@ -170,18 +170,20 @@ class AppInitializationBloc
               ),
             ).toJson(),
           );
-          final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
-                  jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                      [ModuleEnums.hcm.toValue()])
-              .dashboardConfigWrapper;
+          if (dashboardConfigWrapper.isNotEmpty) {
+            final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
+                    jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                        [ModuleEnums.hcm.toValue().toString()])
+                .dashboardConfigWrapper;
 
-          if (dashboardConfigs.isNotEmpty) {
-            await dashboardRemoteRepository.writeToDashboardConfigDB(
-                DashboardConfigPrimaryWrapper.fromJson(
-                        jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                            [ModuleEnums.hcm.toValue()])
-                    .dashboardConfigWrapper,
-                isar);
+            if (dashboardConfigs.isNotEmpty) {
+              await dashboardRemoteRepository.writeToDashboardConfigDB(
+                  DashboardConfigPrimaryWrapper.fromJson(
+                          jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                              [ModuleEnums.hcm.toValue().toString()])
+                      .dashboardConfigWrapper,
+                  isar);
+            }
           }
         } catch (e) {
           debugPrint(e.toString());
@@ -219,7 +221,6 @@ class AppInitializationBloc
     if (configs.isEmpty) {
       throw Exception('`configs` cannot be empty');
     }
-
 
     return MdmsConfig(
       appConfigs: configs,
@@ -314,7 +315,6 @@ class MdmsConfig {
   final List<AppConfiguration> appConfigs;
   final List<ServiceRegistry> serviceRegistryList;
   final List<DashboardConfigSchema?>? dashboardConfigSchema;
-
 
   const MdmsConfig(
       {required this.appConfigs,
