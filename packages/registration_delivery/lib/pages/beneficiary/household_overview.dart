@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:survey_form/survey_form.dart';
 
+import '/widgets/status_filter/status_filter.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -34,7 +35,6 @@ import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/member_card/member_card.dart';
 import '../../widgets/table_card/table_card.dart';
-import '/widgets/status_filter/status_filter.dart';
 
 @RoutePage()
 class HouseholdOverviewPage extends LocalizedStatefulWidget {
@@ -160,10 +160,6 @@ class _HouseholdOverviewPageState
                                                         (value, model) {
                                                       if (value
                                                           .where((element) =>
-                                                              element.code
-                                                                  .toString()
-                                                                  .contains(
-                                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
                                                               element.code
                                                                   .toString()
                                                                   .contains(
@@ -500,13 +496,14 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(
                                                   i18.householdLocation
                                                       .administrationAreaFormLabel,
-                                                ): state
-                                                    .householdMemberWrapper
-                                                    .headOfHousehold
-                                                    ?.address
-                                                    ?.first
-                                                    .locality
-                                                    ?.code,
+                                                ): localizations.translate(state
+                                                        .householdMemberWrapper
+                                                        .headOfHousehold
+                                                        ?.address
+                                                        ?.first
+                                                        .locality
+                                                        ?.code ??
+                                                    i18.common.coreCommonNA),
                                               }),
                                             ],
                                           );
@@ -528,13 +525,14 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(
                                                   i18.householdLocation
                                                       .administrationAreaFormLabel,
-                                                ): state
-                                                    .householdMemberWrapper
-                                                    .headOfHousehold
-                                                    ?.address
-                                                    ?.first
-                                                    .locality
-                                                    ?.code,
+                                                ): localizations.translate(state
+                                                        .householdMemberWrapper
+                                                        .headOfHousehold
+                                                        ?.address
+                                                        ?.first
+                                                        .locality
+                                                        ?.code ??
+                                                    i18.common.coreCommonNA),
                                                 localizations.translate(
                                                   i18.deliverIntervention
                                                       .memberCountText,

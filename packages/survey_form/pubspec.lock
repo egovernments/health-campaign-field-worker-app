@@ -333,18 +333,19 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../digit_data_model"
-      relative: true
-    source: path
-    version: "1.0.5+1"
+      name: digit_data_model
+      sha256: "3280e583b1409146c7aa842b23c9a0f6734eca20dd4603c609ec7719f2729e52"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5-dev.2"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "4d79a36d9a3bfce4616066f2bf5c5d6dfb6c301315e6fa21a1d6d0f76d98dbeb"
+      sha256: "9a0103897ea089c240619392f0d3229476e640eb660775dbd18ec9077f78807d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.6"
+    version: "0.0.2-dev.7"
   dio:
     dependency: "direct main"
     description:
