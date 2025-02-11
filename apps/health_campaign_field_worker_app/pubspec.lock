@@ -513,11 +513,10 @@ packages:
   digit_dss:
     dependency: "direct main"
     description:
-      name: digit_dss
-      sha256: cb5ae888503260dff1df2d4785ba2cac39a20348cfcd660e2212a8965b948dba
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
+      path: "../../packages/digit_dss"
+      relative: true
+    source: path
+    version: "1.0.4"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -553,10 +552,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: baa99c0c165f3459e78a1996e2db13243903eed6e5ece582241de03904f851e6
+      sha256: "1010132c36b6785b20fa702a772c172a5287b5bfca301105bf63444ce7a1c944"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.9"
+    version: "0.0.2-dev.10"
   dio:
     dependency: "direct main"
     description:
