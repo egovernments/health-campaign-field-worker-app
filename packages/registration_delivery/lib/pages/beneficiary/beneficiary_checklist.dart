@@ -325,6 +325,12 @@ class _BeneficiaryChecklistPageState
                                           .trim(),
                                       isRequired: e.required ?? false,
                                       capitalizedFirstLetter: false,
+                                      labelStyle: textTheme.headingS.copyWith(
+                                          color: theme.colorTheme.text.primary),
+                                      descriptionStyle: textTheme.bodyS
+                                          .copyWith(
+                                              color: theme
+                                                  .colorTheme.text.secondary),
                                       description: description != null
                                           ? localizations.translate(
                                               '${value.selectedServiceDefinition?.code}.$description',
@@ -371,6 +377,12 @@ class _BeneficiaryChecklistPageState
                                                 '${value.selectedServiceDefinition?.code}.$description',
                                               )
                                             : null,
+                                        labelStyle: textTheme.headingS.copyWith(
+                                            color: theme.colorTheme.text.primary),
+                                        descriptionStyle: textTheme.bodyS
+                                            .copyWith(
+                                            color: theme
+                                                .colorTheme.text.secondary),
                                         isRequired: e.required ?? false,
                                         child: BlocBuilder<ServiceBloc,
                                             ServiceState>(
@@ -444,6 +456,12 @@ class _BeneficiaryChecklistPageState
                                                         '${value.selectedServiceDefinition?.code}.$description',
                                                       )
                                                     : null,
+                                                labelStyle: textTheme.headingS.copyWith(
+                                                    color: theme.colorTheme.text.primary),
+                                                descriptionStyle: textTheme.bodyS
+                                                    .copyWith(
+                                                    color: theme
+                                                        .colorTheme.text.secondary),
                                                 isRequired: e.required ?? false,
                                                 child: BlocBuilder<ServiceBloc,
                                                     ServiceState>(
@@ -583,6 +601,7 @@ class _BeneficiaryChecklistPageState
       BuildContext context,
       String? description) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
       final childItems = getNextQuestions(
@@ -617,6 +636,12 @@ class _BeneficiaryChecklistPageState
                     '${selectedServiceDefinition?.code}.$description',
                   )
                 : null,
+            labelStyle: textTheme.headingS.copyWith(
+                color: theme.colorTheme.text.primary),
+            descriptionStyle: textTheme.bodyS
+                .copyWith(
+                color: theme
+                    .colorTheme.text.secondary),
             isRequired: item.required ?? false,
             child: Column(children: [
               BlocBuilder<ServiceBloc, ServiceState>(
@@ -651,7 +676,7 @@ class _BeneficiaryChecklistPageState
                                         .toList()
                                     : [],
                                 errorMessage: field.errorText,
-                                capitalizeFirstLetter: false,
+                                sentenceCaseEnabled: false,
                                 groupValue: controller[index].text.trim(),
                                 onChanged: (value) {
                                   field.didChange(value);
@@ -739,6 +764,12 @@ class _BeneficiaryChecklistPageState
                                           '${selectedServiceDefinition?.code}.$description',
                                         )
                                       : null,
+                                  labelStyle: textTheme.headingS.copyWith(
+                                      color: theme.colorTheme.text.primary),
+                                  descriptionStyle: textTheme.bodyS
+                                      .copyWith(
+                                      color: theme
+                                          .colorTheme.text.secondary),
                                   isRequired: item.required ?? false,
                                   capitalizedFirstLetter: false,
                                   child: DigitTextFormInput(
@@ -794,6 +825,12 @@ class _BeneficiaryChecklistPageState
                       '${selectedServiceDefinition?.code}.$description',
                     )
                   : null,
+              labelStyle: textTheme.headingS.copyWith(
+                  color: theme.colorTheme.text.primary),
+              descriptionStyle: textTheme.bodyS
+                  .copyWith(
+                  color: theme
+                      .colorTheme.text.secondary),
               isRequired: item.required ?? false,
               capitalizedFirstLetter: false,
               child: DigitTextFormInput(
@@ -842,6 +879,12 @@ class _BeneficiaryChecklistPageState
                       '${selectedServiceDefinition?.code}.$description',
                     )
                   : null,
+              labelStyle: textTheme.headingS.copyWith(
+                  color: theme.colorTheme.text.primary),
+              descriptionStyle: textTheme.bodyS
+                  .copyWith(
+                  color: theme
+                      .colorTheme.text.secondary),
               isRequired: item.required ?? false,
               capitalizedFirstLetter: false,
               child: DigitTextFormInput(
@@ -874,6 +917,12 @@ class _BeneficiaryChecklistPageState
                     '${selectedServiceDefinition?.code}.$description',
                   )
                 : null,
+            labelStyle: textTheme.headingS.copyWith(
+                color: theme.colorTheme.text.primary),
+            descriptionStyle: textTheme.bodyS
+                .copyWith(
+                color: theme
+                    .colorTheme.text.secondary),
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
@@ -929,6 +978,12 @@ class _BeneficiaryChecklistPageState
                     '${selectedServiceDefinition?.code}.$description',
                   )
                 : null,
+            labelStyle: textTheme.headingS.copyWith(
+                color: theme.colorTheme.text.primary),
+            descriptionStyle: textTheme.bodyS
+                .copyWith(
+                color: theme
+                    .colorTheme.text.secondary),
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
