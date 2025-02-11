@@ -393,6 +393,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             label: localizations.translate(
                               i18.individualDetails.idTypeLabelText,
                             ),
+                            capitalizedFirstLetter: false,
                             isRequired: true,
                             child: DigitDropdown<String>(
                               selectedOption:
@@ -449,6 +450,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       label: localizations.translate(
                                         i18.individualDetails.idNumberLabelText,
                                       ),
+                                      capitalizedFirstLetter: false,
                                       isRequired: form
                                           .control(_idNumberKey)
                                           .validators

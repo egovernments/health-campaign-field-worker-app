@@ -434,7 +434,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           enableCustomIcon: true,
           customIcon: mySurveyFormSvg,
+          iconPadding: const EdgeInsets.all(spacer1),
           icon: Icons.checklist,
+          customIconSize: spacer8,
           label: i18.home.mySurveyForm,
           onPressed: () {
             if (isTriggerLocalisation) {
