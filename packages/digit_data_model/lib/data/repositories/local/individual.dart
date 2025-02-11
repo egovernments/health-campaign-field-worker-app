@@ -173,6 +173,7 @@ class IndividualLocalRepository
                         locationAccuracy: address.locationAccuracy,
                         addressLine1: address.addressLine1,
                         addressLine2: address.addressLine2,
+                        buildingName: address.buildingName,
                         city: address.city,
                         pincode: address.pincode,
                         type: address.type,

@@ -1,5 +1,4 @@
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
@@ -16,6 +15,7 @@ class AcknowledgementPage extends LocalizedStatefulWidget {
   String? label;
   String? description;
   Map<String, dynamic>? descriptionTableData;
+
   AcknowledgementPage({
     super.key,
     super.appLocalizations,
@@ -79,7 +79,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
             type: DigitButtonType.primary,
             size: DigitButtonSize.large,
             onPressed: () {
-              context.router.popUntilRouteWithName(HomeRoute.name);
+              context.router.popAndPushAll([HomeRoute()]);
             },
           ),
           DigitButton(

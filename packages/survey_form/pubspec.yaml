@@ -1,6 +1,6 @@
 name: survey_form
 description: "This package enables supervisors to monitor certain activities and record observations according to defined set of questions."
-version: 1.0.1
+version: 1.0.0-dev.1
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/survey_form
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_ui_components: ^0.0.2-dev.6
+  digit_ui_components: ^0.0.2-dev.9
   flutter_bloc: ^8.1.5
   freezed_annotation: ^2.4.1
   reactive_forms: ^17.0.0
@@ -22,7 +22,7 @@ dependencies:
   dart_mappable: ^4.2.0
   drift: ^2.0.0
   auto_route: ^8.1.3
-  digit_data_model: ^1.0.5
+  digit_data_model: ^1.0.5-dev.2
   collection: ^1.16.0
   location: ^6.0.2
   dio: ^5.1.2

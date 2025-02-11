@@ -7,6 +7,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -187,6 +188,11 @@ class _BeneficiaryChecklistPageState
                                                     .ctaProceed,
                                               ),
                                               onPressed: () {
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop();
+                                                DigitLoaders.overlayLoader(
+                                                    context: context);
                                                 createSubmitRequest(
                                                     decidedFlow: decidedFlow);
                                                 Navigator.of(context,
@@ -195,6 +201,7 @@ class _BeneficiaryChecklistPageState
                                                 navigateToDecidedFlow(
                                                     context, decidedFlow);
                                               },
+                                              capitalizeLetters: false,
                                               type: DigitButtonType.primary,
                                               size: DigitButtonSize.large),
                                           DigitButton(
@@ -206,6 +213,7 @@ class _BeneficiaryChecklistPageState
                                                         rootNavigator: true)
                                                     .pop();
                                               },
+                                              capitalizeLetters: false,
                                               type: DigitButtonType.secondary,
                                               size: DigitButtonSize.large)
                                         ]));
@@ -317,6 +325,12 @@ class _BeneficiaryChecklistPageState
                                           .trim(),
                                       isRequired: e.required ?? false,
                                       capitalizedFirstLetter: false,
+                                      labelStyle: textTheme.headingS.copyWith(
+                                          color: theme.colorTheme.text.primary),
+                                      descriptionStyle: textTheme.bodyS
+                                          .copyWith(
+                                              color: theme
+                                                  .colorTheme.text.secondary),
                                       description: description != null
                                           ? localizations.translate(
                                               '${value.selectedServiceDefinition?.code}.$description',
@@ -363,6 +377,12 @@ class _BeneficiaryChecklistPageState
                                                 '${value.selectedServiceDefinition?.code}.$description',
                                               )
                                             : null,
+                                        labelStyle: textTheme.headingS.copyWith(
+                                            color: theme.colorTheme.text.primary),
+                                        descriptionStyle: textTheme.bodyS
+                                            .copyWith(
+                                            color: theme
+                                                .colorTheme.text.secondary),
                                         isRequired: e.required ?? false,
                                         child: BlocBuilder<ServiceBloc,
                                             ServiceState>(
@@ -436,6 +456,12 @@ class _BeneficiaryChecklistPageState
                                                         '${value.selectedServiceDefinition?.code}.$description',
                                                       )
                                                     : null,
+                                                labelStyle: textTheme.headingS.copyWith(
+                                                    color: theme.colorTheme.text.primary),
+                                                descriptionStyle: textTheme.bodyS
+                                                    .copyWith(
+                                                    color: theme
+                                                        .colorTheme.text.secondary),
                                                 isRequired: e.required ?? false,
                                                 child: BlocBuilder<ServiceBloc,
                                                     ServiceState>(
@@ -575,6 +601,7 @@ class _BeneficiaryChecklistPageState
       BuildContext context,
       String? description) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
       final childItems = getNextQuestions(
@@ -600,6 +627,7 @@ class _BeneficiaryChecklistPageState
         alignment: Alignment.topLeft,
         child: LabeledField(
             charCondition: true,
+            capitalizedFirstLetter: false,
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
@@ -608,6 +636,12 @@ class _BeneficiaryChecklistPageState
                     '${selectedServiceDefinition?.code}.$description',
                   )
                 : null,
+            labelStyle: textTheme.headingS.copyWith(
+                color: theme.colorTheme.text.primary),
+            descriptionStyle: textTheme.bodyS
+                .copyWith(
+                color: theme
+                    .colorTheme.text.secondary),
             isRequired: item.required ?? false,
             child: Column(children: [
               BlocBuilder<ServiceBloc, ServiceState>(
@@ -642,6 +676,7 @@ class _BeneficiaryChecklistPageState
                                         .toList()
                                     : [],
                                 errorMessage: field.errorText,
+                                sentenceCaseEnabled: false,
                                 groupValue: controller[index].text.trim(),
                                 onChanged: (value) {
                                   field.didChange(value);
@@ -729,7 +764,14 @@ class _BeneficiaryChecklistPageState
                                           '${selectedServiceDefinition?.code}.$description',
                                         )
                                       : null,
+                                  labelStyle: textTheme.headingS.copyWith(
+                                      color: theme.colorTheme.text.primary),
+                                  descriptionStyle: textTheme.bodyS
+                                      .copyWith(
+                                      color: theme
+                                          .colorTheme.text.secondary),
                                   isRequired: item.required ?? false,
+                                  capitalizedFirstLetter: false,
                                   child: DigitTextFormInput(
                                     onChange: (value) {
                                       field.didChange(value);
@@ -783,6 +825,12 @@ class _BeneficiaryChecklistPageState
                       '${selectedServiceDefinition?.code}.$description',
                     )
                   : null,
+              labelStyle: textTheme.headingS.copyWith(
+                  color: theme.colorTheme.text.primary),
+              descriptionStyle: textTheme.bodyS
+                  .copyWith(
+                  color: theme
+                      .colorTheme.text.secondary),
               isRequired: item.required ?? false,
               capitalizedFirstLetter: false,
               child: DigitTextFormInput(
@@ -831,6 +879,12 @@ class _BeneficiaryChecklistPageState
                       '${selectedServiceDefinition?.code}.$description',
                     )
                   : null,
+              labelStyle: textTheme.headingS.copyWith(
+                  color: theme.colorTheme.text.primary),
+              descriptionStyle: textTheme.bodyS
+                  .copyWith(
+                  color: theme
+                      .colorTheme.text.secondary),
               isRequired: item.required ?? false,
               capitalizedFirstLetter: false,
               child: DigitTextFormInput(
@@ -863,6 +917,12 @@ class _BeneficiaryChecklistPageState
                     '${selectedServiceDefinition?.code}.$description',
                   )
                 : null,
+            labelStyle: textTheme.headingS.copyWith(
+                color: theme.colorTheme.text.primary),
+            descriptionStyle: textTheme.bodyS
+                .copyWith(
+                color: theme
+                    .colorTheme.text.secondary),
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
@@ -918,6 +978,12 @@ class _BeneficiaryChecklistPageState
                     '${selectedServiceDefinition?.code}.$description',
                   )
                 : null,
+            labelStyle: textTheme.headingS.copyWith(
+                color: theme.colorTheme.text.primary),
+            descriptionStyle: textTheme.bodyS
+                .copyWith(
+                color: theme
+                    .colorTheme.text.secondary),
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(

@@ -71,7 +71,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.3+1"
+    version: "1.0.3-dev.1"
   audioplayers:
     dependency: transitive
     description:
@@ -511,7 +511,7 @@ packages:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.5+1"
+    version: "1.0.5-dev.2"
   digit_dss:
     dependency: "direct main"
     description:
@@ -1805,7 +1805,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.5+3"
+    version: "1.0.5+2-dev.1"
   rxdart:
     dependency: transitive
     description:
@@ -2017,7 +2017,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.0-dev.1"
   sync_http:
     dependency: transitive
     description:

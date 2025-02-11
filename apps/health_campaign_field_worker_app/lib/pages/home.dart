@@ -377,6 +377,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.community);
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -430,7 +434,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           enableCustomIcon: true,
           customIcon: mySurveyFormSvg,
+          iconPadding: const EdgeInsets.all(spacer1),
           icon: Icons.checklist,
+          customIconSize: spacer8,
           label: i18.home.mySurveyForm,
           onPressed: () {
             if (isTriggerLocalisation) {
@@ -596,12 +602,11 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-    if (!context.selectedProject.name.contains('IRS')) {
-      filteredLabels.remove(i18.home.dashboard);
+
       if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
         filteredLabels.remove(i18.home.db);
       }
-    }
+
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -726,8 +731,10 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (
         AppConfiguration appConfiguration,
         List<ServiceRegistry> serviceRegistry,
-        DashboardConfigSchema? dashboardConfigSchema,
+        List<DashboardConfigSchema?>? dashboardConfigSchema,
       ) {
+        final filteredDashboardConfig = filterDashboardConfig(
+            dashboardConfigSchema ?? [], context.projectTypeCode ?? "");
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         ComplaintsSingleton().setInitialData(
@@ -856,7 +863,7 @@ void setPackagesSingleton(BuildContext context) {
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
-            dashboardConfig: dashboardConfigSchema,
+            dashboardConfig: filteredDashboardConfig.firstOrNull,
             appVersion: Constants().version,
             selectedProject: context.selectedProject,
             actionPath: Constants.getEndPoint(
