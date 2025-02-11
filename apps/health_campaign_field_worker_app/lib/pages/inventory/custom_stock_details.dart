@@ -470,9 +470,12 @@ class CustomStockDetailsPageState
                                               scannerState.qrCodes;
 
                                           if ([
-                                            StockRecordEntryType.receipt,
-                                            StockRecordEntryType.dispatch
-                                          ].contains(entryType)) {
+                                                StockRecordEntryType.receipt,
+                                                StockRecordEntryType.dispatch
+                                              ].contains(entryType) ||
+                                              transactionReasonType ==
+                                                  TransactionReason
+                                                      .damagedInTransit) {
                                             if (balesQuantity != null &&
                                                 (barcodes.length +
                                                         qrCodes.length) !=
@@ -944,8 +947,8 @@ class CustomStockDetailsPageState
                                             form
                                                 .control(_balesQuantityKey)
                                                 .setValidators([
-                                              Validators.number(),
                                               Validators.required,
+                                              Validators.number(),
                                               Validators.min(0),
                                               Validators.max(10000),
                                             ]);
@@ -1498,14 +1501,12 @@ class CustomStockDetailsPageState
                                 //Waybill Number
                                 if ([
                                       StockRecordEntryType.receipt,
-                                      StockRecordEntryType.loss,
-                                      StockRecordEntryType.damaged
                                     ].contains(entryType) ||
-                                    (transactionReasonType !=
+                                    (transactionReasonType ==
                                             TransactionReason
-                                                .damagedInStorage ||
-                                        transactionReasonType !=
-                                            TransactionReason.lostInStorage))
+                                                .damagedInTransit ||
+                                        transactionReasonType ==
+                                            TransactionReason.lostInTransit))
                                   DigitTextFormField(
                                       key: const Key(_waybillNumberKey),
                                       label: localizations.translate(
@@ -1530,14 +1531,12 @@ class CustomStockDetailsPageState
                                 //Quantity of Products on Waybill
                                 if ([
                                       StockRecordEntryType.receipt,
-                                      StockRecordEntryType.loss,
-                                      StockRecordEntryType.damaged
                                     ].contains(entryType) ||
-                                    (transactionReasonType !=
+                                    (transactionReasonType ==
                                             TransactionReason
-                                                .damagedInStorage ||
-                                        transactionReasonType !=
-                                            TransactionReason.lostInStorage))
+                                                .damagedInTransit ||
+                                        transactionReasonType ==
+                                            TransactionReason.lostInTransit))
                                   DigitTextFormField(
                                     label: localizations.translate(
                                       i18.stockDetails
@@ -1576,14 +1575,12 @@ class CustomStockDetailsPageState
                                 //Transport Type
                                 if ([
                                       StockRecordEntryType.receipt,
-                                      StockRecordEntryType.loss,
-                                      StockRecordEntryType.damaged
                                     ].contains(entryType) ||
-                                    (transactionReasonType !=
+                                    (transactionReasonType ==
                                             TransactionReason
-                                                .damagedInStorage ||
-                                        transactionReasonType !=
-                                            TransactionReason.lostInStorage))
+                                                .damagedInTransit ||
+                                        transactionReasonType ==
+                                            TransactionReason.lostInTransit))
                                   transportTypes.isNotEmpty
                                       ? DigitReactiveDropdown<String>(
                                           key: const Key(_typeOfTransportKey),
