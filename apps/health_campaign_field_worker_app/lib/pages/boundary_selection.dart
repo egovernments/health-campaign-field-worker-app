@@ -182,6 +182,7 @@ class _BoundarySelectionPageState
                                               resetChildDropdowns(label, state);
                                             });
                                           },
+                                          sentenceCaseEnabled: false,
                                           items: filteredItems
                                               .map((e) => DropdownItem(
                                                   name: localizations.translate(

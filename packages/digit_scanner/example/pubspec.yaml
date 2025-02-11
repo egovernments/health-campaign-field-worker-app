@@ -38,7 +38,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   digit_scanner:
     path: ../../digit_scanner
-  digit_ui_components: ^0.0.2-dev.7
+  digit_ui_components: ^0.0.2-dev.9
 
 dev_dependencies:
   flutter_test:
