@@ -1,5 +1,6 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
 import '../../data_model.dart';
 
@@ -8,18 +9,19 @@ part 'user_action.mapper.dart';
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class UserActionSearchModel extends EntitySearchModel
     with UserActionSearchModelMappable {
-  final double latitude;
-  final double longitude;
-  final bool isSync;
-  final int timestamp;
+  final double? latitude;
+  final double? longitude;
+  final bool? isSync;
+  final int? timestamp;
 
   UserActionSearchModel({
-    required this.latitude,
-    required this.longitude,
-    required this.isSync,
-    required this.timestamp,
+    this.latitude,
+    this.longitude,
+    this.isSync,
+    this.timestamp,
     super.isDeleted,
     super.boundaryCode,
+    super.auditDetails,
   }) : super();
 
   @MappableConstructor()
@@ -29,6 +31,7 @@ class UserActionSearchModel extends EntitySearchModel
     required this.isSync,
     required this.timestamp,
     super.boundaryCode,
+    super.auditDetails,
   }) : super(isDeleted: false);
 }
 
@@ -43,6 +46,7 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
   final int timestamp;
   final bool? nonRecoverableError;
   final String? tenantId;
+  final String? id;
   final int? rowVersion;
   final String projectId;
   final String boundaryCode;
@@ -62,11 +66,38 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
     required this.action,
     this.nonRecoverableError = false,
     this.tenantId,
+    this.id,
     this.rowVersion,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
   }) : super();
+
+  UserActionCompanion get companion {
+    return UserActionCompanion(
+      projectId: Value(projectId),
+      additionalFields: Value(additionalFields?.toJson()),
+      longitude: Value(longitude.toString()),
+      latitude: Value(latitude.toString()),
+      locationAccuracy: Value(locationAccuracy.toString()),
+      tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
+      clientReferenceId: Value(clientReferenceId),
+      action: Value(action),
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      boundaryCode: Value(boundaryCode),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      isSync: Value(isSync),
+      nonRecoverableError: Value(nonRecoverableError),
+      timestamp: Value(timestamp),
+    );
+  }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
