@@ -1,6 +1,6 @@
-## 1.0.5+3
+## 1.0.5+2-dev.1
 
-* Added Eligibility checklist
+* Added support for Eligibility checklist
 * Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
   relatedClientReference in additionalFields
 
