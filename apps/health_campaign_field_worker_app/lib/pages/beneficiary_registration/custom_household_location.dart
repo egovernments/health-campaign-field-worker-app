@@ -53,6 +53,7 @@ class CustomHouseholdLocationPageState
   static const _refugeeKey = 'refugee';
   static const __refugeeCampsTypeKey = 'refugeeCamps';
   List<String> refugeeCampsList = ["camp1", "camp2", "camp3"];
+  String? selectedRefugeeCamp;
   List<String> radioOptions = ["Yes", "No"];
   bool ifRefugeeCamp = false;
   bool isCommunity = false;
@@ -199,7 +200,9 @@ class CustomHouseholdLocationPageState
                                 addressModel,
                               ),
                             );
-                            router.push(CustomHouseHoldDetailsRoute());
+                            router.push(CustomHouseHoldDetailsRoute(
+                              refugeeCamp: selectedRefugeeCamp,
+                            ));
                           },
                           editHousehold: (
                             address,
@@ -229,7 +232,9 @@ class CustomHouseholdLocationPageState
                                 addressModel,
                               ),
                             );
-                            router.push(CustomHouseHoldDetailsRoute());
+                            router.push(CustomHouseHoldDetailsRoute(
+                              refugeeCamp: selectedRefugeeCamp,
+                            ));
                           },
                         );
                       },
@@ -345,6 +350,9 @@ class CustomHouseholdLocationPageState
                               ),
                               menuItems: refugeeCampsList ?? [],
                               formControlName: __refugeeCampsTypeKey,
+                              onChanged: (value) {
+                                selectedRefugeeCamp = value;
+                              },
                               valueMapper: (value) =>
                                   localizations.translate(value),
                               // isRequired: true,

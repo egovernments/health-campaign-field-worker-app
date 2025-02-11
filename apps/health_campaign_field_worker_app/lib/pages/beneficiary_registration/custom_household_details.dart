@@ -25,8 +25,10 @@ import '../../router/app_router.dart';
 
 @RoutePage()
 class CustomHouseHoldDetailsPage extends LocalizedStatefulWidget {
+  final String? refugeeCamp;
   const CustomHouseHoldDetailsPage({
     super.key,
+    required this.refugeeCamp,
     super.appLocalizations,
   });
 
@@ -181,6 +183,9 @@ class CustomHouseHoldDetailsPageState
                                   version: 1,
                                   fields: [
                                     //[TODO: Use pregnant women form value based on project config
+                                    if (widget.refugeeCamp != null)
+                                      AdditionalField(
+                                          "refugeeCamp", widget.refugeeCamp),
                                     ...?householdModel?.additionalFields?.fields
                                         .where((e) =>
                                             e.key !=
