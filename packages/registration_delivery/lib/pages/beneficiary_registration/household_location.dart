@@ -12,6 +12,7 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/component_mapper/household_location_component_mapper.dart';
+import '../../utils/constants.dart';
 import '../../utils/convert_to_map.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/models/widget_config_model.dart';
@@ -65,10 +66,10 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
           return true;
         });
 
-    if (widget.widgetConfig != null) {
-      final converter = FieldConverter(widget.widgetConfig);
-      mapper.configs = converter.convertWidgetConfigToJsonByName(HouseholdLocationRoute.name)!;
-    }
+    // if (widget.widgetConfig != null) {
+    //   final converter = FieldConverter(widget.widgetConfig);
+    //   mapper.configs = converter.convertWidgetConfigToJsonByName(HouseholdLocationRoute.name)!;
+    // }
     super.initState();
   }
 
@@ -77,33 +78,6 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
     final theme = Theme.of(context);
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
-
-    void validate(final form, final key, final fieldConfig) {
-      if (fieldConfig?['attribute'] != 'textField' &&
-          fieldConfig?['attribute'] != 'dateFormPicker' &&
-          fieldConfig?['attribute'] != 'dobPicker') {
-        if (form.control(key).value == null &&
-            (fieldConfig?['isRequired'] ?? false) &&
-            (fieldConfig?['isEnabled'] ?? false)) {
-          setState(() {
-            form.control(key).setErrors({'': true});
-          });
-        }
-      }
-      if (fieldConfig?['attribute'] == 'dobPicker') {
-        final age = DigitDateUtils.calculateAge(
-          form.control(key).value as DateTime?,
-        );
-        if ((fieldConfig?['isRequired'] ?? false) &&
-            (fieldConfig?['isEnabled'] ?? false) &&
-            ((age.years == 0 && age.months == 0) ||
-                (age.years >= 150 && age.months > 0))) {
-          setState(() {
-            form.control(key).setErrors({'': true});
-          });
-        }
-      }
-    }
 
     return Scaffold(
       body: BlocBuilder<BeneficiaryRegistrationBloc,
@@ -162,15 +136,16 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                         for (var component in mapper.configs["components"]) {
                           for (var fieldConfig in component["attributes"]) {
                             var key = fieldConfig["name"];
-                            validate(form, key, fieldConfig);
-                            if (fieldConfig['type'] == 'additionalField' &&
-                                fieldConfig['isEnabled'] == true) {
-                              var val = form.control(key).value ?? '';
-                              fields.add(AdditionalField(
-                                key,
-                                val is List ? val.join("|")
-                                    .toString() : val.toString(),
-                              ));
+
+                            if (evaluateDependencies(form, fieldConfig)) {
+                              validate(form, key, fieldConfig, setState);
+                              if (fieldConfig['type'] == 'additionalField' && fieldConfig['isEnabled'] == true) {
+                                var val = form.control(key).value ?? '';
+                                fields.add(AdditionalField(
+                                  key,
+                                  val is List ? val.join("|").toString() : val.toString(),
+                                ));
+                              }
                             }
                           }
                         }

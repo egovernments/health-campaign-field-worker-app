@@ -42,9 +42,9 @@ class HouseholdLocationComponentMapper {
           {
             'name': 'administrationArea',
             'type': 'field',
-            'isEnabled': false,
+            'isEnabled': true,
             'attribute': 'textField',
-            'readOnly': "true",
+            'readOnly': true,
             'isRequired': false,
             'order': 1,
           },
@@ -62,14 +62,23 @@ class HouseholdLocationComponentMapper {
             'readOnly': false,
             'attribute': 'textField',
             'isRequired': false,
-            'validation': [
-              {
-                'pattern': "^\\d+\$",
-                'key': 'onlyDigits',
-                'errorMessage': 'Digits only'
-              }
-            ],
-            'order': 1,
+            'order': 3,
+          },
+          {
+            'name': 'addressLine2',
+            'isEnabled': true,
+            'readOnly': false,
+            'attribute': 'textField',
+            'isRequired': false,
+            'order': 4,
+          },
+          {
+            'name': 'landmark',
+            'isEnabled': true,
+            'readOnly': false,
+            'attribute': 'textField',
+            'isRequired': false,
+            'order': 4,
           },
           {
             'name': 'postalCode',
@@ -77,77 +86,84 @@ class HouseholdLocationComponentMapper {
             'readOnly': false,
             'attribute': 'textField',
             'isRequired': false,
-            'order': 1,
-          },
-          {
-            "name": "TextField",
-            "type": "additionalField",
-            "label": "TextField",
-            "attribute": "textField",
-            "formDataType": "String",
-            "isEnabled": true,
-            "readOnly": false,
-            "isRequired": false,
-            "keyboardType": "number",
-            "validation": [
+            'validation': [
               {
-                "pattern": "^\\d+\$",
-                "key": "onlyDigits",
-                "errorMessage": "Digits only"
+                'pattern': "^\\d+\$",
+                'key': 'onlyDigits',
+                'errorMessage': 'Digits only'
               }
             ],
-            "order": 1
+            'order': 5,
           },
-          {
-            "name": "SelectionBox",
-            "type": "additionalField",
-            "label": "SelectionBox",
-            "attribute": "selectionbox",
-            "formDataType": "List<String>",
-            "menuItems": ["a", "b", "c", "d"],
-            "allowMultipleSelection": true,
-            "isEnabled": true,
-            "readOnly": false,
-            "isRequired": false,
-            "order": 2
-          },
-          {
-            "name": "dateForm",
-            "type": "additionalField",
-            "label": "dateForm",
-            "attribute": "dateFormPicker",
-            "formDataType": "DateTime",
-            "isEnabled": true,
-            "readOnly": false,
-            "isRequired": false,
-            "order": 5
-          },
-          {
-            "name": "DropDown",
-            "type": "additionalField",
-            "label": "DropDown",
-            "attribute": "dropdown",
-            "formDataType": "String",
-            "menuItems": ['a', 'b'],
-            "isEnabled": true,
-            "readOnly": false,
-            "isRequired": false,
-            "order": 3
-          },
-          {
-            "name": "integerFormPicker",
-            "type": "additionalField",
-            "label": "integerFormPicker",
-            "attribute": "integerFormPicker",
-            "formDataType": "int",
-            "initialValue": 0,
-            "minimum": 0,
-            "maximum": 10,
-            "isEnabled": true,
-            "readOnly": false,
-            "isRequired": false,
-            "order": 6
-          }
+      //     {
+      //       "name": "TextField",
+      //       "type": "additionalField",
+      //       "label": "TextField",
+      //       "attribute": "textField",
+      //       "formDataType": "String",
+      //       "isEnabled": true,
+      //       "readOnly": false,
+      //       "isRequired": false,
+      //       "keyboardType": "number",
+      //       "validation": [
+      //         {
+      //           "pattern": "^\\d+\$",
+      //           "key": "onlyDigits",
+      //           "errorMessage": "Digits only"
+      //         }
+      //       ],
+      //       "order": 1
+      //     },
+      //     {
+      //       "name": "SelectionBox",
+      //       "type": "additionalField",
+      //       "label": "SelectionBox",
+      //       "attribute": "selectionbox",
+      //       "formDataType": "List<String>",
+      //       "menuItems": ["a", "b", "c", "d"],
+      //       "allowMultipleSelection": true,
+      //       "isEnabled": true,
+      //       "readOnly": false,
+      //       "isRequired": false,
+      //       "order": 2
+      //     },
+      //     {
+      //       "name": "dateForm",
+      //       "type": "additionalField",
+      //       "label": "dateForm",
+      //       "attribute": "dateFormPicker",
+      //       "formDataType": "DateTime",
+      //       "isEnabled": true,
+      //       "readOnly": false,
+      //       "isRequired": false,
+      //       "order": 5
+      //     },
+      //     {
+      //       "name": "DropDown",
+      //       "type": "additionalField",
+      //       "label": "DropDown",
+      //       "attribute": "dropdown",
+      //       "formDataType": "String",
+      //       "menuItems": ['a', 'b'],
+      //       "isEnabled": true,
+      //       "readOnly": false,
+      //       "isRequired": false,
+      //       "order": 3
+      //     },
+      //     {
+      //       "name": "integerFormPicker",
+      //       "type": "additionalField",
+      //       "label": "integerFormPicker",
+      //       "attribute": "integerFormPicker",
+      //       "formDataType": "int",
+      //       "initialValue": 0,
+      //       "minimum": 0,
+      //       "maximum": 10,
+      //       "isEnabled": true,
+      //       "readOnly": false,
+      //       "isRequired": false,
+      //       "order": 6
+      //     }
         ]
       },
     ]

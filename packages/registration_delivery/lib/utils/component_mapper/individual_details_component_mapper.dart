@@ -102,12 +102,25 @@ class IndividualsDatailsComponentMapper {
             'name': 'isPregnant',
             'isEnabled': true,
             'readOnly': false,
-            'isRequired': false,
+            'isRequired': true,
             'order': 7,
             'type': 'additionalField',
             'label': 'Is Pregnant',
             'attribute': 'checkbox',
-            'formDataType': 'bool'
+            'formDataType': 'bool',
+            "dependsOn": {
+              "checkAll":
+                  false, // Set to true if all conditions must be met, false if any one is enough
+              "conditions": [
+                {
+                  "field": "gender",
+                  "value": (val) {
+                    if (val == null) return false;
+                    return (val.toString().toLowerCase() == "female");
+                  }
+                }
+              ]
+            }
           },
           {
             'name': 'ttVaccinesTaken',
@@ -119,7 +132,19 @@ class IndividualsDatailsComponentMapper {
             'type': 'additionalField',
             'label': 'How many TT vaccines taken',
             'attribute': 'integerFormPicker',
-            'formDataType': 'int'
+            'formDataType': 'int',
+            "dependsOn": {
+              "checkAll":
+                  false, // Set to true if all conditions must be met, false if any one is enough
+              "conditions": [
+                {
+                  "field": "isPregnant",
+                  "value": (val) {
+                    return (val == true);
+                  }
+                }
+              ]
+            }
           },
           {
             'name': 'noOfMonthsPregnant',
@@ -131,7 +156,19 @@ class IndividualsDatailsComponentMapper {
             'type': 'additionalField',
             'label': 'How many months pregnancy',
             'attribute': 'integerFormPicker',
-            'formDataType': 'int'
+            'formDataType': 'int',
+            "dependsOn": {
+              "checkAll":
+                  false, // Set to true if all conditions must be met, false if any one is enough
+              "conditions": [
+                {
+                  "field": "isPregnant",
+                  "value": (val) {
+                    return (val == true);
+                  }
+                }
+              ]
+            }
           },
           {
             'name': 'noOfTimesVisitedHF',
@@ -143,8 +180,21 @@ class IndividualsDatailsComponentMapper {
             'type': 'additionalField',
             'label': 'How many months visited HF for ANC',
             'attribute': 'integerFormPicker',
-            'formDataType': 'int'
-          },{
+            'formDataType': 'int',
+            "dependsOn": {
+              "checkAll":
+                  false, // Set to true if all conditions must be met, false if any one is enough
+              "conditions": [
+                {
+                  "field": "isPregnant",
+                  "value": (val) {
+                    return (val == true);
+                  }
+                }
+              ]
+            }
+          },
+          {
             'name': 'noOfChildrenLessThan5',
             'isEnabled': true,
             'readOnly': false,
@@ -154,8 +204,21 @@ class IndividualsDatailsComponentMapper {
             'type': 'additionalField',
             'label': 'How many childs less than 5',
             'attribute': 'integerFormPicker',
-            'formDataType': 'int'
-          },{
+            'formDataType': 'int',
+            "dependsOn": {
+              "checkAll":
+                  false, // Set to true if all conditions must be met, false if any one is enough
+              "conditions": [
+                {
+                  "field": "isPregnant",
+                  "value": (val) {
+                    return (val == true);
+                  }
+                }
+              ]
+            }
+          },
+          {
             'name': 'isVaccinationCondition',
             'isEnabled': true,
             'readOnly': false,
@@ -166,7 +229,8 @@ class IndividualsDatailsComponentMapper {
             'attribute': 'radioButton',
             'formDataType': 'KeyValue',
             "menuItems": ["Yes", "No"],
-          },{
+          },
+          {
             'name': 'antigens',
             'isEnabled': true,
             'readOnly': false,
@@ -176,7 +240,19 @@ class IndividualsDatailsComponentMapper {
             'label': 'Select antigens given',
             'attribute': 'dropdown',
             'formDataType': 'String',
-            "menuItems": ["Bacteria","Viruses","Fungi"],
+            "menuItems": ["Bacteria", "Viruses", "Fungi"],
+            "dependsOn": {
+              "checkAll":
+                  false, // Set to true if all conditions must be met, false if any one is enough
+              "conditions": [
+                {
+                  "field": "isVaccinationCondition",
+                  "value": (val) {
+                    return (val == true);
+                  }
+                }
+              ]
+            }
           },
           {
             'name': 'vaccinationPart',
@@ -188,7 +264,19 @@ class IndividualsDatailsComponentMapper {
             'label': 'On which part of body vaccination was given',
             'attribute': 'dropdown',
             'formDataType': 'String',
-            "menuItems": ["Left Arm","Right Arm","Left Leg","Right Leg"],
+            "menuItems": ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
+            "dependsOn": {
+              "checkAll":
+                  false, // Set to true if all conditions must be met, false if any one is enough
+              "conditions": [
+                {
+                  "field": "isVaccinationCondition",
+                  "value": (val) {
+                    return (val == false);
+                  }
+                }
+              ]
+            }
           },
         ]
       }
@@ -228,8 +316,8 @@ class IndividualsDatailsComponentMapper {
                 headingStyle: theme.textTheme.displayMedium,
                 body: component['description'] != null
                     ? localizations.translate(
-                  component['description'],
-                )
+                        component['description'],
+                      )
                     : ""),
             Column(
                 children: buildAttributesFromConfig(
@@ -266,208 +354,291 @@ class IndividualsDatailsComponentMapper {
         }
 
         // Generate the widget based on the fieldConfig['type'] using a switch case
-        switch (key) {
-          case _individualNameKey:
-            widget = DigitTextFormField(
-              formControlName: _individualNameKey,
-              label: localizations.translate(
-                i18.individualDetails.nameLabelText,
-              ),
-              isRequired: fieldConfig['isRequired'] ?? false,
-              readOnly: fieldConfig['readOnly'] ?? false,
-              validationMessages: {
-                'required': (object) => localizations.translate(
-                      '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                    ),
-              },
-            );
-            if (isHeadOfHousehold) {
-              widgets.add(widget);
-              widget = Offstage(
-                offstage: !isHeadOfHousehold,
-                child: DigitCheckbox(
-                  label: localizations.translate(
-                    i18.individualDetails.checkboxLabelText,
+        widget = ReactiveFormConsumer(builder: (context, form, child) {
+          switch (key) {
+            case _individualNameKey:
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DigitTextFormField(
+                    formControlName: _individualNameKey,
+                    label: localizations
+                        .translate(i18.individualDetails.nameLabelText),
+                    isRequired: fieldConfig['isRequired'] ?? false,
+                    readOnly: fieldConfig['readOnly'] ?? false,
+                    validationMessages: {
+                      'required': (object) => localizations.translate(
+                            '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                          ),
+                    },
                   ),
-                  value: isHeadOfHousehold,
-                ),
-              );
-            }
-            break;
-          case _idTypeKey:
-            widget = DigitReactiveSearchDropdown<String>(
-              enabled: (fieldConfig['readOnly'] ?? false) != true,
-              label: localizations.translate(
-                i18.individualDetails.idTypeLabelText,
-              ),
-              form: form,
-              menuItems: RegistrationDeliverySingleton().idTypeOptions!.map(
-                (e) {
-                  return e;
-                },
-              ).toList(),
-              formControlName: _idTypeKey,
-              valueMapper: (value) {
-                return localizations.translate(value);
-              },
-              onSelected: (value) {
-                func!(form, true, value);
-              },
-              isRequired: fieldConfig['isRequired'] ?? false,
-              validationMessage: form.control(_idTypeKey).hasErrors &&
-                      form.control(_idTypeKey).touched
-                  ? localizations.translate(
-                      i18.common.corecommonRequired,
-                    )
-                  : null,
-              emptyText: localizations.translate(i18.common.noMatchFound),
-            );
-            break;
-          case _idNumberKey:
-            widget = form.control(_idTypeKey).value != 'DEFAULT'
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ReactiveFormConsumer(
-                        builder: (context, formGroup, child) {
-                          return DigitTextFormField(
-                            readOnly: fieldConfig['readOnly'] ?? false,
-                            isRequired: fieldConfig['isRequired'] ?? false,
-                            formControlName: _idNumberKey,
-                            label: localizations.translate(
-                              i18.individualDetails.idNumberLabelText,
-                            ),
-                            validationMessages: {
-                              'required': (object) => localizations.translate(
-                                    '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                                  ),
-                            },
-                            padding: const EdgeInsets.only(
-                              top: kPadding * 2,
-                              left: kPadding / 2,
-                              right: kPadding / 2,
-                            ),
-                          );
+                  if (isHeadOfHousehold) // Ensure this updates dynamically
+                    Offstage(
+                      offstage: !isHeadOfHousehold,
+                      child: DigitCheckbox(
+                        label: localizations
+                            .translate(i18.individualDetails.checkboxLabelText),
+                        value: isHeadOfHousehold,
+                        onChanged: (value) {
+                          isHeadOfHousehold = value ?? false;
                         },
                       ),
-                    ],
-                  )
-                : const SizedBox(height: 16);
-            break;
-          case _dobKey:
-            DateTime before150Years =
-                DateTime(now.year - 150, now.month, now.day);
-            widget = individualDetailsShowcaseData.dateOfBirth.buildWith(
-              child: AbsorbPointer(
-                absorbing: fieldConfig['readOnly'] ?? false,
-                child: Opacity(
-                  opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
-                  child: DigitDobPicker(
-                    datePickerFormControl: _dobKey,
-                    datePickerLabel: localizations.translate(
-                      i18.individualDetails.dobLabelText,
                     ),
-                    ageFieldLabel: localizations.translate(
-                      i18.individualDetails.ageLabelText,
-                    ),
-                    yearsHintLabel: localizations.translate(
-                      i18.individualDetails.yearsHintText,
-                    ),
-                    monthsHintLabel: localizations.translate(
-                      i18.individualDetails.monthsHintText,
-                    ),
-                    separatorLabel: localizations.translate(
-                      i18.individualDetails.separatorLabelText,
-                    ),
-                    yearsAndMonthsErrMsg: localizations.translate(
-                      i18.individualDetails.yearsAndMonthsErrorText,
-                    ),
-                    initialDate: before150Years,
-                    onChangeOfFormControl: (formControl) {
-                      // Handle changes to the control's value here
-                      final value = formControl.value;
-                      if (value == null) {
-                        formControl.setErrors({'': true});
-                      } else {
-                        DigitDOBAge age = DigitDateUtils.calculateAge(value);
-                        if ((age.years == 0 && age.months == 0) ||
-                            age.months > 11 ||
-                            (age.years >= 150 && age.months >= 0)) {
+                ],
+              );
+              break;
+            case _idTypeKey:
+              return DigitReactiveSearchDropdown<String>(
+                enabled: (fieldConfig['readOnly'] ?? false) != true,
+                label: localizations.translate(
+                  i18.individualDetails.idTypeLabelText,
+                ),
+                form: form,
+                menuItems: RegistrationDeliverySingleton().idTypeOptions!.map(
+                  (e) {
+                    return e;
+                  },
+                ).toList(),
+                formControlName: _idTypeKey,
+                valueMapper: (value) {
+                  return localizations.translate(value);
+                },
+                onSelected: (value) {
+                  func!(form, true, value);
+                },
+                isRequired: fieldConfig['isRequired'] ?? false,
+                validationMessage: form.control(_idTypeKey).hasErrors &&
+                        form.control(_idTypeKey).touched
+                    ? localizations.translate(
+                        i18.common.corecommonRequired,
+                      )
+                    : null,
+                emptyText: localizations.translate(i18.common.noMatchFound),
+              );
+              break;
+            case _idNumberKey:
+              return form.control(_idTypeKey).value != 'DEFAULT'
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ReactiveFormConsumer(
+                          builder: (context, formGroup, child) {
+                            return DigitTextFormField(
+                              readOnly: fieldConfig['readOnly'] ?? false,
+                              isRequired: fieldConfig['isRequired'] ?? false,
+                              formControlName: _idNumberKey,
+                              label: localizations.translate(
+                                i18.individualDetails.idNumberLabelText,
+                              ),
+                              validationMessages: {
+                                'required': (object) => localizations.translate(
+                                      '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+                                    ),
+                              },
+                              padding: const EdgeInsets.only(
+                                top: kPadding * 2,
+                                left: kPadding / 2,
+                                right: kPadding / 2,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    )
+                  : const SizedBox(height: 16);
+              break;
+            case _dobKey:
+              DateTime before150Years =
+                  DateTime(now.year - 150, now.month, now.day);
+              return individualDetailsShowcaseData.dateOfBirth.buildWith(
+                child: AbsorbPointer(
+                  absorbing: fieldConfig['readOnly'] ?? false,
+                  child: Opacity(
+                    opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
+                    child: DigitDobPicker(
+                      datePickerFormControl: _dobKey,
+                      datePickerLabel: localizations.translate(
+                        i18.individualDetails.dobLabelText,
+                      ),
+                      ageFieldLabel: localizations.translate(
+                        i18.individualDetails.ageLabelText,
+                      ),
+                      yearsHintLabel: localizations.translate(
+                        i18.individualDetails.yearsHintText,
+                      ),
+                      monthsHintLabel: localizations.translate(
+                        i18.individualDetails.monthsHintText,
+                      ),
+                      separatorLabel: localizations.translate(
+                        i18.individualDetails.separatorLabelText,
+                      ),
+                      yearsAndMonthsErrMsg: localizations.translate(
+                        i18.individualDetails.yearsAndMonthsErrorText,
+                      ),
+                      initialDate: before150Years,
+                      onChangeOfFormControl: (formControl) {
+                        // Handle changes to the control's value here
+                        final value = formControl.value;
+                        if (value == null) {
                           formControl.setErrors({'': true});
                         } else {
-                          formControl.removeError('');
+                          DigitDOBAge age = DigitDateUtils.calculateAge(value);
+                          if ((age.years == 0 && age.months == 0) ||
+                              age.months > 11 ||
+                              (age.years >= 150 && age.months >= 0)) {
+                            formControl.setErrors({'': true});
+                          } else {
+                            formControl.removeError('');
+                          }
                         }
-                      }
-                    },
-                    cancelText:
-                        localizations.translate(i18.common.coreCommonCancel),
-                    confirmText:
-                        localizations.translate(i18.common.coreCommonOk),
+                      },
+                      cancelText:
+                          localizations.translate(i18.common.coreCommonCancel),
+                      confirmText:
+                          localizations.translate(i18.common.coreCommonOk),
+                    ),
                   ),
                 ),
-              ),
-            );
-            break;
-          case _genderKey:
-            widget = AbsorbPointer(
-              absorbing: fieldConfig['readOnly'] ?? false,
-              child: Opacity(
-                opacity: (fieldConfig['readOnly'] ?? false) ? 0.5 : 1,
-                child: SelectionBox<String>(
-                  title: '${localizations.translate(
-                    i18.individualDetails.genderLabelText,
-                  )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
-                  allowMultipleSelection: false,
-                  width: 126,
-                  initialSelection: form.control(_genderKey).value != null
-                      ? [form.control(_genderKey).value]
-                      : [],
-                  options: RegistrationDeliverySingleton()
-                      .genderOptions!
-                      .map(
-                        (e) => e,
-                      )
-                      .toList(),
-                  onSelectionChanged: (value) {
-                    func!(form, false, value);
-                  },
-                  valueMapper: (value) {
-                    return localizations.translate(value);
-                  },
-                  errorMessage: form.control(_genderKey).hasErrors &&
-                          form.control(_genderKey).touched
-                      ? localizations.translate(i18.common.corecommonRequired)
-                      : null,
+              );
+              break;
+            case _genderKey:
+              return AbsorbPointer(
+                absorbing: fieldConfig['readOnly'] ?? false,
+                child: Opacity(
+                  opacity: (fieldConfig['readOnly'] ?? false) ? 0.5 : 1,
+                  child: SelectionBox<String>(
+                    title: '${localizations.translate(
+                      i18.individualDetails.genderLabelText,
+                    )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+                    allowMultipleSelection: false,
+                    width: 126,
+                    initialSelection: form.control(_genderKey).value != null
+                        ? [form.control(_genderKey).value]
+                        : [],
+                    options: RegistrationDeliverySingleton()
+                        .genderOptions!
+                        .map(
+                          (e) => e,
+                        )
+                        .toList(),
+                    onSelectionChanged: (value) {
+                      func!(form, false, value);
+                    },
+                    valueMapper: (value) {
+                      return localizations.translate(value);
+                    },
+                    errorMessage: form.control(_genderKey).hasErrors &&
+                            form.control(_genderKey).touched
+                        ? localizations.translate(i18.common.corecommonRequired)
+                        : null,
+                  ),
                 ),
-              ),
-            );
-            break;
-          case _mobileNumberKey:
-            widget = individualDetailsShowcaseData.mobile.buildWith(
-              child: DigitTextFormField(
-                isRequired: fieldConfig['isRequired'] ?? false,
-                readOnly: fieldConfig['readOnly'] ?? false,
-                keyboardType: TextInputType.number,
-                formControlName: _mobileNumberKey,
-                maxLength: 10,
-                label: localizations.translate(
-                  i18.individualDetails.mobileNumberLabelText,
+              );
+              break;
+            case _mobileNumberKey:
+              return individualDetailsShowcaseData.mobile.buildWith(
+                child: DigitTextFormField(
+                  isRequired: fieldConfig['isRequired'] ?? false,
+                  readOnly: fieldConfig['readOnly'] ?? false,
+                  keyboardType: TextInputType.number,
+                  formControlName: _mobileNumberKey,
+                  maxLength: 10,
+                  label: localizations.translate(
+                    i18.individualDetails.mobileNumberLabelText,
+                  ),
+                  validationMessages: {
+                    'required': (object) => localizations.translate(
+                          '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+                        ),
+                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                 ),
-                validationMessages: {
-                  'required': (object) => localizations.translate(
-                        '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                      ),
-                },
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-              ),
-            );
-            break;
-          default:
-            widget = WidgetBuilderFactory.buildWidgetsFromConfig(
-                key, fieldConfig, form, localizations);
-        }
+              );
+              break;
+            default:
+              // Check if this field has dependencies
+              bool shouldRender = true;
+              final formControl = form.control(key);
+
+              // Get current validators
+              final currentValidators = formControl.validators;
+
+              List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
+                  updatedValidators = currentValidators.where((validator) {
+                // Check if the validator is of the same type as Validators.required
+                return validator.runtimeType != Validators.required.runtimeType;
+              }).toList();
+
+              // Set the updated validators back to the form control
+              formControl.setValidators(updatedValidators);
+
+              // Re-run validation with the new validators
+              formControl.updateValueAndValidity();
+
+              if (fieldConfig.containsKey('dependsOn')) {
+                var dependenciesConfig = fieldConfig['dependsOn'];
+                var dependencies = (dependenciesConfig['conditions'] as List?)
+                        ?.cast<Map<String, dynamic>>() ??
+                    [];
+                bool checkAll = dependenciesConfig['checkAll'] ?? false;
+
+                shouldRender = dependencies.isEmpty
+                    ? true
+                    : (checkAll
+                        ? dependencies.every((dependency) {
+                            var dependencyField = dependency['field'];
+                            var dependencyFunc = dependency['value'];
+
+                            // Fetch the value of the dependency field
+                            var currentDependencyValue =
+                                form.control(dependencyField).value is KeyValue
+                                    ? form.control(dependencyField).value.key
+                                    : form.control(dependencyField).value;
+
+                            return dependencyFunc(currentDependencyValue);
+                          })
+                        : dependencies.any((dependency) {
+                            var dependencyField = dependency['field'];
+                            var dependencyFunc = dependency['value'];
+
+                            // Fetch the value of the dependency field
+                            var currentDependencyValue =
+                                form.control(dependencyField).value is KeyValue
+                                    ? form.control(dependencyField).value.key
+                                    : form.control(dependencyField).value;
+
+                            return dependencyFunc(currentDependencyValue);
+                          }));
+
+                if (!shouldRender) {
+                  form.control(key).value = fieldConfig['initialValue'];
+                }
+              }
+
+              if (shouldRender) {
+                if (fieldConfig['isRequired'] == true &&
+                    fieldConfig['isEnabled'] == true) {
+                  // Add the new validator to the list
+                  updatedValidators = [
+                    ...updatedValidators,
+                    Validators.required // Example new validator
+                  ];
+                }
+
+                // Set the updated validators back to the form control
+                formControl.setValidators(updatedValidators);
+
+                // Re-run validation with the new validators
+                formControl.updateValueAndValidity();
+                return WidgetBuilderFactory.buildWidgetsFromConfig(
+                    key, fieldConfig, form, localizations);
+              } else {
+                return Container();
+              }
+          }
+        });
 
         widgets.add(widget);
       }
@@ -562,7 +733,7 @@ class IndividualsDatailsComponentMapper {
 
     for (var component in configs["components"]) {
       for (var attribute in component["attributes"]) {
-        addValidators(formGroup,attribute);
+        addValidators(formGroup, attribute);
       }
     }
 

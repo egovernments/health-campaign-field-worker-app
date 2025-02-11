@@ -249,6 +249,7 @@ abstract class $RegistrationDeliveryRoute extends _i26.AutoRouterModule {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isHeadOfHousehold: args.isHeadOfHousehold,
+          ischild: args.ischild,
         ),
       );
     },
@@ -982,6 +983,7 @@ class IndividualDetailsRoute
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     bool isHeadOfHousehold = false,
+    bool ischild = false,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           IndividualDetailsRoute.name,
@@ -990,6 +992,7 @@ class IndividualDetailsRoute
             key: key,
             appLocalizations: appLocalizations,
             isHeadOfHousehold: isHeadOfHousehold,
+            ischild: ischild,
           ),
           initialChildren: children,
         );
@@ -1006,6 +1009,7 @@ class IndividualDetailsRouteArgs {
     this.key,
     this.appLocalizations,
     this.isHeadOfHousehold = false,
+    this.ischild = false,
   });
 
   final List<_i33.RegistrationDeliveryFormConfig>? widgetConfig;
@@ -1016,9 +1020,11 @@ class IndividualDetailsRouteArgs {
 
   final bool isHeadOfHousehold;
 
+  final bool ischild;
+
   @override
   String toString() {
-    return 'IndividualDetailsRouteArgs{widgetConfig: $widgetConfig, key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold}';
+    return 'IndividualDetailsRouteArgs{widgetConfig: $widgetConfig, key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold, ischild: $ischild}';
   }
 }
 

@@ -34,13 +34,14 @@ import '../../widgets/showcase/showcase_button.dart';
 @RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   final List<RegistrationDeliveryFormConfig>? widgetConfig;
-  final bool isHeadOfHousehold;
+  final bool isHeadOfHousehold, ischild;
 
   const IndividualDetailsPage({
     this.widgetConfig,
     super.key,
     super.appLocalizations,
     this.isHeadOfHousehold = false,
+    this.ischild = false,
   });
 
   @override
@@ -66,6 +67,16 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     if (widget.widgetConfig != null) {
       final converter = FieldConverter(widget.widgetConfig);
       mapper.configs = converter.convertWidgetConfigToJsonByName(IndividualDetailsRoute.name)!;
+    }
+
+    for (var attr in mapper.configs["components"][0]["attributes"]) {
+      bool isPregnantAttribute = attr['name'] == "isPregnant";
+      bool isVaccinationConditionAttribute = attr['name'] == "isVaccinationCondition";
+
+      if ((isPregnantAttribute && widget.ischild) ||
+          (isVaccinationConditionAttribute && !widget.ischild)) {
+        attr['isEnabled'] = false;
+      }
     }
     super.initState();
   }
@@ -161,36 +172,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
 
-    void validate(final form, final key, final fieldConfig) {
-      if(form.control(key).value == "") {
-        form.control(key).value = null;
-      }
-      if (fieldConfig?['attribute'] != 'textField' &&
-          fieldConfig?['attribute'] != 'dateFormPicker' &&
-          fieldConfig?['attribute'] != 'dobPicker') {
-        if (form.control(key).value == null &&
-            (fieldConfig?['isRequired'] ?? false) &&
-            (fieldConfig?['isEnabled'] ?? false)) {
-          setState(() {
-            form.control(key).setErrors({'': true});
-          });
-        }
-      }
-      if (fieldConfig?['attribute'] == 'dobPicker') {
-        final age = DigitDateUtils.calculateAge(
-          form.control(key).value as DateTime?,
-        );
-        if ((fieldConfig?['isRequired'] ?? false) &&
-            (fieldConfig?['isEnabled'] ?? false) &&
-            ((age.years == 0 && age.months == 0) ||
-                (age.years >= 150 && age.months > 0))) {
-          setState(() {
-            form.control(key).setErrors({'': true});
-          });
-        }
-      }
-    }
-
     return Scaffold(
       body: ReactiveFormBuilder(
         form: () => mapper.buildForm(
@@ -243,19 +224,21 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                   builder: (context, bool isClicked, _) {
                     return DigitElevatedButton(
                       onPressed: () async {
+                        form.markAllAsTouched();
                         List<AdditionalField> fields = [];
                         for (var component in mapper.configs["components"]) {
                           for (var fieldConfig in component["attributes"]) {
                             var key = fieldConfig["name"];
-                            validate(form, key, fieldConfig);
-                            if (fieldConfig['type'] == 'additionalField' &&
-                                fieldConfig['isEnabled'] == true) {
-                              var val = form.control(key).value ?? '';
-                              fields.add(AdditionalField(
-                                key,
-                                val is List ? val.join("|")
-                                    .toString() : val.toString(),
-                              ));
+
+                            if (evaluateDependencies(form, fieldConfig)) {
+                              validate(form, key, fieldConfig, setState);
+                              if (fieldConfig['type'] == 'additionalField' && fieldConfig['isEnabled'] == true) {
+                                var val = form.control(key).value ?? '';
+                                fields.add(AdditionalField(
+                                  key,
+                                  val is List ? val.join("|").toString() : val.toString(),
+                                ));
+                              }
                             }
                           }
                         }
@@ -263,7 +246,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             RegistrationDeliverySingleton().loggedInUserUuid;
                         final projectId =
                             RegistrationDeliverySingleton().projectId;
-                        form.markAllAsTouched();
                         if (!form.valid) return;
                         FocusManager.instance.primaryFocus?.unfocus();
 

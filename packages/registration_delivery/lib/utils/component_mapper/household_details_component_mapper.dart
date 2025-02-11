@@ -40,6 +40,14 @@ class HouseholdDetailsComponentMapper {
         "order": 1,
         "attributes": [
           {
+            'name': 'dateOfRegistration',
+            'isEnabled': true,
+            'readOnly': true,
+            'isRequired': false,
+            'order': 1,
+            'initialValue': DateTime.now(),
+          },
+          {
             'name': 'motherWithChildrenLessThanFiveCount',
             'isEnabled': true,
             'readOnly': false,

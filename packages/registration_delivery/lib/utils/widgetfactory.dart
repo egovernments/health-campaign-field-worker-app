@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/checkbox_icon.dart';
@@ -101,13 +102,25 @@ class WidgetBuilderFactory {
         );
         break;
       case 'checkbox':
-        widget = Checkbox(
-          label: localizations.translate(
-    '${fieldConfig['label']}${fieldConfig['isRequired'] ?? false ? '*' : ''}'),
-          onChanged: (val) => {
-            form.control(key).value = val,
-          },
-        );
+        widget = Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
+          Checkbox(
+            label: localizations.translate(
+                '${fieldConfig['label']}${fieldConfig['isRequired'] ?? false ? '*' : ''}'),
+            onChanged: (val) => {
+              form.control(key).value = val,
+            },
+          ),
+          if (form.control(key).touched &&
+              fieldConfig['isRequired'] &&
+              form.control(key).value == null)
+            Text(
+              localizations.translate(
+                i18.common.corecommonRequired,
+              ),
+              style: DigitTheme.instance.mobileTheme.textTheme.bodySmall
+                  ?.copyWith(color: const DigitColors().lavaRed),
+            ),
+        ]);
         break;
       case 'dobPicker':
         DateTime now = DateTime.now();
@@ -160,20 +173,37 @@ class WidgetBuilderFactory {
         );
         break;
       case 'radioButton':
-        widget = DigitRadioButtonList<KeyValue>(
-          labelText: localizations.translate(
-            fieldConfig['label'],
-          ),
-            labelStyle: DigitTheme
-              .instance.mobileTheme.textTheme.bodyLarge,
-            contentPadding: EdgeInsets.zero,
-            formControlName: key,
-            valueMapper: (val) => localizations.translate(val.label),
-            options: Constants.yesNo,
-            isRequired: fieldConfig['isRequired'] ?? false,
-            errorMessage: form.control(key).hasErrors && form.control(key).touched ? localizations.translate(
-              i18.common.corecommonRequired,
-            ) : "");
+        widget = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DigitRadioButtonList<KeyValue>(
+                labelText: localizations.translate(
+                  fieldConfig['label'],
+                ),
+                labelStyle: DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
+                contentPadding: EdgeInsets.zero,
+                formControlName: key,
+                valueMapper: (val) => localizations.translate(val.label),
+                options: Constants.yesNo,
+                onChangeOfFormControl: (value) {
+                  form.control(key).value = value;
+                },
+                isRequired: fieldConfig['isRequired'] ?? false,
+                errorMessage: localizations.translate(
+                  i18.common.corecommonRequired,
+                )),
+            if (form.control(key).touched &&
+                fieldConfig['isRequired'] &&
+                form.control(key).value.label == "")
+              Text(
+                localizations.translate(
+                  i18.common.corecommonRequired,
+                ),
+                style: DigitTheme.instance.mobileTheme.textTheme.bodySmall
+                    ?.copyWith(color: const DigitColors().lavaRed),
+              )
+          ],
+        );
         break;
       case 'selectionbox':
         widget = AbsorbPointer(
@@ -258,7 +288,7 @@ class _CheckboxState extends State<Checkbox> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: widget.padding,
+      padding: const EdgeInsets.only(bottom: 8), // Add bottom margin
       child: InkWell(
         onTap: _toggleCheckbox,
         child: Row(

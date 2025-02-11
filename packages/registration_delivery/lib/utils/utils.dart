@@ -13,6 +13,7 @@ import '../models/entities/referral.dart';
 import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
 import '../models/entities/task.dart';
+import 'constants.dart';
 import 'models/widget_config_model.dart';
 
 /// This class contains custom validators for form controls.
@@ -483,6 +484,50 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
   }
 
   return Status.registered.toValue();
+}
+
+bool evaluateDependencies(FormGroup form, Map<String, dynamic> fieldConfig) {
+  if (fieldConfig['dependsOn'] == null) return true;
+
+  var dependenciesConfig = fieldConfig['dependsOn'];
+  var dependencies = List<Map<String, dynamic>>.from(dependenciesConfig['conditions']);
+  bool checkAll = dependenciesConfig['checkAll'] ?? false;
+
+  return dependencies.map((dependency) {
+    var dependencyField = dependency['field'];
+    var dependencyFunc = dependency['value'];
+    return form.contains(dependencyField) && dependencyFunc(form.control(dependencyField).value);
+  }).reduce((a, b) => checkAll ? a && b : a || b);
+}
+
+bool isNullOrEmpty(dynamic value) {
+  return value == null || (value is String && value.isEmpty) || (value is KeyValue && value.label.isEmpty);
+}
+
+void validate(FormGroup form, String key, Map<String, dynamic>? fieldConfig, dynamic setState) {
+  if (fieldConfig == null) return;
+
+  bool isRequired = fieldConfig['isRequired'] ?? false;
+  bool isEnabled = fieldConfig['isEnabled'] ?? false;
+  String? attribute = fieldConfig['attribute'];
+
+  if (!isEnabled || !evaluateDependencies(form, fieldConfig)) return;
+
+  final control = form.control(key);
+
+  // General validation for non-text fields
+  if (!['textField', 'dateFormPicker', 'dobPicker'].contains(attribute) && isRequired && isNullOrEmpty(control.value)) {
+    setState(() => control.setErrors({'': true}));
+    return;
+  }
+
+  // Specific validation for dobPicker
+  if (attribute == 'dobPicker') {
+    final age = DigitDateUtils.calculateAge(control.value as DateTime?);
+    if (isRequired && ((age.years == 0 && age.months == 0) || (age.years >= 150 && age.months > 0))) {
+      setState(() => control.setErrors({'': true}));
+    }
+  }
 }
 
 void addValidators(final formGroup, dynamic fieldConfig) {
