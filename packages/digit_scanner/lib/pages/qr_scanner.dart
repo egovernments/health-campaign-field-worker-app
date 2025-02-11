@@ -71,6 +71,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: BlocBuilder<DigitScannerBloc, DigitScannerState>(
@@ -171,51 +172,38 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           Align(
                             alignment: Alignment.center,
                             widthFactor: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: spacer1),
-                                  child: Text(
-                                    localizations.translate(
-                                      i18.scanner.manualScan,
-                                    ),
-                                    style: TextStyle(
-                                      color: theme.colorScheme.onError,
-                                      fontSize: 20,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: spacer8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: spacer1),
+                                    child: Text(
+                                      localizations.translate(
+                                        i18.scanner.manualScan,
+                                      ),
+                                      style: textTheme.bodyL.copyWith(
+                                        color: theme.colorTheme.paper.primary
+                                      )
                                     ),
                                   ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
+                                  DigitButton(label: localizations.translate(
+                                    i18.scanner.enterManualCode,
+                                  ), onPressed: () {
                                     context.read<DigitScannerBloc>().add(
-                                          const DigitScannerEvent.handleScanner(
-                                            barCode: [],
-                                            qrCode: [],
-                                          ),
-                                        );
+                                      const DigitScannerEvent.handleScanner(
+                                        barCode: [],
+                                        qrCode: [],
+                                      ),
+                                    );
                                     setState(() {
                                       manualCode = true;
                                     });
-                                  },
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.only(top: spacer1),
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.scanner.enterManualCode,
-                                      ),
-                                      style: TextStyle(
-                                        color: theme.colorScheme.secondary,
-                                        fontSize: theme
-                                            .textTheme.headlineMedium?.fontSize,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                  }, type: DigitButtonType.link, size: DigitButtonSize.large)
+                                ],
+                              ),
                             ),
                           ),
 
@@ -299,11 +287,11 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                   child: widget.isGS1code
                                       ? Text(
                                           '${state.barCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
-                                          style: theme.textTheme.headlineMedium,
+                                          style: textTheme.headingM.copyWith(color: theme.colorTheme.text.primary),
                                         )
                                       : Text(
                                           '${state.qrCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
-                                          style: theme.textTheme.headlineMedium,
+                                    style: textTheme.headingM.copyWith(color: theme.colorTheme.text.primary),
                                         ),
                                 ),
                                 Expanded(
@@ -510,11 +498,10 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                       localizations.translate(
                                         i18.scanner.enterManualCode,
                                       ),
-                                      style: theme.textTheme.headlineLarge,
+                                      style: textTheme.headingL.copyWith(
+                                        color: theme.colorTheme.text.primary,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: spacer2,
                                   ),
                                   ReactiveWrapperField(
                                     formControlName: _manualCodeFormKey,
@@ -523,6 +510,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                           label: localizations.translate(
                                             i18.scanner.resourceCode,
                                           ),
+                                          errorMessage: field.errorText,
+                                          isRequired: true,
                                           type: InputType.text,
                                           onChange: (value) {
                                             form

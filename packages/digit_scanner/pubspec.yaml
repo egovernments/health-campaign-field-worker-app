@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_mlkit_barcode_scanning: ^0.12.0
   camera: ^0.11.0+1
-  digit_ui_components: ^0.0.2-dev.6
+  digit_ui_components: ^0.0.2-dev.10
   reactive_forms: ^17.0.0
   gs1_barcode_parser: ^1.0.5
   flutter_bloc: ^8.1.1

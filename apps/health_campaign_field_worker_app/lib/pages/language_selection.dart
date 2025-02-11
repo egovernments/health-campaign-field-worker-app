@@ -1,3 +1,4 @@
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/molecules/language_selection_card.dart';
@@ -101,7 +102,8 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   builder: (context, localizationState) {
                     return localizationModulesList != null
                         ? DigitLanguageCard(
-                            rowItemWidth: 110,
+                            contentPadding: const EdgeInsets.symmetric(vertical: spacer2),
+                            rowItemWidth: MediaQuery.of(context).size.width*.272,
                             digitRowCardItems: languages.map((e) {
                               var index = languages.indexOf(e);
 
