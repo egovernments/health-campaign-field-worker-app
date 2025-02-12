@@ -454,6 +454,8 @@ class HouseholdDetails {
 
   String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
 
+  String get clfDetailsLabel => 'CLF_DETAILS_LABEL';
+
   String get householdDetailsDescription => 'HOUSEHOLD_DETAILS_DESCRIPTION';
 
   String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
@@ -463,9 +465,16 @@ class HouseholdDetails {
 
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
 
+  String get noOfMembersCountCLFLabel => 'NO_OF_MEMBERS_COUNT_CLF_LABEL';
+
   String get noOfPregnantWomenCountLabel => 'NO_OF_PREGNANT_WOMEN_LABEL';
 
+  String get noOfPregnantWomenCountCLFLabel => 'NO_OF_PREGNANT_WOMEN_CLF_LABEL';
+
   String get noOfChildrenBelow5YearsLabel => 'NO_OF_CHILDREN_BELOW_5_YR_LABEL';
+
+  String get noOfChildrenBelow5YearsCLFLabel =>
+      'NO_OF_CHILDREN_BELOW_5_YR_CLF_LABEL';
 
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
@@ -473,6 +482,8 @@ class HouseholdDetails {
   String get noOfRoomsLabel => 'NO_OF_ROOMS_LABEL';
 
   String get houseDetailsLabel => 'HOUSE_DETAILS_LABEL';
+
+  String get clfStructureDetailsLabel => 'CLF_STRUCTURE_DETAILS_LABEL';
 
   String get selectStructureTypeError => 'PLEASE_SELECT_STRUCTURE_TYPE';
 
