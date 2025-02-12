@@ -1107,8 +1107,9 @@ class _HouseholdOverviewPageState
               RegistrationDeliverySingleton().beneficiaryType!,
           offset: offset,
           limit: limit,
-          searchByName:
-              searchController.text.isNotEmpty ? searchController.text : null,
+          searchByName: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : null,
           selectedFilter: selectedFilters,
         ),
       );
