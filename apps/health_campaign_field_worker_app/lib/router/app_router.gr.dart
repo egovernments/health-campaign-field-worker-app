@@ -132,6 +132,7 @@ abstract class _$AppRouter extends RootStackRouter {
           appLocalizations: args.appLocalizations,
           quantity: args.quantity,
           isGS1code: args.isGS1code,
+          gs1CodeList: args.gs1CodeList,
           singleValue: args.singleValue,
           isEditEnabled: args.isEditEnabled,
           manualEnabled: args.manualEnabled,
@@ -166,12 +167,12 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     CustomHouseHoldDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomHouseHoldDetailsRouteArgs>(
-          orElse: () => const CustomHouseHoldDetailsRouteArgs());
+      final args = routeData.argsAs<CustomHouseHoldDetailsRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomHouseHoldDetailsPage(
           key: args.key,
+          refugeeCamp: args.refugeeCamp,
           appLocalizations: args.appLocalizations,
         ),
       );
@@ -801,6 +802,7 @@ class CustomDigitScannerRoute
     ScannerLocalization? appLocalizations,
     required int quantity,
     required bool isGS1code,
+    List<GS1Barcode> gs1CodeList = const [],
     bool singleValue = false,
     bool isEditEnabled = false,
     bool manualEnabled = true,
@@ -813,6 +815,7 @@ class CustomDigitScannerRoute
             appLocalizations: appLocalizations,
             quantity: quantity,
             isGS1code: isGS1code,
+            gs1CodeList: gs1CodeList,
             singleValue: singleValue,
             isEditEnabled: isEditEnabled,
             manualEnabled: manualEnabled,
@@ -833,6 +836,7 @@ class CustomDigitScannerRouteArgs {
     this.appLocalizations,
     required this.quantity,
     required this.isGS1code,
+    this.gs1CodeList = const [],
     this.singleValue = false,
     this.isEditEnabled = false,
     this.manualEnabled = true,
@@ -847,6 +851,8 @@ class CustomDigitScannerRouteArgs {
 
   final bool isGS1code;
 
+  final List<GS1Barcode> gs1CodeList;
+
   final bool singleValue;
 
   final bool isEditEnabled;
@@ -857,7 +863,7 @@ class CustomDigitScannerRouteArgs {
 
   @override
   String toString() {
-    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled, manualEnabled: $manualEnabled, scanType: $scanType}';
+    return 'CustomDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, gs1CodeList: $gs1CodeList, singleValue: $singleValue, isEditEnabled: $isEditEnabled, manualEnabled: $manualEnabled, scanType: $scanType}';
   }
 }
 
@@ -945,12 +951,14 @@ class CustomHouseHoldDetailsRoute
     extends PageRouteInfo<CustomHouseHoldDetailsRouteArgs> {
   CustomHouseHoldDetailsRoute({
     Key? key,
+    required String? refugeeCamp,
     RegistrationDeliveryLocalization? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
           CustomHouseHoldDetailsRoute.name,
           args: CustomHouseHoldDetailsRouteArgs(
             key: key,
+            refugeeCamp: refugeeCamp,
             appLocalizations: appLocalizations,
           ),
           initialChildren: children,
@@ -965,16 +973,19 @@ class CustomHouseHoldDetailsRoute
 class CustomHouseHoldDetailsRouteArgs {
   const CustomHouseHoldDetailsRouteArgs({
     this.key,
+    required this.refugeeCamp,
     this.appLocalizations,
   });
 
   final Key? key;
 
+  final String? refugeeCamp;
+
   final RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
-    return 'CustomHouseHoldDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'CustomHouseHoldDetailsRouteArgs{key: $key, refugeeCamp: $refugeeCamp, appLocalizations: $appLocalizations}';
   }
 }
 
