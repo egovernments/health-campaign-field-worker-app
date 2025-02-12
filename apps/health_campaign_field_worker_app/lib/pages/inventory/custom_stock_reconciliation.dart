@@ -47,6 +47,7 @@ class CustomStockReconciliationPageState
   static const _manualCountKey = 'manualCountKey';
   static const _reconciliationCommentsKey = 'reconciliationCommentsKey';
   String? selectedFacilityId;
+  bool isFacilitySelected = false;
   TextEditingController controller1 = TextEditingController();
 
   FormGroup _form(
@@ -398,6 +399,10 @@ class CustomStockReconciliationPageState
 
                                                             if (facility ==
                                                                 null) return;
+                                                            setState(() {
+                                                              isFacilitySelected =
+                                                                  true;
+                                                            });
                                                             form
                                                                     .control(
                                                                         _facilityKey)
@@ -567,8 +572,10 @@ class CustomStockReconciliationPageState
                                             i18.stockReconciliationDetails
                                                 .stockReceived,
                                           ),
-                                          value: stockState.stockReceived
-                                              .toStringAsFixed(0),
+                                          value: isFacilitySelected
+                                              ? stockState.stockReceived
+                                                  .toStringAsFixed(0)
+                                              : "0",
                                           labelFlex: 5,
                                         ),
                                         const DigitDivider(),
@@ -577,8 +584,10 @@ class CustomStockReconciliationPageState
                                             i18.stockReconciliationDetails
                                                 .stockIssued,
                                           ),
-                                          value: stockState.stockIssued
-                                              .toStringAsFixed(0),
+                                          value: isFacilitySelected
+                                              ? stockState.stockIssued
+                                                  .toStringAsFixed(0)
+                                              : "0",
                                           labelFlex: 5,
                                         ),
                                         const DigitDivider(),
@@ -587,8 +596,10 @@ class CustomStockReconciliationPageState
                                             i18.stockReconciliationDetails
                                                 .stockReturned,
                                           ),
-                                          value: stockState.stockReturned
-                                              .toStringAsFixed(0),
+                                          value: isFacilitySelected
+                                              ? stockState.stockReturned
+                                                  .toStringAsFixed(0)
+                                              : "0",
                                           labelFlex: 5,
                                         ),
                                         const DigitDivider(),
@@ -597,8 +608,10 @@ class CustomStockReconciliationPageState
                                             i18.stockReconciliationDetails
                                                 .stockLost,
                                           ),
-                                          value: stockState.stockLost
-                                              .toStringAsFixed(0),
+                                          value: isFacilitySelected
+                                              ? stockState.stockLost
+                                                  .toStringAsFixed(0)
+                                              : "0",
                                           labelFlex: 5,
                                         ),
                                         const DigitDivider(),
@@ -607,8 +620,10 @@ class CustomStockReconciliationPageState
                                             i18.stockReconciliationDetails
                                                 .stockDamaged,
                                           ),
-                                          value: stockState.stockDamaged
-                                              .toStringAsFixed(0),
+                                          value: isFacilitySelected
+                                              ? stockState.stockDamaged
+                                                  .toStringAsFixed(0)
+                                              : "0",
                                           labelFlex: 5,
                                         ),
                                         const DigitDivider(),
@@ -616,8 +631,10 @@ class CustomStockReconciliationPageState
                                           label: localizations.translate(i18
                                               .stockReconciliationDetails
                                               .stockOnHand),
-                                          value: stockState.stockInHand
-                                              .toStringAsFixed(0),
+                                          value: isFacilitySelected
+                                              ? stockState.stockInHand
+                                                  .toStringAsFixed(0)
+                                              : "0",
                                           labelFlex: 5,
                                         ),
                                         InfoCard(

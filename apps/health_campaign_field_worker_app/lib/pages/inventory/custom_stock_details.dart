@@ -56,6 +56,7 @@ class CustomStockDetailsPageState
   static const _manualScanCommentsKey = 'manualScanComments';
   static const _baleMismatchCommentsKey = 'baleMismatchCommentsKey';
 
+  late ProductVariantModel selectedProductVariant;
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
@@ -871,6 +872,9 @@ class CustomStockDetailsPageState
                                       fetched: (productVariants) {
                                         form.control(_productVariantKey).value =
                                             productVariants.first;
+                                        selectedProductVariant =
+                                            productVariants.first;
+
                                         return DisableWidget(
                                           child: DigitReactiveDropdown<
                                               ProductVariantModel>(
@@ -925,6 +929,14 @@ class CustomStockDetailsPageState
                                           return InkWell(
                                             onTap: () async {
                                               clearQRCodes();
+                                              stockReconciliationBloc.add(
+                                                StockReconciliationSelectProductEvent(
+                                                  selectedProductVariant.id,
+                                                  isDistributor:
+                                                      !InventorySingleton()
+                                                          .isWareHouseMgr!,
+                                                ),
+                                              );
                                               form
                                                   .control(_deliveryTeamKey)
                                                   .value = '';
@@ -1149,6 +1161,14 @@ class CustomStockDetailsPageState
                                                     _secondaryPartyKey,
                                                 onTap: () async {
                                                   clearQRCodes();
+                                                  stockReconciliationBloc.add(
+                                                    StockReconciliationSelectProductEvent(
+                                                      selectedProductVariant.id,
+                                                      isDistributor:
+                                                          !InventorySingleton()
+                                                              .isWareHouseMgr!,
+                                                    ),
+                                                  );
                                                   form
                                                       .control(_deliveryTeamKey)
                                                       .value = '';
