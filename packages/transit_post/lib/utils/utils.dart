@@ -16,6 +16,7 @@ class TransitPostSingleton {
       .offlineFirst; // Default to offline first persistence configuration
 
   List<ProjectProductVariantModel>? _resources;
+  List<String>? _transitPostType;
   String? _tenantId;
   String? _loggedInUserUuid;
   String? _projectId;
@@ -34,6 +35,7 @@ class TransitPostSingleton {
 
   void setInitialData({
     required List<ProjectProductVariantModel>? resources,
+    required List<String>? transitPostType,
     required String loggedInUserUuid,
     required String projectId,
     int? minAge,
@@ -44,6 +46,7 @@ class TransitPostSingleton {
     _projectId = projectId;
     _minAge = minAge;
     _maxAge = maxAge;
+    _transitPostType = transitPostType;
   }
 
   void setTenantId(String tenantId) {
@@ -60,4 +63,5 @@ class TransitPostSingleton {
   BoundaryModel? get boundary => _boundaryModel;
   int? get minAge => _minAge;
   int? get maxAge => _maxAge;
+  List<String>? get transitPostType => _transitPostType;
 }

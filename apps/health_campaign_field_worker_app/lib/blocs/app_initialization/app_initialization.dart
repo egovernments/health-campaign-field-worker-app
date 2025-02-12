@@ -106,6 +106,7 @@ class AppInitializationBloc
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
+                    MasterEnums.transitPostType.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -312,7 +313,6 @@ class MdmsConfig {
   final List<AppConfiguration> appConfigs;
   final List<ServiceRegistry> serviceRegistryList;
   final DashboardConfigSchema? dashboardConfigSchema;
-
 
   const MdmsConfig(
       {required this.appConfigs,

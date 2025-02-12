@@ -244,8 +244,6 @@ class MdmsRepository {
         return content;
       }).toList();
 
-
-
     final List<IdTypeOptions>? idTypeOptions =
         element?.idTypeOptions.map((element) {
       final idOption = IdTypeOptions()
@@ -328,6 +326,15 @@ class MdmsRepository {
         ..code = e.code
         ..active = e.active;
       return searchFilters;
+    }).toList();
+
+    appConfiguration.transitPostType =
+        result.hcmWrapperModel?.transitPostType?.map((e) {
+      final transitPostType = TransitPostType()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return transitPostType;
     }).toList();
 
     appConfiguration.symptomsTypes =

@@ -97,6 +97,7 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
     @JsonKey(name: 'FIREBASE_CONFIG')
     required List<FirebaseConfig>? firebaseConfig,
+    @JsonKey(name: 'TRANSIT_POST_TYPE') List<TransitPostType>? transitPostType,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(
@@ -339,6 +340,18 @@ class SearchHouseHoldFilters with _$SearchHouseHoldFilters {
 
   factory SearchHouseHoldFilters.fromJson(Map<String, dynamic> json) =>
       _$SearchHouseHoldFiltersFromJson(json);
+}
+
+@freezed
+class TransitPostType with _$TransitPostType {
+  factory TransitPostType({
+    required String name,
+    required String code,
+    required bool active,
+  }) = _TransitPostType;
+
+  factory TransitPostType.fromJson(Map<String, dynamic> json) =>
+      _$TransitPostTypeFromJson(json);
 }
 
 @freezed
