@@ -208,7 +208,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                                     i18.forgotPassword.primaryActionLabel,
                                   ),
                                   onPressed: () {
-                                    Navigator.of(context).pop();
+                                    Navigator.of(ctx).pop();
                                     context.router.popUntilRoot();
                                   },
                                   type: DigitButtonType.primary,
