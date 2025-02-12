@@ -98,6 +98,7 @@ class DeliverIntervention {
   String get informationBulletThree => 'INFORMATION_BULLET_THREE';
   String get informationBulletFour => 'INFORMATION_BULLET_FOUR';
   String get scanValidResource => 'SCAN_VALID_RESOURCE';
+  String get resourceAlreadyScanned => 'RESOURCES_ALREADY_SCANNED';
 }
 
 class Common {
