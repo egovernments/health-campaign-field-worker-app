@@ -967,6 +967,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'FIREBASE_CONFIG')
   List<FirebaseConfig>? get firebaseConfig =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'TRANSIT_POST_TYPE')
+  List<TransitPostType>? get transitPostType =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1009,7 +1012,9 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
       List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
+      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'TRANSIT_POST_TYPE')
+      List<TransitPostType>? transitPostType});
 }
 
 /// @nodoc
@@ -1043,6 +1048,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
+    Object? transitPostType = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: null == appConfig
@@ -1118,6 +1124,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.firebaseConfig
           : firebaseConfig // ignore: cast_nullable_to_non_nullable
               as List<FirebaseConfig>?,
+      transitPostType: freezed == transitPostType
+          ? _value.transitPostType
+          : transitPostType // ignore: cast_nullable_to_non_nullable
+              as List<TransitPostType>?,
     ) as $Val);
   }
 }
@@ -1159,7 +1169,9 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
       List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
+      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'TRANSIT_POST_TYPE')
+      List<TransitPostType>? transitPostType});
 }
 
 /// @nodoc
@@ -1191,6 +1203,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
+    Object? transitPostType = freezed,
   }) {
     return _then(_$HCMWrapperModelImpl(
       appConfig: null == appConfig
@@ -1266,6 +1279,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._firebaseConfig
           : firebaseConfig // ignore: cast_nullable_to_non_nullable
               as List<FirebaseConfig>?,
+      transitPostType: freezed == transitPostType
+          ? _value._transitPostType
+          : transitPostType // ignore: cast_nullable_to_non_nullable
+              as List<TransitPostType>?,
     ));
   }
 }
@@ -1309,7 +1326,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       @JsonKey(name: 'REFUSAL_REASONS')
       final List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG')
-      required final List<FirebaseConfig>? firebaseConfig})
+      required final List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'TRANSIT_POST_TYPE')
+      final List<TransitPostType>? transitPostType})
       : _appConfig = appConfig,
         _bandWidthBatchSize = bandWidthBatchSize,
         _downSyncBandWidthBatchSize = downSyncBandWidthBatchSize,
@@ -1328,7 +1347,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _referralReasonList = referralReasonList,
         _houseStructureTypes = houseStructureTypes,
         _refusalReasons = refusalReasons,
-        _firebaseConfig = firebaseConfig;
+        _firebaseConfig = firebaseConfig,
+        _transitPostType = transitPostType;
 
   factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$HCMWrapperModelImplFromJson(json);
@@ -1523,9 +1543,20 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<TransitPostType>? _transitPostType;
+  @override
+  @JsonKey(name: 'TRANSIT_POST_TYPE')
+  List<TransitPostType>? get transitPostType {
+    final value = _transitPostType;
+    if (value == null) return null;
+    if (_transitPostType is EqualUnmodifiableListView) return _transitPostType;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, transitPostType: $transitPostType)';
   }
 
   @override
@@ -1571,32 +1602,36 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality()
                 .equals(other._refusalReasons, _refusalReasons) &&
             const DeepCollectionEquality()
-                .equals(other._firebaseConfig, _firebaseConfig));
+                .equals(other._firebaseConfig, _firebaseConfig) &&
+            const DeepCollectionEquality()
+                .equals(other._transitPostType, _transitPostType));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_appConfig),
-      const DeepCollectionEquality().hash(_bandWidthBatchSize),
-      const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
-      const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
-      const DeepCollectionEquality()
-          .hash(_householdMemberDeletionReasonOptions),
-      const DeepCollectionEquality().hash(_backgroundServiceConfig),
-      const DeepCollectionEquality().hash(_checklistTypes),
-      const DeepCollectionEquality().hash(_idTypeOptions),
-      const DeepCollectionEquality().hash(_deliveryCommentOptions),
-      const DeepCollectionEquality().hash(_backendInterface),
-      const DeepCollectionEquality().hash(_callSupportOptions),
-      const DeepCollectionEquality().hash(_transportTypes),
-      const DeepCollectionEquality().hash(_symptomsTypeList),
-      const DeepCollectionEquality().hash(_searchHouseHoldFilters),
-      const DeepCollectionEquality().hash(_referralReasonList),
-      const DeepCollectionEquality().hash(_houseStructureTypes),
-      const DeepCollectionEquality().hash(_refusalReasons),
-      const DeepCollectionEquality().hash(_firebaseConfig));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        const DeepCollectionEquality().hash(_appConfig),
+        const DeepCollectionEquality().hash(_bandWidthBatchSize),
+        const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
+        const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
+        const DeepCollectionEquality()
+            .hash(_householdMemberDeletionReasonOptions),
+        const DeepCollectionEquality().hash(_backgroundServiceConfig),
+        const DeepCollectionEquality().hash(_checklistTypes),
+        const DeepCollectionEquality().hash(_idTypeOptions),
+        const DeepCollectionEquality().hash(_deliveryCommentOptions),
+        const DeepCollectionEquality().hash(_backendInterface),
+        const DeepCollectionEquality().hash(_callSupportOptions),
+        const DeepCollectionEquality().hash(_transportTypes),
+        const DeepCollectionEquality().hash(_symptomsTypeList),
+        const DeepCollectionEquality().hash(_searchHouseHoldFilters),
+        const DeepCollectionEquality().hash(_referralReasonList),
+        const DeepCollectionEquality().hash(_houseStructureTypes),
+        const DeepCollectionEquality().hash(_refusalReasons),
+        const DeepCollectionEquality().hash(_firebaseConfig),
+        const DeepCollectionEquality().hash(_transitPostType)
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -1650,8 +1685,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       @JsonKey(name: 'REFUSAL_REASONS')
       final List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG')
-      required final List<FirebaseConfig>?
-          firebaseConfig}) = _$HCMWrapperModelImpl;
+      required final List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'TRANSIT_POST_TYPE')
+      final List<TransitPostType>? transitPostType}) = _$HCMWrapperModelImpl;
 
   factory _HCMWrapperModel.fromJson(Map<String, dynamic> json) =
       _$HCMWrapperModelImpl.fromJson;
@@ -1710,6 +1746,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'FIREBASE_CONFIG')
   List<FirebaseConfig>? get firebaseConfig;
+  @override
+  @JsonKey(name: 'TRANSIT_POST_TYPE')
+  List<TransitPostType>? get transitPostType;
   @override
   @JsonKey(ignore: true)
   _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>
@@ -5245,6 +5284,179 @@ abstract class _SearchHouseHoldFilters implements SearchHouseHoldFilters {
   @JsonKey(ignore: true)
   _$$SearchHouseHoldFiltersImplCopyWith<_$SearchHouseHoldFiltersImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+TransitPostType _$TransitPostTypeFromJson(Map<String, dynamic> json) {
+  return _TransitPostType.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TransitPostType {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+  bool get active => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $TransitPostTypeCopyWith<TransitPostType> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TransitPostTypeCopyWith<$Res> {
+  factory $TransitPostTypeCopyWith(
+          TransitPostType value, $Res Function(TransitPostType) then) =
+      _$TransitPostTypeCopyWithImpl<$Res, TransitPostType>;
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class _$TransitPostTypeCopyWithImpl<$Res, $Val extends TransitPostType>
+    implements $TransitPostTypeCopyWith<$Res> {
+  _$TransitPostTypeCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TransitPostTypeImplCopyWith<$Res>
+    implements $TransitPostTypeCopyWith<$Res> {
+  factory _$$TransitPostTypeImplCopyWith(_$TransitPostTypeImpl value,
+          $Res Function(_$TransitPostTypeImpl) then) =
+      __$$TransitPostTypeImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class __$$TransitPostTypeImplCopyWithImpl<$Res>
+    extends _$TransitPostTypeCopyWithImpl<$Res, _$TransitPostTypeImpl>
+    implements _$$TransitPostTypeImplCopyWith<$Res> {
+  __$$TransitPostTypeImplCopyWithImpl(
+      _$TransitPostTypeImpl _value, $Res Function(_$TransitPostTypeImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_$TransitPostTypeImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TransitPostTypeImpl implements _TransitPostType {
+  _$TransitPostTypeImpl(
+      {required this.name, required this.code, required this.active});
+
+  factory _$TransitPostTypeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TransitPostTypeImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+  @override
+  final bool active;
+
+  @override
+  String toString() {
+    return 'TransitPostType(name: $name, code: $code, active: $active)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TransitPostTypeImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.active, active) || other.active == active));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code, active);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TransitPostTypeImplCopyWith<_$TransitPostTypeImpl> get copyWith =>
+      __$$TransitPostTypeImplCopyWithImpl<_$TransitPostTypeImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TransitPostTypeImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _TransitPostType implements TransitPostType {
+  factory _TransitPostType(
+      {required final String name,
+      required final String code,
+      required final bool active}) = _$TransitPostTypeImpl;
+
+  factory _TransitPostType.fromJson(Map<String, dynamic> json) =
+      _$TransitPostTypeImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  bool get active;
+  @override
+  @JsonKey(ignore: true)
+  _$$TransitPostTypeImplCopyWith<_$TransitPostTypeImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 TransportTypes _$TransportTypesFromJson(Map<String, dynamic> json) {

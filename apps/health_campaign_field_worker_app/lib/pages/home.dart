@@ -671,6 +671,9 @@ void setPackagesSingleton(BuildContext context) {
         // INFO : Need to add singleton of package Here
         TransitPostSingleton().setInitialData(
           resources: context.selectedProjectType?.resources,
+          transitPostType: appConfiguration.transitPostType != null
+              ? appConfiguration.transitPostType!.map((e) => e.code).toList()
+              : [],
           loggedInUserUuid: context.loggedInUserUuid,
           projectId: context.selectedProject.id,
           minAge: context.selectedProjectType?.validMinAge,

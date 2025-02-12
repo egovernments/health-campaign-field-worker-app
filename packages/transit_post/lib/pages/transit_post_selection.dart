@@ -10,13 +10,14 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:transit_post/blocs/transit_post.dart';
-import 'package:transit_post/router/transit_post_router.gm.dart';
-import 'package:transit_post/widgets/back_navigation_help_header.dart';
-import 'package:transit_post/widgets/total_delivery.dart';
 
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
+import '../blocs/transit_post.dart';
+import '../router/transit_post_router.gm.dart';
+import '../utils/utils.dart';
+import '../widgets/back_navigation_help_header.dart';
+import '../widgets/total_delivery.dart';
 
 @RoutePage()
 class TransitPostSelectionPage extends LocalizedStatefulWidget {
@@ -203,7 +204,7 @@ class TransitPostSelectionPageState
                                 formControlName: _transitPostType,
                                 validationMessages: {
                                   "required": (_) => localizations
-                                      .translate(i18.common.corecommonRequired)
+                                      .translate(i18.common.coreCommonRequired)
                                 },
                                 builder: (field) => LabeledField(
                                   label: localizations.translate(
@@ -211,14 +212,20 @@ class TransitPostSelectionPageState
                                   ),
                                   isRequired: true,
                                   child: DigitDropdown(
-                                    items: [
-                                      DropdownItem(
-                                          name: "School", code: "School")
-                                    ],
+                                    items: TransitPostSingleton()
+                                            .transitPostType
+                                            ?.map((transitPostType) =>
+                                                DropdownItem(
+                                                    name:
+                                                        localizations.translate(
+                                                            transitPostType),
+                                                    code: transitPostType))
+                                            .toList() ??
+                                        [],
                                     onSelect: (value) {
                                       setState(() {
                                         form.control(_transitPostType).value =
-                                            value.name;
+                                            value.code;
                                       });
                                     },
                                     errorMessage: field.errorText,
@@ -229,7 +236,7 @@ class TransitPostSelectionPageState
                                 formControlName: _transitPostName,
                                 validationMessages: {
                                   "required": (_) => localizations
-                                      .translate(i18.common.corecommonRequired)
+                                      .translate(i18.common.coreCommonRequired)
                                 },
                                 builder: (field) => LabeledField(
                                   label: localizations.translate(

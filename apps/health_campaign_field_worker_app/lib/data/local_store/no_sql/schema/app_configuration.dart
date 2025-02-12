@@ -78,6 +78,9 @@ class AppConfiguration {
   @Name('SEARCH_HOUSEHOLD_FILTERS')
   late List<SearchHouseHoldFilters>? searchHouseHoldFilters;
 
+  @Name('TRANSIT_POST_TYPE')
+  late List<TransitPostType>? transitPostType;
+
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
@@ -180,6 +183,13 @@ class SearchHouseHoldFilters {
 }
 
 @embedded
+class TransitPostType {
+  late String name;
+  late String code;
+  late bool active;
+}
+
+@embedded
 class HouseholdMemberDeletionReasonOptions {
   late String name;
   late String code;
@@ -257,4 +267,3 @@ class SubDescription {
   late bool? isBold;
   late bool? isSpaceRequired;
 }
-
