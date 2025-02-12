@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: attendance_management
-      sha256: a7deba1b236145a78a7a56fb95d5b92b9f2cb3d098113b88c6a3f4740fc5946b
+      sha256: "8089fa0ca872f7f4839bd1f3dd3492e8a501d16dc24e87a71719853889c77590"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3+1"
+    version: "1.0.3-dev.2"
   audioplayers:
     dependency: transitive
     description:
@@ -515,12 +515,11 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "packages/digit_data_model"
-      ref: hcmpre-1250-beneficiary
-      resolved-ref: d95ddaa65c1c9ffadc0c8a36f673d7eb3138f079
-      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
-    source: git
-    version: "1.0.5+1"
+      name: digit_data_model
+      sha256: "9f7965ded202336dcfd90f28346f06d036abc6ca2d50684657c6ee6a7e07c6fd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5-dev.3"
   digit_dss:
     dependency: "direct main"
     description:
@@ -564,10 +563,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "57c4da5237be6025783e7357a02b6b492f02e38f711d674bf46f5f8c8a93ad76"
+      sha256: bdb971ab85e325f0261c22214389d7baea22c6305c336b663f8919666f70f461
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.4"
+    version: "0.0.2-dev.12"
   dio:
     dependency: "direct main"
     description:
@@ -1343,10 +1342,10 @@ packages:
     dependency: "direct main"
     description:
       name: intl
-      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.19.0"
+    version: "0.18.1"
   inventory_management:
     dependency: "direct main"
     description:
