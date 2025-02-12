@@ -281,7 +281,6 @@ class CustomStockDetailsPageState
                           ),
                           child: ReactiveFormConsumer(
                               builder: (context, form, child) {
-                            print("form.error ${form.errors}");
                             if (form
                                     .control(_deliveryTeamKey)
                                     .value
