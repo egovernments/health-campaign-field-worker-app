@@ -4,7 +4,6 @@ import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/localized.dart';
-import '../router/transit_post_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()

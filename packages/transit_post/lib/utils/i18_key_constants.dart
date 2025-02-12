@@ -8,7 +8,7 @@ class Common {
 
   String get coreCommonBack => 'CORE_COMMON_BACK';
 
-  String get corecommonRequired => 'CORE_COMMON_REQUIRED';
+  String get coreCommonRequired => 'CORE_COMMON_REQUIRED';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
 

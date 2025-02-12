@@ -1,6 +1,4 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:transit_post/pages/transit_post_wrapper.dart';
 
 import 'transit_post_router.gm.dart';
 
@@ -25,6 +23,5 @@ class TransitPostRoute extends $TransitPostRoute {
                   page: TransitPostAcknowledgmentRoute.page,
                   path: 'transit-post-acknowledgment')
             ]),
-        AutoRoute(page: CustomScannerRoute.page),
       ];
 }

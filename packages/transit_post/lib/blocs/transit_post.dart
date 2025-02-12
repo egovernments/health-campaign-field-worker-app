@@ -31,16 +31,6 @@ class TransitPostBloc extends Bloc<TransitPostEvent, TransitPostState> {
     TransitPostSelectionEvent event,
     TransitPostEmitter emit,
   ) async {
-    int curCount = 0;
-
-    // final result = await userActionRepository.search(
-    //   UserActionSearchModel(
-    //       latitude: latitude,
-    //       longitude: longitude,
-    //       isSync: isSync,
-    //       timestamp: timestamp
-    //   )
-    // );
     emit(state.copyWith(
       transitPostType: event.transitPostType,
       transitPostName: event.transitPostName,
@@ -81,19 +71,25 @@ class TransitPostBloc extends Bloc<TransitPostEvent, TransitPostState> {
           latitude: event.latitude,
           longitude: event.longitude,
           locationAccuracy: event.locationAccuracy,
-          clientReferenceId: IdGen.i.identifier,
+          tenantId: TransitPostSingleton().tenantId,
+          clientReferenceId: IdGen.instance.identifier,
           isSync: true,
           timestamp: DateTime.now().millisecondsSinceEpoch,
           projectId: TransitPostSingleton().projectId!,
           boundaryCode: TransitPostSingleton().boundary!.code!,
-          action: 'transit-post',
+          action: 'OTHER',
+          rowVersion: 1,
           clientAuditDetails: ClientAuditDetails(
             createdBy: TransitPostSingleton().loggedInUserUuid!,
             createdTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedBy: TransitPostSingleton().loggedInUserUuid,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
           ),
           auditDetails: AuditDetails(
             createdBy: TransitPostSingleton().loggedInUserUuid!,
             createdTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedBy: TransitPostSingleton().loggedInUserUuid,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
           ),
           additionalFields: UserActionAdditionalFields(version: 1, fields: [
             AdditionalField(
