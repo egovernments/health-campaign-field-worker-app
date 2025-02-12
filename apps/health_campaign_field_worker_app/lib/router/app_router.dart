@@ -9,6 +9,7 @@ import 'package:health_campaign_field_worker_app/pages/custom_qr_scanner.dart';
 import 'package:health_campaign_field_worker_app/pages/household_acknowlegment/custom_household_acknowlegment.dart';
 import 'package:health_campaign_field_worker_app/pages/inventory/custom_report_details.dart';
 import 'package:health_campaign_field_worker_app/pages/inventory/custom_report_selection.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -256,6 +257,7 @@ class AppRouter extends _$AppRouter {
           page: InventoryFacilitySelectionRoute.page,
           path: 'inventory-select-facilities',
         ),
+
         AutoRoute(
           page: CustomInventoryFacilitySelectionRoute.page,
           path: 'custom-inventory-select-facilities',

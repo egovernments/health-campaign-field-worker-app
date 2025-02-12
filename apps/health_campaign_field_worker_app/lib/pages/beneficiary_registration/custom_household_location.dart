@@ -23,6 +23,10 @@ import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_radio_list.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_text_form_input.dart';
 
 import '../../router/app_router.dart';
 
@@ -46,6 +50,13 @@ class CustomHouseholdLocationPageState
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
   static const _buildingNameKey = 'buildingName';
+  static const _refugeeKey = 'refugee';
+  static const __refugeeCampsTypeKey = 'refugeeCamps';
+  List<String> refugeeCampsList = ["camp1", "camp2", "camp3"];
+  String? selectedRefugeeCamp;
+  List<String> radioOptions = ["Yes", "No"];
+  bool ifRefugeeCamp = false;
+  bool isCommunity = false;
 
   @override
   void initState() {
@@ -124,109 +135,117 @@ class CustomHouseholdLocationPageState
                 padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
-                    return DigitElevatedButton(
-                      onPressed: () {
-                        form.markAllAsTouched();
-                        if (!form.valid) return;
+                    return DisableWidget(
+                      isDisable: ifRefugeeCamp && (selectedRefugeeCamp == null),
+                      child: DigitElevatedButton(
+                        onPressed: () {
+                          form.markAllAsTouched();
+                          if (!form.valid) return;
 
-                        registrationState.maybeWhen(
-                          orElse: () {
-                            return;
-                          },
-                          create: (
-                            address,
-                            householdModel,
-                            individualModel,
-                            projectBeneficiaryModel,
-                            registrationDate,
-                            searchQuery,
-                            loading,
-                            isHeadOfHousehold,
-                          ) {
-                            var addressModel = AddressModel(
-                              type: AddressType.correspondence,
-                              latitude: form.control(_latKey).value ??
-                                  locationState.latitude,
-                              longitude: form.control(_lngKey).value ??
-                                  locationState.longitude,
-                              locationAccuracy:
-                                  form.control(_accuracyKey).value ??
-                                      locationState.accuracy,
-                              locality: LocalityModel(
-                                code: RegistrationDeliverySingleton()
-                                    .boundary!
-                                    .code!,
-                                name: RegistrationDeliverySingleton()
-                                    .boundary!
-                                    .name,
-                              ),
-                              tenantId:
-                                  RegistrationDeliverySingleton().tenantId,
-                              buildingName: (RegistrationDeliverySingleton()
-                                          .householdType ==
-                                      HouseholdType.community)
-                                  ? form.control(_buildingNameKey).value
-                                  : null,
-                              rowVersion: 1,
-                              auditDetails: AuditDetails(
-                                createdBy: RegistrationDeliverySingleton()
-                                    .loggedInUserUuid!,
-                                createdTime: context.millisecondsSinceEpoch(),
-                              ),
-                              clientAuditDetails: ClientAuditDetails(
-                                createdBy: RegistrationDeliverySingleton()
-                                    .loggedInUserUuid!,
-                                createdTime: context.millisecondsSinceEpoch(),
-                                lastModifiedBy: RegistrationDeliverySingleton()
-                                    .loggedInUserUuid,
-                                lastModifiedTime:
-                                    context.millisecondsSinceEpoch(),
-                              ),
-                            );
+                          registrationState.maybeWhen(
+                            orElse: () {
+                              return;
+                            },
+                            create: (
+                              address,
+                              householdModel,
+                              individualModel,
+                              projectBeneficiaryModel,
+                              registrationDate,
+                              searchQuery,
+                              loading,
+                              isHeadOfHousehold,
+                            ) {
+                              var addressModel = AddressModel(
+                                type: AddressType.correspondence,
+                                latitude: form.control(_latKey).value ??
+                                    locationState.latitude,
+                                longitude: form.control(_lngKey).value ??
+                                    locationState.longitude,
+                                locationAccuracy:
+                                    form.control(_accuracyKey).value ??
+                                        locationState.accuracy,
+                                locality: LocalityModel(
+                                  code: RegistrationDeliverySingleton()
+                                      .boundary!
+                                      .code!,
+                                  name: RegistrationDeliverySingleton()
+                                      .boundary!
+                                      .name,
+                                ),
+                                tenantId:
+                                    RegistrationDeliverySingleton().tenantId,
+                                buildingName: (RegistrationDeliverySingleton()
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? form.control(_buildingNameKey).value
+                                    : null,
+                                rowVersion: 1,
+                                auditDetails: AuditDetails(
+                                  createdBy: RegistrationDeliverySingleton()
+                                      .loggedInUserUuid!,
+                                  createdTime: context.millisecondsSinceEpoch(),
+                                ),
+                                clientAuditDetails: ClientAuditDetails(
+                                  createdBy: RegistrationDeliverySingleton()
+                                      .loggedInUserUuid!,
+                                  createdTime: context.millisecondsSinceEpoch(),
+                                  lastModifiedBy:
+                                      RegistrationDeliverySingleton()
+                                          .loggedInUserUuid,
+                                  lastModifiedTime:
+                                      context.millisecondsSinceEpoch(),
+                                ),
+                              );
 
-                            bloc.add(
-                              BeneficiaryRegistrationSaveAddressEvent(
-                                addressModel,
-                              ),
-                            );
-                            router.push(CustomHouseHoldDetailsRoute());
-                          },
-                          editHousehold: (
-                            address,
-                            householdModel,
-                            individuals,
-                            registrationDate,
-                            projectBeneficiaryModel,
-                            loading,
-                            headOfHousehold,
-                          ) {
-                            var addressModel = address.copyWith(
-                              type: AddressType.correspondence,
-                              latitude: form.control(_latKey).value,
-                              longitude: form.control(_lngKey).value,
-                              locationAccuracy:
-                                  form.control(_accuracyKey).value,
-                              buildingName: (RegistrationDeliverySingleton()
-                                          .householdType ==
-                                      HouseholdType.community)
-                                  ? form.control(_buildingNameKey).value
-                                  : null,
-                            );
-                            // TODO [Linking of Voucher for Household based project  need to be handled]
+                              bloc.add(
+                                BeneficiaryRegistrationSaveAddressEvent(
+                                  addressModel,
+                                ),
+                              );
+                              router.push(CustomHouseHoldDetailsRoute(
+                                refugeeCamp: selectedRefugeeCamp,
+                              ));
+                            },
+                            editHousehold: (
+                              address,
+                              householdModel,
+                              individuals,
+                              registrationDate,
+                              projectBeneficiaryModel,
+                              loading,
+                              headOfHousehold,
+                            ) {
+                              var addressModel = address.copyWith(
+                                type: AddressType.correspondence,
+                                latitude: form.control(_latKey).value,
+                                longitude: form.control(_lngKey).value,
+                                locationAccuracy:
+                                    form.control(_accuracyKey).value,
+                                buildingName: (RegistrationDeliverySingleton()
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? form.control(_buildingNameKey).value
+                                    : null,
+                              );
+                              // TODO [Linking of Voucher for Household based project  need to be handled]
 
-                            bloc.add(
-                              BeneficiaryRegistrationSaveAddressEvent(
-                                addressModel,
-                              ),
-                            );
-                            router.push(CustomHouseHoldDetailsRoute());
-                          },
-                        );
-                      },
-                      child: Center(
-                        child: Text(
-                          localizations.translate(
-                            i18.householdLocation.actionLabel,
+                              bloc.add(
+                                BeneficiaryRegistrationSaveAddressEvent(
+                                  addressModel,
+                                ),
+                              );
+                              router.push(CustomHouseHoldDetailsRoute(
+                                refugeeCamp: selectedRefugeeCamp,
+                              ));
+                            },
+                          );
+                        },
+                        child: Center(
+                          child: Text(
+                            localizations.translate(
+                              i18.householdLocation.actionLabel,
+                            ),
                           ),
                         ),
                       ),
@@ -276,6 +295,82 @@ class CustomHouseholdLocationPageState
                                           .administrationAreaRequiredValidation,
                                     ),
                               },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding, kPadding, 0, kPadding),
+                            child: LabeledField(
+                              label: "Is it a Refugee Camp?",
+                              isRequired: true,
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: AlignmentDirectional.centerStart,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(top: spacer1),
+                                      child: RadioList(
+                                        containerPadding:
+                                            const EdgeInsets.fromLTRB(
+                                                kPadding * 2,
+                                                kPadding / 6,
+                                                kPadding * 2,
+                                                kPadding / 6),
+                                        radioDigitButtons: radioOptions
+                                            .map((item) => RadioButtonModel(
+                                                  code: item,
+                                                  name: localizations
+                                                      .translate(item.trim()),
+                                                ))
+                                            .toList(),
+                                        groupValue:
+                                            form.control(_refugeeKey).value ??
+                                                "",
+                                        onChanged: (changedValue) {
+                                          setState(() {
+                                            form.control(_refugeeKey).value =
+                                                changedValue.code;
+                                            if (changedValue.code == "Yes") {
+                                              setState(() {
+                                                ifRefugeeCamp = true;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                ifRefugeeCamp = false;
+                                                form
+                                                    .control(
+                                                        __refugeeCampsTypeKey)
+                                                    .value = null;
+                                                selectedRefugeeCamp = null;
+                                              });
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Offstage(
+                            offstage: !ifRefugeeCamp,
+                            child: DigitReactiveDropdown<String>(
+                              key: const Key(__refugeeCampsTypeKey),
+                              label: localizations.translate(
+                                'Refugee Camps List',
+                              ),
+                              menuItems: refugeeCampsList ?? [],
+                              formControlName: __refugeeCampsTypeKey,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedRefugeeCamp = value;
+                                });
+                              },
+                              valueMapper: (value) =>
+                                  localizations.translate(value),
+                              // isRequired: true,
                             ),
                           ),
                           if (RegistrationDeliverySingleton().householdType ==
@@ -355,6 +450,8 @@ class CustomHouseholdLocationPageState
       _accuracyKey: FormControl<double>(
         value: addressModel?.locationAccuracy,
       ),
+      _refugeeKey: FormControl<String>(),
+      __refugeeCampsTypeKey: FormControl<String>(),
       if (RegistrationDeliverySingleton().householdType ==
           HouseholdType.community)
         _buildingNameKey: FormControl<String>(
@@ -367,5 +464,22 @@ class CustomHouseholdLocationPageState
           value: addressModel?.buildingName ?? searchQuery?.trim(),
         ),
     });
+  }
+}
+
+class DisableWidget extends StatelessWidget {
+  final bool isDisable;
+  final Widget child;
+  const DisableWidget({super.key, this.isDisable = false, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return AbsorbPointer(
+      absorbing: isDisable,
+      child: Opacity(
+        opacity: isDisable ? 0.5 : 1,
+        child: child,
+      ),
+    );
   }
 }
