@@ -229,9 +229,17 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                               Padding(
                                 padding: const EdgeInsets.all(0),
                                 child: Text(
-                                  localizations.translate(
-                                    i18.householdDetails.houseDetailsLabel,
-                                  ),
+                                  (RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community)
+                                      ? localizations.translate(
+                                          i18.householdDetails
+                                              .clfStructureDetailsLabel,
+                                        )
+                                      : localizations.translate(
+                                          i18.householdDetails
+                                              .houseDetailsLabel,
+                                        ),
                                   style: textTheme.headingXl,
                                 ),
                               ),
