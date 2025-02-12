@@ -58,6 +58,7 @@ class CustomStockDetailsPageState
 
   late ProductVariantModel selectedProductVariant;
   bool deliveryTeamSelected = false;
+  TransactionReason? transactionReasonType;
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
   int maxCount = 100000000;
@@ -78,7 +79,7 @@ class CustomStockDetailsPageState
       ]),
       _transactionReasonKey: FormControl<String>(validators: []),
       _waybillNumberKey: FormControl<String>(
-        validators: [Validators.minLength(2), Validators.maxLength(200)],
+        validators: [],
       ),
       _waybillQuantityKey: FormControl<int>(),
       _vehicleNumberKey: FormControl<String>(),
@@ -134,7 +135,6 @@ class CustomStockDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    bool isWaybillQuantityInit = false;
     final theme = Theme.of(context);
     final stockReconciliationBloc =
         BlocProvider.of<StockReconciliationBloc>(context);
@@ -464,9 +464,12 @@ class CustomStockDetailsPageState
                                               scannerState.qrCodes;
 
                                           if ([
-                                            StockRecordEntryType.receipt,
-                                            StockRecordEntryType.dispatch
-                                          ].contains(entryType)) {
+                                                StockRecordEntryType.receipt,
+                                                StockRecordEntryType.dispatch
+                                              ].contains(entryType) ||
+                                              transactionReasonType ==
+                                                  TransactionReason
+                                                      .damagedInTransit) {
                                             if (balesQuantity != null &&
                                                 (barcodes.length +
                                                         qrCodes.length) !=
@@ -906,16 +909,70 @@ class CustomStockDetailsPageState
                                   StockRecordEntryType.damaged,
                                 ].contains(entryType))
                                   DigitReactiveDropdown<String>(
-                                    key: const Key(_transactionReasonKey),
-                                    label: localizations.translate(
-                                      transactionReasonLabel ?? 'Reason',
-                                    ),
-                                    menuItems: reasons ?? [],
-                                    formControlName: _transactionReasonKey,
-                                    valueMapper: (value) =>
-                                        localizations.translate(value),
-                                    // isRequired: true,
-                                  ),
+                                      key: const Key(_transactionReasonKey),
+                                      label: localizations.translate(
+                                        transactionReasonLabel ?? 'Reason',
+                                      ),
+                                      isRequired: true,
+                                      menuItems: reasons ?? [],
+                                      formControlName: _transactionReasonKey,
+                                      onChanged: (value) {
+                                        form
+                                            .control(_balesQuantityKey)
+                                            .setValidators([],
+                                                autoValidate: true);
+
+                                        form
+                                            .control(_waybillQuantityKey)
+                                            .setValidators([
+                                          Validators.minLength(2),
+                                          Validators.maxLength(200)
+                                        ], autoValidate: true);
+                                        if (value ==
+                                            TransactionReason.damagedInTransit
+                                                .toValue()) {
+                                          form
+                                              .control(_balesQuantityKey)
+                                              .setValidators([
+                                            Validators.required,
+                                            Validators.number(),
+                                            Validators.min(0),
+                                            Validators.max(10000),
+                                          ], autoValidate: true);
+                                          transactionReasonType =
+                                              TransactionReason
+                                                  .damagedInTransit;
+                                        } else if (value ==
+                                            TransactionReason.damagedInStorage
+                                                .toValue()) {
+                                          form
+                                              .control(_waybillQuantityKey)
+                                              .setValidators([],
+                                                  autoValidate: true);
+                                          transactionReasonType =
+                                              TransactionReason
+                                                  .damagedInStorage;
+                                        } else if (value ==
+                                            TransactionReason.lostInTransit
+                                                .toValue()) {
+                                          transactionReasonType =
+                                              TransactionReason.lostInTransit;
+                                        } else if (value ==
+                                            TransactionReason.lostInStorage
+                                                .toValue()) {
+                                          form
+                                              .control(_waybillQuantityKey)
+                                              .setValidators([],
+                                                  autoValidate: true);
+
+                                          transactionReasonType =
+                                              TransactionReason.lostInStorage;
+                                        }
+                                        setState(() {});
+                                      },
+                                      valueMapper: (value) {
+                                        return localizations.translate(value);
+                                      }),
                                 //Product Facility
                                 BlocBuilder<FacilityBloc, FacilityState>(
                                   builder: (context, state) {
@@ -977,28 +1034,7 @@ class CustomStockDetailsPageState
                                                     updateParent: true,
                                                     autoValidate: true,
                                                   );
-                                                  form
-                                                      .control(
-                                                    _waybillNumberKey,
-                                                  )
-                                                      .setValidators(
-                                                    [
-                                                      Validators.required,
-                                                      Validators.minLength(2),
-                                                      Validators.maxLength(200),
-                                                    ],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
-                                                  form
-                                                      .control(
-                                                    _waybillQuantityKey,
-                                                  )
-                                                      .setValidators(
-                                                    [],
-                                                    updateParent: true,
-                                                    autoValidate: true,
-                                                  );
+
                                                   form
                                                       .control(
                                                     _typeOfTransportKey,
@@ -1063,29 +1099,6 @@ class CustomStockDetailsPageState
                                                       autoValidate: true,
                                                     );
 
-                                                    form
-                                                        .control(
-                                                      _waybillNumberKey,
-                                                    )
-                                                        .setValidators(
-                                                      [
-                                                        Validators.required,
-                                                        Validators.minLength(2),
-                                                        Validators.maxLength(
-                                                            200),
-                                                      ],
-                                                      updateParent: true,
-                                                      autoValidate: true,
-                                                    );
-                                                    form
-                                                        .control(
-                                                      _waybillQuantityKey,
-                                                    )
-                                                        .setValidators(
-                                                      [],
-                                                      updateParent: true,
-                                                      autoValidate: true,
-                                                    );
                                                     form
                                                         .control(
                                                       _typeOfTransportKey,
@@ -1207,15 +1220,7 @@ class CustomStockDetailsPageState
                                                         updateParent: true,
                                                         autoValidate: true,
                                                       );
-                                                      form
-                                                          .control(
-                                                        _waybillNumberKey,
-                                                      )
-                                                          .setValidators(
-                                                        [],
-                                                        updateParent: true,
-                                                        autoValidate: true,
-                                                      );
+
                                                       form
                                                           .control(
                                                         _waybillQuantityKey,
@@ -1279,21 +1284,7 @@ class CustomStockDetailsPageState
                                                           updateParent: true,
                                                           autoValidate: true,
                                                         );
-                                                        form
-                                                            .control(
-                                                          _waybillNumberKey,
-                                                        )
-                                                            .setValidators(
-                                                          [
-                                                            Validators.required,
-                                                            Validators
-                                                                .minLength(2),
-                                                            Validators
-                                                                .maxLength(200),
-                                                          ],
-                                                          updateParent: true,
-                                                          autoValidate: true,
-                                                        );
+
                                                         form
                                                             .control(
                                                           _waybillQuantityKey,
@@ -1364,10 +1355,12 @@ class CustomStockDetailsPageState
                                 ),
                                 //Bales Quantity
                                 if ([
-                                  StockRecordEntryType.receipt,
-                                  StockRecordEntryType.dispatch,
-                                  StockRecordEntryType.returned
-                                ].contains(entryType))
+                                      StockRecordEntryType.receipt,
+                                      StockRecordEntryType.dispatch,
+                                      StockRecordEntryType.returned
+                                    ].contains(entryType) ||
+                                    transactionReasonType ==
+                                        TransactionReason.damagedInTransit)
                                   DigitTextFormField(
                                     keyboardType: TextInputType.number,
                                     label: localizations.translate(
@@ -1482,96 +1475,141 @@ class CustomStockDetailsPageState
                                   ),
                                 ),
                                 //Waybill Number
-                                DigitTextFormField(
-                                    key: const Key(_waybillNumberKey),
+                                if ([
+                                      StockRecordEntryType.receipt,
+                                    ].contains(entryType) ||
+                                    (transactionReasonType ==
+                                            TransactionReason
+                                                .damagedInTransit ||
+                                        transactionReasonType ==
+                                            TransactionReason.lostInTransit))
+                                  DigitTextFormField(
+                                      key: const Key(_waybillNumberKey),
+                                      label: localizations.translate(
+                                        i18.stockDetails.waybillNumberLabel,
+                                      ),
+                                      isRequired: false,
+                                      formControlName: _waybillNumberKey,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                      onChanged: (value) {
+                                        if (value.value == "") {
+                                          form
+                                              .control(_waybillNumberKey)
+                                              .setValidators(
+                                            [],
+                                            updateParent: true,
+                                            autoValidate: true,
+                                          );
+                                        } else {
+                                          form
+                                              .control(_waybillNumberKey)
+                                              .setValidators(
+                                            [
+                                              Validators.minLength(2),
+                                              Validators.maxLength(200)
+                                            ],
+                                            updateParent: true,
+                                            autoValidate: true,
+                                          );
+                                        }
+                                      },
+                                      validationMessages: {
+                                        'maxLength': (object) => localizations
+                                            .translate(
+                                                i18.common.maxCharsRequired)
+                                            .replaceAll('{}', '200'),
+                                        'minLength': (object) => localizations
+                                            .translate(
+                                                i18.common.min2CharsRequired)
+                                            .replaceAll('{}', ''),
+                                      }),
+                                //Quantity of Products on Waybill
+                                if ([
+                                      StockRecordEntryType.receipt,
+                                    ].contains(entryType) ||
+                                    (transactionReasonType ==
+                                            TransactionReason
+                                                .damagedInTransit ||
+                                        transactionReasonType ==
+                                            TransactionReason.lostInTransit))
+                                  DigitTextFormField(
                                     label: localizations.translate(
-                                      i18.stockDetails.waybillNumberLabel,
+                                      i18.stockDetails
+                                          .quantityOfProductIndicatedOnWaybillLabel,
                                     ),
-                                    isRequired: true,
-                                    formControlName: _waybillNumberKey,
+                                    formControlName: _waybillQuantityKey,
+                                    onChanged: (val) {
+                                      if (val.value == null ||
+                                          val.value != "") {
+                                        form
+                                            .control(_waybillQuantityKey)
+                                            .setValidators(
+                                          [],
+                                          autoValidate: true,
+                                          updateParent: true,
+                                        );
+                                      } else {
+                                        form
+                                            .control(_waybillQuantityKey)
+                                            .setValidators(
+                                          [
+                                            Validators.number(),
+                                            Validators.min(0),
+                                            Validators.max(maxCount),
+                                          ],
+                                          autoValidate: true,
+                                          updateParent: true,
+                                        );
+                                      }
+                                    },
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
                                       decimal: true,
                                     ),
-                                    validationMessages: {
-                                      'maxLength': (object) => localizations
-                                          .translate(
-                                              i18.common.maxCharsRequired)
-                                          .replaceAll('{}', '200'),
-                                      'minLength': (object) => localizations
-                                          .translate(
-                                              i18.common.min2CharsRequired)
-                                          .replaceAll('{}', ''),
-                                    }),
-                                //Quantity of Products on Waybill
-                                DigitTextFormField(
-                                  label: localizations.translate(
-                                    i18.stockDetails
-                                        .quantityOfProductIndicatedOnWaybillLabel,
                                   ),
-                                  formControlName: _waybillQuantityKey,
-                                  onChanged: (val) {
-                                    if (val.value == null || val.value != "") {
-                                      form
-                                          .control(_waybillQuantityKey)
-                                          .setValidators(
-                                        [],
-                                        autoValidate: true,
-                                        updateParent: true,
-                                      );
-                                    } else {
-                                      form
-                                          .control(_waybillQuantityKey)
-                                          .setValidators(
-                                        [
-                                          Validators.number(),
-                                          Validators.min(0),
-                                          Validators.max(maxCount),
-                                        ],
-                                        autoValidate: true,
-                                        updateParent: true,
-                                      );
-                                    }
-                                  },
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                                ),
                                 //Transport Type
-                                transportTypes.isNotEmpty
-                                    ? DigitReactiveDropdown<String>(
-                                        key: const Key(_typeOfTransportKey),
-                                        label: localizations.translate(
-                                          i18.stockDetails.transportTypeLabel,
-                                        ),
-                                        valueMapper: (e) => e,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            form.control(
-                                              _typeOfTransportKey,
-                                            );
-                                          });
-                                        },
-                                        initialValue:
-                                            transportTypes.firstOrNull?.name,
-                                        menuItems: transportTypes.map(
-                                          (e) {
-                                            return localizations
-                                                .translate(e.name);
+                                if ([
+                                      StockRecordEntryType.receipt,
+                                    ].contains(entryType) ||
+                                    (transactionReasonType ==
+                                            TransactionReason
+                                                .damagedInTransit ||
+                                        transactionReasonType ==
+                                            TransactionReason.lostInTransit))
+                                  transportTypes.isNotEmpty
+                                      ? DigitReactiveDropdown<String>(
+                                          key: const Key(_typeOfTransportKey),
+                                          label: localizations.translate(
+                                            i18.stockDetails.transportTypeLabel,
+                                          ),
+                                          valueMapper: (e) => e,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              form.control(
+                                                _typeOfTransportKey,
+                                              );
+                                            });
                                           },
-                                        ).toList(),
-                                        formControlName: _typeOfTransportKey,
-                                      )
-                                    : const Offstage(),
+                                          initialValue:
+                                              transportTypes.firstOrNull?.name,
+                                          menuItems: transportTypes.map(
+                                            (e) {
+                                              return localizations
+                                                  .translate(e.name);
+                                            },
+                                          ).toList(),
+                                          formControlName: _typeOfTransportKey,
+                                        )
+                                      : const Offstage(),
                                 const SizedBox(
                                   height: kPadding,
                                 ),
-                                //Stock Details Receipt
+                                //Driver Name
                                 if ([
                                   StockRecordEntryType.receipt,
-                                  StockRecordEntryType.dispatch,
-                                  StockRecordEntryType.returned
                                 ].contains(entryType))
                                   DigitTextFormField(
                                     label: localizations.translate(
@@ -1597,8 +1635,6 @@ class CustomStockDetailsPageState
                                 //Vehicle Number
                                 if ([
                                   StockRecordEntryType.receipt,
-                                  StockRecordEntryType.dispatch,
-                                  StockRecordEntryType.returned
                                 ].contains(entryType))
                                   DigitTextFormField(
                                     label: localizations.translate(
@@ -1642,9 +1678,11 @@ class CustomStockDetailsPageState
 
                                 // todo not yet confirmed if needed or not for issue flow
                                 if ([
-                                  StockRecordEntryType.receipt,
-                                  StockRecordEntryType.dispatch,
-                                ].contains(entryType))
+                                      StockRecordEntryType.receipt,
+                                      StockRecordEntryType.dispatch,
+                                    ].contains(entryType) ||
+                                    transactionReasonType ==
+                                        TransactionReason.damagedInTransit)
                                   scannerState.barCodes.isEmpty
                                       ? DigitOutlineIconButton(
                                           buttonStyle: OutlinedButton.styleFrom(
@@ -1823,9 +1861,11 @@ class CustomStockDetailsPageState
                                         ]),
 
                                 if ([
-                                  StockRecordEntryType.receipt,
-                                  StockRecordEntryType.dispatch,
-                                ].contains(entryType))
+                                      StockRecordEntryType.receipt,
+                                      StockRecordEntryType.dispatch,
+                                    ].contains(entryType) ||
+                                    transactionReasonType ==
+                                        TransactionReason.damagedInTransit)
                                   DigitTextFormField(
                                     label: localizations.translate(
                                       i18_local.stockDetails
@@ -1869,9 +1909,11 @@ class CustomStockDetailsPageState
                                     },
                                   ),
                                 if ([
-                                  StockRecordEntryType.receipt,
-                                  StockRecordEntryType.dispatch,
-                                ].contains(entryType))
+                                      StockRecordEntryType.receipt,
+                                      StockRecordEntryType.dispatch,
+                                    ].contains(entryType) ||
+                                    transactionReasonType ==
+                                        TransactionReason.damagedInTransit)
                                   DigitTextFormField(
                                     label: localizations.translate(
                                       i18_local
