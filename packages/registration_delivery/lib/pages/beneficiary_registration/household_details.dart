@@ -42,8 +42,10 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   static const _memberCountKey = 'memberCount';
   static const _pregnantWomenCountKey = 'pregnantWomenCount';
   static const _childrenCountKey = 'childrenCount';
+
   // Define controllers
-  final TextEditingController _pregnantWomenController = TextEditingController();
+  final TextEditingController _pregnantWomenController =
+      TextEditingController();
   final TextEditingController _childrenController = TextEditingController();
   final TextEditingController _memberController = TextEditingController();
 
@@ -70,11 +72,16 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
           int children = form.control(_childrenCountKey).value;
           int memberCount = form.control(_memberCountKey).value;
           // Get household type
-          final bool isCommunity = RegistrationDeliverySingleton().householdType == HouseholdType.community;
+          final bool isCommunity =
+              RegistrationDeliverySingleton().householdType ==
+                  HouseholdType.community;
           if (isCommunity) {
-            _pregnantWomenController.text = form.control(_pregnantWomenCountKey).value.toString();
-            _childrenController.text = form.control(_childrenCountKey).value.toString();
-            _memberController.text = form.control(_memberCountKey).value.toString();
+            _pregnantWomenController.text =
+                form.control(_pregnantWomenCountKey).value.toString();
+            _childrenController.text =
+                form.control(_childrenCountKey).value.toString();
+            _memberController.text =
+                form.control(_memberCountKey).value.toString();
           }
           return BlocConsumer<BeneficiaryRegistrationBloc,
               BeneficiaryRegistrationState>(
@@ -433,34 +440,46 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       .noOfPregnantWomenCountLabel,
                                 ),
                                 child: DigitNumericFormInput(
-                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                   minValue: 0,
-                                  maxValue: !isCommunity? 10
-                                      : 100000,
+                                  maxValue: !isCommunity ? 10 : 100000,
                                   maxLength: 5,
                                   step: 1,
                                   editable: isCommunity,
-                                  controller: isCommunity ? _pregnantWomenController : null,
-                                  initialValue: isCommunity ? null : form.control(_pregnantWomenCountKey).value.toString(),
+                                  controller: isCommunity
+                                      ? _pregnantWomenController
+                                      : null,
+                                  initialValue: isCommunity
+                                      ? null
+                                      : form
+                                          .control(_pregnantWomenCountKey)
+                                          .value
+                                          .toString(),
                                   onChange: (value) {
-                                    if(value.isEmpty){
+                                    if (value.isEmpty) {
                                       _pregnantWomenController.text = '0';
-                                        form.control(_pregnantWomenCountKey).value = 0;
-                                    }else{
+                                      form
+                                          .control(_pregnantWomenCountKey)
+                                          .value = 0;
+                                    } else {
                                       // Remove leading zeros
                                       String newValue = value;
 
                                       // Remove leading zeros only if the length is greater than 1
                                       if (newValue.length > 1 && isCommunity) {
-                                        newValue = newValue.replaceFirst(RegExp(r'^0+'), '');
+                                        newValue = newValue.replaceFirst(
+                                            RegExp(r'^0+'), '');
                                         // If the value becomes empty after removing zeros, set it to "0"
                                         if (newValue.isEmpty) {
                                           newValue = '0';
                                         }
                                       }
                                       _pregnantWomenController.text = newValue;
-                                      form.control(_pregnantWomenCountKey).value =
-                                          int.parse(newValue);
+                                      form
+                                          .control(_pregnantWomenCountKey)
+                                          .value = int.parse(newValue);
                                       int pregnantWomen = form
                                           .control(_pregnantWomenCountKey)
                                           .value;
@@ -469,10 +488,15 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       int memberCount =
                                           form.control(_memberCountKey).value;
                                       form.control(_memberCountKey).value =
-                                      memberCount < (children + pregnantWomen)
-                                          ? children + pregnantWomen
-                                          : memberCount;
-                                      _memberController.text = (children+pregnantWomen).toString();
+                                          memberCount <
+                                                  (children + pregnantWomen)
+                                              ? children + pregnantWomen
+                                              : memberCount;
+                                      _memberController.text = (memberCount <
+                                                  (children + pregnantWomen)
+                                              ? children + pregnantWomen
+                                              : memberCount)
+                                          .toString();
                                     }
                                   },
                                 ),
@@ -490,18 +514,24 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       .noOfChildrenBelow5YearsLabel,
                                 ),
                                 child: DigitNumericFormInput(
-                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                   minValue: 0,
-                                  maxValue: !isCommunity
-                                      ? 20
-                                      : 100000,
+                                  maxValue: !isCommunity ? 20 : 100000,
                                   maxLength: 5,
                                   step: 1,
                                   editable: isCommunity,
-                                  controller: isCommunity ? _childrenController : null,
-                                  initialValue: isCommunity ? null : form.control(_childrenCountKey).value.toString(),
+                                  controller:
+                                      isCommunity ? _childrenController : null,
+                                  initialValue: isCommunity
+                                      ? null
+                                      : form
+                                          .control(_childrenCountKey)
+                                          .value
+                                          .toString(),
                                   onChange: (value) {
-                                    if(value.isEmpty){
+                                    if (value.isEmpty) {
                                       _childrenController.text = '0';
                                       form.control(_childrenCountKey).value = 0;
                                       return;
@@ -511,7 +541,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
 
                                     // Remove leading zeros only if the length is greater than 1
                                     if (newValue.length > 1 && isCommunity) {
-                                      newValue = newValue.replaceFirst(RegExp(r'^0+'), '');
+                                      newValue = newValue.replaceFirst(
+                                          RegExp(r'^0+'), '');
                                       // If the value becomes empty after removing zeros, set it to "0"
                                       if (newValue.isEmpty) {
                                         newValue = '0';
@@ -532,7 +563,11 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                                 (children + pregnantWomen)
                                             ? children + pregnantWomen
                                             : memberCount;
-                                    _memberController.text = (children+pregnantWomen).toString();
+                                    _memberController.text = (memberCount <=
+                                                (children + pregnantWomen)
+                                            ? children + pregnantWomen
+                                            : memberCount)
+                                        .toString();
                                   },
                                 ),
                               ),
@@ -548,20 +583,26 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   i18.householdDetails.noOfMembersCountLabel,
                                 ),
                                 child: DigitNumericFormInput(
-                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                   minValue: children + pregnantWomen != 0
                                       ? children + pregnantWomen
                                       : 1,
-                                  maxValue: !isCommunity
-                                      ? 30
-                                      : 1000000,
+                                  maxValue: !isCommunity ? 30 : 1000000,
                                   maxLength: 5,
                                   step: 1,
                                   editable: isCommunity,
-                                  controller: isCommunity ? _memberController : null,
-                                  initialValue: isCommunity ? null : form.control(_memberCountKey).value.toString(),
+                                  controller:
+                                      isCommunity ? _memberController : null,
+                                  initialValue: isCommunity
+                                      ? null
+                                      : form
+                                          .control(_memberCountKey)
+                                          .value
+                                          .toString(),
                                   onChange: (value) {
-                                    if(value.isEmpty){
+                                    if (value.isEmpty) {
                                       _memberController.text = '1';
                                       form.control(_memberCountKey).value = 1;
                                       return;
@@ -569,7 +610,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                     // Remove leading zeros
                                     String newValue = value;
 
-                                    if (value=='0' && isCommunity) {
+                                    if (value == '0' && isCommunity) {
                                       newValue = '1';
                                     }
                                     _memberController.text = newValue;
