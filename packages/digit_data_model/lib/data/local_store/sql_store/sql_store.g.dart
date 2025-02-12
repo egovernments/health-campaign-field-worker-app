@@ -39472,6 +39472,11 @@ class $UserActionTable extends UserAction
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
       defaultValue: const Constant(false));
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -39501,6 +39506,7 @@ class $UserActionTable extends UserAction
         auditModifiedTime,
         auditCreatedBy,
         isDeleted,
+        id,
         additionalFields
       ];
   @override
@@ -39639,6 +39645,9 @@ class $UserActionTable extends UserAction
       context.handle(_isDeletedMeta,
           isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
     }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -39696,6 +39705,8 @@ class $UserActionTable extends UserAction
           DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
       isDeleted: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -39729,6 +39740,7 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
   final int? auditModifiedTime;
   final String? auditCreatedBy;
   final bool? isDeleted;
+  final String? id;
   final String? additionalFields;
   const UserActionData(
       {required this.latitude,
@@ -39752,6 +39764,7 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       this.auditModifiedTime,
       this.auditCreatedBy,
       this.isDeleted,
+      this.id,
       this.additionalFields});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -39800,6 +39813,9 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
     }
     if (!nullToAbsent || isDeleted != null) {
       map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -39854,6 +39870,7 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       isDeleted: isDeleted == null && nullToAbsent
           ? const Value.absent()
           : Value(isDeleted),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
@@ -39886,6 +39903,7 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      id: serializer.fromJson<String?>(json['id']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -39914,6 +39932,7 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'id': serializer.toJson<String?>(id),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -39940,6 +39959,7 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           Value<int?> auditModifiedTime = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
+          Value<String?> id = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       UserActionData(
         latitude: latitude ?? this.latitude,
@@ -39980,6 +40000,7 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
         auditCreatedBy:
             auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        id: id.present ? id.value : this.id,
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
@@ -40008,6 +40029,7 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('isDeleted: $isDeleted, ')
+          ..write('id: $id, ')
           ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
@@ -40036,6 +40058,7 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
         auditModifiedTime,
         auditCreatedBy,
         isDeleted,
+        id,
         additionalFields
       ]);
   @override
@@ -40063,6 +40086,7 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           other.auditModifiedTime == this.auditModifiedTime &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.isDeleted == this.isDeleted &&
+          other.id == this.id &&
           other.additionalFields == this.additionalFields);
 }
 
@@ -40088,6 +40112,7 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
   final Value<int?> auditModifiedTime;
   final Value<String?> auditCreatedBy;
   final Value<bool?> isDeleted;
+  final Value<String?> id;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const UserActionCompanion({
@@ -40112,6 +40137,7 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     this.auditModifiedTime = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.isDeleted = const Value.absent(),
+    this.id = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -40137,6 +40163,7 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     this.auditModifiedTime = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.isDeleted = const Value.absent(),
+    this.id = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : latitude = Value(latitude),
@@ -40169,6 +40196,7 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     Expression<int>? auditModifiedTime,
     Expression<String>? auditCreatedBy,
     Expression<bool>? isDeleted,
+    Expression<String>? id,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -40196,6 +40224,7 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (isDeleted != null) 'is_deleted': isDeleted,
+      if (id != null) 'id': id,
       if (additionalFields != null) 'additional_fields': additionalFields,
       if (rowid != null) 'rowid': rowid,
     });
@@ -40223,6 +40252,7 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       Value<int?>? auditModifiedTime,
       Value<String?>? auditCreatedBy,
       Value<bool?>? isDeleted,
+      Value<String?>? id,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return UserActionCompanion(
@@ -40247,6 +40277,7 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       isDeleted: isDeleted ?? this.isDeleted,
+      id: id ?? this.id,
       additionalFields: additionalFields ?? this.additionalFields,
       rowid: rowid ?? this.rowid,
     );
@@ -40318,6 +40349,9 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     if (isDeleted.present) {
       map['is_deleted'] = Variable<bool>(isDeleted.value);
     }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
@@ -40351,6 +40385,7 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('isDeleted: $isDeleted, ')
+          ..write('id: $id, ')
           ..write('additionalFields: $additionalFields, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -56316,6 +56351,7 @@ typedef $$UserActionTableInsertCompanionBuilder = UserActionCompanion Function({
   Value<int?> auditModifiedTime,
   Value<String?> auditCreatedBy,
   Value<bool?> isDeleted,
+  Value<String?> id,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -56341,6 +56377,7 @@ typedef $$UserActionTableUpdateCompanionBuilder = UserActionCompanion Function({
   Value<int?> auditModifiedTime,
   Value<String?> auditCreatedBy,
   Value<bool?> isDeleted,
+  Value<String?> id,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -56386,6 +56423,7 @@ class $$UserActionTableTableManager extends RootTableManager<
             Value<int?> auditModifiedTime = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
+            Value<String?> id = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -56411,6 +56449,7 @@ class $$UserActionTableTableManager extends RootTableManager<
             auditModifiedTime: auditModifiedTime,
             auditCreatedBy: auditCreatedBy,
             isDeleted: isDeleted,
+            id: id,
             additionalFields: additionalFields,
             rowid: rowid,
           ),
@@ -56436,6 +56475,7 @@ class $$UserActionTableTableManager extends RootTableManager<
             Value<int?> auditModifiedTime = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
+            Value<String?> id = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -56461,6 +56501,7 @@ class $$UserActionTableTableManager extends RootTableManager<
             auditModifiedTime: auditModifiedTime,
             auditCreatedBy: auditCreatedBy,
             isDeleted: isDeleted,
+            id: id,
             additionalFields: additionalFields,
             rowid: rowid,
           ),
@@ -56587,6 +56628,11 @@ class $$UserActionTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
@@ -56698,6 +56744,11 @@ class $$UserActionTableOrderingComposer
 
   ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
       column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

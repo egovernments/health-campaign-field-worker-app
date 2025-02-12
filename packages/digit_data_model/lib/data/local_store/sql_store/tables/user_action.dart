@@ -24,6 +24,7 @@ class UserAction extends Table {
   TextColumn get auditCreatedBy => text().nullable()();
   BoolColumn get isDeleted =>
       boolean().nullable().withDefault(const Constant(false))();
+  TextColumn get id => text().nullable()();
 
   TextColumn get additionalFields => text().nullable()();
 

@@ -245,12 +245,12 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
   static String? _$tenantId(UserActionModel v) => v.tenantId;
   static const Field<UserActionModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
-  static String? _$id(UserActionModel v) => v.id;
-  static const Field<UserActionModel, String> _f$id =
-      Field('id', _$id, opt: true);
   static int? _$rowVersion(UserActionModel v) => v.rowVersion;
   static const Field<UserActionModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
+  static String? _$id(UserActionModel v) => v.id;
+  static const Field<UserActionModel, String> _f$id =
+      Field('id', _$id, opt: true);
   static AuditDetails? _$auditDetails(UserActionModel v) => v.auditDetails;
   static const Field<UserActionModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -277,8 +277,8 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
     #action: _f$action,
     #nonRecoverableError: _f$nonRecoverableError,
     #tenantId: _f$tenantId,
-    #id: _f$id,
     #rowVersion: _f$rowVersion,
+    #id: _f$id,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -308,8 +308,8 @@ class UserActionModelMapper extends SubClassMapperBase<UserActionModel> {
         action: data.dec(_f$action),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         tenantId: data.dec(_f$tenantId),
-        id: data.dec(_f$id),
         rowVersion: data.dec(_f$rowVersion),
+        id: data.dec(_f$id),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -389,8 +389,8 @@ abstract class UserActionModelCopyWith<$R, $In extends UserActionModel, $Out>
       String? action,
       bool? nonRecoverableError,
       String? tenantId,
-      String? id,
       int? rowVersion,
+      String? id,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -432,8 +432,8 @@ class _UserActionModelCopyWithImpl<$R, $Out>
           String? action,
           Object? nonRecoverableError = $none,
           Object? tenantId = $none,
-          Object? id = $none,
           Object? rowVersion = $none,
+          Object? id = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -451,8 +451,8 @@ class _UserActionModelCopyWithImpl<$R, $Out>
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
         if (tenantId != $none) #tenantId: tenantId,
-        if (id != $none) #id: id,
         if (rowVersion != $none) #rowVersion: rowVersion,
+        if (id != $none) #id: id,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -476,8 +476,8 @@ class _UserActionModelCopyWithImpl<$R, $Out>
       nonRecoverableError:
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       tenantId: data.get(#tenantId, or: $value.tenantId),
-      id: data.get(#id, or: $value.id),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+      id: data.get(#id, or: $value.id),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),

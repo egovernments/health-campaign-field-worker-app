@@ -66,8 +66,8 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
     required this.action,
     this.nonRecoverableError = false,
     this.tenantId,
-    this.id,
     this.rowVersion,
+    this.id,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
@@ -96,6 +96,7 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
       isSync: Value(isSync),
       nonRecoverableError: Value(nonRecoverableError),
       timestamp: Value(timestamp),
+      id: Value(id),
     );
   }
 }
