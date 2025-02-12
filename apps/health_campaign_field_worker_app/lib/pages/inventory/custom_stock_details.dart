@@ -78,13 +78,7 @@ class CustomStockDetailsPageState
       ]),
       _transactionReasonKey: FormControl<String>(validators: []),
       _waybillNumberKey: FormControl<String>(
-        validators: [
-          StockRecordEntryType.receipt,
-          StockRecordEntryType.loss,
-          StockRecordEntryType.damaged
-        ].contains(stockType)
-            ? [Validators.minLength(2), Validators.maxLength(200)]
-            : [],
+        validators: [],
       ),
       _waybillQuantityKey: FormControl<int>(),
       _vehicleNumberKey: FormControl<String>(),
@@ -921,126 +915,165 @@ class CustomStockDetailsPageState
                                       formControlName: _transactionReasonKey,
                                       onChanged: (value) {
                                         form
-                                            .control(_secondaryPartyKey)
-                                            .setValidators(
-                                                [Validators.required]);
-                                        form
                                             .control(_balesQuantityKey)
-                                            .setValidators([]);
+                                            .setValidators([],
+                                                autoValidate: true);
 
-                                        form
-                                            .control(_waybillNumberKey)
-                                            .setValidators([
-                                          Validators.minLength(2),
-                                          Validators.maxLength(200)
-                                        ]);
                                         form
                                             .control(_waybillQuantityKey)
                                             .setValidators([
                                           Validators.minLength(2),
                                           Validators.maxLength(200)
-                                        ]);
-                                        setState(() {
-                                          if (value ==
-                                              TransactionReason.damagedInTransit
-                                                  .toValue()) {
-                                            form
-                                                .control(_balesQuantityKey)
-                                                .setValidators([
-                                              Validators.required,
-                                              Validators.number(),
-                                              Validators.min(0),
-                                              Validators.max(10000),
-                                            ]);
-                                            transactionReasonType =
-                                                TransactionReason
-                                                    .damagedInTransit;
-                                          } else if (value ==
-                                              TransactionReason.damagedInStorage
-                                                  .toValue()) {
-                                            form
-                                                .control(_secondaryPartyKey)
-                                                .setValidators([]);
-                                            form
-                                                .control(_waybillNumberKey)
-                                                .setValidators([]);
-                                            form
-                                                .control(_waybillQuantityKey)
-                                                .setValidators([]);
-                                            transactionReasonType =
-                                                TransactionReason
-                                                    .damagedInStorage;
-                                          } else if (value ==
-                                              TransactionReason.lostInTransit
-                                                  .toValue()) {
-                                            transactionReasonType =
-                                                TransactionReason.lostInTransit;
-                                          } else if (value ==
-                                              TransactionReason.lostInStorage
-                                                  .toValue()) {
-                                            form
-                                                .control(_secondaryPartyKey)
-                                                .setValidators([]);
-                                            form
-                                                .control(_waybillNumberKey)
-                                                .setValidators([]);
-                                            form
-                                                .control(_waybillQuantityKey)
-                                                .setValidators([]);
+                                        ], autoValidate: true);
+                                        if (value ==
+                                            TransactionReason.damagedInTransit
+                                                .toValue()) {
+                                          form
+                                              .control(_balesQuantityKey)
+                                              .setValidators([
+                                            Validators.required,
+                                            Validators.number(),
+                                            Validators.min(0),
+                                            Validators.max(10000),
+                                          ], autoValidate: true);
+                                          transactionReasonType =
+                                              TransactionReason
+                                                  .damagedInTransit;
+                                        } else if (value ==
+                                            TransactionReason.damagedInStorage
+                                                .toValue()) {
+                                          form
+                                              .control(_waybillQuantityKey)
+                                              .setValidators([],
+                                                  autoValidate: true);
+                                          transactionReasonType =
+                                              TransactionReason
+                                                  .damagedInStorage;
+                                        } else if (value ==
+                                            TransactionReason.lostInTransit
+                                                .toValue()) {
+                                          transactionReasonType =
+                                              TransactionReason.lostInTransit;
+                                        } else if (value ==
+                                            TransactionReason.lostInStorage
+                                                .toValue()) {
+                                          form
+                                              .control(_waybillQuantityKey)
+                                              .setValidators([],
+                                                  autoValidate: true);
 
-                                            transactionReasonType =
-                                                TransactionReason.lostInStorage;
-                                          }
-                                        });
+                                          transactionReasonType =
+                                              TransactionReason.lostInStorage;
+                                        }
+                                        setState(() {});
                                       },
                                       valueMapper: (value) {
                                         return localizations.translate(value);
                                       }),
                                 //Product Facility
-                                if (transactionReasonType !=
-                                        TransactionReason.damagedInStorage ||
-                                    transactionReasonType !=
-                                        TransactionReason.lostInStorage)
-                                  BlocBuilder<FacilityBloc, FacilityState>(
-                                    builder: (context, state) {
-                                      return state.maybeWhen(
-                                          orElse: () => const Offstage(),
-                                          loading: () => const Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
-                                          fetched: (facilities, allFacilities) {
-                                            return InkWell(
-                                              onTap: () async {
-                                                clearQRCodes();
-                                                form
-                                                    .control(_deliveryTeamKey)
-                                                    .value = '';
+                                BlocBuilder<FacilityBloc, FacilityState>(
+                                  builder: (context, state) {
+                                    return state.maybeWhen(
+                                        orElse: () => const Offstage(),
+                                        loading: () => const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                        fetched: (facilities, allFacilities) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              clearQRCodes();
+                                              form
+                                                  .control(_deliveryTeamKey)
+                                                  .value = '';
 
-                                                final facility = await context
-                                                        .router
-                                                        .push(CustomInventoryFacilitySelectionRoute(
-                                                            facilities:
-                                                                allFacilities))
-                                                    as FacilityModel?;
+                                              final facility =
+                                                  await context.router.push(
+                                                          CustomInventoryFacilitySelectionRoute(
+                                                              facilities:
+                                                                  allFacilities))
+                                                      as FacilityModel?;
 
-                                                if (facility == null) return;
-                                                form
-                                                        .control(_secondaryPartyKey)
-                                                        .value =
-                                                    localizations.translate(
-                                                  'FAC_${facility.id}',
-                                                );
+                                              if (facility == null) return;
+                                              form
+                                                      .control(_secondaryPartyKey)
+                                                      .value =
+                                                  localizations.translate(
+                                                'FAC_${facility.id}',
+                                              );
 
+                                              setState(() {
+                                                selectedFacilityId =
+                                                    facility.id;
+                                              });
+                                              if (facility.id ==
+                                                  'Delivery Team') {
                                                 setState(() {
-                                                  selectedFacilityId =
-                                                      facility.id;
-                                                });
-                                                if (facility.id ==
-                                                    'Delivery Team') {
-                                                  setState(() {
-                                                    deliveryTeamSelected = true;
+                                                  deliveryTeamSelected = true;
 
+                                                  form
+                                                      .control(
+                                                    _driverNameKey,
+                                                  )
+                                                      .setValidators(
+                                                    [
+                                                      Validators.minLength(2),
+                                                      Validators.maxLength(200),
+                                                    ],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+
+                                                  form
+                                                      .control(
+                                                    _typeOfTransportKey,
+                                                  )
+                                                      .setValidators(
+                                                    [],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+                                                  form
+                                                      .control(
+                                                    _vehicleNumberKey,
+                                                  )
+                                                      .setValidators(
+                                                    [
+                                                      Validators.minLength(2),
+                                                      Validators.maxLength(200),
+                                                    ],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+
+                                                  form
+                                                      .control(
+                                                    _deliveryTeamKey,
+                                                  )
+                                                      .setValidators(
+                                                    [Validators.required],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+                                                  form
+                                                      .control(
+                                                        _deliveryTeamKey,
+                                                      )
+                                                      .touched;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  deliveryTeamSelected = false;
+                                                  if (isWareHouseMgr) {
+                                                    form
+                                                        .control(
+                                                      _deliveryTeamKey,
+                                                    )
+                                                        .setValidators(
+                                                      [],
+                                                      updateParent: true,
+                                                      autoValidate: true,
+                                                    );
                                                     form
                                                         .control(
                                                       _driverNameKey,
@@ -1080,48 +1113,104 @@ class CustomStockDetailsPageState
 
                                                     form
                                                         .control(
-                                                      _deliveryTeamKey,
-                                                    )
-                                                        .setValidators(
-                                                      [Validators.required],
-                                                      updateParent: true,
-                                                      autoValidate: true,
-                                                    );
-                                                    form
-                                                        .control(
-                                                          _deliveryTeamKey,
+                                                          _driverNameKey,
                                                         )
                                                         .touched;
-                                                  });
-                                                } else {
+                                                    form
+                                                        .control(
+                                                          _waybillNumberKey,
+                                                        )
+                                                        .touched;
+                                                    form
+                                                        .control(
+                                                          _waybillQuantityKey,
+                                                        )
+                                                        .touched;
+                                                    form
+                                                        .control(
+                                                          _typeOfTransportKey,
+                                                        )
+                                                        .touched;
+                                                    form
+                                                        .control(
+                                                          _vehicleNumberKey,
+                                                        )
+                                                        .touched;
+                                                  }
+                                                });
+                                              }
+                                            },
+                                            child: IgnorePointer(
+                                              child: DigitTextFormField(
+                                                key: const Key(
+                                                    _secondaryPartyKey),
+                                                hideKeyboard: true,
+                                                label: localizations.translate(
+                                                  '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
+                                                ),
+                                                isRequired: true,
+                                                validationMessages: {
+                                                  'required': (object) =>
+                                                      localizations.translate(
+                                                        '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                                      ),
+                                                },
+                                                suffix: const Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Icon(Icons.search),
+                                                ),
+                                                formControlName:
+                                                    _secondaryPartyKey,
+                                                onTap: () async {
+                                                  clearQRCodes();
+                                                  form
+                                                      .control(_deliveryTeamKey)
+                                                      .value = '';
+
+                                                  final facility =
+                                                      await context.router.push(
+                                                    CustomInventoryFacilitySelectionRoute(
+                                                      facilities: allFacilities,
+                                                    ),
+                                                  ) as FacilityModel?;
+
+                                                  if (facility == null) return;
+                                                  form
+                                                          .control(
+                                                              _secondaryPartyKey)
+                                                          .value =
+                                                      localizations.translate(
+                                                    'FAC_${facility.id}',
+                                                  );
+
                                                   setState(() {
-                                                    deliveryTeamSelected =
-                                                        false;
-                                                    if (isWareHouseMgr) {
+                                                    selectedFacilityId =
+                                                        facility.id;
+                                                  });
+                                                  if (facility.id ==
+                                                      'Delivery Team') {
+                                                    setState(() {
+                                                      deliveryTeamSelected =
+                                                          true;
                                                       form
                                                           .control(
-                                                        _deliveryTeamKey,
+                                                        _driverNameKey,
                                                       )
                                                           .setValidators(
                                                         [],
                                                         updateParent: true,
                                                         autoValidate: true,
                                                       );
+
                                                       form
                                                           .control(
-                                                        _driverNameKey,
+                                                        _waybillQuantityKey,
                                                       )
                                                           .setValidators(
-                                                        [
-                                                          Validators.minLength(
-                                                              2),
-                                                          Validators.maxLength(
-                                                              200),
-                                                        ],
+                                                        [],
                                                         updateParent: true,
                                                         autoValidate: true,
                                                       );
-
                                                       form
                                                           .control(
                                                         _typeOfTransportKey,
@@ -1136,109 +1225,43 @@ class CustomStockDetailsPageState
                                                         _vehicleNumberKey,
                                                       )
                                                           .setValidators(
-                                                        [
-                                                          Validators.minLength(
-                                                              2),
-                                                          Validators.maxLength(
-                                                              200),
-                                                        ],
+                                                        [],
                                                         updateParent: true,
                                                         autoValidate: true,
                                                       );
 
                                                       form
                                                           .control(
-                                                            _driverNameKey,
-                                                          )
-                                                          .touched;
-                                                      form
-                                                          .control(
-                                                            _waybillNumberKey,
-                                                          )
-                                                          .touched;
-                                                      form
-                                                          .control(
-                                                            _waybillQuantityKey,
-                                                          )
-                                                          .touched;
-                                                      form
-                                                          .control(
-                                                            _typeOfTransportKey,
-                                                          )
-                                                          .touched;
-                                                      form
-                                                          .control(
-                                                            _vehicleNumberKey,
-                                                          )
-                                                          .touched;
-                                                    }
-                                                  });
-                                                }
-                                              },
-                                              child: IgnorePointer(
-                                                child: DigitTextFormField(
-                                                  key: const Key(
-                                                      _secondaryPartyKey),
-                                                  hideKeyboard: true,
-                                                  label:
-                                                      localizations.translate(
-                                                    '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
-                                                  ),
-                                                  isRequired: true,
-                                                  validationMessages: {
-                                                    'required': (object) =>
-                                                        localizations.translate(
-                                                          '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                                                        ),
-                                                  },
-                                                  suffix: const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(8.0),
-                                                    child: Icon(Icons.search),
-                                                  ),
-                                                  formControlName:
-                                                      _secondaryPartyKey,
-                                                  onTap: () async {
-                                                    clearQRCodes();
-                                                    form
-                                                        .control(
-                                                            _deliveryTeamKey)
-                                                        .value = '';
+                                                        _deliveryTeamKey,
+                                                      )
+                                                          .setValidators(
+                                                        [Validators.required],
+                                                        updateParent: true,
+                                                        autoValidate: true,
+                                                      );
 
-                                                    final facility =
-                                                        await context.router
-                                                            .push(
-                                                      CustomInventoryFacilitySelectionRoute(
-                                                        facilities:
-                                                            allFacilities,
-                                                      ),
-                                                    ) as FacilityModel?;
-
-                                                    if (facility == null)
-                                                      return;
-                                                    form
-                                                            .control(
-                                                                _secondaryPartyKey)
-                                                            .value =
-                                                        localizations.translate(
-                                                      'FAC_${facility.id}',
-                                                    );
-
-                                                    setState(() {
-                                                      selectedFacilityId =
-                                                          facility.id;
+                                                      form
+                                                          .control(
+                                                            _deliveryTeamKey,
+                                                          )
+                                                          .touched;
                                                     });
-                                                    if (facility.id ==
-                                                        'Delivery Team') {
-                                                      setState(() {
-                                                        deliveryTeamSelected =
-                                                            true;
+                                                  } else {
+                                                    setState(() {
+                                                      deliveryTeamSelected =
+                                                          false;
+                                                      if (isWareHouseMgr) {
                                                         form
                                                             .control(
                                                           _driverNameKey,
                                                         )
                                                             .setValidators(
-                                                          [],
+                                                          [
+                                                            Validators
+                                                                .minLength(2),
+                                                            Validators
+                                                                .maxLength(200),
+                                                          ],
                                                           updateParent: true,
                                                           autoValidate: true,
                                                         );
@@ -1266,117 +1289,51 @@ class CustomStockDetailsPageState
                                                           _vehicleNumberKey,
                                                         )
                                                             .setValidators(
-                                                          [],
+                                                          [
+                                                            Validators
+                                                                .minLength(2),
+                                                            Validators
+                                                                .maxLength(200),
+                                                          ],
                                                           updateParent: true,
                                                           autoValidate: true,
                                                         );
 
                                                         form
                                                             .control(
-                                                          _deliveryTeamKey,
-                                                        )
-                                                            .setValidators(
-                                                          [Validators.required],
-                                                          updateParent: true,
-                                                          autoValidate: true,
-                                                        );
-
-                                                        form
-                                                            .control(
-                                                              _deliveryTeamKey,
+                                                              _driverNameKey,
                                                             )
                                                             .touched;
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        deliveryTeamSelected =
-                                                            false;
-                                                        if (isWareHouseMgr) {
-                                                          form
-                                                              .control(
-                                                            _driverNameKey,
-                                                          )
-                                                              .setValidators(
-                                                            [
-                                                              Validators
-                                                                  .minLength(2),
-                                                              Validators
-                                                                  .maxLength(
-                                                                      200),
-                                                            ],
-                                                            updateParent: true,
-                                                            autoValidate: true,
-                                                          );
-
-                                                          form
-                                                              .control(
-                                                            _waybillQuantityKey,
-                                                          )
-                                                              .setValidators(
-                                                            [],
-                                                            updateParent: true,
-                                                            autoValidate: true,
-                                                          );
-                                                          form
-                                                              .control(
-                                                            _typeOfTransportKey,
-                                                          )
-                                                              .setValidators(
-                                                            [],
-                                                            updateParent: true,
-                                                            autoValidate: true,
-                                                          );
-                                                          form
-                                                              .control(
-                                                            _vehicleNumberKey,
-                                                          )
-                                                              .setValidators(
-                                                            [
-                                                              Validators
-                                                                  .minLength(2),
-                                                              Validators
-                                                                  .maxLength(
-                                                                      200),
-                                                            ],
-                                                            updateParent: true,
-                                                            autoValidate: true,
-                                                          );
-
-                                                          form
-                                                              .control(
-                                                                _driverNameKey,
-                                                              )
-                                                              .touched;
-                                                          form
-                                                              .control(
-                                                                _waybillNumberKey,
-                                                              )
-                                                              .touched;
-                                                          form
-                                                              .control(
-                                                                _waybillQuantityKey,
-                                                              )
-                                                              .touched;
-                                                          form
-                                                              .control(
-                                                                _typeOfTransportKey,
-                                                              )
-                                                              .touched;
-                                                          form
-                                                              .control(
-                                                                _vehicleNumberKey,
-                                                              )
-                                                              .touched;
-                                                        }
-                                                      });
-                                                    }
-                                                  },
-                                                ),
+                                                        form
+                                                            .control(
+                                                              _waybillNumberKey,
+                                                            )
+                                                            .touched;
+                                                        form
+                                                            .control(
+                                                              _waybillQuantityKey,
+                                                            )
+                                                            .touched;
+                                                        form
+                                                            .control(
+                                                              _typeOfTransportKey,
+                                                            )
+                                                            .touched;
+                                                        form
+                                                            .control(
+                                                              _vehicleNumberKey,
+                                                            )
+                                                            .touched;
+                                                      }
+                                                    });
+                                                  }
+                                                },
                                               ),
-                                            );
-                                          });
-                                    },
-                                  ),
+                                            ),
+                                          );
+                                        });
+                                  },
+                                ),
                                 //Bales Quantity
                                 if ([
                                       StockRecordEntryType.receipt,
@@ -1518,6 +1475,28 @@ class CustomStockDetailsPageState
                                           const TextInputType.numberWithOptions(
                                         decimal: true,
                                       ),
+                                      onChanged: (value) {
+                                        if (value.value == "") {
+                                          form
+                                              .control(_waybillNumberKey)
+                                              .setValidators(
+                                            [],
+                                            updateParent: true,
+                                            autoValidate: true,
+                                          );
+                                        } else {
+                                          form
+                                              .control(_waybillNumberKey)
+                                              .setValidators(
+                                            [
+                                              Validators.minLength(2),
+                                              Validators.maxLength(200)
+                                            ],
+                                            updateParent: true,
+                                            autoValidate: true,
+                                          );
+                                        }
+                                      },
                                       validationMessages: {
                                         'maxLength': (object) => localizations
                                             .translate(
