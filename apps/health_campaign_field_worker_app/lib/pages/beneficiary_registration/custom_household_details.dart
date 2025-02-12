@@ -21,7 +21,9 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
+import '../../models/entities/community_types.dart';
 import '../../router/app_router.dart';
+import '../../utils/constants.dart';
 
 @RoutePage()
 class CustomHouseHoldDetailsPage extends LocalizedStatefulWidget {
@@ -183,9 +185,15 @@ class CustomHouseHoldDetailsPageState
                                   version: 1,
                                   fields: [
                                     //[TODO: Use pregnant women form value based on project config
+
+                                    if (widget.refugeeCamp != null)
+                                      AdditionalField(Constants.refugeeCamp,
+                                          widget.refugeeCamp),
                                     if (widget.refugeeCamp != null)
                                       AdditionalField(
-                                          "refugeeCamp", widget.refugeeCamp),
+                                          Constants.communityKey,
+                                          CommunityTypes.refugeeCamps
+                                              .toValue()),
                                     ...?householdModel?.additionalFields?.fields
                                         .where((e) =>
                                             e.key !=
