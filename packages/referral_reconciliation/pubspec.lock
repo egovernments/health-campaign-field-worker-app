@@ -400,7 +400,7 @@ packages:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.5-dev.2"
+    version: "1.0.5-dev.3"
   digit_scanner:
     dependency: "direct main"
     description:
@@ -413,10 +413,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: baa99c0c165f3459e78a1996e2db13243903eed6e5ece582241de03904f851e6
+      sha256: bdb971ab85e325f0261c22214389d7baea22c6305c336b663f8919666f70f461
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.9"
+    version: "0.0.2-dev.12"
   dio:
     dependency: "direct main"
     description:

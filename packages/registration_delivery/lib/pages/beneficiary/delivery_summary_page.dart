@@ -184,7 +184,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 heading: localizations.translate(i18
                                     .householdLocation
                                     .householdLocationLabelText),
-                                withDivider: true,
+                                withDivider: false,
                                 items: [
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -218,7 +218,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.householdDetailsLabel),
-                                withDivider: true,
+                                withDivider: false,
                                 items: [
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -280,7 +280,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.houseDetailsLabel),
-                                withDivider: true,
+                                withDivider: false,
                                 items: [
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -358,7 +358,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                   padding: EdgeInsets.zero,
                                   heading: localizations.translate(
                                       '${RegistrationDeliverySingleton().selectedProject?.projectType?.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
-                                  withDivider: true,
+                                  withDivider: false,
                                   items: [
                                     LabelValueItem(
                                       label: localizations.translate(deliverState

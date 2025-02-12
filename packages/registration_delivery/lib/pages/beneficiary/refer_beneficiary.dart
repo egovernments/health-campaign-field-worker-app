@@ -322,9 +322,8 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                             ),
                             isRequired: true,
                             child: DigitSearchFormInput(
-                              // hideKeyboard: true,
-                              // readOnly: true,r
                               errorMessage: field.errorText,
+                              readOnly: true,
                               initialValue: form.control(_referredToKey).value,
                               onSuffixTap: (value) async {
                                 final parent =
