@@ -481,6 +481,8 @@ class HouseholdDetails {
 
   String get noOfRoomsLabel => 'NO_OF_ROOMS_LABEL';
 
+  String get noOfRoomsCLFLabel => 'NO_OF_ROOMS_CLF_LABEL';
+
   String get houseDetailsLabel => 'HOUSE_DETAILS_LABEL';
 
   String get clfStructureDetailsLabel => 'CLF_STRUCTURE_DETAILS_LABEL';
