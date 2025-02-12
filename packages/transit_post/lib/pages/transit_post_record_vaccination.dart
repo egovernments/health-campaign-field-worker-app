@@ -14,7 +14,6 @@ import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:transit_post/utils/utils.dart';
 
 import '../widgets/localized.dart';
 import '../widgets/total_delivery.dart';
@@ -22,6 +21,7 @@ import '../widgets/back_navigation_help_header.dart';
 import '../router/transit_post_router.gm.dart';
 import '../blocs/transit_post.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 
 @RoutePage()
 class TransitPostRecordVaccinationPage extends LocalizedStatefulWidget {
@@ -174,7 +174,9 @@ class TransitPostRecordVaccinationPageState
                                     labelFlex: 5,
                                     label: localizations.translate(
                                         i18.transitPost.transitPostTypeLabel),
-                                    value: transitPostState.transitPostType),
+                                    value: localizations.translate(
+                                        transitPostState.transitPostType ??
+                                            '')),
                                 LabelValueItem(
                                     labelFlex: 5,
                                     label: localizations.translate(

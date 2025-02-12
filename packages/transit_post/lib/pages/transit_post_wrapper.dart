@@ -6,7 +6,6 @@ import 'package:location/location.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:transit_post/blocs/transit_post.dart';
 import 'package:transit_post/data/repositories/local/user_action.dart';
-import 'package:transit_post/data/repositories/remote/user_action.dart';
 import 'package:transit_post/utils/extensions/extensions.dart';
 
 @RoutePage()
