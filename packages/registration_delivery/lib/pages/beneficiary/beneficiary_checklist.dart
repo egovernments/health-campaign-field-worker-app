@@ -378,11 +378,12 @@ class _BeneficiaryChecklistPageState
                                               )
                                             : null,
                                         labelStyle: textTheme.headingS.copyWith(
-                                            color: theme.colorTheme.text.primary),
+                                            color:
+                                                theme.colorTheme.text.primary),
                                         descriptionStyle: textTheme.bodyS
                                             .copyWith(
-                                            color: theme
-                                                .colorTheme.text.secondary),
+                                                color: theme
+                                                    .colorTheme.text.secondary),
                                         isRequired: e.required ?? false,
                                         child: BlocBuilder<ServiceBloc,
                                             ServiceState>(
@@ -456,12 +457,14 @@ class _BeneficiaryChecklistPageState
                                                         '${value.selectedServiceDefinition?.code}.$description',
                                                       )
                                                     : null,
-                                                labelStyle: textTheme.headingS.copyWith(
-                                                    color: theme.colorTheme.text.primary),
-                                                descriptionStyle: textTheme.bodyS
+                                                labelStyle: textTheme.headingS
                                                     .copyWith(
-                                                    color: theme
-                                                        .colorTheme.text.secondary),
+                                                        color: theme.colorTheme
+                                                            .text.primary),
+                                                descriptionStyle:
+                                                    textTheme.bodyS.copyWith(
+                                                        color: theme.colorTheme
+                                                            .text.secondary),
                                                 isRequired: e.required ?? false,
                                                 child: BlocBuilder<ServiceBloc,
                                                     ServiceState>(
@@ -636,12 +639,10 @@ class _BeneficiaryChecklistPageState
                     '${selectedServiceDefinition?.code}.$description',
                   )
                 : null,
-            labelStyle: textTheme.headingS.copyWith(
-                color: theme.colorTheme.text.primary),
+            labelStyle: textTheme.headingS
+                .copyWith(color: theme.colorTheme.text.primary),
             descriptionStyle: textTheme.bodyS
-                .copyWith(
-                color: theme
-                    .colorTheme.text.secondary),
+                .copyWith(color: theme.colorTheme.text.secondary),
             isRequired: item.required ?? false,
             child: Column(children: [
               BlocBuilder<ServiceBloc, ServiceState>(
@@ -766,10 +767,8 @@ class _BeneficiaryChecklistPageState
                                       : null,
                                   labelStyle: textTheme.headingS.copyWith(
                                       color: theme.colorTheme.text.primary),
-                                  descriptionStyle: textTheme.bodyS
-                                      .copyWith(
-                                      color: theme
-                                          .colorTheme.text.secondary),
+                                  descriptionStyle: textTheme.bodyS.copyWith(
+                                      color: theme.colorTheme.text.secondary),
                                   isRequired: item.required ?? false,
                                   capitalizedFirstLetter: false,
                                   child: DigitTextFormInput(
@@ -825,12 +824,10 @@ class _BeneficiaryChecklistPageState
                       '${selectedServiceDefinition?.code}.$description',
                     )
                   : null,
-              labelStyle: textTheme.headingS.copyWith(
-                  color: theme.colorTheme.text.primary),
+              labelStyle: textTheme.headingS
+                  .copyWith(color: theme.colorTheme.text.primary),
               descriptionStyle: textTheme.bodyS
-                  .copyWith(
-                  color: theme
-                      .colorTheme.text.secondary),
+                  .copyWith(color: theme.colorTheme.text.secondary),
               isRequired: item.required ?? false,
               capitalizedFirstLetter: false,
               child: DigitTextFormInput(
@@ -879,12 +876,10 @@ class _BeneficiaryChecklistPageState
                       '${selectedServiceDefinition?.code}.$description',
                     )
                   : null,
-              labelStyle: textTheme.headingS.copyWith(
-                  color: theme.colorTheme.text.primary),
+              labelStyle: textTheme.headingS
+                  .copyWith(color: theme.colorTheme.text.primary),
               descriptionStyle: textTheme.bodyS
-                  .copyWith(
-                  color: theme
-                      .colorTheme.text.secondary),
+                  .copyWith(color: theme.colorTheme.text.secondary),
               isRequired: item.required ?? false,
               capitalizedFirstLetter: false,
               child: DigitTextFormInput(
@@ -917,12 +912,10 @@ class _BeneficiaryChecklistPageState
                     '${selectedServiceDefinition?.code}.$description',
                   )
                 : null,
-            labelStyle: textTheme.headingS.copyWith(
-                color: theme.colorTheme.text.primary),
+            labelStyle: textTheme.headingS
+                .copyWith(color: theme.colorTheme.text.primary),
             descriptionStyle: textTheme.bodyS
-                .copyWith(
-                color: theme
-                    .colorTheme.text.secondary),
+                .copyWith(color: theme.colorTheme.text.secondary),
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
@@ -978,12 +971,10 @@ class _BeneficiaryChecklistPageState
                     '${selectedServiceDefinition?.code}.$description',
                   )
                 : null,
-            labelStyle: textTheme.headingS.copyWith(
-                color: theme.colorTheme.text.primary),
+            labelStyle: textTheme.headingS
+                .copyWith(color: theme.colorTheme.text.primary),
             descriptionStyle: textTheme.bodyS
-                .copyWith(
-                color: theme
-                    .colorTheme.text.secondary),
+                .copyWith(color: theme.colorTheme.text.secondary),
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
@@ -1063,18 +1054,19 @@ class _BeneficiaryChecklistPageState
         // Build cards for each matching child attribute
         for (final matchingChildItem in childItems.where((childItem) =>
             childItem.code!.startsWith('$parentCode.$parentControllerValue.')))
-          Card(
-            margin: const EdgeInsets.only(bottom: 8.0, left: 4.0, right: 4.0),
-            color: countDots(matchingChildItem.code ?? '') % 4 == 2
-                ? const Color.fromRGBO(238, 238, 238, 1)
-                : const DigitColors().light.paperPrimary,
-            child: _buildSurveyForm(
-                matchingChildItem,
-                initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
-                // Pass parentIndex here as we're building at the same level
-                selectedServiceDefinition,
-                context,
-                description),
+          DigitCard(
+            margin: const EdgeInsets.only(
+                bottom: spacer2, left: spacer2, right: spacer2),
+            cardType: CardType.secondary,
+            children: [
+              _buildSurveyForm(
+                  matchingChildItem,
+                  initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
+                  // Pass parentIndex here as we're building at the same level
+                  selectedServiceDefinition,
+                  context,
+                  description)
+            ],
           ),
       ],
     );

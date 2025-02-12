@@ -33,6 +33,7 @@ class ReferBeneficiaryPage extends LocalizedStatefulWidget {
     this.isEditing = false,
     required this.projectBeneficiaryClientRefId,
   });
+
   @override
   State<ReferBeneficiaryPage> createState() => ReferBeneficiaryPageState();
 }
@@ -73,6 +74,7 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
           fetched: (_, facilities) => facilities.isEmpty
               ? NoFacilitiesAssignedDialog.show(context)
               : null,
+          empty: () => NoFacilitiesAssignedDialog.show(context),
         );
       },
       builder: (ctx, facilityState) {

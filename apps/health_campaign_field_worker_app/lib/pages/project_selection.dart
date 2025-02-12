@@ -141,7 +141,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 final boundary = selectedProject.address?.boundary;
 
                 if (boundary != null) {
-                  triggerLocationTracking(state.selectedProject!);
+                  // triggerLocationTracking(state.selectedProject!); // TODO: Enable location tracking
                   navigateToBoundary(boundary);
                 } else {
                   Toast.showToast(
@@ -235,7 +235,6 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           .firstWhere((element) => element.boundaryList.isNotEmpty);
       if (mounted) {
         context.router.replaceAll([
-          HomeRoute(),
           BoundarySelectionRoute(),
         ]);
       }
