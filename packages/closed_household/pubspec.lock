@@ -413,11 +413,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: c3bc7299a7d927ebb83d8e91c1d7a8a51f6a1d1295dafeacb642012b72b99a2f
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
+      path: "../digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.5-dev.3"
   digit_scanner:
     dependency: "direct main"
     description:
@@ -438,10 +437,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "9a0103897ea089c240619392f0d3229476e640eb660775dbd18ec9077f78807d"
+      sha256: bdb971ab85e325f0261c22214389d7baea22c6305c336b663f8919666f70f461
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.7"
+    version: "0.0.2-dev.12"
   dio:
     dependency: transitive
     description:
@@ -1329,11 +1328,10 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "8f6843cb5e1acd5e44026b663a28e80086e791107b9131487c7e3a38e43b1229"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
+      path: "../registration_delivery"
+      relative: true
+    source: path
+    version: "1.0.5+2-dev.1"
   rxdart:
     dependency: transitive
     description:

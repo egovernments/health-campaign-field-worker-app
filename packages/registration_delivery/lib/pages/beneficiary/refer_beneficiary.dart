@@ -284,6 +284,7 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                         isRequired: true,
                         child: DigitTextFormInput(
                           errorMessage: field.errorText,
+                          readOnly: true,
                           onChange: (value) {
                             form.control(_referredByKey).value = value;
                           },
@@ -323,7 +324,6 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                             isRequired: true,
                             child: DigitSearchFormInput(
                               errorMessage: field.errorText,
-                              readOnly: true,
                               initialValue: form.control(_referredToKey).value,
                               onSuffixTap: (value) async {
                                 final parent =

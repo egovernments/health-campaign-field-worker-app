@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,6 +90,7 @@ class ClosedHouseholdBloc
         tenantId: ClosedHouseholdSingleton().tenantId.toString(),
         longitude: event.longitude,
         latitude: event.latitude,
+        householdType: HouseholdType.family,
         clientAuditDetails: ClientAuditDetails(
           createdBy: ClosedHouseholdSingleton().loggedInUserUuid.toString(),
           createdTime: DateTime.now().millisecondsSinceEpoch,
