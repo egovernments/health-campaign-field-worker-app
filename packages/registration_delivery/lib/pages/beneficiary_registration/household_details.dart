@@ -63,6 +63,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
     final textTheme = theme.digitTextTheme(context);
+    final bool isCommunity = RegistrationDeliverySingleton().householdType ==
+        HouseholdType.community;
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -108,10 +110,12 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
             },
             builder: (context, registrationState) {
               return ScrollableContent(
-                header: const Column(children: [
+                header: Column(children: [
                   BackNavigationHelpHeaderWidget(
                     showHelp: false,
-                    showcaseButton: ShowcaseButton(),
+                    showcaseButton: ShowcaseButton(
+                      isCommunity: isCommunity,
+                    ),
                   ),
                 ]),
                 enableFixedDigitButton: true,
@@ -395,9 +399,13 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         children: [
                           DigitTextBlock(
                             padding: const EdgeInsets.all(0),
-                            heading: localizations.translate(
-                              i18.householdDetails.householdDetailsLabel,
-                            ),
+                            heading: (isCommunity)
+                                ? localizations.translate(
+                                    i18.householdDetails.clfDetailsLabel,
+                                  )
+                                : localizations.translate(
+                                    i18.householdDetails.householdDetailsLabel,
+                                  ),
                             description: localizations.translate(
                               i18.householdDetails.householdDetailsDescription,
                             ),
@@ -435,10 +443,17 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             child: ReactiveWrapperField(
                               formControlName: _pregnantWomenCountKey,
                               builder: (field) => LabeledField(
-                                label: localizations.translate(
-                                  i18.householdDetails
-                                      .noOfPregnantWomenCountLabel,
-                                ),
+                                label: (RegistrationDeliverySingleton()
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? localizations.translate(
+                                        i18.householdDetails
+                                            .noOfPregnantWomenCountCLFLabel,
+                                      )
+                                    : localizations.translate(
+                                        i18.householdDetails
+                                            .noOfPregnantWomenCountLabel,
+                                      ),
                                 child: DigitNumericFormInput(
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
@@ -509,10 +524,17 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             child: ReactiveWrapperField(
                               formControlName: _childrenCountKey,
                               builder: (field) => LabeledField(
-                                label: localizations.translate(
-                                  i18.householdDetails
-                                      .noOfChildrenBelow5YearsLabel,
-                                ),
+                                label: (RegistrationDeliverySingleton()
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? localizations.translate(
+                                        i18.householdDetails
+                                            .noOfChildrenBelow5YearsCLFLabel,
+                                      )
+                                    : localizations.translate(
+                                        i18.householdDetails
+                                            .noOfChildrenBelow5YearsLabel,
+                                      ),
                                 child: DigitNumericFormInput(
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
@@ -579,9 +601,17 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             child: ReactiveWrapperField(
                               formControlName: _memberCountKey,
                               builder: (field) => LabeledField(
-                                label: localizations.translate(
-                                  i18.householdDetails.noOfMembersCountLabel,
-                                ),
+                                label: (RegistrationDeliverySingleton()
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? localizations.translate(
+                                        i18.householdDetails
+                                            .noOfMembersCountCLFLabel,
+                                      )
+                                    : localizations.translate(
+                                        i18.householdDetails
+                                            .noOfMembersCountLabel,
+                                      ),
                                 child: DigitNumericFormInput(
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly

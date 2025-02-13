@@ -1,12 +1,11 @@
 part of 'showcase_constants.dart';
 
-class _HouseholdDetailsShowcaseData {
-  static final _HouseholdDetailsShowcaseData _instance =
-      _HouseholdDetailsShowcaseData._();
+class _CLFDetailsShowcaseData {
+  static final _CLFDetailsShowcaseData _instance = _CLFDetailsShowcaseData._();
 
-  _HouseholdDetailsShowcaseData._();
+  _CLFDetailsShowcaseData._();
 
-  factory _HouseholdDetailsShowcaseData() => _instance;
+  factory _CLFDetailsShowcaseData() => _instance;
 
   List<ShowcaseItemBuilder> get showcaseData => [
         dateOfRegistration,
@@ -16,20 +15,20 @@ class _HouseholdDetailsShowcaseData {
       ];
 
   final dateOfRegistration = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.householdDetailsShowcase.dateOfRegistration,
+    messageLocalizationKey: i18.clfDetailsShowcase.dateOfRegistration,
   );
 
   final numberOfMembersLivingInHousehold = ShowcaseItemBuilder(
     messageLocalizationKey:
-        i18.householdDetailsShowcase.numberOfMembersLivingInHousehold,
+        i18.clfDetailsShowcase.numberOfMembersLivingInHousehold,
   );
 
   final numberOfPregnantWomenInHousehold = ShowcaseItemBuilder(
     messageLocalizationKey:
-        i18.householdDetailsShowcase.numberOfPregnantWomenInHousehold,
+        i18.clfDetailsShowcase.numberOfPregnantWomenInHousehold,
   );
   final numberOfChildrenBelow5InHousehold = ShowcaseItemBuilder(
     messageLocalizationKey:
-        i18.householdDetailsShowcase.numberOfChildrenBelow5InHousehold,
+        i18.clfDetailsShowcase.numberOfChildrenBelow5InHousehold,
   );
 }
