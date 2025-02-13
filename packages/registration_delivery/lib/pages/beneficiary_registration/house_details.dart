@@ -58,7 +58,6 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                     header: const Column(
                       children: [
                         BackNavigationHelpHeaderWidget(
-                          showcaseButton: ShowcaseButton(),
                           showHelp: false,
                         ),
                       ],
@@ -229,9 +228,17 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                               Padding(
                                 padding: const EdgeInsets.all(0),
                                 child: Text(
-                                  localizations.translate(
-                                    i18.householdDetails.houseDetailsLabel,
-                                  ),
+                                  (RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community)
+                                      ? localizations.translate(
+                                          i18.householdDetails
+                                              .clfStructureDetailsLabel,
+                                        )
+                                      : localizations.translate(
+                                          i18.householdDetails
+                                              .houseDetailsLabel,
+                                        ),
                                   style: textTheme.headingXl,
                                 ),
                               ),
@@ -297,9 +304,14 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 child: ReactiveWrapperField(
                                   formControlName: _noOfRoomsKey,
                                   builder: (field) => LabeledField(
-                                    label: localizations.translate(
-                                      i18.householdDetails.noOfRoomsLabel,
-                                    ),
+                                    label: (RegistrationDeliverySingleton()
+                                                .householdType ==
+                                            HouseholdType.community)
+                                        ? localizations.translate(i18
+                                            .householdDetails.noOfRoomsCLFLabel)
+                                        : localizations.translate(
+                                            i18.householdDetails.noOfRoomsLabel,
+                                          ),
                                     child: DigitNumericFormInput(
                                       minValue: 1,
                                       maxValue: 20,
