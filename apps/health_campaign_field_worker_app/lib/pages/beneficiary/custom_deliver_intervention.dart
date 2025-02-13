@@ -639,6 +639,8 @@ class CustomDeliverInterventionPageState
                                                                         builder:
                                                                             (context) =>
                                                                                 CustomDigitScannerPage(
+                                                                          gs1CodeList:
+                                                                              scannerState.barCodes,
                                                                           quantity:
                                                                               bednetCount,
                                                                           isGS1code:

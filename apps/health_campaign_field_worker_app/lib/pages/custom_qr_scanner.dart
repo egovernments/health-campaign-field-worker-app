@@ -623,21 +623,22 @@ class _CustomDigitScannerPageState
   }
 
   Future<void> storeCodeWrapper(String code) async {
-    if (pattern.hasMatch(code) == false) {
-      await DigitToast.show(
-        currentContext,
-        options: DigitToastOptions(
-          localizations
-              .translate(i18Local.deliverIntervention.patternValidationFailed),
-          true,
-          Theme.of(currentContext),
-        ),
-      );
-      await Future.delayed(const Duration(seconds: 2));
-    } else if (codes.length < widget.quantity) {
+    if (codes.length < widget.quantity) {
       if (widget.scanType == ScanType.stock &&
           code.contains(Constants.pipeSeparator)) {
         code = code.split(Constants.pipeSeparator).last.trim();
+      } else if (pattern.hasMatch(code) == false) {
+        await DigitToast.show(
+          currentContext,
+          options: DigitToastOptions(
+            localizations.translate(
+                i18Local.deliverIntervention.patternValidationFailed),
+            true,
+            Theme.of(currentContext),
+          ),
+        );
+        await Future.delayed(const Duration(seconds: 2));
+        return;
       }
       await DigitScannerUtils().storeCode(
         context: currentContext,
