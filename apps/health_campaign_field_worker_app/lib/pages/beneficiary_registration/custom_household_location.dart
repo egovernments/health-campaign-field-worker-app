@@ -450,7 +450,9 @@ class CustomHouseholdLocationPageState
       _accuracyKey: FormControl<double>(
         value: addressModel?.locationAccuracy,
       ),
-      _refugeeKey: FormControl<String>(),
+      _refugeeKey: FormControl<String>(
+        value: radioOptions.last,
+      ),
       __refugeeCampsTypeKey: FormControl<String>(),
       if (RegistrationDeliverySingleton().householdType ==
           HouseholdType.community)
