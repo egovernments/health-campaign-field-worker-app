@@ -390,12 +390,12 @@ class _CustomDigitScannerPageState
                                 onPressed: () {
                                   final bloc = context.read<DigitScannerBloc>();
                                   if (widget.isGS1code) {
-                                    result = List.from(
+                                    List<GS1Barcode> newResult = List.from(
                                       state.barCodes,
                                     );
-                                    result.removeAt(index);
+                                    newResult.removeAt(index);
                                     setState(() {
-                                      result = result;
+                                      result = newResult;
                                     });
 
                                     bloc.add(
@@ -405,12 +405,12 @@ class _CustomDigitScannerPageState
                                       ),
                                     );
                                   } else {
-                                    codes = List.from(
+                                    List<String> newCodes = List.from(
                                       state.qrCodes,
                                     );
-                                    codes.removeAt(index);
+                                    newCodes.removeAt(index);
                                     setState(() {
-                                      codes = codes;
+                                      codes = newCodes;
                                     });
 
                                     bloc.add(
