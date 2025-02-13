@@ -96,7 +96,8 @@ class AppInitializationBloc
                     MasterEnums.backendInterface.toValue(),
                     MasterEnums.callSupport.toValue(),
                     MasterEnums.transportTypes.toValue(),
-                    MasterEnums.searchCLFFilters.toValue()
+                    MasterEnums.searchCLFFilters.toValue(),
+                    MasterEnums.refugeeCamps.toValue()
                   ]),
                 ),
                 MdmsModuleDetailModel(
