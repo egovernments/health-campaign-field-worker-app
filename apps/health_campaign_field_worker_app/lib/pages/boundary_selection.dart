@@ -182,6 +182,7 @@ class _BoundarySelectionPageState
                                               resetChildDropdowns(label, state);
                                             });
                                           },
+                                          isDisabled: labelIndex!=0 && formControls[labelList[labelIndex-1]]?.value==null ,
                                           sentenceCaseEnabled: false,
                                           items: filteredItems
                                               .map((e) => DropdownItem(
@@ -217,6 +218,18 @@ class _BoundarySelectionPageState
                                                 ?.updateValue(selectedBoundary);
                                             // Call the resetChildDropdowns function when a parent dropdown is selected
                                             resetChildDropdowns(label, state);
+                                          },
+                                          onChange: (value){
+                                            if(value.isEmpty){
+                                              if(labelIndex == 0){
+                                                formControls[label]?.updateValue(null);
+                                                resetChildDropdowns(label, state);
+                                              }else{
+                                                setState(() {
+                                                  resetChildDropdowns(labelList.elementAt(labelIndex-1), state);
+                                                });
+                                              }
+                                            }
                                           },
                                           emptyItemText:
                                               localizations.translate(
