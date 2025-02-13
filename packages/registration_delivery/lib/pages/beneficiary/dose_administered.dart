@@ -91,7 +91,6 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                   ]),
                   footer: DigitCard(
                       margin: const EdgeInsets.only(top: spacer2),
-                      padding: const EdgeInsets.all(spacer2),
                       children: [
                         ValueListenableBuilder(
                           valueListenable: clickedStatus,

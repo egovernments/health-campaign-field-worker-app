@@ -1,6 +1,7 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:drift/drift.dart';
 
 part 'household.mapper.dart';
@@ -16,6 +17,7 @@ class HouseholdSearchModel extends EntitySearchModel
   final bool? isProximityEnabled;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final HouseholdType? householdType;
 
   HouseholdSearchModel({
     this.id,
@@ -26,6 +28,7 @@ class HouseholdSearchModel extends EntitySearchModel
     this.isProximityEnabled,
     this.clientReferenceId,
     this.tenantId,
+    this.householdType,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -40,6 +43,7 @@ class HouseholdSearchModel extends EntitySearchModel
     this.isProximityEnabled,
     this.clientReferenceId,
     this.tenantId,
+    this.householdType,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
@@ -58,6 +62,7 @@ class HouseholdModel extends EntityModel with HouseholdModelMappable {
   final int? rowVersion;
   final AddressModel? address;
   final HouseholdAdditionalFields? additionalFields;
+  final HouseholdType? householdType;
 
   HouseholdModel({
     this.additionalFields,
@@ -70,6 +75,7 @@ class HouseholdModel extends EntityModel with HouseholdModelMappable {
     this.tenantId,
     this.rowVersion,
     this.address,
+    this.householdType,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
@@ -95,6 +101,7 @@ class HouseholdModel extends EntityModel with HouseholdModelMappable {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
+      householdType: Value(householdType),
     );
   }
 }

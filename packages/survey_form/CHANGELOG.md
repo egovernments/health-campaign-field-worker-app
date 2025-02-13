@@ -1,3 +1,7 @@
+## 1.0.1
+
+* Upgrade digit_ui_components to ^0.0.2-dev.6
+
 ## 1.0.0+1
 
 * Modified ServiceSearchModel with relatedClientReferenceId and search query

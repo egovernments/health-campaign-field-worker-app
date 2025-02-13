@@ -386,6 +386,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         label: localizations.translate(
                                           '${value.selectedServiceDefinition?.code}.${e.code}',
                                         ),
+                                        capitalizedFirstLetter: false,
                                         description: description != null
                                             ? localizations.translate(
                                                 '${value.selectedServiceDefinition?.code}.$description',
@@ -445,6 +446,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                             )
                                           : null,
                                       isRequired: e.required ?? false,
+                                      capitalizedFirstLetter: false,
                                       child: DigitTextFormInput(
                                         onChange: (value) {
                                           field.didChange(value);
@@ -480,6 +482,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                           )
                                         : null,
                                     isRequired: e.required ?? false,
+                                    capitalizedFirstLetter: false,
                                     child:
                                         BlocBuilder<ServiceBloc, ServiceState>(
                                       builder: (context, state) {
@@ -564,6 +567,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                               '${selectedServiceDefinition?.code}.${e.code}',
                                             ),
                                             isRequired: e.required ?? false,
+                                            capitalizedFirstLetter: false,
                                             child: BlocBuilder<ServiceBloc,
                                                 ServiceState>(
                                               builder: (context, state) {
@@ -706,6 +710,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
+            capitalizedFirstLetter: false,
             isRequired: item.required ?? false,
             child: Column(children: [
               BlocBuilder<ServiceBloc, ServiceState>(
@@ -824,6 +829,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                     '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
                                   ),
                                   isRequired: item.required ?? false,
+                                  capitalizedFirstLetter: false,
                                   child: DigitTextFormInput(
                                     onChange: (value) {
                                       field.didChange(value);
@@ -874,6 +880,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 '${selectedServiceDefinition?.code}.${item.code}',
               ),
               isRequired: item.required ?? false,
+              capitalizedFirstLetter: false,
               child: DigitTextFormInput(
                 maxLength: 1000,
                 charCount: true,
@@ -918,6 +925,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   )
                   .trim(),
               isRequired: item.required ?? false,
+              capitalizedFirstLetter: false,
               child: DigitTextFormInput(
                 onChange: (value) {
                   field.didChange(value);
@@ -944,6 +952,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
             isRequired: item.required ?? false,
+            capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
                 return Column(
@@ -993,6 +1002,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
             isRequired: item.required ?? false,
+            capitalizedFirstLetter: false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
                 return FormField<bool>(

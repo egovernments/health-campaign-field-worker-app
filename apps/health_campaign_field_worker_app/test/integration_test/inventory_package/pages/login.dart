@@ -1,4 +1,4 @@
-import 'package:digit_components/widgets/digit_project_cell.dart';
+import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/pages/boundary_selection.dart';
 
@@ -34,7 +34,7 @@ Future<void> testLoginPage(WidgetTester widgetTester) async {
   await widgetTester.pumpAndSettle(const Duration(seconds: 5));
 
   //choose a project
-  await widgetTester.tap(find.byType(DigitProjectCell).first);
+  await widgetTester.tap(find.byType(MenuCard).first);
   await widgetTester.pumpAndSettle(const Duration(seconds: 3));
 
   expect(

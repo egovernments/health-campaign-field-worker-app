@@ -412,11 +412,10 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: c33af61ed9ab3d7740fc3c8948af4b763d946cba5e902f8bfb00948d4d69d60a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
+      path: "../digit_scanner"
+      relative: true
+    source: path
+    version: "1.0.5"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -429,10 +428,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "57c4da5237be6025783e7357a02b6b492f02e38f711d674bf46f5f8c8a93ad76"
+      sha256: "4d79a36d9a3bfce4616066f2bf5c5d6dfb6c301315e6fa21a1d6d0f76d98dbeb"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.4"
+    version: "0.0.2-dev.6"
   dio:
     dependency: "direct main"
     description:
@@ -1464,7 +1463,7 @@ packages:
       path: "../survey_form"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   synchronized:
     dependency: transitive
     description:

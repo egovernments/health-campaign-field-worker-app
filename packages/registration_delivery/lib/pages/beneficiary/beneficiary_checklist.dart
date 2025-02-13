@@ -618,7 +618,7 @@ class _BeneficiaryChecklistPageState
                           i18.common.corecommonRequired,
                         ),
                         style: TextStyle(
-                          color: theme.colorScheme.error,
+                          color: theme.colorTheme.alert.error,
                         ),
                       ),
                     ),

@@ -58,7 +58,6 @@ class AcknowledgementPageState
           child: DigitCard(
               cardType: CardType.primary,
               margin: const EdgeInsets.only(top: spacer2),
-              padding: const EdgeInsets.all(spacer2),
               children: [
                 Column(
                   children: [

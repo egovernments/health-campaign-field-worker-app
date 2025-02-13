@@ -1,3 +1,4 @@
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +15,10 @@ class BeneficiaryStatisticsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
-    return DigitCard(
-      children: [Row(
+    return DigitCard(children: [
+      Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           SizedBox(
@@ -27,12 +29,12 @@ class BeneficiaryStatisticsCard extends StatelessWidget {
               children: [
                 Text(
                   beneficiaryStatistics.beneficiaryStatisticsList.first.title,
-                  style: theme.textTheme.displayMedium,
+                  style: textTheme.headingXl,
                   textAlign: TextAlign.center,
                 ),
                 Text(
                   beneficiaryStatistics.beneficiaryStatisticsList.first.content,
-                  style: theme.textTheme.bodyMedium,
+                  style: textTheme.bodyS,
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -44,19 +46,19 @@ class BeneficiaryStatisticsCard extends StatelessWidget {
               children: [
                 Text(
                   beneficiaryStatistics.beneficiaryStatisticsList.last.title,
-                  style: theme.textTheme.displayMedium,
+                  style: textTheme.headingXl,
                   textAlign: TextAlign.center,
                 ),
                 Text(
                   beneficiaryStatistics.beneficiaryStatisticsList.last.content,
-                  style: theme.textTheme.bodyMedium,
+                  style: textTheme.bodyS,
                   textAlign: TextAlign.center,
                 ),
               ],
             ),
           ),
         ],
-      ),]
-    );
+      ),
+    ]);
   }
 }
