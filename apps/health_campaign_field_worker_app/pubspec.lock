@@ -362,10 +362,9 @@ packages:
   complaints:
     dependency: "direct main"
     description:
-      name: complaints
-      sha256: "6e383d4be32cee58696258c2f58176ef9869b2afc4aeed252e4b3757eb4bfb76"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/complaints"
+      relative: true
+    source: path
     version: "1.0.0"
   connectivity_plus:
     dependency: "direct main"
@@ -522,10 +521,9 @@ packages:
   digit_dss:
     dependency: "direct main"
     description:
-      name: digit_dss
-      sha256: cb5ae888503260dff1df2d4785ba2cac39a20348cfcd660e2212a8965b948dba
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_dss"
+      relative: true
+    source: path
     version: "1.0.3"
   digit_firebase_services:
     dependency: "direct main"
@@ -546,19 +544,17 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: c33af61ed9ab3d7740fc3c8948af4b763d946cba5e902f8bfb00948d4d69d60a
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.4"
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
+      path: "../../packages/digit_showcase"
+      relative: true
+    source: path
+    version: "1.0.1"
   digit_ui_components:
     dependency: "direct main"
     description:
@@ -1844,11 +1840,10 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      name: referral_reconciliation
-      sha256: "0b7e439b105b7cc4c89cff822b801ab8eecce497031be1572e5415aa1e871208"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
+    version: "1.0.3+1"
   registration_delivery:
     dependency: "direct main"
     description:

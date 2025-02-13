@@ -1,39 +1,41 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+The Transit Post Package is a Flutter-based module designed to manage transit post selections, including scanning resources and tracking delivery count. It integrates with Bloc for state management and supports reactive forms for user inputs.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **Transit Post Pages**: The package includes several pages like 'transit_post_selection.dart', 'transit_post_record_vaccination.dart', 'transit_post_acknowledgment.dart' and 'transit_post_wrapper.dart' to record resource delivery.
 
-## Getting started
+- **Transit Post Blocs**: It provides various Blocs for state management.
+- **Transit Post Repositories**: The package provides abstract classes for data repositories, 'UserActionLocalRepository', 'UserActionRemoteRepository'.
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+## Getting Started
+
+To use this package, add the following dependency to your 'pubspec.yaml' file:
+
+```yaml
+dependencies:
+    transit_post: ^any
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+To Navigate to any screens of the package:
+
+First add transit_post_router to your main app router
+
+Navigate to the required screen using the below code:
 
 ```dart
-const like = 'sample';
+context.router.push(TransitPostWrapperRoute()),
 ```
+Transit_post package requires below data to be passed from main app:
 
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+List<ProjectProductVariantModel>? _resources;
+  List<String>? _transitPostType;
+  String? _tenantId;
+  String? _loggedInUserUuid;
+  String? _projectId;
+  BoundaryModel? _boundaryModel;
+  int? _minAge;
+  int? _maxAge;
+```
