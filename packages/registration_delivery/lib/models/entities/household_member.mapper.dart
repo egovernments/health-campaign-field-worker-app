@@ -85,6 +85,12 @@ class HouseholdMemberSearchModelMapper
   static const Field<HouseholdMemberSearchModel, AdditionalFields>
       _f$additionalFields =
       Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+  static int? _$offset(HouseholdMemberSearchModel v) => v.offset;
+  static const Field<HouseholdMemberSearchModel, int> _f$offset =
+      Field('offset', _$offset, mode: FieldMode.member);
+  static int? _$limit(HouseholdMemberSearchModel v) => v.limit;
+  static const Field<HouseholdMemberSearchModel, int> _f$limit =
+      Field('limit', _$limit, mode: FieldMode.member);
 
   @override
   final MappableFields<HouseholdMemberSearchModel> fields = const {
@@ -101,6 +107,8 @@ class HouseholdMemberSearchModelMapper
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #offset: _f$offset,
+    #limit: _f$limit,
   };
   @override
   final bool ignoreNull = true;

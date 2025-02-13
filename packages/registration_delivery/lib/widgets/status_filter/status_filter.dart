@@ -1,5 +1,7 @@
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -39,6 +41,8 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -56,7 +60,7 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                 Center(
                   child: Text(
                     localizations.translate(i18.common.coreCommonLoadingText),
-                    style: theme.textTheme.headlineSmall?.copyWith(
+                    style: textTheme.headingM.copyWith(
                         color: DigitTheme.instance.colorScheme.primary),
                   ),
                 )
@@ -177,9 +181,10 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
 
   getFilters() {
     var finalStatues = <Status>[];
-    finalStatues.addAll((RegistrationDeliverySingleton()
-                .searchHouseHoldFilter ??
-            [])
+    finalStatues.addAll((RegistrationDeliverySingleton().householdType ==
+                HouseholdType.community
+            ? RegistrationDeliverySingleton().searchCLFFilters ?? []
+            : RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
         .map((e) => Status.values.where((element) => element.toValue() == e))
         .expand((element) => element)
         .toList());

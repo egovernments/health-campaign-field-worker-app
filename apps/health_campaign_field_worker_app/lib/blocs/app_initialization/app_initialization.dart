@@ -107,6 +107,7 @@ class AppInitializationBloc
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
                     MasterEnums.transitPostType.toValue(),
+                    MasterEnums.searchCLFFilters.toValue()
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -243,6 +244,7 @@ class AppInitializationState with _$AppInitializationState {
   const factory AppInitializationState.uninitialized() = AppUninitialized;
 
   const factory AppInitializationState.loading() = AppInitializing;
+
   const factory AppInitializationState.failed() = AppInitializationFailed;
 
   const factory AppInitializationState.initialized({

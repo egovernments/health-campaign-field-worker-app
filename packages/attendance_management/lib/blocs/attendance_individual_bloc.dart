@@ -159,25 +159,28 @@ class AttendanceIndividualBloc
             if (e.status != -1) {
               list.addAll([
                 AttendanceLogModel(
-                    individualId: e.individualId,
-                    registerId: e.registerId,
-                    tenantId: e.tenantId,
-                    type: EnumValues.entry.toValue(),
-                    status: e.status == 0
-                        ? EnumValues.inactive.toValue()
-                        : EnumValues.active.toValue(),
-                    time: event.entryTime,
-                    uploadToServer: (event.createOplog ?? false),
-                    additionalDetails:
-                        event.latitude != null && event.longitude != null
-                            ? {
-                                "latitude": event.latitude,
-                                "longitude": event.longitude,
-                              }
-                            : {
-                                EnumValues.boundaryCode.toValue():
-                                    AttendanceSingleton().boundary?.code,
-                              }),
+                  individualId: e.individualId,
+                  registerId: e.registerId,
+                  tenantId: e.tenantId,
+                  type: EnumValues.entry.toValue(),
+                  status: e.status == 0
+                      ? EnumValues.inactive.toValue()
+                      : EnumValues.active.toValue(),
+                  time: event.entryTime,
+                  uploadToServer: (event.createOplog ?? false),
+                  additionalDetails: event.latitude != null &&
+                          event.longitude != null
+                      ? {
+                          "latitude": event.latitude,
+                          "longitude": event.longitude,
+                          if (event.comment!.isNotEmpty) "comment": event.comment,
+                        }
+                      : {
+                          EnumValues.boundaryCode.toValue():
+                              AttendanceSingleton().boundary?.code,
+                          if (event.comment!.isNotEmpty) "comment": event.comment,
+                        },
+                ),
                 AttendanceLogModel(
                     individualId: e.individualId,
                     registerId: e.registerId,
@@ -192,18 +195,20 @@ class AttendanceIndividualBloc
                             ? halfDay
                             : event.exitTime,
                     uploadToServer: (event.createOplog ?? false),
-                    additionalDetails:
-                        event.latitude != null && event.longitude != null
-                            ? {
-                                EnumValues.latitude.toValue(): event.latitude,
-                                EnumValues.longitude.toValue(): event.longitude,
-                                EnumValues.boundaryCode.toValue():
-                                    AttendanceSingleton().boundary?.code,
-                              }
-                            : {
-                                EnumValues.boundaryCode.toValue():
-                                    AttendanceSingleton().boundary?.code,
-                              })
+                    additionalDetails: event.latitude != null &&
+                            event.longitude != null
+                        ? {
+                            EnumValues.latitude.toValue(): event.latitude,
+                            EnumValues.longitude.toValue(): event.longitude,
+                            EnumValues.boundaryCode.toValue():
+                                AttendanceSingleton().boundary?.code,
+                            if (event.comment!.isNotEmpty) "comment": event.comment,
+                          }
+                        : {
+                            EnumValues.boundaryCode.toValue():
+                                AttendanceSingleton().boundary?.code,
+                            if (event.comment!.isNotEmpty) "comment": event.comment,
+                          })
               ]);
             }
           });
@@ -429,6 +434,7 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
     @Default(false) bool? createOplog,
     double? latitude,
     double? longitude,
+    String? comment,
   }) = SaveAsDraftEvent;
 
   // Event for searching attendees by name

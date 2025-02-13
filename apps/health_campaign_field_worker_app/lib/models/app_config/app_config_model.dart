@@ -90,6 +90,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
     @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
     List<SearchHouseHoldFilters>? searchHouseHoldFilters,
+    @JsonKey(name: 'SEARCH_CLF_FILTERS')
+    List<SearchCLFFilters>? searchCLFFilters,
     @JsonKey(name: 'REFERRAL_REASONS')
     List<ReferralReasonType>? referralReasonList,
     @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -206,6 +208,7 @@ class BandWidthBatchSize with _$BandWidthBatchSize {
     @JsonKey(name: 'MAX_RANGE') required double maxRange,
     @JsonKey(name: 'BATCH_SIZE') required int batchSize,
   }) = _BandWidthBatchSize;
+
   factory BandWidthBatchSize.fromJson(Map<String, dynamic> json) =>
       _$BandWidthBatchSizeFromJson(json);
 }
@@ -343,6 +346,18 @@ class SearchHouseHoldFilters with _$SearchHouseHoldFilters {
 }
 
 @freezed
+class SearchCLFFilters with _$SearchCLFFilters {
+  factory SearchCLFFilters({
+    required String name,
+    required String code,
+    required bool active,
+  }) = _SearchCLFFilters;
+
+  factory SearchCLFFilters.fromJson(Map<String, dynamic> json) =>
+      _$SearchCLFFiltersFromJson(json);
+}
+
+@freezed
 class TransitPostType with _$TransitPostType {
   factory TransitPostType({
     required String name,
@@ -371,6 +386,7 @@ class RowVersions with _$RowVersions {
     required String module,
     required String version,
   }) = _RowVersions;
+
   factory RowVersions.fromJson(Map<String, dynamic> json) =>
       _$RowVersionsFromJson(json);
 }

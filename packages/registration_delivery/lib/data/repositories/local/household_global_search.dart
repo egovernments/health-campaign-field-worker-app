@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/models/entities/task.dart';
@@ -196,6 +197,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
               params.maxRadius != null)
             sql.address.longitude.isNotNull(),
           sql.address.latitude.isNotNull(),
+          sql.household.householdType.equalsValue(params.householdType)
         ]))
         ..orderBy([
           if (params.latitude != null &&
@@ -228,7 +230,12 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
           .individual
           .select()
           .join([joinName(sql), joinIndividualAddress(sql)]);
-      await searchByName(selectQuery, params, sql);
+      if (params.householdType == HouseholdType.community) {
+        await searchByBuildingName(selectQuery, params, sql);
+      } else {
+        await searchByName(selectQuery, params, sql);
+      }
+
       selectQuery = selectQuery.join([
         leftOuterJoin(
             sql.householdMember,
@@ -244,14 +251,18 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
             sql.projectBeneficiary,
             sql.projectBeneficiary.beneficiaryClientReferenceId
                 .equalsExp(sql.household.clientReferenceId))
-      ]);
+      ]).where(sql.household.householdType.equalsValue(params.householdType));
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
         selectQuery != null) {
-      selectQuery = selectQuery.join([
-        joinName(sql),
-      ]);
-      selectQuery = searchByName(selectQuery, params, sql);
+      if (params.householdType == HouseholdType.community) {
+        selectQuery = searchByBuildingName(selectQuery, params, sql);
+      } else {
+        selectQuery = selectQuery.join([
+          joinName(sql),
+        ]);
+        selectQuery = searchByName(selectQuery, params, sql);
+      }
     }
     return selectQuery;
   }
@@ -296,9 +307,13 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
                 sql.projectBeneficiary.beneficiaryClientReferenceId
                     .equalsExp(sql.household.clientReferenceId))
         ])
-          ..where(filter == Status.registered.name
-              ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
-              : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+          ..where(buildAnd([
+            sql.household.householdType.equalsValue(params.householdType),
+            filter == Status.registered.name
+                ? sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .isNotNull()
+                : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull()
+          ]));
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -354,9 +369,12 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
             sql.household.clientReferenceId
                 .equalsExp(sql.projectBeneficiary.beneficiaryClientReferenceId))
       ])
-        ..where(sql.task.status.equals(
-          statusMap[applyFilter]!.toValue(),
-        ));
+        ..where(buildAnd([
+          sql.household.householdType.equalsValue(params.householdType),
+          sql.task.status.equals(
+            statusMap[applyFilter]!.toValue(),
+          )
+        ]));
       if (!(params.filter!.contains(Status.notRegistered.name))) {
         selectQuery
             .where(sql.projectBeneficiary.projectId.equals(params.projectId!));
@@ -386,6 +404,14 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         sql.individual.clientReferenceId,
       ),
     );
+  }
+
+  searchByBuildingName(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
+    return selectQuery.where(buildAnd([
+      if (params.nameSearch != null)
+        sql.address.buildingName.contains(params.nameSearch!),
+    ]));
   }
 
   joinHouseHoldAddress(LocalSqlDataStore sql) {
@@ -422,6 +448,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
           final address = e.readTableOrNull(sql.address);
 
           return HouseholdModel(
+            householdType: household.householdType,
             id: household.id,
             tenantId: household.tenantId,
             clientReferenceId: household.clientReferenceId,

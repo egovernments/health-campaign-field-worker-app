@@ -141,6 +141,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           ?.map(
               (e) => SearchHouseHoldFilters.fromJson(e as Map<String, dynamic>))
           .toList(),
+      searchCLFFilters: (json['SEARCH_CLF_FILTERS'] as List<dynamic>?)
+          ?.map((e) => SearchCLFFilters.fromJson(e as Map<String, dynamic>))
+          .toList(),
       referralReasonList: (json['REFERRAL_REASONS'] as List<dynamic>?)
           ?.map((e) => ReferralReasonType.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -177,6 +180,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'TRANSPORT_TYPES': instance.transportTypes,
       'SYMPTOM_TYPES': instance.symptomsTypeList,
       'SEARCH_HOUSEHOLD_FILTERS': instance.searchHouseHoldFilters,
+      'SEARCH_CLF_FILTERS': instance.searchCLFFilters,
       'REFERRAL_REASONS': instance.referralReasonList,
       'HOUSE_STRUCTURE_TYPES': instance.houseStructureTypes,
       'REFUSAL_REASONS': instance.refusalReasons,
@@ -475,6 +479,22 @@ _$SearchHouseHoldFiltersImpl _$$SearchHouseHoldFiltersImplFromJson(
 
 Map<String, dynamic> _$$SearchHouseHoldFiltersImplToJson(
         _$SearchHouseHoldFiltersImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+      'active': instance.active,
+    };
+
+_$SearchCLFFiltersImpl _$$SearchCLFFiltersImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SearchCLFFiltersImpl(
+      name: json['name'] as String,
+      code: json['code'] as String,
+      active: json['active'] as bool,
+    );
+
+Map<String, dynamic> _$$SearchCLFFiltersImplToJson(
+        _$SearchCLFFiltersImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,

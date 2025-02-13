@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -42,6 +43,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
   static const _lngKey = 'lng';
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
+  static const _buildingNameKey = 'buildingName';
 
   @override
   void initState() {
@@ -190,6 +192,11 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                   tenantId:
                                       RegistrationDeliverySingleton().tenantId,
                                   rowVersion: 1,
+                                  buildingName: (RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community)
+                                      ? form.control(_buildingNameKey).value
+                                      : null,
                                   auditDetails: AuditDetails(
                                     createdBy: RegistrationDeliverySingleton()
                                         .loggedInUserUuid!,
@@ -246,6 +253,11 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                   type: AddressType.correspondence,
                                   latitude: form.control(_latKey).value,
                                   longitude: form.control(_lngKey).value,
+                                  buildingName: (RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community)
+                                      ? form.control(_buildingNameKey).value
+                                      : null,
                                   locationAccuracy:
                                       form.control(_accuracyKey).value,
                                 );
@@ -271,13 +283,23 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                       children: [
                         DigitTextBlock(
                             padding: const EdgeInsets.only(top: spacer2),
-                            heading: localizations.translate(
-                              i18.householdLocation.householdLocationLabelText,
-                            ),
-                            description: localizations.translate(
-                              i18.householdLocation
-                                  .householdLocationDescriptionText,
-                            )),
+                            heading: (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.community)
+                                ? localizations.translate(
+                                    i18.householdLocation.clfLocationLabelText)
+                                : localizations.translate(
+                                    i18.householdLocation
+                                        .householdLocationLabelText,
+                                  ),
+                            description: (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.community)
+                                ? null
+                                : localizations.translate(
+                                    i18.householdLocation
+                                        .householdLocationDescriptionText,
+                                  )),
                         householdLocationShowcaseData.administrativeArea
                             .buildWith(
                           child: ReactiveWrapperField(
@@ -327,6 +349,36 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                             ),
                           ),
                         ),
+                        if (RegistrationDeliverySingleton().householdType ==
+                            HouseholdType.community)
+                          householdLocationShowcaseData.buildingName.buildWith(
+                              child: ReactiveWrapperField(
+                                  formControlName: _buildingNameKey,
+                                  validationMessages: {
+                                    'required': (_) => localizations.translate(
+                                          i18.common.corecommonRequired,
+                                        ),
+                                    'sizeLessThan2': (_) =>
+                                        localizations.translate(
+                                            i18.common.min3CharsRequired),
+                                    'maxLength': (object) => localizations
+                                        .translate(i18.common.maxCharsRequired)
+                                        .replaceAll('{}', maxLength.toString()),
+                                  },
+                                  builder: (field) => LabeledField(
+                                      label: localizations.translate(i18
+                                          .householdLocation.buildingNameLabel),
+                                      isRequired: true,
+                                      child: DigitTextFormInput(
+                                        errorMessage: field.errorText,
+                                        onChange: (value) {
+                                          form.control(_buildingNameKey).value =
+                                              value;
+                                        },
+                                        initialValue: form
+                                            .control(_buildingNameKey)
+                                            .value,
+                                      )))),
                         householdLocationShowcaseData.addressLine1.buildWith(
                           child: ReactiveWrapperField(
                             formControlName: _addressLine1Key,
@@ -449,7 +501,14 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {
     final addressModel = state.mapOrNull(
+      create: (value) => value.addressModel,
       editHousehold: (value) => value.addressModel,
+    );
+
+    final searchQuery = state.mapOrNull<String>(
+      create: (value) {
+        return value.searchQuery;
+      },
     );
 
     return fb.group(<String, Object>{
@@ -491,6 +550,17 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
       _accuracyKey: FormControl<double>(
         value: addressModel?.locationAccuracy,
       ),
+      if (RegistrationDeliverySingleton().householdType ==
+          HouseholdType.community)
+        _buildingNameKey: FormControl<String>(
+          validators: [
+            Validators.required,
+            Validators.delegate(
+                (validator) => CustomValidator.sizeLessThan2(validator)),
+            Validators.maxLength(64),
+          ],
+          value: addressModel?.buildingName ?? searchQuery?.trim(),
+        ),
     });
   }
 }

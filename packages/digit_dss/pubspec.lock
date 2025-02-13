@@ -71,7 +71,7 @@ packages:
       path: "../attendance_management"
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.3+1"
   auto_route:
     dependency: "direct main"
     description:
@@ -323,9 +323,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../dart_mappable_builder"
-      relative: true
-    source: path
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: ab088b8fc21a07ed7a56bf81c935ee51481ad253
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
     version: "4.2.3"
   dart_style:
     dependency: transitive
@@ -377,10 +379,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "57c4da5237be6025783e7357a02b6b492f02e38f711d674bf46f5f8c8a93ad76"
+      sha256: "4d79a36d9a3bfce4616066f2bf5c5d6dfb6c301315e6fa21a1d6d0f76d98dbeb"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.4"
+    version: "0.0.2-dev.6"
   dio:
     dependency: "direct main"
     description:

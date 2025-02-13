@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
@@ -107,57 +108,58 @@ class MemberCard extends StatelessWidget {
                   Positioned(
                     child: Align(
                       alignment: Alignment.topRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: spacer2),
-                        child: DigitButton(
-                          isDisabled: (projectBeneficiaries ?? []).isEmpty,
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (ctx) => DigitActionCard(
-                              onOutsideTap: () {
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
-                              },
-                              actions: [
-                                DigitButton(
-                                  prefixIcon: Icons.person,
-                                  label: localizations.translate(
-                                    i18.memberCard.assignAsHouseholdhead,
-                                  ),
-                                  isDisabled: isHead ? true : false,
-                                  onPressed: setAsHeadAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
+                      child: DigitButton(
+                        isDisabled: (projectBeneficiaries ?? []).isEmpty,
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (ctx) => DigitActionCard(
+                            onOutsideTap: () {
+                              Navigator.of(context, rootNavigator: true).pop();
+                            },
+                            actions: [
+                              DigitButton(
+                                prefixIcon: Icons.person,
+                                label: (RegistrationDeliverySingleton()
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? localizations.translate(
+                                        i18.memberCard.assignAsClfhead)
+                                    : localizations.translate(
+                                        i18.memberCard.assignAsHouseholdhead,
+                                      ),
+                                isDisabled: isHead ? true : false,
+                                onPressed: setAsHeadAction,
+                                type: DigitButtonType.secondary,
+                                size: DigitButtonSize.large,
+                              ),
+                              DigitButton(
+                                prefixIcon: Icons.edit,
+                                label: localizations.translate(
+                                  i18.memberCard.editIndividualDetails,
                                 ),
-                                DigitButton(
-                                  prefixIcon: Icons.edit,
-                                  label: localizations.translate(
-                                    i18.memberCard.editIndividualDetails,
-                                  ),
-                                  onPressed: editMemberAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
+                                onPressed: editMemberAction,
+                                type: DigitButtonType.secondary,
+                                size: DigitButtonSize.large,
+                              ),
+                              DigitButton(
+                                prefixIcon: Icons.delete,
+                                label: localizations.translate(
+                                  i18.memberCard.deleteIndividualActionText,
                                 ),
-                                DigitButton(
-                                  prefixIcon: Icons.delete,
-                                  label: localizations.translate(
-                                    i18.memberCard.deleteIndividualActionText,
-                                  ),
-                                  isDisabled: isHead ? true : false,
-                                  onPressed: deleteMemberAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                ),
-                              ],
-                            ),
+                                isDisabled: isHead ? true : false,
+                                onPressed: deleteMemberAction,
+                                type: DigitButtonType.secondary,
+                                size: DigitButtonSize.large,
+                              ),
+                            ],
                           ),
-                          label: localizations.translate(
-                            i18.memberCard.editDetails,
-                          ),
-                          prefixIcon: Icons.edit,
-                          type: DigitButtonType.tertiary,
-                          size: DigitButtonSize.medium,
                         ),
+                        label: localizations.translate(
+                          i18.memberCard.editDetails,
+                        ),
+                        prefixIcon: Icons.edit,
+                        type: DigitButtonType.tertiary,
+                        size: DigitButtonSize.medium,
                       ),
                     ),
                   ),
