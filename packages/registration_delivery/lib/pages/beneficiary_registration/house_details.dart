@@ -58,7 +58,6 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                     header: const Column(
                       children: [
                         BackNavigationHelpHeaderWidget(
-                          showcaseButton: ShowcaseButton(),
                           showHelp: false,
                         ),
                       ],
