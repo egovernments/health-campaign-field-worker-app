@@ -124,6 +124,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .map(
               (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
+      refugeeCampOptions: (json['REFUGEE_CAMPS'] as List<dynamic>)
+          .map((e) => RefugeeCampOptions.fromJson(e as Map<String, dynamic>))
+          .toList(),
       backendInterface: (json['BACKEND_INTERFACE'] as List<dynamic>)
           .map((e) => BackendInterface.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -158,6 +161,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'CHECKLIST_TYPES': instance.checklistTypes,
       'ID_TYPE_OPTIONS_POPULATOR': instance.idTypeOptions,
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
+      'REFUGEE_CAMPS': instance.refugeeCampOptions,
       'BACKEND_INTERFACE': instance.backendInterface,
       'CALL_SUPPORT': instance.callSupportOptions,
       'TRANSPORT_TYPES': instance.transportTypes,
@@ -308,6 +312,20 @@ _$DeliveryCommentOptionsImpl _$$DeliveryCommentOptionsImplFromJson(
 
 Map<String, dynamic> _$$DeliveryCommentOptionsImplToJson(
         _$DeliveryCommentOptionsImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+    };
+
+_$RefugeeCampOptionsImpl _$$RefugeeCampOptionsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$RefugeeCampOptionsImpl(
+      name: json['name'] as String,
+      code: json['code'] as String,
+    );
+
+Map<String, dynamic> _$$RefugeeCampOptionsImplToJson(
+        _$RefugeeCampOptionsImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
