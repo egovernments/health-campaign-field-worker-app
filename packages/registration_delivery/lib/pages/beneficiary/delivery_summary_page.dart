@@ -53,7 +53,6 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
               header: Column(children: [
                 const BackNavigationHelpHeaderWidget(
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(spacer2),

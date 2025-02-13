@@ -63,6 +63,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
     final textTheme = theme.digitTextTheme(context);
+    final bool isCommunity = RegistrationDeliverySingleton().householdType ==
+        HouseholdType.community;
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -108,10 +110,12 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
             },
             builder: (context, registrationState) {
               return ScrollableContent(
-                header: const Column(children: [
+                header: Column(children: [
                   BackNavigationHelpHeaderWidget(
                     showHelp: false,
-                    showcaseButton: ShowcaseButton(),
+                    showcaseButton: ShowcaseButton(
+                      isCommunity: isCommunity,
+                    ),
                   ),
                 ]),
                 enableFixedDigitButton: true,
@@ -395,9 +399,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         children: [
                           DigitTextBlock(
                             padding: const EdgeInsets.all(0),
-                            heading: (RegistrationDeliverySingleton()
-                                        .householdType ==
-                                    HouseholdType.community)
+                            heading: (isCommunity)
                                 ? localizations.translate(
                                     i18.householdDetails.clfDetailsLabel,
                                   )

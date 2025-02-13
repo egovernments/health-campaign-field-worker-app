@@ -18,6 +18,8 @@ const individualDetailsShowcase = IndividualDetailsShowcase();
 const householdOverviewShowcase = HouseholdOverviewShowcase();
 const deliverInterventionShowcase = DeliverInterventionShowcase();
 const checklist = Checklist();
+const clfLocationShowCase = CLFLocationShowcase();
+const clfDetailsShowcase = CLFDetailsShowcase();
 
 class Common {
   const Common();
@@ -1041,4 +1043,50 @@ class DeliverInterventionShowcase {
   String get deliveryComment {
     return 'DELIVER_INTERVENTION_SHOWCASE_DELIVERY_COMMENT';
   }
+}
+
+class CLFLocationShowcase {
+  const CLFLocationShowcase();
+
+  String get buildingName {
+    return 'CLF_LOCATION_SHOWCASE_BUILDING_NAME';
+  }
+
+  String get administrativeArea {
+    return 'CLF_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';
+  }
+
+  String get gpsAccuracy {
+    return 'CLF_LOCATION_SHOWCASE_GPS_ACCURACY_LABEL';
+  }
+
+  String get landmark {
+    return 'CLF_LOCATION_SHOWCASE_LANDMARK';
+  }
+
+  String get address {
+    return 'CLF_LOCATION_SHOWCASE_ADDRESS';
+  }
+
+  String get postalCode {
+    return 'CLF_LOCATION_SHOWCASE_POSTAL_CODE';
+  }
+}
+
+class CLFDetailsShowcase {
+  const CLFDetailsShowcase();
+
+  String get dateOfRegistration {
+    return 'CLF_DETAILS_SHOWCASE_DATE_OF_REGISTRATION';
+  }
+
+  String get numberOfMembersLivingInHousehold {
+    return 'CLF_DETAILS_SHOWCASE_NUMBER_OF_MEMBERS_LIVING_IN_INSTITUTION';
+  }
+
+  String get numberOfPregnantWomenInHousehold =>
+      'CLF_DETAILS_SHOWCASE_NO_OF_PREGNANT_WOMEN_IN_INSTITUTION';
+
+  String get numberOfChildrenBelow5InHousehold =>
+      'CLF_DETAILS_SHOWCASE_NO_OF_CHILD_BELOW_5_IN_INSTITUTION';
 }

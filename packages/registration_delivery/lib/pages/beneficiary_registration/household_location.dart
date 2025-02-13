@@ -71,6 +71,8 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
     final theme = Theme.of(context);
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
+    final bool isCommunity = RegistrationDeliverySingleton().householdType ==
+        HouseholdType.community;
 
     return Scaffold(
       body: BlocBuilder<BeneficiaryRegistrationBloc,
@@ -110,10 +112,12 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
             },
             child: ScrollableContent(
               enableFixedDigitButton: true,
-              header: const Column(
+              header: Column(
                 children: [
                   BackNavigationHelpHeaderWidget(
-                    showcaseButton: ShowcaseButton(),
+                    showcaseButton: ShowcaseButton(
+                      isCommunity: isCommunity,
+                    ),
                     showHelp: false,
                   ),
                 ],
@@ -283,9 +287,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                       children: [
                         DigitTextBlock(
                             padding: const EdgeInsets.only(top: spacer2),
-                            heading: (RegistrationDeliverySingleton()
-                                        .householdType ==
-                                    HouseholdType.community)
+                            heading: (isCommunity)
                                 ? localizations.translate(
                                     i18.householdLocation.clfLocationLabelText)
                                 : localizations.translate(

@@ -102,7 +102,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(),
                 ),
               ]),
               footer: DigitCard(
@@ -506,24 +505,23 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             initialDate: before150Years,
                             initialValue: getInitialDateValue(form),
                             onChangeOfFormControl: (value) {
-                                setState(() {
-                                  if (value == null) {
+                              setState(() {
+                                if (value == null) {
+                                  form.control(_dobKey).setErrors({'': true});
+                                } else {
+                                  DigitDOBAgeConvertor age =
+                                      DigitDateUtils.calculateAge(value);
+                                  if ((age.years == 0 && age.months == 0) ||
+                                      (age.months > 11) ||
+                                      (age.years >= 150 && age.months >= 0)) {
                                     form.control(_dobKey).setErrors({'': true});
                                   } else {
-                                    DigitDOBAgeConvertor age =
-                                    DigitDateUtils.calculateAge(value);
-                                    if ((age.years == 0 && age.months == 0) ||
-                                        (age.months > 11) ||
-                                        (age.years >= 150 && age.months >= 0)) {
-                                      form.control(_dobKey).setErrors({'': true});
-                                    } else {
-                                      form.control(_dobKey).value = value;
-                                      form.control(_dobKey).removeError('');
-                                    }
+                                    form.control(_dobKey).value = value;
+                                    form.control(_dobKey).removeError('');
                                   }
-                                });
+                                }
+                              });
                               // Handle changes to the control's value here
-
                             },
                             cancelText: localizations
                                 .translate(i18.common.coreCommonCancel),
