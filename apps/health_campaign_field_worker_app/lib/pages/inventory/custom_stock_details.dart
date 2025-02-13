@@ -987,6 +987,11 @@ class CustomStockDetailsPageState
                                             onTap: () async {
                                               clearQRCodes();
                                               stockReconciliationBloc.add(
+                                                StockReconciliationSelectFacilityEvent(
+                                                  stockState.facilityModel!,
+                                                ),
+                                              );
+                                              stockReconciliationBloc.add(
                                                 StockReconciliationSelectProductEvent(
                                                   selectedProductVariant.id,
                                                   isDistributor:
@@ -1174,6 +1179,11 @@ class CustomStockDetailsPageState
                                                     _secondaryPartyKey,
                                                 onTap: () async {
                                                   clearQRCodes();
+                                                  stockReconciliationBloc.add(
+                                                    StockReconciliationSelectFacilityEvent(
+                                                      stockState.facilityModel!,
+                                                    ),
+                                                  );
                                                   stockReconciliationBloc.add(
                                                     StockReconciliationSelectProductEvent(
                                                       selectedProductVariant.id,

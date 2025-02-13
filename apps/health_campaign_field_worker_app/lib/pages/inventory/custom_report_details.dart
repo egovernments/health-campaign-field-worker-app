@@ -176,10 +176,10 @@ class CustomInventoryReportDetailsPageState
                           child: BlocConsumer<StockReconciliationBloc,
                               StockReconciliationState>(
                             listener: (context, stockState) {
-                              if (!stockState.persisted) return;
+                              // if (!stockState.persisted) return;
 
-                              context.router
-                                  .replace(InventoryAcknowledgementRoute());
+                              // context.router
+                              //     .replace(InventoryAcknowledgementRoute());
                             },
                             builder: (context, stockState) {
                               return Column(
