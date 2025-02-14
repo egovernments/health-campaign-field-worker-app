@@ -463,9 +463,6 @@ class CustomInventoryReportDetailsPageState
                                                           value: widget
                                                                           .reportType ==
                                                                       InventoryReportType
-                                                                          .receipt ||
-                                                                  widget.reportType ==
-                                                                      InventoryReportType
                                                                           .dispatch ||
                                                                   widget.reportType ==
                                                                       InventoryReportType
