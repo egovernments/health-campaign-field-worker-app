@@ -941,6 +941,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'REFUGEE_CAMPS')
+  List<RefugeeCampOptions> get refugeeCampOptions =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface =>
       throw _privateConstructorUsedError;
@@ -988,6 +991,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'REFUGEE_CAMPS')
+      List<RefugeeCampOptions> refugeeCampOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1021,6 +1026,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
+    Object? refugeeCampOptions = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
@@ -1066,6 +1072,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
+      refugeeCampOptions: null == refugeeCampOptions
+          ? _value.refugeeCampOptions
+          : refugeeCampOptions // ignore: cast_nullable_to_non_nullable
+              as List<RefugeeCampOptions>,
       backendInterface: null == backendInterface
           ? _value.backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
@@ -1119,6 +1129,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'REFUGEE_CAMPS')
+      List<RefugeeCampOptions> refugeeCampOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
       List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
@@ -1150,6 +1162,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
+    Object? refugeeCampOptions = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
@@ -1195,6 +1208,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
+      refugeeCampOptions: null == refugeeCampOptions
+          ? _value._refugeeCampOptions
+          : refugeeCampOptions // ignore: cast_nullable_to_non_nullable
+              as List<RefugeeCampOptions>,
       backendInterface: null == backendInterface
           ? _value._backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
@@ -1245,6 +1262,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'REFUGEE_CAMPS')
+      required final List<RefugeeCampOptions> refugeeCampOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1267,6 +1286,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _checklistTypes = checklistTypes,
         _idTypeOptions = idTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
+        _refugeeCampOptions = refugeeCampOptions,
         _backendInterface = backendInterface,
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes,
@@ -1366,6 +1386,16 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(_deliveryCommentOptions);
   }
 
+  final List<RefugeeCampOptions> _refugeeCampOptions;
+  @override
+  @JsonKey(name: 'REFUGEE_CAMPS')
+  List<RefugeeCampOptions> get refugeeCampOptions {
+    if (_refugeeCampOptions is EqualUnmodifiableListView)
+      return _refugeeCampOptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_refugeeCampOptions);
+  }
+
   final List<BackendInterface> _backendInterface;
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1435,7 +1465,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, refugeeCampOptions: $refugeeCampOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList)';
   }
 
   @override
@@ -1465,6 +1495,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality().equals(
                 other._deliveryCommentOptions, _deliveryCommentOptions) &&
             const DeepCollectionEquality()
+                .equals(other._refugeeCampOptions, _refugeeCampOptions) &&
+            const DeepCollectionEquality()
                 .equals(other._backendInterface, _backendInterface) &&
             const DeepCollectionEquality()
                 .equals(other._callSupportOptions, _callSupportOptions) &&
@@ -1492,6 +1524,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       const DeepCollectionEquality().hash(_checklistTypes),
       const DeepCollectionEquality().hash(_idTypeOptions),
       const DeepCollectionEquality().hash(_deliveryCommentOptions),
+      const DeepCollectionEquality().hash(_refugeeCampOptions),
       const DeepCollectionEquality().hash(_backendInterface),
       const DeepCollectionEquality().hash(_callSupportOptions),
       const DeepCollectionEquality().hash(_transportTypes),
@@ -1534,6 +1567,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'REFUGEE_CAMPS')
+      required final List<RefugeeCampOptions> refugeeCampOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
       required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1578,6 +1613,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions;
+  @override
+  @JsonKey(name: 'REFUGEE_CAMPS')
+  List<RefugeeCampOptions> get refugeeCampOptions;
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
   List<BackendInterface> get backendInterface;
@@ -3338,6 +3376,161 @@ abstract class _DeliveryCommentOptions implements DeliveryCommentOptions {
   @JsonKey(ignore: true)
   _$$DeliveryCommentOptionsImplCopyWith<_$DeliveryCommentOptionsImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+RefugeeCampOptions _$RefugeeCampOptionsFromJson(Map<String, dynamic> json) {
+  return _RefugeeCampOptions.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RefugeeCampOptions {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RefugeeCampOptionsCopyWith<RefugeeCampOptions> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RefugeeCampOptionsCopyWith<$Res> {
+  factory $RefugeeCampOptionsCopyWith(
+          RefugeeCampOptions value, $Res Function(RefugeeCampOptions) then) =
+      _$RefugeeCampOptionsCopyWithImpl<$Res, RefugeeCampOptions>;
+  @useResult
+  $Res call({String name, String code});
+}
+
+/// @nodoc
+class _$RefugeeCampOptionsCopyWithImpl<$Res, $Val extends RefugeeCampOptions>
+    implements $RefugeeCampOptionsCopyWith<$Res> {
+  _$RefugeeCampOptionsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$RefugeeCampOptionsImplCopyWith<$Res>
+    implements $RefugeeCampOptionsCopyWith<$Res> {
+  factory _$$RefugeeCampOptionsImplCopyWith(_$RefugeeCampOptionsImpl value,
+          $Res Function(_$RefugeeCampOptionsImpl) then) =
+      __$$RefugeeCampOptionsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code});
+}
+
+/// @nodoc
+class __$$RefugeeCampOptionsImplCopyWithImpl<$Res>
+    extends _$RefugeeCampOptionsCopyWithImpl<$Res, _$RefugeeCampOptionsImpl>
+    implements _$$RefugeeCampOptionsImplCopyWith<$Res> {
+  __$$RefugeeCampOptionsImplCopyWithImpl(_$RefugeeCampOptionsImpl _value,
+      $Res Function(_$RefugeeCampOptionsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+  }) {
+    return _then(_$RefugeeCampOptionsImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RefugeeCampOptionsImpl implements _RefugeeCampOptions {
+  _$RefugeeCampOptionsImpl({required this.name, required this.code});
+
+  factory _$RefugeeCampOptionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RefugeeCampOptionsImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+
+  @override
+  String toString() {
+    return 'RefugeeCampOptions(name: $name, code: $code)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RefugeeCampOptionsImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RefugeeCampOptionsImplCopyWith<_$RefugeeCampOptionsImpl> get copyWith =>
+      __$$RefugeeCampOptionsImplCopyWithImpl<_$RefugeeCampOptionsImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RefugeeCampOptionsImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RefugeeCampOptions implements RefugeeCampOptions {
+  factory _RefugeeCampOptions(
+      {required final String name,
+      required final String code}) = _$RefugeeCampOptionsImpl;
+
+  factory _RefugeeCampOptions.fromJson(Map<String, dynamic> json) =
+      _$RefugeeCampOptionsImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  @JsonKey(ignore: true)
+  _$$RefugeeCampOptionsImplCopyWith<_$RefugeeCampOptionsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 DeletionReasonOptions _$DeletionReasonOptionsFromJson(

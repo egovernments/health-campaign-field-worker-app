@@ -78,6 +78,9 @@ class AppConfiguration {
   late List<ReferralReasons>? referralReasons;
 
   late PrivacyPolicy? privacyPolicyConfig;
+
+  @Name('REFUGEE_CAMPS')
+  late List<RefugeeCampOptions>? refugeeCampOptions;
 }
 
 @embedded
@@ -106,6 +109,12 @@ class IdTypeOptions {
 
 @embedded
 class DeliveryCommentOptions {
+  late String name;
+  late String code;
+}
+
+@embedded
+class RefugeeCampOptions {
   late String name;
   late String code;
 }

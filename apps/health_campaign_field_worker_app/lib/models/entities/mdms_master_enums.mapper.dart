@@ -65,6 +65,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.searchCLFFilters;
       case "PrivacyPolicy":
         return MasterEnums.privacyPolicy;
+      case "REFUGEE_CAMPS":
+        return MasterEnums.refugeeCamps;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -113,6 +115,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "SEARCH_CLF_FILTERS";
       case MasterEnums.privacyPolicy:
         return "PrivacyPolicy";
+      case MasterEnums.refugeeCamps:
+        return "REFUGEE_CAMPS";
     }
   }
 }
