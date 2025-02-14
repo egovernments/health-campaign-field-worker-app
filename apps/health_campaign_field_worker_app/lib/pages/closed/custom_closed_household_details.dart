@@ -202,7 +202,8 @@ class CustomClosedHouseholdDetailsPageState
       _householdHeadNameKey: FormControl<String>(
         value: null,
         validators: [
-          // utilsLocal.CustomValidator.requiredMin3,
+          Validators.delegate((validator) =>
+              utilsLocal.CustomValidator.requiredMin3(validator)),
           Validators.maxLength(200),
         ],
       ),
