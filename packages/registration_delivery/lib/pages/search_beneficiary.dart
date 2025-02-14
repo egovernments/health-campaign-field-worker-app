@@ -124,7 +124,9 @@ class _SearchBeneficiaryPageState
                                       : i18.searchBeneficiary
                                           .searchIndividualLabelText,
                             ),
-                            style: textTheme.headingXl,
+                            style: textTheme.headingXl.copyWith(
+                              color: theme.colorTheme.primary.primary2,
+                            ),
                             textAlign: TextAlign.left,
                           ),
                         ),

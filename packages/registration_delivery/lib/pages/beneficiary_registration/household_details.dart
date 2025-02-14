@@ -111,17 +111,19 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
             builder: (context, registrationState) {
               return ScrollableContent(
                 header: Column(children: [
-                  BackNavigationHelpHeaderWidget(
-                    showHelp: false,
-                    showcaseButton: ShowcaseButton(
-                      isCommunity: isCommunity,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: spacer2),
+                    child: BackNavigationHelpHeaderWidget(
+                      showHelp: false,
+                      showcaseButton: ShowcaseButton(
+                        isCommunity: isCommunity,
+                      ),
                     ),
                   ),
                 ]),
                 enableFixedDigitButton: true,
                 footer: DigitCard(
                     margin: const EdgeInsets.only(top: spacer2),
-                    padding: const EdgeInsets.all(spacer2),
                     children: [
                       DigitButton(
                         label: registrationState.mapOrNull(
@@ -398,7 +400,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         margin: const EdgeInsets.all(spacer2),
                         children: [
                           DigitTextBlock(
-                            padding: const EdgeInsets.all(0),
+                            padding: EdgeInsets.zero,
                             heading: (isCommunity)
                                 ? localizations.translate(
                                     i18.householdDetails.clfDetailsLabel,
@@ -406,6 +408,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 : localizations.translate(
                                     i18.householdDetails.householdDetailsLabel,
                                   ),
+                            headingStyle: textTheme.headingXl.copyWith(color:
+                            theme.colorTheme.primary.primary2),
                             description: localizations.translate(
                               i18.householdDetails.householdDetailsDescription,
                             ),

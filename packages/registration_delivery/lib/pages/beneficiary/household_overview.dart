@@ -94,31 +94,20 @@ class _HouseholdOverviewPageState
                       return true;
                     },
                     child: ScrollableContent(
-                      header: BackNavigationHelpHeaderWidget(
-                        handleBack: () {
-                          context
-                              .read<SearchHouseholdsBloc>()
-                              .add(const SearchHouseholdsEvent.clear());
-                        },
+                      header: Padding(
+                        padding: const EdgeInsets.only(bottom: spacer2),
+                        child: BackNavigationHelpHeaderWidget(
+                          handleBack: () {
+                            context
+                                .read<SearchHouseholdsBloc>()
+                                .add(const SearchHouseholdsEvent.clear());
+                          },
+                        ),
                       ),
                       enableFixedDigitButton: true,
                       footer: DigitCard(
                         margin: const EdgeInsets.only(top: spacer2),
                         children: [
-                          DigitButton(
-                            mainAxisSize: MainAxisSize.max,
-                            onPressed: () => addIndividual(
-                              context,
-                              state.householdMemberWrapper.household!,
-                            ),
-                            label: localizations.translate(
-                              i18.householdOverView
-                                  .householdOverViewAddActionText,
-                            ),
-                            prefixIcon: Icons.add_circle,
-                            type: DigitButtonType.secondary,
-                            size: DigitButtonSize.medium,
-                          ),
                           Offstage(
                             offstage:
                                 beneficiaryType == BeneficiaryType.individual ||
@@ -455,7 +444,9 @@ class _HouseholdOverviewPageState
                                               : localizations.translate(i18
                                                   .householdOverView
                                                   .householdOverViewLabel),
-                                          style: textTheme.headingXl,
+                                          style: textTheme.headingXl.copyWith(
+                                            color: theme.colorTheme.primary.primary2
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -997,6 +988,20 @@ class _HouseholdOverviewPageState
                                       ).toList(),
                                     ),
                                   ],
+                                ),
+                                DigitButton(
+                                  mainAxisSize: MainAxisSize.max,
+                                  onPressed: () => addIndividual(
+                                    context,
+                                    state.householdMemberWrapper.household!,
+                                  ),
+                                  label: localizations.translate(
+                                    i18.householdOverView
+                                        .householdOverViewAddActionText,
+                                  ),
+                                  prefixIcon: Icons.add_circle,
+                                  type: DigitButtonType.tertiary,
+                                  size: DigitButtonSize.large,
                                 ),
                               ]),
                         ),

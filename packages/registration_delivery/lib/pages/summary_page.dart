@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -40,6 +41,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+
     return PopScope(
       onPopInvoked: (val) {
         context.read<BeneficiaryRegistrationBloc>().add(
@@ -80,8 +84,11 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
           return ScrollableContent(
               enableFixedDigitButton: true,
               header: Column(children: [
-                const BackNavigationHelpHeaderWidget(
-                  showHelp: false,
+                const Padding(
+                  padding: EdgeInsets.only(bottom: spacer2),
+                  child: BackNavigationHelpHeaderWidget(
+                    showHelp: false,
+                  ),
                 ),
                 Padding(
                   padding:
@@ -92,8 +99,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                       localizations.translate(
                         i18.common.coreCommonSummaryDetails,
                       ),
-                      style: DigitTheme
-                          .instance.mobileTheme.textTheme.displayMedium,
+                      style: textTheme.headingXl.copyWith(color: theme.colorTheme.primary.primary2),
                     ),
                   ),
                 ),
@@ -207,6 +213,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                 heading: localizations.translate(i18
                                     .householdLocation
                                     .householdLocationLabelText),
+                                headingStyle: textTheme.headingL.copyWith(
+                                  color: theme.colorTheme.primary.primary2,
+                                ),
                                 items: [
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -217,6 +226,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             i18.common.coreCommonNA),
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(bottom: spacer2)
                                   ),
                                   LabelValueItem(
                                     label: localizations.translate(i18
@@ -227,6 +237,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             .translate(i18.common.coreCommonNA),
                                     isInline: true,
                                     labelFlex: 5,
+                                    padding: const EdgeInsets.only(top: spacer2),
                                   ),
                                 ]),
                           ]),
@@ -237,6 +248,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                 padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.householdDetailsLabel),
+                                headingStyle: textTheme.headingL.copyWith(
+                                  color: theme.colorTheme.primary.primary2,
+                                ),
                                 items: [
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -247,6 +261,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                         '0',
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(bottom: spacer2)
                                   ),
                                   LabelValueItem(
                                     label: localizations.translate(i18
@@ -282,6 +297,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                         '0',
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(top: spacer2)
                                   ),
                                 ]),
                           ]),
@@ -292,6 +308,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                 padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.houseDetailsLabel),
+                                headingStyle: textTheme.headingL.copyWith(
+                                  color: theme.colorTheme.primary.primary2,
+                                ),
                                 items: [
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -308,6 +327,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                         '0',
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(bottom: spacer2)
                                   ),
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -330,6 +350,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                         .join(', '),
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(top: spacer2)
                                   ),
                                 ]),
                           ]),
@@ -341,6 +362,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                 heading: localizations.translate(i18
                                     .individualDetails
                                     .individualsDetailsLabelText),
+                                headingStyle: textTheme.headingL.copyWith(
+                                  color: theme.colorTheme.primary.primary2,
+                                ),
                                 items: [
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -362,6 +386,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             localizations.translate(
                                                 i18.common.coreCommonNA)),
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(bottom: spacer2)
                                   ),
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -418,6 +443,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                                 : localizations.translate(
                                                     i18.common.coreCommonNA)),
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(top: spacer2)
                                   ),
                                 ]),
                           ]),

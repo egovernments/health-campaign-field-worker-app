@@ -188,6 +188,7 @@ class BeneficiaryDetailsPageState
                                                                 .beneficiaryDetails
                                                                 .resourcesTobeDelivered),
                                                         type: PopUpType.simple,
+                                                        contentPadding: EdgeInsets.zero,
                                                         additionalWidgets: [
                                                           buildTableContent(
                                                               deliverState,
@@ -253,7 +254,9 @@ class BeneficiaryDetailsPageState
                                 Text(
                                   localizations.translate(i18.beneficiaryDetails
                                       .beneficiarysDetailsLabelText),
-                                  style: textTheme.headingXl,
+                                  style: textTheme.headingXl.copyWith(
+                                    color: theme.colorTheme.primary.primary2
+                                  ),
                                 ),
                                 DigitTableCard(
                                   element: {
