@@ -31,7 +31,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: EdgeInsets.all( theme.spacerTheme.spacer2),
+      padding: EdgeInsets.all( theme.spacerTheme.spacer4),
       child: Row(
         children: [
           Expanded(
