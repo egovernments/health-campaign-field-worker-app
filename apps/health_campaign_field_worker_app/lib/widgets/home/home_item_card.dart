@@ -14,6 +14,8 @@ class HomeItemCard extends StatelessWidget {
   final VoidCallback? onPressed;
   final double? customIconSize;
   final bool enableCustomIcon;
+  final double? iconSize;
+  final EdgeInsets? iconPadding;
 
   const HomeItemCard({
     required this.icon,
@@ -22,6 +24,8 @@ class HomeItemCard extends StatelessWidget {
     this.customIcon = "",
     this.customIconSize,
     this.onPressed,
+    this.iconSize,
+    this.iconPadding,
     super.key,
   });
 
@@ -40,10 +44,13 @@ class HomeItemCard extends StatelessWidget {
           if (enableCustomIcon)
             Align(
               alignment: Alignment.center,
-              child: SvgPicture.asset(
-                customIcon,
-                width: customIconSize ?? 25,
-                height: customIconSize ?? 25,
+              child: Padding(
+                padding: iconPadding ?? EdgeInsets.zero,
+                child: SvgPicture.asset(
+                  customIcon,
+                  width: customIconSize ?? 25,
+                  height: customIconSize ?? 25,
+                ),
               ),
             ),
           if (!enableCustomIcon)
@@ -54,7 +61,7 @@ class HomeItemCard extends StatelessWidget {
                 color: onPressed == null
                     ? theme.disabledColor
                     : theme.colorTheme.primary.primary1,
-                size: 40,
+                size: iconSize ?? 40,
               ),
             ),
           Align(

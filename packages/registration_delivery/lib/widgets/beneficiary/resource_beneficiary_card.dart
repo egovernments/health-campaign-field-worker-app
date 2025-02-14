@@ -41,7 +41,7 @@ class ResourceBeneficiaryCardState
             orElse: () => const Offstage(),
             fetched: (productVariants) {
               return SelectionCard<ProductVariantModel>(
-                equalWidthOptions: true,
+                width: MediaQuery.of(context).size.width*.8,
                 showParentContainer: true,
                 options: productVariants,
                 onSelectionChanged: (selectedOptions) {
