@@ -999,6 +999,8 @@ class HouseholdLocation {
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+
+  String get refugeeCampLabel => 'REFUGEE_CAMP_LABEL';
 }
 
 class SearchBeneficiary {
