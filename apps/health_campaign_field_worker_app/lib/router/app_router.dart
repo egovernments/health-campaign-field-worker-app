@@ -19,6 +19,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:complaints/complaints.dart';
+import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
@@ -72,6 +73,7 @@ part 'app_router.gr.dart';
     AttendanceRoute,
     ClosedHouseholdPackageRoute,
     ComplaintsRoute,
+    SurveyFormRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
