@@ -289,61 +289,40 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                         ),
                       ),
                     ),
-                    InkWell(
-                      onTap: () async {
-                        final parent = context.router.parent() as StackRouter;
-                        final facility = await parent.push(
-                          FacilitySelectionRoute(
-                            facilities: facilities,
-                          ),
-                        ) as FacilityModel?;
-
-                        if (facility == null) return;
-                        form.control(_referredToKey).value =
-                            localizations.translate('FAC_${facility.id}');
-                        setState(() {
-                          selectedProjectFacilityId = facility.id;
-                        });
+                    ReactiveWrapperField(
+                      formControlName: _referredToKey,
+                      validationMessages: {
+                        'required': (_) => localizations.translate(
+                              i18.referBeneficiary.facilityValidationMessage,
+                            ),
                       },
-                      child: IgnorePointer(
-                        child: ReactiveWrapperField(
-                          formControlName: _referredToKey,
-                          validationMessages: {
-                            'required': (_) => localizations.translate(
-                                  i18.referBeneficiary
-                                      .facilityValidationMessage,
-                                ),
+                      builder: (field) => LabeledField(
+                        label: localizations.translate(
+                          i18.referBeneficiary.referredToLabel,
+                        ),
+                        isRequired: true,
+                        child: DigitDropdown(
+                          sentenceCaseEnabled: false,
+                          selectedOption: DropdownItem(
+                              name: form.control(_referredToKey).value ?? '',
+                              code: form.control(_referredToKey).value ?? ''),
+                          isSearchable: true,
+                          emptyItemText:
+                              localizations.translate(i18.common.noMatchFound),
+                          errorMessage: field.errorText,
+                          items: facilities.map((e) {
+                            return DropdownItem(
+                                name: localizations.translate('FAC_${e.id}'),
+                                code: e.id);
+                          }).toList(),
+                          onSelect: (value) {
+                            form.control(_referredToKey).value =
+                                localizations.translate('FAC_${value.code}');
+
+                            setState(() {
+                              selectedProjectFacilityId = value.code;
+                            });
                           },
-                          builder: (field) => LabeledField(
-                            label: localizations.translate(
-                              i18.referBeneficiary.referredToLabel,
-                            ),
-                            isRequired: true,
-                            child: DigitSearchFormInput(
-                              // hideKeyboard: true,
-                              // readOnly: true,r
-                              errorMessage: field.errorText,
-                              initialValue: form.control(_referredToKey).value,
-                              onSuffixTap: (value) async {
-                                final parent =
-                                    context.router.parent() as StackRouter;
-                                final facility = await parent.push(
-                                  FacilitySelectionRoute(
-                                    facilities: facilities,
-                                  ),
-                                ) as FacilityModel?;
-
-                                if (facility == null) return;
-                                form.control(_referredToKey).value =
-                                    localizations
-                                        .translate('FAC_${facility.id}');
-
-                                setState(() {
-                                  selectedProjectFacilityId = facility.id;
-                                });
-                              },
-                            ),
-                          ),
                         ),
                       ),
                     ),

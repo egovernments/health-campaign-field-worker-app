@@ -119,10 +119,6 @@ class AppRouter extends _$AppRouter {
           page: ProjectFacilitySelectionRoute.page,
           path: 'select-project-facilities',
         ),
-        AutoRoute(
-          page: FacilitySelectionRoute.page,
-          path: 'select-facilities',
-        ),
 
         /// Project Selection
         AutoRoute(

@@ -12,10 +12,6 @@ class ReferralReconciliationRoute extends $ReferralReconciliationRoute {
       path: 'search-referrals',
     ),
     AutoRoute(
-      page: ReferralReconProjectFacilitySelectionRoute.page,
-      path: 'referral-project-facility',
-    ),
-    AutoRoute(
         page: HFCreateReferralWrapperRoute.page,
         path: 'referral-reconciliation',
         children: [

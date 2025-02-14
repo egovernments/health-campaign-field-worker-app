@@ -16,7 +16,6 @@ import '../../blocs/referral_recon_record.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../project_facility/project_facility_selection.dart';
 
 @RoutePage()
 class ReferralFacilityPage extends LocalizedStatefulWidget {
@@ -270,79 +269,63 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                               ),
                                             );
                                           }),
-                                      InkWell(
-                                        onTap: viewOnly
-                                            ? null
-                                            : () async {
-                                                final facility =
-                                                    await Navigator.of(context)
-                                                        .push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ReferralReconProjectFacilitySelectionPage(
-                                                      projectFacilities:
-                                                          facilities,
-                                                    ),
-                                                  ),
-                                                );
+                                      ReactiveWrapperField(
+                                        formControlName: _evaluationFacilityKey,
+                                        validationMessages: {
+                                          'required': (_) =>
+                                              localizations.translate(
+                                                i18.referralReconciliation
+                                                    .facilityValidationMessage,
+                                              ),
+                                        },
+                                        showErrors: (control) =>
+                                            control.invalid &&
+                                            control
+                                                .touched, // Ensures error is shown if invalid and touched
+                                        builder: (field) => LabeledField(
+                                          isRequired: true,
+                                          label: localizations.translate(
+                                            i18.referralReconciliation
+                                                .evaluationFacilityLabel,
+                                          ),
+                                          child: DigitDropdown(
+                                            errorMessage: field.errorText,
+                                            sentenceCaseEnabled: false,
+                                            selectedOption: DropdownItem(
+                                              name: form
+                                                      .control(
+                                                          _evaluationFacilityKey)
+                                                      .value ??
+                                                  '',
+                                              code: form
+                                                      .control(
+                                                          _evaluationFacilityKey)
+                                                      .value ??
+                                                  '',
+                                            ),
+                                            items: facilities.map((e) {
+                                              return DropdownItem(
+                                                name: localizations.translate(
+                                                  '$projectFacilityPrefix${e.id}',
+                                                ),
+                                                code: e.id,
+                                              );
+                                            }).toList(),
+                                            onSelect: (value) {
+                                              form
+                                                      .control(
+                                                        _evaluationFacilityKey,
+                                                      )
+                                                      .value =
+                                                  localizations.translate(
+                                                      'PJ_FAC_${value.code}');
 
-                                                if (facility == null) return;
-                                                form
-                                                        .control(
-                                                          _evaluationFacilityKey,
-                                                        )
-                                                        .value =
-                                                    localizations.translate(
-                                                        'PJ_FAC_${facility.id}');
-                                                setState(() {
-                                                  selectedProjectFacilityId =
-                                                      facility.id;
-                                                });
-                                              },
-                                        child: IgnorePointer(
-                                          child: ReactiveWrapperField<String>(
-                                              validationMessages: {
-                                                'required': (_) =>
-                                                    localizations.translate(
-                                                      i18.referralReconciliation
-                                                          .facilityValidationMessage,
-                                                    ),
-                                              },
-                                              formControlName:
-                                                  _evaluationFacilityKey,
-                                              showErrors: (control) =>
-                                                  control.invalid &&
-                                                  control
-                                                      .touched, // Ensures error is shown if invalid and touched
-                                              builder: (field) {
-                                                return LabeledField(
-                                                  isRequired: true,
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.referralReconciliation
-                                                        .evaluationFacilityLabel,
-                                                  ),
-                                                  child: DigitSearchFormInput(
-                                                    onChange: (val) => {
-                                                      form
-                                                          .control(
-                                                              _evaluationFacilityKey)
-                                                          .markAsTouched(),
-                                                      form
-                                                          .control(
-                                                              _evaluationFacilityKey)
-                                                          .value = val,
-                                                    },
-                                                    readOnly: viewOnly,
-                                                    errorMessage:
-                                                        field.errorText,
-                                                    initialValue: form
-                                                        .control(
-                                                            _evaluationFacilityKey)
-                                                        .value,
-                                                  ),
-                                                );
-                                              }),
+                                              setState(() {
+                                                selectedProjectFacilityId =
+                                                    value.code;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
                                       ReactiveWrapperField<String>(
