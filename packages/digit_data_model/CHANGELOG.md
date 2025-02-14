@@ -1,3 +1,10 @@
+## 1.0.6
+
+* Added localityCode in attendance table
+* Added relatedClientReferenceId in service table
+* Added household type in household table to support CLF
+* Updated migration script
+
 ## 1.0.5-dev.3
 
 * Added household type in household table to support CLF

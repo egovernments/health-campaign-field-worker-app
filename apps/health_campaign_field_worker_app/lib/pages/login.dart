@@ -82,7 +82,8 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           i18.login.labelText,
                         ),
                         style: textTheme.headingXl.copyWith(
-                          color: theme.colorTheme.primary.primary2, // Use theme color
+                          color: theme
+                              .colorTheme.primary.primary2, // Use theme color
                         ),
                       ),
                       ReactiveWrapperField(

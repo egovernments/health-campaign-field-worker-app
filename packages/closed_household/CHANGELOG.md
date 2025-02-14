@@ -1,3 +1,8 @@
+## 1.0.5
+
+* Upgrade digit_ui_components, digit_data_model
+* Added type as family while creating new household
+
 ## 1.0.4
 
 * Upgrade digit_ui_components to 0.0.2-dev.6
