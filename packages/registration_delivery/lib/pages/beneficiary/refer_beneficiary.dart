@@ -101,7 +101,10 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
             builder: (context, form, child) => ScrollableContent(
               enableFixedDigitButton: true,
               header: const Column(children: [
-                BackNavigationHelpHeaderWidget(),
+                Padding(
+                  padding: EdgeInsets.only(bottom: spacer4),
+                  child: BackNavigationHelpHeaderWidget(),
+                ),
               ]),
               footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
@@ -229,12 +232,16 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                   ]),
               slivers: [
                 SliverToBoxAdapter(
-                  child: DigitCard(children: [
+                  child: DigitCard(
+                    margin: const EdgeInsets.symmetric(horizontal: spacer2),
+                      children: [
                     Text(
                       localizations.translate(
                         i18.referBeneficiary.referralDetails,
                       ),
-                      style: textTheme.headingXl,
+                      style: textTheme.headingXl.copyWith(
+                        color: theme.colorTheme.primary.primary2
+                      ),
                     ),
                     ReactiveWrapperField(
                       formControlName: _dateOfReferralKey,
@@ -363,6 +370,7 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: RadioList(
+                            containerPadding: const EdgeInsets.all(spacer2),
                             radioDigitButtons: reasons
                                 .map((e) => RadioButtonModel(
                                     code: e.key.toString(),

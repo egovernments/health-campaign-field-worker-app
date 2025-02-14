@@ -4,6 +4,7 @@ import 'package:digit_data_model/models/entities/address_type.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -69,6 +70,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
     final bool isCommunity = RegistrationDeliverySingleton().householdType ==
@@ -114,11 +116,13 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
               enableFixedDigitButton: true,
               header: Column(
                 children: [
-                  BackNavigationHelpHeaderWidget(
-                    showcaseButton: ShowcaseButton(
-                      isCommunity: isCommunity,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: spacer2),
+                    child: BackNavigationHelpHeaderWidget(
+                      showcaseButton: ShowcaseButton(
+                        isCommunity: isCommunity,
+                      ),
                     ),
-                    showHelp: false,
                   ),
                 ],
               ),
@@ -286,7 +290,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                       margin: const EdgeInsets.all(spacer2),
                       children: [
                         DigitTextBlock(
-                            padding: const EdgeInsets.only(top: spacer2),
+                            padding: EdgeInsets.zero,
                             heading: (isCommunity)
                                 ? localizations.translate(
                                     i18.householdLocation.clfLocationLabelText)
@@ -294,6 +298,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                     i18.householdLocation
                                         .householdLocationLabelText,
                                   ),
+                            headingStyle: textTheme.headingXl.copyWith(
+                              color: theme.colorTheme.primary.primary2
+                            ),
                             description: (RegistrationDeliverySingleton()
                                         .householdType ==
                                     HouseholdType.community)
@@ -477,7 +484,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                 i18.householdLocation.postalCodeFormLabel,
                               ),
                               child: DigitTextFormInput(
-                                keyboardType: TextInputType.text,
+                                keyboardType: TextInputType.number,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
