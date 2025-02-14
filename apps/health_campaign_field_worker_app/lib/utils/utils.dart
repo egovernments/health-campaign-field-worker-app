@@ -388,24 +388,42 @@ initializeAllMappers() async {
 
 int getSyncCount(List<OpLog> oplogs) {
   int count = oplogs.where((element) {
-    switch (element.entityType) {
-      //add SyncCount case for package
-      case DataModelType.complaints:
-      case DataModelType.household:
-      case DataModelType.individual:
-      case DataModelType.householdMember:
-      case DataModelType.projectBeneficiary:
-      case DataModelType.task:
-      case DataModelType.stock:
-      case DataModelType.stockReconciliation:
-      case DataModelType.service:
-      case DataModelType.sideEffect:
-      case DataModelType.referral:
-      case DataModelType.hFReferral:
-      case DataModelType.attendance:
-        return true;
-      default:
-        return false;
+    if (element.syncedDown == false && element.syncedUp == true) {
+      switch (element.entityType) {
+        case DataModelType.household:
+        case DataModelType.individual:
+        case DataModelType.householdMember:
+        case DataModelType.projectBeneficiary:
+        case DataModelType.task:
+        case DataModelType.stock:
+        case DataModelType.stockReconciliation:
+        case DataModelType.sideEffect:
+        case DataModelType.referral:
+        case DataModelType.hFReferral:
+        case DataModelType.attendance:
+          return true;
+        default:
+          return false;
+      }
+    } else {
+      switch (element.entityType) {
+        case DataModelType.household:
+        case DataModelType.individual:
+        case DataModelType.householdMember:
+        case DataModelType.projectBeneficiary:
+        case DataModelType.task:
+        case DataModelType.stock:
+        case DataModelType.stockReconciliation:
+        case DataModelType.service:
+        case DataModelType.complaints:
+        case DataModelType.sideEffect:
+        case DataModelType.referral:
+        case DataModelType.hFReferral:
+        case DataModelType.attendance:
+          return true;
+        default:
+          return false;
+      }
     }
   }).length;
 
