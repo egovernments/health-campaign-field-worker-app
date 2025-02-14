@@ -30,13 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-<<<<<<<< HEAD:packages/complaints/example/pubspec.yaml
-========
-  digit_components:
-    path: ../../digit_components
-  collection: ^1.16.0
-  reactive_forms: ^17.0.0
->>>>>>>> master:packages/digit_components/example/pubspec.yaml
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -50,15 +43,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-<<<<<<<< HEAD:packages/complaints/example/pubspec.yaml
-========
-  freezed: ^2.5.2
-  build_runner: ^2.2.1
-  json_serializable: ^6.4.0
-  bloc_test: ^9.1.0
-  flutter_launcher_icons: ^0.13.1
-
->>>>>>>> master:packages/digit_components/example/pubspec.yaml
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
