@@ -32,7 +32,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.only(left: spacer2, top: spacer2),
+      padding: const EdgeInsets.only(left: spacer2, top: spacer4),
       child: Row(
         children: [
           Expanded(
@@ -69,12 +69,12 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               label: RegistrationDeliveryLocalization.of(context)
                   .translate(i18.common.coreCommonHelp),
               type: DigitButtonType.tertiary,
-              size: DigitButtonSize.medium,
+              size: DigitButtonSize.small,
               suffixIcon: Icons.help_outline_outlined,
               onPressed: () => helpClicked,
             ),
-          SizedBox(width: showcaseButton != null ? 16 : 0),
-          if (showcaseButton != null) showcaseButton!,
+          SizedBox(width: showcaseButton != null && showHelp ? 16 : 0),
+          if (showcaseButton != null && showHelp) showcaseButton!,
         ],
       ),
     );
