@@ -372,10 +372,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: ab088b8fc21a07ed7a56bf81c935ee51481ad253
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
     version: "4.2.3"
   dart_style:
     dependency: transitive
@@ -385,14 +386,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  db_viewer:
-    dependency: transitive
-    description:
-      name: db_viewer
-      sha256: "5f7e3cfcde9663321797d8f6f0c876f7c13f0825a2e77ec1ef065656797144d9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   diff_match_patch:
     dependency: transitive
     description:
@@ -405,26 +398,26 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: c3bc7299a7d927ebb83d8e91c1d7a8a51f6a1d1295dafeacb642012b72b99a2f
+      sha256: bcb6c328a75df1442672e39c0dbae32bc9cb067a07a581bded672d2b748957b9
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   digit_scanner:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: c33af61ed9ab3d7740fc3c8948af4b763d946cba5e902f8bfb00948d4d69d60a
+      sha256: "69580859ba9b63f32e40e6d56bf55a016eb623007ea06552b38f70056ea06dfe"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "57c4da5237be6025783e7357a02b6b492f02e38f711d674bf46f5f8c8a93ad76"
+      sha256: "687906c379faedf72f97277a2d0a844bbfa41c908a46fd998332d888694cbe78"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.4"
+    version: "0.0.2-dev.14"
   dio:
     dependency: "direct main"
     description:
@@ -449,14 +442,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.0"
-  drift_db_viewer:
-    dependency: "direct main"
-    description:
-      name: drift_db_viewer
-      sha256: "5ea77858c52b55460a1e8f34ab5f88324621d486717d876fd745765fbc227f3f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   drift_dev:
     dependency: "direct dev"
     description:
@@ -1062,7 +1047,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path
       sha256: "087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af"
@@ -1086,7 +1071,7 @@ packages:
     source: hosted
     version: "1.0.1"
   path_provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path_provider
       sha256: c9e7d3a4cd1410877472158bee69963a4579f78b68c65a2b7d40d1a7a88bb161
@@ -1315,7 +1300,7 @@ packages:
     source: hosted
     version: "2.4.0"
   sqlite3_flutter_libs:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: sqlite3_flutter_libs
       sha256: "636b0fe8a2de894e5455572f6cbbc458f4ffecfe9f860b79439e27041ea4f0b9"

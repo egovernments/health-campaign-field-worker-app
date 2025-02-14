@@ -59,6 +59,9 @@ class SurveyFormPageState extends State<SurveyformPage> {
                           .isNegative &&
                       !item.code!
                           .contains(Constants.healthFacilitySurveyFormPrefix) &&
+                      !item.code!.contains(Constants.iecSurveyFormPrefix) &&
+                      !item.code!
+                          .contains(Constants.eligibilitySurveyFormPrefix) &&
                       (item.code ?? '')
                           .contains(SurveyFormSingleton().projectName));
 

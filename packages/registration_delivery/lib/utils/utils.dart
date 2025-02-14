@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -25,6 +26,38 @@ class CustomValidator {
             control.value.toString().trim().isEmpty
         ? null
         : {'required': true};
+  }
+
+  static Map<String, dynamic>? sizeLessThan2(AbstractControl<dynamic> control) {
+    return control.value != null && control.value.toString().length <= 2
+        ? {'sizeLessThan2': true}
+        : null;
+  }
+
+  static Map<String, dynamic>? validMobileNumber(
+    AbstractControl<dynamic> control,
+  ) {
+    if (control.value == null || control.value.toString().isEmpty) {
+      return null;
+    }
+
+    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
+
+    if (RegExp(pattern).hasMatch(control.value.toString())) return null;
+
+    if (control.value.toString().length < 10) return {'mobileNumber': true};
+
+    return {'mobileNumber': true};
+  }
+
+  static Map<String, dynamic>? minPhoneNumValidation(
+    AbstractControl<dynamic> control,
+  ) {
+    if (control.value != null &&
+        control.value.toString().isNotEmpty &&
+        control.value.toString().length < 9) {
+      return {'minLength': true};
+    }
   }
 }
 
@@ -63,7 +96,7 @@ bool checkIfBeneficiaryRefused(
   List<TaskModel>? tasks,
 ) {
   final isBeneficiaryRefused = (tasks != null &&
-      (tasks).isNotEmpty &&
+      (tasks ?? []).isNotEmpty &&
       tasks.last.status == Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
@@ -79,11 +112,13 @@ bool checkEligibilityForAgeAndSideEffect(
   int totalAgeMonths = age.years * 12 + age.months;
   final currentCycle = projectType?.cycles?.firstWhereOrNull(
     (e) =>
-        (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
-        (e.endDate) > DateTime.now().millisecondsSinceEpoch,
+        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
     // Return null when no matching cycle is found
   );
-  if (currentCycle != null) {
+  if (currentCycle != null &&
+      currentCycle.startDate != null &&
+      currentCycle.endDate != null) {
     bool recordedSideEffect = false;
     if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
       final lastTaskTime =
@@ -91,8 +126,8 @@ bool checkEligibilityForAgeAndSideEffect(
               ? tasks.clientAuditDetails?.createdTime
               : null;
       recordedSideEffect = lastTaskTime != null &&
-          (lastTaskTime >= currentCycle.startDate &&
-              lastTaskTime <= currentCycle.endDate);
+          (lastTaskTime >= currentCycle.startDate! &&
+              lastTaskTime <= currentCycle.endDate!);
 
       return projectType?.validMinAge != null &&
               projectType?.validMaxAge != null
@@ -123,7 +158,9 @@ bool recordedSideEffect(
   TaskModel? task,
   List<SideEffectModel>? sideEffects,
 ) {
-  if (selectedCycle != null) {
+  if (selectedCycle != null &&
+      selectedCycle.startDate != null &&
+      selectedCycle.endDate != null) {
     if ((task != null) && (sideEffects ?? []).isNotEmpty) {
       final lastTaskCreatedTime =
           task.clientReferenceId == sideEffects?.last.taskClientReferenceId
@@ -145,7 +182,7 @@ bool checkIfBeneficiaryReferred(
 ) {
   if (currentCycle?.startDate != null && currentCycle?.endDate != null) {
     final isBeneficiaryReferred = (referrals != null &&
-        (referrals).isNotEmpty &&
+        (referrals ?? []).isNotEmpty &&
         referrals.last.clientAuditDetails!.createdTime >=
             currentCycle!.startDate &&
         referrals.last.clientAuditDetails!.createdTime <= currentCycle.endDate);
@@ -160,9 +197,9 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     IndividualModel? individualModel, HouseholdModel? householdModel) {
   if (currentDelivery != null) {
     var individualAgeInMonths = 0;
-    int? gender;
-    int? roomCount;
-    int? memberCount;
+    var gender;
+    var roomCount;
+    var memberCount;
     String? structureType;
 
     if (individualModel != null) {
@@ -193,28 +230,73 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     }
 
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
-      final String? condition = criteria.condition;
+      final condition = criteria.condition;
       if (condition != null) {
-        final conditions = condition.split('and');
+        if (condition.contains('and')) {
+          final conditions = condition.split('and');
 
-        List expressionParser = [];
-        for (var element in conditions) {
-          final expression = CustomFormulaParser.parseCondition(element, {
-            if (individualModel != null && individualAgeInMonths != 0)
-              'age': individualAgeInMonths,
-            if (gender != null) 'gender': gender,
-            if (memberCount != null) 'memberCount': memberCount,
-            if (roomCount != null) 'roomCount': roomCount,
-            if (structureType != null) 'type_of_structure': structureType
-          }, stringKeys: [
-            'type_of_structure'
-          ]);
-          final error = expression;
-          expressionParser.add(error["value"]);
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = FormulaParser(
+              element,
+              {
+                'age': individualAgeInMonths,
+                if (gender != null) 'gender': gender,
+                if (memberCount != null) 'memberCount': memberCount,
+                if (roomCount != null) 'roomCount': roomCount
+              },
+            );
+            final error = expression.parse;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        } else if (condition.contains('or')) {
+          final conditions = condition.split('or');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).isNotEmpty
+              ? true
+              : false;
+        } else {
+          final conditions = condition.split(
+              'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
         }
-
-        return expressionParser.where((element) => element == true).length ==
-            conditions.length;
       }
 
       return false;
@@ -351,10 +433,11 @@ class RegistrationDeliverySingleton {
   List<String>? _householdMemberDeletionReasonOptions;
   List<String>? _deliveryCommentOptions;
   List<String>? _symptomsTypes;
-  List<String>? _searchHouseHoldFilter;
+  List<String>? _searchHouseHoldFilter, _searchCLFFilters;
   List<String>? _referralReasons;
   List<String>? _houseStructureTypes;
   List<String>? _refusalReasons;
+  HouseholdType? _householdType;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -379,6 +462,7 @@ class RegistrationDeliverySingleton {
     required List<String>? deliveryCommentOptions,
     required List<String>? symptomsTypes,
     required List<String>? searchHouseHoldFilter,
+    required List<String>? searchCLFFilters,
     required List<String>? referralReasons,
     required List<String>? houseStructureTypes,
     required List<String>? refusalReasons,
@@ -398,6 +482,7 @@ class RegistrationDeliverySingleton {
     _deliveryCommentOptions = deliveryCommentOptions;
     _symptomsTypes = symptomsTypes;
     _searchHouseHoldFilter = searchHouseHoldFilter;
+    _searchCLFFilters = searchCLFFilters;
     _referralReasons = referralReasons;
     _houseStructureTypes = houseStructureTypes;
     _refusalReasons = refusalReasons;
@@ -406,6 +491,10 @@ class RegistrationDeliverySingleton {
 
   void setTenantId(String tenantId) {
     _tenantId = tenantId;
+  }
+
+  void setHouseholdType(HouseholdType? householdType) {
+    _householdType = householdType;
   }
 
   String? get tenantId => _tenantId;
@@ -443,6 +532,8 @@ class RegistrationDeliverySingleton {
 
   List<String>? get searchHouseHoldFilter => _searchHouseHoldFilter;
 
+  List<String>? get searchCLFFilters => _searchCLFFilters;
+
   List<String>? get referralReasons => _referralReasons;
 
   List<String>? get houseStructureTypes => _houseStructureTypes;
@@ -450,6 +541,8 @@ class RegistrationDeliverySingleton {
   List<String>? get refusalReasons => _refusalReasons;
 
   UserModel? get loggedInUser => _loggedInUser;
+
+  HouseholdType? get householdType => _householdType;
 }
 
 bool allDosesDelivered(
@@ -524,4 +617,32 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
   }
 
   return Status.registered.toValue();
+}
+
+String getStatus(String selectedFilter) {
+  final statusMap = {
+    Status.delivered.toValue(): Status.delivered,
+    Status.notAdministered.toValue(): Status.notAdministered,
+    Status.visited.toValue(): Status.visited,
+    Status.notVisited.toValue(): Status.notVisited,
+    Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+    Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+    Status.administeredSuccess.toValue(): Status.administeredSuccess,
+    Status.administeredFailed.toValue(): Status.administeredFailed,
+    Status.inComplete.toValue(): Status.inComplete,
+    Status.toAdminister.toValue(): Status.toAdminister,
+    Status.closeHousehold.toValue(): Status.closeHousehold,
+    Status.registered.toValue(): Status.registered,
+    Status.notRegistered.toValue(): Status.notRegistered,
+  };
+
+  var mappedStatus = statusMap.entries
+      .where((element) => element.value.name == selectedFilter)
+      .first
+      .key;
+  if (mappedStatus != null) {
+    return mappedStatus;
+  } else {
+    return selectedFilter;
+  }
 }

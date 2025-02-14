@@ -96,8 +96,6 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                             footer: DigitCard(
                                 margin: EdgeInsets.fromLTRB(
                                     0, theme.spacerTheme.spacer2, 0, 0),
-                                padding:
-                                    EdgeInsets.all(theme.spacerTheme.spacer2),
                                 cardType: CardType.primary,
                                 children: [
                                   ValueListenableBuilder(
@@ -187,6 +185,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                               SliverToBoxAdapter(
                                 child: DigitCard(
                                     cardType: CardType.primary,
+                                    margin: const EdgeInsets.all(spacer2),
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -198,8 +197,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                                 i18.referralReconciliation
                                                     .facilityDetails,
                                               ),
-                                              style:
-                                                  textTheme.headingXl,
+                                              style: textTheme.headingXl,
                                             ),
                                           ),
                                         ],

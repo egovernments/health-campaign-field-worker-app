@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 
@@ -170,12 +171,21 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     } else if (params.isProximityEnabled) {
       selectQuery = super.sql.individual.select().join([
         joinIndividualAddress(sql),
+        leftOuterJoin(sql.household,
+            sql.household.householdType.equalsValue(params.householdType)),
+        leftOuterJoin(
+            sql.householdMember,
+            sql.householdMember.individualClientReferenceId
+                .equalsExp(sql.individual.clientReferenceId)),
         leftOuterJoin(
             sql.projectBeneficiary,
             sql.projectBeneficiary.beneficiaryClientReferenceId
                 .equalsExp(sql.individual.clientReferenceId))
       ])
         ..where(buildAnd([
+          if (params.householdType == HouseholdType.community &&
+              params.householdClientReferenceId == null)
+            sql.householdMember.isHeadOfHousehold.equals(true),
           sql.address.relatedClientReferenceId.isNotNull(),
           sql.individual.clientReferenceId.isNotNull(),
           if (params.latitude != null &&
@@ -193,6 +203,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               params.maxRadius != null)
             sql.address.longitude.isNotNull(),
           sql.address.latitude.isNotNull(),
+          sql.householdMember.householdClientReferenceId
+              .equalsExp(sql.household.clientReferenceId),
         ]))
         ..orderBy([
           if (params.latitude != null &&
@@ -220,30 +232,77 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       return selectQuery;
     } else if (params.nameSearch != null ||
         params.nameSearch!.isNotEmpty && selectQuery == null) {
-      selectQuery = super.sql.individual.select().join(
-          [joinName(sql), joinIdentifier(sql), joinIndividualAddress(sql)]);
-      await searchByName(selectQuery, params, sql);
-      selectQuery = selectQuery.join([
-        leftOuterJoin(
-            sql.householdMember,
-            sql.householdMember.individualClientReferenceId
-                .equalsExp(sql.individual.clientReferenceId))
-      ]);
-      selectQuery.join([
-        leftOuterJoin(
-            sql.household,
-            sql.household.clientReferenceId
-                .equalsExp(sql.householdMember.householdClientReferenceId)),
-        leftOuterJoin(
-            sql.projectBeneficiary,
-            sql.projectBeneficiary.beneficiaryClientReferenceId
-                .equalsExp(sql.household.clientReferenceId))
-      ]);
+      selectQuery = super
+          .sql
+          .individual
+          .select()
+          .join([joinName(sql), joinIndividualAddress(sql)]);
+
+      if (params.householdClientReferenceId != null) {
+        await searchByName(selectQuery, params, sql);
+
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.household,
+              sql.household.clientReferenceId
+                  .equals(params.householdClientReferenceId ?? '')),
+          leftOuterJoin(
+              sql.projectBeneficiary,
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(sql.individual.clientReferenceId)),
+        ]);
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.householdMember,
+              sql.householdMember.individualClientReferenceId
+                  .equalsExp(sql.individual.clientReferenceId))
+        ])
+          ..where(buildAnd([
+            sql.household.householdType.equalsValue(params.householdType),
+            sql.householdMember.householdClientReferenceId
+                .equals(params.householdClientReferenceId ?? '')
+          ]));
+      } else {
+        if (params.householdType == HouseholdType.community) {
+          await searchByBuildingName(selectQuery, params, sql);
+        } else {
+          await searchByName(selectQuery, params, sql);
+        }
+
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.householdMember,
+              sql.householdMember.individualClientReferenceId
+                  .equalsExp(sql.individual.clientReferenceId))
+        ]);
+        selectQuery.join([
+          leftOuterJoin(
+              sql.household,
+              sql.household.clientReferenceId
+                  .equalsExp(sql.householdMember.householdClientReferenceId)),
+          leftOuterJoin(
+              sql.projectBeneficiary,
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(sql.individual.clientReferenceId))
+        ]).where(buildAnd([
+          if (params.householdType == HouseholdType.community &&
+              params.householdClientReferenceId == null)
+            sql.householdMember.isHeadOfHousehold.equals(true),
+          sql.household.householdType.equalsValue(params.householdType)
+        ]));
+      }
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
         selectQuery != null) {
-      selectQuery = selectQuery.join([joinName(sql), joinIdentifier(sql)]);
-      selectQuery = searchByName(selectQuery, params, sql);
+      if (params.householdType == HouseholdType.community &&
+          params.householdClientReferenceId == null) {
+        selectQuery = searchByBuildingName(selectQuery, params, sql);
+      } else {
+        selectQuery = selectQuery.join([
+          joinName(sql),
+        ]);
+        selectQuery = searchByName(selectQuery, params, sql);
+      }
     }
     return selectQuery;
   }
@@ -274,6 +333,16 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     ]));
   }
 
+  searchByBuildingName(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
+    return selectQuery.where(buildAnd([
+      if (params.nameSearch != null)
+        buildOr([
+          sql.address.buildingName.contains(params.nameSearch!),
+        ]),
+    ]));
+  }
+
   filterSearch(selectQuery, GlobalSearchParameters params, String filter,
       LocalSqlDataStore sql) async {
     var sql = super.sql;
@@ -281,20 +350,45 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       if (filter == Status.registered.name ||
           filter == Status.notRegistered.name) {
         selectQuery = sql.individual.select().join([
+          leftOuterJoin(sql.household,
+              sql.household.householdType.equalsValue(params.householdType)),
+          leftOuterJoin(
+              sql.householdMember,
+              sql.householdMember.individualClientReferenceId
+                  .equalsExp(sql.individual.clientReferenceId)),
           if (params.nameSearch == null || !params.isProximityEnabled)
             leftOuterJoin(
                 sql.projectBeneficiary,
                 sql.projectBeneficiary.beneficiaryClientReferenceId
                     .equalsExp(sql.individual.clientReferenceId))
         ])
-          ..where(filter == Status.registered.name
-              ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
-              : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+          ..where(buildAnd([
+            sql.householdMember.householdClientReferenceId
+                .equalsExp(sql.household.clientReferenceId),
+            filter == Status.registered.name
+                ? sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .isNotNull()
+                : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull(),
+            if (params.householdClientReferenceId != null)
+              sql.householdMember.householdClientReferenceId
+                  .equals(params.householdClientReferenceId ?? '')
+          ]));
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
 
         selectQuery = filterSearchQuery;
+
+        if (params.householdClientReferenceId != null) {
+          selectQuery = selectQuery.join([
+            leftOuterJoin(
+                sql.householdMember,
+                sql.householdMember.individualClientReferenceId
+                    .equalsExp(sql.individual.clientReferenceId))
+          ])
+            ..where(sql.householdMember.householdClientReferenceId
+                .equals(params.householdClientReferenceId ?? ''));
+        }
       }
     } else if (selectQuery != null) {
       if (filter == Status.registered.name ||

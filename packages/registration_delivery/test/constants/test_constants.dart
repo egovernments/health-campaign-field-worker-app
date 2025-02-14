@@ -48,6 +48,7 @@ class RegistrationDeliveryTestConstants {
 
   static IndividualModel individualModel = IndividualModel(
     clientReferenceId: '1ce2-3f4g-5h6i-7j8k-9l0m',
+    name: NameModel(givenName: 'test'),
     address: [mockAddress],
   );
 
@@ -64,6 +65,9 @@ class RegistrationDeliveryTestConstants {
   static HouseholdMemberWrapper householdMemberWrapper = HouseholdMemberWrapper(
       household: mockHousehold,
       headOfHousehold: mockIndividual,
-      members: [],
-      projectBeneficiaries: []);
+      members: [individualModel],
+      projectBeneficiaries: [mockProjectBeneficiary],
+      tasks: [],
+      sideEffects: [],
+      referrals: []);
 }

@@ -1,6 +1,8 @@
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/molecules/language_selection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -11,7 +13,6 @@ import '../blocs/localization/localization.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
-import '../utils/constants.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
@@ -39,7 +40,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
 
     return Scaffold(
       body: Container(
-        color: theme.colorScheme.primary,
+        color: theme.colorTheme.primary.primary2,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -58,21 +59,21 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   listener: (context, state) {
                     if (state.loading && !isDialogVisible) {
                       isDialogVisible = true;
-                      DigitComponentsUtils().showLocalizationLoadingDialog(
+                      DigitComponentsUtils.showDialog(
                         context,
-                        DigitSyncDialogType.inProgress,
+                        "",
+                        DialogType.inProgress,
                       );
                     } else if (!state.loading && isDialogVisible) {
                       isDialogVisible = false;
-                      DigitComponentsUtils()
-                          .hideDialog(context);
+                      DigitComponentsUtils.hideDialog(context);
                     }
                     if (!state.loading &&
                         !isDialogVisible &&
                         state.retryModule != null) {
                       DigitSyncDialog.show(
                         context,
-                        type: DigitSyncDialogType.failed,
+                        type: DialogType.failed,
                         label: i18.common.failedToFetch,
                         primaryAction: DigitDialogActions(
                           label: AppLocalizations.of(context).translate(
@@ -102,6 +103,10 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   builder: (context, localizationState) {
                     return localizationModulesList != null
                         ? DigitLanguageCard(
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: spacer2),
+                            rowItemWidth:
+                                MediaQuery.of(context).size.width * .272,
                             digitRowCardItems: languages.map((e) {
                               var index = languages.indexOf(e);
 
@@ -155,14 +160,8 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     setState(() {});
     context.read<LocalizationBloc>().add(
           LocalizationEvent.onLoadLocalization(
-            module: 'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList
-        .map((e)
-    =>
-        e.name.toString()
-    )
-        .join(',')
-        .toString()
-  }',
+            module:
+                'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.map((e) => e.name.toString()).join(',').toString()}',
             tenantId: tenantId,
             locale: locale,
             path: Constants.localizationApiPath,

@@ -65,12 +65,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
-    bool isHealthFacilityWorker = SurveyFormSingleton().isHealthFacilityWorker;
-
     return WillPopScope(
-      onWillPop: isHealthFacilityWorker && widget.referralClientRefId != null
-          ? () async => false
-          : () async => _onBackPressed(context),
+      onWillPop: () async => _onBackPressed(context),
       child: Scaffold(
         body: BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
           builder: (context, state) {
@@ -81,10 +77,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 if (!isControllersInitialized) {
                   initialAttributes?.forEach((e) {
                     controller.add(TextEditingController());
-                    if (!(isHealthFacilityWorker &&
-                        widget.referralClientRefId != null)) {
-                      additionalController.add(TextEditingController());
-                    }
                   });
 
                   // Set the flag to true after initializing controllers
@@ -96,11 +88,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               orElse: () => Text(state.runtimeType.toString()),
               serviceDefinitionFetch: (value) {
                 return ScrollableContent(
-                  header: Column(children: [
-                    if (!(isHealthFacilityWorker &&
-                        widget.referralClientRefId != null))
-                      const BackNavigationHelpHeaderWidget(),
-                  ]),
+                  header: const BackNavigationHelpHeaderWidget(),
                   enableFixedDigitButton: true,
                   footer: DigitCard(
                       cardType: CardType.primary,
@@ -139,10 +127,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                           (controller[i].text == '')) ||
                                       (itemsAttributes?[i].dataType !=
                                               'SingleValueList' &&
-                                          (controller[i].text == '' &&
-                                              !(isHealthFacilityWorker &&
-                                                  widget.referralClientRefId !=
-                                                      null))))) {
+                                          (controller[i].text == '')))) {
                                 return;
                               }
                             }
@@ -196,11 +181,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                               dataType: attribute?[i].dataType,
                                               clientReferenceId:
                                                   IdGen.i.identifier,
-                                              referenceId: isHealthFacilityWorker &&
-                                                      widget.referralClientRefId !=
-                                                          null
-                                                  ? widget.referralClientRefId
-                                                  : referenceId,
+                                              referenceId: referenceId,
                                               value: attribute?[i].dataType !=
                                                       'SingleValueList'
                                                   ? controller[i]
@@ -221,32 +202,27 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                           .notSelectedKey,
                                               rowVersion: 1,
                                               tenantId: attribute?[i].tenantId,
-                                              additionalDetails: isHealthFacilityWorker &&
-                                                      widget.referralClientRefId !=
-                                                          null
-                                                  ? null
-                                                  : ((attribute?[i]
-                                                                      .values
-                                                                      ?.length ==
-                                                                  2 ||
-                                                              attribute?[i]
-                                                                      .values
-                                                                      ?.length ==
-                                                                  3) &&
-                                                          controller[i].text ==
-                                                              attribute?[i]
-                                                                  .values?[1]
-                                                                  .trim())
-                                                      ? additionalController[i]
-                                                              .text
-                                                              .toString()
-                                                              .isEmpty
-                                                          ? null
-                                                          : additionalController[
-                                                                  i]
-                                                              .text
-                                                              .toString()
-                                                      : null,
+                                              additionalDetails: ((attribute?[i]
+                                                                  .values
+                                                                  ?.length ==
+                                                              2 ||
+                                                          attribute?[i]
+                                                                  .values
+                                                                  ?.length ==
+                                                              3) &&
+                                                      controller[i].text ==
+                                                          attribute?[i]
+                                                              .values?[1]
+                                                              .trim())
+                                                  ? additionalController[i]
+                                                          .text
+                                                          .toString()
+                                                          .isEmpty
+                                                      ? null
+                                                      : additionalController[i]
+                                                          .text
+                                                          .toString()
+                                                  : null,
                                               additionalFields:
                                                   ServiceAttributesAdditionalFields(
                                                 version: 1,
@@ -283,13 +259,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                       tenantId: value
                                                           .selectedServiceDefinition!
                                                           .tenantId,
-                                                      clientId: isHealthFacilityWorker &&
-                                                              widget.referralClientRefId !=
-                                                                  null
-                                                          ? widget
-                                                              .referralClientRefId
-                                                              .toString()
-                                                          : referenceId,
+                                                      clientId: referenceId,
                                                       serviceDefId: value
                                                           .selectedServiceDefinition
                                                           ?.id,
@@ -416,6 +386,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         label: localizations.translate(
                                           '${value.selectedServiceDefinition?.code}.${e.code}',
                                         ),
+                                        capitalizedFirstLetter: false,
+                                        charCondition: true,
                                         description: description != null
                                             ? localizations.translate(
                                                 '${value.selectedServiceDefinition?.code}.$description',
@@ -475,6 +447,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                             )
                                           : null,
                                       isRequired: e.required ?? false,
+                                      capitalizedFirstLetter: false,
+                                      charCondition: true,
                                       child: DigitTextFormInput(
                                         onChange: (value) {
                                           field.didChange(value);
@@ -510,6 +484,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                           )
                                         : null,
                                     isRequired: e.required ?? false,
+                                    capitalizedFirstLetter: false,
+                                    charCondition: true,
                                     child:
                                         BlocBuilder<ServiceBloc, ServiceState>(
                                       builder: (context, state) {
@@ -577,6 +553,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         index,
                                         value.selectedServiceDefinition,
                                         context,
+                                        description,
                                       ),
                                     ]),
                             ] else if (e.dataType == 'Boolean') ...[
@@ -593,7 +570,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                             label: localizations.translate(
                                               '${selectedServiceDefinition?.code}.${e.code}',
                                             ),
+                                            description: description != null
+                                                ? localizations.translate(
+                                                    '${value.selectedServiceDefinition?.code}.$description',
+                                                  )
+                                                : null,
                                             isRequired: e.required ?? false,
+                                            capitalizedFirstLetter: false,
+                                            charCondition: true,
                                             child: BlocBuilder<ServiceBloc,
                                                 ServiceState>(
                                               builder: (context, state) {
@@ -701,13 +685,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }
 
   Widget _buildSurveyForm(
-    AttributesModel item,
-    int index,
-    ServiceDefinitionModel? selectedServiceDefinition,
-    BuildContext context,
-  ) {
-    bool isHealthFacilityWorker = SurveyFormSingleton().isHealthFacilityWorker;
-
+      AttributesModel item,
+      int index,
+      ServiceDefinitionModel? selectedServiceDefinition,
+      BuildContext context,
+      String? description) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
     /* Check the data type of the attribute*/
@@ -734,10 +716,16 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       return Align(
         alignment: Alignment.topLeft,
         child: LabeledField(
-            charCondition: true,
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
+            capitalizedFirstLetter: false,
+            charCondition: true,
             isRequired: item.required ?? false,
             child: Column(children: [
               BlocBuilder<ServiceBloc, ServiceState>(
@@ -829,8 +817,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
                   return (controller[index].text == item.values?[1].trim() &&
-                          !(isHealthFacilityWorker &&
-                              widget.referralClientRefId != null) &&
                           item.dataType != 'SingleValueList')
                       ? Padding(
                           padding: const EdgeInsets.only(
@@ -857,7 +843,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                   label: localizations.translate(
                                     '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
                                   ),
+                                  description: description != null
+                                      ? localizations.translate(
+                                          '${selectedServiceDefinition?.code}.$description',
+                                        )
+                                      : null,
                                   isRequired: item.required ?? false,
+                                  capitalizedFirstLetter: false,
+                                  charCondition: true,
                                   child: DigitTextFormInput(
                                     onChange: (value) {
                                       field.didChange(value);
@@ -881,6 +874,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   index,
                   controller[index].text.trim(),
                   context,
+                  description,
                 ),
               ],
             ])),
@@ -907,7 +901,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               label: localizations.translate(
                 '${selectedServiceDefinition?.code}.${item.code}',
               ),
+              description: description != null
+                  ? localizations.translate(
+                      '${selectedServiceDefinition?.code}.$description',
+                    )
+                  : null,
               isRequired: item.required ?? false,
+              capitalizedFirstLetter: false,
+              charCondition: true,
               child: DigitTextFormInput(
                 maxLength: 1000,
                 charCount: true,
@@ -951,7 +952,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                     '${selectedServiceDefinition?.code}.${item.code}',
                   )
                   .trim(),
+              description: description != null
+                  ? localizations.translate(
+                      '${selectedServiceDefinition?.code}.$description',
+                    )
+                  : null,
               isRequired: item.required ?? false,
+              capitalizedFirstLetter: false,
+              charCondition: true,
               child: DigitTextFormInput(
                 onChange: (value) {
                   field.didChange(value);
@@ -977,7 +985,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
             isRequired: item.required ?? false,
+            capitalizedFirstLetter: false,
+            charCondition: true,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
                 return Column(
@@ -1026,7 +1041,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
             isRequired: item.required ?? false,
+            capitalizedFirstLetter: false,
+            charCondition: true,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
                 return FormField<bool>(
@@ -1091,12 +1113,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }
 
   // Function to build nested SurveyForm for child attributes
-  Widget _buildNestedSurveyForm(
-    String parentCode,
-    int parentIndex,
-    String parentControllerValue,
-    BuildContext context,
-  ) {
+  Widget _buildNestedSurveyForm(String parentCode, int parentIndex,
+      String parentControllerValue, BuildContext context, String? description) {
     // Retrieve child items for the given parent code
     final childItems = getNextQuestions(
       parentCode,
@@ -1109,17 +1127,18 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
         for (final matchingChildItem in childItems.where((childItem) =>
             childItem.code!.startsWith('$parentCode.$parentControllerValue.')))
           DigitCard(
-              cardType: CardType.primary,
+              cardType: CardType.secondary,
               margin: const EdgeInsets.only(
-                  bottom: spacer2, left: spacer1, right: spacer1),
+                  bottom: spacer2, left: spacer2, right: spacer2),
               children: [
                 _buildSurveyForm(
-                  matchingChildItem,
-                  initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
-                  // Pass parentIndex here as we're building at the same level
-                  selectedServiceDefinition,
-                  context,
-                ),
+                    matchingChildItem,
+                    initialAttributes?.indexOf(matchingChildItem) ??
+                        parentIndex,
+                    // Pass parentIndex here as we're building at the same level
+                    selectedServiceDefinition,
+                    context,
+                    description),
               ]),
       ],
     );

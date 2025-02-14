@@ -1,5 +1,5 @@
 import 'package:attendance_management/pages/mark_attendance.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/utils/utils.dart';
@@ -10,9 +10,9 @@ final testVariables = getTestData();
 final widgetSelector = getWidgets();
 Future<void> selectDate(WidgetTester widgetTester) async {
   // select Date
-  await widgetTester.tap(find.byType(DigitDateFormPicker));
+  await widgetTester.tap(find.byType(DigitDateFormInput));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 200));
-  expect(find.byType(DigitDateFormPicker), findsAny);
+  expect(find.byType(DigitDateFormInput), findsAny);
 
   await widgetTester.tap(find.byTooltip('Previous month'));
   await widgetTester.pumpAndSettle(Durations.short2);
