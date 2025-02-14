@@ -26,6 +26,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:complaints/complaints.dart';
+import 'package:survey_form/survey_form.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -272,6 +273,22 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           AttendanceLogOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<ServiceDefinitionModel,
+              ServiceDefinitionSearchModel>>(
+        create: (_) => ServiceDefinitionLocalRepository(
+          sql,
+          ServiceDefinitionOpLogManager(
+            isar,
+          ),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
+        create: (_) => ServiceLocalRepository(
+          sql,
+          ServiceOpLogManager(isar),
+        ),
+      )
     ];
   }
 

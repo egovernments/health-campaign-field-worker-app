@@ -1,3 +1,6 @@
+import 'package:survey_form/survey_form.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
+
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 
@@ -570,6 +573,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               userId: context.loggedInUserUuid,
               localRepositories: [
                 // INFO : Need to add local repo of package Here
+                context
+                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
 
@@ -601,6 +607,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
+                context
+                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
 
@@ -642,6 +651,26 @@ void setPackagesSingleton(BuildContext context) {
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
         // INFO : Need to add singleton of package Here
+        SurveyFormSingleton().setInitialData(
+          projectId: context.projectId,
+          projectName: context.selectedProject.name,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+          isHealthFacilityWorker: context.loggedInUserRoles
+              .where((role) =>
+                  role.code == RolesType.healthFacilityWorker.toValue())
+              .toList()
+              .isNotEmpty,
+          roles: context.read<AuthBloc>().state.maybeMap(
+              orElse: () => const Offstage(),
+              authenticated: (res) {
+                return res.userModel.roles
+                    .map((e) => e.code.snakeCase.toUpperCase())
+                    .toList();
+              }),
+        );
+
         ComplaintsSingleton().setInitialData(
           tenantId: envConfig.variables.tenantId,
           loggedInUserUuid: context.loggedInUserUuid,

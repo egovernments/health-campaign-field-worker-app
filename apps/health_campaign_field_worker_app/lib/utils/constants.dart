@@ -1,3 +1,4 @@
+import 'package:survey_form/survey_form.dart';
 import 'package:complaints/complaints.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/closed_household.dart';
@@ -143,6 +144,14 @@ class Constants {
         sql,
         PgrServiceOpLogManager(isar),
       ),
+      ServiceDefinitionLocalRepository(
+        sql,
+        ServiceDefinitionOpLogManager(isar),
+      ),
+      ServiceLocalRepository(
+        sql,
+        ServiceOpLogManager(isar),
+      ),
     ];
   }
 
@@ -220,6 +229,10 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.complaints)
           PgrServiceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.serviceDefinition)
+          ServiceDefinitionRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.service)
+          ServiceRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -275,6 +288,8 @@ class Constants {
 
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
+
+    SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 

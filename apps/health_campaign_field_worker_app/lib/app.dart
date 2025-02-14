@@ -1,3 +1,4 @@
+import 'package:survey_form/survey_form.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -222,6 +223,13 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            serviceDefinitionRemoteRepository: ctx.read<
+                                RemoteRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
+                            serviceDefinitionLocalRepository: ctx.read<
+                                LocalRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
+
                             bandwidthCheckRepository: BandwidthCheckRepository(
                               DioClient().dio,
                               bandwidthPath:

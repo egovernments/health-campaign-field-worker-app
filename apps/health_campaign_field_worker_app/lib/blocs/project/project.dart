@@ -1,3 +1,4 @@
+import 'package:survey_form/survey_form.dart';
 // GENERATED using mason_cli
 import 'dart:async';
 import 'dart:core';
@@ -33,6 +34,40 @@ part 'project.freezed.dart';
 typedef ProjectEmitter = Emitter<ProjectState>;
 
 class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
+  FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
+    final configs = await isar.appConfigurations.where().findAll();
+    final userObject = await localSecureStore.userRequestModel;
+    List<String> codes = [];
+    for (UserRoleModel elements in userObject!.roles) {
+      configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+        for (final project in projects) {
+          codes.add(
+            '${project.name}.$element.${elements.code.snakeCase.toUpperCase()}',
+          );
+        }
+      });
+    }
+
+    final serviceDefinition = await serviceDefinitionRemoteRepository
+        .search(ServiceDefinitionSearchModel(
+      tenantId: envConfig.variables.tenantId,
+      code: codes,
+    ));
+
+    for (var element in serviceDefinition) {
+      await serviceDefinitionLocalRepository.create(
+        element,
+        createOpLog: false,
+      );
+    }
+  }
+
+  /// Service Definition Repositories
+  final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionRemoteRepository;
+  final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionLocalRepository;
+
   final LocalSecureStore localSecureStore;
   final Isar isar;
   final MdmsRepository mdmsRepository;
@@ -100,6 +135,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final DashboardRemoteRepository dashboardRemoteRepository;
 
   ProjectBloc({
+    required this.serviceDefinitionRemoteRepository,
+    required this.serviceDefinitionLocalRepository,
     LocalSecureStore? localSecureStore,
     required this.bandwidthCheckRepository,
     required this.projectStaffRemoteRepository,
@@ -235,6 +272,26 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     if (projects.isNotEmpty) {
       // INFO : Need to add project load functions
+      try {
+        await _loadServiceDefinition(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.serviceDefinitions,
+          ),
+        );
+      }
+      // try {
+      //   await _loadServiceDefinition(projects);
+      // } catch (_) {
+      //   emit(
+      //     state.copyWith(
+      //       loading: false,
+      //       syncError: ProjectSyncErrorType.serviceDefinitions,
+      //     ),
+      //   );
+      // }
 
       try {
         await _loadProjectFacilities(projects);

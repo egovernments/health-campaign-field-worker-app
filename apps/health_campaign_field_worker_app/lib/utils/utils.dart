@@ -1,5 +1,7 @@
 library app_utils;
 
+import 'package:survey_form/survey_form.init.dart' as surveyForm_mappers;
+
 import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
@@ -379,6 +381,7 @@ initializeAllMappers() async {
     Future(() => inventory_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
     Future(() => complaints_mappers.initializeMappers()),
+    Future(() => surveyForm_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
