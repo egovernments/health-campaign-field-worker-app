@@ -79,10 +79,13 @@ class CustomStockReconciliationPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // Added the route here to allow multiple submission
     onSubmissionCompleted() {
-      context.router.replace(
-        InventoryAcknowledgementRoute(),
-      );
+      Future.delayed(const Duration(milliseconds: 300)).then((value) {
+        context.router.replace(
+          InventoryAcknowledgementRoute(),
+        );
+      });
     }
 
     return InventorySingleton().projectId.isEmpty
