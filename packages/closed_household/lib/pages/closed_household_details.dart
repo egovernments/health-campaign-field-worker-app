@@ -152,7 +152,9 @@ class ClosedHouseholdDetailsPageState
                           heading: localizations.translate(
                             i18.closeHousehold.closeHouseHoldDetailLabel,
                           ),
-                          headingStyle: textTheme.headingXl,
+                          headingStyle: textTheme.headingXl.copyWith(
+                            color: theme.colorTheme.primary.primary2
+                          ),
                           description: localizations.translate(
                             i18.closeHousehold.closeHouseHoldDetailDescLabel,
                           ),

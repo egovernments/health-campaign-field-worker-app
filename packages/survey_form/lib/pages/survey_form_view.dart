@@ -1127,9 +1127,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
         for (final matchingChildItem in childItems.where((childItem) =>
             childItem.code!.startsWith('$parentCode.$parentControllerValue.')))
           DigitCard(
-              cardType: CardType.primary,
+              cardType: CardType.secondary,
               margin: const EdgeInsets.only(
-                  bottom: spacer2, left: spacer1, right: spacer1),
+                  bottom: spacer2, left: spacer2, right: spacer2),
               children: [
                 _buildSurveyForm(
                     matchingChildItem,

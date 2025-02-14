@@ -46,6 +46,7 @@ class ClosedHouseholdSummaryPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
         builder: (context, householdState) {
@@ -126,6 +127,9 @@ class ClosedHouseholdSummaryPageState
                         padding: EdgeInsets.zero,
                         heading: localizations.translate(
                             i18.closeHousehold.closeHouseholdSummaryLabel),
+                        headingStyle: textTheme.headingXl.copyWith(
+                            color: theme.colorTheme.primary.primary2
+                        ),
                         withDivider: false,
                         items: [
                           LabelValueItem(
@@ -136,6 +140,7 @@ class ClosedHouseholdSummaryPageState
                                     dateFormat: 'dd MMM yyyy'))
                                 .toString(),
                             labelFlex: 5,
+                            padding: const EdgeInsets.only(bottom: spacer2),
                           ),
                           LabelValueItem(
                             label: localizations.translate(
@@ -161,6 +166,7 @@ class ClosedHouseholdSummaryPageState
                             value:
                                 '${householdState.locationAccuracy.toStringAsFixed(2)} ${localizations.translate(i18.common.coreCommonMeters)}',
                             labelFlex: 5,
+                            padding: const EdgeInsets.only(top: spacer2),
                           ),
                         ]),
                   ]),
@@ -175,6 +181,9 @@ class ClosedHouseholdSummaryPageState
                               heading: localizations.translate(i18
                                   .closeHousehold
                                   .closeHouseholdVoucherSummaryLabel),
+                              headingStyle: textTheme.headingXl.copyWith(
+                                  color: theme.colorTheme.primary.primary2
+                              ),
                               withDivider: false,
                               items: [
                                 LabelValueItem(
@@ -183,6 +192,7 @@ class ClosedHouseholdSummaryPageState
                                       .closeHouseholdVoucherCodeLabel),
                                   value: state.qrCodes.first,
                                   labelFlex: 5,
+                                  padding: EdgeInsets.zero,
                                 ),
                               ],
                             ),

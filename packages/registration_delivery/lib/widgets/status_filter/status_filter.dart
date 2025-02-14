@@ -99,7 +99,7 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                   child: SelectionCard<Status>(
                     options: getFilters() ?? [],
                     allowMultipleSelection: false,
-                    equalWidthOptions: true,
+                    width: MediaQuery.of(context).size.width * 0.6,
                     initialSelection: [...selectedButtons],
                     onSelectionChanged: (selected) {
                       setState(() {

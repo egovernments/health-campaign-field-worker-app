@@ -1,6 +1,10 @@
 ## 1.0.1
 
-* Upgrade digit_ui_components to ^0.0.2-dev.6
+* Modified ServiceSearchModel with relatedClientReferenceId and search query
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+* Removed isHealthFacilityWorker variable from Singleton
+* Upgraded to latest package versions
 
 ## 1.0.0-dev.1
 

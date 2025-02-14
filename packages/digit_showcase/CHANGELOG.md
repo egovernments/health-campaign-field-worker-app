@@ -1,3 +1,8 @@
+## 1.0.2
+
+* Updated to latest package versions
+* Added localized values for skip and next
+
 ## 1.0.1
 
 * Updated to latest package versions

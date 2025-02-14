@@ -100,9 +100,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             return ScrollableContent(
               enableFixedDigitButton: true,
               header: const Column(children: [
-                BackNavigationHelpHeaderWidget(
-                  showHelp: false,
-                  showcaseButton: ShowcaseButton(),
+                Padding(
+                  padding: EdgeInsets.only(bottom: spacer2),
+                  child: BackNavigationHelpHeaderWidget(
+                    showHelp: false,
+                  ),
                 ),
               ]),
               footer: DigitCard(
@@ -334,54 +336,61 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           localizations.translate(
                             i18.individualDetails.individualsDetailsLabelText,
                           ),
-                          style: textTheme.headingXl,
+                          style: textTheme.headingXl.copyWith(color: theme.colorTheme.primary.primary2),
                         ),
-                        individualDetailsShowcaseData.nameOfIndividual
-                            .buildWith(
-                          child: ReactiveWrapperField(
-                            formControlName: _individualNameKey,
-                            validationMessages: {
-                              'required': (object) => localizations.translate(
+                        Column(
+                          children: [
+                            individualDetailsShowcaseData.nameOfIndividual
+                                .buildWith(
+                              child: ReactiveWrapperField(
+                                formControlName: _individualNameKey,
+                                validationMessages: {
+                                  'required': (object) => localizations.translate(
                                     '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
                                   ),
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', maxLength.toString()),
-                            },
-                            builder: (field) => LabeledField(
-                              label: localizations.translate(
-                                i18.individualDetails.nameLabelText,
-                              ),
-                              isRequired: true,
-                              child: DigitTextFormInput(
-                                initialValue:
-                                    form.control(_individualNameKey).value,
-                                onChange: (value) {
-                                  form.control(_individualNameKey).value =
-                                      value;
+                                  'maxLength': (object) => localizations
+                                      .translate(i18.common.maxCharsRequired)
+                                      .replaceAll('{}', maxLength.toString()),
                                 },
-                                errorMessage: field.errorText,
+                                builder: (field) => LabeledField(
+                                  label: localizations.translate(
+                                    i18.individualDetails.nameLabelText,
+                                  ),
+                                  isRequired: true,
+                                  child: DigitTextFormInput(
+                                    initialValue:
+                                    form.control(_individualNameKey).value,
+                                    onChange: (value) {
+                                      form.control(_individualNameKey).value =
+                                          value;
+                                    },
+                                    errorMessage: field.errorText,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Offstage(
-                          offstage: !widget.isHeadOfHousehold,
-                          child: DigitCheckbox(
-                            capitalizeFirstLetter: false,
-                            label: (RegistrationDeliverySingleton()
-                                        .householdType ==
+                            if(widget.isHeadOfHousehold)
+                              const SizedBox(height: spacer2,),
+                            Offstage(
+                              offstage: !widget.isHeadOfHousehold,
+                              child: DigitCheckbox(
+                                capitalizeFirstLetter: false,
+                                label: (RegistrationDeliverySingleton()
+                                    .householdType ==
                                     HouseholdType.community)
-                                ? localizations.translate(
+                                    ? localizations.translate(
                                     i18.individualDetails.clfCheckboxLabelText)
-                                : localizations.translate(
-                                    i18.individualDetails.checkboxLabelText,
-                                  ),
-                            value: widget.isHeadOfHousehold,
-                            readOnly: widget.isHeadOfHousehold,
-                            onChanged: (_) {},
-                          ),
+                                    : localizations.translate(
+                                  i18.individualDetails.checkboxLabelText,
+                                ),
+                                value: widget.isHeadOfHousehold,
+                                readOnly: widget.isHeadOfHousehold,
+                                onChanged: (_) {},
+                              ),
+                            ),
+                          ],
                         ),
+
                         ReactiveWrapperField(
                           formControlName: _idTypeKey,
                           validationMessages: {
@@ -594,6 +603,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 onChange: (value) {
                                   form.control(_mobileNumberKey).value = value;
                                 },
+                                errorMessage: field.errorText,
                               ),
                             ),
                           ),

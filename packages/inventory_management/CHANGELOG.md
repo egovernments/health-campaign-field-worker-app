@@ -1,10 +1,8 @@
 ## 1.0.5
 
-* Upgrade digit_ui_components to ^0.0.2-dev.6
-
-## 1.0.4+1
-
-* Added the boundary new variable in inventory singleton class to get the code of the selected boundary
+* Upgraded to latest versions
+* Added the boundary new variable in inventory singleton class to get the code of the selected
+  boundary
 
 ## 1.0.4
 

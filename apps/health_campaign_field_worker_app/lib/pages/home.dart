@@ -162,8 +162,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                     ),
             ],
           ),
-          footer: PoweredByDigit(
-            version: Constants().version,
+          footer: Padding(
+            padding: const EdgeInsets.only(bottom: spacer2),
+            child: PoweredByDigit(
+              version: Constants().version,
+            ),
           ),
           children: [
             const SizedBox(height: spacer2 * 2),
