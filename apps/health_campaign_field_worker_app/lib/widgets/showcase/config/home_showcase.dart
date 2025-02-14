@@ -106,5 +106,9 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.home.closedHouseHoldLabel,
   );
 
+  final transitPost = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.transitPostLabel,
+  );
+
   final clf = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.clf);
 }

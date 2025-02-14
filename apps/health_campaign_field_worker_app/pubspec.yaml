@@ -70,6 +70,8 @@ dependencies:
   permission_handler: ^11.3.1
   survey_form: ^1.0.0
   complaints: ^1.0.0
+  transit_post:
+    path: ../../packages/transit_post
 
 dev_dependencies:
   flutter_test:

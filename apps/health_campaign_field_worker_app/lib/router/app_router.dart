@@ -20,6 +20,8 @@ import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:transit_post/router/transit_post_router.dart';
+import 'package:transit_post/router/transit_post_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -49,7 +51,8 @@ part 'app_router.gr.dart';
     ClosedHouseholdPackageRoute,
     DashboardRoute,
     SurveyFormRoute,
-    ComplaintsRoute
+    ComplaintsRoute,
+    TransitPostRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -201,6 +204,8 @@ class AppRouter extends _$AppRouter {
 
         // Referral Reconciliation Route
         ...ReferralReconciliationRoute().routes,
+
+        ...TransitPostRoute().routes,
       ],
     )
   ];

@@ -17,6 +17,10 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
+import 'package:transit_post/data/repositories/local/user_action.dart';
+import 'package:transit_post/data/repositories/oplog/oplog.dart';
+import 'package:transit_post/data/repositories/remote/user_action.dart';
+import 'package:transit_post/utils/utils.dart';
 
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/entity_mapper.dart';
@@ -158,6 +162,7 @@ class Constants {
       ),
       LocationTrackerLocalBaseRepository(
           sql, LocationTrackerOpLogManager(isar)),
+      UserActionLocalRepository(sql, UserActionOpLogManager(isar)),
     ];
   }
 
@@ -246,6 +251,8 @@ class Constants {
           PgrServiceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userLocation)
           LocationTrackerRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userAction)
+          UserActionRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -287,6 +294,7 @@ class Constants {
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
     LocationTrackerSingleton()
         .setTenantId(tenantId: envConfig.variables.tenantId);
+    TransitPostSingleton().setTenantId(envConfig.variables.tenantId);
     SyncServiceSingleton().setData(
       syncDownRetryCount: envConfig.variables.syncDownRetryCount,
       persistenceConfiguration: PersistenceConfiguration.offlineFirst,
@@ -295,6 +303,7 @@ class Constants {
     SyncServiceSingleton().setRegistries(SyncServiceRegistry());
     SyncServiceSingleton().registries?.registerSyncRegistries({
       DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
+      DataModelType.userAction: (remote) => CustomSyncRegistry(remote),
     });
   }
 }

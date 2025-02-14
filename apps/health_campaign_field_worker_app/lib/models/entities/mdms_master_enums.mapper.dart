@@ -75,6 +75,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.privacyPolicy;
       case "dashboardConfig":
         return MasterEnums.dashboardConfig;
+      case "TRANSIT_POST_TYPE":
+        return MasterEnums.transitPostType;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -133,6 +135,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "PrivacyPolicy";
       case MasterEnums.dashboardConfig:
         return "dashboardConfig";
+      case MasterEnums.transitPostType:
+        return "TRANSIT_POST_TYPE";
     }
   }
 }

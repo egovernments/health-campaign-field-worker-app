@@ -78,6 +78,9 @@ class AppConfiguration {
   @Name('SEARCH_CLF_FILTERS')
   late List<SearchCLFFilters>? searchCLFFilters;
 
+  @Name('TRANSIT_POST_TYPE')
+  late List<TransitPostType>? transitPostType;
+
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
@@ -174,6 +177,13 @@ class HouseholdDeletionReasonOptions {
 
 @embedded
 class SearchHouseHoldFilters {
+  late String name;
+  late String code;
+  late bool active;
+}
+
+@embedded
+class TransitPostType {
   late String name;
   late String code;
   late bool active;

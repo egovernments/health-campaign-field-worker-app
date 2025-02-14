@@ -106,6 +106,7 @@ class AppInitializationBloc
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
+                    MasterEnums.transitPostType.toValue(),
                     MasterEnums.searchCLFFilters.toValue()
                   ]),
                 ),
