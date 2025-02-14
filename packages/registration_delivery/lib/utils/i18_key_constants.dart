@@ -132,6 +132,10 @@ class Common {
   String get metersNear => 'METERS_NEAR';
 
   String get coreCommonLoadingText => 'CORE_COMMON_LOADING_TEXT';
+
+  String get minAge => 'MINIMUM_AGE_SHOULD_BE_GREATER_THAN_0';
+
+  String get maxAge => 'MAXIMUM_AGE_CAN_NOT_EXCEED_150_YEARS';
 }
 
 class SearchBeneficiary {
