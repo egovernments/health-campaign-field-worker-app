@@ -1,7 +1,6 @@
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +17,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showLogoutCTA;
   final VoidCallback? helpClicked;
   final VoidCallback? handleback;
+  final bool defaultPopRoute;
   final ShowcaseButton? showcaseButton;
 
   const BackNavigationHelpHeaderWidget({
@@ -27,6 +27,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     this.showLogoutCTA = false,
     this.helpClicked,
     this.handleback,
+    this.defaultPopRoute = true,
     this.showcaseButton,
   });
 
@@ -53,7 +54,9 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                       ),
                     ),
                     handleBack: () {
-                      context.router.maybePop();
+                      if (defaultPopRoute) {
+                        context.router.maybePop();
+                      }
                       handleback != null ? handleback!() : null;
                     },
                     label: AppLocalizations.of(context).translate(

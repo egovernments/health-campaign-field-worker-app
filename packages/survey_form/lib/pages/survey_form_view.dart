@@ -387,6 +387,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                           '${value.selectedServiceDefinition?.code}.${e.code}',
                                         ),
                                         capitalizedFirstLetter: false,
+                                        charCondition: true,
                                         description: description != null
                                             ? localizations.translate(
                                                 '${value.selectedServiceDefinition?.code}.$description',
@@ -447,6 +448,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                           : null,
                                       isRequired: e.required ?? false,
                                       capitalizedFirstLetter: false,
+                                      charCondition: true,
                                       child: DigitTextFormInput(
                                         onChange: (value) {
                                           field.didChange(value);
@@ -483,6 +485,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         : null,
                                     isRequired: e.required ?? false,
                                     capitalizedFirstLetter: false,
+                                    charCondition: true,
                                     child:
                                         BlocBuilder<ServiceBloc, ServiceState>(
                                       builder: (context, state) {
@@ -550,6 +553,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         index,
                                         value.selectedServiceDefinition,
                                         context,
+                                        description,
                                       ),
                                     ]),
                             ] else if (e.dataType == 'Boolean') ...[
@@ -566,8 +570,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                             label: localizations.translate(
                                               '${selectedServiceDefinition?.code}.${e.code}',
                                             ),
+                                            description: description != null
+                                                ? localizations.translate(
+                                                    '${value.selectedServiceDefinition?.code}.$description',
+                                                  )
+                                                : null,
                                             isRequired: e.required ?? false,
                                             capitalizedFirstLetter: false,
+                                            charCondition: true,
                                             child: BlocBuilder<ServiceBloc,
                                                 ServiceState>(
                                               builder: (context, state) {
@@ -675,11 +685,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }
 
   Widget _buildSurveyForm(
-    AttributesModel item,
-    int index,
-    ServiceDefinitionModel? selectedServiceDefinition,
-    BuildContext context,
-  ) {
+      AttributesModel item,
+      int index,
+      ServiceDefinitionModel? selectedServiceDefinition,
+      BuildContext context,
+      String? description) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
     /* Check the data type of the attribute*/
@@ -706,11 +716,16 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       return Align(
         alignment: Alignment.topLeft,
         child: LabeledField(
-            charCondition: true,
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
             capitalizedFirstLetter: false,
+            charCondition: true,
             isRequired: item.required ?? false,
             child: Column(children: [
               BlocBuilder<ServiceBloc, ServiceState>(
@@ -828,8 +843,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                   label: localizations.translate(
                                     '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
                                   ),
+                                  description: description != null
+                                      ? localizations.translate(
+                                          '${selectedServiceDefinition?.code}.$description',
+                                        )
+                                      : null,
                                   isRequired: item.required ?? false,
                                   capitalizedFirstLetter: false,
+                                  charCondition: true,
                                   child: DigitTextFormInput(
                                     onChange: (value) {
                                       field.didChange(value);
@@ -853,6 +874,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   index,
                   controller[index].text.trim(),
                   context,
+                  description,
                 ),
               ],
             ])),
@@ -879,8 +901,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               label: localizations.translate(
                 '${selectedServiceDefinition?.code}.${item.code}',
               ),
+              description: description != null
+                  ? localizations.translate(
+                      '${selectedServiceDefinition?.code}.$description',
+                    )
+                  : null,
               isRequired: item.required ?? false,
               capitalizedFirstLetter: false,
+              charCondition: true,
               child: DigitTextFormInput(
                 maxLength: 1000,
                 charCount: true,
@@ -924,8 +952,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                     '${selectedServiceDefinition?.code}.${item.code}',
                   )
                   .trim(),
+              description: description != null
+                  ? localizations.translate(
+                      '${selectedServiceDefinition?.code}.$description',
+                    )
+                  : null,
               isRequired: item.required ?? false,
               capitalizedFirstLetter: false,
+              charCondition: true,
               child: DigitTextFormInput(
                 onChange: (value) {
                   field.didChange(value);
@@ -951,8 +985,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
+            charCondition: true,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
                 return Column(
@@ -1001,8 +1041,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
+            description: description != null
+                ? localizations.translate(
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
+                : null,
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
+            charCondition: true,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
                 return FormField<bool>(
@@ -1067,12 +1113,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }
 
   // Function to build nested SurveyForm for child attributes
-  Widget _buildNestedSurveyForm(
-    String parentCode,
-    int parentIndex,
-    String parentControllerValue,
-    BuildContext context,
-  ) {
+  Widget _buildNestedSurveyForm(String parentCode, int parentIndex,
+      String parentControllerValue, BuildContext context, String? description) {
     // Retrieve child items for the given parent code
     final childItems = getNextQuestions(
       parentCode,
@@ -1085,17 +1127,18 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
         for (final matchingChildItem in childItems.where((childItem) =>
             childItem.code!.startsWith('$parentCode.$parentControllerValue.')))
           DigitCard(
-              cardType: CardType.primary,
+              cardType: CardType.secondary,
               margin: const EdgeInsets.only(
-                  bottom: spacer2, left: spacer1, right: spacer1),
+                  bottom: spacer2, left: spacer2, right: spacer2),
               children: [
                 _buildSurveyForm(
-                  matchingChildItem,
-                  initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
-                  // Pass parentIndex here as we're building at the same level
-                  selectedServiceDefinition,
-                  context,
-                ),
+                    matchingChildItem,
+                    initialAttributes?.indexOf(matchingChildItem) ??
+                        parentIndex,
+                    // Pass parentIndex here as we're building at the same level
+                    selectedServiceDefinition,
+                    context,
+                    description),
               ]),
       ],
     );

@@ -12,7 +12,6 @@ import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -125,7 +124,9 @@ class _SearchBeneficiaryPageState
                                       : i18.searchBeneficiary
                                           .searchIndividualLabelText,
                             ),
-                            style: textTheme.headingXl,
+                            style: textTheme.headingXl.copyWith(
+                              color: theme.colorTheme.primary.primary2,
+                            ),
                             textAlign: TextAlign.left,
                           ),
                         ),
@@ -403,9 +404,8 @@ class _SearchBeneficiaryPageState
         ),
         bottomNavigationBar: Offstage(
           offstage: RegistrationDeliverySingleton().householdType ==
-                      HouseholdType.community &&
-                  (searchHouseholdsState.searchQuery == null) ||
-              (searchHouseholdsState.searchQuery!.length < 3),
+                  HouseholdType.community &&
+              searchController.text.length < 3,
           child: DigitCard(
               margin: const EdgeInsets.only(top: spacer2),
               padding: const EdgeInsets.all(spacer4),
@@ -523,7 +523,6 @@ class _SearchBeneficiaryPageState
     if (!isPagination) {
       blocWrapper.clearEvent();
     }
-
     if (RegistrationDeliverySingleton().beneficiaryType ==
         BeneficiaryType.individual) {
       if (isProximityEnabled ||

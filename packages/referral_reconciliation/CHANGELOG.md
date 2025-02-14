@@ -1,6 +1,8 @@
 ## 1.0.4
 
-* Upgrade digit_ui_components to ^0.0.2-dev.6
+* Updated to latest package versions
+* UI/UX fixes
+* Bug fixes
 
 ## 1.0.3+1
 
