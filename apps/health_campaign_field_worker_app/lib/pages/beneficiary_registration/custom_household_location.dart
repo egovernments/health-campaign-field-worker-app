@@ -54,7 +54,6 @@ class CustomHouseholdLocationPageState
   static const _buildingNameKey = 'buildingName';
   static const _refugeeKey = 'refugee';
   static const __refugeeCampsTypeKey = 'refugeeCamps';
-  List<String> refugeeCampsList = ["camp1", "camp2", "camp3"];
   String? selectedRefugeeCamp;
   List<String> radioOptions = ["Yes", "No"];
   bool ifRefugeeCamp = false;
@@ -398,25 +397,6 @@ class CustomHouseholdLocationPageState
                               ),
                             ),
                           ),
-                          // Offstage(
-                          //   offstage: !ifRefugeeCamp,
-                          //   child: DigitReactiveDropdown<String>(
-                          //     key: const Key(__refugeeCampsTypeKey),
-                          //     label: localizations.translate(
-                          //       'Refugee Camps List',
-                          //     ),
-                          //     menuItems: refugeeCampsList ?? [],
-                          //     formControlName: __refugeeCampsTypeKey,
-                          //     onChanged: (value) {
-                          //       setState(() {
-                          //         selectedRefugeeCamp = value;
-                          //       });
-                          //     },
-                          //     valueMapper: (value) =>
-                          //         localizations.translate(value),
-                          //     // isRequired: true,
-                          //   ),
-                          // ),
                           if (RegistrationDeliverySingleton().householdType ==
                               HouseholdType.community)
                             householdLocationShowcaseData.buildingName
