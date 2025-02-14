@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -12,6 +13,7 @@ import '../../../models/entities/beneficiary_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
 import '../../../models/entities/pgr_application_status.dart';
+import '../../../models/entities/household_type.dart';
 import 'tables/address.dart';
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';
@@ -108,17 +110,20 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 5; // Increment schema version
+  int get schemaVersion => 6; // Increment schema version
 
   @override
-  MigrationStrategy get migration =>
-      MigrationStrategy(
+  MigrationStrategy get migration => MigrationStrategy(
         onUpgrade: (migrator, from, to) async {
           if (from < 5) {
             //Add column for projectType in Project Table
             try {
               await migrator.addColumn(project, project.projectType);
-            } catch (e) {}
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to add column for projectType");
+              }
+            }
           }
           if (from < 5) {
             await customStatement('''
@@ -173,6 +178,21 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             // Step 4: Rename the new table to the old table's name
             await customStatement(
                 'ALTER TABLE attributes_temp RENAME TO attributes;');
+          }
+
+          if (from < 6) {
+            try {
+              await migrator.addColumn(household, household.householdType);
+              await migrator.addColumn(
+                  attendanceRegister, attendanceRegister.localityCode);
+              await migrator.addColumn(
+                  service, service.relatedClientReferenceId);
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to add columns for householdType, attendance - localityCode, and service - relatedClientReferenceId");
+              }
+            }
           }
         },
       );

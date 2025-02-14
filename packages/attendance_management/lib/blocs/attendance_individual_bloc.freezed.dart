@@ -39,7 +39,8 @@ mixin _$AttendanceIndividualEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)
+            double? longitude,
+            String? comment)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) =>
@@ -67,7 +68,8 @@ mixin _$AttendanceIndividualEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)?
+            double? longitude,
+            String? comment)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) =>
@@ -95,7 +97,8 @@ mixin _$AttendanceIndividualEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)?
+            double? longitude,
+            String? comment)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
@@ -349,7 +352,8 @@ class _$AttendanceIndividualLogSearchEventImpl
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)
+            double? longitude,
+            String? comment)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
@@ -381,7 +385,8 @@ class _$AttendanceIndividualLogSearchEventImpl
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)?
+            double? longitude,
+            String? comment)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
@@ -413,7 +418,8 @@ class _$AttendanceIndividualLogSearchEventImpl
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)?
+            double? longitude,
+            String? comment)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
@@ -647,7 +653,8 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)
+            double? longitude,
+            String? comment)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
@@ -679,7 +686,8 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)?
+            double? longitude,
+            String? comment)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
@@ -711,7 +719,8 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)?
+            double? longitude,
+            String? comment)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
@@ -798,7 +807,8 @@ abstract class _$$SaveAsDraftEventImplCopyWith<$Res> {
       bool isSingleSession,
       bool? createOplog,
       double? latitude,
-      double? longitude});
+      double? longitude,
+      String? comment});
 }
 
 /// @nodoc
@@ -820,6 +830,7 @@ class __$$SaveAsDraftEventImplCopyWithImpl<$Res>
     Object? createOplog = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
+    Object? comment = freezed,
   }) {
     return _then(_$SaveAsDraftEventImpl(
       entryTime: null == entryTime
@@ -850,6 +861,10 @@ class __$$SaveAsDraftEventImplCopyWithImpl<$Res>
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
+      comment: freezed == comment
+          ? _value.comment
+          : comment // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -864,7 +879,8 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
       this.isSingleSession = false,
       this.createOplog = false,
       this.latitude,
-      this.longitude});
+      this.longitude,
+      this.comment});
 
   @override
   final int entryTime;
@@ -882,10 +898,12 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
   final double? latitude;
   @override
   final double? longitude;
+  @override
+  final String? comment;
 
   @override
   String toString() {
-    return 'AttendanceIndividualEvent.saveAsDraft(entryTime: $entryTime, exitTime: $exitTime, selectedDate: $selectedDate, isSingleSession: $isSingleSession, createOplog: $createOplog, latitude: $latitude, longitude: $longitude)';
+    return 'AttendanceIndividualEvent.saveAsDraft(entryTime: $entryTime, exitTime: $exitTime, selectedDate: $selectedDate, isSingleSession: $isSingleSession, createOplog: $createOplog, latitude: $latitude, longitude: $longitude, comment: $comment)';
   }
 
   @override
@@ -906,12 +924,13 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
+                other.longitude == longitude) &&
+            (identical(other.comment, comment) || other.comment == comment));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, entryTime, exitTime,
-      selectedDate, isSingleSession, createOplog, latitude, longitude);
+      selectedDate, isSingleSession, createOplog, latitude, longitude, comment);
 
   @JsonKey(ignore: true)
   @override
@@ -944,12 +963,13 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)
+            double? longitude,
+            String? comment)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
     return saveAsDraft(entryTime, exitTime, selectedDate, isSingleSession,
-        createOplog, latitude, longitude);
+        createOplog, latitude, longitude, comment);
   }
 
   @override
@@ -976,12 +996,13 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)?
+            double? longitude,
+            String? comment)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
     return saveAsDraft?.call(entryTime, exitTime, selectedDate, isSingleSession,
-        createOplog, latitude, longitude);
+        createOplog, latitude, longitude, comment);
   }
 
   @override
@@ -1008,14 +1029,15 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)?
+            double? longitude,
+            String? comment)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
   }) {
     if (saveAsDraft != null) {
       return saveAsDraft(entryTime, exitTime, selectedDate, isSingleSession,
-          createOplog, latitude, longitude);
+          createOplog, latitude, longitude, comment);
     }
     return orElse();
   }
@@ -1070,7 +1092,8 @@ abstract class SaveAsDraftEvent implements AttendanceIndividualEvent {
       final bool isSingleSession,
       final bool? createOplog,
       final double? latitude,
-      final double? longitude}) = _$SaveAsDraftEventImpl;
+      final double? longitude,
+      final String? comment}) = _$SaveAsDraftEventImpl;
 
   int get entryTime;
   int get exitTime;
@@ -1079,6 +1102,7 @@ abstract class SaveAsDraftEvent implements AttendanceIndividualEvent {
   bool? get createOplog;
   double? get latitude;
   double? get longitude;
+  String? get comment;
   @JsonKey(ignore: true)
   _$$SaveAsDraftEventImplCopyWith<_$SaveAsDraftEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -1172,7 +1196,8 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)
+            double? longitude,
+            String? comment)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
@@ -1203,7 +1228,8 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)?
+            double? longitude,
+            String? comment)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
@@ -1234,7 +1260,8 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
             bool isSingleSession,
             bool? createOplog,
             double? latitude,
-            double? longitude)?
+            double? longitude,
+            String? comment)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),

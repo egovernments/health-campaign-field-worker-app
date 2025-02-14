@@ -18,6 +18,8 @@ const individualDetailsShowcase = IndividualDetailsShowcase();
 const householdOverviewShowcase = HouseholdOverviewShowcase();
 const deliverInterventionShowcase = DeliverInterventionShowcase();
 const checklist = Checklist();
+const clfLocationShowCase = CLFLocationShowcase();
+const clfDetailsShowcase = CLFDetailsShowcase();
 
 class Common {
   const Common();
@@ -85,15 +87,19 @@ class Common {
   String get coreCommonYes => 'CORE_COMMON_YES';
 
   String get coreCommonNo => 'CORE_COMMON_NO';
+
   String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
 
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 
+  String get min3CharsRequired => 'MIN_3_CHARS_REQUIRED';
+
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
   String get maxValue => 'MAX_VALUE_ALLOWED';
+
   String get minValue => 'MIN_VALUE_ALLOWED';
 
   String get noResultsFound => 'NO_RESULTS_FOUND';
@@ -103,6 +109,7 @@ class Common {
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
   String get projectFacilitySearchHeaderLabel =>
       'PROJECT_FACILITY_SEARCH_HEADER_LABEL';
 
@@ -113,17 +120,33 @@ class Common {
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
+
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+
   String get locationCapturing => 'CAPTURING_LOCATION';
+
   String get locationCaptured => 'LOCATION_CAPTURED';
+
   String get coreCommonSummaryDetails => 'CORE_COMMON_SUMMARY_DETAILS';
 
   String get metersNear => 'METERS_NEAR';
+
   String get coreCommonLoadingText => 'CORE_COMMON_LOADING_TEXT';
+
+  String get minAge => 'MINIMUM_AGE_SHOULD_BE_GREATER_THAN_0';
+
+  String get maxAge => 'MAXIMUM_AGE_CAN_NOT_EXCEED_150_YEARS';
 }
 
 class SearchBeneficiary {
   const SearchBeneficiary();
+
+  String get communityProximityLabel =>
+      'BENEFICIARY_SEARCH_COMMUNITY_PROXIMITY_LABEL_TEXT';
+
+  String get clfSearchHintText => 'BENEFICIARY_CLF_SEARCH_HINT_TEXT';
+
+  String get searchCLFLabel => 'BENEFICIARY_SEARCH_CLF_LABEL_TEXT';
 
   String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
 
@@ -143,7 +166,11 @@ class SearchBeneficiary {
 
   String get beneficiaryInfoTitle => 'BENEFICIARY_INFO_TITLE';
 
+  String get clfInfoTitle => 'BENEFICIARY_CLF_INFO_TITLE';
+
   String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
+
+  String get clfAddActionLabel => 'BENEFICIARY_ADD_CLF_ACTION_LABEL';
 
   String get iconLabel => 'ICON_LABEL';
 
@@ -164,28 +191,45 @@ class BeneficiaryDetails {
   const BeneficiaryDetails();
 
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
+
   String get beneficiarysDetailsEditIconLabelText =>
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL_TEXT';
+
   String get beneficiarysDetailsEditIconLabel =>
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL';
+
   String get beneficiarysDetailsDeleteIconLabel =>
       'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
+
   String get resourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
+
   String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
+
   String get ctaProceed => 'PROCEED';
+
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
+
   String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
+
   String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
+
   String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
+
   String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';
+
   String get beneficiaryCompletedOn => 'BENEFICIARY_DETAILS_COMPLETED_ON';
+
   String get beneficiaryDeliveryStrategy =>
       'BENEFICIARY_DETAILS_DELIVERY_STRATEGY';
+
   String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
+
   String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
+
   String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
+
   String get unableToScan => 'UNABLE_TO_SCAN';
 
   String get scanValidResource => 'SCAN_VALID_RESOURCE';
@@ -213,38 +257,65 @@ class BeneficiaryDetails {
   String get scannerDialogPrimaryAction => 'SCANNER_DIALOG_PRIMARY_ACTION';
 
   String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
+
   String get beneficiaryHeader => 'BENEFICIARY_HEADER';
+
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
+
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
+
   String get dataFound => 'DATA_FOUND';
+
   String get noDataFound => 'NO_DATA_FOUND';
+
   String get dataFoundContent => 'DATA_FOUND_CONTENT';
+
   String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
+
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
+
   String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
+
   String get downloadreport => 'DOWNLOAD_REPORT';
+
   String get boundary => 'BOUNDARY';
+
   String get status => 'STATUS';
+
   String get downloadedon => 'DOWNLOADED_ON';
+
   String get recordsdownload => 'RECORDS_DOWNLOAD';
+
   String get downloadcompleted => 'DOWNLOAD_COMPLETED';
+
   String get datadownloadreport => 'DATA_DOWNLOAD_REPORT';
+
   String get download => 'DOWNLOAD';
+
   String get partialdownloaded => 'PARTIAL_DOWNLOAD';
+
   String get downloadtime => 'DOWNLOAD_TIME';
+
   String get totalrecorddownload => 'TOTAL_RECORD_DOWNLOAD';
+
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
+
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+
   String get householdMemberSingular => 'BENEFICIARY_HOUSEHOLD_MEMBER';
+
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
+
   String get totalMembers => 'TOTAL_HOUSEHOLD_MEMBERS';
 }
 
 class IndividualDetails {
   const IndividualDetails();
+
+  String get clfCheckboxLabelText => 'INDIVIDUAL_CLF_CHECKBOX_LABEL_TEXT';
 
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
 
@@ -281,6 +352,7 @@ class IndividualDetails {
       'INDIVIDUAL_DETAILS_MOBILE_NUMBER_LENGTH';
 
   String get yearsHintText => 'YEARS_HINT_TEXT';
+
   String get monthsHintText => 'MONTHS_HINT_TEXT';
 
   String get yearsErrorText => 'ERR_YEARS';
@@ -295,12 +367,17 @@ class IndividualDetails {
 class HouseholdLocation {
   const HouseholdLocation();
 
+  String get buildingNameLabel => 'CLF_BUILDING_NAME_LABEL_TEXT';
+
+  String get clfLocationLabelText => 'CLF_LOCATION_LABEL_TEXT';
+
   String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
 
   String get householdLocationDescriptionText =>
       'HOUSEHOLD_LOCATION_DESCRIPTION_TEXT';
 
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
+
   String get gpsAccuracyLabel => 'CLOSE_HOUSEHOLD_GPS_ACCURACY_LABEL';
 
   String get administrationAreaRequiredValidation =>
@@ -332,7 +409,9 @@ class AcknowledgementSuccess {
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 
   String get goToHome => 'GO_TO_HOME_SCREEN';
+
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
+
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
@@ -381,6 +460,8 @@ class HouseholdDetails {
 
   String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
 
+  String get clfDetailsLabel => 'CLF_DETAILS_LABEL';
+
   String get householdDetailsDescription => 'HOUSEHOLD_DETAILS_DESCRIPTION';
 
   String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
@@ -389,14 +470,33 @@ class HouseholdDetails {
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
 
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+
+  String get noOfMembersCountCLFLabel => 'NO_OF_MEMBERS_COUNT_CLF_LABEL';
+
   String get noOfPregnantWomenCountLabel => 'NO_OF_PREGNANT_WOMEN_LABEL';
+
+  String get noOfPregnantWomenCountCLFLabel => 'NO_OF_PREGNANT_WOMEN_CLF_LABEL';
+
   String get noOfChildrenBelow5YearsLabel => 'NO_OF_CHILDREN_BELOW_5_YR_LABEL';
+
+  String get noOfChildrenBelow5YearsCLFLabel =>
+      'NO_OF_CHILDREN_BELOW_5_YR_CLF_LABEL';
+
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
+
   String get noOfRoomsLabel => 'NO_OF_ROOMS_LABEL';
+
+  String get noOfRoomsCLFLabel => 'NO_OF_ROOMS_CLF_LABEL';
+
   String get houseDetailsLabel => 'HOUSE_DETAILS_LABEL';
+
+  String get clfStructureDetailsLabel => 'CLF_STRUCTURE_DETAILS_LABEL';
+
   String get selectStructureTypeError => 'PLEASE_SELECT_STRUCTURE_TYPE';
+
   String get memberCountError => 'MEMBER_COUNT_ERROR';
+
   String get typeOfStructure => 'TYPE_OF_STRUCTURE';
 }
 
@@ -405,14 +505,24 @@ class HouseholdOverView {
 
   String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
 
+  String get instituteNameLabel => 'HOUSEHOLD_OVER_VIEW_INSTITUTE_NAME_LABEL';
+
+  String get instituteTypeLabel => 'HOUSEHOLD_OVER_VIEW_INSTITUTE_TYPE_LABEL';
+
+  String get clfOverviewLabel => 'HOUSEHOLD_OVER_VIEW_CLF_LABEL';
+
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
+
+  String get clfOverViewEditLabel => 'CLF_OVER_VIEW_EDIT_ICON_LABEL';
 
   String get householdOverViewDeleteLabel =>
       'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
 
   String get householdOverViewEditIconText =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
+
+  String get clfOverViewEditIconText => 'CLF_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
 
   String get householdOverViewActionCardTitle =>
       'HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE';
@@ -462,6 +572,8 @@ class MemberCard {
 
   String get assignAsHouseholdhead => 'MEMBER_CARD_ASSIGN_AS_HEAD';
 
+  String get assignAsClfhead => 'MEMBER_CARD_ASSIGN_AS_CLF';
+
   String get editIndividualDetails => 'MEMBER_CARD_EDIT_INDIVIDUAL_DETAILS';
 
   String get deleteIndividualActionText =>
@@ -488,6 +600,7 @@ class MemberCard {
 
   String get recordAdverseEventsLabel =>
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
+
   String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
 }
 
@@ -495,12 +608,16 @@ class DeliverIntervention {
   const DeliverIntervention();
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
-  String get beneficiaryChecklistDialogTitle =>
-      'BENEFICIARY_CHECKLIST_DIALOG_TITLE';
+
+  String get beneficiaryChecklistDialogDescription =>
+      'BENEFICIARY_CHECKLIST_DIALOG_DESCRIPTION';
 
   String get refusedDeliveryLabel => 'REFUSED_DELIVERY_LABEL';
+
   String get refusedDeliveryVisitDateLabel => 'REFUSED_DELIVERY_VISIT_DATE';
+
   String get reasonForRefusalLabel => 'REASON_FOR_REFUSAL_LABEL';
+
   String get reasonForRefusalCommentLabel => 'REASON_FOR_REFUSAL_COMMENT_LABEL';
 
   String get deliverInterventionResourceLabel =>
@@ -522,6 +639,7 @@ class DeliverIntervention {
 
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+
   String get deliveryCommentHeading =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_HEADING';
 
@@ -543,31 +661,46 @@ class DeliverIntervention {
 
   String get didYouObserveAdvEventsTitle =>
       'DID_YOU_OBSERVE_ADVERSE_EVENTS_TITLE';
+
   String get didYouObservePreviousAdvEventsTitle =>
       'DID_YOU_OBSERVE_PREVIOUS_ADVERSE_EVENTS_TITLE';
 
   String get heightLabelText => 'HEIGHT_LABEL_TEXT';
+
   String get resourceAddBeneficiary =>
       'DELIVER_INTERVENTION_RESOURCE_ADD_RESOURCE';
+
   String get resourceDeleteBeneficiary =>
       'DELIVER_INTERVENTION_RESOURCE_DELETE_RESOURCE';
+
   String get resourceDeleteBeneficiaryDialogTitle =>
       'DELIVER_INTERVENTION_RESOURCE_DIALOG_TITLE';
+
   String get resourceDeleteBeneficiaryPrimaryActionLabel =>
       'DELIVER_INTERVENTION_RESOURCE_DELETE_PRIMARY_ACTION_LABEL';
+
   String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
+
   String get dose => 'DELIVER_INTERVENTION_DOSE';
+
   String get hidePastCycles => 'DELIVER_INTERVENTION_HIDE_PAST_CYCLES';
+
   String get viewPastCycles => 'DELIVER_INTERVENTION_VIEW_PAST_CYCLES';
+
   String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
+
   String get cycle => 'DELIVERY_CYCLE';
+
   String get recordPastDeliveryDeatils =>
       'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
+
   String get wasDosePastDeliveryDetails =>
       'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS';
+
   //[todo] need to change the 24
   String get wasDosePastRecordDeliveryDetails =>
       'DELIVER_INTERVENTION_PAST_RECORD_DOSE_DELIVERY_DETAILS';
+
   String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
 
   String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
@@ -620,30 +753,53 @@ class ReferBeneficiary {
   const ReferBeneficiary();
 
   String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
+
   String get dateOfEvaluationLabel =>
       'REFER_BENEFICIARY_DATE_OF_EVALUATION_LABEL';
+
   String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
+
   String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
+
   String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
+
   String get reasonForReferral => 'REASON_FOR_REFERRAL';
+
   String get referralComments => 'REFERRAL_COMMENTS';
+
   String get referralDetails => 'REFERRAL_DETAILS_HEADER';
+
   String get facilityValidationMessage => 'PLEASE_ENTER_VALID_FACILITY';
+
   String get facilityDetails => 'FACILITY_DETAILS_HEADER';
+
   String get evaluationFacilityLabel => 'EVALUATION_FACILITY_LABEL';
+
   String get nameOfHealthFacilityCoordinatorLabel =>
       'NAME_OF_HEALTH_FACILITY_COORDINATOR';
+
   String get healthFacilityCoordinatorLabel => 'NAME_OF_HF_COORDINATOR_LABEL';
+
   String get nameOfTheChildLabel => 'REFERRAL_NAME_OF_CHILD_LABEL';
+
   String get beneficiaryIdLabel => 'REFERRAL_BENEFICIARY_ID_LABEL';
+
   String get referralCodeLabel => 'REFERRAL_CODE_LABEL';
+
   String get reasonForReferralHeader => 'REASON_FOR_REFERRAL_HEADER';
+
   String get searchReferralsHeader => 'SEARCH_REFERRALS_HEADER';
+
   String get referredByTeamCodeLabel => 'REFERRED_BY_TEAM_CODE_LABEL';
+
   String get selectCycle => 'REFERRAL_SELECT_CYCLE';
+
   String get createReferralLabel => 'CREATE_REFERRAL_LABEL';
+
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
+
   String get noFacilityAssigned => 'NO_FACILITY_ASSIGNED';
+
   String get noFacilityAssignedDescription =>
       'NO_FACILITY_ASSIGNED_DESCRIPTION';
 }
@@ -736,6 +892,10 @@ String get registerNewHousehold {
 
 class HouseholdLocationShowcase {
   const HouseholdLocationShowcase();
+
+  String get buildingName {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_BUILDING_NAME';
+  }
 
   String get administrativeArea {
     return 'HOUSEHOLD_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';
@@ -887,4 +1047,50 @@ class DeliverInterventionShowcase {
   String get deliveryComment {
     return 'DELIVER_INTERVENTION_SHOWCASE_DELIVERY_COMMENT';
   }
+}
+
+class CLFLocationShowcase {
+  const CLFLocationShowcase();
+
+  String get buildingName {
+    return 'CLF_LOCATION_SHOWCASE_BUILDING_NAME';
+  }
+
+  String get administrativeArea {
+    return 'CLF_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';
+  }
+
+  String get gpsAccuracy {
+    return 'CLF_LOCATION_SHOWCASE_GPS_ACCURACY_LABEL';
+  }
+
+  String get landmark {
+    return 'CLF_LOCATION_SHOWCASE_LANDMARK';
+  }
+
+  String get address {
+    return 'CLF_LOCATION_SHOWCASE_ADDRESS';
+  }
+
+  String get postalCode {
+    return 'CLF_LOCATION_SHOWCASE_POSTAL_CODE';
+  }
+}
+
+class CLFDetailsShowcase {
+  const CLFDetailsShowcase();
+
+  String get dateOfRegistration {
+    return 'CLF_DETAILS_SHOWCASE_DATE_OF_REGISTRATION';
+  }
+
+  String get numberOfMembersLivingInHousehold {
+    return 'CLF_DETAILS_SHOWCASE_NUMBER_OF_MEMBERS_LIVING_IN_INSTITUTION';
+  }
+
+  String get numberOfPregnantWomenInHousehold =>
+      'CLF_DETAILS_SHOWCASE_NO_OF_PREGNANT_WOMEN_IN_INSTITUTION';
+
+  String get numberOfChildrenBelow5InHousehold =>
+      'CLF_DETAILS_SHOWCASE_NO_OF_CHILD_BELOW_5_IN_INSTITUTION';
 }

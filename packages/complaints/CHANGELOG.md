@@ -1,3 +1,11 @@
+## 1.0.2
+
+* Upgraded to latest packages
+
+## 1.0.1
+
+* Upgrade digit_ui_components to 0.0.2-dev.6
+
 ## 1.0.0
 
 * Upgrade to Flutter 3.22

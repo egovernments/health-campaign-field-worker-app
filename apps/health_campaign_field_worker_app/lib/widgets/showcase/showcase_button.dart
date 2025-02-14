@@ -1,6 +1,6 @@
 import 'package:complaints/router/complaints_router.gm.dart';
-import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_showcase/showcase_widget.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../../blocs/localization/app_localization.dart';
@@ -21,8 +21,7 @@ class ShowcaseButton extends LocalizedStatefulWidget {
 class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+    return DigitButton(
       onPressed: () {
         if (widget.showcaseFor?.isNotEmpty == true) {
           ShowcaseWidget.of(context).startShowCase(
@@ -40,23 +39,10 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
 
         ShowcaseWidget.of(context).startShowCase(paths.toList());
       },
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              kPadding,
-              kPadding,
-              kPadding / 2,
-              kPadding,
-            ),
-            child: Text(
-              AppLocalizations.of(context).translate(i18.common.coreCommonHelp),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const Icon(Icons.help_outline),
-        ],
-      ),
+      label: AppLocalizations.of(context).translate(i18.common.coreCommonHelp),
+      type: DigitButtonType.tertiary,
+      size: DigitButtonSize.medium,
+      suffixIcon: Icons.help_outline,
     );
   }
 

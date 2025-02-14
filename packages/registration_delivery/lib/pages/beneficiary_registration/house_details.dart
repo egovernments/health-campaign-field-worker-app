@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
@@ -56,9 +57,11 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                     enableFixedDigitButton: true,
                     header: const Column(
                       children: [
-                        BackNavigationHelpHeaderWidget(
-                          showcaseButton: ShowcaseButton(),
-                          showHelp: false,
+                        Padding(
+                          padding: EdgeInsets.only(bottom: spacer2),
+                          child: BackNavigationHelpHeaderWidget(
+                            showHelp: false,
+                          ),
                         ),
                       ],
                     ),
@@ -99,6 +102,9 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 ) {
                                   var houseModel = HouseholdModel(
                                       clientReferenceId: IdGen.i.identifier,
+                                      householdType:
+                                          RegistrationDeliverySingleton()
+                                              .householdType,
                                       tenantId: RegistrationDeliverySingleton()
                                           .tenantId,
                                       rowVersion: 1,
@@ -220,30 +226,41 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                     slivers: [
                       SliverToBoxAdapter(
                         child: DigitCard(
-                          margin: const EdgeInsets.all(spacer2),
+                            margin: const EdgeInsets.all(spacer2),
                             children: [
-                          Padding(
-                            padding: const EdgeInsets.all(0),
-                            child: Text(
-                              localizations.translate(
-                                i18.householdDetails.houseDetailsLabel,
+                              Padding(
+                                padding: EdgeInsets.zero,
+                                child: Text(
+                                  (RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community)
+                                      ? localizations.translate(
+                                          i18.householdDetails
+                                              .clfStructureDetailsLabel,
+                                        )
+                                      : localizations.translate(
+                                          i18.householdDetails
+                                              .houseDetailsLabel,
+                                        ),
+                                  style: textTheme.headingXl.copyWith(
+                                    color: theme.colorTheme.primary.primary2
+                                  ),
+                                ),
                               ),
-                              style: textTheme.headingXl,
-                            ),
-                          ),
-                          houseShowcaseData.typeOfStructure.buildWith(
-                            child: SelectionCard<String>(
-                              showParentContainer: true,
-                              isRequired: true,
-                              title: localizations.translate(
-                                  i18.householdDetails.typeOfStructure),
-                              equalWidthOptions: true,
-                              allowMultipleSelection: false,
-                              options: RegistrationDeliverySingleton()
-                                      .houseStructureTypes ??
-                                  [],
-                              initialSelection:
-                                  form.control(_householdStructureKey).value !=
+                              houseShowcaseData.typeOfStructure.buildWith(
+                                child: SelectionCard<String>(
+                                  showParentContainer: true,
+                                  isRequired: true,
+                                  title: localizations.translate(
+                                      i18.householdDetails.typeOfStructure),
+                                  equalWidthOptions: true,
+                                  allowMultipleSelection: false,
+                                  options: RegistrationDeliverySingleton()
+                                          .houseStructureTypes ??
+                                      [],
+                                  initialSelection: form
+                                              .control(_householdStructureKey)
+                                              .value !=
                                           null
                                       ? [
                                           ...form
@@ -251,64 +268,72 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                               .value
                                         ]
                                       : [],
-                              onSelectionChanged: (values) {
-                                form
-                                    .control(_householdStructureKey)
-                                    .markAsTouched();
-                                if (values.isEmpty) {
-                                  form.control(_householdStructureKey).value =
-                                      null;
-                                  setState(() {
+                                  onSelectionChanged: (values) {
                                     form
                                         .control(_householdStructureKey)
-                                        .setErrors({'': true});
-                                  });
-                                } else {
-                                  setState(() {
-                                    form.control(_householdStructureKey).value =
-                                        values;
-                                  });
-                                }
-                              },
-                              valueMapper: (value) {
-                                return localizations
-                                    .translate(value.toString());
-                              },
-                              errorMessage: form
-                                          .control(_householdStructureKey)
-                                          .hasErrors &&
+                                        .markAsTouched();
+                                    if (values.isEmpty) {
                                       form
                                           .control(_householdStructureKey)
-                                          .touched
-                                  ? localizations.translate(i18.householdDetails
-                                      .selectStructureTypeError)
-                                  : null,
-                            ),
-                          ),
-                          houseShowcaseData.noOfRooms.buildWith(
-                            child: ReactiveWrapperField(
-                              formControlName: _noOfRoomsKey,
-                              builder: (field) => LabeledField(
-                                label: localizations.translate(
-                                  i18.householdDetails.noOfRoomsLabel,
-                                ),
-                                child: DigitNumericFormInput(
-                                  minValue: 1,
-                                  maxValue: 20,
-                                  initialValue: form
-                                      .control(_noOfRoomsKey)
-                                      .value
-                                      .toString(),
-                                  step: 1,
-                                  onChange: (value) {
-                                    form.control(_noOfRoomsKey).value =
-                                        int.parse(value);
+                                          .value = null;
+                                      setState(() {
+                                        form
+                                            .control(_householdStructureKey)
+                                            .setErrors({'': true});
+                                      });
+                                    } else {
+                                      setState(() {
+                                        form
+                                            .control(_householdStructureKey)
+                                            .value = values;
+                                      });
+                                    }
                                   },
+                                  valueMapper: (value) {
+                                    return localizations
+                                        .translate(value.toString());
+                                  },
+                                  errorMessage: form
+                                              .control(_householdStructureKey)
+                                              .hasErrors &&
+                                          form
+                                              .control(_householdStructureKey)
+                                              .touched
+                                      ? localizations.translate(i18
+                                          .householdDetails
+                                          .selectStructureTypeError)
+                                      : null,
                                 ),
                               ),
-                            ),
-                          ),
-                        ]),
+                              houseShowcaseData.noOfRooms.buildWith(
+                                child: ReactiveWrapperField(
+                                  formControlName: _noOfRoomsKey,
+                                  builder: (field) => LabeledField(
+                                    label: (RegistrationDeliverySingleton()
+                                                .householdType ==
+                                            HouseholdType.community)
+                                        ? localizations.translate(i18
+                                            .householdDetails.noOfRoomsCLFLabel)
+                                        : localizations.translate(
+                                            i18.householdDetails.noOfRoomsLabel,
+                                          ),
+                                    child: DigitNumericFormInput(
+                                      minValue: 1,
+                                      maxValue: 20,
+                                      initialValue: form
+                                          .control(_noOfRoomsKey)
+                                          .value
+                                          .toString(),
+                                      step: 1,
+                                      onChange: (value) {
+                                        form.control(_noOfRoomsKey).value =
+                                            int.parse(value);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ]),
                       ),
                     ],
                   );
