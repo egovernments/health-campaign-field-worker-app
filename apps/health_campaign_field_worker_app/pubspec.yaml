@@ -53,23 +53,23 @@ dependencies:
   package_info_plus: ^8.0.0
   expandable: ^5.0.1
   flutter_svg: ^2.0.10+1
-  digit_showcase: ^1.0.0
+  digit_showcase: ^1.0.2
   qr_flutter: ^4.1.0
   disk_space_update: ^0.0.2
-  sync_service: ^0.0.1-dev.1
-  attendance_management: ^1.0.3
-  digit_scanner: ^1.0.4
-  inventory_management: ^1.0.4
-  referral_reconciliation: ^1.0.3
-  digit_data_model: ^1.0.5
-  registration_delivery: ^1.0.5+2
+  sync_service: ^1.0.0
+  attendance_management: ^1.0.4+1
+  digit_scanner: ^1.0.5
+  inventory_management: ^1.0.5
+  referral_reconciliation: ^1.0.4
+  digit_data_model: ^1.0.6
+  registration_delivery: ^1.0.6
   disable_battery_optimization: ^1.1.1
-  digit_dss: ^1.0.3
-  closed_household: ^1.0.3
+  digit_dss: ^1.0.4
+  closed_household: ^1.0.5
   digit_location_tracker: ^1.0.0
   permission_handler: ^11.3.1
-  survey_form: ^1.0.0
-  complaints: ^1.0.0
+  survey_form: ^1.0.1
+  complaints: ^1.0.2
 
 dev_dependencies:
   flutter_test:
