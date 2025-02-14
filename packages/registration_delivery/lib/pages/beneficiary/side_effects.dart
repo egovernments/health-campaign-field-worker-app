@@ -78,8 +78,11 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                         body: state.loading
                             ? const Center(child: CircularProgressIndicator())
                             : ScrollableContent(
-                                header: const BackNavigationHelpHeaderWidget(
-                                  showHelp: false,
+                                header: const Padding(
+                                  padding: EdgeInsets.only(bottom: spacer4),
+                                  child: BackNavigationHelpHeaderWidget(
+                                    showHelp: false,
+                                  ),
                                 ),
                                 footer: DigitCard(
                                     margin: const EdgeInsets.only(top: spacer2),
@@ -250,12 +253,16 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                     ]),
                                 slivers: [
                                   SliverToBoxAdapter(
-                                    child: DigitCard(children: [
+                                    child: DigitCard(
+                                      margin: const EdgeInsets.symmetric(horizontal: spacer2),
+                                        children: [
                                       Text(
                                         localizations.translate(
                                           i18.adverseEvents.sideEffectsLabel,
                                         ),
-                                        style: textTheme.headingXl,
+                                        style: textTheme.headingXl.copyWith(
+                                          color: theme.colorTheme.primary.primary2
+                                        ),
                                       ),
                                       Text(
                                         '${localizations.translate(

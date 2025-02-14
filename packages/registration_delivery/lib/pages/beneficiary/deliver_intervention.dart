@@ -367,8 +367,11 @@ class DeliverInterventionPageState
                                       },
                                     ),
                                     header: const Column(children: [
-                                      BackNavigationHelpHeaderWidget(
-                                        showHelp: false,
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom:spacer2),
+                                        child: BackNavigationHelpHeaderWidget(
+                                          showHelp: false,
+                                        ),
                                       ),
                                     ]),
                                     children: [
@@ -383,7 +386,7 @@ class DeliverInterventionPageState
                                                     i18.deliverIntervention
                                                         .deliverInterventionLabel,
                                                   ),
-                                                  style: textTheme.headingXl,
+                                                  style: textTheme.headingXl.copyWith(color: theme.colorTheme.primary.primary2),
                                                 ),
                                                 if (RegistrationDeliverySingleton()
                                                         .beneficiaryType ==
@@ -414,7 +417,7 @@ class DeliverInterventionPageState
                                                     height: MediaQuery.sizeOf(
                                                                 context)
                                                             .height *
-                                                        0.08,
+                                                        0.07,
                                                     child: DigitStepper(
                                                       activeIndex:
                                                           deliveryInterventionState
@@ -465,7 +468,9 @@ class DeliverInterventionPageState
                                                     i18.deliverIntervention
                                                         .deliverInterventionResourceLabel,
                                                   ),
-                                                  style: textTheme.headingXl,
+                                                  style: textTheme.headingXl.copyWith(
+                                                    color: theme.colorTheme.primary.primary2
+                                                  ),
                                                 ),
                                                 ..._controllers.map((e) =>
                                                     ResourceBeneficiaryCard(
@@ -538,7 +543,9 @@ class DeliverInterventionPageState
                                                     i18.deliverIntervention
                                                         .deliveryCommentHeading,
                                                   ),
-                                                  style: textTheme.headingXl,
+                                                  style: textTheme.headingXl.copyWith(
+                                                    color: theme.colorTheme.primary.primary2
+                                                  ),
                                                 ),
                                                 ReactiveWrapperField(
                                                   formControlName:
