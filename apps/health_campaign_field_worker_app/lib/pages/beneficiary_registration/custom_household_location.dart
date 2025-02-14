@@ -495,7 +495,7 @@ class CustomHouseholdLocationPageState
         value: addressModel?.locationAccuracy,
       ),
       _refugeeKey: FormControl<String>(),
-      __refugeeCampsTypeKey: FormControl<String>(),
+      __refugeeCampsTypeKey: FormControl<RefugeeCampOptions>(),
       if (RegistrationDeliverySingleton().householdType ==
           HouseholdType.community)
         _buildingNameKey: FormControl<String>(
