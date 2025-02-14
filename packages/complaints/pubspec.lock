@@ -318,18 +318,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: c3bc7299a7d927ebb83d8e91c1d7a8a51f6a1d1295dafeacb642012b72b99a2f
+      sha256: bcb6c328a75df1442672e39c0dbae32bc9cb067a07a581bded672d2b748957b9
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: baa99c0c165f3459e78a1996e2db13243903eed6e5ece582241de03904f851e6
+      sha256: "4cab483b1526e3438b36bc4253022882f5c46646178e966d91247916fd1306d5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.9"
+    version: "0.0.2-dev.13"
   dio:
     dependency: "direct main"
     description:
