@@ -504,6 +504,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
+      i18.home.mySurveyForm:
+          homeShowcaseData.supervisorMySurveyForm.showcaseKey,
 
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
