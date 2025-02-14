@@ -186,6 +186,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         mainAxisSize: MainAxisSize.max,
                       ),
                       DigitButton(
+                        key: const Key('forget_button'),
                         label: localizations.translate(
                           i18.forgotPassword.actionLabel,
                         ),
@@ -207,6 +208,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                             type: PopUpType.simple,
                             actions: [
                               DigitButton(
+                                  key: const Key('forget_button-pop-up-button'),
                                   label: localizations.translate(
                                     i18.forgotPassword.primaryActionLabel,
                                   ),

@@ -1,17 +1,15 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/pages/login.dart';
 import 'package:health_campaign_field_worker_app/pages/project_selection.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:health_campaign_field_worker_app/main.dart' as app;
-import 'package:mocktail/mocktail.dart';
 import 'helper_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Login Test', () {
+  group('Project selection Test', () {
     late FlutterExceptionHandler originalOnError;
 
     setUp(() {
@@ -24,7 +22,7 @@ void main() {
       FlutterError.onError = originalOnError;
     });
 
-    testWidgets('Login flow', (WidgetTester tester) async {
+    testWidgets('Project selection flow', (WidgetTester tester) async {
       // Override FlutterError.onError temporarily
       // Chain error handlers properly
       final originalOnError = FlutterError.onError;
@@ -52,24 +50,13 @@ void main() {
         // Verify navigation to login
         expect(find.byType(LoginPage), findsOneWidget);
 
-        // Enter credentials(Invalid credentials flow)
-        await loginPageHelper(tester,'usr-1234','eGov@1234',1);
-
-        // Wait for navigation
-        await tester.pumpAndSettle();
-
-        // Verify toast content
-        final toast = find.descendant(
-          of: find.byType(Overlay),
-          matching: find.text('Unable to login'),
-        );
-        expect(toast, findsOneWidget);
-
         // Enter credentials(Valid credentials flow)
         await loginPageHelper(tester,'USR-016817','eGov@123',5);
 
         // Verify successful navigation
         expect(find.byType(ProjectSelectionPage), findsOneWidget);
+
+
       } finally {
         // Restore FlutterError.onError to its original state
         FlutterError.onError = originalOnError;

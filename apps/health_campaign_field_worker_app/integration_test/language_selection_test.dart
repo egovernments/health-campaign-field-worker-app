@@ -43,7 +43,7 @@ void main() {
         expect(find.byKey(const Key('language_selection_container')), findsOneWidget);
 
         // Select language option
-        await languageSelectionHelper(tester);
+        await languageSelectionPageHelper(tester);
 
         // Check for errors during test
         final exception = tester.takeException();

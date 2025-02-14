@@ -5,7 +5,6 @@ import 'package:health_campaign_field_worker_app/pages/login.dart';
 import 'package:health_campaign_field_worker_app/pages/project_selection.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:health_campaign_field_worker_app/main.dart' as app;
-import 'package:mocktail/mocktail.dart';
 import 'helper_test.dart';
 
 void main() {
@@ -52,24 +51,17 @@ void main() {
         // Verify navigation to login
         expect(find.byType(LoginPage), findsOneWidget);
 
-        // Enter credentials(Invalid credentials flow)
-        await loginPageHelper(tester,'usr-1234','eGov@1234',1);
+        await tester.tap(find.byKey(const Key('forget_button')));
+        await tester.pump(const Duration(milliseconds: 100));
 
-        // Wait for navigation
-        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('forget_button-pop-up-button')), findsOneWidget);
 
-        // Verify toast content
-        final toast = find.descendant(
-          of: find.byType(Overlay),
-          matching: find.text('Unable to login'),
-        );
-        expect(toast, findsOneWidget);
+        await tester.tap(find.byKey(const Key('forget_button-pop-up-button'),));
+        await tester.pump(const Duration(milliseconds: 100));
 
-        // Enter credentials(Valid credentials flow)
-        await loginPageHelper(tester,'USR-016817','eGov@123',5);
-
-        // Verify successful navigation
-        expect(find.byType(ProjectSelectionPage), findsOneWidget);
+        // Verify that we are on the Language Selection Page
+        expect(find.byKey(const Key('language_selection_container')), findsOneWidget);
+        await tester.pumpAndSettle(const Duration(seconds: 3));
       } finally {
         // Restore FlutterError.onError to its original state
         FlutterError.onError = originalOnError;
