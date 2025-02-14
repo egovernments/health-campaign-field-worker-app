@@ -2,6 +2,7 @@
 
 * Upgrade digit_ui_components, digit_data_model
 * Added type as family while creating new household
+* UI/UX fixes
 
 ## 1.0.4
 

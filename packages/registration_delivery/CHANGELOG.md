@@ -1,3 +1,11 @@
+## 1.0.6
+
+* Added support for Eligibility checklist
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+* UI/UX fixes
+* Updated to latest packages
+
 ## 1.0.5+2-dev.1
 
 * Added support for Eligibility checklist

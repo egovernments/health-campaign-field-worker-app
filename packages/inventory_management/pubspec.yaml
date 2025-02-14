@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_ui_components: ^0.0.2-dev.13
+  digit_ui_components: ^0.0.2-dev.14
   flutter_bloc: ^8.1.5
   freezed_annotation: ^2.4.1
   reactive_forms: ^17.0.0
@@ -28,10 +28,6 @@ dependencies:
   uuid: ^4.4.0
   fluttertoast: ^8.1.2
   overlay_builder: ^1.1.0
-  sqlite3_flutter_libs: ^0.5.10
-  path_provider: ^2.0.11
-  path: ^1.8.2
-  drift_db_viewer: ^2.0.0
   recase: ^4.1.0
   digit_scanner: ^1.0.5
   pluto_grid: ^8.0.0

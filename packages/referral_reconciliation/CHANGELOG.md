@@ -1,6 +1,8 @@
 ## 1.0.4
 
 * Updated to latest package versions
+* UI/UX fixes
+* Bug fixes
 
 ## 1.0.3+1
 
