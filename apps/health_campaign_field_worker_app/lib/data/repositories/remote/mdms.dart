@@ -274,6 +274,15 @@ class MdmsRepository {
       return deliveryCommentOption;
     }).toList();
 
+    final List<RefugeeCampOptions>? refugeeCampOptions =
+        element?.refugeeCampOptions.map((element) {
+      final refugeeCampOption = RefugeeCampOptions()
+        ..name = element.name
+        ..code = element.code;
+
+      return refugeeCampOption;
+    }).toList();
+
     final List<Interfaces>? interfaceList =
         element?.backendInterface.first.interface.map((e) {
       final config = Config()..localStoreTTL = e.config.localStoreTTL;
@@ -301,6 +310,7 @@ class MdmsRepository {
     appConfiguration.idTypeOptions = idTypeOptions;
     appConfiguration.privacyPolicyConfig = privacyPolicy;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
+    appConfiguration.refugeeCampOptions = refugeeCampOptions;
     appConfiguration.householdDeletionReasonOptions =
         householdDeletionReasonOptions;
     appConfiguration.householdMemberDeletionReasonOptions =

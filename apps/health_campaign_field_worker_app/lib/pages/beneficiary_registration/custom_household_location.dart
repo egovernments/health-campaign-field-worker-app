@@ -28,6 +28,8 @@ import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_radio_list.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_text_form_input.dart';
 
+import '../../blocs/app_initialization/app_initialization.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../router/app_router.dart';
 
 @RoutePage()
@@ -52,7 +54,6 @@ class CustomHouseholdLocationPageState
   static const _buildingNameKey = 'buildingName';
   static const _refugeeKey = 'refugee';
   static const __refugeeCampsTypeKey = 'refugeeCamps';
-  List<String> refugeeCampsList = ["camp1", "camp2", "camp3"];
   String? selectedRefugeeCamp;
   List<String> radioOptions = ["Yes", "No"];
   bool ifRefugeeCamp = false;
@@ -356,21 +357,44 @@ class CustomHouseholdLocationPageState
                           ),
                           Offstage(
                             offstage: !ifRefugeeCamp,
-                            child: DigitReactiveDropdown<String>(
-                              key: const Key(__refugeeCampsTypeKey),
-                              label: localizations.translate(
-                                'Refugee Camps List',
+                            child: DigitCard(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  BlocBuilder<AppInitializationBloc,
+                                      AppInitializationState>(
+                                    builder: (context, state) {
+                                      if (state is! AppInitialized) {
+                                        return const Offstage();
+                                      }
+
+                                      final refugeeCampOptions = state
+                                              .appConfiguration
+                                              .refugeeCampOptions ??
+                                          <RefugeeCampOptions>[];
+
+                                      return DigitReactiveDropdown<
+                                          RefugeeCampOptions>(
+                                        key: const Key(__refugeeCampsTypeKey),
+                                        label: localizations.translate(
+                                          'Refugee Camps List',
+                                        ),
+                                        menuItems: refugeeCampOptions ?? [],
+                                        formControlName: __refugeeCampsTypeKey,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedRefugeeCamp = value.name;
+                                          });
+                                        },
+                                        valueMapper: (value) =>
+                                            localizations.translate(value.name),
+                                        // isRequired: true,
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
-                              menuItems: refugeeCampsList ?? [],
-                              formControlName: __refugeeCampsTypeKey,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedRefugeeCamp = value;
-                                });
-                              },
-                              valueMapper: (value) =>
-                                  localizations.translate(value),
-                              // isRequired: true,
                             ),
                           ),
                           if (RegistrationDeliverySingleton().householdType ==
@@ -453,7 +477,7 @@ class CustomHouseholdLocationPageState
       _refugeeKey: FormControl<String>(
         value: radioOptions.last,
       ),
-      __refugeeCampsTypeKey: FormControl<String>(),
+      __refugeeCampsTypeKey: FormControl<RefugeeCampOptions>(),
       if (RegistrationDeliverySingleton().householdType ==
           HouseholdType.community)
         _buildingNameKey: FormControl<String>(
