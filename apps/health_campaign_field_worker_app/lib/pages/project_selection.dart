@@ -64,7 +64,9 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 localizations.translate(
                   i18.projectSelection.projectDetailsLabelText,
                 ),
-                style: textTheme.headingXl,
+                style: textTheme.headingXl.copyWith(
+                  color: theme.colorTheme.primary.primary2
+                ),
               ),
             ),
           ],
