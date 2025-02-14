@@ -188,7 +188,8 @@ class BeneficiaryDetailsPageState
                                                                 .beneficiaryDetails
                                                                 .resourcesTobeDelivered),
                                                         type: PopUpType.simple,
-                                                        contentPadding: EdgeInsets.zero,
+                                                        contentPadding:
+                                                            EdgeInsets.zero,
                                                         additionalWidgets: [
                                                           buildTableContent(
                                                               deliverState,
@@ -255,8 +256,7 @@ class BeneficiaryDetailsPageState
                                   localizations.translate(i18.beneficiaryDetails
                                       .beneficiarysDetailsLabelText),
                                   style: textTheme.headingXl.copyWith(
-                                    color: theme.colorTheme.primary.primary2
-                                  ),
+                                      color: theme.colorTheme.primary.primary2),
                                 ),
                                 DigitTableCard(
                                   element: {
@@ -395,43 +395,39 @@ class BeneficiaryDetailsPageState
                               .isNotEmpty)
                             DigitCard(
                                 margin: const EdgeInsets.all(spacer2),
-                                children: [
-                                  Column(
-                                    children: RegistrationDeliverySingleton()
-                                                .projectType
-                                                ?.cycles !=
-                                            null
-                                        ? [
-                                            BlocBuilder<DeliverInterventionBloc,
-                                                DeliverInterventionState>(
-                                              builder: (context, deliverState) {
-                                                return Column(
-                                                  children: [
-                                                    (RegistrationDeliverySingleton()
+                                children: RegistrationDeliverySingleton()
+                                            .projectType
+                                            ?.cycles !=
+                                        null
+                                    ? [
+                                        BlocBuilder<DeliverInterventionBloc,
+                                            DeliverInterventionState>(
+                                          builder: (context, deliverState) {
+                                            return Column(
+                                              children: [
+                                                (RegistrationDeliverySingleton()
+                                                                .projectType
+                                                                ?.cycles ??
+                                                            [])
+                                                        .isNotEmpty
+                                                    ? RecordDeliveryCycle(
+                                                        projectCycles:
+                                                            RegistrationDeliverySingleton()
                                                                     .projectType
                                                                     ?.cycles ??
-                                                                [])
-                                                            .isNotEmpty
-                                                        ? RecordDeliveryCycle(
-                                                            projectCycles:
-                                                                RegistrationDeliverySingleton()
-                                                                        .projectType
-                                                                        ?.cycles ??
-                                                                    [],
-                                                            taskData:
-                                                                taskData ?? [],
-                                                            individualModel: state
-                                                                .selectedIndividual,
-                                                          )
-                                                        : const Offstage(),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                          ]
-                                        : [],
-                                  ),
-                                ])
+                                                                [],
+                                                        taskData:
+                                                            taskData ?? [],
+                                                        individualModel: state
+                                                            .selectedIndividual,
+                                                      )
+                                                    : const Offstage(),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ]
+                                    : [])
                         ],
                       ),
                     );
