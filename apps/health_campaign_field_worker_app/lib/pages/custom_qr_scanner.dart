@@ -390,12 +390,12 @@ class _CustomDigitScannerPageState
                                 onPressed: () {
                                   final bloc = context.read<DigitScannerBloc>();
                                   if (widget.isGS1code) {
-                                    result = List.from(
+                                    List<GS1Barcode> newResult = List.from(
                                       state.barCodes,
                                     );
-                                    result.removeAt(index);
+                                    newResult.removeAt(index);
                                     setState(() {
-                                      result = result;
+                                      result = newResult;
                                     });
 
                                     bloc.add(
@@ -405,12 +405,12 @@ class _CustomDigitScannerPageState
                                       ),
                                     );
                                   } else {
-                                    codes = List.from(
+                                    List<String> newCodes = List.from(
                                       state.qrCodes,
                                     );
-                                    codes.removeAt(index);
+                                    newCodes.removeAt(index);
                                     setState(() {
-                                      codes = codes;
+                                      codes = newCodes;
                                     });
 
                                     bloc.add(
@@ -623,21 +623,22 @@ class _CustomDigitScannerPageState
   }
 
   Future<void> storeCodeWrapper(String code) async {
-    if (pattern.hasMatch(code) == false) {
-      await DigitToast.show(
-        currentContext,
-        options: DigitToastOptions(
-          localizations
-              .translate(i18Local.deliverIntervention.patternValidationFailed),
-          true,
-          Theme.of(currentContext),
-        ),
-      );
-      await Future.delayed(const Duration(seconds: 2));
-    } else if (codes.length < widget.quantity) {
+    if (codes.length < widget.quantity) {
       if (widget.scanType == ScanType.stock &&
           code.contains(Constants.pipeSeparator)) {
         code = code.split(Constants.pipeSeparator).last.trim();
+      } else if (pattern.hasMatch(code) == false) {
+        await DigitToast.show(
+          currentContext,
+          options: DigitToastOptions(
+            localizations.translate(
+                i18Local.deliverIntervention.patternValidationFailed),
+            true,
+            Theme.of(currentContext),
+          ),
+        );
+        await Future.delayed(const Duration(seconds: 2));
+        return;
       }
       await DigitScannerUtils().storeCode(
         context: currentContext,
