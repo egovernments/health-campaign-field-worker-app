@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -41,6 +42,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+
     return ProductVariantBlocWrapper(
       child: Scaffold(
           body: BlocConsumer<DeliverInterventionBloc, DeliverInterventionState>(
@@ -62,8 +66,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                       localizations.translate(
                         i18.common.coreCommonSummaryDetails,
                       ),
-                      style: DigitTheme
-                          .instance.mobileTheme.textTheme.displayMedium,
+                      style: textTheme.headingXl.copyWith(
+                        color: theme.colorTheme.primary.primary2
+                      ),
                     ),
                   ),
                 ),
@@ -183,6 +188,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 heading: localizations.translate(i18
                                     .householdLocation
                                     .householdLocationLabelText),
+                                headingStyle: textTheme.headingL.copyWith(
+                                  color: theme.colorTheme.primary.primary2,
+                                ),
                                 withDivider: false,
                                 items: [
                                   LabelValueItem(
@@ -197,6 +205,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                         i18.common.coreCommonNA),
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(bottom: spacer2)
                                   ),
                                   LabelValueItem(
                                     label: localizations.translate(i18
@@ -207,6 +216,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                             .translate(i18.common.coreCommonNA),
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(top: spacer2)
                                   ),
                                 ]),
                           ]),
@@ -217,6 +227,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.householdDetailsLabel),
+                                headingStyle: textTheme.headingL.copyWith(
+                                  color: theme.colorTheme.primary.primary2,
+                                ),
                                 withDivider: false,
                                 items: [
                                   LabelValueItem(
@@ -228,6 +241,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                         '0',
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(bottom: spacer2)
                                   ),
                                   LabelValueItem(
                                     label: localizations.translate(i18
@@ -269,6 +283,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                         '0',
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(top: spacer2)
                                   ),
                                 ]),
                           ]),
@@ -279,6 +294,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.houseDetailsLabel),
+                                headingStyle: textTheme.headingL.copyWith(
+                                  color: theme.colorTheme.primary.primary2,
+                                ),
                                 withDivider: false,
                                 items: [
                                   LabelValueItem(
@@ -299,6 +317,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                         '0',
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(bottom: spacer2)
                                   ),
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -324,6 +343,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                         .join(', '),
                                     isInline: true,
                                     labelFlex: 5,
+                                      padding: const EdgeInsets.only(top: spacer2)
                                   ),
                                 ]),
                           ]),
@@ -357,6 +377,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                   padding: EdgeInsets.zero,
                                   heading: localizations.translate(
                                       '${RegistrationDeliverySingleton().selectedProject?.projectType?.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
+                                  headingStyle: textTheme.headingL.copyWith(
+                                    color: theme.colorTheme.primary.primary2,
+                                  ),
                                   withDivider: false,
                                   items: [
                                     LabelValueItem(
@@ -398,6 +421,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               localizations.translate(
                                                   i18.common.coreCommonNA),
                                       labelFlex: 5,
+                                        padding: EdgeInsets.zero,
                                     ),
                                   ]),
                             ]);

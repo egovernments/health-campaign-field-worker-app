@@ -87,7 +87,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                         BoundarySelectionRoute(),
                                       ]);
                                     },
-                                    child: SizedBox(
+                                    child: Container(
+                                      padding: const EdgeInsets.only(right: spacer2),
                                       width: MediaQuery.of(context).size.width -
                                           60,
                                       child: Align(

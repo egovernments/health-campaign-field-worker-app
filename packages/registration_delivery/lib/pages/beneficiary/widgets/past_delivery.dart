@@ -65,7 +65,7 @@ Widget buildTableContent(
       right: spacer2,
       top: 0,
     ),
-    height: containerHeight,
+    // height: containerHeight,
     width: MediaQuery.of(context).size.width / 1.25,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,14 +90,15 @@ Widget buildTableContent(
           ),
         ),
         const DigitDivider(),
+        const SizedBox(height: spacer4,),
         // Build the DigitTable with the data
         if (fetchProductVariant(item, individualModel, householdModel)
                 ?.productVariants !=
             null)
           DigitTable(
-            enableBorder: true,
-            withRowDividers: true,
-            withColumnDividers: true,
+            enableBorder: false,
+            withRowDividers: false,
+            withColumnDividers: false,
             showSelectedState: false,
             showPagination: false,
             columns: columnListResource,
