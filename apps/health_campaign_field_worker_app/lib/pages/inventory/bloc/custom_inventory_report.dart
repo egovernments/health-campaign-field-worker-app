@@ -109,7 +109,21 @@ class CustomInventoryReportBloc
               element.auditDetails?.createdBy ==
                   InventorySingleton().loggedInUserUuid);
 
-      final groupedData = data.groupListsBy(
+      // Added data filter for dispatch because of no transaction reasons
+      // We are removing all the loss and damage stocks from here
+      var newData = data;
+      if (reportType == InventoryReportType.dispatch && data.isNotEmpty) {
+        newData = data.where((e) {
+          return [
+                TransactionReason.damagedInStorage.toValue(),
+                TransactionReason.damagedInTransit.toValue(),
+                TransactionReason.lostInStorage.toValue(),
+                TransactionReason.lostInTransit.toValue()
+              ].contains(e.transactionReason) ==
+              false;
+        });
+      }
+      final groupedData = newData.groupListsBy(
         (element) => DateFormat('dd MMM yyyy').format(
           DateTime.fromMillisecondsSinceEpoch(
             element.auditDetails!.createdTime,

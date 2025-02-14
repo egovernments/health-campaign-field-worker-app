@@ -79,6 +79,15 @@ class CustomStockReconciliationPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // Added the route here to allow multiple submission
+    onSubmissionCompleted() {
+      Future.delayed(const Duration(milliseconds: 300)).then((value) {
+        context.router.replace(
+          InventoryAcknowledgementRoute(),
+        );
+      });
+    }
+
     return InventorySingleton().projectId.isEmpty
         ? Center(
             child: Text(localizations
@@ -91,11 +100,11 @@ class CustomStockReconciliationPageState
               child: BlocConsumer<StockReconciliationBloc,
                   StockReconciliationState>(
                 listener: (context, stockState) {
-                  if (!stockState.persisted) return;
+                  // if (!stockState.persisted) return;
 
-                  context.router.replace(
-                    InventoryAcknowledgementRoute(),
-                  );
+                  // context.router.replace(
+                  //   InventoryAcknowledgementRoute(),
+                  // );
                 },
                 builder: (context, stockState) {
                   return BlocBuilder<InventoryProductVariantBloc,
@@ -338,6 +347,7 @@ class CustomStockReconciliationPageState
                                                             model,
                                                           ),
                                                         );
+                                                        onSubmissionCompleted();
                                                       }
                                                     },
                                               label: localizations.translate(

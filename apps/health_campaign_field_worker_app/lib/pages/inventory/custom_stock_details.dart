@@ -452,6 +452,10 @@ class CustomStockDetailsPageState
                                               .control(_deliveryTeamKey)
                                               .value as String?;
 
+                                          final transportTypeName = form
+                                              .control(_typeOfTransportKey)
+                                              .value as String?;
+
                                           final List<AdditionalField>
                                               additionalFields = [];
                                           final scannerState = context
@@ -762,6 +766,11 @@ class CustomStockDetailsPageState
                                                             _balesQuantityKey,
                                                             balesQuantity
                                                                 .toString()),
+                                                      if (transportTypeName !=
+                                                          null)
+                                                        AdditionalField(
+                                                            _typeOfTransportKey,
+                                                            transportTypeName),
                                                       if (hasLocationData) ...[
                                                         AdditionalField(
                                                           'lat',
@@ -1596,13 +1605,6 @@ class CustomStockDetailsPageState
                                             i18.stockDetails.transportTypeLabel,
                                           ),
                                           valueMapper: (e) => e,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              form.control(
-                                                _typeOfTransportKey,
-                                              );
-                                            });
-                                          },
                                           initialValue:
                                               transportTypes.firstOrNull?.name,
                                           menuItems: transportTypes.map(

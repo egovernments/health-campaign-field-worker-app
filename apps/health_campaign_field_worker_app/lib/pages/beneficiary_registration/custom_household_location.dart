@@ -31,6 +31,8 @@ import 'package:digit_ui_components/widgets/atoms/digit_text_form_input.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../router/app_router.dart';
+import '../../utils/constants.dart';
+import '../../utils/i18_key_constants.dart' as local_i18;
 
 @RoutePage()
 class CustomHouseholdLocationPage extends LocalizedStatefulWidget {
@@ -302,7 +304,9 @@ class CustomHouseholdLocationPageState
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, kPadding, 0, kPadding),
                             child: LabeledField(
-                              label: "Is it a Refugee Camp?",
+                              label: localizations.translate(
+                                local_i18.householdLocation.refugeeCampLabel,
+                              ),
                               isRequired: true,
                               child: Column(
                                 children: [
@@ -317,12 +321,12 @@ class CustomHouseholdLocationPageState
                                                 kPadding * 2,
                                                 kPadding / 6,
                                                 kPadding * 2,
-                                                kPadding / 6),
-                                        radioDigitButtons: radioOptions
+                                                kPadding),
+                                        radioDigitButtons: Constants.yesNo
                                             .map((item) => RadioButtonModel(
-                                                  code: item,
+                                                  code: item.key ? "Yes" : "No",
                                                   name: localizations
-                                                      .translate(item.trim()),
+                                                      .translate(item.label),
                                                 ))
                                             .toList(),
                                         groupValue:
@@ -357,44 +361,42 @@ class CustomHouseholdLocationPageState
                           ),
                           Offstage(
                             offstage: !ifRefugeeCamp,
-                            child: DigitCard(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  BlocBuilder<AppInitializationBloc,
-                                      AppInitializationState>(
-                                    builder: (context, state) {
-                                      if (state is! AppInitialized) {
-                                        return const Offstage();
-                                      }
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                BlocBuilder<AppInitializationBloc,
+                                    AppInitializationState>(
+                                  builder: (context, state) {
+                                    if (state is! AppInitialized) {
+                                      return const Offstage();
+                                    }
 
-                                      final refugeeCampOptions = state
-                                              .appConfiguration
-                                              .refugeeCampOptions ??
-                                          <RefugeeCampOptions>[];
+                                    final refugeeCampOptions = state
+                                            .appConfiguration
+                                            .refugeeCampOptions ??
+                                        <RefugeeCampOptions>[];
 
-                                      return DigitReactiveDropdown<
-                                          RefugeeCampOptions>(
-                                        key: const Key(__refugeeCampsTypeKey),
-                                        label: localizations.translate(
-                                          'Refugee Camps List',
-                                        ),
-                                        menuItems: refugeeCampOptions ?? [],
-                                        formControlName: __refugeeCampsTypeKey,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            selectedRefugeeCamp = value.name;
-                                          });
-                                        },
-                                        valueMapper: (value) =>
-                                            localizations.translate(value.name),
-                                        // isRequired: true,
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
+                                    return DigitReactiveDropdown<
+                                        RefugeeCampOptions>(
+                                      key: const Key(__refugeeCampsTypeKey),
+                                      label: localizations.translate(
+                                        'Refugee Camps List',
+                                      ),
+                                      menuItems: refugeeCampOptions ?? [],
+                                      formControlName: __refugeeCampsTypeKey,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedRefugeeCamp = value.name;
+                                        });
+                                      },
+                                      valueMapper: (value) =>
+                                          localizations.translate(value.name),
+                                      // isRequired: true,
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           if (RegistrationDeliverySingleton().householdType ==
