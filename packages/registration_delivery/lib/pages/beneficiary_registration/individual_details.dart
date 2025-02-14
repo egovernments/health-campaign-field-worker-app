@@ -499,31 +499,28 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             yearsAndMonthsErrMsg: localizations.translate(
                               i18.individualDetails.yearsAndMonthsErrorText,
                             ),
-                            errorMessage: form.control(_dobKey).hasErrors
-                                ? localizations
-                                    .translate(i18.common.corecommonRequired)
-                                : null,
+                            errorMessage: _getDobErrorMessage(form.control(_dobKey)),
                             initialDate: before150Years,
                             initialValue: getInitialDateValue(form),
                             onChangeOfFormControl: (value) {
-                                setState(() {
-                                  if (value == null) {
+                              setState(() {
+                                if (value == null) {
+                                  form.control(_dobKey).setErrors({'': true});
+                                } else {
+                                  DigitDOBAgeConvertor age =
+                                      DigitDateUtils.calculateAge(value);
+                                  if ((age.years == 0 && age.months == 0) ||
+                                      (age.months > 11) ||
+                                      (age.years >= 150 && age.months >= 0)) {
+                                    form.control(_dobKey).value = value;
                                     form.control(_dobKey).setErrors({'': true});
                                   } else {
-                                    DigitDOBAgeConvertor age =
-                                    DigitDateUtils.calculateAge(value);
-                                    if ((age.years == 0 && age.months == 0) ||
-                                        (age.months > 11) ||
-                                        (age.years >= 150 && age.months >= 0)) {
-                                      form.control(_dobKey).setErrors({'': true});
-                                    } else {
-                                      form.control(_dobKey).value = value;
-                                      form.control(_dobKey).removeError('');
-                                    }
+                                    form.control(_dobKey).value = value;
+                                    form.control(_dobKey).removeError('');
                                   }
-                                });
+                                }
+                              });
                               // Handle changes to the control's value here
-
                             },
                             cancelText: localizations
                                 .translate(i18.common.coreCommonCancel),
@@ -792,6 +789,34 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     );
 
     return individual;
+  }
+
+  String? _getDobErrorMessage(AbstractControl<dynamic> control) {
+    if (!control.hasErrors) return null;
+
+    final dobValue = control.value;
+    final age = dobValue != null
+        ? DigitDateUtils.calculateAge(dobValue)
+        : null;
+
+    if (dobValue == null) {
+      return localizations.translate(i18.common.corecommonRequired);
+    }
+
+    if (age != null) {
+      const minAge = 0;
+      const maxAge = 150;
+
+      if (age.years == minAge && age.months == minAge) {
+        return localizations.translate(i18.common.minAge);
+      }
+
+      if (age.years >= maxAge) {
+        return localizations.translate(i18.common.maxAge);
+      }
+    }
+
+    return null;
   }
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {
