@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
@@ -49,6 +50,25 @@ class CustomHouseHoldDetailsPageState
     final theme = Theme.of(context);
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
+
+    List<AdditionalField> addAdditionalField(HouseholdModel? householdModel) {
+      AdditionalField? field;
+      List<AdditionalField>? additionalFields =
+          householdModel?.additionalFields?.fields;
+      if (additionalFields != null) {
+        field = additionalFields.firstWhereOrNull((e) =>
+            (e.key == Constants.refugeeCamp ||
+                e.key == Constants.communityKey));
+      }
+      if (field == null && widget.refugeeCamp != null) {
+        return [
+          AdditionalField(Constants.refugeeCamp, widget.refugeeCamp),
+          AdditionalField(
+              Constants.communityKey, CommunityTypes.refugeeCamps.toValue())
+        ];
+      }
+      return [];
+    }
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -186,14 +206,6 @@ class CustomHouseHoldDetailsPageState
                                   fields: [
                                     //[TODO: Use pregnant women form value based on project config
 
-                                    if (widget.refugeeCamp != null)
-                                      AdditionalField(Constants.refugeeCamp,
-                                          widget.refugeeCamp),
-                                    if (widget.refugeeCamp != null)
-                                      AdditionalField(
-                                          Constants.communityKey,
-                                          CommunityTypes.refugeeCamps
-                                              .toValue()),
                                     ...?householdModel?.additionalFields?.fields
                                         .where((e) =>
                                             e.key !=
@@ -203,6 +215,7 @@ class CustomHouseHoldDetailsPageState
                                             e.key !=
                                                 AdditionalFieldsType.children
                                                     .toValue()),
+                                    ...addAdditionalField(householdModel),
                                   ]));
 
                           bloc.add(
