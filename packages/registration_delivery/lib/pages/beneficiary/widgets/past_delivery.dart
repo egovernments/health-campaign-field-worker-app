@@ -65,11 +65,10 @@ Widget buildTableContent(
       right: spacer2,
       top: 0,
     ),
-    // height: containerHeight,
     width: MediaQuery.of(context).size.width / 1.25,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      // mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: spacer1),
