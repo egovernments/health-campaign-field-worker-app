@@ -310,7 +310,7 @@ class Modules {
 }
 
 const String noResultSvg = 'assets/icons/svg/no_result.svg';
-const String myChecklistSvg = 'assets/icons/svg/mychecklist.svg';
+const String mySurveyFormSvg = 'assets/icons/svg/mychecklist.svg';
 
 enum DigitProgressDialogType {
   inProgress,

@@ -19,6 +19,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:complaints/complaints.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../blocs/summary_reports/custom_enumeration_summary_report.dart';
@@ -174,6 +175,24 @@ class AppRouter extends _$AppRouter {
           page: ComplaintsAcknowledgementRoute.page,
           path: 'complaints-acknowledgement',
         ),
+
+        AutoRoute(
+            page: SurveyFormWrapperRoute.page,
+            path: 'surveyForm',
+            children: [
+              AutoRoute(
+                page: SurveyformRoute.page,
+                path: '',
+              ),
+              AutoRoute(
+                  page: SurveyFormBoundaryViewRoute.page,
+                  path: 'view-boundary'),
+              AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+              AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+              AutoRoute(
+                  page: SurveyFormAcknowledgementRoute.page,
+                  path: 'surveyForm-acknowledgement'),
+            ]),
 
         // Closed-Household Route
         AutoRoute(

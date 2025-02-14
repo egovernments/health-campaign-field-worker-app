@@ -246,6 +246,10 @@ class HomeShowcase {
     return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
   }
 
+  String get supervisorMySurveyForm {
+    return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
+  }
+
   String get supervisorComplaints {
     return 'SUPERVISOR_HOME_SHOWCASE_COMPLAINTS';
   }
@@ -683,6 +687,8 @@ class Home {
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
   String get viewSummaryReportsLabel => 'VIEW_SUMMARY_REPORTS_LABEL';
+
+  String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
 }

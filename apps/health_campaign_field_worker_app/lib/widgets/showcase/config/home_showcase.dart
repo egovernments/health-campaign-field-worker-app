@@ -48,6 +48,10 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.warehouseManagerManageStock,
   );
 
+  final supervisorMySurveyForm = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.supervisorMySurveyForm,
+  );
+
   final wareHouseManagerStockReconciliation = ShowcaseItemBuilder(
     messageLocalizationKey:
         i18.homeShowcase.wareHouseManagerStockReconciliation,

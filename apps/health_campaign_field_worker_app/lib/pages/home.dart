@@ -26,6 +26,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:recase/recase.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -342,6 +343,16 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
+      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
+        child: HomeItemCard(
+          enableCustomIcon: true,
+          customIcon: mySurveyFormSvg,
+          icon: Icons.checklist,
+          label: i18.home.mySurveyForm,
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
+        ),
+      ),
+
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
@@ -517,6 +528,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
+      i18.home.mySurveyForm,
 
       i18.home.closedHouseHoldLabel,
       i18.home.viewSummaryReportsLabel,
