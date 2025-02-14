@@ -99,6 +99,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           capitalizedFirstLetter: false,
                           isRequired: true,
                           child: DigitTextFormInput(
+                            key: const Key('username_field'),
                             keyboardType: TextInputType.text,
                             errorMessage: field.errorText,
                             onChange: (value) {
@@ -122,6 +123,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           ),
                           isRequired: true,
                           child: DigitPasswordFormInput(
+                            key: const Key('password_field'),
                             errorMessage: field.errorText,
                             onChange: (value) {
                               form.control(_password).value = value;
@@ -159,6 +161,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         );
                       }),
                       DigitButton(
+                        key: const Key('login_button'),
                         label: localizations.translate(i18.login.actionLabel),
                         type: DigitButtonType.primary,
                         onPressed: () {

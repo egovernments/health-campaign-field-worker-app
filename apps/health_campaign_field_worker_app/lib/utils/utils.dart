@@ -47,6 +47,9 @@ export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
 
+/// By using this key, we can push pages without context
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class CustomValidator {
   /// Validates that control's value must be `true`
   static Map<String, dynamic>? requiredMin(

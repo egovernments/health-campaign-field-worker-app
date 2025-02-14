@@ -41,6 +41,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     return Scaffold(
       body: Container(
         color: theme.colorTheme.primary.primary2,
+        key: const Key('language_selection_container'), //language_selection_container
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -109,7 +110,6 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                                 MediaQuery.of(context).size.width * .272,
                             digitRowCardItems: languages.map((e) {
                               var index = languages.indexOf(e);
-
                               return DigitRowCardModel(
                                 label: e.label,
                                 value: e.value,
