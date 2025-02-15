@@ -10,12 +10,14 @@ class HomeItemCard extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final bool enableCustomIcon;
+  final double? customIconSize;
 
   const HomeItemCard({
     required this.icon,
     required this.label,
     this.enableCustomIcon = false,
     this.customIcon = "",
+    this.customIconSize,
     this.onPressed,
     super.key,
   });
@@ -38,8 +40,8 @@ class HomeItemCard extends StatelessWidget {
             if (enableCustomIcon)
               SvgPicture.asset(
                 customIcon,
-                width: 25,
-                height: 25,
+                width: customIconSize ?? 25,
+                height: customIconSize ?? 25,
               ),
             if (!enableCustomIcon)
               Icon(

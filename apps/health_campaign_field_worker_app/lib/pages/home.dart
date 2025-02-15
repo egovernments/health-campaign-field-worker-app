@@ -420,8 +420,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.home,
           enableCustomIcon: true,
-          customIcon:
-              closedHouseholdSvg, //add in constants foe closed households
+          customIcon: closedHouseholdSvg,
+          customIconSize: 48, //add in constants foe closed households
           label: i18.home.closedHouseHoldLabel,
           onPressed: () async {
             await context.router.push(const ClosedHouseholdWrapperRoute());
