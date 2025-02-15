@@ -470,14 +470,20 @@ class CustomInventoryReportDetailsPageState
                                                                   widget.reportType ==
                                                                       InventoryReportType
                                                                           .damage
-                                                              ? model.receiverId ??
-                                                                  model
-                                                                      .receiverType ??
-                                                                  ''
-                                                              : model.senderId ??
-                                                                  model
-                                                                      .receiverType ??
-                                                                  '',
+                                                              ? localizations
+                                                                      .translate(
+                                                                          'FAC_${model.receiverId}') ??
+                                                                  localizations
+                                                                      .translate(
+                                                                          model.receiverType ??
+                                                                              '')
+                                                              : localizations
+                                                                      .translate(
+                                                                          'FAC_${model.senderId}') ??
+                                                                  localizations
+                                                                      .translate(
+                                                                          model.receiverType ??
+                                                                              ''),
                                                         ),
                                                       ],
                                                     ),

@@ -142,8 +142,8 @@ class _BoundarySelectionPageState
                                       formControlName: label,
                                       valueMapper: (value) {
                                         return localizations.translate(
-                                            value.name ??
-                                                value.code ??
+                                            value.code ??
+                                                value.name ??
                                                 'No Value');
                                       },
                                       onFieldTap: (value) {
@@ -569,7 +569,9 @@ class _BoundarySelectionPageState
                                                     }
                                                   }
                                                 },
-                                          child: const Text('Submit'),
+                                          child: Text(localizations.translate(
+                                            i18.common.coreCommonSubmit,
+                                          )),
                                         );
                                       },
                                     ),
