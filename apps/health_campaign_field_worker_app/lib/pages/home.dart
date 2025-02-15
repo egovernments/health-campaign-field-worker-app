@@ -421,7 +421,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.home,
           enableCustomIcon: true,
           customIcon:
-              'assets/icons/svg/mychecklist.svg', //add in constants foe closed households
+              closedHouseholdSvg, //add in constants foe closed households
           label: i18.home.closedHouseHoldLabel,
           onPressed: () async {
             await context.router.push(const ClosedHouseholdWrapperRoute());
