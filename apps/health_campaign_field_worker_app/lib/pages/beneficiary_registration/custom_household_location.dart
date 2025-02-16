@@ -10,30 +10,26 @@ import 'package:digit_ui_components/widgets/atoms/digit_text_form_input.dart';
 import 'package:digit_ui_components/widgets/atoms/reactive_fields.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/search_households/search_bloc_common_wrapper.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
-import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
-import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_radio_list.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_text_form_input.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as local_i18;
+import '../../widgets/custom_digit_reactive_dropdown.dart';
 
 @RoutePage()
 class CustomHouseholdLocationPage extends LocalizedStatefulWidget {
@@ -383,7 +379,7 @@ class CustomHouseholdLocationPageState
                                             .refugeeCampOptions ??
                                         <RefugeeCampOptions>[];
 
-                                    return DigitReactiveDropdown<
+                                    return CustomDigitReactiveDropdown<
                                         RefugeeCampOptions>(
                                       key: const Key(__refugeeCampsTypeKey),
                                       label: localizations.translate(
