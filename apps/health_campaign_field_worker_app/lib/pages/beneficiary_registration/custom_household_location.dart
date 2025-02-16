@@ -302,65 +302,69 @@ class CustomHouseholdLocationPageState
                               },
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                kPadding, kPadding, 0, kPadding),
-                            child: LabeledField(
-                              label: localizations.translate(
-                                local_i18.householdLocation.refugeeCampLabel,
-                              ),
-                              isRequired: true,
-                              child: Column(
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional.centerStart,
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(top: spacer1),
-                                      child: RadioList(
-                                        containerPadding:
-                                            const EdgeInsets.fromLTRB(
-                                                kPadding * 2,
-                                                kPadding / 6,
-                                                kPadding * 2,
-                                                kPadding),
-                                        radioDigitButtons: Constants.yesNo
-                                            .map((item) => RadioButtonModel(
-                                                  code: item.key ? "Yes" : "No",
-                                                  name: localizations
-                                                      .translate(item.label),
-                                                ))
-                                            .toList(),
-                                        groupValue:
-                                            form.control(_refugeeKey).value ??
-                                                "",
-                                        onChanged: (changedValue) {
-                                          setState(() {
-                                            form.control(_refugeeKey).value =
-                                                changedValue.code;
-                                            if (changedValue.code == "Yes") {
-                                              setState(() {
-                                                ifRefugeeCamp = true;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                ifRefugeeCamp = false;
-                                                form
-                                                    .control(
-                                                        __refugeeCampsTypeKey)
-                                                    .value = null;
-                                                selectedRefugeeCamp = null;
-                                              });
-                                            }
-                                          });
-                                        },
+                          if (RegistrationDeliverySingleton().householdType ==
+                              HouseholdType.family)
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  kPadding, kPadding, 0, kPadding),
+                              child: LabeledField(
+                                label: localizations.translate(
+                                  local_i18.householdLocation.refugeeCampLabel,
+                                ),
+                                isRequired: true,
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment:
+                                          AlignmentDirectional.centerStart,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: spacer1),
+                                        child: RadioList(
+                                          containerPadding:
+                                              const EdgeInsets.fromLTRB(
+                                                  kPadding * 2,
+                                                  kPadding / 6,
+                                                  kPadding * 2,
+                                                  kPadding),
+                                          radioDigitButtons: Constants.yesNo
+                                              .map((item) => RadioButtonModel(
+                                                    code:
+                                                        item.key ? "Yes" : "No",
+                                                    name: localizations
+                                                        .translate(item.label),
+                                                  ))
+                                              .toList(),
+                                          groupValue:
+                                              form.control(_refugeeKey).value ??
+                                                  "",
+                                          onChanged: (changedValue) {
+                                            setState(() {
+                                              form.control(_refugeeKey).value =
+                                                  changedValue.code;
+                                              if (changedValue.code == "Yes") {
+                                                setState(() {
+                                                  ifRefugeeCamp = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  ifRefugeeCamp = false;
+                                                  form
+                                                      .control(
+                                                          __refugeeCampsTypeKey)
+                                                      .value = null;
+                                                  selectedRefugeeCamp = null;
+                                                });
+                                              }
+                                            });
+                                          },
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
                           Offstage(
                             offstage: !ifRefugeeCamp,
                             child: Column(
