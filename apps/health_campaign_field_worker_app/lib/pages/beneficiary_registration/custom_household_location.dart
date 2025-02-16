@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/blocs/search_households/search_bloc_common_wrapper.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -126,10 +127,15 @@ class CustomHouseholdLocationPageState
             },
             child: ScrollableContent(
               enableFixedButton: true,
-              header: const Column(
+              header: Column(
                 children: [
                   BackNavigationHelpHeaderWidget(
                     showHelp: false,
+                    // Info clear search bloc
+                    handleBack: () {
+                      var blocWrapper = context.read<SearchBlocWrapper>();
+                      blocWrapper.clearEvent();
+                    },
                   ),
                 ],
               ),
