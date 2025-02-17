@@ -40,6 +40,78 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:2efde986bec30f99f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.qa.bi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:68fc441605038da0f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.bi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
