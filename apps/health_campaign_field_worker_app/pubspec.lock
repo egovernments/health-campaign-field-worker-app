@@ -1808,10 +1808,9 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "4354d586163faa46a1880a72dfcc380025599d370a194e6f14a7bba68f17906c"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.6"
   rxdart:
     dependency: transitive
