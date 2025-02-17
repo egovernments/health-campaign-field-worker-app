@@ -47,6 +47,10 @@ class HouseholdSearchModelMapper
   static String? _$tenantId(HouseholdSearchModel v) => v.tenantId;
   static const Field<HouseholdSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static HouseholdType? _$householdType(HouseholdSearchModel v) =>
+      v.householdType;
+  static const Field<HouseholdSearchModel, HouseholdType> _f$householdType =
+      Field('householdType', _$householdType, opt: true);
   static String? _$boundaryCode(HouseholdSearchModel v) => v.boundaryCode;
   static const Field<HouseholdSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -69,6 +73,7 @@ class HouseholdSearchModelMapper
     #isProximityEnabled: _f$isProximityEnabled,
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
+    #householdType: _f$householdType,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -94,6 +99,7 @@ class HouseholdSearchModelMapper
         isProximityEnabled: data.dec(_f$isProximityEnabled),
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
+        householdType: data.dec(_f$householdType),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -167,6 +173,7 @@ abstract class HouseholdSearchModelCopyWith<
       bool? isProximityEnabled,
       List<String>? clientReferenceId,
       String? tenantId,
+      HouseholdType? householdType,
       String? boundaryCode});
   HouseholdSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -204,6 +211,7 @@ class _HouseholdSearchModelCopyWithImpl<$R, $Out>
           Object? isProximityEnabled = $none,
           Object? clientReferenceId = $none,
           Object? tenantId = $none,
+          Object? householdType = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
@@ -215,6 +223,7 @@ class _HouseholdSearchModelCopyWithImpl<$R, $Out>
           #isProximityEnabled: isProximityEnabled,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
+        if (householdType != $none) #householdType: householdType,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -230,6 +239,7 @@ class _HouseholdSearchModelCopyWithImpl<$R, $Out>
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
+          householdType: data.get(#householdType, or: $value.householdType),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -285,6 +295,9 @@ class HouseholdModelMapper extends SubClassMapperBase<HouseholdModel> {
   static AddressModel? _$address(HouseholdModel v) => v.address;
   static const Field<HouseholdModel, AddressModel> _f$address =
       Field('address', _$address, opt: true);
+  static HouseholdType? _$householdType(HouseholdModel v) => v.householdType;
+  static const Field<HouseholdModel, HouseholdType> _f$householdType =
+      Field('householdType', _$householdType, opt: true);
   static AuditDetails? _$auditDetails(HouseholdModel v) => v.auditDetails;
   static const Field<HouseholdModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -308,6 +321,7 @@ class HouseholdModelMapper extends SubClassMapperBase<HouseholdModel> {
     #tenantId: _f$tenantId,
     #rowVersion: _f$rowVersion,
     #address: _f$address,
+    #householdType: _f$householdType,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -335,6 +349,7 @@ class HouseholdModelMapper extends SubClassMapperBase<HouseholdModel> {
         tenantId: data.dec(_f$tenantId),
         rowVersion: data.dec(_f$rowVersion),
         address: data.dec(_f$address),
+        householdType: data.dec(_f$householdType),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -413,6 +428,7 @@ abstract class HouseholdModelCopyWith<$R, $In extends HouseholdModel, $Out>
       String? tenantId,
       int? rowVersion,
       AddressModel? address,
+      HouseholdType? householdType,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -455,6 +471,7 @@ class _HouseholdModelCopyWithImpl<$R, $Out>
           Object? tenantId = $none,
           Object? rowVersion = $none,
           Object? address = $none,
+          Object? householdType = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -470,6 +487,7 @@ class _HouseholdModelCopyWithImpl<$R, $Out>
         if (tenantId != $none) #tenantId: tenantId,
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (address != $none) #address: address,
+        if (householdType != $none) #householdType: householdType,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -490,6 +508,7 @@ class _HouseholdModelCopyWithImpl<$R, $Out>
       tenantId: data.get(#tenantId, or: $value.tenantId),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       address: data.get(#address, or: $value.address),
+      householdType: data.get(#householdType, or: $value.householdType),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),

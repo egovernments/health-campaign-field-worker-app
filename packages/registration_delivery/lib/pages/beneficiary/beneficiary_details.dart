@@ -149,7 +149,6 @@ class BeneficiaryDetailsPageState
                                     ? DigitCard(
                                         margin:
                                             const EdgeInsets.only(top: spacer2),
-                                        padding: const EdgeInsets.all(spacer2),
                                         children: [
                                             DigitButton(
                                               label:
@@ -189,6 +188,8 @@ class BeneficiaryDetailsPageState
                                                                 .beneficiaryDetails
                                                                 .resourcesTobeDelivered),
                                                         type: PopUpType.simple,
+                                                        contentPadding:
+                                                            EdgeInsets.zero,
                                                         additionalWidgets: [
                                                           buildTableContent(
                                                               deliverState,
@@ -231,7 +232,6 @@ class BeneficiaryDetailsPageState
                                     : const SizedBox.shrink()
                                 : DigitCard(
                                     margin: const EdgeInsets.only(top: spacer2),
-                                    padding: const EdgeInsets.all(spacer2),
                                     children: [
                                         DigitButton(
                                           label: localizations.translate(i18
@@ -255,7 +255,8 @@ class BeneficiaryDetailsPageState
                                 Text(
                                   localizations.translate(i18.beneficiaryDetails
                                       .beneficiarysDetailsLabelText),
-                                  style: textTheme.headingXl,
+                                  style: textTheme.headingXl.copyWith(
+                                      color: theme.colorTheme.primary.primary2),
                                 ),
                                 DigitTableCard(
                                   element: {
@@ -394,43 +395,39 @@ class BeneficiaryDetailsPageState
                               .isNotEmpty)
                             DigitCard(
                                 margin: const EdgeInsets.all(spacer2),
-                                children: [
-                                  Column(
-                                    children: RegistrationDeliverySingleton()
-                                                .projectType
-                                                ?.cycles !=
-                                            null
-                                        ? [
-                                            BlocBuilder<DeliverInterventionBloc,
-                                                DeliverInterventionState>(
-                                              builder: (context, deliverState) {
-                                                return Column(
-                                                  children: [
-                                                    (RegistrationDeliverySingleton()
+                                children: RegistrationDeliverySingleton()
+                                            .projectType
+                                            ?.cycles !=
+                                        null
+                                    ? [
+                                        BlocBuilder<DeliverInterventionBloc,
+                                            DeliverInterventionState>(
+                                          builder: (context, deliverState) {
+                                            return Column(
+                                              children: [
+                                                (RegistrationDeliverySingleton()
+                                                                .projectType
+                                                                ?.cycles ??
+                                                            [])
+                                                        .isNotEmpty
+                                                    ? RecordDeliveryCycle(
+                                                        projectCycles:
+                                                            RegistrationDeliverySingleton()
                                                                     .projectType
                                                                     ?.cycles ??
-                                                                [])
-                                                            .isNotEmpty
-                                                        ? RecordDeliveryCycle(
-                                                            projectCycles:
-                                                                RegistrationDeliverySingleton()
-                                                                        .projectType
-                                                                        ?.cycles ??
-                                                                    [],
-                                                            taskData:
-                                                                taskData ?? [],
-                                                            individualModel: state
-                                                                .selectedIndividual,
-                                                          )
-                                                        : const Offstage(),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                          ]
-                                        : [],
-                                  ),
-                                ])
+                                                                [],
+                                                        taskData:
+                                                            taskData ?? [],
+                                                        individualModel: state
+                                                            .selectedIndividual,
+                                                      )
+                                                    : const Offstage(),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ]
+                                    : [])
                         ],
                       ),
                     );

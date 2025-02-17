@@ -68,6 +68,7 @@ class Common {
   String get coreCommonYes => 'CORE_COMMON_YES';
 
   String get coreCommonNo => 'CORE_COMMON_NO';
+
   String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
 
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
@@ -77,6 +78,7 @@ class Common {
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
   String get maxValue => 'MAX_VALUE_ALLOWED';
+
   String get minValue => 'MIN_VALUE_ALLOWED';
 
   String get noResultsFound => 'NO_RESULTS_FOUND';
@@ -84,6 +86,7 @@ class Common {
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
   String get projectFacilitySearchHeaderLabel =>
       'PROJECT_FACILITY_SEARCH_HEADER_LABEL';
 
@@ -94,6 +97,7 @@ class Common {
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
+
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
 
   String get inactive => 'INACTIVE';
@@ -110,7 +114,9 @@ class AcknowledgementSuccess {
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 
   String get goToHome => 'GO_TO_HOME_SCREEN';
+
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
+
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
@@ -118,21 +124,42 @@ class Scanner {
   const Scanner();
 
   String get changingCameraLens => 'CHANGING_CAMERA_LENS';
+
   String get flashOn => 'FLASH_ON';
+
   String get flashOff => 'FLASH_OFF';
+
   String get scannerLabel => 'SCANNER_LABEL';
+
   String get barCodeScannerLabel => 'BARCODE_SCANNER';
+
   String get manualScan => 'MANUAL_SCAN';
+
   String get enterManualCode => 'ENTER_MANUAL_CODE';
+
   String get resourcesScanned => 'RESOURCE_SCANNED';
+
+  String get resourcesScanFailed => 'RESOURCE_SCAN_FAILED';
+
   String get resourceAlreadyScanned => 'RESOURCES_ALREADY_SCANNED';
+
+  String get invalidBarcode => 'INVALID_BARCODE';
+
   String get manualCodeDescription => 'MANUAL_CODE_DESC';
+
   String get resourceCode => 'RESOURCE_CODE';
+
   String get scannerDialogTitle => 'SCANNER_DIALOG_TITLE';
+
   String get scannerDialogContent => 'SCANNER_DIALOG_CONTENT';
+
   String get scannerDialogPrimaryAction => 'SCANNER_DIALOG_PRIMARY_ACTION';
+
   String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
+
   String get scannedResourceCountMisMatch => 'SCANNED_RESOURCE_COUNT_MISMATCH';
+
   String get barCodesFound => 'BARCODES_FOUND';
+
   String get barCode => 'BARCODE';
 }

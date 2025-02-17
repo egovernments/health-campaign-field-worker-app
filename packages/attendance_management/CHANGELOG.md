@@ -1,3 +1,25 @@
+## 1.0.4+1
+
+* Updated data_model package path to pub version
+
+## 1.0.4
+
+* Added mobile number field for attendees in Mark Attendance Screen
+* Added localityCode and comment field to support Payments feature
+* Updated to latest packages
+
+## 1.0.3-dev.2
+
+* Added localityCode in register companion
+
+## 1.0.3-dev.1
+
+* Added localityCode and comment field to support Payments feature
+
+## 1.0.3+1
+
+* Added mobile number field for attendees in Mark Attendance Screen
+
 ## 1.0.3
 
 * Updated digit_data_model to latest version

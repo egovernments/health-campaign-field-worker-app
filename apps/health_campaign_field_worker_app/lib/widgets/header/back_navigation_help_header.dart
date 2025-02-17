@@ -1,4 +1,7 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +17,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showLogoutCTA;
   final VoidCallback? helpClicked;
   final VoidCallback? handleback;
+  final bool defaultPopRoute;
   final ShowcaseButton? showcaseButton;
 
   const BackNavigationHelpHeaderWidget({
@@ -23,13 +27,12 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     this.showLogoutCTA = false,
     this.helpClicked,
     this.handleback,
+    this.defaultPopRoute = true,
     this.showcaseButton,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Row(
@@ -38,40 +41,42 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
             child: Row(
               children: [
                 if (context.router.canPop() && showBackNavigation)
-                  Flexible(
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onSurface,
-                        padding: EdgeInsets.zero,
+                  DigitBackButton(
+                    digitBackButtonThemeData:
+                        const DigitBackButtonThemeData().copyWith(
+                      context: context,
+                      backDigitButtonIcon: Icon(
+                        Icons.arrow_left,
+                        size: MediaQuery.of(context).size.width < 500
+                            ? Theme.of(context).spacerTheme.spacer5
+                            : Theme.of(context).spacerTheme.spacer6,
+                        color: Theme.of(context).colorTheme.primary.primary2,
                       ),
-                      onPressed: () {
+                    ),
+                    handleBack: () {
+                      if (defaultPopRoute) {
                         context.router.maybePop();
-                        handleback != null ? handleback!() : null;
-                      },
-                      icon: const Icon(Icons.arrow_left_sharp),
-                      label: Text(
-                        AppLocalizations.of(context).translate(
-                          i18.common.coreCommonBack,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      }
+                      handleback != null ? handleback!() : null;
+                    },
+                    label: AppLocalizations.of(context).translate(
+                      i18.common.coreCommonBack,
                     ),
                   ),
                 SizedBox(width: showBackNavigation ? 16 : 0),
                 if (showLogoutCTA)
                   Flexible(
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                    child: DigitButton(
+                      capitalizeLetters: false,
                       onPressed: () {
                         context.read<AuthBloc>().add(const AuthLogoutEvent());
                       },
-                      icon: const Icon(Icons.logout_outlined),
-                      label: Text(
-                        AppLocalizations.of(context).translate(
-                          i18.common.coreCommonLogout,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                      prefixIcon: Icons.logout_outlined,
+                      label: AppLocalizations.of(context).translate(
+                        i18.common.coreCommonLogout,
                       ),
+                      type: DigitButtonType.tertiary,
+                      size: DigitButtonSize.medium,
                     ),
                   ),
               ],
@@ -79,32 +84,17 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
           ),
           SizedBox(width: showHelp ? 16 : 0),
           if (showHelp)
-            TextButton(
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
-              onPressed: helpClicked,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      kPadding,
-                      kPadding,
-                      kPadding / 1,
-                      kPadding,
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)
-                          .translate(i18.common.coreCommonHelp),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-
-                  const Icon(
-                    Icons.help_outline_outlined,
-                  ), // Add the icon to the right
-                ],
-              ),
+            DigitButton(
+              isDisabled: helpClicked == null,
+              label: AppLocalizations.of(context)
+                  .translate(i18.common.coreCommonHelp),
+              type: DigitButtonType.tertiary,
+              size: DigitButtonSize.medium,
+              suffixIcon: Icons.help_outline_outlined,
+              // style: TextButton.styleFrom(padding: EdgeInsets.zero),
+              onPressed: () => helpClicked,
             ),
-          SizedBox(width: showcaseButton != null ? 16 : 0),
+          SizedBox(width: showcaseButton != null ? spacer4 : 0),
           if (showcaseButton != null) showcaseButton!,
         ],
       ),

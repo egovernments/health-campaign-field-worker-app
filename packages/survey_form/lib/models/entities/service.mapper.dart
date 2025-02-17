@@ -26,6 +26,10 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
   static String? _$clientId(ServiceSearchModel v) => v.clientId;
   static const Field<ServiceSearchModel, String> _f$clientId =
       Field('clientId', _$clientId, opt: true);
+  static String? _$relatedClientReferenceId(ServiceSearchModel v) =>
+      v.relatedClientReferenceId;
+  static const Field<ServiceSearchModel, String> _f$relatedClientReferenceId =
+      Field('relatedClientReferenceId', _$relatedClientReferenceId, opt: true);
   static String? _$serviceDefId(ServiceSearchModel v) => v.serviceDefId;
   static const Field<ServiceSearchModel, String> _f$serviceDefId =
       Field('serviceDefId', _$serviceDefId, opt: true);
@@ -53,6 +57,7 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
   final MappableFields<ServiceSearchModel> fields = const {
     #id: _f$id,
     #clientId: _f$clientId,
+    #relatedClientReferenceId: _f$relatedClientReferenceId,
     #serviceDefId: _f$serviceDefId,
     #accountId: _f$accountId,
     #createdAt: _f$createdAt,
@@ -76,6 +81,7 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
     return ServiceSearchModel.ignoreDeleted(
         id: data.dec(_f$id),
         clientId: data.dec(_f$clientId),
+        relatedClientReferenceId: data.dec(_f$relatedClientReferenceId),
         serviceDefId: data.dec(_f$serviceDefId),
         accountId: data.dec(_f$accountId),
         createdAt: data.dec(_f$createdAt),
@@ -142,6 +148,7 @@ abstract class ServiceSearchModelCopyWith<$R, $In extends ServiceSearchModel,
   $R call(
       {String? id,
       String? clientId,
+      String? relatedClientReferenceId,
       String? serviceDefId,
       String? accountId,
       String? createdAt,
@@ -163,6 +170,7 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? id = $none,
           Object? clientId = $none,
+          Object? relatedClientReferenceId = $none,
           Object? serviceDefId = $none,
           Object? accountId = $none,
           Object? createdAt = $none,
@@ -171,6 +179,8 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (clientId != $none) #clientId: clientId,
+        if (relatedClientReferenceId != $none)
+          #relatedClientReferenceId: relatedClientReferenceId,
         if (serviceDefId != $none) #serviceDefId: serviceDefId,
         if (accountId != $none) #accountId: accountId,
         if (createdAt != $none) #createdAt: createdAt,
@@ -182,6 +192,8 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
       ServiceSearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
           clientId: data.get(#clientId, or: $value.clientId),
+          relatedClientReferenceId: data.get(#relatedClientReferenceId,
+              or: $value.relatedClientReferenceId),
           serviceDefId: data.get(#serviceDefId, or: $value.serviceDefId),
           accountId: data.get(#accountId, or: $value.accountId),
           createdAt: data.get(#createdAt, or: $value.createdAt),

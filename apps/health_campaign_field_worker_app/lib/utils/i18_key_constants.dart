@@ -204,6 +204,10 @@ class HomeShowcase {
   String get deleteAll {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
   }
+
+  String get clf {
+    return "COMMUNAL_LIVING_FACILITY_SHOWCASE";
+  }
 }
 
 class SelectStockShowcase {
@@ -345,6 +349,8 @@ class Login {
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+
+  String get unableToLoginText => 'UNABLE_TO_LOGIN';
 }
 
 class SelectSurveyFormShowcase {
@@ -562,6 +568,8 @@ class Home {
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
+
+  String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
 }
 
 class DataShare {
@@ -610,6 +618,8 @@ class ProjectSelection {
   String get contactSysAdmin => 'CONTACT_SYS_ADMIN';
 
   String get onProjectMapped => 'NO_PROJECT_MAPPED';
+
+  String get fetchBoundaryFailed => 'FETCH_BOUNDARY_FAILED';
 }
 
 class Complaints {

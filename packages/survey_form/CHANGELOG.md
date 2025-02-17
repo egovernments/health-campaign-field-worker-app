@@ -1,3 +1,18 @@
+## 1.0.1
+
+* Modified ServiceSearchModel with relatedClientReferenceId and search query
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+* Removed isHealthFacilityWorker variable from Singleton
+* Upgraded to latest package versions
+
+## 1.0.0-dev.1
+
+* Modified ServiceSearchModel with relatedClientReferenceId and search query
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+* Removed isHealthFacilityWorker variable from Singleton
+
 ## 1.0.0
 
 * Upgrade to Flutter 3.22
