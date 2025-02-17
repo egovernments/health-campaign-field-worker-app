@@ -345,7 +345,7 @@ class CustomViewBeneficiaryCardState
                 ),
               ),
               Flexible(
-                child: isClosedHousehold
+                child: isClosedHousehold || (projectBeneficiary == null)
                     ? const Offstage()
                     : DigitOutLineButton(
                         buttonStyle: OutlinedButton.styleFrom(
