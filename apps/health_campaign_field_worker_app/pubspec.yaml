@@ -106,6 +106,7 @@ dev_dependencies:
   isar_generator: ^3.1.0+1
   flutter_launcher_icons: ^0.13.1
   hrk_flutter_test_batteries: ^0.8.0
+  change_app_package_name: ^1.1.0
 
 flutter_icons:
   android: "burundi_logo_tsinda_malaria"
