@@ -1,3 +1,14 @@
+## 1.0.4
+
+* Updated to latest package versions
+* UI/UX fixes
+* Bug fixes
+
+## 1.0.3+1
+
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+
 ## 1.0.3
 
 * Upgrade to Flutter 3.22

@@ -1,6 +1,6 @@
 name: referral_reconciliation
 description: "This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally via the Digit HCM app"
-version: 1.0.3
+version: 1.0.4
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/referral_reconciliation
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_ui_components: ^0.0.2-dev.4
+  digit_ui_components: ^0.0.2-dev.14
   flutter_bloc: ^8.1.5
   freezed_annotation: ^2.4.1
   reactive_forms: ^17.0.0
@@ -31,12 +31,12 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
   path: ^1.8.2
-  digit_scanner: ^1.0.4
+  digit_scanner: ^1.0.5
   group_radio_button: ^1.3.0
   flutter_keyboard_visibility: ^5.4.1
-  digit_data_model: ^1.0.5
+  digit_data_model: ^1.0.6
   stream_transform: ^2.1.0
-  survey_form: ^1.0.0
+  survey_form: ^1.0.1
 
 
 dev_dependencies:

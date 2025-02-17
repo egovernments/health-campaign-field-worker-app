@@ -33,6 +33,8 @@ class RegistrationDeliveryEnumsMapper
         return RegistrationDeliveryEnums.userName;
       case "IEC":
         return RegistrationDeliveryEnums.iec;
+      case "ELIGIBILITY":
+        return RegistrationDeliveryEnums.eligibility;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -47,6 +49,8 @@ class RegistrationDeliveryEnumsMapper
         return "userName";
       case RegistrationDeliveryEnums.iec:
         return "IEC";
+      case RegistrationDeliveryEnums.eligibility:
+        return "ELIGIBILITY";
     }
   }
 }

@@ -20,7 +20,7 @@ class ComplaintsLocalization {
 
   // Method to get the delegate for localization
   static LocalizationsDelegate<ComplaintsLocalization> getDelegate(
-      Future<dynamic> localizedStrings, List<dynamic> languages) =>
+          Future<dynamic> localizedStrings, List<dynamic> languages) =>
       ComplaintsLocalizationDelegate(localizedStrings, languages);
 
   // Method to load localized strings
@@ -42,7 +42,7 @@ class ComplaintsLocalization {
       return localizedValues;
     } else {
       final index = _localizedStrings.indexWhere(
-            (medium) => medium.code == localizedValues,
+        (medium) => medium.code == localizedValues,
       );
 
       return index != -1 ? _localizedStrings[index].message : localizedValues;

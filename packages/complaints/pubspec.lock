@@ -318,18 +318,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: c3bc7299a7d927ebb83d8e91c1d7a8a51f6a1d1295dafeacb642012b72b99a2f
+      sha256: bcb6c328a75df1442672e39c0dbae32bc9cb067a07a581bded672d2b748957b9
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "57c4da5237be6025783e7357a02b6b492f02e38f711d674bf46f5f8c8a93ad76"
+      sha256: "4cab483b1526e3438b36bc4253022882f5c46646178e966d91247916fd1306d5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.4"
+    version: "0.0.2-dev.13"
   dio:
     dependency: "direct main"
     description:
@@ -358,10 +358,10 @@ packages:
     dependency: "direct main"
     description:
       name: drift
-      sha256: "4e0ffee40d23f0b809e6cff1ad202886f51d629649073ed42d9cd1d194ea943e"
+      sha256: "6acedc562ffeed308049f78fb1906abad3d65714580b6745441ee6d50ec564cd"
       url: "https://pub.dev"
     source: hosted
-    version: "2.19.1+1"
+    version: "2.18.0"
   fake_async:
     dependency: transitive
     description:

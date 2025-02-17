@@ -33,6 +33,7 @@ class ReferBeneficiaryPage extends LocalizedStatefulWidget {
     this.isEditing = false,
     required this.projectBeneficiaryClientRefId,
   });
+
   @override
   State<ReferBeneficiaryPage> createState() => ReferBeneficiaryPageState();
 }
@@ -73,6 +74,7 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
           fetched: (_, facilities) => facilities.isEmpty
               ? NoFacilitiesAssignedDialog.show(context)
               : null,
+          empty: () => NoFacilitiesAssignedDialog.show(context),
         );
       },
       builder: (ctx, facilityState) {
@@ -99,11 +101,13 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
             builder: (context, form, child) => ScrollableContent(
               enableFixedDigitButton: true,
               header: const Column(children: [
-                BackNavigationHelpHeaderWidget(),
+                Padding(
+                  padding: EdgeInsets.only(bottom: spacer4),
+                  child: BackNavigationHelpHeaderWidget(),
+                ),
               ]),
               footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
-                  padding: const EdgeInsets.all(spacer2),
                   children: [
                     ValueListenableBuilder(
                       valueListenable: clickedStatus,
@@ -228,12 +232,16 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                   ]),
               slivers: [
                 SliverToBoxAdapter(
-                  child: DigitCard(children: [
+                  child: DigitCard(
+                    margin: const EdgeInsets.symmetric(horizontal: spacer2),
+                      children: [
                     Text(
                       localizations.translate(
                         i18.referBeneficiary.referralDetails,
                       ),
-                      style: textTheme.headingXl,
+                      style: textTheme.headingXl.copyWith(
+                        color: theme.colorTheme.primary.primary2
+                      ),
                     ),
                     ReactiveWrapperField(
                       formControlName: _dateOfReferralKey,
@@ -283,6 +291,7 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                         isRequired: true,
                         child: DigitTextFormInput(
                           errorMessage: field.errorText,
+                          readOnly: true,
                           onChange: (value) {
                             form.control(_referredByKey).value = value;
                           },
@@ -321,8 +330,6 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                             ),
                             isRequired: true,
                             child: DigitSearchFormInput(
-                              // hideKeyboard: true,
-                              // readOnly: true,r
                               errorMessage: field.errorText,
                               initialValue: form.control(_referredToKey).value,
                               onSuffixTap: (value) async {
@@ -363,6 +370,7 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: RadioList(
+                            containerPadding: const EdgeInsets.all(spacer2),
                             radioDigitButtons: reasons
                                 .map((e) => RadioButtonModel(
                                     code: e.key.toString(),

@@ -116,59 +116,65 @@ const AppConfigurationSchema = CollectionSchema(
       name: r'PROXIMITY_SEARCH_RANGE',
       type: IsarType.double,
     ),
-    r'SEARCH_HOUSEHOLD_FILTERS': PropertySchema(
+    r'SEARCH_CLF_FILTERS': PropertySchema(
       id: 17,
+      name: r'SEARCH_CLF_FILTERS',
+      type: IsarType.objectList,
+      target: r'SearchCLFFilters',
+    ),
+    r'SEARCH_HOUSEHOLD_FILTERS': PropertySchema(
+      id: 18,
       name: r'SEARCH_HOUSEHOLD_FILTERS',
       type: IsarType.objectList,
       target: r'SearchHouseHoldFilters',
     ),
     r'SYNC_METHOD': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -201,6 +207,7 @@ const AppConfigurationSchema = CollectionSchema(
     r'FirebaseConfig': FirebaseConfigSchema,
     r'SymptomsTypes': SymptomsTypesSchema,
     r'SearchHouseHoldFilters': SearchHouseHoldFiltersSchema,
+    r'SearchCLFFilters': SearchCLFFiltersSchema,
     r'ReferralReasons': ReferralReasonsSchema,
     r'HouseStructureTypes': HouseStructureTypesSchema,
     r'RefusalReasons': RefusalReasonsSchema,
@@ -412,6 +419,20 @@ int _appConfigurationEstimateSize(
     }
   }
   {
+    final list = object.searchCLFFilters;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[SearchCLFFilters]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              SearchCLFFiltersSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
     final list = object.searchHouseHoldFilters;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -617,47 +638,53 @@ void _appConfigurationSerialize(
   writer.writeString(offsets[14], object.networkDetection);
   writer.writeString(offsets[15], object.persistenceMode);
   writer.writeDouble(offsets[16], object.maxRadius);
-  writer.writeObjectList<SearchHouseHoldFilters>(
+  writer.writeObjectList<SearchCLFFilters>(
     offsets[17],
+    allOffsets,
+    SearchCLFFiltersSchema.serialize,
+    object.searchCLFFilters,
+  );
+  writer.writeObjectList<SearchHouseHoldFilters>(
+    offsets[18],
     allOffsets,
     SearchHouseHoldFiltersSchema.serialize,
     object.searchHouseHoldFilters,
   );
-  writer.writeString(offsets[18], object.syncMethod);
-  writer.writeString(offsets[19], object.syncTrigger);
-  writer.writeString(offsets[20], object.tenantId);
+  writer.writeString(offsets[19], object.syncMethod);
+  writer.writeString(offsets[20], object.syncTrigger);
+  writer.writeString(offsets[21], object.tenantId);
   writer.writeObjectList<TransportTypes>(
-    offsets[21],
+    offsets[22],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[22],
+    offsets[23],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[23],
+    offsets[24],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[24],
+    offsets[25],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[25],
+    offsets[26],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[26],
+    offsets[27],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -758,47 +785,53 @@ AppConfiguration _appConfigurationDeserialize(
   object.networkDetection = reader.readStringOrNull(offsets[14]);
   object.persistenceMode = reader.readStringOrNull(offsets[15]);
   object.maxRadius = reader.readDoubleOrNull(offsets[16]);
-  object.searchHouseHoldFilters = reader.readObjectList<SearchHouseHoldFilters>(
+  object.searchCLFFilters = reader.readObjectList<SearchCLFFilters>(
     offsets[17],
+    SearchCLFFiltersSchema.deserialize,
+    allOffsets,
+    SearchCLFFilters(),
+  );
+  object.searchHouseHoldFilters = reader.readObjectList<SearchHouseHoldFilters>(
+    offsets[18],
     SearchHouseHoldFiltersSchema.deserialize,
     allOffsets,
     SearchHouseHoldFilters(),
   );
-  object.syncMethod = reader.readStringOrNull(offsets[18]);
-  object.syncTrigger = reader.readStringOrNull(offsets[19]);
-  object.tenantId = reader.readStringOrNull(offsets[20]);
+  object.syncMethod = reader.readStringOrNull(offsets[19]);
+  object.syncTrigger = reader.readStringOrNull(offsets[20]);
+  object.tenantId = reader.readStringOrNull(offsets[21]);
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[21],
+    offsets[22],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[22],
+    offsets[23],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[23],
+    offsets[24],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[24],
+    offsets[25],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[25],
+    offsets[26],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[26],
+    offsets[27],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -915,53 +948,60 @@ P _appConfigurationDeserializeProp<P>(
     case 16:
       return (reader.readDoubleOrNull(offset)) as P;
     case 17:
+      return (reader.readObjectList<SearchCLFFilters>(
+        offset,
+        SearchCLFFiltersSchema.deserialize,
+        allOffsets,
+        SearchCLFFilters(),
+      )) as P;
+    case 18:
       return (reader.readObjectList<SearchHouseHoldFilters>(
         offset,
         SearchHouseHoldFiltersSchema.deserialize,
         allOffsets,
         SearchHouseHoldFilters(),
       )) as P;
-    case 18:
-      return (reader.readStringOrNull(offset)) as P;
     case 19:
       return (reader.readStringOrNull(offset)) as P;
     case 20:
       return (reader.readStringOrNull(offset)) as P;
     case 21:
+      return (reader.readStringOrNull(offset)) as P;
+    case 22:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 22:
+    case 23:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 23:
+    case 24:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 24:
+    case 25:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 25:
+    case 26:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 26:
+    case 27:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -2691,6 +2731,113 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchCLFFiltersIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'SEARCH_CLF_FILTERS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchCLFFiltersIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'SEARCH_CLF_FILTERS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchCLFFiltersLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_CLF_FILTERS',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchCLFFiltersIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_CLF_FILTERS',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchCLFFiltersIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_CLF_FILTERS',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchCLFFiltersLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_CLF_FILTERS',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchCLFFiltersLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_CLF_FILTERS',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchCLFFiltersLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'SEARCH_CLF_FILTERS',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       searchHouseHoldFiltersIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -3972,6 +4119,13 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      searchCLFFiltersElement(FilterQuery<SearchCLFFilters> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'SEARCH_CLF_FILTERS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       searchHouseHoldFiltersElement(FilterQuery<SearchHouseHoldFilters> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'SEARCH_HOUSEHOLD_FILTERS');
@@ -4382,6 +4536,13 @@ extension AppConfigurationQueryProperty
       maxRadiusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'PROXIMITY_SEARCH_RANGE');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<SearchCLFFilters>?, QQueryOperations>
+      searchCLFFiltersProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'SEARCH_CLF_FILTERS');
     });
   }
 
@@ -8900,6 +9061,376 @@ extension SearchHouseHoldFiltersQueryFilter on QueryBuilder<
 
 extension SearchHouseHoldFiltersQueryObject on QueryBuilder<
     SearchHouseHoldFilters, SearchHouseHoldFilters, QFilterCondition> {}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const SearchCLFFiltersSchema = Schema(
+  name: r'SearchCLFFilters',
+  id: 6742638452277890113,
+  properties: {
+    r'active': PropertySchema(
+      id: 0,
+      name: r'active',
+      type: IsarType.bool,
+    ),
+    r'code': PropertySchema(
+      id: 1,
+      name: r'code',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 2,
+      name: r'name',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _searchCLFFiltersEstimateSize,
+  serialize: _searchCLFFiltersSerialize,
+  deserialize: _searchCLFFiltersDeserialize,
+  deserializeProp: _searchCLFFiltersDeserializeProp,
+);
+
+int _searchCLFFiltersEstimateSize(
+  SearchCLFFilters object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.code.length * 3;
+  bytesCount += 3 + object.name.length * 3;
+  return bytesCount;
+}
+
+void _searchCLFFiltersSerialize(
+  SearchCLFFilters object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeBool(offsets[0], object.active);
+  writer.writeString(offsets[1], object.code);
+  writer.writeString(offsets[2], object.name);
+}
+
+SearchCLFFilters _searchCLFFiltersDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = SearchCLFFilters();
+  object.active = reader.readBool(offsets[0]);
+  object.code = reader.readString(offsets[1]);
+  object.name = reader.readString(offsets[2]);
+  return object;
+}
+
+P _searchCLFFiltersDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readBool(offset)) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension SearchCLFFiltersQueryFilter
+    on QueryBuilder<SearchCLFFilters, SearchCLFFilters, QFilterCondition> {
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      activeEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'active',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      codeEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      codeGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      codeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      codeBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'code',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      codeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      codeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      codeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      codeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'code',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      codeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'code',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      codeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'code',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      nameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      nameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      nameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      nameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      nameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      nameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SearchCLFFilters, SearchCLFFilters, QAfterFilterCondition>
+      nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+}
+
+extension SearchCLFFiltersQueryObject
+    on QueryBuilder<SearchCLFFilters, SearchCLFFilters, QFilterCondition> {}
 
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
