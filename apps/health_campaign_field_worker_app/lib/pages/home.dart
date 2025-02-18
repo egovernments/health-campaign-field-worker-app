@@ -614,10 +614,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-
-      if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
-        filteredLabels.remove(i18.home.db);
-      }
+    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
+      filteredLabels.remove(i18.home.db);
+    }
 
     filteredLabels.add(i18.home.dataShare); // TODO: Role action mapping
 

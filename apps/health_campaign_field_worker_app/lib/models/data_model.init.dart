@@ -11,7 +11,7 @@ import 'entities/peer_to_peer/message_types.dart' as p4;
 import 'entities/peer_to_peer/peer_to_peer_message.dart' as p5;
 import 'entities/roles.dart' as p6;
 import 'entities/roles_type.dart' as p7;
-import 'entities/status.dart' as p9;
+import 'entities/scanner_type.dart' as p8;
 
 void initializeMappers() {
   p0.DownsyncSearchModelMapper.ensureInitialized();
@@ -27,5 +27,4 @@ void initializeMappers() {
   p6.RolesMapper.ensureInitialized();
   p7.RolesTypeMapper.ensureInitialized();
   p8.ScannerTypeMapper.ensureInitialized();
-  p9.StatusMapper.ensureInitialized();
 }
