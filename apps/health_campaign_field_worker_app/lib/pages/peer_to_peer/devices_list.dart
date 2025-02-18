@@ -6,7 +6,6 @@ import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
@@ -32,21 +31,18 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
     with TickerProviderStateMixin {
   final List<Device> devices = [];
   final List<Device> connectedDevices = [];
-  late final Device senderDeviceDetails;
+  late final String senderDeviceDetails;
   late NearbyService nearbyService;
   late StreamSubscription<dynamic> stateSubscription;
   late AnimationController _controller;
   late AnimationController _radarController;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  late Device senderDevice;
-  String? deviceName;
 
   @override
   void initState() {
     super.initState();
     createAnimations();
     initializeNearbyService();
-    senderDevice = Device('', '', 0);
     fetchSenderDeviceDetails();
   }
 
@@ -164,11 +160,8 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
 
   List<Widget> generateDeviceWidgets(double width, double height) {
     final random = Random();
-    final devicesToShow = widget.deviceType == DeviceType.receiver
-        ? senderDevice.deviceId.isNotEmpty
-            ? [senderDevice]
-            : []
-        : devices;
+    final devicesToShow =
+        widget.deviceType == DeviceType.receiver ? connectedDevices : devices;
 
     return devicesToShow.asMap().entries.map((entry) {
       final angle = random.nextDouble() * 2 * pi + entry.key * 0.1;
@@ -268,10 +261,9 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
 
   void handleDeviceTap(Device device) {
     if (device.state == SessionState.notConnected) {
-      DigitLoaders.overlayLoader(context: context);
       nearbyService.invitePeer(
         deviceID: device.deviceId,
-        deviceName: device.deviceName,
+        deviceName: senderDeviceDetails,
       );
     } else if (device.state == SessionState.connected) {
       nearbyService.disconnectPeer(deviceID: device.deviceId);
@@ -285,9 +277,6 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
       case SessionState.connecting:
         return SessionState.connecting.name.toUpperCase();
       case SessionState.connected:
-        if (widget.deviceType == DeviceType.sender) {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
         return SessionState.connected.name.toUpperCase();
       default:
         return "UNKNOWN";
@@ -334,7 +323,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
           if (widget.deviceType == DeviceType.sender) {
             await nearbyService.startBrowsingForPeers();
           } else {
-            await nearbyService.startAdvertisingPeer();
+            await nearbyService.startAdvertisingPeer(deviceName: deviceId);
           }
         }
       },
@@ -363,37 +352,20 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
             ..clear()
             ..addAll(devices.where((d) => d.state == SessionState.connected));
         });
-        if (connectedDevices.isNotEmpty) {
-          if (widget.deviceType == DeviceType.sender) {
-            for (var e in connectedDevices) {
-              var senderDevice = deviceName ?? '';
-              nearbyService.sendMessage(e.deviceId, senderDevice);
-            }
-          }
-          nearbyService.dataReceivedSubscription(callback: (data) {
-            print('received ${data['message']}');
-            // senderDevice = data['message'];
-          });
-        }
       },
     );
   }
 
   Future<String> getSenderDeviceName() async {
     var deviceId = '';
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      deviceId = androidInfo.model;
-    }
-    if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceId = iosInfo.localizedModel;
-    }
+    final deviceInfo = DeviceInfoPlugin();
+    deviceId = Platform.isAndroid
+        ? (await deviceInfo.androidInfo).model
+        : (await deviceInfo.iosInfo).localizedModel;
     return deviceId;
   }
 
   void fetchSenderDeviceDetails() async {
-    deviceName = await getSenderDeviceName();
-    setState(() {});
+    senderDeviceDetails = await getSenderDeviceName();
   }
 }
