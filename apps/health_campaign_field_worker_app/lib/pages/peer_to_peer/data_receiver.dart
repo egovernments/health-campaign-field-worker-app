@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -49,12 +48,12 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
         if (device.state == SessionState.notConnected) {
           if (mounted) {
             context.router.maybePop();
-            DigitToast.show(context,
-                options: DigitToastOptions(
-                    localizations.translate(
-                        '${device.deviceName} ${SessionState.notConnected.name}'),
-                    true,
-                    Theme.of(context)));
+            Toast.showToast(
+              context,
+              message: localizations.translate(
+                  '${device.deviceName} ${SessionState.notConnected.name}'),
+              type: ToastType.error,
+            );
           }
         }
       }
@@ -79,7 +78,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
           listener: (context, state) {
             if (state is DataReceived) {
               context.router
-                  .popAndPush(AcknowledgementRoute(isDataRecordSuccess: true));
+                  .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
             }
           },
           child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
@@ -240,8 +239,6 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                           spacing: 8.0,
                                           runSpacing: 4.0,
                                           children: [
-                                            buildDeviceChip(),
-                                            const SizedBox(width: 8),
                                             Container(
                                               padding: const EdgeInsets.all(
                                                   kPadding),
@@ -286,42 +283,5 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
       deviceId = iosInfo.localizedModel;
     }
     return deviceId;
-  }
-
-  Widget buildDeviceChip() {
-    return FutureBuilder<String>(
-      future: getCurrentDeviceName(), // Call your async method here
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while the future is being resolved
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          // Handle error case
-          return Chip(
-            label: Text(localizations.translate(i18.common.coreCommonNA)),
-            backgroundColor: DigitTheme.instance.colors.light.primary1Bg,
-          );
-        } else if (snapshot.hasData) {
-          // Display the device name when available
-          return Container(
-            padding: const EdgeInsets.all(kPadding),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: DigitTheme.instance.colors.light.primary1Bg,
-              ),
-              borderRadius: BorderRadius.circular(kPadding),
-            ),
-            child: Text(
-              snapshot.data!,
-              style: TextStyle(
-                color: DigitTheme.instance.colors.light.primary2,
-              ),
-            ),
-          );
-        } else {
-          return const SizedBox.shrink(); // Handle unexpected case
-        }
-      },
-    );
   }
 }

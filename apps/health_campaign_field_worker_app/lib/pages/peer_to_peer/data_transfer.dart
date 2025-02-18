@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -51,12 +50,12 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
         if (device.state == SessionState.notConnected) {
           if (mounted) {
             context.router.maybePop();
-            DigitToast.show(context,
-                options: DigitToastOptions(
-                    localizations.translate(
-                        '${device.deviceName} ${SessionState.notConnected.name}'),
-                    true,
-                    Theme.of(context)));
+            Toast.showToast(
+              context,
+              message: localizations.translate(
+                  '${device.deviceName} ${SessionState.notConnected.name}'),
+              type: ToastType.error,
+            );
           }
         }
       }
@@ -80,7 +79,15 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
         listener: (context, state) {
           if (state is CompletedDataTransfer) {
             context.router
-                .popAndPush(AcknowledgementRoute(isDataRecordSuccess: true));
+                .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
+          }
+          if (state is FailedDataTransfer) {
+            Toast.showToast(
+              context,
+              message: localizations.translate(state.error),
+              type: ToastType.error,
+              position: ToastPosition.aboveOneButtonFooter,
+            );
           }
         },
         child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
