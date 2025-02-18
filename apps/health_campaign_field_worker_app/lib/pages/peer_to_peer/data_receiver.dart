@@ -13,6 +13,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import '../../blocs/peer_to_peer/peer_to_peer.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/peer_to_peer/file_transfer_animation.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
@@ -40,8 +41,11 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
     nearbyService = widget.nearbyService;
     peerToPeerBloc = context.read<PeerToPeerBloc>();
     nearbyService.dataReceivedSubscription(callback: (data) {
-      peerToPeerBloc.add(
-          DataReceiverEvent(nearbyService: widget.nearbyService, data: data));
+      peerToPeerBloc.add(DataReceiverEvent(
+          nearbyService: widget.nearbyService,
+          data: data,
+          selectedBoundaryCode: context.boundary.code!,
+          projectId: context.projectId));
     });
     nearbyService.stateChangedSubscription(callback: (devices) {
       for (var device in devices) {
@@ -79,6 +83,15 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
             if (state is DataReceived) {
               context.router
                   .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
+            }
+            if (state is FailedDataTransfer) {
+              Toast.showToast(
+                context,
+                message: localizations.translate(state.error),
+                type: ToastType.error,
+                position: ToastPosition.aboveOneButtonFooter,
+              );
+              context.router.maybePop();
             }
           },
           child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
@@ -121,150 +134,139 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                           color: DigitTheme.instance.colors.light.paperPrimary,
                           margin: const EdgeInsets.all(kPadding),
                           child: state.maybeWhen(
-                              orElse: () => Center(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                            orElse: () => Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const SizedBox(height: 16),
+                                  CircularPercentIndicator(
+                                    radius: MediaQuery.of(context).size.height *
+                                        0.15,
+                                    lineWidth: kPadding * 1.5,
+                                    animation: false,
+                                    percent: 0,
+                                    // Update this dynamically for progress
+                                    center: const Text(
+                                      '0 %',
+                                      style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+
+                                    progressBorderColor: DigitTheme
+                                        .instance.colors.light.primary1Bg,
+                                    progressColor: DigitTheme
+                                        .instance.colors.light.alertSuccess,
+                                    backgroundColor: DigitTheme
+                                        .instance.colors.light.primary1Bg,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      FileTransferAnimation(),
+                                      // Add animation here
+                                    ],
+                                  ),
+                                  Wrap(
+                                      spacing: 8.0,
+                                      runSpacing: 4.0,
+                                      children: [
+                                        // buildDeviceChip(),
+                                        Container(
+                                          padding:
+                                              const EdgeInsets.all(kPadding),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: DigitTheme.instance.colors
+                                                  .light.primary1Bg,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(kPadding),
+                                          ),
+                                          child: Text(
+                                            widget.connectedDevice.deviceName,
+                                            style: TextStyle(
+                                              color: DigitTheme.instance.colors
+                                                  .light.primary2,
+                                            ),
+                                          ),
+                                        ),
+                                      ]),
+                                ],
+                              ),
+                            ),
+                            receivingInProgress:
+                                (progress, offset, totalCount) {
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Receiving $offset / $totalCount'),
+                                    const SizedBox(height: 16),
+                                    CircularPercentIndicator(
+                                      radius:
+                                          MediaQuery.of(context).size.height *
+                                              0.15,
+                                      lineWidth: kPadding * 1.5,
+                                      animation: false,
+                                      percent: progress,
+                                      // Update this dynamically for progress
+                                      center: Text(
+                                        '${(progress * 100).toStringAsFixed(1)} %',
+                                        style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+
+                                      progressBorderColor: DigitTheme
+                                          .instance.colors.light.primary1Bg,
+                                      progressColor: DigitTheme
+                                          .instance.colors.light.alertSuccess,
+                                      backgroundColor: DigitTheme
+                                          .instance.colors.light.primary1Bg,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        const SizedBox(height: 16),
-                                        CircularPercentIndicator(
-                                          radius: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.15,
-                                          lineWidth: kPadding * 1.5,
-                                          animation: false,
-                                          percent: 0,
-                                          // Update this dynamically for progress
-                                          center: const Text(
-                                            '0 %',
-                                            style: TextStyle(
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-
-                                          progressBorderColor: DigitTheme
-                                              .instance.colors.light.primary1Bg,
-                                          progressColor: DigitTheme.instance
-                                              .colors.light.alertSuccess,
-                                          backgroundColor: DigitTheme
-                                              .instance.colors.light.primary1Bg,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            FileTransferAnimation(),
-                                            // Add animation here
-                                          ],
-                                        ),
-                                        Wrap(
-                                            spacing: 8.0,
-                                            runSpacing: 4.0,
-                                            children: [
-                                              // buildDeviceChip(),
-                                              Container(
-                                                padding: const EdgeInsets.all(
-                                                    kPadding),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: DigitTheme
-                                                        .instance
-                                                        .colors
-                                                        .light
-                                                        .primary1Bg,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          kPadding),
-                                                ),
-                                                child: Text(
-                                                  widget.connectedDevice
-                                                      .deviceName,
-                                                  style: TextStyle(
-                                                    color: DigitTheme.instance
-                                                        .colors.light.primary2,
-                                                  ),
-                                                ),
-                                              ),
-                                            ]),
+                                        FileTransferAnimation(),
+                                        // Add animation here
                                       ],
                                     ),
-                                  ),
-                              receivingInProgress:
-                                  (progress, offset, totalCount) {
-                                return Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text('Receiving $offset / $totalCount'),
-                                      const SizedBox(height: 16),
-                                      CircularPercentIndicator(
-                                        radius:
-                                            MediaQuery.of(context).size.height *
-                                                0.15,
-                                        lineWidth: kPadding * 1.5,
-                                        animation: false,
-                                        percent: progress,
-                                        // Update this dynamically for progress
-                                        center: Text(
-                                          '${(progress * 100).toStringAsFixed(1)} %',
-                                          style: const TextStyle(
-                                              fontSize: 24,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-
-                                        progressBorderColor: DigitTheme
-                                            .instance.colors.light.primary1Bg,
-                                        progressColor: DigitTheme
-                                            .instance.colors.light.alertSuccess,
-                                        backgroundColor: DigitTheme
-                                            .instance.colors.light.primary1Bg,
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                    Wrap(
+                                        spacing: 8.0,
+                                        runSpacing: 4.0,
                                         children: [
-                                          FileTransferAnimation(),
-                                          // Add animation here
-                                        ],
-                                      ),
-                                      Wrap(
-                                          spacing: 8.0,
-                                          runSpacing: 4.0,
-                                          children: [
-                                            Container(
-                                              padding: const EdgeInsets.all(
-                                                  kPadding),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: DigitTheme.instance
-                                                      .colors.light.primary1Bg,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        kPadding),
+                                          Container(
+                                            padding:
+                                                const EdgeInsets.all(kPadding),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: DigitTheme.instance
+                                                    .colors.light.primary1Bg,
                                               ),
-                                              child: Text(
-                                                widget
-                                                    .connectedDevice.deviceName,
-                                                style: TextStyle(
-                                                  color: DigitTheme.instance
-                                                      .colors.light.primary2,
-                                                ),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      kPadding),
+                                            ),
+                                            child: Text(
+                                              widget.connectedDevice.deviceName,
+                                              style: TextStyle(
+                                                color: DigitTheme.instance
+                                                    .colors.light.primary2,
                                               ),
                                             ),
-                                          ]),
-                                    ],
-                                  ),
-                                );
-                              })),
+                                          ),
+                                        ]),
+                                  ],
+                                ),
+                              );
+                            },
+                          )),
                     ]))
                   ]);
             },

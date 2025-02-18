@@ -29,6 +29,8 @@ class MessageTypesMapper extends EnumMapper<MessageTypes> {
         return MessageTypes.confirmation;
       case "chunk":
         return MessageTypes.chunk;
+      case "handshake":
+        return MessageTypes.handShake;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -41,6 +43,8 @@ class MessageTypesMapper extends EnumMapper<MessageTypes> {
         return "confirmation";
       case MessageTypes.chunk:
         return "chunk";
+      case MessageTypes.handShake:
+        return "handshake";
     }
   }
 }
@@ -79,6 +83,8 @@ class ConfirmationTypesMapper extends EnumMapper<ConfirmationTypes> {
         return ConfirmationTypes.failed;
       case "finalAcknowledgment":
         return ConfirmationTypes.finalAcknowledgment;
+      case "handshake":
+        return ConfirmationTypes.handShake;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -95,6 +101,8 @@ class ConfirmationTypesMapper extends EnumMapper<ConfirmationTypes> {
         return "failed";
       case ConfirmationTypes.finalAcknowledgment:
         return "finalAcknowledgment";
+      case ConfirmationTypes.handShake:
+        return "handshake";
     }
   }
 }

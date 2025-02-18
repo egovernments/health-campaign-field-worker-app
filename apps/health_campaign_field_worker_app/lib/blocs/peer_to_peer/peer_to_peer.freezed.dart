@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$PeerToPeerEvent {
   NearbyService get nearbyService => throw _privateConstructorUsedError;
+  String get selectedBoundaryCode => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
@@ -25,7 +26,8 @@ mixin _$PeerToPeerEvent {
             String selectedBoundaryCode,
             List<Device> connectedDevice)
         dataTransfer,
-    required TResult Function(NearbyService nearbyService, dynamic data)
+    required TResult Function(String projectId, String selectedBoundaryCode,
+            NearbyService nearbyService, dynamic data)
         dataReceiver,
   }) =>
       throw _privateConstructorUsedError;
@@ -34,7 +36,9 @@ mixin _$PeerToPeerEvent {
     TResult? Function(NearbyService nearbyService, String selectedProject,
             String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
-    TResult? Function(NearbyService nearbyService, dynamic data)? dataReceiver,
+    TResult? Function(String projectId, String selectedBoundaryCode,
+            NearbyService nearbyService, dynamic data)?
+        dataReceiver,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -42,7 +46,9 @@ mixin _$PeerToPeerEvent {
     TResult Function(NearbyService nearbyService, String selectedProject,
             String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
-    TResult Function(NearbyService nearbyService, dynamic data)? dataReceiver,
+    TResult Function(String projectId, String selectedBoundaryCode,
+            NearbyService nearbyService, dynamic data)?
+        dataReceiver,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -77,7 +83,7 @@ abstract class $PeerToPeerEventCopyWith<$Res> {
           PeerToPeerEvent value, $Res Function(PeerToPeerEvent) then) =
       _$PeerToPeerEventCopyWithImpl<$Res, PeerToPeerEvent>;
   @useResult
-  $Res call({NearbyService nearbyService});
+  $Res call({NearbyService nearbyService, String selectedBoundaryCode});
 }
 
 /// @nodoc
@@ -94,12 +100,17 @@ class _$PeerToPeerEventCopyWithImpl<$Res, $Val extends PeerToPeerEvent>
   @override
   $Res call({
     Object? nearbyService = null,
+    Object? selectedBoundaryCode = null,
   }) {
     return _then(_value.copyWith(
       nearbyService: null == nearbyService
           ? _value.nearbyService
           : nearbyService // ignore: cast_nullable_to_non_nullable
               as NearbyService,
+      selectedBoundaryCode: null == selectedBoundaryCode
+          ? _value.selectedBoundaryCode
+          : selectedBoundaryCode // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -237,7 +248,8 @@ class _$DataTransferEventImpl
             String selectedBoundaryCode,
             List<Device> connectedDevice)
         dataTransfer,
-    required TResult Function(NearbyService nearbyService, dynamic data)
+    required TResult Function(String projectId, String selectedBoundaryCode,
+            NearbyService nearbyService, dynamic data)
         dataReceiver,
   }) {
     return dataTransfer(
@@ -250,7 +262,9 @@ class _$DataTransferEventImpl
     TResult? Function(NearbyService nearbyService, String selectedProject,
             String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
-    TResult? Function(NearbyService nearbyService, dynamic data)? dataReceiver,
+    TResult? Function(String projectId, String selectedBoundaryCode,
+            NearbyService nearbyService, dynamic data)?
+        dataReceiver,
   }) {
     return dataTransfer?.call(
         nearbyService, selectedProject, selectedBoundaryCode, connectedDevice);
@@ -262,7 +276,9 @@ class _$DataTransferEventImpl
     TResult Function(NearbyService nearbyService, String selectedProject,
             String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
-    TResult Function(NearbyService nearbyService, dynamic data)? dataReceiver,
+    TResult Function(String projectId, String selectedBoundaryCode,
+            NearbyService nearbyService, dynamic data)?
+        dataReceiver,
     required TResult orElse(),
   }) {
     if (dataTransfer != null) {
@@ -314,6 +330,7 @@ abstract class DataTransferEvent implements PeerToPeerEvent {
   @override
   NearbyService get nearbyService;
   String get selectedProject;
+  @override
   String get selectedBoundaryCode;
   List<Device> get connectedDevice;
   @override
@@ -330,7 +347,11 @@ abstract class _$$DataReceiverEventImplCopyWith<$Res>
       __$$DataReceiverEventImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({NearbyService nearbyService, dynamic data});
+  $Res call(
+      {String projectId,
+      String selectedBoundaryCode,
+      NearbyService nearbyService,
+      dynamic data});
 }
 
 /// @nodoc
@@ -344,10 +365,20 @@ class __$$DataReceiverEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? projectId = null,
+    Object? selectedBoundaryCode = null,
     Object? nearbyService = null,
     Object? data = freezed,
   }) {
     return _then(_$DataReceiverEventImpl(
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      selectedBoundaryCode: null == selectedBoundaryCode
+          ? _value.selectedBoundaryCode
+          : selectedBoundaryCode // ignore: cast_nullable_to_non_nullable
+              as String,
       nearbyService: null == nearbyService
           ? _value.nearbyService
           : nearbyService // ignore: cast_nullable_to_non_nullable
@@ -366,8 +397,15 @@ class _$DataReceiverEventImpl
     with DiagnosticableTreeMixin
     implements DataReceiverEvent {
   const _$DataReceiverEventImpl(
-      {required this.nearbyService, required this.data});
+      {required this.projectId,
+      required this.selectedBoundaryCode,
+      required this.nearbyService,
+      required this.data});
 
+  @override
+  final String projectId;
+  @override
+  final String selectedBoundaryCode;
   @override
   final NearbyService nearbyService;
   @override
@@ -375,7 +413,7 @@ class _$DataReceiverEventImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PeerToPeerEvent.dataReceiver(nearbyService: $nearbyService, data: $data)';
+    return 'PeerToPeerEvent.dataReceiver(projectId: $projectId, selectedBoundaryCode: $selectedBoundaryCode, nearbyService: $nearbyService, data: $data)';
   }
 
   @override
@@ -383,6 +421,8 @@ class _$DataReceiverEventImpl
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'PeerToPeerEvent.dataReceiver'))
+      ..add(DiagnosticsProperty('projectId', projectId))
+      ..add(DiagnosticsProperty('selectedBoundaryCode', selectedBoundaryCode))
       ..add(DiagnosticsProperty('nearbyService', nearbyService))
       ..add(DiagnosticsProperty('data', data));
   }
@@ -392,14 +432,18 @@ class _$DataReceiverEventImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DataReceiverEventImpl &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
+            (identical(other.selectedBoundaryCode, selectedBoundaryCode) ||
+                other.selectedBoundaryCode == selectedBoundaryCode) &&
             (identical(other.nearbyService, nearbyService) ||
                 other.nearbyService == nearbyService) &&
             const DeepCollectionEquality().equals(other.data, data));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, nearbyService, const DeepCollectionEquality().hash(data));
+  int get hashCode => Object.hash(runtimeType, projectId, selectedBoundaryCode,
+      nearbyService, const DeepCollectionEquality().hash(data));
 
   @JsonKey(ignore: true)
   @override
@@ -417,10 +461,11 @@ class _$DataReceiverEventImpl
             String selectedBoundaryCode,
             List<Device> connectedDevice)
         dataTransfer,
-    required TResult Function(NearbyService nearbyService, dynamic data)
+    required TResult Function(String projectId, String selectedBoundaryCode,
+            NearbyService nearbyService, dynamic data)
         dataReceiver,
   }) {
-    return dataReceiver(nearbyService, data);
+    return dataReceiver(projectId, selectedBoundaryCode, nearbyService, data);
   }
 
   @override
@@ -429,9 +474,12 @@ class _$DataReceiverEventImpl
     TResult? Function(NearbyService nearbyService, String selectedProject,
             String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
-    TResult? Function(NearbyService nearbyService, dynamic data)? dataReceiver,
+    TResult? Function(String projectId, String selectedBoundaryCode,
+            NearbyService nearbyService, dynamic data)?
+        dataReceiver,
   }) {
-    return dataReceiver?.call(nearbyService, data);
+    return dataReceiver?.call(
+        projectId, selectedBoundaryCode, nearbyService, data);
   }
 
   @override
@@ -440,11 +488,13 @@ class _$DataReceiverEventImpl
     TResult Function(NearbyService nearbyService, String selectedProject,
             String selectedBoundaryCode, List<Device> connectedDevice)?
         dataTransfer,
-    TResult Function(NearbyService nearbyService, dynamic data)? dataReceiver,
+    TResult Function(String projectId, String selectedBoundaryCode,
+            NearbyService nearbyService, dynamic data)?
+        dataReceiver,
     required TResult orElse(),
   }) {
     if (dataReceiver != null) {
-      return dataReceiver(nearbyService, data);
+      return dataReceiver(projectId, selectedBoundaryCode, nearbyService, data);
     }
     return orElse();
   }
@@ -483,9 +533,14 @@ class _$DataReceiverEventImpl
 
 abstract class DataReceiverEvent implements PeerToPeerEvent {
   const factory DataReceiverEvent(
-      {required final NearbyService nearbyService,
+      {required final String projectId,
+      required final String selectedBoundaryCode,
+      required final NearbyService nearbyService,
       required final dynamic data}) = _$DataReceiverEventImpl;
 
+  String get projectId;
+  @override
+  String get selectedBoundaryCode;
   @override
   NearbyService get nearbyService;
   dynamic get data;

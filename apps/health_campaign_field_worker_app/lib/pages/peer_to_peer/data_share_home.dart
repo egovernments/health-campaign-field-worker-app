@@ -1,5 +1,3 @@
-import 'package:attendance_management/widgets/back_navigation_help_header.dart';
-import 'package:attendance_management/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -7,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../widgets/header/back_navigation_help_header.dart';
+import '../../widgets/localized.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
 import 'devices_list.dart';
 

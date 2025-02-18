@@ -106,34 +106,53 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
                 .map((e) => offsetData[e])
                 .toList()
                 .first;
-
-            for (var entity in entityData) {
-              Map<String, dynamic> entityResponse = entity;
-
-              for (var device in event.connectedDevice) {
-                await event.nearbyService.sendMessage(
-                  device.deviceId,
-                  PeerToPeerMessageModel(
-                          messageType: MessageTypes.chunk.toValue(),
-                          selectedBoundaryCode: selectedBoundaryCode,
-                          message: compressJson(entityResponse),
-                          offset: offsetValue,
-                          totalCount: totalCount)
-                      .toJson(),
-                );
-              }
-
-              // Wait for confirmation before proceeding
-              await waitForConfirmation(
-                event.nearbyService,
-                confirmationType: ConfirmationTypes.chunk.toValue(),
-                offset: offsetValue,
+            for (var device in event.connectedDevice) {
+              await event.nearbyService.sendMessage(
+                device.deviceId,
+                PeerToPeerMessageModel(
+                  messageType: MessageTypes.handShake.toValue(),
+                  selectedBoundaryCode: event.selectedBoundaryCode,
+                  message: event.selectedProject,
+                ).toJson(),
               );
 
-              emit(PeerToPeerState.transferInProgress(
-                  progress: offsetValue / totalCount,
+              bool handshakeSuccessful = await waitForConfirmation(
+                event.nearbyService,
+                confirmationType: ConfirmationTypes.handShake.toValue(),
+              );
+
+              if (handshakeSuccessful) {
+                emit(const PeerToPeerState.failedToTransfer(
+                    error: "Handshake failed. Stopping transfer."));
+                return;
+              } else {
+                for (var entity in entityData) {
+                  Map<String, dynamic> entityResponse = entity;
+
+                  await event.nearbyService.sendMessage(
+                    device.deviceId,
+                    PeerToPeerMessageModel(
+                            messageType: MessageTypes.chunk.toValue(),
+                            selectedBoundaryCode: selectedBoundaryCode,
+                            message: compressJson(entityResponse),
+                            offset: offsetValue,
+                            totalCount: totalCount)
+                        .toJson(),
+                  );
+                }
+
+                // Wait for confirmation before proceeding
+                await waitForConfirmation(
+                  event.nearbyService,
+                  confirmationType: ConfirmationTypes.chunk.toValue(),
                   offset: offsetValue,
-                  totalCount: totalCount));
+                );
+
+                emit(PeerToPeerState.transferInProgress(
+                    progress: offsetValue / totalCount,
+                    offset: offsetValue,
+                    totalCount: totalCount));
+              }
             }
           }
 
@@ -161,6 +180,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
       } else {
         emit(const PeerToPeerState.failedToTransfer(
             error: "File doesn't exist"));
+        return;
       }
     } catch (e) {
       emit(PeerToPeerState.failedToTransfer(error: e.toString()));
@@ -198,7 +218,33 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
       PeerToPeerMessageModel messageModel =
           PeerToPeerMessageModelMapper.fromJson(event.data["message"]);
 
-      if (messageModel.messageType == MessageTypes.chunk.toValue()) {
+      if (messageModel.messageType == MessageTypes.handShake.toValue()) {
+        // First message contains boundary and project
+        if (messageModel.selectedBoundaryCode == event.selectedBoundaryCode &&
+            messageModel.message == event.projectId) {
+          // Send acknowledgment to proceed
+          await event.nearbyService.sendMessage(
+              event.data["deviceId"],
+              PeerToPeerMessageModel(
+                messageType: MessageTypes.confirmation.toValue(),
+                message: "Handshake successful. Proceeding with transfer.",
+                confirmationType: ConfirmationTypes.handShake.toValue(),
+                status: MessageStatus.success.toValue(),
+              ).toJson());
+        } else {
+          // Send failure message and stop transfer
+          await event.nearbyService.sendMessage(
+              event.data["deviceId"],
+              PeerToPeerMessageModel(
+                messageType: MessageTypes.confirmation.toValue(),
+                message: "Handshake failed. Boundary or project mismatch.",
+                confirmationType: ConfirmationTypes.failed.toValue(),
+                status: MessageStatus.fail.toValue(),
+              ).toJson());
+          emit(const PeerToPeerState.failedToReceive(
+              error: "Boundary or project mismatch."));
+        }
+      } else if (messageModel.messageType == MessageTypes.chunk.toValue()) {
         // Process chunk
         int? offset = messageModel.offset;
         int? totalCount = messageModel.totalCount;
@@ -308,12 +354,12 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
     }
   }
 
-  Future<void> waitForConfirmation(
+  Future<bool> waitForConfirmation(
     NearbyService nearbyService, {
     required String confirmationType,
     int? offset,
   }) async {
-    final completer = Completer<void>();
+    final completer = Completer<bool>();
 
     final subscription = nearbyService.dataReceivedSubscription(
       callback: (data) {
@@ -324,28 +370,28 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           if (messageModel.messageType == MessageTypes.confirmation.toValue()) {
             if (confirmationType == ConfirmationTypes.chunk.toValue() &&
                 messageModel.offset == offset) {
-              completer.complete();
+              completer.complete(true);
             } else if (confirmationType ==
-                ConfirmationTypes.finalAcknowledgment.toValue()) {
-              completer.complete();
-            } else if (confirmationType ==
-                ConfirmationTypes.finalTransfer.toValue()) {
-              completer.complete();
+                    ConfirmationTypes.finalAcknowledgment.toValue() ||
+                confirmationType == ConfirmationTypes.finalTransfer.toValue() ||
+                confirmationType == ConfirmationTypes.handShake.toValue()) {
+              completer.complete(true);
             } else if (confirmationType == ConfirmationTypes.failed.toValue()) {
-              completer.complete();
+              completer.complete(false);
               emit(const PeerToPeerState.failedToTransfer(
                   error: "File doesn't exist"));
-              throw "Failed to transfer ${messageModel.message}";
             }
           }
         } catch (e) {
           debugPrint("Error processing confirmation: $e");
+          completer.complete(false);
         }
       },
     );
 
-    await completer.future;
+    bool result = await completer.future;
     subscription.cancel();
+    return result;
   }
 }
 
@@ -358,7 +404,9 @@ class PeerToPeerEvent with _$PeerToPeerEvent {
       required List<Device> connectedDevice}) = DataTransferEvent;
 
   const factory PeerToPeerEvent.dataReceiver(
-      {required NearbyService nearbyService,
+      {required String projectId,
+      required String selectedBoundaryCode,
+      required NearbyService nearbyService,
       required dynamic data}) = DataReceiverEvent;
 }
 

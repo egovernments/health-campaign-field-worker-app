@@ -7,7 +7,9 @@ enum MessageTypes {
   @MappableValue("confirmation")
   confirmation,
   @MappableValue("chunk")
-  chunk
+  chunk,
+  @MappableValue("handshake")
+  handShake
 }
 
 @MappableEnum(caseStyle: CaseStyle.upperCase)
@@ -20,6 +22,8 @@ enum ConfirmationTypes {
   failed,
   @MappableValue("finalAcknowledgment")
   finalAcknowledgment,
+  @MappableValue("handshake")
+  handShake
 }
 
 @MappableEnum(caseStyle: CaseStyle.upperCase)
