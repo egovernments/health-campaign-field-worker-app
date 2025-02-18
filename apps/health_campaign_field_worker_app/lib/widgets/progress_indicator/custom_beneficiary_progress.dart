@@ -160,7 +160,6 @@ class CustomBeneficiaryProgressBarState
 
   @override
   Widget build(BuildContext context) {
-    // Todo : verify this once as discussion going on
     final target = context.isDistributor ? 325.0 : 50.0;
 
     return DigitCard(

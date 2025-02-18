@@ -282,17 +282,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
       }
-      // try {
-      //   await _loadServiceDefinition(projects);
-      // } catch (_) {
-      //   emit(
-      //     state.copyWith(
-      //       loading: false,
-      //       syncError: ProjectSyncErrorType.serviceDefinitions,
-      //     ),
-      //   );
-      // }
-
       try {
         await _loadProjectFacilities(projects);
       } catch (_) {

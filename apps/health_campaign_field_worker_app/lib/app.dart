@@ -372,15 +372,7 @@ class MainApplicationState extends State<MainApplication>
                               );
                             },
                             supportedLocales: languages != null
-                                ? languages.map((e) => getLocale(e.value)
-                                    // {
-                                    //     final results = e.value.split('_');
-
-                                    //     return results.isNotEmpty
-                                    //         ? Locale(results.first, results.last)
-                                    //         : firstLanguage;
-                                    //   }
-                                    )
+                                ? languages.map((e) => getLocale(e.value))
                                 : [getLocale(firstLanguage)],
                             localizationsDelegates: getAppLocalizationDelegates(
                               sql: widget.sql,

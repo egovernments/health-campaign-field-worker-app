@@ -140,7 +140,6 @@ class CustomStockDetailsPageState
         BlocProvider.of<StockReconciliationBloc>(context);
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
-    // final parser = GS1BarcodeParser.defaultParser();
 
     return PopScope(
       onPopInvoked: (didPop) {
@@ -1467,7 +1466,6 @@ class CustomStockDetailsPageState
                                         ? null
                                         : IconButton(
                                             onPressed: () {
-                                              //[TODO: Add route to auto_route]
                                               Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                   builder: (context) =>
@@ -1688,7 +1686,6 @@ class CustomStockDetailsPageState
                                   },
                                 ),
 
-                                // todo not yet confirmed if needed or not for issue flow
                                 if ([
                                       StockRecordEntryType.receipt,
                                       StockRecordEntryType.dispatch,
@@ -1717,7 +1714,6 @@ class CustomStockDetailsPageState
                                                       : 0;
 
                                               if (balesQuantityInInt > 0) {
-                                                //[TODO: Add route to auto_route]
                                                 Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                     builder: (context) =>
@@ -1808,7 +1804,6 @@ class CustomStockDetailsPageState
                                                               : 0;
                                                       if (balesQuantityInInt >
                                                           0) {
-                                                        //[TODO: Add route to auto_route]
                                                         Navigator.of(context)
                                                             .push(
                                                           MaterialPageRoute(

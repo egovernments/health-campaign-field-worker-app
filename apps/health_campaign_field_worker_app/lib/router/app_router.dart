@@ -199,24 +199,6 @@ class AppRouter extends _$AppRouter {
           path: 'complaints-acknowledgement',
         ),
 
-        // AutoRoute(
-        //     page: SurveyFormWrapperRoute.page,
-        //     path: 'surveyForm',
-        //     children: [
-        //       AutoRoute(
-        //         page: SurveyformRoute.page,
-        //         path: '',
-        //       ),
-        //       AutoRoute(
-        //           page: SurveyFormBoundaryViewRoute.page,
-        //           path: 'view-boundary'),
-        //       AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
-        //       AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
-        //       AutoRoute(
-        //           page: SurveyFormAcknowledgementRoute.page,
-        //           path: 'surveyForm-acknowledgement'),
-        //     ]),
-
         // Closed-Household Route
         AutoRoute(
             page: ClosedHouseholdWrapperRoute.page,

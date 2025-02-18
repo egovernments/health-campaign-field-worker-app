@@ -114,8 +114,7 @@ class CustomDistributionSummaryReportBloc extends Bloc<
 
       // populate the day vs count for that day map
       populateDateVsCountMap(dateVsHouseholds, dateVsHouseholdCount);
-      // populateDateVsCountMap(
-      //     dateVsProjectBeneficiaries, dateVsProjectBeneficiaryCount);
+
       populateDateVsBednetDistributedMap(
           dateVsSuccessfulTasks, dateVsBedNetDistributedCount);
 
