@@ -47,11 +47,11 @@ class ReferralBloc extends Bloc<ReferralEvent, ReferralState> {
       final List<ReferralModel> referrals = await referralRepository.search(
         event.referrals,
       );
-      if (referrals.isNotEmpty) {
-        emit(state.copyWith(referrals: referrals));
-      } else {
-        emit(state.copyWith(referrals: null));
-      }
+
+      emit(state.copyWith(
+        loading: false,
+        referrals: (referrals.isNotEmpty) ? referrals : null,
+      ));
     } catch (error) {
       rethrow;
     } finally {

@@ -41,7 +41,8 @@ void main() {
         serviceSearchModel: ServiceTestConstants.mockServiceSearchModel,
       )),
       expect: () => [
-        ServiceSearchState(serviceList: [ServiceTestConstants.mockServiceModel]),
+        ServiceSearchState(
+            serviceList: [ServiceTestConstants.mockServiceModel]),
       ],
       verify: (_) {
         // Verify that the search method was called
@@ -71,12 +72,33 @@ void main() {
     blocTest<ServiceBloc, ServiceState>(
       'emits a ServiceSearchState when reset event is added',
       build: () => ServiceBloc(
-          ServiceState.serviceSearch(serviceList: [ServiceTestConstants.mockServiceModel]),
+          ServiceState.serviceSearch(
+              serviceList: [ServiceTestConstants.mockServiceModel]),
           serviceDataRepository: serviceDataRepository),
       act: (bloc) => bloc.add(ServiceEvent.resetSelected(
         serviceList: [ServiceTestConstants.mockServiceModel],
       )),
-      expect: () => [ServiceState.serviceSearch(serviceList: [ServiceTestConstants.mockServiceModel])],
+      expect: () => [
+        ServiceState.serviceSearch(
+            serviceList: [ServiceTestConstants.mockServiceModel])
+      ],
     );
+
+    //Test for the ServiceSelect Event
+    blocTest<ServiceBloc, ServiceState>(
+        'emits updated state with selectedService when ServiceSelectionEvent is added',
+        build: () => ServiceBloc(
+            ServiceState.serviceSearch(
+                serviceList: [ServiceTestConstants.mockServiceModel]),
+            serviceDataRepository: serviceDataRepository),
+        act: (bloc) {
+          bloc.add(ServiceSelectionEvent(
+              service: ServiceTestConstants.mockServiceModel));
+        },
+        expect: () => [
+              ServiceState.serviceSearch(
+                  serviceList: [ServiceTestConstants.mockServiceModel],
+                  selectedService: ServiceTestConstants.mockServiceModel)
+            ]);
   });
 }
