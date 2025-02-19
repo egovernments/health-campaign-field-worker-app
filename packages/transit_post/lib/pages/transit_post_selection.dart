@@ -212,6 +212,15 @@ class TransitPostSelectionPageState
                                   ),
                                   isRequired: true,
                                   child: DigitDropdown(
+                                    selectedOption: DropdownItem(
+                                        name: localizations.translate(form
+                                                .control(_transitPostType)
+                                                .value ??
+                                            ''),
+                                        code: form
+                                                .control(_transitPostType)
+                                                .value ??
+                                            ''),
                                     items: TransitPostSingleton()
                                             .transitPostType
                                             ?.map((transitPostType) =>

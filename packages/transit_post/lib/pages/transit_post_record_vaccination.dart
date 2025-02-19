@@ -203,8 +203,8 @@ class TransitPostRecordVaccinationPageState
                           label: localizations.translate(
                             i18.transitPost.beneficiaryAgeLabel,
                           ),
-                          value: localizations.translate(
-                              "${i18.transitPost.beneficiaryAgeDescription} ${TransitPostSingleton().minAge!} ${"-"} ${TransitPostSingleton().maxAge!}"),
+                          value:
+                              "${localizations.translate(i18.transitPost.beneficiaryAgeDescription)} ${TransitPostSingleton().minAge!.toString()} ${"-"} ${TransitPostSingleton().maxAge!.toString()}",
                         )
                       ]),
                     SizedBox(
@@ -272,7 +272,7 @@ class TransitPostRecordVaccinationPageState
 
       tableData.add(
         DigitTableData(
-            localizations.translate("${i18.transitPost.doseLabel} $count"),
+            "${localizations.translate(i18.transitPost.doseLabel)} $count",
             cellKey: "Dose$count"),
       );
       tableData.add(DigitTableData(resource.productVariantId,
