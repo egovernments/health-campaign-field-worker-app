@@ -22,6 +22,7 @@ import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
 import '../../models/entities/stock.dart';
 import '../../models/entities/stock_reconciliation.dart';
+import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 
@@ -217,71 +218,85 @@ class InventoryReportDetailsPageState
                                                             facilities,
                                                       ) ??
                                                       [];
-
-                                              return InkWell(
-                                                onTap: () async {
-                                                  if (mounted) {
-                                                    final stockReconciliationBloc =
-                                                        context.read<
-                                                            StockReconciliationBloc>();
-
-                                                    final facility = await context
-                                                            .router
-                                                            .push(InventoryFacilitySelectionRoute(
-                                                                facilities:
-                                                                    facilities))
-                                                        as FacilityModel?;
-
-                                                    if (facility == null) {
-                                                      return;
-                                                    }
-                                                    form
-                                                            .control(_facilityKey)
-                                                            .value =
-                                                        localizations.translate(
-                                                      'FAC_${facility.id}',
-                                                    );
-
-                                                    setState(() {
-                                                      selectedFacilityId =
-                                                          facility.id;
-                                                    });
-
-                                                    controller1.text =
-                                                        localizations.translate(
-                                                            'FAC_${facility.id}');
-                                                    stockReconciliationBloc.add(
-                                                      StockReconciliationSelectFacilityEvent(
-                                                        facility,
-                                                      ),
-                                                    );
-
-                                                    if (mounted) {
-                                                      handleSelection(
-                                                          form,
-                                                          context.read<
-                                                              InventoryReportBloc>());
-                                                    }
-                                                  }
-                                                },
-                                                child: IgnorePointer(
-                                                  child: ReactiveWrapperField(
-                                                    formControlName:
-                                                        _facilityKey,
-                                                    builder: (field) {
-                                                      return InputField(
-                                                        type: InputType.search,
-                                                        isRequired: true,
-                                                        controller: controller1,
+                                              return ReactiveWrapperField(
+                                                formControlName: _facilityKey,
+                                                builder: (field) =>
+                                                    LabeledField(
                                                         label: localizations
                                                             .translate(
                                                           i18.stockReconciliationDetails
                                                               .facilityLabel,
                                                         ),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
+                                                        isRequired: true,
+                                                        child: DigitDropdown(
+                                                          sentenceCaseEnabled:
+                                                              false,
+                                                          selectedOption:
+                                                              DropdownItem(
+                                                            name: form
+                                                                    .control(
+                                                                        _facilityKey)
+                                                                    .value ??
+                                                                '',
+                                                            code:
+                                                                selectedFacilityId ??
+                                                                    '',
+                                                          ),
+                                                          isSearchable: true,
+                                                          emptyItemText:
+                                                              localizations
+                                                                  .translate(i18
+                                                                      .common
+                                                                      .noMatchFound),
+                                                          errorMessage:
+                                                              field.errorText,
+                                                          onSelect: (value) {
+                                                            form
+                                                                    .control(
+                                                                        _facilityKey)
+                                                                    .value =
+                                                                localizations
+                                                                    .translate(
+                                                                        'FAC_${value.code}');
+
+                                                            setState(() {
+                                                              selectedFacilityId =
+                                                                  value.code;
+                                                            });
+
+                                                            controller1.text =
+                                                                localizations
+                                                                    .translate(
+                                                                        'FAC_${value.code}');
+
+                                                            final stockReconciliationBloc =
+                                                                context.read<
+                                                                    StockReconciliationBloc>();
+                                                            final facility = facilities
+                                                                .firstWhere((e) =>
+                                                                    e.id ==
+                                                                    value.code);
+
+                                                            stockReconciliationBloc
+                                                                .add(
+                                                              StockReconciliationSelectFacilityEvent(
+                                                                  facility),
+                                                            );
+
+                                                            handleSelection(
+                                                                form,
+                                                                context.read<
+                                                                    InventoryReportBloc>());
+                                                          },
+                                                          items: facilities
+                                                              .map((e) {
+                                                            return DropdownItem(
+                                                                name: localizations
+                                                                    .translate(
+                                                                        '$facilityPrefix${e.id}'),
+                                                                code: e.id);
+                                                          }).toList(),
+                                                        )),
                                               );
                                             },
                                           ),
