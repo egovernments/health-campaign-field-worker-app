@@ -120,21 +120,39 @@ class _CustomDistributionSummaryReportDetailsState
                                     .householdDistributedLabel,
                               ),
                               key: _householdKey,
-                              width: 130,
+                              width: localizations
+                                      .translate(
+                                        i18Local.inventoryReportDetails
+                                            .householdDistributedLabel,
+                                      )
+                                      .length *
+                                  8,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
                                   .projectBeneficiaryImpactedLabel),
                               key: _projectBeneficiaryKey,
-                              width: 120,
+                              width: localizations
+                                      .translate(
+                                        i18Local.inventoryReportDetails
+                                            .projectBeneficiaryImpactedLabel,
+                                      )
+                                      .length *
+                                  8,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
                                   .bednetDistributedLabel),
                               key: _bednetDistributedKey,
-                              width: 130,
+                              width: localizations
+                                      .translate(
+                                        i18Local.inventoryReportDetails
+                                            .bednetDistributedLabel,
+                                      )
+                                      .length *
+                                  8,
                             ),
                           ],
                           rows: [
