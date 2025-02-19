@@ -173,6 +173,7 @@ class IndividualLocalRepository
                         locationAccuracy: address.locationAccuracy,
                         addressLine1: address.addressLine1,
                         addressLine2: address.addressLine2,
+                        buildingName: address.buildingName,
                         city: address.city,
                         pincode: address.pincode,
                         type: address.type,
@@ -407,8 +408,8 @@ class IndividualLocalRepository
           ),
         );
 
-        batch.insertAllOnConflictUpdate(sql.address, addressCompanions);
-        batch.insertAllOnConflictUpdate(sql.identifier, identifierCompanions);
+        batch.replaceAll(sql.address, addressCompanions);
+        batch.replaceAll(sql.identifier, identifierCompanions);
       });
 
       await super.update(entity, createOpLog: createOpLog);

@@ -271,29 +271,24 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                       EdgeInsets.all(theme.spacerTheme.spacer3),
                                   children: [
                                     tableData.isNotEmpty
-                                        ? table.DigitTable(
-                                            showSelectedState: false,
-                                            tableHeight: viewOnly
-                                                ? MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    .55
-                                                : MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    .4,
-                                            tableWidth: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            showPagination: false,
-                                            showRowsPerPage: false,
-                                            withColumnDividers: false,
-                                            columns: headerList(
-                                              widget.dateTime,
-                                              localizations,
+                                        ? SizedBox(
+                                      height: MediaQuery.of(context).size.height*.525,
+                                          child: table.DigitTable(
+                                              showSelectedState: false,
+                                              tableHeight:MediaQuery.of(context).size.height*.5 ,
+                                              tableWidth: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              showPagination: false,
+                                              showRowsPerPage: false,
+                                              withColumnDividers: false,
+                                              columns: headerList(
+                                                widget.dateTime,
+                                                localizations,
+                                              ),
+                                              rows: tableData,
                                             ),
-                                            rows: tableData,
-                                          )
+                                        )
                                         : NoResultCard(
                                             align: Alignment.center,
                                             label: localizations.translate(

@@ -53876,6 +53876,7 @@ typedef $$HouseholdTableInsertCompanionBuilder = HouseholdCompanion Function({
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
+  Value<HouseholdType?> householdType,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -53897,6 +53898,7 @@ typedef $$HouseholdTableUpdateCompanionBuilder = HouseholdCompanion Function({
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
+  Value<HouseholdType?> householdType,
   Value<String?> additionalFields,
   Value<int> rowid,
 });
@@ -53938,6 +53940,7 @@ class $$HouseholdTableTableManager extends RootTableManager<
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
+            Value<HouseholdType?> householdType = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -53959,6 +53962,7 @@ class $$HouseholdTableTableManager extends RootTableManager<
             tenantId: tenantId,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
+            householdType: householdType,
             additionalFields: additionalFields,
             rowid: rowid,
           ),
@@ -53980,6 +53984,7 @@ class $$HouseholdTableTableManager extends RootTableManager<
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
+            Value<HouseholdType?> householdType = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -54001,6 +54006,7 @@ class $$HouseholdTableTableManager extends RootTableManager<
             tenantId: tenantId,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
+            householdType: householdType,
             additionalFields: additionalFields,
             rowid: rowid,
           ),
@@ -54107,6 +54113,13 @@ class $$HouseholdTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnWithTypeConverterFilters<HouseholdType?, HouseholdType, int>
+      get householdType => $state.composableBuilder(
+          column: $state.table.householdType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
   ColumnFilters<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
@@ -54198,6 +54211,11 @@ class $$HouseholdTableOrderingComposer
 
   ColumnOrderings<int> get rowVersion => $state.composableBuilder(
       column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get householdType => $state.composableBuilder(
+      column: $state.table.householdType,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
