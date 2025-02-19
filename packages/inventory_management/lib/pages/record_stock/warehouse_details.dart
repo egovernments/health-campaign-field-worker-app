@@ -54,7 +54,7 @@ class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
       fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
-          value: localizations.translate(InventorySingleton().boundaryName),
+          value: localizations.translate(InventorySingleton().boundary!.code ?? ''),
         ),
         _warehouseKey: FormControl<String>(
           validators: [Validators.required],
