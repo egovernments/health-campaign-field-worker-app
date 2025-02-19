@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -16,7 +14,6 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/peer_to_peer/file_transfer_animation.dart';
-import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
 class DataReceiverPage extends LocalizedStatefulWidget {
@@ -55,7 +52,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
             Toast.showToast(
               context,
               message: localizations.translate(
-                  '${device.deviceName} ${SessionState.notConnected.name}'),
+                  '${device.deviceName} ${SessionState.notConnected.toString().toUpperCase()}'),
               type: ToastType.error,
             );
           }
@@ -119,7 +116,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                     SliverToBoxAdapter(
                         child: Column(children: [
                       Padding(
-                        padding: const EdgeInsets.all(kPadding),
+                        padding: const EdgeInsets.all(spacer2),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: Text(
@@ -132,18 +129,18 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                       Container(
                           height: MediaQuery.of(context).size.height * 0.6,
                           color: DigitTheme.instance.colors.light.paperPrimary,
-                          margin: const EdgeInsets.all(kPadding),
+                          margin: const EdgeInsets.all(spacer2),
                           child: state.maybeWhen(
                             orElse: () => Center(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: spacer4),
                                   CircularPercentIndicator(
                                     radius: MediaQuery.of(context).size.height *
                                         0.15,
-                                    lineWidth: kPadding * 1.5,
+                                    lineWidth: spacer2 * 1.5,
                                     animation: false,
                                     percent: 0,
                                     // Update this dynamically for progress
@@ -161,29 +158,23 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                     backgroundColor: DigitTheme
                                         .instance.colors.light.primary1Bg,
                                   ),
-                                  const SizedBox(height: 16),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      FileTransferAnimation(),
-                                      // Add animation here
-                                    ],
-                                  ),
+                                  const SizedBox(height: spacer4),
+                                  FileTransferAnimation(),
                                   Wrap(
-                                      spacing: 8.0,
-                                      runSpacing: 4.0,
+                                      spacing: spacer2,
+                                      runSpacing: spacer1,
                                       children: [
                                         // buildDeviceChip(),
                                         Container(
                                           padding:
-                                              const EdgeInsets.all(kPadding),
+                                              const EdgeInsets.all(spacer2),
                                           decoration: BoxDecoration(
                                             border: Border.all(
                                               color: DigitTheme.instance.colors
                                                   .light.primary1Bg,
                                             ),
                                             borderRadius:
-                                                BorderRadius.circular(kPadding),
+                                                BorderRadius.circular(spacer2),
                                           ),
                                           child: Text(
                                             widget.connectedDevice.deviceName,
@@ -204,23 +195,22 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text('Receiving $offset / $totalCount'),
-                                    const SizedBox(height: 16),
+                                    Text(localizations.translate(
+                                        '${i18.dataShare.receiving} $offset / $totalCount')),
+                                    const SizedBox(height: spacer4),
                                     CircularPercentIndicator(
                                       radius:
                                           MediaQuery.of(context).size.height *
                                               0.15,
-                                      lineWidth: kPadding * 1.5,
+                                      lineWidth: spacer2 * 1.5,
                                       animation: false,
                                       percent: progress,
                                       // Update this dynamically for progress
                                       center: Text(
                                         '${(progress * 100).toStringAsFixed(1)} %',
                                         style: const TextStyle(
-                                            fontSize: 24,
                                             fontWeight: FontWeight.bold),
                                       ),
-
                                       progressBorderColor: DigitTheme
                                           .instance.colors.light.primary1Bg,
                                       progressColor: DigitTheme
@@ -228,22 +218,15 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                       backgroundColor: DigitTheme
                                           .instance.colors.light.primary1Bg,
                                     ),
-                                    const SizedBox(height: 16),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        FileTransferAnimation(),
-                                        // Add animation here
-                                      ],
-                                    ),
+                                    const SizedBox(height: spacer4),
+                                    FileTransferAnimation(),
                                     Wrap(
-                                        spacing: 8.0,
-                                        runSpacing: 4.0,
+                                        spacing: spacer2,
+                                        runSpacing: spacer1,
                                         children: [
                                           Container(
                                             padding:
-                                                const EdgeInsets.all(kPadding),
+                                                const EdgeInsets.all(spacer2),
                                             decoration: BoxDecoration(
                                               border: Border.all(
                                                 color: DigitTheme.instance
@@ -251,7 +234,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(
-                                                      kPadding),
+                                                      spacer2),
                                             ),
                                             child: Text(
                                               widget.connectedDevice.deviceName,
@@ -272,18 +255,5 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
             },
           ),
         ));
-  }
-
-  Future<String> getCurrentDeviceName() async {
-    var deviceId = '';
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      deviceId = androidInfo.model;
-    }
-    if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceId = iosInfo.localizedModel;
-    }
-    return deviceId;
   }
 }

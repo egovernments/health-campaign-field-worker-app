@@ -16,7 +16,6 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/peer_to_peer/file_transfer_animation.dart';
-import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
 class DataTransferPage extends LocalizedStatefulWidget {
@@ -88,6 +87,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
               type: ToastType.error,
               position: ToastPosition.aboveOneButtonFooter,
             );
+            context.router.maybePop();
           }
         },
         child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
@@ -115,7 +115,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(kPadding),
+                      padding: const EdgeInsets.all(spacer2),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
@@ -127,26 +127,25 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                     Container(
                         height: MediaQuery.of(context).size.height * 0.6,
                         color: DigitTheme.instance.colors.light.paperPrimary,
-                        margin: const EdgeInsets.all(kPadding),
+                        margin: const EdgeInsets.all(spacer2),
                         child: state.maybeWhen(
                           orElse: () => Center(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const SizedBox(height: 16),
+                                const SizedBox(height: spacer4),
                                 CircularPercentIndicator(
                                   radius:
                                       MediaQuery.of(context).size.height * 0.15,
-                                  lineWidth: kPadding * 1.5,
+                                  lineWidth: spacer2 * 1.5,
                                   animation: false,
                                   percent: 0,
                                   // Update this dynamically for progress
                                   center: const Text(
                                     '0 %',
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   progressBorderColor: DigitTheme
                                       .instance.colors.light.primary1Bg,
@@ -162,20 +161,20 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                               Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              const SizedBox(height: 16),
-                              Text('Transferring $offset / $totalCount'),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: spacer4),
+                              Text(localizations.translate(
+                                  '${i18.dataShare.transferring} $offset / $totalCount')),
+                              const SizedBox(height: spacer4),
                               CircularPercentIndicator(
                                 radius:
                                     MediaQuery.of(context).size.height * 0.15,
-                                lineWidth: kPadding * 1.5,
+                                lineWidth: spacer2 * 1.5,
                                 animation: false,
                                 percent: progress,
                                 // Update this dynamically for progress
                                 center: Text(
                                   '${(progress * 100).toStringAsFixed(1)} %',
                                   style: const TextStyle(
-                                      fontSize: 24,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 progressBorderColor:
@@ -185,56 +184,35 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                                 backgroundColor:
                                     DigitTheme.instance.colors.light.primary1Bg,
                               ),
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  FileTransferAnimation(),
-                                  // Add animation here
-                                ],
-                              ),
-                              Wrap(spacing: 8.0, runSpacing: 4.0, children: [
-                                // buildDeviceChip(),
-                                const SizedBox(width: 8),
-                                Container(
-                                  padding: const EdgeInsets.all(kPadding),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: DigitTheme
-                                          .instance.colors.light.primary1Bg,
+                              const SizedBox(height: spacer4),
+                              FileTransferAnimation(),
+                              Wrap(
+                                  spacing: spacer2,
+                                  runSpacing: spacer1,
+                                  children: [
+                                    // buildDeviceChip(),
+                                    const SizedBox(width: spacer2),
+                                    Container(
+                                      padding: const EdgeInsets.all(spacer2),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: DigitTheme
+                                              .instance.colors.light.primary1Bg,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(spacer2),
+                                      ),
+                                      child: Text(
+                                        widget
+                                            .connectedDevices.first.deviceName,
+                                        style: TextStyle(
+                                          color: DigitTheme
+                                              .instance.colors.light.primary2,
+                                        ),
+                                      ),
                                     ),
-                                    borderRadius:
-                                        BorderRadius.circular(kPadding),
-                                  ),
-                                  child: Text(
-                                    widget.connectedDevices.first.deviceName,
-                                    style: TextStyle(
-                                      color: DigitTheme
-                                          .instance.colors.light.primary2,
-                                    ),
-                                  ),
-                                ),
-                              ]),
+                                  ]),
                             ],
-                          ),
-                          failedToTransfer: (error) => Center(
-                            child: DigitButton(
-                              onPressed: () {
-                                context.read<PeerToPeerBloc>().add(
-                                    DataTransferEvent(
-                                        nearbyService: nearbyService,
-                                        connectedDevice:
-                                            widget.connectedDevices,
-                                        selectedBoundaryCode:
-                                            context.boundary.code ?? '',
-                                        selectedProject:
-                                            context.selectedProject.id));
-                              },
-                              size: DigitButtonSize.large,
-                              label: localizations
-                                  .translate(i18.common.coreCommonRetry),
-                              type: DigitButtonType.primary,
-                            ),
                           ),
                         )),
                   ],
@@ -276,12 +254,12 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
         } else if (snapshot.hasData) {
           // Display the device name when available
           return Container(
-            padding: const EdgeInsets.all(kPadding),
+            padding: const EdgeInsets.all(spacer2),
             decoration: BoxDecoration(
               border: Border.all(
                 color: DigitTheme.instance.colors.light.primary1Bg,
               ),
-              borderRadius: BorderRadius.circular(kPadding),
+              borderRadius: BorderRadius.circular(spacer2),
             ),
             child: Text(
               snapshot.data!,

@@ -1,9 +1,8 @@
 import 'package:digit_showcase/showcase.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
 
 import '../localized.dart';
-
-const kPadding = 8.0;
 
 class ShowcaseItemBuilder {
   final GlobalKey showcaseKey;
@@ -46,17 +45,17 @@ class _ShowcaseItemWrapperWidgetState
       disableScaleAnimation: true,
       description: localizations.translate(widget.messageLocalizationKey),
       targetPadding: const EdgeInsets.fromLTRB(
-        kPadding / 2,
-        kPadding / 2,
-        kPadding / 2,
-        kPadding / 2,
+        spacer2 / 2,
+        spacer2 / 2,
+        spacer2 / 2,
+        spacer2 / 2,
       ),
       child: Container(
         padding: const EdgeInsets.fromLTRB(
-          kPadding / 2,
-          kPadding / 2,
-          kPadding / 2,
-          kPadding / 2,
+          spacer2 / 2,
+          spacer2 / 2,
+          spacer2 / 2,
+          spacer2 / 2,
         ),
         child: widget.child,
       ),
