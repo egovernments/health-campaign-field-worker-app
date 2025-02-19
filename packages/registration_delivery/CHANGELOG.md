@@ -1,3 +1,7 @@
+## 1.0.6+1
+
+* Updated to latest packages
+
 ## 1.0.6
 
 * Added support for Eligibility checklist
