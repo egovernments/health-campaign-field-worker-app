@@ -16,6 +16,7 @@ import '../../data/sync_service_mapper.dart';
 import '../../models/downsync/downsync.dart';
 import '../../models/entities/peer_to_peer/message_types.dart';
 import '../../models/entities/peer_to_peer/peer_to_peer_message.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 part 'peer_to_peer.freezed.dart';
 
@@ -80,8 +81,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           // Ensure that 'entities' is a Map<String, dynamic>
           if (offsets is! Map<String, dynamic>) {
             emit(PeerToPeerState.failedToTransfer(
-                error:
-                    'Expected a Map<String, dynamic>, but got ${offsets.runtimeType}'));
+                error: i18.dataShare.invalidFileError));
             return;
           }
 
@@ -122,8 +122,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               );
 
               if (handshakeSuccessful) {
-                emit(const PeerToPeerState.failedToTransfer(
-                    error: "Handshake failed. Stopping transfer."));
+                emit(PeerToPeerState.failedToTransfer(
+                    error: i18.dataShare.projectMisMatchError));
                 return;
               } else {
                 for (var entity in entityData) {
@@ -178,8 +178,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           emit(const PeerToPeerState.completedDataTransfer());
         }
       } else {
-        emit(const PeerToPeerState.failedToTransfer(
-            error: "File doesn't exist"));
+        emit(PeerToPeerState.failedToTransfer(
+            error: i18.dataShare.fileNotFoundError));
         return;
       }
     } catch (e) {
@@ -219,9 +219,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
           PeerToPeerMessageModelMapper.fromJson(event.data["message"]);
 
       if (messageModel.messageType == MessageTypes.handShake.toValue()) {
-        // First message contains boundary and project
-        if (messageModel.selectedBoundaryCode == event.selectedBoundaryCode &&
-            messageModel.message == event.projectId) {
+        if (messageModel.message == event.projectId) {
           // Send acknowledgment to proceed
           await event.nearbyService.sendMessage(
               event.data["deviceId"],
@@ -237,12 +235,12 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               event.data["deviceId"],
               PeerToPeerMessageModel(
                 messageType: MessageTypes.confirmation.toValue(),
-                message: "Handshake failed. Boundary or project mismatch.",
+                message: "Handshake failed. Project mismatch.",
                 confirmationType: ConfirmationTypes.failed.toValue(),
                 status: MessageStatus.fail.toValue(),
               ).toJson());
-          emit(const PeerToPeerState.failedToReceive(
-              error: "Boundary or project mismatch."));
+          emit(PeerToPeerState.failedToReceive(
+              error: i18.dataShare.projectMisMatchError));
         }
       } else if (messageModel.messageType == MessageTypes.chunk.toValue()) {
         // Process chunk
@@ -378,8 +376,8 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
               completer.complete(true);
             } else if (confirmationType == ConfirmationTypes.failed.toValue()) {
               completer.complete(false);
-              emit(const PeerToPeerState.failedToTransfer(
-                  error: "File doesn't exist"));
+              emit(PeerToPeerState.failedToTransfer(
+                  error: i18.dataShare.failedToTransfer));
             }
           }
         } catch (e) {

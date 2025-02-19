@@ -13,7 +13,6 @@ import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
-import '../../widgets/showcase/showcase_wrappers.dart';
 
 enum DeviceType { receiver, sender }
 
@@ -191,13 +190,13 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                   decoration: BoxDecoration(
                       color: DigitTheme.instance.colors.light.primary1Bg
                           .withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(kPadding),
+                      borderRadius: BorderRadius.circular(spacer2),
                       border: Border.all(
                           color: DigitTheme.instance.colors.light.primary1Bg
                               .withOpacity(0.2),
                           width: 1.5)),
                   child: Padding(
-                    padding: const EdgeInsets.all(kPadding),
+                    padding: const EdgeInsets.all(spacer2),
                     child: Column(
                       children: [
                         Icon(
@@ -218,10 +217,10 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                   ),
                 ),
                 Material(
-                  borderRadius: BorderRadius.circular(kPadding),
+                  borderRadius: BorderRadius.circular(spacer2),
                   color: DigitTheme.instance.colors.light.primary1Bg,
                   child: Padding(
-                    padding: const EdgeInsets.all(kPadding / 2),
+                    padding: const EdgeInsets.all(spacer1),
                     child: Text(
                       getStateName(device.state),
                       textAlign: TextAlign.center,
@@ -315,7 +314,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
 
     nearbyService = NearbyService();
     await nearbyService.init(
-      serviceType: 'mpconn',
+      serviceType: 'DigitShare',
       deviceName: deviceId,
       strategy: Strategy.Wi_Fi_P2P,
       callback: (isRunning) async {
