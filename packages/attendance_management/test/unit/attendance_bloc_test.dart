@@ -82,5 +82,29 @@ void main() {
         verify(() => attendanceLogDataRepository.search(any())).called(2);
       },
     );
+
+    //Test case for fetching data for the selected attendance register
+    blocTest<AttendanceBloc, AttendanceStates>(
+        'emits [RegisterLoading, SelectedRegisterLoaded] when loadSelectedRegisterData event is added',
+        build: () {
+          when(() => attendanceDataRepository.search(any()))
+              .thenAnswer((_) async => AttendanceTestConstants.registers);
+          when(() => individualDataRepository.search(any()))
+              .thenAnswer((_) async => AttendanceTestConstants.individuals);
+          when(() => attendanceLogDataRepository.search(any()))
+              .thenAnswer((_) async => AttendanceTestConstants.attendanceLogs);
+          return attendanceBloc;
+        },
+        act: (bloc) {
+          bloc.add(LoadSelectedAttendanceRegisterData(
+              registers: AttendanceTestConstants.registers,
+              registerID: AttendanceTestConstants.registerId));
+        },
+        expect: () => [
+              const RegisterLoading(),
+              SelectedRegisterLoaded(
+                selectedRegister: AttendanceTestConstants.registers[0],
+              ),
+            ]);
   });
 }

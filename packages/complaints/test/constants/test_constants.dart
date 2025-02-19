@@ -3,6 +3,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 
 class ComplaintsConstants {
+  static const String clientReferenceId = '1891de8-02a2-4844-80ff-a080b7b40b70';
   static final ComplaintsDetailsModel complaintsDetailsModel =
       ComplaintsDetailsModel(
           dateOfComplaint: DateTime(2024),
@@ -28,6 +29,7 @@ class ComplaintsConstants {
   static const String tenantId = 'mz';
 
   static var mockPgrServiceModel = PgrServiceModel(
+      serviceRequestId: '1891de8-02a2-4844-80ff-a080b7b40b70',
       clientReferenceId: '1891de8-02a2-4844-80ff-a080b7b40b70',
       tenantId: 'mz',
       serviceCode: complaintType,

@@ -12,9 +12,11 @@ class ReferralReconTestConstants {
   ];
   final String projectFacilityId = 'PJ_1';
   final HFReferralModel hfReferralModel = HFReferralModel(
-      id: '11891de8-02a2-4844-80ff-a080b7b40b62',
-      clientReferenceId: '11891de8-02a2-4844-80ff-a080b7b40b65',
-      projectFacilityId: 'PJ_1');
+    id: '11891de8-02a2-4844-80ff-a080b7b40b62',
+    clientReferenceId: '11891de8-02a2-4844-80ff-a080b7b40b65',
+    projectFacilityId: 'PJ_1',
+    name: 'test-referral',
+  );
   Map<String, Object> additionalDataForReferralRecord = {
     'dateOfEvaluation': DateTime(2024, 1, 1).millisecondsSinceEpoch.toString()
   };

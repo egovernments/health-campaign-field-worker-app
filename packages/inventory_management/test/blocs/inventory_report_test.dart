@@ -30,7 +30,11 @@ void main() {
     });
 
     setUpAll(() {
-      registerFallbackValue(StockSearchModel());
+      registerFallbackValue(StockSearchModel(
+        transactionType: [TransactionType.received.toValue()],
+        transactionReason: [TransactionReason.received.toValue()],
+        receiverId: InventoryReportConstants.facilityId,
+      ));
       registerFallbackValue(StockReconciliationSearchModel());
     });
 
@@ -59,5 +63,28 @@ void main() {
         ),
       ],
     );
+
+    blocTest<InventoryReportBloc, InventoryReportState>(
+        'emits [InventoryReportLoadingState, InventoryReportStockState] when loadStockData event is added',
+        build: () {
+          when(() => mockStockDataRepository.search(any()))
+              .thenAnswer((_) async => [
+                    InventoryReportConstants.stockModel,
+                  ]);
+          return inventoryReportBloc;
+        },
+        act: (bloc) => bloc.add(const InventoryReportLoadStockDataEvent(
+              reportType: InventoryReportType.receipt,
+              facilityId: InventoryReportConstants.facilityId,
+              productVariantId: InventoryReportConstants.productVariantId,
+            )),
+        expect: () => [
+              const InventoryReportLoadingState(),
+              InventoryReportStockState(stockData: {
+                InventoryReportConstants.dateFormat: [
+                  InventoryReportConstants.stockModel,
+                ]
+              })
+            ]);
   });
 }

@@ -113,5 +113,34 @@ void main() {
         ),
       ],
     );
+
+    //Test for saveTransactionDetails event
+    blocTest<RecordStockBloc, RecordStockState>(
+        'emits updated state when saveTransactionDetails event is added',
+        build: () => RecordStockBloc(
+              const RecordStockState.create(
+                entryType: InventoryReportConstants.entryType,
+                projectId: InventoryReportConstants.projectId,
+              ),
+              stockRepository: MockStockDataRepository(),
+            ),
+        act: (bloc) {
+          bloc.add(RecordStockSaveTransactionDetailsEvent(
+            dateOfRecord: InventoryReportConstants.dateOfRecord,
+            primaryType: InventoryReportConstants.primaryType,
+            primaryId: InventoryReportConstants.facilityId,
+            facilityModel: mockFacilityModel,
+          ));
+        },
+        expect: () => [
+              RecordStockState.create(
+                entryType: InventoryReportConstants.entryType,
+                projectId: InventoryReportConstants.projectId,
+                dateOfRecord: InventoryReportConstants.dateOfRecord,
+                facilityModel: mockFacilityModel,
+                primaryType: InventoryReportConstants.primaryType,
+                primaryId: InventoryReportConstants.facilityId,
+              )
+            ]);
   });
 }
