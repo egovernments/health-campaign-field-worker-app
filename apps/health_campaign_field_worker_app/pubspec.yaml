@@ -1,7 +1,7 @@
 name: health_campaign_field_worker_app
 description: A new Flutter project.
 publish_to: "none"
-version: 1.6.12+8
+version: 1.6.13+9
 
 environment:
   sdk: ">=3.0.0 <=4.0.0"
@@ -63,11 +63,6 @@ dependencies:
   inventory_management: ^1.0.4
   referral_reconciliation: ^1.0.3
   digit_data_model: 1.0.5-dev.3
-  # digit_data_model:
-  #   git:
-  #     url: https://github.com/egovernments/health-campaign-field-worker-app/
-  #     ref: hcmpre-1250-beneficiary
-  #     path: ./packages/digit_data_model
   registration_delivery:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
