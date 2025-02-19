@@ -84,11 +84,11 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   return GestureDetector(
                                     onTap: () {
                                       ctx.router.replaceAll([
-                                        HomeRoute(),
                                         BoundarySelectionRoute(),
                                       ]);
                                     },
-                                    child: SizedBox(
+                                    child: Container(
+                                      padding: const EdgeInsets.only(right: spacer2),
                                       width: MediaQuery.of(context).size.width -
                                           60,
                                       child: Align(

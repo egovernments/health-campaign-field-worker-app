@@ -152,7 +152,9 @@ class ClosedHouseholdDetailsPageState
                           heading: localizations.translate(
                             i18.closeHousehold.closeHouseHoldDetailLabel,
                           ),
-                          headingStyle: textTheme.headingXl,
+                          headingStyle: textTheme.headingXl.copyWith(
+                            color: theme.colorTheme.primary.primary2
+                          ),
                           description: localizations.translate(
                             i18.closeHousehold.closeHouseHoldDetailDescLabel,
                           ),
@@ -257,7 +259,7 @@ class ClosedHouseholdDetailsPageState
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
         value: localizations
-            .translate(ClosedHouseholdSingleton().boundary!.name.toString()),
+            .translate(ClosedHouseholdSingleton().boundary!.code.toString()),
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(

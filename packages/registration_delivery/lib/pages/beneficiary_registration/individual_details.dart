@@ -100,9 +100,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             return ScrollableContent(
               enableFixedDigitButton: true,
               header: const Column(children: [
-                BackNavigationHelpHeaderWidget(
-                  showHelp: false,
-                  showcaseButton: ShowcaseButton(),
+                Padding(
+                  padding: EdgeInsets.only(bottom: spacer2),
+                  child: BackNavigationHelpHeaderWidget(
+                    showHelp: false,
+                  ),
                 ),
               ]),
               footer: DigitCard(
@@ -122,12 +124,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
-                            final age = DigitDateUtils.calculateAge(
-                              form.control(_dobKey).value as DateTime,
-                            );
-                            if ((age.years == 0 && age.months == 0) ||
-                                age.years >= 150 && age.months > 0) {
-                              form.control(_dobKey).setErrors({'': true});
+                            if (form.control(_dobKey).value == null) {
+                              setState(() {
+                                form.control(_dobKey).setErrors({'': true});
+                              });
                             }
                             if (form.control(_idTypeKey).value == null) {
                               form.control(_idTypeKey).setErrors({'': true});
@@ -336,54 +336,61 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           localizations.translate(
                             i18.individualDetails.individualsDetailsLabelText,
                           ),
-                          style: textTheme.headingXl,
+                          style: textTheme.headingXl.copyWith(color: theme.colorTheme.primary.primary2),
                         ),
-                        individualDetailsShowcaseData.nameOfIndividual
-                            .buildWith(
-                          child: ReactiveWrapperField(
-                            formControlName: _individualNameKey,
-                            validationMessages: {
-                              'required': (object) => localizations.translate(
+                        Column(
+                          children: [
+                            individualDetailsShowcaseData.nameOfIndividual
+                                .buildWith(
+                              child: ReactiveWrapperField(
+                                formControlName: _individualNameKey,
+                                validationMessages: {
+                                  'required': (object) => localizations.translate(
                                     '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
                                   ),
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', maxLength.toString()),
-                            },
-                            builder: (field) => LabeledField(
-                              label: localizations.translate(
-                                i18.individualDetails.nameLabelText,
-                              ),
-                              isRequired: true,
-                              child: DigitTextFormInput(
-                                initialValue:
-                                    form.control(_individualNameKey).value,
-                                onChange: (value) {
-                                  form.control(_individualNameKey).value =
-                                      value;
+                                  'maxLength': (object) => localizations
+                                      .translate(i18.common.maxCharsRequired)
+                                      .replaceAll('{}', maxLength.toString()),
                                 },
-                                errorMessage: field.errorText,
+                                builder: (field) => LabeledField(
+                                  label: localizations.translate(
+                                    i18.individualDetails.nameLabelText,
+                                  ),
+                                  isRequired: true,
+                                  child: DigitTextFormInput(
+                                    initialValue:
+                                    form.control(_individualNameKey).value,
+                                    onChange: (value) {
+                                      form.control(_individualNameKey).value =
+                                          value;
+                                    },
+                                    errorMessage: field.errorText,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Offstage(
-                          offstage: !widget.isHeadOfHousehold,
-                          child: DigitCheckbox(
-                            capitalizeFirstLetter: false,
-                            label: (RegistrationDeliverySingleton()
-                                        .householdType ==
+                            if(widget.isHeadOfHousehold)
+                              const SizedBox(height: spacer2,),
+                            Offstage(
+                              offstage: !widget.isHeadOfHousehold,
+                              child: DigitCheckbox(
+                                capitalizeFirstLetter: false,
+                                label: (RegistrationDeliverySingleton()
+                                    .householdType ==
                                     HouseholdType.community)
-                                ? localizations.translate(
+                                    ? localizations.translate(
                                     i18.individualDetails.clfCheckboxLabelText)
-                                : localizations.translate(
-                                    i18.individualDetails.checkboxLabelText,
-                                  ),
-                            value: widget.isHeadOfHousehold,
-                            readOnly: widget.isHeadOfHousehold,
-                            onChanged: (_) {},
-                          ),
+                                    : localizations.translate(
+                                  i18.individualDetails.checkboxLabelText,
+                                ),
+                                value: widget.isHeadOfHousehold,
+                                readOnly: widget.isHeadOfHousehold,
+                                onChanged: (_) {},
+                              ),
+                            ),
+                          ],
                         ),
+
                         ReactiveWrapperField(
                           formControlName: _idTypeKey,
                           validationMessages: {
@@ -395,6 +402,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             label: localizations.translate(
                               i18.individualDetails.idTypeLabelText,
                             ),
+                            capitalizedFirstLetter: false,
                             isRequired: true,
                             child: DigitDropdown<String>(
                               selectedOption:
@@ -451,6 +459,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       label: localizations.translate(
                                         i18.individualDetails.idNumberLabelText,
                                       ),
+                                      capitalizedFirstLetter: false,
                                       isRequired: form
                                           .control(_idNumberKey)
                                           .validators
@@ -499,28 +508,28 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             yearsAndMonthsErrMsg: localizations.translate(
                               i18.individualDetails.yearsAndMonthsErrorText,
                             ),
-                            errorMessage: form.control(_dobKey).hasErrors
-                                ? localizations
-                                    .translate(i18.common.corecommonRequired)
-                                : null,
+                            errorMessage: _getDobErrorMessage(form.control(_dobKey)),
                             initialDate: before150Years,
                             initialValue: getInitialDateValue(form),
                             onChangeOfFormControl: (value) {
-                              if (value == null) {
-                                form.control(_dobKey).setErrors({'': true});
-                              } else {
-                                DigitDOBAgeConvertor age =
-                                    DigitDateUtils.calculateAge(value);
-                                if ((age.years == 0 && age.months == 0) ||
-                                    age.months > 11 ||
-                                    (age.years >= 150 && age.months >= 0)) {
+                              setState(() {
+                                if (value == null) {
                                   form.control(_dobKey).setErrors({'': true});
                                 } else {
-                                  form.control(_dobKey).removeError('');
+                                  DigitDOBAgeConvertor age =
+                                      DigitDateUtils.calculateAge(value);
+                                  if ((age.years == 0 && age.months == 0) ||
+                                      (age.months > 11) ||
+                                      (age.years >= 150 && age.months >= 0)) {
+                                    form.control(_dobKey).value = value;
+                                    form.control(_dobKey).setErrors({'': true});
+                                  } else {
+                                    form.control(_dobKey).value = value;
+                                    form.control(_dobKey).removeError('');
+                                  }
                                 }
-                              }
+                              });
                               // Handle changes to the control's value here
-                              form.control(_dobKey).value = value;
                             },
                             cancelText: localizations
                                 .translate(i18.common.coreCommonCancel),
@@ -594,6 +603,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 onChange: (value) {
                                   form.control(_mobileNumberKey).value = value;
                                 },
+                                errorMessage: field.errorText,
                               ),
                             ),
                           ),
@@ -789,6 +799,34 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     );
 
     return individual;
+  }
+
+  String? _getDobErrorMessage(AbstractControl<dynamic> control) {
+    if (!control.hasErrors) return null;
+
+    final dobValue = control.value;
+    final age = dobValue != null
+        ? DigitDateUtils.calculateAge(dobValue)
+        : null;
+
+    if (dobValue == null) {
+      return localizations.translate(i18.common.corecommonRequired);
+    }
+
+    if (age != null) {
+      const minAge = 0;
+      const maxAge = 150;
+
+      if (age.years == minAge && age.months == minAge) {
+        return localizations.translate(i18.common.minAge);
+      }
+
+      if (age.years >= maxAge) {
+        return localizations.translate(i18.common.maxAge);
+      }
+    }
+
+    return null;
   }
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {

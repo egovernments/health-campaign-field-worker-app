@@ -200,6 +200,7 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     var gender;
     var roomCount;
     var memberCount;
+    String? structureType;
 
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
@@ -220,30 +221,82 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               ?.value
               .toString() ??
           '1')!;
+      structureType = householdModel.additionalFields?.fields
+          .where((h) =>
+              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+          .firstOrNull
+          ?.value
+          .toString();
     }
 
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final condition = criteria.condition;
       if (condition != null) {
-        final conditions = condition.split('and');
+        if (condition.contains('and')) {
+          final conditions = condition.split('and');
 
-        List expressionParser = [];
-        for (var element in conditions) {
-          final expression = FormulaParser(
-            element,
-            {
-              'age': individualAgeInMonths,
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = FormulaParser(
+              element,
+              {
+                'age': individualAgeInMonths,
+                if (gender != null) 'gender': gender,
+                if (memberCount != null) 'memberCount': memberCount,
+                if (roomCount != null) 'roomCount': roomCount
+              },
+            );
+            final error = expression.parse;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        } else if (condition.contains('or')) {
+          final conditions = condition.split('or');
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
-              if (roomCount != null) 'roomCount': roomCount
-            },
-          );
-          final error = expression.parse;
-          expressionParser.add(error["value"]);
-        }
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
 
-        return expressionParser.where((element) => element == true).length ==
-            conditions.length;
+          return expressionParser.where((element) => element == true).isNotEmpty
+              ? true
+              : false;
+        } else {
+          final conditions = condition.split(
+              'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
+
+          List expressionParser = [];
+          for (var element in conditions) {
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType
+            }, stringKeys: [
+              'type_of_structure'
+            ]);
+            final error = expression;
+            expressionParser.add(error["value"]);
+          }
+
+          return expressionParser.where((element) => element == true).length ==
+              conditions.length;
+        }
       }
 
       return false;
@@ -264,6 +317,54 @@ String maskString(String input) {
       List<String>.generate(input.length, (index) => maskingChar).join();
 
   return maskedString;
+}
+
+class CustomFormulaParser {
+  // Modify the function to accept stringKeys as nullable
+  static Map<String, dynamic> parseCondition(
+    String condition,
+    Map<String, dynamic> variables, {
+    List<String>? stringKeys,
+  } // Accept stringKeys as nullable
+      ) {
+    // If stringKeys is null or empty, default to FormulaParser for all conditions
+    if (stringKeys == null || stringKeys.isEmpty) {
+      return _parseAsFormula(condition, variables);
+    }
+
+    // Loop through stringKeys and check for string comparison in the condition
+    for (var key in stringKeys) {
+      if (condition.contains('$key==')) {
+        // Extract the expected value after '==' for string comparison
+        var value = condition.split('==')[1].trim();
+        if (variables.containsKey(key) && variables[key] is String) {
+          return _compareString(condition, value, variables[key]);
+        }
+      }
+    }
+
+    // If no string-specific comparison, use FormulaParser for numeric evaluation
+    return _parseAsFormula(condition, variables);
+  }
+
+  // Handle string comparison
+  static Map<String, dynamic> _compareString(
+      String condition, String expectedValue, String actualValue) {
+    // Compare string values directly
+    bool comparisonResult = actualValue == expectedValue;
+    return {'value': comparisonResult};
+  }
+
+  // Handle numeric evaluation using FormulaParser
+  static Map<String, dynamic> _parseAsFormula(
+      String condition, Map<String, dynamic> variables) {
+    final expression = FormulaParser(
+      condition,
+      variables,
+    );
+    final error = expression.parse;
+    return error; // Parsing the numeric expression
+  }
 }
 
 class Coordinate {

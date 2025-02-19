@@ -131,22 +131,31 @@ class DashboardRemoteRepository {
   }
 
   FutureOr<void> writeToDashboardConfigDB(
-    DashboardConfigWrapper dashboardConfigWrapper,
+    List<DashboardConfigWrapper> dashboardConfigWrapperList,
     Isar isar,
   ) async {
-    final dashboardConfig = DashboardConfigSchema()
-      ..enableDashboard = dashboardConfigWrapper.enableDashboard
-      ..charts = dashboardConfigWrapper.charts?.map((chart) {
-        final dssChart = DashboardChartConfigSchema()
-          ..name = chart.name
-          ..active = chart.active
-          ..chartType = chart.chartType
-          ..vizType = chart.vizType;
-        return dssChart;
-      }).toList();
+    final dashboardConfigList = dashboardConfigWrapperList.map((dashboardConfigWrapper) {
+      final dashboardConfig = DashboardConfigSchema()
+        ..enableDashboard = dashboardConfigWrapper.enableDashboard
+        ..projectTypeCode = dashboardConfigWrapper.projectTypeCode
+        ..projectTypeId = dashboardConfigWrapper.projectTypeId
+        ..charts = dashboardConfigWrapper.charts?.map((chart) {
+          final dssChart = DashboardChartConfigSchema()
+            ..name = chart.name
+            ..active = chart.active
+            ..chartType = chart.chartType
+            ..vizType = chart.vizType;
+          return dssChart;
+        }).toList();
+      return dashboardConfig;
+    }).toList();
+
+    final dashboardConfigSchemaList = DashboardConfigSchemaList()
+      ..dashboardConfigs = dashboardConfigList;
+
 
     isar.writeTxnSync(() {
-      isar.dashboardConfigSchemas.putSync(dashboardConfig);
+      isar.dashboardConfigSchemaLists.putSync(dashboardConfigSchemaList);
     });
   }
 }

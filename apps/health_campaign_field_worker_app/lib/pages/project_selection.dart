@@ -64,7 +64,9 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 localizations.translate(
                   i18.projectSelection.projectDetailsLabelText,
                 ),
-                style: textTheme.headingXl,
+                style: textTheme.headingXl.copyWith(
+                  color: theme.colorTheme.primary.primary2
+                ),
               ),
             ),
           ],
@@ -141,7 +143,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 final boundary = selectedProject.address?.boundary;
 
                 if (boundary != null) {
-                  triggerLocationTracking(state.selectedProject!);
+                  // triggerLocationTracking(state.selectedProject!); // TODO: Enable location tracking
                   navigateToBoundary(boundary);
                 } else {
                   Toast.showToast(
@@ -235,7 +237,6 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           .firstWhere((element) => element.boundaryList.isNotEmpty);
       if (mounted) {
         context.router.replaceAll([
-          HomeRoute(),
           BoundarySelectionRoute(),
         ]);
       }

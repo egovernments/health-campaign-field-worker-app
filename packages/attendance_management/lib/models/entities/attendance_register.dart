@@ -109,6 +109,7 @@ class AttendanceRegisterModel extends EntityModel
         status: Value(status!),
         startDate: Value(startDate),
         endDate: Value(endDate),
+        localityCode: Value(localityCode!),
         nonRecoverableError: Value(nonRecoverableError),
         auditCreatedBy: Value(auditDetails?.createdBy),
         auditCreatedTime: Value(auditDetails?.createdTime),
