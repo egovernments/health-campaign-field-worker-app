@@ -908,11 +908,11 @@ class InventoryReportDetails {
   }
 
   String get projectBeneficiaryRegisteredLabel {
-    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_LABEL';
+    return 'ENUMERATION_SUMMARY_PROJECT_BENEFICIARY_REGISTERED_LABEL';
   }
 
   String get closedHouseholdRegisteredLabel {
-    return 'ENUMERATION_SUMMARY_PROJECT_BENEFICIARY_REGISTERED_LABEL';
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_LABEL';
   }
 
   String get householdDistributedLabel {

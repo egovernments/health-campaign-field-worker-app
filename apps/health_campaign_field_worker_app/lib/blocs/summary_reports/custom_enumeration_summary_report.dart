@@ -67,18 +67,24 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
           .where((element) => element.isNotEmpty)
           .toSet();
 
-      // closed household beneficiairy
+      // closedhousehold projectbeneficiairy beneficiaryClientRefIds
       Set<String?> filteredBeneficiariesClientRefId = {};
       getClosedHouseholdProjectBeneficiary(projectBeneficiaryClientReferenceIds,
           projectBeneficiaryList, filteredBeneficiariesClientRefId);
 
-      // filteredHouseholds list
+      // filteredHouseholds list (remove closed ones)
       List<HouseholdModel> filteredHouseholdsList = [];
 
-      // filter closed households from householdList
+      // filteredProjectBeneficiaryList list (remove closed ones)
+      List<ProjectBeneficiaryModel> filteredProjectBeneficiaryList = [];
 
+      // filter closed households from householdList
       filteredHouseholds(householdList, filteredBeneficiariesClientRefId,
           filteredHouseholdsList);
+
+      // filter closedhousehold projectBeneficairy from list
+      filterProjectBeneficiaryList(projectBeneficiaryList,
+          filteredBeneficiariesClientRefId, filteredProjectBeneficiaryList);
 
       Map<String, List<HouseholdModel>> dateVsHousehold = {};
       Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary = {};
@@ -96,7 +102,7 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
 
         dateVsHousehold.putIfAbsent(dateKey, () => []).add(element);
       }
-      for (var element in projectBeneficiaryList) {
+      for (var element in filteredProjectBeneficiaryList) {
         var dateKey = DigitDateUtils.getDateFromTimestamp(
           element.clientAuditDetails!.createdTime,
         );
@@ -216,6 +222,19 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       if (!filteredBeneficiariesClientRefId
           .contains(household.clientReferenceId)) {
         filteredHouseholdsList.add(household);
+      }
+    }
+  }
+
+  // todo optimize this
+  void filterProjectBeneficiaryList(
+      List<ProjectBeneficiaryModel> projectBeneficiaryList,
+      Set<String?> filteredBeneficiariesClientRefId,
+      List<ProjectBeneficiaryModel> filteredProjectBeneficiaryList) {
+    for (var projectBeneficiary in projectBeneficiaryList) {
+      if (!filteredBeneficiariesClientRefId
+          .contains(projectBeneficiary.beneficiaryClientReferenceId)) {
+        filteredProjectBeneficiaryList.add(projectBeneficiary);
       }
     }
   }
