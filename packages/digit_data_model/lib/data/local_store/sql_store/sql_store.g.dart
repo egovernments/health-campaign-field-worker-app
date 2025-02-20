@@ -37,6 +37,12 @@ class $AttendanceRegisterTable extends AttendanceRegister
   late final GeneratedColumn<String> referenceId = GeneratedColumn<String>(
       'reference_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _localityCodeMeta =
+      const VerificationMeta('localityCode');
+  @override
+  late final GeneratedColumn<String> localityCode = GeneratedColumn<String>(
+      'locality_code', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _serviceCodeMeta =
       const VerificationMeta('serviceCode');
   @override
@@ -147,6 +153,7 @@ class $AttendanceRegisterTable extends AttendanceRegister
         registerNumber,
         name,
         referenceId,
+        localityCode,
         serviceCode,
         status,
         startDate,
@@ -205,6 +212,14 @@ class $AttendanceRegisterTable extends AttendanceRegister
               data['reference_id']!, _referenceIdMeta));
     } else if (isInserting) {
       context.missing(_referenceIdMeta);
+    }
+    if (data.containsKey('locality_code')) {
+      context.handle(
+          _localityCodeMeta,
+          localityCode.isAcceptableOrUnknown(
+              data['locality_code']!, _localityCodeMeta));
+    } else if (isInserting) {
+      context.missing(_localityCodeMeta);
     }
     if (data.containsKey('service_code')) {
       context.handle(
@@ -317,6 +332,8 @@ class $AttendanceRegisterTable extends AttendanceRegister
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       referenceId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}reference_id'])!,
+      localityCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}locality_code'])!,
       serviceCode: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}service_code'])!,
       status: attachedDatabase.typeMapping
@@ -365,6 +382,7 @@ class AttendanceRegisterData extends DataClass
   final String registerNumber;
   final String name;
   final String referenceId;
+  final String localityCode;
   final String serviceCode;
   final String status;
   final int? startDate;
@@ -387,6 +405,7 @@ class AttendanceRegisterData extends DataClass
       required this.registerNumber,
       required this.name,
       required this.referenceId,
+      required this.localityCode,
       required this.serviceCode,
       required this.status,
       this.startDate,
@@ -413,6 +432,7 @@ class AttendanceRegisterData extends DataClass
     map['register_number'] = Variable<String>(registerNumber);
     map['name'] = Variable<String>(name);
     map['reference_id'] = Variable<String>(referenceId);
+    map['locality_code'] = Variable<String>(localityCode);
     map['service_code'] = Variable<String>(serviceCode);
     map['status'] = Variable<String>(status);
     if (!nullToAbsent || startDate != null) {
@@ -467,6 +487,7 @@ class AttendanceRegisterData extends DataClass
       registerNumber: Value(registerNumber),
       name: Value(name),
       referenceId: Value(referenceId),
+      localityCode: Value(localityCode),
       serviceCode: Value(serviceCode),
       status: Value(status),
       startDate: startDate == null && nullToAbsent
@@ -523,6 +544,7 @@ class AttendanceRegisterData extends DataClass
       registerNumber: serializer.fromJson<String>(json['registerNumber']),
       name: serializer.fromJson<String>(json['name']),
       referenceId: serializer.fromJson<String>(json['referenceId']),
+      localityCode: serializer.fromJson<String>(json['localityCode']),
       serviceCode: serializer.fromJson<String>(json['serviceCode']),
       status: serializer.fromJson<String>(json['status']),
       startDate: serializer.fromJson<int?>(json['startDate']),
@@ -551,6 +573,7 @@ class AttendanceRegisterData extends DataClass
       'registerNumber': serializer.toJson<String>(registerNumber),
       'name': serializer.toJson<String>(name),
       'referenceId': serializer.toJson<String>(referenceId),
+      'localityCode': serializer.toJson<String>(localityCode),
       'serviceCode': serializer.toJson<String>(serviceCode),
       'status': serializer.toJson<String>(status),
       'startDate': serializer.toJson<int?>(startDate),
@@ -576,6 +599,7 @@ class AttendanceRegisterData extends DataClass
           String? registerNumber,
           String? name,
           String? referenceId,
+          String? localityCode,
           String? serviceCode,
           String? status,
           Value<int?> startDate = const Value.absent(),
@@ -598,6 +622,7 @@ class AttendanceRegisterData extends DataClass
         registerNumber: registerNumber ?? this.registerNumber,
         name: name ?? this.name,
         referenceId: referenceId ?? this.referenceId,
+        localityCode: localityCode ?? this.localityCode,
         serviceCode: serviceCode ?? this.serviceCode,
         status: status ?? this.status,
         startDate: startDate.present ? startDate.value : this.startDate,
@@ -642,6 +667,7 @@ class AttendanceRegisterData extends DataClass
           ..write('registerNumber: $registerNumber, ')
           ..write('name: $name, ')
           ..write('referenceId: $referenceId, ')
+          ..write('localityCode: $localityCode, ')
           ..write('serviceCode: $serviceCode, ')
           ..write('status: $status, ')
           ..write('startDate: $startDate, ')
@@ -669,6 +695,7 @@ class AttendanceRegisterData extends DataClass
         registerNumber,
         name,
         referenceId,
+        localityCode,
         serviceCode,
         status,
         startDate,
@@ -695,6 +722,7 @@ class AttendanceRegisterData extends DataClass
           other.registerNumber == this.registerNumber &&
           other.name == this.name &&
           other.referenceId == this.referenceId &&
+          other.localityCode == this.localityCode &&
           other.serviceCode == this.serviceCode &&
           other.status == this.status &&
           other.startDate == this.startDate &&
@@ -720,6 +748,7 @@ class AttendanceRegisterCompanion
   final Value<String> registerNumber;
   final Value<String> name;
   final Value<String> referenceId;
+  final Value<String> localityCode;
   final Value<String> serviceCode;
   final Value<String> status;
   final Value<int?> startDate;
@@ -743,6 +772,7 @@ class AttendanceRegisterCompanion
     this.registerNumber = const Value.absent(),
     this.name = const Value.absent(),
     this.referenceId = const Value.absent(),
+    this.localityCode = const Value.absent(),
     this.serviceCode = const Value.absent(),
     this.status = const Value.absent(),
     this.startDate = const Value.absent(),
@@ -767,6 +797,7 @@ class AttendanceRegisterCompanion
     required String registerNumber,
     required String name,
     required String referenceId,
+    required String localityCode,
     required String serviceCode,
     required String status,
     this.startDate = const Value.absent(),
@@ -788,6 +819,7 @@ class AttendanceRegisterCompanion
         registerNumber = Value(registerNumber),
         name = Value(name),
         referenceId = Value(referenceId),
+        localityCode = Value(localityCode),
         serviceCode = Value(serviceCode),
         status = Value(status);
   static Insertable<AttendanceRegisterData> custom({
@@ -796,6 +828,7 @@ class AttendanceRegisterCompanion
     Expression<String>? registerNumber,
     Expression<String>? name,
     Expression<String>? referenceId,
+    Expression<String>? localityCode,
     Expression<String>? serviceCode,
     Expression<String>? status,
     Expression<int>? startDate,
@@ -820,6 +853,7 @@ class AttendanceRegisterCompanion
       if (registerNumber != null) 'register_number': registerNumber,
       if (name != null) 'name': name,
       if (referenceId != null) 'reference_id': referenceId,
+      if (localityCode != null) 'locality_code': localityCode,
       if (serviceCode != null) 'service_code': serviceCode,
       if (status != null) 'status': status,
       if (startDate != null) 'start_date': startDate,
@@ -848,6 +882,7 @@ class AttendanceRegisterCompanion
       Value<String>? registerNumber,
       Value<String>? name,
       Value<String>? referenceId,
+      Value<String>? localityCode,
       Value<String>? serviceCode,
       Value<String>? status,
       Value<int?>? startDate,
@@ -871,6 +906,7 @@ class AttendanceRegisterCompanion
       registerNumber: registerNumber ?? this.registerNumber,
       name: name ?? this.name,
       referenceId: referenceId ?? this.referenceId,
+      localityCode: localityCode ?? this.localityCode,
       serviceCode: serviceCode ?? this.serviceCode,
       status: status ?? this.status,
       startDate: startDate ?? this.startDate,
@@ -908,6 +944,9 @@ class AttendanceRegisterCompanion
     }
     if (referenceId.present) {
       map['reference_id'] = Variable<String>(referenceId.value);
+    }
+    if (localityCode.present) {
+      map['locality_code'] = Variable<String>(localityCode.value);
     }
     if (serviceCode.present) {
       map['service_code'] = Variable<String>(serviceCode.value);
@@ -971,6 +1010,7 @@ class AttendanceRegisterCompanion
           ..write('registerNumber: $registerNumber, ')
           ..write('name: $name, ')
           ..write('referenceId: $referenceId, ')
+          ..write('localityCode: $localityCode, ')
           ..write('serviceCode: $serviceCode, ')
           ..write('status: $status, ')
           ..write('startDate: $startDate, ')
@@ -21419,6 +21459,12 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
   late final GeneratedColumn<String> serviceDefId = GeneratedColumn<String>(
       'service_def_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _relatedClientReferenceIdMeta =
+      const VerificationMeta('relatedClientReferenceId');
+  @override
+  late final GeneratedColumn<String> relatedClientReferenceId =
+      GeneratedColumn<String>('related_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _isActiveMeta =
       const VerificationMeta('isActive');
   @override
@@ -21537,6 +21583,7 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
         id,
         clientId,
         serviceDefId,
+        relatedClientReferenceId,
         isActive,
         accountId,
         additionalDetails,
@@ -21579,6 +21626,13 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
           _serviceDefIdMeta,
           serviceDefId.isAcceptableOrUnknown(
               data['service_def_id']!, _serviceDefIdMeta));
+    }
+    if (data.containsKey('related_client_reference_id')) {
+      context.handle(
+          _relatedClientReferenceIdMeta,
+          relatedClientReferenceId.isAcceptableOrUnknown(
+              data['related_client_reference_id']!,
+              _relatedClientReferenceIdMeta));
     }
     if (data.containsKey('is_active')) {
       context.handle(_isActiveMeta,
@@ -21687,6 +21741,9 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
           .read(DriftSqlType.string, data['${effectivePrefix}client_id'])!,
       serviceDefId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}service_def_id']),
+      relatedClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}related_client_reference_id']),
       isActive: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_active']),
       accountId: attachedDatabase.typeMapping
@@ -21734,6 +21791,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
   final String? id;
   final String clientId;
   final String? serviceDefId;
+  final String? relatedClientReferenceId;
   final bool? isActive;
   final String? accountId;
   final String? additionalDetails;
@@ -21755,6 +21813,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       {this.id,
       required this.clientId,
       this.serviceDefId,
+      this.relatedClientReferenceId,
       this.isActive,
       this.accountId,
       this.additionalDetails,
@@ -21781,6 +21840,10 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
     map['client_id'] = Variable<String>(clientId);
     if (!nullToAbsent || serviceDefId != null) {
       map['service_def_id'] = Variable<String>(serviceDefId);
+    }
+    if (!nullToAbsent || relatedClientReferenceId != null) {
+      map['related_client_reference_id'] =
+          Variable<String>(relatedClientReferenceId);
     }
     if (!nullToAbsent || isActive != null) {
       map['is_active'] = Variable<bool>(isActive);
@@ -21843,6 +21906,9 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       serviceDefId: serviceDefId == null && nullToAbsent
           ? const Value.absent()
           : Value(serviceDefId),
+      relatedClientReferenceId: relatedClientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relatedClientReferenceId),
       isActive: isActive == null && nullToAbsent
           ? const Value.absent()
           : Value(isActive),
@@ -21904,6 +21970,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       id: serializer.fromJson<String?>(json['id']),
       clientId: serializer.fromJson<String>(json['clientId']),
       serviceDefId: serializer.fromJson<String?>(json['serviceDefId']),
+      relatedClientReferenceId:
+          serializer.fromJson<String?>(json['relatedClientReferenceId']),
       isActive: serializer.fromJson<bool?>(json['isActive']),
       accountId: serializer.fromJson<String?>(json['accountId']),
       additionalDetails:
@@ -21932,6 +22000,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       'id': serializer.toJson<String?>(id),
       'clientId': serializer.toJson<String>(clientId),
       'serviceDefId': serializer.toJson<String?>(serviceDefId),
+      'relatedClientReferenceId':
+          serializer.toJson<String?>(relatedClientReferenceId),
       'isActive': serializer.toJson<bool?>(isActive),
       'accountId': serializer.toJson<String?>(accountId),
       'additionalDetails': serializer.toJson<String?>(additionalDetails),
@@ -21956,6 +22026,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
           {Value<String?> id = const Value.absent(),
           String? clientId,
           Value<String?> serviceDefId = const Value.absent(),
+          Value<String?> relatedClientReferenceId = const Value.absent(),
           Value<bool?> isActive = const Value.absent(),
           Value<String?> accountId = const Value.absent(),
           Value<String?> additionalDetails = const Value.absent(),
@@ -21978,6 +22049,9 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
         clientId: clientId ?? this.clientId,
         serviceDefId:
             serviceDefId.present ? serviceDefId.value : this.serviceDefId,
+        relatedClientReferenceId: relatedClientReferenceId.present
+            ? relatedClientReferenceId.value
+            : this.relatedClientReferenceId,
         isActive: isActive.present ? isActive.value : this.isActive,
         accountId: accountId.present ? accountId.value : this.accountId,
         additionalDetails: additionalDetails.present
@@ -22023,6 +22097,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
           ..write('id: $id, ')
           ..write('clientId: $clientId, ')
           ..write('serviceDefId: $serviceDefId, ')
+          ..write('relatedClientReferenceId: $relatedClientReferenceId, ')
           ..write('isActive: $isActive, ')
           ..write('accountId: $accountId, ')
           ..write('additionalDetails: $additionalDetails, ')
@@ -22045,27 +22120,29 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      clientId,
-      serviceDefId,
-      isActive,
-      accountId,
-      additionalDetails,
-      createdAt,
-      auditCreatedBy,
-      nonRecoverableError,
-      auditCreatedTime,
-      clientCreatedTime,
-      clientModifiedBy,
-      clientCreatedBy,
-      clientModifiedTime,
-      auditModifiedBy,
-      auditModifiedTime,
-      tenantId,
-      isDeleted,
-      rowVersion,
-      additionalFields);
+  int get hashCode => Object.hashAll([
+        id,
+        clientId,
+        serviceDefId,
+        relatedClientReferenceId,
+        isActive,
+        accountId,
+        additionalDetails,
+        createdAt,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -22073,6 +22150,7 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
           other.id == this.id &&
           other.clientId == this.clientId &&
           other.serviceDefId == this.serviceDefId &&
+          other.relatedClientReferenceId == this.relatedClientReferenceId &&
           other.isActive == this.isActive &&
           other.accountId == this.accountId &&
           other.additionalDetails == this.additionalDetails &&
@@ -22096,6 +22174,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
   final Value<String?> id;
   final Value<String> clientId;
   final Value<String?> serviceDefId;
+  final Value<String?> relatedClientReferenceId;
   final Value<bool?> isActive;
   final Value<String?> accountId;
   final Value<String?> additionalDetails;
@@ -22118,6 +22197,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     this.id = const Value.absent(),
     this.clientId = const Value.absent(),
     this.serviceDefId = const Value.absent(),
+    this.relatedClientReferenceId = const Value.absent(),
     this.isActive = const Value.absent(),
     this.accountId = const Value.absent(),
     this.additionalDetails = const Value.absent(),
@@ -22141,6 +22221,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     this.id = const Value.absent(),
     required String clientId,
     this.serviceDefId = const Value.absent(),
+    this.relatedClientReferenceId = const Value.absent(),
     this.isActive = const Value.absent(),
     this.accountId = const Value.absent(),
     this.additionalDetails = const Value.absent(),
@@ -22164,6 +22245,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     Expression<String>? id,
     Expression<String>? clientId,
     Expression<String>? serviceDefId,
+    Expression<String>? relatedClientReferenceId,
     Expression<bool>? isActive,
     Expression<String>? accountId,
     Expression<String>? additionalDetails,
@@ -22187,6 +22269,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
       if (id != null) 'id': id,
       if (clientId != null) 'client_id': clientId,
       if (serviceDefId != null) 'service_def_id': serviceDefId,
+      if (relatedClientReferenceId != null)
+        'related_client_reference_id': relatedClientReferenceId,
       if (isActive != null) 'is_active': isActive,
       if (accountId != null) 'account_id': accountId,
       if (additionalDetails != null) 'additional_details': additionalDetails,
@@ -22214,6 +22298,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
       {Value<String?>? id,
       Value<String>? clientId,
       Value<String?>? serviceDefId,
+      Value<String?>? relatedClientReferenceId,
       Value<bool?>? isActive,
       Value<String?>? accountId,
       Value<String?>? additionalDetails,
@@ -22236,6 +22321,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
       id: id ?? this.id,
       clientId: clientId ?? this.clientId,
       serviceDefId: serviceDefId ?? this.serviceDefId,
+      relatedClientReferenceId:
+          relatedClientReferenceId ?? this.relatedClientReferenceId,
       isActive: isActive ?? this.isActive,
       accountId: accountId ?? this.accountId,
       additionalDetails: additionalDetails ?? this.additionalDetails,
@@ -22268,6 +22355,10 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     }
     if (serviceDefId.present) {
       map['service_def_id'] = Variable<String>(serviceDefId.value);
+    }
+    if (relatedClientReferenceId.present) {
+      map['related_client_reference_id'] =
+          Variable<String>(relatedClientReferenceId.value);
     }
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
@@ -22332,6 +22423,7 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
           ..write('id: $id, ')
           ..write('clientId: $clientId, ')
           ..write('serviceDefId: $serviceDefId, ')
+          ..write('relatedClientReferenceId: $relatedClientReferenceId, ')
           ..write('isActive: $isActive, ')
           ..write('accountId: $accountId, ')
           ..write('additionalDetails: $additionalDetails, ')
@@ -39541,6 +39633,7 @@ typedef $$AttendanceRegisterTableInsertCompanionBuilder
   required String registerNumber,
   required String name,
   required String referenceId,
+  required String localityCode,
   required String serviceCode,
   required String status,
   Value<int?> startDate,
@@ -39566,6 +39659,7 @@ typedef $$AttendanceRegisterTableUpdateCompanionBuilder
   Value<String> registerNumber,
   Value<String> name,
   Value<String> referenceId,
+  Value<String> localityCode,
   Value<String> serviceCode,
   Value<String> status,
   Value<int?> startDate,
@@ -39611,6 +39705,7 @@ class $$AttendanceRegisterTableTableManager extends RootTableManager<
             Value<String> registerNumber = const Value.absent(),
             Value<String> name = const Value.absent(),
             Value<String> referenceId = const Value.absent(),
+            Value<String> localityCode = const Value.absent(),
             Value<String> serviceCode = const Value.absent(),
             Value<String> status = const Value.absent(),
             Value<int?> startDate = const Value.absent(),
@@ -39635,6 +39730,7 @@ class $$AttendanceRegisterTableTableManager extends RootTableManager<
             registerNumber: registerNumber,
             name: name,
             referenceId: referenceId,
+            localityCode: localityCode,
             serviceCode: serviceCode,
             status: status,
             startDate: startDate,
@@ -39659,6 +39755,7 @@ class $$AttendanceRegisterTableTableManager extends RootTableManager<
             required String registerNumber,
             required String name,
             required String referenceId,
+            required String localityCode,
             required String serviceCode,
             required String status,
             Value<int?> startDate = const Value.absent(),
@@ -39683,6 +39780,7 @@ class $$AttendanceRegisterTableTableManager extends RootTableManager<
             registerNumber: registerNumber,
             name: name,
             referenceId: referenceId,
+            localityCode: localityCode,
             serviceCode: serviceCode,
             status: status,
             startDate: startDate,
@@ -39742,6 +39840,11 @@ class $$AttendanceRegisterTableFilterComposer
 
   ColumnFilters<String> get referenceId => $state.composableBuilder(
       column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get localityCode => $state.composableBuilder(
+      column: $state.table.localityCode,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -39851,6 +39954,11 @@ class $$AttendanceRegisterTableOrderingComposer
 
   ColumnOrderings<String> get referenceId => $state.composableBuilder(
       column: $state.table.referenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get localityCode => $state.composableBuilder(
+      column: $state.table.localityCode,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -48095,6 +48203,7 @@ typedef $$ServiceTableInsertCompanionBuilder = ServiceCompanion Function({
   Value<String?> id,
   required String clientId,
   Value<String?> serviceDefId,
+  Value<String?> relatedClientReferenceId,
   Value<bool?> isActive,
   Value<String?> accountId,
   Value<String?> additionalDetails,
@@ -48118,6 +48227,7 @@ typedef $$ServiceTableUpdateCompanionBuilder = ServiceCompanion Function({
   Value<String?> id,
   Value<String> clientId,
   Value<String?> serviceDefId,
+  Value<String?> relatedClientReferenceId,
   Value<bool?> isActive,
   Value<String?> accountId,
   Value<String?> additionalDetails,
@@ -48160,6 +48270,7 @@ class $$ServiceTableTableManager extends RootTableManager<
             Value<String?> id = const Value.absent(),
             Value<String> clientId = const Value.absent(),
             Value<String?> serviceDefId = const Value.absent(),
+            Value<String?> relatedClientReferenceId = const Value.absent(),
             Value<bool?> isActive = const Value.absent(),
             Value<String?> accountId = const Value.absent(),
             Value<String?> additionalDetails = const Value.absent(),
@@ -48183,6 +48294,7 @@ class $$ServiceTableTableManager extends RootTableManager<
             id: id,
             clientId: clientId,
             serviceDefId: serviceDefId,
+            relatedClientReferenceId: relatedClientReferenceId,
             isActive: isActive,
             accountId: accountId,
             additionalDetails: additionalDetails,
@@ -48206,6 +48318,7 @@ class $$ServiceTableTableManager extends RootTableManager<
             Value<String?> id = const Value.absent(),
             required String clientId,
             Value<String?> serviceDefId = const Value.absent(),
+            Value<String?> relatedClientReferenceId = const Value.absent(),
             Value<bool?> isActive = const Value.absent(),
             Value<String?> accountId = const Value.absent(),
             Value<String?> additionalDetails = const Value.absent(),
@@ -48229,6 +48342,7 @@ class $$ServiceTableTableManager extends RootTableManager<
             id: id,
             clientId: clientId,
             serviceDefId: serviceDefId,
+            relatedClientReferenceId: relatedClientReferenceId,
             isActive: isActive,
             accountId: accountId,
             additionalDetails: additionalDetails,
@@ -48280,6 +48394,12 @@ class $$ServiceTableFilterComposer
       column: $state.table.serviceDefId,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get relatedClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.relatedClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<bool> get isActive => $state.composableBuilder(
       column: $state.table.isActive,
@@ -48384,6 +48504,12 @@ class $$ServiceTableOrderingComposer
       column: $state.table.serviceDefId,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get relatedClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.relatedClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<bool> get isActive => $state.composableBuilder(
       column: $state.table.isActive,

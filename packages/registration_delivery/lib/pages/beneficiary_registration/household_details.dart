@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
@@ -415,6 +416,9 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   minValue: 0,
                                   maxValue: 10,
                                   step: 1,
+                                  editable: RegistrationDeliverySingleton()
+                                          .householdType ==
+                                      HouseholdType.community,
                                   initialValue: form
                                       .control(_pregnantWomenCountKey)
                                       .value
@@ -452,6 +456,9 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   minValue: 0,
                                   maxValue: 20,
                                   step: 1,
+                                  editable: RegistrationDeliverySingleton()
+                                          .householdType ==
+                                      HouseholdType.community,
                                   initialValue: form
                                       .control(_childrenCountKey)
                                       .value
@@ -491,6 +498,9 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       : 1,
                                   maxValue: 30,
                                   step: 1,
+                                  editable: RegistrationDeliverySingleton()
+                                          .householdType ==
+                                      HouseholdType.community,
                                   initialValue: form
                                       .control(_memberCountKey)
                                       .value

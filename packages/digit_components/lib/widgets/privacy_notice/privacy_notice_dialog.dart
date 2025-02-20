@@ -4,12 +4,11 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:flutter/material.dart';
-import '../../models/privacy_policy_model.dart';
+
 import '../../theme/digit_theme.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
 import 'privacy_notice_expand_component.dart';
-import '../../utils/i18_key_constants.dart' as i18;
-
 
 class FullPageDialog extends LocalizedStatefulWidget {
   final PrivacyNoticeModel privacyPolicy;
@@ -40,7 +39,7 @@ class FullPageDialogState extends LocalizedState<FullPageDialog> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: kPadding*2),
+                  padding: const EdgeInsets.symmetric(horizontal: kPadding * 2),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -49,15 +48,20 @@ class FullPageDialogState extends LocalizedState<FullPageDialog> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: kPadding*3, left: 0),
+                            padding: const EdgeInsets.only(
+                                top: kPadding * 3, left: 0),
                             child: Container(
-                              width: MediaQuery.of(context).size.width*.7,
+                              width: MediaQuery.of(context).size.width * .7,
                               child: Text(
-                                localizations.translate(widget.privacyPolicy.header ?? ''),
+                                localizations.translate(
+                                    widget.privacyPolicy.header ?? ''),
                                 maxLines: 3,
-                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                                  color: const DigitColors().woodsmokeBlack,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium
+                                    ?.copyWith(
+                                      color: const DigitColors().woodsmokeBlack,
+                                    ),
                               ),
                             ),
                           ),
@@ -69,23 +73,25 @@ class FullPageDialogState extends LocalizedState<FullPageDialog> {
                               },
                               child: Icon(
                                 Icons.close,
-                                size: kPadding*4,
+                                size: kPadding * 4,
                                 color: const DigitColors().woodsmokeBlack,
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: kPadding*2),
-                      if(widget.privacyPolicy.contents != null)
-                      Column(
-                        children: widget.privacyPolicy.contents!.map((section) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: kPadding*2),
-                            child: ExpandableSection(content: section),
-                          );
-                        }).toList(),
-                      ),
+                      const SizedBox(height: kPadding * 2),
+                      if (widget.privacyPolicy.contents != null)
+                        Column(
+                          children:
+                              widget.privacyPolicy.contents!.map((section) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: kPadding * 2),
+                              child: ExpandableSection(content: section),
+                            );
+                          }).toList(),
+                        ),
                     ],
                   ),
                 ),
@@ -112,14 +118,16 @@ class FullPageDialogState extends LocalizedState<FullPageDialog> {
                         widget.onAccept();
                         Navigator.of(context).pop();
                       },
-                      child: Text(localizations.translate(i18.privacyPolicy.acceptText)),
+                      child: Text(localizations
+                          .translate(i18.privacyPolicy.acceptText)),
                     ),
                     DigitOutLineButton(
                       onPressed: () {
                         widget.onDecline();
                         Navigator.of(context).pop();
                       },
-                      label: localizations.translate(i18.privacyPolicy.declineText),
+                      label: localizations
+                          .translate(i18.privacyPolicy.declineText),
                       buttonStyle: OutlinedButton.styleFrom(
                         backgroundColor: Colors.white,
                         side: BorderSide(

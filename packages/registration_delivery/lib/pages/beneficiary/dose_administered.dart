@@ -436,15 +436,16 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                           const Divider(
                                             thickness: 2.0,
                                           ),
-                                          DigitTable(
-                                            enableBorder: true,
-                                            showPagination: false,
-                                            showSelectedState: false,
-                                            columns: headerListResource,
-                                            rows: tableDataRows,
-                                            tableHeight:
-                                                (tableDataRows.length + 1) *
-                                                    57.5,
+                                          SizedBox(
+                                            height: (tableDataRows.length + 1) *
+                                                57.5,
+                                            child: DigitTable(
+                                              enableBorder: true,
+                                              showPagination: false,
+                                              showSelectedState: false,
+                                              columns: headerListResource,
+                                              rows: tableDataRows,
+                                            ),
                                           ),
                                         ],
                                       );

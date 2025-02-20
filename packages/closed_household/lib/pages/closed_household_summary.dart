@@ -142,7 +142,7 @@ class ClosedHouseholdSummaryPageState
                                 i18.closeHousehold.closeHouseholdVillageName),
                             value: ClosedHouseholdSingleton()
                                 .boundary!
-                                .name
+                                .code
                                 .toString(),
                             labelFlex: 5,
                           ),

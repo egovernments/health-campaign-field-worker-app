@@ -373,8 +373,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "packages/dart_mappable_builder"
-      ref: "1.6-final-dev"
-      resolved-ref: "1e7467577a9701d396f7e23afbf00065e54c5469"
+      ref: master
+      resolved-ref: ab088b8fc21a07ed7a56bf81c935ee51481ad253
       url: "https://github.com/egovernments/health-campaign-field-worker-app/"
     source: git
     version: "4.2.3"
@@ -397,11 +397,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: c3bc7299a7d927ebb83d8e91c1d7a8a51f6a1d1295dafeacb642012b72b99a2f
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
+      path: "../digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.5+1"
   digit_scanner:
     dependency: "direct main"
     description:
@@ -1406,10 +1405,9 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      name: survey_form
-      sha256: "5e3a08570fe8c97d7dfd0bc6f28b2ae829e2fe66ce987504920c20d091c47c19"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../survey_form"
+      relative: true
+    source: path
     version: "1.0.0"
   synchronized:
     dependency: transitive

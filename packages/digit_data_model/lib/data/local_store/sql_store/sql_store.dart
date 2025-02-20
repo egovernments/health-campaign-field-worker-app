@@ -2,7 +2,6 @@
 import 'dart:io';
 
 import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
-import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
@@ -110,7 +109,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 5; // Increment schema version
+  int get schemaVersion => 6; // Increment schema version
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -178,14 +177,12 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
           if (from < 6) {
             try {
-              AppLogger.instance.info('Apply migration $from to $to');
               await migrator.addColumn(household, household.householdType);
-            } catch (e) {
-              AppLogger.instance.error(
-                title: 'migration',
-                message: e.toString(),
-              );
-            }
+              await migrator.addColumn(
+                  attendanceRegister, attendanceRegister.localityCode);
+              await migrator.addColumn(
+                  service, service.relatedClientReferenceId);
+            } catch (e) {}
           }
         },
       );

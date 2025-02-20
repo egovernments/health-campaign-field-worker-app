@@ -405,8 +405,7 @@ class _SearchBeneficiaryPageState
           offstage: RegistrationDeliverySingleton().householdType ==
                       HouseholdType.community &&
                   (searchHouseholdsState.searchQuery == null) ||
-              (searchHouseholdsState.searchQuery != null &&
-                  searchHouseholdsState.householdMembers.isNotEmpty),
+              (searchHouseholdsState.searchQuery!.length < 3),
           child: DigitCard(
               margin: const EdgeInsets.only(top: spacer2),
               padding: const EdgeInsets.all(spacer4),

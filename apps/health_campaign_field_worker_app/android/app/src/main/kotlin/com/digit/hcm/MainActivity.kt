@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
@@ -16,7 +17,11 @@ class MainActivity : FlutterActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val latitude = intent?.getDoubleExtra("latitude", 0.0)
             val longitude = intent?.getDoubleExtra("longitude", 0.0)
-            val accuracy = intent?.getFloatExtra("accuracy", 0.0f) // Retrieve accuracy here
+            val accuracy = intent?.getFloatExtra("accuracy", 0.0f) ?: 0.0f
+            if (latitude == null || longitude == null) {
+                Log.e("LocationReceiver", "Received null location data")
+                return
+            }
 
             // Handle the location data here
             Toast.makeText(

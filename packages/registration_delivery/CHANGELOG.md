@@ -1,3 +1,9 @@
+## 1.0.5+3
+
+* Added Eligibility checklist
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+
 ## 1.0.5+2
 
 * Action label and status change with projectType
