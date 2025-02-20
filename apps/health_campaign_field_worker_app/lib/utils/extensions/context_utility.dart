@@ -42,13 +42,12 @@ extension ContextUtilityExtensions on BuildContext {
     final projectState = projectBloc.state;
     final selectedCycle =
         projectState.selectedProject?.additionalDetails?.projectType?.cycles
-                ?.where(
-                  (e) =>
-                      (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
-                      (e.endDate) > DateTime.now().millisecondsSinceEpoch,
-                )
-                .firstOrNull ??
-            projectState.selectedCycle;
+            ?.where(
+              (e) =>
+                  (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+                  (e.endDate) > DateTime.now().millisecondsSinceEpoch,
+            )
+            .firstOrNull;
 
     return selectedCycle;
   }
@@ -58,8 +57,7 @@ extension ContextUtilityExtensions on BuildContext {
 
     final projectState = projectBloc.state;
     final projectType =
-        projectState.selectedProject?.additionalDetails?.projectType ??
-            projectState.selectedProjectType;
+        projectState.selectedProject?.additionalDetails?.projectType;
 
     return projectType;
   }
@@ -69,8 +67,7 @@ extension ContextUtilityExtensions on BuildContext {
 
     final projectState = projectBloc.state;
     var projectCycles =
-        projectState.selectedProject?.additionalDetails?.projectType?.cycles ??
-            projectState.selectedProjectType?.cycles;
+        projectState.selectedProject?.additionalDetails?.projectType?.cycles;
 
     if (projectCycles != null && (projectCycles.isNotEmpty)) {
       List<String> resultList = [];
