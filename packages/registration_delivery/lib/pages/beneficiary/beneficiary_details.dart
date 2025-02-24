@@ -180,51 +180,84 @@ class BeneficiaryDetailsPageState
                                                           .selectedIndividual,
                                                     ),
                                                   );
-                                                  showCustomPopup(
-                                                    context: context,
-                                                    builder: (popUpContext) => Popup(
-                                                        title: localizations
-                                                            .translate(i18
-                                                                .beneficiaryDetails
-                                                                .resourcesTobeDelivered),
-                                                        type: PopUpType.simple,
-                                                        contentPadding:
-                                                            EdgeInsets.zero,
-                                                        additionalWidgets: [
-                                                          buildTableContent(
-                                                              deliverState,
-                                                              context,
-                                                              variant,
-                                                              state
-                                                                  .selectedIndividual,
-                                                              state
-                                                                  .householdMemberWrapper
-                                                                  .household),
-                                                        ],
-                                                        actions: [
-                                                          DigitButton(
-                                                              label: localizations
-                                                                  .translate(i18
-                                                                      .beneficiaryDetails
-                                                                      .ctaProceed),
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                  context,
-                                                                  rootNavigator:
-                                                                      true,
-                                                                ).pop();
-                                                                router.push(
-                                                                  DeliverInterventionRoute(),
-                                                                );
-                                                              },
-                                                              type:
-                                                                  DigitButtonType
-                                                                      .primary,
-                                                              size:
-                                                                  DigitButtonSize
-                                                                      .large),
-                                                        ]),
-                                                  );
+
+                                                  var productVariants = fetchProductVariant(
+                                                      RegistrationDeliverySingleton()
+                                                          .selectedProject
+                                                          ?.additionalDetails
+                                                          ?.projectType
+                                                          ?.cycles![deliverState
+                                                                  .cycle -
+                                                              1]
+                                                          .deliveries?[deliverState
+                                                              .dose -
+                                                          1],
+                                                      state.selectedIndividual,
+                                                      state
+                                                          .householdMemberWrapper
+                                                          .household,
+                                                      context: context);
+
+                                                  if (productVariants[
+                                                          'criteria'] ==
+                                                      null) {
+                                                    Toast.showToast(
+                                                      context,
+                                                      message: localizations
+                                                          .translate(
+                                                              productVariants[
+                                                                      'errors']
+                                                                  .toString()),
+                                                      type: ToastType.error,
+                                                    );
+                                                  } else {
+                                                    showCustomPopup(
+                                                      context: context,
+                                                      builder: (popUpContext) => Popup(
+                                                          title: localizations
+                                                              .translate(i18
+                                                                  .beneficiaryDetails
+                                                                  .resourcesTobeDelivered),
+                                                          type:
+                                                              PopUpType.simple,
+                                                          contentPadding:
+                                                              EdgeInsets.zero,
+                                                          additionalWidgets: [
+                                                            buildTableContent(
+                                                                deliverState,
+                                                                context,
+                                                                variant,
+                                                                state
+                                                                    .selectedIndividual,
+                                                                state
+                                                                    .householdMemberWrapper
+                                                                    .household),
+                                                          ],
+                                                          actions: [
+                                                            DigitButton(
+                                                                label: localizations
+                                                                    .translate(i18
+                                                                        .beneficiaryDetails
+                                                                        .ctaProceed),
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true,
+                                                                  ).pop();
+                                                                  router.push(
+                                                                    DeliverInterventionRoute(),
+                                                                  );
+                                                                },
+                                                                type:
+                                                                    DigitButtonType
+                                                                        .primary,
+                                                                size:
+                                                                    DigitButtonSize
+                                                                        .large),
+                                                          ]),
+                                                    );
+                                                  }
                                                 }
                                               },
                                             ),
@@ -241,8 +274,37 @@ class BeneficiaryDetailsPageState
                                           size: DigitButtonSize.large,
                                           mainAxisSize: MainAxisSize.max,
                                           onPressed: () {
-                                            context.router.push(
-                                                DeliverInterventionRoute());
+                                            var productVariants =
+                                                fetchProductVariant(
+                                                    RegistrationDeliverySingleton()
+                                                            .selectedProject
+                                                            ?.additionalDetails
+                                                            ?.projectType
+                                                            ?.cycles![
+                                                                deliverState
+                                                                        .cycle -
+                                                                    1]
+                                                            .deliveries?[
+                                                        deliverState.dose - 1],
+                                                    state.selectedIndividual,
+                                                    state.householdMemberWrapper
+                                                        .household,
+                                                    context: context);
+
+                                            if (productVariants['criteria'] ==
+                                                null) {
+                                              Toast.showToast(
+                                                context,
+                                                message: localizations
+                                                    .translate(productVariants[
+                                                            'errors']
+                                                        .toString()),
+                                                type: ToastType.error,
+                                              );
+                                            } else {
+                                              context.router.push(
+                                                  DeliverInterventionRoute());
+                                            }
                                           },
                                         ),
                                       ]);
