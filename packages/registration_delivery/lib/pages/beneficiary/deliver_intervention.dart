@@ -6,9 +6,7 @@ import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_stepper.dart';
-import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -173,6 +171,23 @@ class DeliverInterventionPageState
                 : BlocBuilder<DeliverInterventionBloc,
                     DeliverInterventionState>(
                     builder: (context, deliveryInterventionState) {
+                      var checkForFormulaErrors =
+                          getProductVariants(deliveryInterventionState, state);
+
+                      if (checkForFormulaErrors['criteria'] == null) {
+                        if (context.mounted) {
+                          SchedulerBinding.instance.addPostFrameCallback((_) {
+                            context.router.maybePop();
+                            Toast.showToast(
+                              context,
+                              message: localizations.translate(
+                                  checkForFormulaErrors['errors'].toString()),
+                              type: ToastType.error,
+                            );
+                          });
+                        }
+                      }
+
                       List<DeliveryProductVariant>? productVariants =
                           RegistrationDeliverySingleton()
                                       .selectedProject
@@ -181,20 +196,9 @@ class DeliverInterventionPageState
                                       ?.cycles
                                       ?.isNotEmpty ==
                                   true
-                              ? (fetchProductVariant(
-                                      RegistrationDeliverySingleton()
-                                              .selectedProject
-                                              ?.additionalDetails
-                                              ?.projectType
-                                              ?.cycles![
-                                                  deliveryInterventionState
-                                                          .cycle -
-                                                      1]
-                                              .deliveries?[
-                                          deliveryInterventionState.dose - 1],
-                                      state.selectedIndividual,
-                                      state.householdMemberWrapper.household)
-                                  ?.productVariants)
+                              ? getProductVariants(deliveryInterventionState,
+                                      state)['criteria']
+                                  ?.productVariants
                               : RegistrationDeliverySingleton()
                                   .selectedProject
                                   ?.additionalDetails
@@ -218,34 +222,6 @@ class DeliverInterventionPageState
                           : 0;
 
                       final steps = generateSteps(numberOfDoses);
-                      if ((productVariants ?? []).isEmpty && context.mounted) {
-                        SchedulerBinding.instance.addPostFrameCallback((_) {
-                          showCustomPopup(
-                              context: context,
-                              builder: (popUpContext) => Popup(
-                                      title: localizations.translate(
-                                        i18.common.noResultsFound,
-                                      ),
-                                      description: localizations.translate(
-                                        i18.deliverIntervention
-                                            .checkForProductVariantsConfig,
-                                      ),
-                                      type: PopUpType.alert,
-                                      actions: [
-                                        DigitButton(
-                                          label: localizations.translate(
-                                            i18.common.coreCommonOk,
-                                          ),
-                                          onPressed: () {
-                                            context.router.maybePop();
-                                            Navigator.of(popUpContext).pop();
-                                          },
-                                          type: DigitButtonType.primary,
-                                          size: DigitButtonSize.large,
-                                        ),
-                                      ]));
-                        });
-                      }
 
                       return BlocBuilder<ProductVariantBloc,
                           ProductVariantState>(
@@ -368,7 +344,8 @@ class DeliverInterventionPageState
                                     ),
                                     header: const Column(children: [
                                       Padding(
-                                        padding: EdgeInsets.only(bottom:spacer2),
+                                        padding:
+                                            EdgeInsets.only(bottom: spacer2),
                                         child: BackNavigationHelpHeaderWidget(
                                           showHelp: false,
                                         ),
@@ -386,7 +363,12 @@ class DeliverInterventionPageState
                                                     i18.deliverIntervention
                                                         .deliverInterventionLabel,
                                                   ),
-                                                  style: textTheme.headingXl.copyWith(color: theme.colorTheme.primary.primary2),
+                                                  style: textTheme.headingXl
+                                                      .copyWith(
+                                                          color: theme
+                                                              .colorTheme
+                                                              .primary
+                                                              .primary2),
                                                 ),
                                                 if (RegistrationDeliverySingleton()
                                                         .beneficiaryType ==
@@ -468,9 +450,12 @@ class DeliverInterventionPageState
                                                     i18.deliverIntervention
                                                         .deliverInterventionResourceLabel,
                                                   ),
-                                                  style: textTheme.headingXl.copyWith(
-                                                    color: theme.colorTheme.primary.primary2
-                                                  ),
+                                                  style: textTheme.headingXl
+                                                      .copyWith(
+                                                          color: theme
+                                                              .colorTheme
+                                                              .primary
+                                                              .primary2),
                                                 ),
                                                 ..._controllers.map((e) =>
                                                     ResourceBeneficiaryCard(
@@ -543,9 +528,12 @@ class DeliverInterventionPageState
                                                     i18.deliverIntervention
                                                         .deliveryCommentHeading,
                                                   ),
-                                                  style: textTheme.headingXl.copyWith(
-                                                    color: theme.colorTheme.primary.primary2
-                                                  ),
+                                                  style: textTheme.headingXl
+                                                      .copyWith(
+                                                          color: theme
+                                                              .colorTheme
+                                                              .primary
+                                                              .primary2),
                                                 ),
                                                 ReactiveWrapperField(
                                                   formControlName:
@@ -807,18 +795,11 @@ class DeliverInterventionPageState
                   ?.cycles ==
               null
           ? 1
-          : fetchProductVariant(
-                      RegistrationDeliverySingleton()
-                          .selectedProject
-                          ?.additionalDetails
-                          ?.projectType
-                          ?.cycles![bloc.cycle - 1]
-                          .deliveries?[bloc.dose - 1],
-                      overViewbloc.selectedIndividual,
-                      overViewbloc.householdMemberWrapper.household)
-                  ?.productVariants
-                  ?.length ??
-              0;
+          : getProductVariants(bloc, overViewbloc) != null
+              ? getProductVariants(bloc, overViewbloc)['criteria']
+                  .productVariants
+                  .length
+              : 0;
 
       _controllers.addAll(List.generate(r, (index) => index)
           .mapIndexed((index, element) => index));
@@ -885,5 +866,21 @@ class DeliverInterventionPageState
         ),
       ]),
     });
+  }
+
+  getProductVariants(DeliverInterventionState deliveryInterventionState,
+      HouseholdOverviewState state) {
+    var result = (fetchProductVariant(
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.projectType
+            ?.cycles![deliveryInterventionState.cycle - 1]
+            .deliveries?[deliveryInterventionState.dose - 1],
+        state.selectedIndividual,
+        state.householdMemberWrapper.household,
+        context: context));
+
+    return result;
   }
 }

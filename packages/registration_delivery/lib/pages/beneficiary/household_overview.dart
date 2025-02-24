@@ -11,6 +11,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_chip.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_toast.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
@@ -155,9 +156,42 @@ class _HouseholdOverviewPageState
                                                                       '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                           .toList()
                                                           .isEmpty) {
-                                                        context.router.push(
-                                                          DeliverInterventionRoute(),
-                                                        );
+                                                        var productVariants = fetchProductVariant(
+                                                            RegistrationDeliverySingleton()
+                                                                .selectedProject
+                                                                ?.additionalDetails
+                                                                ?.projectType
+                                                                ?.cycles![
+                                                                    deliverInterventionState
+                                                                            .cycle -
+                                                                        1]
+                                                                .deliveries?[deliverInterventionState
+                                                                    .dose -
+                                                                1],
+                                                            state
+                                                                .selectedIndividual,
+                                                            state
+                                                                .householdMemberWrapper
+                                                                .household,
+                                                            context: context);
+
+                                                        if (productVariants[
+                                                                'criteria'] ==
+                                                            null) {
+                                                          Toast.showToast(
+                                                            context,
+                                                            message: localizations.translate(
+                                                                productVariants[
+                                                                        'errors']
+                                                                    .toString()),
+                                                            type:
+                                                                ToastType.error,
+                                                          );
+                                                        } else {
+                                                          context.router.push(
+                                                            DeliverInterventionRoute(),
+                                                          );
+                                                        }
                                                       } else {
                                                         navigateToChecklist(
                                                             ctx,
@@ -230,9 +264,42 @@ class _HouseholdOverviewPageState
                                                                     '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                         .toList()
                                                         .isEmpty) {
-                                                      context.router.push(
-                                                        DeliverInterventionRoute(),
-                                                      );
+                                                      var productVariants = fetchProductVariant(
+                                                          RegistrationDeliverySingleton()
+                                                              .selectedProject
+                                                              ?.additionalDetails
+                                                              ?.projectType
+                                                              ?.cycles![
+                                                                  deliverInterventionState
+                                                                          .cycle -
+                                                                      1]
+                                                              .deliveries?[deliverInterventionState
+                                                                  .dose -
+                                                              1],
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          context: context);
+
+                                                      if (productVariants[
+                                                              'criteria'] ==
+                                                          null) {
+                                                        Toast.showToast(
+                                                          context,
+                                                          message: localizations
+                                                              .translate(
+                                                                  productVariants[
+                                                                          'errors']
+                                                                      .toString()),
+                                                          type: ToastType.error,
+                                                        );
+                                                      } else {
+                                                        context.router.push(
+                                                          DeliverInterventionRoute(),
+                                                        );
+                                                      }
                                                     } else {
                                                       navigateToChecklist(
                                                           ctx,
@@ -445,8 +512,8 @@ class _HouseholdOverviewPageState
                                                   .householdOverView
                                                   .householdOverViewLabel),
                                           style: textTheme.headingXl.copyWith(
-                                            color: theme.colorTheme.primary.primary2
-                                          ),
+                                              color: theme
+                                                  .colorTheme.primary.primary2),
                                         ),
                                       ),
                                     ),

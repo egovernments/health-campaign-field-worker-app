@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/household.dart';
@@ -193,8 +194,12 @@ bool checkIfBeneficiaryReferred(
   }
 }
 
-DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
-    IndividualModel? individualModel, HouseholdModel? householdModel) {
+Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel, HouseholdModel? householdModel,
+    {BuildContext? context}) {
+  List<String> errorMessages = [];
+  DeliveryDoseCriteria? deliveryDoseCriteria;
+
   if (currentDelivery != null) {
     var individualAgeInMonths = 0;
     var gender;
@@ -235,7 +240,7 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
         if (condition.contains('and')) {
           final conditions = condition.split('and');
 
-          List expressionParser = [];
+          List<bool> expressionParser = [];
           for (var element in conditions) {
             final expression = FormulaParser(
               element,
@@ -247,6 +252,9 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               },
             );
             final error = expression.parse;
+            if (!error["value"]) {
+              errorMessages.add("CONDITION $condition FAILED");
+            }
             expressionParser.add(error["value"]);
           }
 
@@ -255,7 +263,7 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
         } else if (condition.contains('or')) {
           final conditions = condition.split('or');
 
-          List expressionParser = [];
+          List<bool> expressionParser = [];
           for (var element in conditions) {
             final expression = CustomFormulaParser.parseCondition(element, {
               if (individualModel != null && individualAgeInMonths != 0)
@@ -268,17 +276,20 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               'type_of_structure'
             ]);
             final error = expression;
+            if (!error["value"]) {
+              errorMessages.add("CONDITION $condition FAILED");
+            }
             expressionParser.add(error["value"]);
           }
 
-          return expressionParser.where((element) => element == true).isNotEmpty
-              ? true
-              : false;
+          return expressionParser
+              .where((element) => element == true)
+              .isNotEmpty;
         } else {
           final conditions = condition.split(
               'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
 
-          List expressionParser = [];
+          List<bool> expressionParser = [];
           for (var element in conditions) {
             final expression = CustomFormulaParser.parseCondition(element, {
               if (individualModel != null && individualAgeInMonths != 0)
@@ -291,6 +302,9 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               'type_of_structure'
             ]);
             final error = expression;
+            if (!error["value"]) {
+              errorMessages.add("CONDITION $condition FAILED");
+            }
             expressionParser.add(error["value"]);
           }
 
@@ -302,10 +316,17 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       return false;
     }).toList();
 
-    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+    deliveryDoseCriteria =
+        (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
   }
 
-  return null;
+  // Remove duplicate error messages
+  errorMessages = errorMessages.toSet().toList();
+
+  return {
+    'criteria': deliveryDoseCriteria,
+    'errors': errorMessages,
+  };
 }
 
 String maskString(String input) {
