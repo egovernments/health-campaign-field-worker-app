@@ -886,26 +886,24 @@ class CustomStockDetailsPageState
                                         selectedProductVariant =
                                             productVariants.first;
 
-                                        return DisableWidget(
-                                          child: DigitReactiveDropdown<
-                                              ProductVariantModel>(
-                                            key: const Key(_productVariantKey),
-                                            formControlName: _productVariantKey,
-                                            label: localizations.translate(
-                                              module.selectProductLabel,
-                                            ),
-                                            isRequired: true,
-                                            valueMapper: (value) {
-                                              return localizations.translate(
-                                                value.sku ?? value.id,
-                                              );
-                                            },
-                                            menuItems: productVariants,
-                                            validationMessages: {
-                                              'required': (object) =>
-                                                  '${module.selectProductLabel}_IS_REQUIRED',
-                                            },
+                                        return DigitReactiveDropdown<
+                                            ProductVariantModel>(
+                                          key: const Key(_productVariantKey),
+                                          formControlName: _productVariantKey,
+                                          label: localizations.translate(
+                                            module.selectProductLabel,
                                           ),
+                                          isRequired: true,
+                                          valueMapper: (value) {
+                                            return localizations.translate(
+                                              value.sku ?? value.id,
+                                            );
+                                          },
+                                          menuItems: productVariants,
+                                          validationMessages: {
+                                            'required': (object) =>
+                                                '${module.selectProductLabel}_IS_REQUIRED',
+                                          },
                                         );
                                       },
                                     );
