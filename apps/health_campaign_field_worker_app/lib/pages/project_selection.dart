@@ -64,9 +64,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 localizations.translate(
                   i18.projectSelection.projectDetailsLabelText,
                 ),
-                style: textTheme.headingXl.copyWith(
-                  color: theme.colorTheme.primary.primary2
-                ),
+                style: textTheme.headingXl
+                    .copyWith(color: theme.colorTheme.primary.primary2),
               ),
             ),
           ],
@@ -86,7 +85,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   barrierDismissible: false,
                   builder: (context) => DigitSyncDialogContent(
                     label: localizations.translate(
-                      i18.projectSelection.syncFailedTitleText,
+                      '${error.name.toUpperCase()}_ERROR',
                     ),
                     type: DialogType.failed,
                     primaryAction: DigitDialogActions(

@@ -1,3 +1,8 @@
+## 1.0.6+1
+
+* Added PRODUCT as enum in beneficiaryType
+* Updated digit_ui_components to latest version
+
 ## 1.0.6
 
 * Added localityCode in attendance table
