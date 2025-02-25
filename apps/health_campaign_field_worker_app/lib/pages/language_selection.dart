@@ -2,6 +2,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/molecules/language_selection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,14 +61,10 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   listener: (context, state) {
                     if (state.loading && !isDialogVisible) {
                       isDialogVisible = true;
-                      DigitComponentsUtils.showDialog(
-                        context,
-                        "",
-                        DialogType.inProgress,
-                      );
+                      DigitLoaders.overlayLoader(context: context);
                     } else if (!state.loading && isDialogVisible) {
                       isDialogVisible = false;
-                      DigitComponentsUtils.hideDialog(context);
+                      Navigator.of(context, rootNavigator: true).pop();
                     }
                     if (!state.loading &&
                         !isDialogVisible &&

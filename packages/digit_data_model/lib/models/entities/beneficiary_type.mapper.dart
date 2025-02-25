@@ -29,6 +29,8 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
         return BeneficiaryType.individual;
       case "HOUSEHOLD":
         return BeneficiaryType.household;
+      case "PRODUCT":
+        return BeneficiaryType.product;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -41,6 +43,8 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
         return "INDIVIDUAL";
       case BeneficiaryType.household:
         return "HOUSEHOLD";
+      case BeneficiaryType.product:
+        return "PRODUCT";
     }
   }
 }

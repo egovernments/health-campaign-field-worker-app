@@ -1,7 +1,11 @@
+## 1.0.4+1
+
+* Updated to latest packages
+
 ## 1.0.4
 
 * Added support for multiple campaign types dashboard Configs
-* Upgrade digit_ui_components
+* Updated to latest packages
 
 ## 1.0.3
 
