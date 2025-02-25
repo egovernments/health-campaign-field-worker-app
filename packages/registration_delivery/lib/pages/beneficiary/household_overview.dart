@@ -17,6 +17,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:survey_form/survey_form.dart';
 
@@ -286,15 +287,47 @@ class _HouseholdOverviewPageState
                                                       if (productVariants[
                                                               'criteria'] ==
                                                           null) {
-                                                        Toast.showToast(
-                                                          context,
-                                                          message: localizations
-                                                              .translate(
-                                                                  productVariants[
-                                                                          'errors']
-                                                                      .toString()),
-                                                          type: ToastType.error,
-                                                        );
+                                                        if (context.mounted) {
+                                                          SchedulerBinding
+                                                              .instance
+                                                              .addPostFrameCallback(
+                                                                  (_) {
+                                                            showCustomPopup(
+                                                                context:
+                                                                    context,
+                                                                builder: (popUpContext) =>
+                                                                    Popup(
+                                                                        title: localizations
+                                                                            .translate(
+                                                                          i18.common
+                                                                              .coreCommonError,
+                                                                        ),
+                                                                        description: localizations.translate(productVariants['errors']
+                                                                            .toString()
+                                                                            .replaceAll('[',
+                                                                                '')
+                                                                            .replaceAll(']',
+                                                                                '')),
+                                                                        type: PopUpType
+                                                                            .alert,
+                                                                        actions: [
+                                                                          DigitButton(
+                                                                            label:
+                                                                                localizations.translate(
+                                                                              i18.common.coreCommonOk,
+                                                                            ),
+                                                                            onPressed:
+                                                                                () {
+                                                                              Navigator.of(popUpContext).pop();
+                                                                            },
+                                                                            type:
+                                                                                DigitButtonType.primary,
+                                                                            size:
+                                                                                DigitButtonSize.large,
+                                                                          ),
+                                                                        ]));
+                                                          });
+                                                        }
                                                       } else {
                                                         context.router.push(
                                                           DeliverInterventionRoute(),

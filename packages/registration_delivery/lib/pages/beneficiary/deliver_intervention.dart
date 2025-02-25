@@ -6,9 +6,10 @@ import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_stepper.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -176,15 +177,30 @@ class DeliverInterventionPageState
 
                       if (checkForFormulaErrors['criteria'] == null) {
                         if (context.mounted) {
-                          SchedulerBinding.instance.addPostFrameCallback((_) {
-                            context.router.maybePop();
-                            Toast.showToast(
-                              context,
-                              message: localizations.translate(
-                                  checkForFormulaErrors['errors'].toString()),
-                              type: ToastType.error,
-                            );
-                          });
+                          showCustomPopup(
+                              context: context,
+                              builder: (popUpContext) => Popup(
+                                      title: localizations.translate(
+                                        i18.common.coreCommonError,
+                                      ),
+                                      description: localizations.translate(
+                                          checkForFormulaErrors['errors']
+                                              .toString()
+                                              .replaceAll('[', '')
+                                              .replaceAll(']', '')),
+                                      type: PopUpType.alert,
+                                      actions: [
+                                        DigitButton(
+                                          label: localizations.translate(
+                                            i18.common.coreCommonOk,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(popUpContext).pop();
+                                          },
+                                          type: DigitButtonType.primary,
+                                          size: DigitButtonSize.large,
+                                        ),
+                                      ]));
                         }
                       }
 
