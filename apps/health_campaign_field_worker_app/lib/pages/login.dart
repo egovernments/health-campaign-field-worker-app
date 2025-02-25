@@ -81,7 +81,10 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         localizations.translate(
                           i18.login.labelText,
                         ),
-                        style: textTheme.headingXl,
+                        style: textTheme.headingXl.copyWith(
+                          color: theme
+                              .colorTheme.primary.primary2, // Use theme color
+                        ),
                       ),
                       ReactiveWrapperField(
                         formControlName: _userId,
@@ -213,7 +216,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                                     i18.forgotPassword.primaryActionLabel,
                                   ),
                                   onPressed: () {
-                                    Navigator.of(context).pop();
+                                    Navigator.of(ctx).pop();
                                     context.router.popUntilRoot();
                                   },
                                   type: DigitButtonType.primary,

@@ -193,7 +193,8 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
     int? selectedIndex,
     bool isCurrentCycle,
   ) {
-    final theme = DigitTheme.instance.mobileTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     final widgetList = <Widget>[];
 
@@ -205,9 +206,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: isCurrentCycle
-                  ? const EdgeInsets.all(spacer2)
-                  : const EdgeInsets.all(spacer2),
+              padding: const EdgeInsets.only(bottom: spacer4),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -215,7 +214,9 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ? localizations
                           .translate(i18.beneficiaryDetails.currentCycleLabel)
                       : '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
-                  style: theme.textTheme.headlineLarge,
+                  style: textTheme.headingL.copyWith(
+                    color: theme.colorTheme.primary.primary2
+                  ),
                   textAlign: TextAlign.left,
                 ),
               ),

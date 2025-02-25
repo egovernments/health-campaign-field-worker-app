@@ -71,7 +71,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.3-dev.1"
+    version: "1.0.4+1"
   audioplayers:
     dependency: transitive
     description:
@@ -265,7 +265,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -342,7 +342,7 @@ packages:
       path: "../../packages/closed_household"
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.0.5"
   code_builder:
     dependency: transitive
     description:
@@ -362,11 +362,10 @@ packages:
   complaints:
     dependency: "direct main"
     description:
-      name: complaints
-      sha256: "6e383d4be32cee58696258c2f58176ef9869b2afc4aeed252e4b3757eb4bfb76"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
+      path: "../../packages/complaints"
+      relative: true
+    source: path
+    version: "1.0.2"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -510,7 +509,7 @@ packages:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.5-dev.3"
+    version: "1.0.6"
   digit_dss:
     dependency: "direct main"
     description:
@@ -537,27 +536,25 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: c33af61ed9ab3d7740fc3c8948af4b763d946cba5e902f8bfb00948d4d69d60a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
+    version: "1.0.5"
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
+      path: "../../packages/digit_showcase"
+      relative: true
+    source: path
+    version: "1.0.2"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: a0637ca53c234e476f65f71a5967663499e4fbea863715c6400c701700289d1d
+      sha256: "687906c379faedf72f97277a2d0a844bbfa41c908a46fd998332d888694cbe78"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.11"
+    version: "0.0.2-dev.14"
   dio:
     dependency: "direct main"
     description:
@@ -2017,7 +2014,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "1.0.0-dev.1"
+    version: "1.0.1"
   sync_http:
     dependency: transitive
     description:
@@ -2355,5 +2352,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.1 <3.9.0"
+  dart: ">=3.4.1 <4.0.0"
   flutter: ">=3.22.0"

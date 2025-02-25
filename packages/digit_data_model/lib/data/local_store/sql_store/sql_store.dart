@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -118,7 +119,11 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             //Add column for projectType in Project Table
             try {
               await migrator.addColumn(project, project.projectType);
-            } catch (e) {}
+            } catch (e) {
+              if (kDebugMode) {
+                print("Failed to add column for projectType");
+              }
+            }
           }
           if (from < 5) {
             await customStatement('''
@@ -182,7 +187,12 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
                   attendanceRegister, attendanceRegister.localityCode);
               await migrator.addColumn(
                   service, service.relatedClientReferenceId);
-            } catch (e) {}
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to add columns for householdType, attendance - localityCode, and service - relatedClientReferenceId");
+              }
+            }
           }
         },
       );

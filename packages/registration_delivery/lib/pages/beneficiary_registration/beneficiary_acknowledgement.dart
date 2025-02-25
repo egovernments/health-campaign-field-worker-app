@@ -29,35 +29,38 @@ class BeneficiaryAcknowledgementPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PanelCard(
-        type: PanelType.success,
-        title: localizations
-            .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
-        actions: [
-          DigitButton(
-              label: localizations.translate(
-                i18.householdDetails.viewHouseHoldDetailsAction,
-              ),
-              onPressed: () {
-                final bloc = context.read<SearchBlocWrapper>();
+      body: Padding(
+        padding: const EdgeInsets.all(spacer2),
+        child: PanelCard(
+          type: PanelType.success,
+          title: localizations
+              .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
+          actions: [
+            DigitButton(
+                label: localizations.translate(
+                  i18.householdDetails.viewHouseHoldDetailsAction,
+                ),
+                onPressed: () {
+                  final bloc = context.read<SearchBlocWrapper>();
 
-                context.router.popAndPush(
-                  BeneficiaryWrapperRoute(
-                    wrapper: bloc.state.householdMembers.first,
-                  ),
-                );
-              },
-              type: DigitButtonType.primary,
-              size: DigitButtonSize.large),
-          DigitButton(
-              label: localizations
-                  .translate(i18.acknowledgementSuccess.actionLabelText),
-              onPressed: () => context.router.maybePop(),
-              type: DigitButtonType.secondary,
-              size: DigitButtonSize.large),
-        ],
-        description: localizations.translate(
-          i18.acknowledgementSuccess.acknowledgementDescriptionText,
+                  context.router.popAndPush(
+                    BeneficiaryWrapperRoute(
+                      wrapper: bloc.state.householdMembers.first,
+                    ),
+                  );
+                },
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large),
+            DigitButton(
+                label: localizations
+                    .translate(i18.acknowledgementSuccess.actionLabelText),
+                onPressed: () => context.router.maybePop(),
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large),
+          ],
+          description: localizations.translate(
+            i18.acknowledgementSuccess.acknowledgementDescriptionText,
+          ),
         ),
       ),
     );

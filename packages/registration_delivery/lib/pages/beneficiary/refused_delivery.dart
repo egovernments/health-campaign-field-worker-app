@@ -59,7 +59,6 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                     header: const Column(
                       children: [
                         BackNavigationHelpHeaderWidget(
-                          showcaseButton: ShowcaseButton(),
                           showHelp: false,
                         ),
                       ],
