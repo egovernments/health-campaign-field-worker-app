@@ -282,6 +282,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: CustomMarkAttendancePage(
           attendees: args.attendees,
+          individuals: args.individuals,
           registerId: args.registerId,
           tenantId: args.tenantId,
           dateTime: args.dateTime,
@@ -1388,6 +1389,7 @@ class CustomMarkAttendanceRoute
     extends PageRouteInfo<CustomMarkAttendanceRouteArgs> {
   CustomMarkAttendanceRoute({
     required List<AttendeeModel> attendees,
+    required List<IndividualModel> individuals,
     required String registerId,
     required String tenantId,
     required DateTime dateTime,
@@ -1401,6 +1403,7 @@ class CustomMarkAttendanceRoute
           CustomMarkAttendanceRoute.name,
           args: CustomMarkAttendanceRouteArgs(
             attendees: attendees,
+            individuals: individuals,
             registerId: registerId,
             tenantId: tenantId,
             dateTime: dateTime,
@@ -1422,6 +1425,7 @@ class CustomMarkAttendanceRoute
 class CustomMarkAttendanceRouteArgs {
   const CustomMarkAttendanceRouteArgs({
     required this.attendees,
+    required this.individuals,
     required this.registerId,
     required this.tenantId,
     required this.dateTime,
@@ -1433,6 +1437,8 @@ class CustomMarkAttendanceRouteArgs {
   });
 
   final List<AttendeeModel> attendees;
+
+  final List<IndividualModel> individuals;
 
   final String registerId;
 
@@ -1452,7 +1458,7 @@ class CustomMarkAttendanceRouteArgs {
 
   @override
   String toString() {
-    return 'CustomMarkAttendanceRouteArgs{attendees: $attendees, registerId: $registerId, tenantId: $tenantId, dateTime: $dateTime, entryTime: $entryTime, exitTime: $exitTime, session: $session, key: $key, appLocalizations: $appLocalizations}';
+    return 'CustomMarkAttendanceRouteArgs{attendees: $attendees, individuals: $individuals, registerId: $registerId, tenantId: $tenantId, dateTime: $dateTime, entryTime: $entryTime, exitTime: $exitTime, session: $session, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

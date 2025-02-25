@@ -4,6 +4,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -34,6 +35,7 @@ import 'package:attendance_management/widgets/no_result_card.dart';
 @RoutePage()
 class CustomMarkAttendancePage extends LocalizedStatefulWidget {
   final List<AttendeeModel> attendees;
+  final List<IndividualModel> individuals;
   final String registerId;
   final String tenantId;
   final DateTime dateTime;
@@ -43,6 +45,7 @@ class CustomMarkAttendancePage extends LocalizedStatefulWidget {
 
   const CustomMarkAttendancePage({
     required this.attendees,
+    required this.individuals,
     required this.registerId,
     required this.tenantId,
     required this.dateTime,
@@ -355,6 +358,20 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
   }
 
   DigitTableRow getAttendanceRow(AttendeeModel tableDataModel, bool viewOnly) {
+    String? mobileNumber = (widget.individuals.isNotEmpty)
+        ? widget.individuals
+            .firstWhere(
+              (i) => i.id == tableDataModel.individualId,
+            )
+            .mobileNumber
+        : null;
+    NameModel? name = (widget.individuals.isNotEmpty)
+        ? widget.individuals
+            .firstWhere(
+              (i) => i.id == tableDataModel.individualId,
+            )
+            .name
+        : null;
     return DigitTableRow(tableRow: [
       DigitTableData(
         tableDataModel.name.toString(),
@@ -387,12 +404,12 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
         cellKey: tableDataModel.individualNumber ?? "",
       ),
       DigitTableData(
-        tableDataModel.name.toString().split(" ").last,
-        cellKey: tableDataModel.name ?? "",
+        name?.familyName ?? "",
+        cellKey: name?.familyName ?? "",
       ),
       DigitTableData(
-        tableDataModel.name.toString(),
-        cellKey: tableDataModel.individualNumber ?? "",
+        mobileNumber ?? "",
+        cellKey: mobileNumber ?? "",
       ),
     ]);
   }

@@ -219,6 +219,9 @@ class _CustomAttendanceDateSessionSelectionPageState
                                                                 entryTime)
                                                         .toList()
                                                     : [],
+                                                individuals: selectedRegister
+                                                        .individualList ??
+                                                    [],
                                                 dateTime: dateSession,
                                                 session: session != null
                                                     ? int.parse(session)
@@ -419,7 +422,7 @@ class _CustomAttendanceDateSessionSelectionPageState
     return "$missedDays${AttendanceLocalization.of(context).translate(i18.attendance.missedAttendanceDescription)}";
   }
 
-  isAttendanceCompleted(DateTime selectedDate) {
+  bool isAttendanceCompleted(DateTime selectedDate) {
     final register = widget.registers
         .where((register) => register.id == widget.registerID)
         .first;
@@ -434,9 +437,8 @@ class _CustomAttendanceDateSessionSelectionPageState
           ?.values
           .firstOrNull;
 
-      return selectDateCompleted;
+      return selectDateCompleted ?? false;
     }
-
     return false;
   }
 
