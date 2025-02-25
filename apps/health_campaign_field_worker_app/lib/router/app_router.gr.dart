@@ -301,6 +301,29 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomSurveyFormBoundaryViewRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomSurveyFormBoundaryViewRouteArgs>(
+          orElse: () => const CustomSurveyFormBoundaryViewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomSurveyFormBoundaryViewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomSurveyFormViewRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomSurveyFormViewRouteArgs>(
+          orElse: () => const CustomSurveyFormViewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomSurveyFormViewPage(
+          key: args.key,
+          referralClientRefId: args.referralClientRefId,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomWarehouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomWarehouseDetailsRouteArgs>(
           orElse: () => const CustomWarehouseDetailsRouteArgs());
@@ -1435,6 +1458,89 @@ class CustomSummaryRouteArgs {
   @override
   String toString() {
     return 'CustomSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomSurveyFormBoundaryViewPage]
+class CustomSurveyFormBoundaryViewRoute
+    extends PageRouteInfo<CustomSurveyFormBoundaryViewRouteArgs> {
+  CustomSurveyFormBoundaryViewRoute({
+    Key? key,
+    SurveyFormLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomSurveyFormBoundaryViewRoute.name,
+          args: CustomSurveyFormBoundaryViewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomSurveyFormBoundaryViewRoute';
+
+  static const PageInfo<CustomSurveyFormBoundaryViewRouteArgs> page =
+      PageInfo<CustomSurveyFormBoundaryViewRouteArgs>(name);
+}
+
+class CustomSurveyFormBoundaryViewRouteArgs {
+  const CustomSurveyFormBoundaryViewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final SurveyFormLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomSurveyFormBoundaryViewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomSurveyFormViewPage]
+class CustomSurveyFormViewRoute
+    extends PageRouteInfo<CustomSurveyFormViewRouteArgs> {
+  CustomSurveyFormViewRoute({
+    Key? key,
+    String? referralClientRefId,
+    SurveyFormLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomSurveyFormViewRoute.name,
+          args: CustomSurveyFormViewRouteArgs(
+            key: key,
+            referralClientRefId: referralClientRefId,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomSurveyFormViewRoute';
+
+  static const PageInfo<CustomSurveyFormViewRouteArgs> page =
+      PageInfo<CustomSurveyFormViewRouteArgs>(name);
+}
+
+class CustomSurveyFormViewRouteArgs {
+  const CustomSurveyFormViewRouteArgs({
+    this.key,
+    this.referralClientRefId,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final String? referralClientRefId;
+
+  final SurveyFormLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomSurveyFormViewRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
   }
 }
 
