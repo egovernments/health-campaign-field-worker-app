@@ -358,6 +358,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 showPagination: false,
                 columns: filteredHeaderList,
                 rows: tableData ?? [],
+                showSelectedState: false,
               ),
             ),
             Container(

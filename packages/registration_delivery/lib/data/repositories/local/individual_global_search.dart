@@ -416,8 +416,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 sql.projectBeneficiary,
                 sql.projectBeneficiary.beneficiaryClientReferenceId.equalsExp(
                     sql.referral.projectBeneficiaryClientReferenceId))
-        ])
-          ..where(sql.referral.projectId.equals(params.projectId!));
+        ]);
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -452,10 +451,9 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         selectQuery = selectQuery.join([
           leftOuterJoin(
               sql.referral,
-              sql.referral.projectBeneficiaryClientReferenceId
-                  .equalsExp(sql.projectBeneficiary.clientReferenceId))
-        ])
-          ..where(sql.referral.projectId.equals(params.projectId!));
+              sql.referral.projectBeneficiaryClientReferenceId.equalsExp(
+                  sql.projectBeneficiary.beneficiaryClientReferenceId))
+        ]);
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
