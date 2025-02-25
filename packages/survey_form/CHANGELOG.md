@@ -1,3 +1,7 @@
+## 1.0.1+1
+
+* Upgraded to latest package versions
+
 ## 1.0.1
 
 * Modified ServiceSearchModel with relatedClientReferenceId and search query

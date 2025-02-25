@@ -1,3 +1,7 @@
+## 1.0.2+1
+
+* Upgraded to latest packages
+
 ## 1.0.2
 
 * Upgraded to latest packages
