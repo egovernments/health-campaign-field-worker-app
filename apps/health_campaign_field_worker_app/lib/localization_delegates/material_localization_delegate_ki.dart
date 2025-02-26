@@ -138,7 +138,8 @@ class MaterialLocalizationKi extends MaterialLocalizations {
 
   @override
   // TODO: implement firstDayOfWeekIndex
-  int get firstDayOfWeekIndex => 1;
+  int get firstDayOfWeekIndex =>
+      (intl.DateFormat().dateSymbols.FIRSTDAYOFWEEK + 1) % 7;
 
   @override
   // TODO: implement firstPageTooltip
@@ -146,7 +147,7 @@ class MaterialLocalizationKi extends MaterialLocalizations {
 
   @override
   String formatCompactDate(DateTime date) {
-    return intl.DateFormat('yyyy-MM-dd').format(date);
+    return intl.DateFormat().format(date);
   }
 
   @override
@@ -157,7 +158,7 @@ class MaterialLocalizationKi extends MaterialLocalizations {
 
   @override
   String formatFullDate(DateTime date) {
-    return intl.DateFormat('yyyy-MMMM-dd EEEE').format(date);
+    return intl.DateFormat().format(date);
   }
 
   @override
@@ -167,7 +168,7 @@ class MaterialLocalizationKi extends MaterialLocalizations {
 
   @override
   String formatMediumDate(DateTime date) {
-    return intl.DateFormat('yyyy-MMM-dd').format(date);
+    return intl.DateFormat().format(date);
   }
 
   @override
@@ -177,17 +178,17 @@ class MaterialLocalizationKi extends MaterialLocalizations {
 
   @override
   String formatMonthYear(DateTime date) {
-    return intl.DateFormat('MMM-yyyy').format(date);
+    return intl.DateFormat().format(date);
   }
 
   @override
   String formatShortDate(DateTime date) {
-    return intl.DateFormat('yyyy-MM-dd').format(date);
+    return intl.DateFormat().format(date);
   }
 
   @override
   String formatShortMonthDay(DateTime date) {
-    return intl.DateFormat('MM-dd').format(date);
+    return intl.DateFormat().format(date);
   }
 
   @override
@@ -198,7 +199,7 @@ class MaterialLocalizationKi extends MaterialLocalizations {
 
   @override
   String formatYear(DateTime date) {
-    return intl.DateFormat('yyyy').format(date);
+    return intl.DateFormat().format(date);
   }
 
   @override
@@ -448,7 +449,8 @@ class MaterialLocalizationKi extends MaterialLocalizations {
 
   @override
   // TODO: implement narrowWeekdays
-  List<String> get narrowWeekdays => [];
+  List<String> get narrowWeekdays =>
+      intl.DateFormat().dateSymbols.NARROWWEEKDAYS;
 
   @override
   // TODO: implement nextMonthTooltip
