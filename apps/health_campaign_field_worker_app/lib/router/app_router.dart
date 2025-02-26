@@ -1,3 +1,7 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:health_campaign_field_worker_app/pages/attendance/custom_manage_attendance.dart';
+import 'package:health_campaign_field_worker_app/pages/attendance/custom_mark_attendance.dart';
+import 'package:health_campaign_field_worker_app/pages/attendance/custom_session_select.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.dart';
 import 'package:complaints/router/complaints_router.dart';
@@ -233,12 +237,33 @@ class AppRouter extends _$AppRouter {
           path: 'manage-attendance',
         ),
         AutoRoute(
+          page: CustomManageAttendanceRoute.page,
+          path: 'custom-manage-attendance',
+        ),
+        RedirectRoute(
+            path: "manage-attendance", redirectTo: "custom-manage-attendance"),
+        AutoRoute(
           page: AttendanceDateSessionSelectionRoute.page,
           path: 'attendance-date-session-selection',
         ),
         AutoRoute(
+          page: CustomAttendanceDateSessionSelectionRoute.page,
+          path: 'custom-attendance-date-session-selection',
+        ),
+        RedirectRoute(
+            path: "attendance-date-session-selection",
+            redirectTo: "custom-attendance-date-session-selection"),
+        AutoRoute(
           page: MarkAttendanceRoute.page,
           path: 'mark-attendance',
+        ),
+        AutoRoute(
+          page: CustomMarkAttendanceRoute.page,
+          path: 'custom-mark-attendance',
+        ),
+        RedirectRoute(
+          path: 'mark-attendance',
+          redirectTo: 'custom-mark-attendance',
         ),
         AutoRoute(
           page: AttendanceAcknowledgementRoute.page,
