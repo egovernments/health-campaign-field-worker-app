@@ -705,8 +705,9 @@ class CustomDeliverInterventionPageState
                                                             icon: Icons.qr_code,
                                                             label: localizations
                                                                 .translate(
-                                                              i18.individualDetails
-                                                                  .linkVoucherToIndividual,
+                                                              i18Local
+                                                                  .deliverIntervention
+                                                                  .scanningITNs,
                                                             ),
                                                           ),
                                                   ),

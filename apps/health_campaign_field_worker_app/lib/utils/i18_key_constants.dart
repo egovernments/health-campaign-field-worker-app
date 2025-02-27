@@ -80,6 +80,8 @@ class HouseholdOverView {
 class DeliverIntervention {
   const DeliverIntervention();
 
+  String get scanningITNs => "DELIVER_INTERVENTION_SCANNING_ITNS";
+
   String get memberCountText => "MEMBER_COUNT_TEXT";
   String get bednetCountText => "BEDNET_COUNT_TEXT";
 

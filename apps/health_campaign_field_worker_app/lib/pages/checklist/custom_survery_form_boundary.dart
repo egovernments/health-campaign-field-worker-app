@@ -3,6 +3,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
+import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:intl/intl.dart';
 import 'package:survey_form/survey_form.dart';
 
@@ -47,7 +48,8 @@ class CustomSurveyFormBoundaryViewPageState
                 ),
                 size: DigitButtonSize.large,
                 mainAxisSize: MainAxisSize.max,
-                onPressed: () => context.router.push(SurveyFormViewRoute()),
+                onPressed: () =>
+                    context.router.push(CustomSurveyFormViewRoute()),
               ),
             ]),
         children: [

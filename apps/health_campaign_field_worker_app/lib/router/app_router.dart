@@ -1,5 +1,7 @@
 import 'package:health_campaign_field_worker_app/pages/checklist/custom_survery_form_boundary.dart';
+import 'package:health_campaign_field_worker_app/pages/checklist/custom_survery_form_wrapper.dart';
 import 'package:health_campaign_field_worker_app/pages/checklist/custom_survey_form.dart';
+import 'package:health_campaign_field_worker_app/pages/checklist/custom_survey_form_view.dart';
 import 'package:survey_form/blocs/app_localization.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.dart';
@@ -114,11 +116,11 @@ class AppRouter extends _$AppRouter {
         // INFO : Need to add Router of package Here
         // SurveyForm Route
         AutoRoute(
-            page: SurveyFormWrapperRoute.page,
-            path: 'surveyForm',
+            page: CustomSurveyFormWrapperRoute.page,
+            path: 'survey-form',
             children: [
               AutoRoute(
-                page: SurveyformRoute.page,
+                page: CustomSurveyformRoute.page,
                 path: '',
               ),
               AutoRoute(
@@ -127,8 +129,6 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                   page: CustomSurveyFormBoundaryViewRoute.page,
                   path: 'custom-view-boundary'),
-              RedirectRoute(
-                  path: 'view-boundary', redirectTo: 'custom-view-boundary'),
               AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
               AutoRoute(
                   page: CustomSurveyFormViewRoute.page, path: 'custom-view'),

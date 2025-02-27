@@ -324,6 +324,28 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomSurveyFormWrapperRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomSurveyFormWrapperRouteArgs>(
+          orElse: () => const CustomSurveyFormWrapperRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomSurveyFormWrapperPage(
+          key: args.key,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    CustomSurveyformRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomSurveyformRouteArgs>(
+          orElse: () => const CustomSurveyformRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomSurveyformPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomWarehouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomWarehouseDetailsRouteArgs>(
           orElse: () => const CustomWarehouseDetailsRouteArgs());
@@ -1541,6 +1563,83 @@ class CustomSurveyFormViewRouteArgs {
   @override
   String toString() {
     return 'CustomSurveyFormViewRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomSurveyFormWrapperPage]
+class CustomSurveyFormWrapperRoute
+    extends PageRouteInfo<CustomSurveyFormWrapperRouteArgs> {
+  CustomSurveyFormWrapperRoute({
+    Key? key,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomSurveyFormWrapperRoute.name,
+          args: CustomSurveyFormWrapperRouteArgs(
+            key: key,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomSurveyFormWrapperRoute';
+
+  static const PageInfo<CustomSurveyFormWrapperRouteArgs> page =
+      PageInfo<CustomSurveyFormWrapperRouteArgs>(name);
+}
+
+class CustomSurveyFormWrapperRouteArgs {
+  const CustomSurveyFormWrapperRouteArgs({
+    this.key,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'CustomSurveyFormWrapperRouteArgs{key: $key, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [CustomSurveyformPage]
+class CustomSurveyformRoute extends PageRouteInfo<CustomSurveyformRouteArgs> {
+  CustomSurveyformRoute({
+    Key? key,
+    SurveyFormLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomSurveyformRoute.name,
+          args: CustomSurveyformRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomSurveyformRoute';
+
+  static const PageInfo<CustomSurveyformRouteArgs> page =
+      PageInfo<CustomSurveyformRouteArgs>(name);
+}
+
+class CustomSurveyformRouteArgs {
+  const CustomSurveyformRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final SurveyFormLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomSurveyformRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

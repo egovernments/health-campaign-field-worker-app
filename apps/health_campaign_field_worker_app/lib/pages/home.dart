@@ -352,7 +352,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIcon: mySurveyFormSvg,
           icon: Icons.checklist,
           label: i18.home.mySurveyForm,
-          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
+          onPressed: () => context.router.push(CustomSurveyFormWrapperRoute()),
         ),
       ),
 
