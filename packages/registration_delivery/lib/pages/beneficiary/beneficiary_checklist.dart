@@ -81,8 +81,11 @@ class _BeneficiaryChecklistPageState
             state.mapOrNull(
               serviceDefinitionFetch: (value) {
                 selectedServiceDefinition = value.serviceDefinitionList
-                    .where((element) => element.code.toString().contains(
-                        '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                    .where((element) =>
+                        element.code.toString().contains(
+                            '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}') ||
+                        element.code.toString().contains(
+                            '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
                     .toList()
                     .firstOrNull;
 
@@ -237,8 +240,7 @@ class _BeneficiaryChecklistPageState
                                   selectedServiceDefinition!.code.toString(),
                                 )} ${localizations.translate(i18.checklist.checklist)}',
                                 style: textTheme.headingXl.copyWith(
-                                  color: theme.colorTheme.primary.primary2
-                                ),
+                                    color: theme.colorTheme.primary.primary2),
                               ),
                             ),
                             ...initialAttributes!.map((
@@ -250,8 +252,7 @@ class _BeneficiaryChecklistPageState
                                   ?.value;
                               int index = (initialAttributes ?? []).indexOf(e);
 
-                              return Column(
-                                  children: [
+                              return Column(children: [
                                 if (e.dataType == 'String' &&
                                     !(e.code ?? '').contains('.')) ...[
                                   FormField<String>(
@@ -284,12 +285,14 @@ class _BeneficiaryChecklistPageState
                                                   '${value.selectedServiceDefinition?.code}.$description',
                                                 )
                                               : null,
-                                          labelStyle: textTheme.headingM.copyWith(
-                                              color: theme.colorTheme.text.primary),
+                                          labelStyle: textTheme.headingM
+                                              .copyWith(
+                                                  color: theme
+                                                      .colorTheme.text.primary),
                                           descriptionStyle: textTheme.bodyS
                                               .copyWith(
-                                              color: theme
-                                                  .colorTheme.text.secondary),
+                                                  color: theme.colorTheme.text
+                                                      .secondary),
                                           isRequired: e.required ?? false,
                                           capitalizedFirstLetter: false,
                                           child: DigitTextFormInput(
@@ -345,12 +348,14 @@ class _BeneficiaryChecklistPageState
                                               .trim(),
                                           isRequired: e.required ?? false,
                                           capitalizedFirstLetter: false,
-                                          labelStyle: textTheme.headingM.copyWith(
-                                              color: theme.colorTheme.text.primary),
-                                          descriptionStyle: textTheme.bodyS
+                                          labelStyle: textTheme.headingM
                                               .copyWith(
                                                   color: theme
-                                                      .colorTheme.text.secondary),
+                                                      .colorTheme.text.primary),
+                                          descriptionStyle: textTheme.bodyS
+                                              .copyWith(
+                                                  color: theme.colorTheme.text
+                                                      .secondary),
                                           description: description != null
                                               ? localizations.translate(
                                                   '${value.selectedServiceDefinition?.code}.$description',
@@ -402,13 +407,14 @@ class _BeneficiaryChecklistPageState
                                                     '${value.selectedServiceDefinition?.code}.$description',
                                                   )
                                                 : null,
-                                            labelStyle: textTheme.headingM.copyWith(
-                                                color:
-                                                    theme.colorTheme.text.primary),
+                                            labelStyle: textTheme.headingM
+                                                .copyWith(
+                                                    color: theme.colorTheme.text
+                                                        .primary),
                                             descriptionStyle: textTheme.bodyS
                                                 .copyWith(
-                                                    color: theme
-                                                        .colorTheme.text.secondary),
+                                                    color: theme.colorTheme.text
+                                                        .secondary),
                                             isRequired: e.required ?? false,
                                             child: BlocBuilder<ServiceBloc,
                                                 ServiceState>(
@@ -417,7 +423,8 @@ class _BeneficiaryChecklistPageState
                                                   children: e.values!
                                                       .map((e) => DigitCheckbox(
                                                             label: e,
-                                                            value: controller[index]
+                                                            value: controller[
+                                                                    index]
                                                                 .text
                                                                 .split('.')
                                                                 .contains(e),
@@ -435,12 +442,16 @@ class _BeneficiaryChecklistPageState
                                                                   );
                                                               final String ele;
                                                               var val =
-                                                                  controller[index]
+                                                                  controller[
+                                                                          index]
                                                                       .text
-                                                                      .split('.');
-                                                              if (val.contains(e)) {
+                                                                      .split(
+                                                                          '.');
+                                                              if (val.contains(
+                                                                  e)) {
                                                                 val.remove(e);
-                                                                ele = val.join(".");
+                                                                ele = val
+                                                                    .join(".");
                                                               } else {
                                                                 ele =
                                                                     "${controller[index].text}.$e";
@@ -521,13 +532,21 @@ class _BeneficiaryChecklistPageState
                                                       },
                                                       builder: (field) =>
                                                           Column(
-                                                            children: [
-                                                              SelectionCard<bool>(
-                                                                                                                      errorMessage:
+                                                        children: [
+                                                          SelectionCard<bool>(
+                                                            showParentContainer:
+                                                                true,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.3,
+                                                            errorMessage:
                                                                 field.errorText,
-                                                                                                                      allowMultipleSelection:
+                                                            allowMultipleSelection:
                                                                 false,
-                                                                                                                      valueMapper: (value) {
+                                                            valueMapper:
+                                                                (value) {
                                                               return value
                                                                   ? localizations
                                                                       .translate(
@@ -539,8 +558,8 @@ class _BeneficiaryChecklistPageState
                                                                       i18.common
                                                                           .coreCommonNo,
                                                                     );
-                                                                                                                      },
-                                                                                                                      initialSelection: controller[
+                                                            },
+                                                            initialSelection: controller[
                                                                             index]
                                                                         .text ==
                                                                     'true'
@@ -550,14 +569,15 @@ class _BeneficiaryChecklistPageState
                                                                         'false'
                                                                     ? [false]
                                                                     : [],
-                                                                                                                      options: const [
+                                                            options: const [
                                                               true,
                                                               false
-                                                                                                                      ],
-                                                                                                                      onSelectionChanged:
+                                                            ],
+                                                            onSelectionChanged:
                                                                 (curValue) {
                                                               field.didChange(
-                                                                  curValue.first);
+                                                                  curValue
+                                                                      .first);
                                                               if (curValue
                                                                   .isNotEmpty) {
                                                                 context
@@ -579,11 +599,11 @@ class _BeneficiaryChecklistPageState
                                                                       .toString(),
                                                                 );
                                                               }
-                                                                                                                      },
-                                                                                                                    ),
-                                                              const DigitDivider(),
-                                                            ],
+                                                            },
                                                           ),
+                                                          const DigitDivider(),
+                                                        ],
+                                                      ),
                                                     );
                                                   },
                                                 ),
@@ -685,7 +705,8 @@ class _BeneficiaryChecklistPageState
                       return Align(
                           alignment: Alignment.topLeft,
                           child: FormField(
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               validator: (value1) {
                                 if (item.required == true &&
                                     (controller[index].text == null ||
@@ -701,7 +722,8 @@ class _BeneficiaryChecklistPageState
                                     radioDigitButtons: item.values != null
                                         ? item.values!
                                             .where((e) =>
-                                                e != i18.checklist.notSelectedKey)
+                                                e !=
+                                                i18.checklist.notSelectedKey)
                                             .toList()
                                             .map((item) => RadioButtonModel(
                                                   code: item,
@@ -718,8 +740,9 @@ class _BeneficiaryChecklistPageState
                                       field.didChange(value);
                                       context.read<ServiceBloc>().add(
                                             ServiceSurveyFormEvent(
-                                              value:
-                                                  Random().nextInt(100).toString(),
+                                              value: Random()
+                                                  .nextInt(100)
+                                                  .toString(),
                                               submitTriggered: submitTriggered,
                                             ),
                                           );
@@ -768,7 +791,8 @@ class _BeneficiaryChecklistPageState
                   ),
                   BlocBuilder<ServiceBloc, ServiceState>(
                     builder: (context, state) {
-                      return (controller[index].text == item.values?[1].trim() &&
+                      return (controller[index].text ==
+                                  item.values?[1].trim() &&
                               item.dataType != 'SingleValueList')
                           ? Padding(
                               padding: const EdgeInsets.only(
@@ -781,8 +805,10 @@ class _BeneficiaryChecklistPageState
                                     AutovalidateMode.onUserInteraction,
                                 validator: (value1) {
                                   if (item.required == true &&
-                                      (additionalController[index].text == null ||
-                                          additionalController[index].text == '')) {
+                                      (additionalController[index].text ==
+                                              null ||
+                                          additionalController[index].text ==
+                                              '')) {
                                     return localizations.translate(
                                       i18.common.coreCommonReasonRequired,
                                     );
@@ -802,14 +828,17 @@ class _BeneficiaryChecklistPageState
                                           : null,
                                       labelStyle: textTheme.headingM.copyWith(
                                           color: theme.colorTheme.text.primary),
-                                      descriptionStyle: textTheme.bodyS.copyWith(
-                                          color: theme.colorTheme.text.secondary),
+                                      descriptionStyle: textTheme.bodyS
+                                          .copyWith(
+                                              color: theme
+                                                  .colorTheme.text.secondary),
                                       isRequired: item.required ?? false,
                                       capitalizedFirstLetter: false,
                                       child: DigitTextFormInput(
                                         onChange: (value) {
                                           field.didChange(value);
-                                          additionalController[index].text = value;
+                                          additionalController[index].text =
+                                              value;
                                         },
                                         errorMessage: field.errorText,
                                         maxLength: 1000,
@@ -975,8 +1004,10 @@ class _BeneficiaryChecklistPageState
                           .map((e) => DigitCheckbox(
                                 label: localizations.translate(
                                     '${selectedServiceDefinition?.code}.${e}'),
-                                value:
-                                    controller[index].text.split('.').contains(e),
+                                value: controller[index]
+                                    .text
+                                    .split('.')
+                                    .contains(e),
                                 onChanged: (value) {
                                   context.read<ServiceBloc>().add(
                                         ServiceSurveyFormEvent(
@@ -1048,6 +1079,8 @@ class _BeneficiaryChecklistPageState
                         return null;
                       },
                       builder: (field) => SelectionCard(
+                        showParentContainer: true,
+                        width: MediaQuery.of(context).size.width * 0.3,
                         errorMessage: field.errorText,
                         allowMultipleSelection: false,
                         valueMapper: (value) {
@@ -1077,7 +1110,8 @@ class _BeneficiaryChecklistPageState
                           } else {
                             ele = "${controller[index].text}.$e";
                           }
-                          controller[index].value = TextEditingController.fromValue(
+                          controller[index].value =
+                              TextEditingController.fromValue(
                             TextEditingValue(
                               text: ele,
                             ),
@@ -1152,8 +1186,8 @@ class _BeneficiaryChecklistPageState
 
     // Get the precedence flow attribute if defined
     String? precedenceFlowCode = serviceDefinition.additionalFields?.fields
-        .firstWhere((element) => element.key == 'precedenceFlow')
-        .value;
+        .firstWhereOrNull((element) => element.key == 'precedenceFlow')
+        ?.value;
 
     AttributesModel? precedenceAttribute =
         serviceDefinition.attributes?.firstWhereOrNull(
@@ -1347,7 +1381,12 @@ class _BeneficiaryChecklistPageState
             projectBeneficiaryClientRefId: widget.beneficiaryClientRefId!));
         break;
       case Status.toAdminister:
-        ctx.router.navigate(BeneficiaryDetailsRoute());
+        if (selectedServiceDefinition!.code!
+            .contains(RegistrationDeliveryEnums.iec.toValue())) {
+          ctx.router.navigate(DeliverInterventionRoute());
+        } else {
+          ctx.router.navigate(BeneficiaryDetailsRoute());
+        }
         break;
       default:
         Navigator.of(ctx).pop();
