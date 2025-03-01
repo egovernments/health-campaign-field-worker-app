@@ -14,6 +14,7 @@ const homeShowcase = HomeShowcase();
 const privacyPolicy = PrivacyPolicy();
 
 const memberCard = MemberCard();
+const attendance = Attendance();
 const householdOverView = HouseholdOverView();
 const deliverIntervention = DeliverIntervention();
 
@@ -44,6 +45,12 @@ class MemberCard {
   const MemberCard();
 
   String get deliverDetailsUpdateLabel => "DELIVER_DETAILS_UPDATE_LABEL";
+}
+
+class Attendance {
+  const Attendance();
+  String get identityCardNumber => "IDENTITY_CARD_NUMBER";
+  String get phoneNumber => "PHONE_NUMBER";
 }
 
 class HouseholdOverView {
