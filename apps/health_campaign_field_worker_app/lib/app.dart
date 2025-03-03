@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
@@ -351,13 +353,7 @@ class MainApplicationState extends State<MainApplication>
                       ],
                       child: BlocBuilder<ErrorBloc, ErrorState>(
                         builder: (context, errorState) {
-                          if (errorState is HasErrorState) {
-                            return MaterialApp(
-                              home: Scaffold(
-                          body:  CustomErrorWidget(errorMessage: errorState.errorMessage),
-                          ),
-                            );
-                          }
+
                           return BlocBuilder<LocalizationBloc, LocalizationState>(
                             builder: (context, langState) {
                               final selectedLocale =
@@ -368,16 +364,23 @@ class MainApplicationState extends State<MainApplication>
                                 debugShowCheckedModeBanner: false,
                                 builder: (context, child) {
 
-                                  final errorBloc = context.read<ErrorBloc>();
+                                  // final errorBloc = context.read<ErrorBloc>();
+                                  //
+                                  // FlutterError.onError = (FlutterErrorDetails details) {
+                                  //     errorBloc.add(SetErrorEvent(errorMessage: 'Please contact our most devoted employee : LATA'));
+                                  // };
+                                  //
+                                  // if (errorState is HasErrorState && context.router.current.name != ErrorRoute.name) {
+                                  //     context.router.push(ErrorRoute());
+                                  // }
 
-                                  FlutterError.onError = (FlutterErrorDetails details) {
-                                    errorBloc.add(SetErrorEvent(errorMessage: 'Please contact our most devoted employee : LATA'));
-                                  };
 
                                   final env = envConfig.variables.envType;
                                   if (env == EnvType.prod) {
                                     return child ?? const SizedBox.shrink();
                                   }
+
+
 
                                   return Banner(
                                     message: envConfig.variables.envType.name,

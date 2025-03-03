@@ -131,6 +131,9 @@ class Common {
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
   String get locationCapturing => 'CAPTURING_LOCATION';
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
+  String get coreCommonError => 'CORE_COMMON_UNKNOWN_ERROR_OCCURRED';
+  String get coreCommonErrorDescription => 'CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION';
+
 }
 
 class HomeShowcase {
