@@ -364,23 +364,10 @@ class MainApplicationState extends State<MainApplication>
                                 debugShowCheckedModeBanner: false,
                                 builder: (context, child) {
 
-                                  // final errorBloc = context.read<ErrorBloc>();
-                                  //
-                                  // FlutterError.onError = (FlutterErrorDetails details) {
-                                  //     errorBloc.add(SetErrorEvent(errorMessage: 'Please contact our most devoted employee : LATA'));
-                                  // };
-                                  //
-                                  // if (errorState is HasErrorState && context.router.current.name != ErrorRoute.name) {
-                                  //     context.router.push(ErrorRoute());
-                                  // }
-
-
                                   final env = envConfig.variables.envType;
                                   if (env == EnvType.prod) {
                                     return child ?? const SizedBox.shrink();
                                   }
-
-
 
                                   return Banner(
                                     message: envConfig.variables.envType.name,

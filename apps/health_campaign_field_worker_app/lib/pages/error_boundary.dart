@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/error_screen.dart';
@@ -74,8 +75,10 @@ class _ErrorCatcher extends StatelessWidget {
 
 // Set ErrorWidget.builder globally once at app startup
 void setupErrorWidget() {
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    return const ErrorScreen();
-  };
+  if (kReleaseMode) { // Only in release mode (production)
+    ErrorWidget.builder = (FlutterErrorDetails details) {
+      return const ErrorScreen();
+    };
+  }
 }
 
