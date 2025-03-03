@@ -152,6 +152,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                             .setValidators([Validators.requiredTrue]);
                         form.control(_privacyCheck).updateValueAndValidity();
                         return PrivacyComponent(
+                          key: const Key('privacy_component'),
                           privacyPolicy:
                               convertToPrivacyPolicyModel(privacyPolicyJson),
                           formControlName: _privacyCheck,

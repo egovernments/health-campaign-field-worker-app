@@ -182,6 +182,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                           child: SizedBox(
                             width: 300,
                             child: DigitButton(
+                              key: const Key('no_projects_assigned'),
                               label: localizations.translate(
                                 i18.common.coreCommonOk,
                               ),
@@ -208,6 +209,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                       (element) => Padding(
                         padding: const EdgeInsets.all(spacer2),
                         child: MenuCard(
+                          key: const Key("projects"),
                           icon: Icons.article,
                           heading: element.name,
                           onTap: () {

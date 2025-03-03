@@ -97,7 +97,9 @@ class _BoundarySelectionPageState
                 builder: (context) {
                   if (state.loading) {
                     return const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        key: const Key('boundary_loading_state_indicator'),
+                      ),
                     );
                   }
 
@@ -124,6 +126,7 @@ class _BoundarySelectionPageState
                         }
                       },
                       child: ReactiveFormBuilder(
+                        key: const Key('boundary_form'),
                         form: () => buildForm(state, appConfiguration),
                         builder: (context, form, child) => ScrollableContent(
                           footer: BlocListener<BeneficiaryDownSyncBloc,

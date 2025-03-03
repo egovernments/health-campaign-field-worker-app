@@ -27,8 +27,16 @@ abstract class LocalizedState<T extends LocalizedStatefulWidget>
 
   @override
   @mustCallSuper
+  // void didChangeDependencies() {
+  //   _localizations = widget.appLocalizations ?? AppLocalizations.of(context);
+  //   super.didChangeDependencies();
+  // }
+  // @override
   void didChangeDependencies() {
-    _localizations = widget.appLocalizations ?? AppLocalizations.of(context);
     super.didChangeDependencies();
+    final newLocalizations = AppLocalizations.of(context);
+    if (newLocalizations != null) {
+      localizations = newLocalizations;
+    }
   }
 }
