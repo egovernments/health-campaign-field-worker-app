@@ -533,9 +533,11 @@ class CustomStockDetailsPageState
                                                       .stockInHand <
                                                   int.parse(
                                                       quantity.toString()) &&
-                                              entryType ==
-                                                  StockRecordEntryType
-                                                      .dispatch) {
+                                              [
+                                                StockRecordEntryType.dispatch,
+                                                StockRecordEntryType.damaged,
+                                                StockRecordEntryType.loss
+                                              ].contains(entryType)) {
                                             final alert =
                                                 await DigitDialog.show<bool>(
                                               context,
