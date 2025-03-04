@@ -39,6 +39,10 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
     return localizations.translate(code);
   }
 
+  String getBednetCount(int members) {
+    return ((members ~/ 2) + (members % 2)).toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -203,7 +207,7 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                         child: LabelValueList(
                             heading: localizations.translate(
                                 i18.householdDetails.householdDetailsLabel),
-                            withDivider: true,
+                            withDivider: false,
                             items: [
                               LabelValuePair(
                                   label: localizations.translate(
@@ -212,6 +216,18 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                                           .householdModel?.memberCount
                                           .toString() ??
                                       '0',
+                                  isInline: true),
+                              LabelValuePair(
+                                  label: "Number of Net to give the HH",
+                                  value: getBednetCount(householdState
+                                          .householdModel?.memberCount ??
+                                      0),
+                                  isInline: true),
+                              LabelValuePair(
+                                  label: "Distribution Site Name",
+                                  value: householdState.householdModel?.address!
+                                          .locality!.name ??
+                                      "",
                                   isInline: true),
                             ]),
                       ),
