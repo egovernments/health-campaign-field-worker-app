@@ -446,6 +446,7 @@ class _BoundarySelectionPageState
                                       valueListenable: clickedStatus,
                                       builder: (context, bool isClicked, _) {
                                         return DigitButton(
+                                          key: const Key('boundary_selection_submit_button'),
                                           mainAxisSize: MainAxisSize.max,
                                           isDisabled:
                                               selectedBoundary == null ||
@@ -592,6 +593,7 @@ class _BoundarySelectionPageState
                                             label: localizations.translate(label),
                                             isRequired: true,
                                             child: DigitDropdown<BoundaryModel>(
+                                              key: const Key('boundary_selection_page_dropdown'),
                                               onTap: () {
                                                 setState(() {
                                                   resetChildDropdowns(
