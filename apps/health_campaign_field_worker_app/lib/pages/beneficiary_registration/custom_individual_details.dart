@@ -51,6 +51,7 @@ class CustomIndividualDetailsPageState
   static const _individualNameKey = 'individualName';
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
+  static const _phoneNumberKey = 'phoneNumber';
   bool isDuplicateTag = false;
   bool isHeadAgeValid = true;
   static const maxLength = 200;
@@ -505,6 +506,16 @@ class CustomIndividualDetailsPageState
                                     .translate(i18.common.corecommonRequired)
                                 : null,
                           ),
+                          DigitTextFormField(
+                            formControlName: _phoneNumberKey,
+                            label: localizations.translate(
+                              i18.individualDetails.mobileNumberLabelText,
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            maxLength: 8,
+                          ),
                         ]),
                         const SizedBox(height: 16),
                         if ((RegistrationDeliverySingleton().beneficiaryType ==
@@ -683,6 +694,7 @@ class CustomIndividualDetailsPageState
     );
 
     String? individualName = form.control(_individualNameKey).value as String?;
+    int? mobileNumber = form.control(_phoneNumberKey).value as int?;
     individual = individual.copyWith(
       name: name.copyWith(
         givenName: individualName?.trim(),
@@ -691,6 +703,7 @@ class CustomIndividualDetailsPageState
           ? null
           : Gender.values
               .byName(form.control(_genderKey).value.toString().toLowerCase()),
+      mobileNumber: mobileNumber?.toString(),
       dateOfBirth: dobString,
       identifiers: [
         identifier.copyWith(
@@ -749,6 +762,7 @@ class CustomIndividualDetailsPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
+      _phoneNumberKey: FormControl<int>(),
     });
   }
 
