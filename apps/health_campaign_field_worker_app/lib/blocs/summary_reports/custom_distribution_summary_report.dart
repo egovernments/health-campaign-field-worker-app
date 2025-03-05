@@ -87,14 +87,7 @@ class CustomDistributionSummaryReportBloc extends Bloc<
       Map<String, int> dateVsHouseholdCount = {};
       Map<String, int> dateVsBeneficiaryImpactedCount = {};
       Map<String, int> dateVsBedNetDistributedCount = {};
-
-      for (var element in householdList) {
-        var dateKey = DigitDateUtils.getDateFromTimestamp(
-          element.clientAuditDetails!.createdTime,
-        );
-
-        dateVsHouseholds.putIfAbsent(dateKey, () => []).add(element);
-      }
+      Map<String, String> dateVsProjectBeneficiaryClientRefId = {};
 
       for (var element in successfulTaskList) {
         var dateKey = DigitDateUtils.getDateFromTimestamp(
@@ -102,6 +95,24 @@ class CustomDistributionSummaryReportBloc extends Bloc<
         );
 
         dateVsSuccessfulTasks.putIfAbsent(dateKey, () => []).add(element);
+      }
+
+      for (var element in householdList) {
+        final correspondingTask = getTheCorrespondingTask(
+            element, successfulTaskList, projectBeneficiaryList);
+        // info use the task date to put in map , so that all are mapped to distribution dates
+        // as task is created during distribution , all other entities like household ,pb were created at registration phase
+        if (correspondingTask == null) {
+          continue;
+        } else {
+          if (correspondingTask is TaskModel) {
+            var dateKey = DigitDateUtils.getDateFromTimestamp(
+              correspondingTask.clientAuditDetails!.createdTime,
+            );
+
+            dateVsHouseholds.putIfAbsent(dateKey, () => []).add(element);
+          }
+        }
       }
 
       // get a set of unique dates
@@ -137,6 +148,28 @@ class CustomDistributionSummaryReportBloc extends Bloc<
     } catch (e) {
       emit(const CustomDistributionSummaryReportLoadingState());
     }
+  }
+
+  dynamic getTheCorrespondingTask(
+      HouseholdModel household,
+      List<TaskModel> taskList,
+      List<ProjectBeneficiaryModel> projectBeneficiaries) {
+    final projectBeneficiary = projectBeneficiaries
+        .where((element) =>
+            element.beneficiaryClientReferenceId == household.clientReferenceId)
+        .firstOrNull;
+    if (projectBeneficiary == null) {
+      return null;
+    }
+    final task = taskList
+        .where((element) =>
+            element.projectBeneficiaryClientReferenceId ==
+            projectBeneficiary.clientReferenceId)
+        .firstOrNull;
+    if (task == null) {
+      return null;
+    }
+    return task;
   }
 
   void populateDateVsBeneficiaryImpactedMap(
