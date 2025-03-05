@@ -435,12 +435,12 @@ class CustomSurveyFormViewPageState
                                           },
                                           errorMessage: field.errorText,
                                           controller: controller[index],
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter.allow(
-                                                RegExp(
-                                              "[a-zA-Z0-9]",
-                                            )),
-                                          ],
+                                          // inputFormatters: [
+                                          //   FilteringTextInputFormatter.allow(
+                                          //       RegExp(
+                                          //     "[a-zA-Z0-9]",
+                                          //   )),
+                                          // ],
                                         ));
                                   }),
                             ] else if (e.dataType == 'Number' &&
