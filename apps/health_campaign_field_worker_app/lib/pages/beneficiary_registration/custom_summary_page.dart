@@ -13,6 +13,7 @@ import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
 import 'package:registration_delivery/blocs/search_households/search_bloc_common_wrapper.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -40,7 +41,7 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
   }
 
   String getBednetCount(int members) {
-    return ((members ~/ 2) + (members % 2)).toString();
+    return (members.round()).toString();
   }
 
   @override
@@ -218,16 +219,17 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                                       '0',
                                   isInline: true),
                               LabelValuePair(
-                                  label: "Number of Net to give the HH",
+                                  label: localizations.translate(
+                                      i18Local.beneficiaryDetails.numberOfNets),
                                   value: getBednetCount(householdState
                                           .householdModel?.memberCount ??
                                       0),
                                   isInline: true),
                               LabelValuePair(
-                                  label: "Distribution Site Name",
-                                  value: householdState.householdModel?.address!
-                                          .locality!.name ??
-                                      "",
+                                  label: localizations.translate(i18Local
+                                      .beneficiaryDetails.dustributionSiteName),
+                                  value: localizations.translate(
+                                      "${householdState.householdModel?.address!.locality!.code}_DP"),
                                   isInline: true),
                             ]),
                       ),

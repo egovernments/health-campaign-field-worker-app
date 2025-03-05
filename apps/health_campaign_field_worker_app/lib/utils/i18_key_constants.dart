@@ -1161,6 +1161,9 @@ class StockDetails {
 class BeneficiaryDetails {
   const BeneficiaryDetails();
 
+  String get numberOfNets => 'NUMBER_OF_NETS';
+  String get dustributionSiteName => 'DISTRIBUTION_SITE_NAME';
+
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
   String get beneficiarysDetailsEditIconLabelText =>
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL_TEXT';

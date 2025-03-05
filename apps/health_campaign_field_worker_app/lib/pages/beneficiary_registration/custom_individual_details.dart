@@ -718,7 +718,7 @@ class CustomIndividualDetailsPageState
       dateOfBirth: dobString,
       identifiers: [
         identifier.copyWith(
-          identifierId: nationalIdCardNumber,
+          identifierId: nationalIdCardNumber ?? "DEFAULT",
           identifierType: "DEFAULT",
         ),
       ],
