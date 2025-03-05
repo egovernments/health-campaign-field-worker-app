@@ -520,10 +520,29 @@ class CustomIndividualDetailsPageState
                             label: localizations.translate(
                               i18.individualDetails.mobileNumberLabelText,
                             ),
+                            keyboardType: TextInputType.number,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly
                             ],
                             maxLength: 8,
+                            validationMessages: {
+                              'minLength': (object) => localizations
+                                  .translate(i18.individualDetails
+                                      .mobileNumberLengthValidationMessage)
+                                  .replaceAll('10', "8")
+                            },
+                            onChanged: (value) {
+                              int? numberText = value.value;
+                              if (numberText == null) {
+                                form
+                                    .control(_phoneNumberKey)
+                                    .setValidators([], autoValidate: true);
+                              } else {
+                                form.control(_phoneNumberKey).setValidators([
+                                  Validators.number(allowNegatives: false),
+                                ], autoValidate: true);
+                              }
+                            },
                           ),
                         ]),
                         const SizedBox(height: 16),

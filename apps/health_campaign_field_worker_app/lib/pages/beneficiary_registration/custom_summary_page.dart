@@ -41,7 +41,7 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
   }
 
   String getBednetCount(int members) {
-    return (members.round()).toString();
+    return (members / 2).round().toString();
   }
 
   @override
