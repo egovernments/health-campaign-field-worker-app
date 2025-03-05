@@ -64,6 +64,7 @@ class BeneficiaryCard extends StatelessWidget {
                     prefixIcon: Icons.info_rounded,
                     label: RegistrationDeliveryLocalization.of(context)
                         .translate(status.toString()),
+                    capitalizeLetters: false,
                     textColor: theme.colorTheme.alert.error,
                     iconColor: theme.colorTheme.alert.error,
                     type: DigitButtonType.tertiary,

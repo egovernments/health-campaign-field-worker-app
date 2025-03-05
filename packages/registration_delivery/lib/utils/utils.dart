@@ -127,8 +127,8 @@ bool checkEligibilityForAgeAndSideEffect(
               ? tasks.clientAuditDetails?.createdTime
               : null;
       recordedSideEffect = lastTaskTime != null &&
-          (lastTaskTime >= currentCycle.startDate! &&
-              lastTaskTime <= currentCycle.endDate!);
+          (lastTaskTime >= currentCycle.startDate &&
+              lastTaskTime <= currentCycle.endDate);
 
       return projectType?.validMinAge != null &&
               projectType?.validMaxAge != null
@@ -625,10 +625,11 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
     Status.inComplete.toValue(): Status.inComplete,
     Status.toAdminister.toValue(): Status.toAdminister,
     Status.closeHousehold.toValue(): Status.closeHousehold,
+    Status.ineligible.toValue(): Status.ineligible,
   };
 
   if (tasks.isEmpty) {
-    return Status.registered.toValue();
+    return Status.registered;
   } else {
     final mappedStatus =
         statusMap[tasks.lastOrNull!.status ?? Status.registered];
@@ -637,7 +638,7 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
     }
   }
 
-  return Status.registered.toValue();
+  return Status.registered;
 }
 
 String getStatus(String selectedFilter) {
