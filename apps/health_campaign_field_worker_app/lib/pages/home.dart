@@ -395,7 +395,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
           icon: Icons.all_inbox,
-          label: i18.home.beneficiaryLabel,
+          label: context.isRegistrar
+              ? i18.home.beneficiaryLabel
+              : i18.home.beneficiaryDistributionLabel,
           onPressed: () async {
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
