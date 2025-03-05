@@ -253,7 +253,7 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
             );
             final error = expression.parse;
             if (!error["value"]) {
-              errorMessages.add("CONDITION $condition FAILED");
+              errorMessages.add("CONDITION_FAILED $condition");
             }
             expressionParser.add(error["value"]);
           }
@@ -277,7 +277,7 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
             ]);
             final error = expression;
             if (!error["value"]) {
-              errorMessages.add("CONDITION $condition FAILED");
+              errorMessages.add("CONDITION_FAILED $condition");
             }
             expressionParser.add(error["value"]);
           }
@@ -303,7 +303,7 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
             ]);
             final error = expression;
             if (!error["value"]) {
-              errorMessages.add("CONDITION $condition FAILED");
+              errorMessages.add("CONDITION_FAILED $condition");
             }
             expressionParser.add(error["value"]);
           }

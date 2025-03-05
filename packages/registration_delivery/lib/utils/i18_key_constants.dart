@@ -50,6 +50,8 @@ class Common {
 
   String get corecommonclose => 'CORE_COMMON_CLOSE';
 
+  String get coreCommonError => 'CORE_COMMON_ERROR';
+
   String get coreCommonOk => 'CORE_COMMON_OK';
 
   String get coreCommonNA => 'CORE_COMMON_NA';

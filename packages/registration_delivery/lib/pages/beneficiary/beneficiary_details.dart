@@ -201,14 +201,41 @@ class BeneficiaryDetailsPageState
                                                   if (productVariants[
                                                           'criteria'] ==
                                                       null) {
-                                                    Toast.showToast(
-                                                      context,
-                                                      message: localizations
-                                                          .translate(
-                                                              productVariants[
+                                                    showCustomPopup(
+                                                      context: context,
+                                                      builder: (BuildContext context) => Popup(
+                                                          title: localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .coreCommonError),
+                                                          description: localizations
+                                                              .translate(productVariants[
                                                                       'errors']
-                                                                  .toString()),
-                                                      type: ToastType.error,
+                                                                  .toString()
+                                                                  .replaceAll(
+                                                                      '[', '')
+                                                                  .replaceAll(
+                                                                      ']', '')),
+                                                          type: PopUpType.alert,
+                                                          actions: [
+                                                            DigitButton(
+                                                                label: localizations
+                                                                    .translate(i18
+                                                                        .common
+                                                                        .corecommonclose),
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true,
+                                                                  ).pop();
+                                                                },
+                                                                type: DigitButtonType
+                                                                    .tertiary,
+                                                                size:
+                                                                    DigitButtonSize
+                                                                        .large)
+                                                          ]),
                                                     );
                                                   } else {
                                                     showCustomPopup(
@@ -293,13 +320,43 @@ class BeneficiaryDetailsPageState
 
                                             if (productVariants['criteria'] ==
                                                 null) {
-                                              Toast.showToast(
-                                                context,
-                                                message: localizations
-                                                    .translate(productVariants[
-                                                            'errors']
-                                                        .toString()),
-                                                type: ToastType.error,
+                                              showCustomPopup(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    Popup(
+                                                        title: localizations
+                                                            .translate(i18.common
+                                                                .coreCommonError),
+                                                        description: localizations
+                                                            .translate(
+                                                                productVariants[
+                                                                        'errors']
+                                                                    .toString()
+                                                                    .replaceAll(
+                                                                        '[', '')
+                                                                    .replaceAll(
+                                                                        ']',
+                                                                        '')),
+                                                        type: PopUpType.alert,
+                                                        actions: [
+                                                      DigitButton(
+                                                          label: localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .corecommonclose),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                              context,
+                                                              rootNavigator:
+                                                                  true,
+                                                            ).pop();
+                                                          },
+                                                          type: DigitButtonType
+                                                              .tertiary,
+                                                          size: DigitButtonSize
+                                                              .large)
+                                                    ]),
                                               );
                                             } else {
                                               context.router.push(
