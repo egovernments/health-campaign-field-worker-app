@@ -49,6 +49,7 @@ class CustomIndividualDetailsPage extends LocalizedStatefulWidget {
 class CustomIndividualDetailsPageState
     extends LocalizedState<CustomIndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
+  static const _nationalIdCardNumberKey = 'nationalIdCardNumberKey';
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _phoneNumberKey = 'phoneNumber';
@@ -406,6 +407,14 @@ class CustomIndividualDetailsPageState
                               },
                             ),
                           ),
+                          DigitTextFormField(
+                            formControlName: _nationalIdCardNumberKey,
+                            label: localizations.translate(
+                              i18Local.individualDetails
+                                  .nationalIdCardNumberLabelText,
+                            ),
+                            isRequired: false,
+                          ),
                           Offstage(
                             offstage: !widget.isHeadOfHousehold,
                             child: DigitCheckbox(
@@ -695,6 +704,8 @@ class CustomIndividualDetailsPageState
 
     String? individualName = form.control(_individualNameKey).value as String?;
     int? mobileNumber = form.control(_phoneNumberKey).value as int?;
+    String? nationalIdCardNumber =
+        form.control(_nationalIdCardNumberKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
         givenName: individualName?.trim(),
@@ -707,7 +718,7 @@ class CustomIndividualDetailsPageState
       dateOfBirth: dobString,
       identifiers: [
         identifier.copyWith(
-          identifierId: "DEFAULT",
+          identifierId: nationalIdCardNumber,
           identifierType: "DEFAULT",
         ),
       ],
@@ -754,6 +765,7 @@ class CustomIndividualDetailsPageState
                 ? null
                 : searchQuery?.trim()),
       ),
+      _nationalIdCardNumberKey: FormControl<String>(),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
             ? DateFormat(Constants().dateFormat).parse(

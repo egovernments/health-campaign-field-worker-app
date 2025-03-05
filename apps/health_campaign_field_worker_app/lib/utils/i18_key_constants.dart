@@ -1055,6 +1055,9 @@ class IndividualDetails {
 
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
 
+  String get nationalIdCardNumberLabelText =>
+      'NATIONAL_ID_CARD_NUMBER_LABEL_TEXT';
+
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
