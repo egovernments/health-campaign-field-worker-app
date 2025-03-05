@@ -698,6 +698,8 @@ class Home {
   String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
 
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
+  String get beneficiaryDistributionLabel =>
+      'HOME_BENEFICIARY_DISTRIBUTION_LABEL';
 }
 
 class AcknowledgementSuccess {
