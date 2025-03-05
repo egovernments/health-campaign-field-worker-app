@@ -146,9 +146,14 @@ class CustomBeneficiaryProgressBarState
               await projectBeneficiaryRepository.progressBarSearch(
                   projectBeneficiarySearchQuery, loggedInUserUuid);
 
+          // Info filtering beneficiaries who do not have tag or are null
+          //(closed and ones where duplicate tags were used to create will be filtered here)
+          List<ProjectBeneficiaryModel> filteredResults =
+              results.where((element) => element.tag != null).toList();
+
           if (mounted) {
             setState(() {
-              current = results.length;
+              current = filteredResults.length;
             });
           }
         },
