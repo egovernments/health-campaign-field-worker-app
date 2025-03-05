@@ -92,7 +92,10 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       Set<String> uniqueDates = {};
 
       Map<String, int> dateVsHouseholdCount = {};
+      // info this captures total project beneficiary created / registered
       Map<String, int> dateVsProjectBeneficiaryCount = {};
+      // info this captures total members in the households registered
+      Map<String, int> dateVsTotalMemberCount = {};
       Map<String, int> dateVsClosedHouseholdTaskCount = {};
 
       for (var element in filteredHouseholdsList) {
@@ -132,12 +135,16 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       populateDateVsCountMap(
           dateVsClosedHouseholdTask, dateVsClosedHouseholdTaskCount);
 
+      // populate the day vs total members impacted (sum of members of each household registered)
+      populateDateVsBeneficiaryImpactedMap(
+          dateVsHousehold, dateVsTotalMemberCount);
+
       Map<String, Map<String, int>> dateVsEntityVsCountMap = {};
 
       popoulateDateVsEntityCountMap(
         dateVsEntityVsCountMap,
         dateVsHouseholdCount,
-        dateVsProjectBeneficiaryCount,
+        dateVsTotalMemberCount,
         dateVsClosedHouseholdTaskCount,
         uniqueDates,
       );
@@ -237,6 +244,27 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
         filteredProjectBeneficiaryList.add(projectBeneficiary);
       }
     }
+  }
+
+  void populateDateVsBeneficiaryImpactedMap(
+      Map<String, List<HouseholdModel>> dateVsHousehold,
+      Map<String, int> dateVsBeneficiaryImpactedCount) {
+    dateVsHousehold.forEach((key, value) {
+      int memberCount = 0;
+      memberCount = getMembersCount(value);
+
+      dateVsBeneficiaryImpactedCount[key] = memberCount;
+    });
+  }
+
+  int getMembersCount(List<HouseholdModel> households) {
+    int memberCount = 0;
+
+    for (var household in households) {
+      memberCount = memberCount + (household.memberCount ?? 0);
+    }
+
+    return memberCount;
   }
 
   Future<void> _handleLoadingEvent(
