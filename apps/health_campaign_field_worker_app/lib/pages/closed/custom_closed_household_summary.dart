@@ -14,10 +14,16 @@ import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import 'package:closed_household/widgets/showcase/showcase_button.dart';
+import '../../../utils/i18_key_constants.dart' as i18Local;
+
+import '../../blocs/custom_blocs/closed_household.dart' as custombloc;
 
 @RoutePage()
 class CustomClosedHouseholdSummaryPage extends LocalizedStatefulWidget {
+  final reason;
+
   const CustomClosedHouseholdSummaryPage({
+    required this.reason,
     super.key,
     super.appLocalizations,
   });
@@ -62,8 +68,10 @@ class CustomClosedHouseholdSummaryPageState
                     children: [
                       DigitElevatedButton(
                         onPressed: () {
-                          context.read<ClosedHouseholdBloc>().add(
-                              ClosedHouseholdEvent.handleSubmit(
+                          context.read<custombloc.ClosedHouseholdBloc>().add(
+                              custombloc.ClosedHouseholdEvent.handleSubmit(
+                                  reason:
+                                      localizations.translate(widget.reason),
                                   context: context,
                                   householdHeadName:
                                       householdState.householdHeadName,
@@ -74,6 +82,19 @@ class CustomClosedHouseholdSummaryPageState
                                   tag: scannerState.qrCodes.isNotEmpty
                                       ? scannerState.qrCodes.first
                                       : null));
+
+                          // context.read<ClosedHouseholdBloc>().add(
+                          //     ClosedHouseholdEvent.handleSubmit(
+                          //         context: context,
+                          //         householdHeadName:
+                          //             householdState.householdHeadName,
+                          //         locationAccuracy:
+                          //             householdState.locationAccuracy,
+                          //         longitude: householdState.longitude,
+                          //         latitude: householdState.latitude,
+                          //         tag: scannerState.qrCodes.isNotEmpty
+                          //             ? scannerState.qrCodes.first
+                          //             : null));
 
                           ///clear the scanner
                           context.router
@@ -132,6 +153,11 @@ class CustomClosedHouseholdSummaryPageState
                                 : localizations
                                     .translate(i18.common.coreCommonNA),
                           ),
+                          LabelValuePair(
+                            label: localizations.translate(
+                                i18Local.beneficiaryDetails.reasonLabelText),
+                            value: localizations.translate(widget.reason),
+                          )
                         ]),
                   ),
                 ],

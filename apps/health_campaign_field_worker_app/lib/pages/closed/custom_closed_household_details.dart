@@ -9,6 +9,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18Local;
+import '../../blocs/custom_blocs/closed_household.dart' as custombloc;
 import '../../utils/utils.dart' as utilsLocal;
 
 import 'package:closed_household/router/closed_household_router.gm.dart';
@@ -34,6 +35,7 @@ class CustomClosedHouseholdDetailsPageState
   static const _householdHeadNameKey = 'householdHeadName';
   static const _latKey = 'lat';
   static const _lngKey = 'lng';
+  static const _reasonKey = 'reason';
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
 
@@ -55,6 +57,7 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
+    final reasonOptions = ["closed", "refusal"];
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -107,8 +110,8 @@ class CustomClosedHouseholdDetailsPageState
                             .control(_householdHeadNameKey)
                             .value as String?;
 
-                        context.read<ClosedHouseholdBloc>().add(
-                              ClosedHouseholdEvent.handleSummary(
+                        context.read<custombloc.ClosedHouseholdBloc>().add(
+                              custombloc.ClosedHouseholdEvent.handleSummary(
                                 latitude: locationState.latitude!,
                                 longitude: locationState.longitude!,
                                 locationAccuracy:
@@ -120,8 +123,23 @@ class CustomClosedHouseholdDetailsPageState
                               ),
                             );
 
-                        context.router
-                            .push(CustomClosedHouseholdSummaryRoute());
+                        final reason =
+                            form.control(_reasonKey).value as String?;
+                        if (reason == null || reason.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                localizations
+                                    .translate(i18.common.corecommonRequired),
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+
+                        context.router.push(
+                            CustomClosedHouseholdSummaryRoute(reason: reason));
                       },
                       child: Center(
                         child: Text(
@@ -163,6 +181,46 @@ class CustomClosedHouseholdDetailsPageState
                             formControlName: _accuracyKey,
                             label: localizations.translate(
                               i18.closeHousehold.accuracyLabel,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding, 0, kPadding, 0),
+                            child: SelectionBox<String>(
+                              isRequired: true,
+                              title: localizations.translate(
+                                  i18Local.beneficiaryDetails.reasonLabelText),
+                              allowMultipleSelection: false,
+                              width: 148,
+                              initialSelection:
+                                  form.control(_reasonKey).value != null
+                                      ? [form.control(_reasonKey).value]
+                                      : [],
+                              options: reasonOptions
+                                  .map((e) => e.toUpperCase())
+                                  .toList(),
+                              onSelectionChanged: (value) {
+                                setState(() {
+                                  if (value.isNotEmpty) {
+                                    form.control(_reasonKey).value =
+                                        value.first;
+                                  } else if (true) {
+                                    form.control(_reasonKey).value = null;
+                                    setState(() {
+                                      form
+                                          .control(_reasonKey)
+                                          .setErrors({'': true});
+                                    });
+                                  }
+                                });
+                              },
+                              valueMapper: (value) {
+                                return localizations.translate(value);
+                              },
+                              errorMessage: form.control(_reasonKey).hasErrors
+                                  ? localizations
+                                      .translate(i18.common.corecommonRequired)
+                                  : null,
                             ),
                           ),
                           DigitTextFormField(
@@ -207,6 +265,7 @@ class CustomClosedHouseholdDetailsPageState
           Validators.maxLength(200),
         ],
       ),
+      _reasonKey: FormControl<String>(validators: []),
       _latKey: FormControl<double>(validators: []),
       _lngKey: FormControl<double>(),
       _accuracyKey: FormControl<double>(),

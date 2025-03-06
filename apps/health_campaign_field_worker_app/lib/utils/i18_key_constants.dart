@@ -1241,4 +1241,5 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+  String get reasonLabelText => 'REASON_LABEL_TEXT';
 }
