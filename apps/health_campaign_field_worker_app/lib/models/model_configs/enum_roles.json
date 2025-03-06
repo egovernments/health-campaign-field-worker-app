@@ -28,6 +28,10 @@
     {
       "name": "Registrar",
       "value": "REGISTRAR"
+    },
+    {
+      "name": "Team Supervisor",
+      "value": "TEAM_SUPERVISOR"
     }
   ],
   "isEnum": true

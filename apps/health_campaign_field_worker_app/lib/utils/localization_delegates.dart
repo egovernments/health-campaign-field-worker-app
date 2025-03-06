@@ -4,6 +4,10 @@ import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
 import 'package:closed_household/blocs/app_localization.dart'
     as closed_household_localization;
+import 'package:complaints/blocs/localization/app_localization.dart'
+    as complaints_localization;
+import 'package:digit_ui_components/services/AppLocalization.dart'
+    as component_localization;
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_dss/blocs/app_localization.dart'
     as digit_dss_localization;
@@ -16,7 +20,8 @@ import 'package:referral_reconciliation/blocs/app_localization.dart'
     as referral_reconciliation_localization;
 import 'package:registration_delivery/blocs/app_localization.dart'
     as registration_delivery_localization;
-import 'package:digit_components/blocs/localization.dart' as component_localization;
+import 'package:survey_form/blocs/app_localization.dart'
+    as survey_form_localization;
 
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -32,6 +37,9 @@ getAppLocalizationDelegates({
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
+
+    // INFO : Need to add package delegates here
+
     referral_reconciliation_localization.ReferralReconLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
@@ -41,6 +49,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     attendance_localization.AttendanceLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    survey_form_localization.SurveyFormLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
@@ -58,6 +70,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     digit_dss_localization.DashboardLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    complaints_localization.ComplaintsLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),

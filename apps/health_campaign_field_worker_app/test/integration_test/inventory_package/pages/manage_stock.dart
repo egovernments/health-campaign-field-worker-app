@@ -1,4 +1,5 @@
-import 'package:digit_components/digit_components.dart'; // Import components from Digit Components package
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:flutter/material.dart'; // Import Flutter Material library
 import 'package:flutter_test/flutter_test.dart'; // Import Flutter test library
 import 'package:inventory_management/pages/manage_stocks.dart'; // Import ManageStocksPage
@@ -32,12 +33,12 @@ Future<void> testManageStockPage(WidgetTester widgetTester) async {
 // Function to test each page
 Future<void> testOnePage(WidgetTester widgetTester, int i) async {
   // Tap on the DigitListView at index i
-  await widgetTester.tap(find.byType(DigitListView).at(i));
+  await widgetTester.tap(find.byType(LabelValueItem).at(i));
   await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 
   // Tap on the warehouse field
   await widgetTester
-      .tap(find.widgetWithText(DigitTextFormField, 'Warehouse *'));
+      .tap(find.widgetWithText(DigitTextFormInput, 'Warehouse *'));
   await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 
   // Tap on a transaction reason
@@ -45,7 +46,7 @@ Future<void> testOnePage(WidgetTester widgetTester, int i) async {
   await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 
   // Tap on the submit button
-  await widgetTester.tap(find.byType(DigitElevatedButton).last);
+  await widgetTester.tap(find.byType(DigitButton).last);
   await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 
   // Tap on the select product field
@@ -75,7 +76,7 @@ Future<void> testOnePage(WidgetTester widgetTester, int i) async {
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 50));
 
   // Tap on the submit button
-  await widgetTester.tap(find.widgetWithText(DigitElevatedButton, 'Submit'));
+  await widgetTester.tap(find.widgetWithText(DigitButton, 'Submit'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
   // TODO: Test scan bales
@@ -83,11 +84,11 @@ Future<void> testOnePage(WidgetTester widgetTester, int i) async {
   // Tap on the submit button in the dialog
   await widgetTester.tap(find.descendant(
     of: find.byKey(const Key('submitDialog')),
-    matching: find.byType(DigitElevatedButton).last,
+    matching: find.byType(DigitButton).last,
   ));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
   // Go back to the home page
-  await widgetTester.tap(find.widgetWithText(DigitElevatedButton, 'Go Back'));
+  await widgetTester.tap(find.widgetWithText(DigitButton, 'Go Back'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 }

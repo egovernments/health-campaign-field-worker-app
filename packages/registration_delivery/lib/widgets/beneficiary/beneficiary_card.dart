@@ -1,8 +1,10 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 
 import '../../models/entities/status.dart';
+import '../../utils/utils.dart';
 
 class BeneficiaryCard extends StatelessWidget {
   final String title;
@@ -23,44 +25,59 @@ class BeneficiaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(spacer1),
           child: Text(
             title,
-            style: theme.textTheme.headlineSmall,
+            style: textTheme.headingS,
           ),
         ),
-        Offstage(
-          offstage: status == null,
-          child: status == Status.visited.toValue() ||
-                  status == Status.registered.toValue() ||
-                  status == Status.administeredSuccess.toValue()
-              ? DigitIconButton(
-                  icon: Icons.check_circle,
-                  iconText: RegistrationDeliveryLocalization.of(context)
-                      .translate(status.toString()),
-                  iconTextColor: theme.colorScheme.onSurfaceVariant,
-                  iconColor: theme.colorScheme.onSurfaceVariant,
-                )
-              : DigitIconButton(
-                  icon: Icons.info_rounded,
-                  iconText: RegistrationDeliveryLocalization.of(context)
-                      .translate(status.toString()),
-                  iconTextColor: theme.colorScheme.error,
-                  iconColor: theme.colorScheme.error,
-                ),
-        ),
+        if (status != null)
+          Offstage(
+            offstage: status == null,
+            child: status == Status.visited.toValue() ||
+                    status == Status.registered.toValue() ||
+                    status == Status.administeredSuccess.toValue() ||
+                    status == Status.delivered.toValue()
+                ? DigitButton(
+                    prefixIcon: Icons.check_circle,
+                    label: RegistrationDeliveryLocalization.of(context)
+                        .translate(status.toString() ==
+                                Status.administeredSuccess.toValue()
+                            ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${status.toString()}'
+                            : status.toString()),
+                    capitalizeLetters: false,
+                    textColor: theme.colorTheme.alert.success,
+                    iconColor: theme.colorTheme.alert.success,
+                    isDisabled: true,
+                    onPressed: () {},
+                    type: DigitButtonType.tertiary,
+                    size: DigitButtonSize.medium,
+                  )
+                : DigitButton(
+                    prefixIcon: Icons.info_rounded,
+                    label: RegistrationDeliveryLocalization.of(context)
+                        .translate(status.toString()),
+                    textColor: theme.colorTheme.alert.error,
+                    iconColor: theme.colorTheme.alert.error,
+                    type: DigitButtonType.tertiary,
+                    size: DigitButtonSize.medium,
+                    isDisabled: true,
+                    onPressed: () {},
+                  ),
+          ),
         if (subtitle != null)
           Padding(
             padding: const EdgeInsets.all(4),
             child: Text(
               subtitle!,
-              style: theme.textTheme.bodyMedium,
+              style: textTheme.bodyS,
             ),
           ),
         if (description != null)
@@ -68,7 +85,7 @@ class BeneficiaryCard extends StatelessWidget {
             padding: const EdgeInsets.all(4),
             child: Text(
               description!,
-              style: theme.textTheme.bodySmall,
+              style: textTheme.bodyXS,
             ),
           ),
       ],

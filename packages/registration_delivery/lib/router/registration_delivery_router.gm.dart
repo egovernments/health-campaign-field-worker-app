@@ -9,12 +9,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i25;
-import 'package:digit_data_model/data_model.dart' as _i30;
+import 'package:digit_data_model/data_model.dart' as _i31;
+import 'package:flutter/foundation.dart' as _i28;
 import 'package:flutter/material.dart' as _i26;
 import 'package:registration_delivery/blocs/app_localization.dart' as _i27;
 import 'package:registration_delivery/blocs/search_households/search_households.dart'
-    as _i29;
-import 'package:registration_delivery/models/entities/task.dart' as _i31;
+    as _i30;
+import 'package:registration_delivery/models/entities/task.dart' as _i32;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_checklist.dart'
     as _i2;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_details.dart'
@@ -60,7 +61,7 @@ import 'package:registration_delivery/pages/registration_delivery_wrapper.dart'
     as _i20;
 import 'package:registration_delivery/pages/search_beneficiary.dart' as _i21;
 import 'package:registration_delivery/pages/summary_page.dart' as _i24;
-import 'package:registration_delivery/registration_delivery.dart' as _i28;
+import 'package:registration_delivery/registration_delivery.dart' as _i29;
 
 abstract class $RegistrationDeliveryRoute extends _i25.AutoRouterModule {
   @override
@@ -385,7 +386,7 @@ class BeneficiaryAcknowledgementRouteArgs {
 class BeneficiaryChecklistRoute
     extends _i25.PageRouteInfo<BeneficiaryChecklistRouteArgs> {
   BeneficiaryChecklistRoute({
-    _i26.Key? key,
+    _i28.Key? key,
     String? beneficiaryClientRefId,
     _i27.RegistrationDeliveryLocalization? appLocalizations,
     List<_i25.PageRouteInfo>? children,
@@ -412,7 +413,7 @@ class BeneficiaryChecklistRouteArgs {
     this.appLocalizations,
   });
 
-  final _i26.Key? key;
+  final _i28.Key? key;
 
   final String? beneficiaryClientRefId;
 
@@ -469,7 +470,7 @@ class BeneficiaryRegistrationWrapperRoute
     extends _i25.PageRouteInfo<BeneficiaryRegistrationWrapperRouteArgs> {
   BeneficiaryRegistrationWrapperRoute({
     _i26.Key? key,
-    required _i28.BeneficiaryRegistrationState initialState,
+    required _i29.BeneficiaryRegistrationState initialState,
     List<_i25.PageRouteInfo>? children,
   }) : super(
           BeneficiaryRegistrationWrapperRoute.name,
@@ -494,7 +495,7 @@ class BeneficiaryRegistrationWrapperRouteArgs {
 
   final _i26.Key? key;
 
-  final _i28.BeneficiaryRegistrationState initialState;
+  final _i29.BeneficiaryRegistrationState initialState;
 
   @override
   String toString() {
@@ -508,7 +509,7 @@ class BeneficiaryWrapperRoute
     extends _i25.PageRouteInfo<BeneficiaryWrapperRouteArgs> {
   BeneficiaryWrapperRoute({
     _i26.Key? key,
-    required _i29.HouseholdMemberWrapper wrapper,
+    required _i30.HouseholdMemberWrapper wrapper,
     bool isEditing = false,
     List<_i25.PageRouteInfo>? children,
   }) : super(
@@ -536,7 +537,7 @@ class BeneficiaryWrapperRouteArgs {
 
   final _i26.Key? key;
 
-  final _i29.HouseholdMemberWrapper wrapper;
+  final _i30.HouseholdMemberWrapper wrapper;
 
   final bool isEditing;
 
@@ -674,7 +675,7 @@ class FacilitySelectionRoute
     extends _i25.PageRouteInfo<FacilitySelectionRouteArgs> {
   FacilitySelectionRoute({
     _i26.Key? key,
-    required List<_i30.FacilityModel> facilities,
+    required List<_i31.FacilityModel> facilities,
     List<_i25.PageRouteInfo>? children,
   }) : super(
           FacilitySelectionRoute.name,
@@ -699,7 +700,7 @@ class FacilitySelectionRouteArgs {
 
   final _i26.Key? key;
 
-  final List<_i30.FacilityModel> facilities;
+  final List<_i31.FacilityModel> facilities;
 
   @override
   String toString() {
@@ -1001,7 +1002,7 @@ class RecordPastDeliveryDetailsRoute
   RecordPastDeliveryDetailsRoute({
     _i26.Key? key,
     _i27.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i31.TaskModel>? tasks,
+    List<_i32.TaskModel>? tasks,
     List<_i25.PageRouteInfo>? children,
   }) : super(
           RecordPastDeliveryDetailsRoute.name,
@@ -1030,7 +1031,7 @@ class RecordPastDeliveryDetailsRouteArgs {
 
   final _i27.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i31.TaskModel>? tasks;
+  final List<_i32.TaskModel>? tasks;
 
   @override
   String toString() {
@@ -1185,7 +1186,7 @@ class SideEffectsRoute extends _i25.PageRouteInfo<SideEffectsRouteArgs> {
   SideEffectsRoute({
     _i26.Key? key,
     _i27.RegistrationDeliveryLocalization? appLocalizations,
-    required List<_i31.TaskModel> tasks,
+    required List<_i32.TaskModel> tasks,
     bool isEditing = false,
     List<_i25.PageRouteInfo>? children,
   }) : super(
@@ -1217,7 +1218,7 @@ class SideEffectsRouteArgs {
 
   final _i27.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i31.TaskModel> tasks;
+  final List<_i32.TaskModel> tasks;
 
   final bool isEditing;
 

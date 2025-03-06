@@ -1,3 +1,33 @@
+## 1.0.4+1
+
+* Updated to latest package versions
+
+## 1.0.4
+
+* Updated to latest package versions
+* UI/UX fixes
+* Bug fixes
+
+## 1.0.3+1
+
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+
+## 1.0.3
+
+* Upgrade to Flutter 3.22
+* Updated digit_data_model, survey_form to latest version
+* Migrated to digit_ui_components
+
+## 1.0.2+2
+
+* Updated digit_components, digit_data_model
+* Service model additionalDetails objectType changes in checklist
+
+## 1.0.3-dev.1
+
+* Integrated with survey_form package
+
 ## 1.0.2+1
 
 * Updated digit_scanner package, digit_components, digit_data_model

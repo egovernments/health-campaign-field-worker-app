@@ -70,6 +70,7 @@ class HouseholdLocalRepository
 
             return HouseholdModel(
               id: household.id,
+              householdType: household.householdType,
               tenantId: household.tenantId,
               clientReferenceId: household.clientReferenceId,
               memberCount: household.memberCount,
@@ -102,6 +103,7 @@ class HouseholdLocalRepository
                   ? null
                   : AddressModel(
                       id: address.id,
+                      buildingName: address.buildingName,
                       relatedClientReferenceId: household.clientReferenceId,
                       tenantId: address.tenantId,
                       doorNo: address.doorNo,

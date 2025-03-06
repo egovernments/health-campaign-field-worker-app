@@ -1,8 +1,64 @@
+## 1.0.6+1
+
+* Updated to latest packages
+
+## 1.0.6
+
+* Added support for Eligibility checklist
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+* UI/UX fixes
+* Updated to latest packages
+
+## 1.0.5+2-dev.1
+
+* Added support for Eligibility checklist
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+
+## 1.0.5+2
+
+* Action label and status change with projectType
+
+## 1.0.5+1
+
+* householdOverViewActionText localization fix
+
+## 1.0.5
+
+* Upgrade to Flutter 3.22
+* Updated latest version's of digit_data_model, survey_form, digit_scanner
+* Migrated to digit_ui_components
+
+## 1.0.3+4
+
+* Delivery action label and administered_success status update based on the project
+
+## 1.0.4-dev.5
+
+* Updated digit_data_model to latest version
+* Updated survey_form to latest version
+* Migrated to digit_ui_components
+
+## 1.0.3+3
+
+* Updated Service model additionalDetails objectType in digit_data_model package
+
+## 1.0.3+2
+
+* Bug Fix -
+    * fixed wrong status map of beneficiaryRefused in utils
+* Sorting tasks based on createTime
+
+## 1.0.4-dev.1
+
+* Integrated survey_form package
+
 ## 1.0.3+1
 
 * Bug Fixes -
-  * Reload fix after edit
-  * Project Beneficiary create for all members if not registered for campaign
+    * Reload fix after edit
+    * Project Beneficiary create for all members if not registered for campaign
 * Updated digit_scanner package, digit_components, digit_data_model
 
 ## 1.0.3
@@ -21,11 +77,11 @@
 
 ## 1.0.3-dev.10
 
-* Removed stepper if number of deliveries is greater than 1 
+* Removed stepper if number of deliveries is greater than 1
 
 ## 1.0.3-dev.9
 
-* Updated localization key 
+* Updated localization key
 * Resolved taskStatus key from task table entity
 
 ## 1.0.3-dev.8
@@ -42,7 +98,7 @@
 
 ## 1.0.3-dev.5
 
-* Added count for filter search 
+* Added count for filter search
 * Bug fixes
 
 ## 1.0.3-dev.4
@@ -52,7 +108,6 @@
 ## 1.0.3-dev.3
 
 * Closed household flow change
-
 
 ## 1.0.3-dev.2
 
@@ -129,7 +184,7 @@
 
 ## 0.0.0-dev.2
 
-* Boundary v2 Integrated, to use Boundary v1  0.0.0-dev.1 version can be used
+* Boundary v2 Integrated, to use Boundary v1 0.0.0-dev.1 version can be used
 
 ## 0.0.0-dev.1
 

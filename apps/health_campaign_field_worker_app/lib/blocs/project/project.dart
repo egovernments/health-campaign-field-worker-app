@@ -4,15 +4,16 @@ import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -26,6 +27,7 @@ import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils.dart';
 
 part 'project.freezed.dart';
@@ -80,6 +82,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final RemoteRepository<StockModel, StockSearchModel> stockRemoteRepository;
   final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
 
+  /// Service Definition Repositories
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionRemoteRepository;
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
@@ -159,8 +162,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline = connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile;
+    final isOnline =
+        connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+            connectivityResult.firstOrNull == ConnectivityResult.mobile;
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
@@ -216,56 +220,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       List<ProjectModel> staffProjects;
       try {
-        if (context.loggedInUserRoles
-            .where(
-              (role) => role.code == RolesType.districtSupervisor.toValue(),
-            )
-            .toList()
-            .isNotEmpty) {
-          final individual = await individualRemoteRepository.search(
-            IndividualSearchModel(
-              userUuid: [projectStaff.userId.toString()],
-            ),
-          );
-          if (individual.isNotEmpty) {
-            final attendanceRegisters = await attendanceRemoteRepository.search(
-              AttendanceRegisterSearchModel(
-                staffId: individual.first.id,
-                referenceId: projectStaff.projectId,
-              ),
-            );
-            await attendanceLocalRepository.bulkCreate(attendanceRegisters);
-
-            for (final register in attendanceRegisters) {
-              if (register.attendees != null &&
-                  (register.attendees ?? []).isNotEmpty) {
-                try {
-                  final individuals = await individualRemoteRepository.search(
-                    IndividualSearchModel(
-                      id: register.attendees!
-                          .map((e) => e.individualId!)
-                          .toList(),
-                    ),
-                  );
-                  await individualLocalRepository.bulkCreate(individuals);
-                  final logs = await attendanceLogRemoteRepository.search(
-                    AttendanceLogSearchModel(
-                      registerId: register.id,
-                    ),
-                  );
-                  await attendanceLogLocalRepository.bulkCreate(logs);
-                } catch (_) {
-                  emit(state.copyWith(
-                    loading: false,
-                    syncError: ProjectSyncErrorType.project,
-                  ));
-
-                  return;
-                }
-              }
-            }
-          }
-        }
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(
             id: projectStaff.projectId,
@@ -294,6 +248,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
+      // INFO : Need to add project load functions
+
       try {
         await _loadProjectFacilities(projects, batchSize);
       } catch (_) {
@@ -364,6 +320,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         selectedProject: selectedProject,
       ),
     );
+
+    /* An empty BoundarySearchModel is sent to retrieve all boundaries from the repository.
+    This ensures that the entire dataset is fetched, as no specific filters or constraints are applied.
+    The retrieved boundaries are then processed to find the least level boundaries and set them in the singleton.*/
+    final boundaries = await boundaryLocalRepository.search(
+      BoundarySearchModel(),
+    );
+    LeastLevelBoundarySingleton()
+        .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
   }
 
   FutureOr<void> _loadProjectFacilities(
@@ -448,6 +413,50 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     List<BoundaryModel> boundaries;
     try {
+      if (context.loggedInUserRoles
+          .where(
+            (role) =>
+                role.code == RolesType.districtSupervisor.toValue() ||
+                role.code == RolesType.teamSupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty) {
+        final attendanceRegisters = await attendanceRemoteRepository.search(
+          AttendanceRegisterSearchModel(
+            staffId: context.loggedInIndividualId,
+            referenceId: event.model.id,
+            localityCode: event.model.address?.boundary,
+          ),
+        );
+        await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+
+        for (final register in attendanceRegisters) {
+          if (register.attendees != null &&
+              (register.attendees ?? []).isNotEmpty) {
+            try {
+              final individuals = await individualRemoteRepository.search(
+                IndividualSearchModel(
+                  id: register.attendees!.map((e) => e.individualId!).toList(),
+                ),
+              );
+              await individualLocalRepository.bulkCreate(individuals);
+              final logs = await attendanceLogRemoteRepository.search(
+                AttendanceLogSearchModel(
+                  registerId: register.id,
+                ),
+              );
+              await attendanceLogLocalRepository.bulkCreate(logs);
+            } catch (_) {
+              emit(state.copyWith(
+                loading: false,
+                syncError: ProjectSyncErrorType.project,
+              ));
+
+              return;
+            }
+          }
+        }
+      }
       try {
         final startDate = DateTime(
                 DateTime.now().year, DateTime.now().month, DateTime.now().day)
@@ -458,20 +467,24 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .toLocal()
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
-        final dashboardConfig = await isar.dashboardConfigSchemas
+        final dashboardConfig = await isar.dashboardConfigSchemaLists
             .where()
             .filter()
-            .chartsIsNotNull()
-            .chartsIsNotEmpty()
+            .dashboardConfigsIsNotNull()
+            .dashboardConfigsIsNotEmpty()
             .findAll();
         final dashboardActionPath = Constants.getEndPoint(
             serviceRegistry: serviceRegistry,
             service: DashboardResponseModel.schemaName.toUpperCase(),
             action: ApiOperation.search.toValue(),
             entityName: DashboardResponseModel.schemaName);
-        if (dashboardConfig.isNotEmpty &&
-            dashboardConfig.first.enableDashboard == true &&
-            dashboardConfig.first.charts != null) {
+
+        final filteredDashboardConfig = filterDashboardConfig(dashboardConfig.isNotEmpty ? dashboardConfig.first.dashboardConfigs : null,
+            event.model.additionalDetails?.projectType?.code ?? "");
+
+        if (filteredDashboardConfig.isNotEmpty &&
+            filteredDashboardConfig.first?.enableDashboard == true &&
+            filteredDashboardConfig.first?.charts != null) {
           final loggedInIndividualId = await localSecureStore.userIndividualId;
           final registers = await attendanceLocalRepository.search(
             AttendanceRegisterSearchModel(
@@ -480,11 +493,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             ),
           );
           List<String> attendeesIndividualIds = [];
-          registers.forEach((r) {
+          for (var r in registers) {
             r.attendees?.where((a) => a.individualId != null).forEach((att) {
               attendeesIndividualIds.add(att.individualId.toString());
             });
-          });
+          }
           final individuals =
               await individualLocalRepository.search(IndividualSearchModel(
             id: attendeesIndividualIds,
@@ -494,7 +507,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .map((i) => i.userUuid.toString())
               .toList();
           await processDashboardConfig(
-            dashboardConfig.first.charts ?? [],
+            dashboardConfig.first.dashboardConfigs?.where(
+                    (config) => config.projectTypeId == event.model.projectTypeId || config.projectTypeCode == event.model.projectType).first.charts  ?? [],
             startDate,
             endDate,
             isar,
@@ -502,7 +516,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             dashboardRemoteRepository,
             dashboardActionPath.trim().isNotEmpty
                 ? dashboardActionPath
-                : '/dashboard-analytics/dashboard/getChartV2', //[TODO: To be added to MDMS Service registry
+                : Constants.dashboardAnalyticsPath,
             envConfig.variables.tenantId,
             event.model.id,
             userUUIDList,
@@ -584,6 +598,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           );
         }
         await boundaryLocalRepository.bulkCreate(boundaries);
+        LeastLevelBoundarySingleton()
+            .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
         await localSecureStore.setSelectedProject(event.model);
       }
       await localSecureStore.setProjectSetUpComplete(event.model.id, true);

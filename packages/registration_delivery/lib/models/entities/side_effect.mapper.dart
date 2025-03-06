@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'side_effect.dart';
@@ -129,10 +129,8 @@ mixin SideEffectSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SideEffectSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as SideEffectSearchModel, other));
+    return SideEffectSearchModelMapper.ensureInitialized()
+        .equalsValue(this as SideEffectSearchModel, other);
   }
 
   @override
@@ -278,6 +276,13 @@ class SideEffectModelMapper extends SubClassMapperBase<SideEffectModel> {
   static String? _$projectId(SideEffectModel v) => v.projectId;
   static const Field<SideEffectModel, String> _f$projectId =
       Field('projectId', _$projectId, opt: true);
+  static String? _$projectBeneficiaryClientReferenceId(SideEffectModel v) =>
+      v.projectBeneficiaryClientReferenceId;
+  static const Field<SideEffectModel, String>
+      _f$projectBeneficiaryClientReferenceId = Field(
+          'projectBeneficiaryClientReferenceId',
+          _$projectBeneficiaryClientReferenceId,
+          opt: true);
   static String? _$taskClientReferenceId(SideEffectModel v) =>
       v.taskClientReferenceId;
   static const Field<SideEffectModel, String> _f$taskClientReferenceId =
@@ -319,6 +324,8 @@ class SideEffectModelMapper extends SubClassMapperBase<SideEffectModel> {
     #additionalFields: _f$additionalFields,
     #id: _f$id,
     #projectId: _f$projectId,
+    #projectBeneficiaryClientReferenceId:
+        _f$projectBeneficiaryClientReferenceId,
     #taskClientReferenceId: _f$taskClientReferenceId,
     #reAttempts: _f$reAttempts,
     #symptoms: _f$symptoms,
@@ -346,6 +353,8 @@ class SideEffectModelMapper extends SubClassMapperBase<SideEffectModel> {
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
         projectId: data.dec(_f$projectId),
+        projectBeneficiaryClientReferenceId:
+            data.dec(_f$projectBeneficiaryClientReferenceId),
         taskClientReferenceId: data.dec(_f$taskClientReferenceId),
         reAttempts: data.dec(_f$reAttempts),
         symptoms: data.dec(_f$symptoms),
@@ -392,10 +401,8 @@ mixin SideEffectModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SideEffectModelMapper.ensureInitialized()
-                .isValueEqual(this as SideEffectModel, other));
+    return SideEffectModelMapper.ensureInitialized()
+        .equalsValue(this as SideEffectModel, other);
   }
 
   @override
@@ -426,6 +433,7 @@ abstract class SideEffectModelCopyWith<$R, $In extends SideEffectModel, $Out>
       {SideEffectAdditionalFields? additionalFields,
       String? id,
       String? projectId,
+      String? projectBeneficiaryClientReferenceId,
       String? taskClientReferenceId,
       int? reAttempts,
       List<String>? symptoms,
@@ -473,6 +481,7 @@ class _SideEffectModelCopyWithImpl<$R, $Out>
           {Object? additionalFields = $none,
           Object? id = $none,
           Object? projectId = $none,
+          Object? projectBeneficiaryClientReferenceId = $none,
           Object? taskClientReferenceId = $none,
           Object? reAttempts = $none,
           Object? symptoms = $none,
@@ -487,6 +496,9 @@ class _SideEffectModelCopyWithImpl<$R, $Out>
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
         if (projectId != $none) #projectId: projectId,
+        if (projectBeneficiaryClientReferenceId != $none)
+          #projectBeneficiaryClientReferenceId:
+              projectBeneficiaryClientReferenceId,
         if (taskClientReferenceId != $none)
           #taskClientReferenceId: taskClientReferenceId,
         if (reAttempts != $none) #reAttempts: reAttempts,
@@ -507,6 +519,9 @@ class _SideEffectModelCopyWithImpl<$R, $Out>
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
       projectId: data.get(#projectId, or: $value.projectId),
+      projectBeneficiaryClientReferenceId: data.get(
+          #projectBeneficiaryClientReferenceId,
+          or: $value.projectBeneficiaryClientReferenceId),
       taskClientReferenceId:
           data.get(#taskClientReferenceId, or: $value.taskClientReferenceId),
       reAttempts: data.get(#reAttempts, or: $value.reAttempts),
@@ -616,10 +631,8 @@ mixin SideEffectAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SideEffectAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as SideEffectAdditionalFields, other));
+    return SideEffectAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as SideEffectAdditionalFields, other);
   }
 
   @override

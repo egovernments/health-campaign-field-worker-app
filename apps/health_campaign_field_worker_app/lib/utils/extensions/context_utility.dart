@@ -26,6 +26,16 @@ extension ContextUtilityExtensions on BuildContext {
 
   String get projectId => selectedProject.id;
 
+  String? get projectTypeCode {
+    final projectType = selectedProject.projectType;
+
+    if (projectType == null) {
+      return "";
+    }
+
+    return projectType;
+  }
+
   ProjectCycle? get selectedCycle {
     final projectBloc = _get<ProjectBloc>();
 
@@ -77,8 +87,8 @@ extension ContextUtilityExtensions on BuildContext {
 
     final projectState = projectBloc.state;
 
-    final BeneficiaryType? selectedBeneficiary =
-        projectState.selectedProject?.targets?.firstOrNull?.beneficiaryType;
+    final BeneficiaryType? selectedBeneficiary = projectState
+        .selectedProject?.additionalDetails?.projectType?.beneficiaryType;
 
     if (selectedBeneficiary == null) {
       throw AppException('No beneficiary type is selected');
@@ -103,7 +113,13 @@ extension ContextUtilityExtensions on BuildContext {
     RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
     ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
+    InventorySingleton().setBoundary(boundary: selectedBoundary);
     ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
+    ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
+    AttendanceSingleton().setBoundary(boundary: selectedBoundary);
+    LocationTrackerSingleton()
+        .setBoundaryName(boundaryName: selectedBoundary.code!);
     return selectedBoundary;
   }
 
@@ -220,5 +236,17 @@ extension ContextUtilityExtensions on BuildContext {
     } catch (error) {
       throw AppException('Could not fetch ${T.runtimeType}');
     }
+  }
+
+  // sync refresh
+  void syncRefresh() {
+    final syncBloc = _get<SyncBloc>();
+    syncBloc.add(SyncRefreshEvent(loggedInUserUuid));
+  }
+
+  // insert sync count
+  Stream<SyncState> syncCount() {
+    final syncBloc = _get<SyncBloc>();
+    return syncBloc.stream;
   }
 }

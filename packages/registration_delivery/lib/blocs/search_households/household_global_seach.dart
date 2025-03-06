@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -50,6 +51,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
     final results = await houseHoldGlobalSearchRepository.houseHoldGlobalSearch(
       GlobalSearchParameters(
+          householdType: event.globalSearchParams.householdType,
           projectId: event.globalSearchParams.projectId,
           isProximityEnabled: event.globalSearchParams.isProximityEnabled,
           latitude: event.globalSearchParams.latitude,
@@ -215,6 +217,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
+
       sideEffectsList = tasksRelated[1];
       referralsList = tasksRelated[2];
 
@@ -329,7 +332,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     if (projectBeneficiariesList.isNotEmpty) {
       if (taskList.isEmpty) {
         taskList =
-            await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
+            await fetchTaskByProjectBeneficiary(projectBeneficiariesList);
       }
       sideEffectsList =
           await sideEffectDataRepository.search(SideEffectSearchModel(

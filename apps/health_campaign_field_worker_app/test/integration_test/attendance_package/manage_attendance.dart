@@ -1,6 +1,6 @@
 import 'package:attendance_management/pages/manage_attendance.dart';
 import 'package:attendance_management/pages/session_select.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../test_variables.dart';
@@ -21,7 +21,7 @@ Future<void> manageAttendance(WidgetTester widgetTester) async {
   );
 
   //check for registers
-  expect(find.byType(DigitElevatedButton), findsAtLeast(1));
+  expect(find.byType(DigitButton), findsAtLeast(1));
 
   await widgetTester.scrollUntilVisible(
     widgetSelector['openRegister']!,

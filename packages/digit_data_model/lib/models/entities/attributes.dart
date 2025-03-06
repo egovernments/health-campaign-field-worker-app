@@ -1,25 +1,25 @@
 // Generated using mason. Do not modify by hand
+import 'dart:convert';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
-
-import '../../data/local_store/sql_store/sql_store.dart';
 
 part 'attributes.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class AttributesSearchModel extends EntitySearchModel with AttributesSearchModelMappable {
+class AttributesSearchModel extends EntitySearchModel
+    with AttributesSearchModelMappable {
   final String? id;
   final String? dataType;
   final String? referenceId;
   final String? tenantId;
   final String? code;
-  final String? isActive;
+  final bool? isActive;
   final bool? required;
   final String? regex;
   final int? order;
-  
+
   AttributesSearchModel({
     this.id,
     this.dataType,
@@ -32,7 +32,7 @@ class AttributesSearchModel extends EntitySearchModel with AttributesSearchModel
     this.order,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   AttributesSearchModel.ignoreDeleted({
@@ -46,12 +46,11 @@ class AttributesSearchModel extends EntitySearchModel with AttributesSearchModel
     this.regex,
     this.order,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class AttributesModel extends EntityModel with AttributesModelMappable {
-
   static const schemaName = 'Attributes';
 
   final String? id;
@@ -60,15 +59,17 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
   final String? tenantId;
   final String? code;
   final List<String>? values;
-  final String? isActive;
+  final bool? isActive;
   final bool? required;
   final String? regex;
   final int? order;
   final bool? nonRecoverableError;
   final int? rowVersion;
   final AttributesAdditionalFields? additionalFields;
+  final Map<String, dynamic>? additionalDetails;
 
   AttributesModel({
+    this.additionalDetails,
     this.additionalFields,
     this.id,
     this.dataType,
@@ -82,9 +83,10 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
     this.order,
     this.nonRecoverableError = false,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   AttributesCompanion get companion {
     return AttributesCompanion(
@@ -110,16 +112,17 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
       order: Value(order),
       nonRecoverableError: Value(nonRecoverableError),
       rowVersion: Value(rowVersion),
-      );
+      additionalDetails: Value(jsonEncode(additionalDetails)),
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class AttributesAdditionalFields extends AdditionalFields with AttributesAdditionalFieldsMappable {
+class AttributesAdditionalFields extends AdditionalFields
+    with AttributesAdditionalFieldsMappable {
   AttributesAdditionalFields({
     super.schema = 'Attributes',
     required super.version,
     super.fields,
   });
 }
-

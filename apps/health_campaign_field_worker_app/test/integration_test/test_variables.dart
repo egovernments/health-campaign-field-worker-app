@@ -1,4 +1,4 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/widgets/home/home_item_card.dart';
 
@@ -22,18 +22,18 @@ Map<String, dynamic> getTestData() {
 // if the names of the following buttons change in the app, you can change them here
 Map<String, Finder> getWidgets() {
   //login
-  final username = find.byType(DigitTextFormField).first;
-  final password = find.byType(DigitTextFormField).last;
-  final continueButton = find.widgetWithText(DigitElevatedButton, 'Continue');
-  final login = find.byType(DigitElevatedButton);
+  final username = find.byType(DigitTextFormInput).first;
+  final password = find.byType(DigitTextFormInput).last;
+  final continueButton = find.widgetWithText(DigitButton, 'Continue');
+  final login = find.byType(DigitButton);
   final submit = find.widgetWithText(
-    DigitElevatedButton,
+    DigitButton,
     'Submit',
   );
 
   //attendance
   final markAttendanceButton =
-      find.widgetWithText(DigitElevatedButton, 'Mark Attendance');
+      find.widgetWithText(DigitButton, 'Mark Attendance');
   final manageAttendanceButton =
       find.widgetWithText(HomeItemCard, 'Manage Attendance');
   final openRegister = find.text('Open Register').at(3);

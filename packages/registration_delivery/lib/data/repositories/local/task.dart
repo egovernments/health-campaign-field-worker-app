@@ -114,7 +114,13 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                 sql.task.auditCreatedBy.equals(
                   userId,
                 ),
-            ])))
+            ]))
+            ..orderBy([
+              OrderingTerm(
+                expression: sql.task.clientModifiedTime,
+                mode: OrderingMode.asc,
+              ),
+            ]))
           .get();
 
       final tasksMap = <String, TaskModel>{};
