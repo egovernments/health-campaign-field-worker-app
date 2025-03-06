@@ -26,7 +26,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -51,19 +54,9 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y',
-    appId: '1:397617237644:android:65f82dc21b1ad4d0f6b5a9',
+    appId: '1:397617237644:android:2efde986bec30f99f6b5a9',
     messagingSenderId: '397617237644',
     projectId: 'digit-health-75ed0',
     storageBucket: 'digit-health-75ed0.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAcvb5-mL5VJA5hbm2Detexa01ZDt48z-U',
-    appId: '1:397617237644:ios:6711bca5cf278891f6b5a9',
-    messagingSenderId: '397617237644',
-    projectId: 'digit-health-75ed0',
-    storageBucket: 'digit-health-75ed0.appspot.com',
-    iosClientId: '397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com',
-    iosBundleId: 'org.egov.salama',
   );
 }
