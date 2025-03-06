@@ -414,7 +414,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           if (params.nameSearch == null || !params.isProximityEnabled)
             leftOuterJoin(
                 sql.projectBeneficiary,
-                sql.projectBeneficiary.beneficiaryClientReferenceId.equalsExp(
+                sql.projectBeneficiary.clientReferenceId.equalsExp(
                     sql.referral.projectBeneficiaryClientReferenceId))
         ]);
       } else {
@@ -451,8 +451,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         selectQuery = selectQuery.join([
           leftOuterJoin(
               sql.referral,
-              sql.referral.projectBeneficiaryClientReferenceId.equalsExp(
-                  sql.projectBeneficiary.beneficiaryClientReferenceId))
+              sql.referral.projectBeneficiaryClientReferenceId
+                  .equalsExp(sql.projectBeneficiary.clientReferenceId))
         ]);
       } else {
         var filterSearchQuery =
