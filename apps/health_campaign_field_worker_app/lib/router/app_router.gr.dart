@@ -92,11 +92,11 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     CustomClosedHouseholdSummaryRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomClosedHouseholdSummaryRouteArgs>(
-          orElse: () => const CustomClosedHouseholdSummaryRouteArgs());
+      final args = routeData.argsAs<CustomClosedHouseholdSummaryRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomClosedHouseholdSummaryPage(
+          reason: args.reason,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -724,12 +724,14 @@ class CustomClosedHouseholdDetailsRouteArgs {
 class CustomClosedHouseholdSummaryRoute
     extends PageRouteInfo<CustomClosedHouseholdSummaryRouteArgs> {
   CustomClosedHouseholdSummaryRoute({
+    required dynamic reason,
     Key? key,
     AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
           CustomClosedHouseholdSummaryRoute.name,
           args: CustomClosedHouseholdSummaryRouteArgs(
+            reason: reason,
             key: key,
             appLocalizations: appLocalizations,
           ),
@@ -744,9 +746,12 @@ class CustomClosedHouseholdSummaryRoute
 
 class CustomClosedHouseholdSummaryRouteArgs {
   const CustomClosedHouseholdSummaryRouteArgs({
+    required this.reason,
     this.key,
     this.appLocalizations,
   });
+
+  final dynamic reason;
 
   final Key? key;
 
@@ -754,7 +759,7 @@ class CustomClosedHouseholdSummaryRouteArgs {
 
   @override
   String toString() {
-    return 'CustomClosedHouseholdSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'CustomClosedHouseholdSummaryRouteArgs{reason: $reason, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

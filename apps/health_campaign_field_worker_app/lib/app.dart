@@ -34,6 +34,7 @@ import 'utils/environment_config.dart';
 import 'utils/localization_delegates.dart';
 import 'utils/utils.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
+import 'blocs/custom_blocs/closed_household.dart' as custombloc;
 
 class MainApplication extends StatefulWidget {
   final Dio client;
@@ -343,6 +344,26 @@ class MainApplicationState extends State<MainApplication>
                                 .repository<StockModel, StockSearchModel>(),
                           ),
                         ),
+                        BlocProvider(
+                          create: (_) {
+                            return custombloc.ClosedHouseholdBloc(
+                              const custombloc.ClosedHouseholdState(),
+                              householdMemberRepository: context.repository<
+                                  HouseholdMemberModel,
+                                  HouseholdMemberSearchModel>(),
+                              householdRepository: context.repository<
+                                  HouseholdModel, HouseholdSearchModel>(),
+                              individualRepository: context.repository<
+                                  IndividualModel, IndividualSearchModel>(),
+                              projectBeneficiaryRepository: context.repository<
+                                  ProjectBeneficiaryModel,
+                                  ProjectBeneficiarySearchModel>(),
+                              taskRepository: context
+                                  .repository<TaskModel, TaskSearchModel>(),
+                            );
+                          },
+                          lazy: false,
+                        )
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
