@@ -532,15 +532,15 @@ class CustomIndividualDetailsPageState
                                   .replaceAll('10', "8")
                             },
                             onChanged: (value) {
-                              int? numberText = value.value;
-                              if (numberText == null) {
+                              String? numberText = value.value;
+                              if (numberText != null && numberText.isNotEmpty) {
+                                form.control(_phoneNumberKey).setValidators([
+                                  Validators.minLength(8),
+                                ], autoValidate: true);
+                              } else {
                                 form
                                     .control(_phoneNumberKey)
                                     .setValidators([], autoValidate: true);
-                              } else {
-                                form.control(_phoneNumberKey).setValidators([
-                                  Validators.number(allowNegatives: false),
-                                ], autoValidate: true);
                               }
                             },
                           ),
@@ -722,7 +722,7 @@ class CustomIndividualDetailsPageState
     );
 
     String? individualName = form.control(_individualNameKey).value as String?;
-    int? mobileNumber = form.control(_phoneNumberKey).value as int?;
+    String? mobileNumber = form.control(_phoneNumberKey).value as String?;
     String? nationalIdCardNumber =
         form.control(_nationalIdCardNumberKey).value as String?;
     individual = individual.copyWith(
@@ -733,7 +733,7 @@ class CustomIndividualDetailsPageState
           ? null
           : Gender.values
               .byName(form.control(_genderKey).value.toString().toLowerCase()),
-      mobileNumber: mobileNumber?.toString(),
+      mobileNumber: mobileNumber,
       dateOfBirth: dobString,
       identifiers: [
         identifier.copyWith(
@@ -793,7 +793,7 @@ class CustomIndividualDetailsPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _phoneNumberKey: FormControl<int>(),
+      _phoneNumberKey: FormControl<String>(),
     });
   }
 
