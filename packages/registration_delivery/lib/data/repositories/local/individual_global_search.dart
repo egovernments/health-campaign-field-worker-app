@@ -78,8 +78,9 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       // Apply filters if present
       if (params.filter != null && params.filter!.isNotEmpty) {
         for (var filter in params.filter!) {
-          filterSelectQuery =
-              await filterSearch(filterSelectQuery, params, filter, super.sql);
+          filterSelectQuery = await filterSearch(
+                  filterSelectQuery, params, filter, super.sql) ??
+              nameSelectQuery;
         }
       } else {
         filterSelectQuery = nameSelectQuery;
@@ -129,7 +130,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                         ),
                 );
               })
-              .where((element) => element.isDeleted != true)
+              .where((e) => e != null)
+              .where((element) => element!.isDeleted != true)
               .toList();
         } else {
           data = results
@@ -171,7 +173,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               .toList();
         }
 
-        return {"data": data, "total_count": count};
+        return {"data": data, "total_count": data.isNotEmpty ? count : 0};
       }
     } else {
       var proximitySelectQuery =
@@ -453,7 +455,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               sql.referral,
               sql.referral.projectBeneficiaryClientReferenceId
                   .equalsExp(sql.projectBeneficiary.clientReferenceId))
-        ]);
+        ]).where(sql.referral.projectBeneficiaryClientReferenceId
+            .equalsExp(sql.projectBeneficiary.clientReferenceId));
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -471,7 +474,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       Status.visited.name: Status.visited,
       Status.notVisited.name: Status.notVisited,
       Status.beneficiaryRefused.name: Status.beneficiaryRefused,
-      Status.beneficiaryReferred.name: Status.beneficiaryReferred,
       Status.administeredSuccess.name: Status.administeredSuccess,
       Status.administeredFailed.name: Status.administeredFailed,
       Status.inComplete.name: Status.inComplete,
@@ -703,6 +705,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         .where((element) => element.isDeleted != true)
         .toList();
 
-    return {'total_count': count, 'data': data};
+    return {'total_count': data.isNotEmpty ? count : 0, 'data': data};
   }
 }
