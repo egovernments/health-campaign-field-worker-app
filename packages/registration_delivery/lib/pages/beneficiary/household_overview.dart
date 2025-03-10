@@ -181,16 +181,19 @@ class _HouseholdOverviewPageState
                                                             context: context,
                                                             builder: (BuildContext context) => Popup(
                                                                 title: localizations
-                                                                    .translate(
-                                                                        i18.common
-                                                                            .coreCommonError),
-                                                                description: localizations.translate(productVariants[
-                                                                        'errors']
-                                                                    .toString()
-                                                                    .replaceAll(
-                                                                        '[', '')
-                                                                    .replaceAll(
-                                                                        ']', '')),
+                                                                    .translate(i18
+                                                                        .common
+                                                                        .coreCommonError),
+                                                                description: localizations.translate(
+                                                                        'CONDITION_FAILED') +
+                                                                    productVariants['errors']
+                                                                        .toString()
+                                                                        .replaceAll(
+                                                                            '[',
+                                                                            '')
+                                                                        .replaceAll(
+                                                                            ']',
+                                                                            ''),
                                                                 type: PopUpType
                                                                     .alert,
                                                                 actions: [
@@ -320,16 +323,16 @@ class _HouseholdOverviewPageState
                                                                       .common
                                                                       .coreCommonError),
                                                               description: localizations.translate(
+                                                                      'CONDITION_FAILED') +
                                                                   productVariants[
                                                                           'errors']
                                                                       .toString()
                                                                       .replaceAll(
                                                                           '[', '')
                                                                       .replaceAll(
-                                                                          ']',
-                                                                          '')),
-                                                              type:
-                                                                  PopUpType.alert,
+                                                                          ']', ''),
+                                                              type: PopUpType
+                                                                  .alert,
                                                               actions: [
                                                                 DigitButton(
                                                                     label: localizations
