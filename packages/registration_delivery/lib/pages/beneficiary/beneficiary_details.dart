@@ -209,13 +209,15 @@ class BeneficiaryDetailsPageState
                                                                   .common
                                                                   .coreCommonError),
                                                           description: localizations
-                                                              .translate(productVariants[
+                                                                  .translate(
+                                                                      'CONDITION_FAILED') +
+                                                              productVariants[
                                                                       'errors']
                                                                   .toString()
                                                                   .replaceAll(
                                                                       '[', '')
                                                                   .replaceAll(
-                                                                      ']', '')),
+                                                                      ']', ''),
                                                           type: PopUpType.alert,
                                                           actions: [
                                                             DigitButton(
@@ -326,18 +328,19 @@ class BeneficiaryDetailsPageState
                                                         context) =>
                                                     Popup(
                                                         title: localizations
-                                                            .translate(i18.common
+                                                            .translate(i18
+                                                                .common
                                                                 .coreCommonError),
                                                         description: localizations
-                                                            .translate(
-                                                                productVariants[
-                                                                        'errors']
-                                                                    .toString()
-                                                                    .replaceAll(
-                                                                        '[', '')
-                                                                    .replaceAll(
-                                                                        ']',
-                                                                        '')),
+                                                                .translate(
+                                                                    'CONDITION_FAILED') +
+                                                            productVariants[
+                                                                    'errors']
+                                                                .toString()
+                                                                .replaceAll(
+                                                                    '[', '')
+                                                                .replaceAll(
+                                                                    ']', ''),
                                                         type: PopUpType.alert,
                                                         actions: [
                                                       DigitButton(

@@ -185,11 +185,12 @@ class DeliverInterventionPageState
                               builder: (BuildContext context) => Popup(
                                   title: localizations
                                       .translate(i18.common.coreCommonError),
-                                  description: localizations.translate(
+                                  description: localizations
+                                          .translate('CONDITION_FAILED') +
                                       checkForFormulaErrors['errors']
                                           .toString()
                                           .replaceAll('[', '')
-                                          .replaceAll(']', '')),
+                                          .replaceAll(']', ''),
                                   type: PopUpType.alert,
                                   actions: [
                                     DigitButton(
