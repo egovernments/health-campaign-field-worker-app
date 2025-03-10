@@ -93,6 +93,7 @@ class Constants {
   static const String refugeeCamp = "refugeeCamp";
   static const String communityKey = 'communityKey';
   static const String householdTypeKey = 'householdTypeKey';
+  static const String nationalWarehouse = 'National Warehouse';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

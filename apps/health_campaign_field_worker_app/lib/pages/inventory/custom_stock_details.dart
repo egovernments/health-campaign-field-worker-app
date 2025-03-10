@@ -14,6 +14,7 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import 'package:registration_delivery/utils/utils.dart' as registration_utils;
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
@@ -25,6 +26,7 @@ import 'package:registration_delivery/utils/utils.dart'
     as CustomValidatorRegistration;
 
 import '../../router/app_router.dart';
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import '../custom_qr_scanner.dart';
 
@@ -991,6 +993,20 @@ class CustomStockDetailsPageState
                                                   CircularProgressIndicator(),
                                             ),
                                         fetched: (facilities, allFacilities) {
+                                          List<FacilityModel>
+                                              filteredFacilities = [];
+
+                                          filteredFacilities.addAll(facilities);
+
+                                          // add national level facility to the list
+                                          filteredFacilities.addAll(
+                                              allFacilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants
+                                                          .nationalWarehouse)
+                                                  .toList());
+
                                           return InkWell(
                                             onTap: () async {
                                               clearQRCodes();
@@ -1011,12 +1027,12 @@ class CustomStockDetailsPageState
                                                   .control(_deliveryTeamKey)
                                                   .value = '';
 
-                                              final facility =
-                                                  await context.router.push(
-                                                          CustomInventoryFacilitySelectionRoute(
-                                                              facilities:
-                                                                  allFacilities))
-                                                      as FacilityModel?;
+                                              final facility = await context
+                                                      .router
+                                                      .push(CustomInventoryFacilitySelectionRoute(
+                                                          facilities:
+                                                              filteredFacilities))
+                                                  as FacilityModel?;
 
                                               if (facility == null) return;
                                               form
@@ -1207,7 +1223,8 @@ class CustomStockDetailsPageState
                                                   final facility =
                                                       await context.router.push(
                                                     CustomInventoryFacilitySelectionRoute(
-                                                      facilities: allFacilities,
+                                                      facilities:
+                                                          filteredFacilities,
                                                     ),
                                                   ) as FacilityModel?;
 
