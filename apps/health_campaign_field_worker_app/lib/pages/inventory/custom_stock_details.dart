@@ -45,6 +45,7 @@ class CustomStockDetailsPageState
     extends LocalizedState<CustomStockDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
+  static const _looseQuantityKey = 'looseQuantity';
   static const _transactionQuantityKey = 'quantity';
   static const _transactionReasonKey = 'transactionReason';
   static const _waybillNumberKey = 'waybillNumber';
@@ -79,6 +80,19 @@ class CustomStockDetailsPageState
         Validators.min(0),
         Validators.max(10000),
       ]),
+      _looseQuantityKey: FormControl<int>(
+        validators: [
+          StockRecordEntryType.receipt,
+          StockRecordEntryType.dispatch,
+          StockRecordEntryType.returned
+        ].contains(stockType)
+            ? [
+                Validators.number(),
+                Validators.min(0),
+                Validators.max(10000),
+              ]
+            : [],
+      ),
       _transactionReasonKey: FormControl<String>(validators: []),
       _waybillNumberKey: FormControl<String>(
         validators: [],
@@ -179,6 +193,8 @@ class CustomStockDetailsPageState
                 String transactionPartyLabel;
                 String balesCountLabel;
                 String quantityCountLabel;
+                String looseQuantityCountLabel =
+                    i18_local.stockDetails.looseQuantityLabel;
                 String? transactionReasonLabel;
                 String? transactionReason;
                 String transactionType;
@@ -405,6 +421,10 @@ class CustomStockDetailsPageState
                                           final quantity = form
                                               .control(_transactionQuantityKey)
                                               .value;
+
+                                          final looseQuantity = form
+                                              .control(_looseQuantityKey)
+                                              .value as int?;
 
                                           final waybillNumber = form
                                               .control(_waybillNumberKey)
@@ -768,6 +788,11 @@ class CustomStockDetailsPageState
                                                         AdditionalField(
                                                             _balesQuantityKey,
                                                             balesQuantity
+                                                                .toString()),
+                                                      if (looseQuantity != null)
+                                                        AdditionalField(
+                                                            _looseQuantityKey,
+                                                            looseQuantity
                                                                 .toString()),
                                                       if (transportTypeName !=
                                                           null)
@@ -1419,7 +1444,44 @@ class CustomStockDetailsPageState
                                             '${quantityCountLabel}_MIN_ERROR',
                                           ),
                                     },
+                                    onChanged: (formGroup) {
+                                      calculateFinalQuantity(form);
+                                    },
                                   ),
+                                DigitTextFormField(
+                                  key: const Key(_looseQuantityKey),
+                                  formControlName: _looseQuantityKey,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                                  isRequired: false,
+                                  validationMessages: {
+                                    "number": (object) =>
+                                        localizations.translate(
+                                          '${quantityCountLabel}_ERROR',
+                                        ),
+                                    "max": (object) => localizations.translate(
+                                          '${quantityCountLabel}_MAX_ERROR',
+                                        ),
+                                    "min": (object) => localizations.translate(
+                                          '${quantityCountLabel}_MIN_ERROR',
+                                        ),
+                                  },
+                                  onChanged: (val) {
+                                    if (val.value != null) {
+                                      if (val.value > 10000000000) {
+                                        form
+                                            .control(_transactionQuantityKey)
+                                            .value = 10000;
+                                      }
+                                      calculateFinalQuantity(form);
+                                    }
+                                  },
+                                  label: localizations.translate(
+                                    looseQuantityCountLabel,
+                                  ),
+                                ),
                                 //Transaction Quantity
                                 DigitTextFormField(
                                   key: const Key(_transactionQuantityKey),
@@ -1429,6 +1491,7 @@ class CustomStockDetailsPageState
                                     decimal: true,
                                   ),
                                   isRequired: true,
+                                  readOnly: true,
                                   validationMessages: {
                                     "number": (object) =>
                                         localizations.translate(
@@ -1451,7 +1514,7 @@ class CustomStockDetailsPageState
                                     }
                                   },
                                   label: localizations.translate(
-                                    quantityCountLabel,
+                                    looseQuantityCountLabel,
                                   ),
                                 ),
                                 //Delivery Team
@@ -1994,6 +2057,20 @@ class CustomStockDetailsPageState
         ),
       ),
     );
+  }
+
+// sets final quantity value based on other quantity
+  void calculateFinalQuantity(FormGroup form) {
+    final balesQuantity = form.control(_balesQuantityKey).value as int?;
+    final looseQuantity = form.control(_looseQuantityKey).value as int?;
+
+    if (balesQuantity != null) {
+      final quantity = balesQuantity * 50 + (looseQuantity ?? 0);
+
+      setState(() {
+        form.control(_transactionQuantityKey).value = quantity;
+      });
+    }
   }
 
   void clearQRCodes() {

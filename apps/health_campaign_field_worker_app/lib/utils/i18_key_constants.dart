@@ -1137,6 +1137,7 @@ class StockDetails {
 
   String get balesDamagedCountLabel => 'STOCK_DETAILS_BALES_DAMAGED';
   String get balesQuantityRequiredError => 'BALES_QUANTITY_REQUIRED_ERROR';
+  String get looseQuantityLabel => 'STOCK_DETAILS_LOOSE_QUANTITY_LABEL';
 
   // comments
   String get manualScanCommentsLabel =>
