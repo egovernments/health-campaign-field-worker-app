@@ -405,19 +405,18 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: bcb6c328a75df1442672e39c0dbae32bc9cb067a07a581bded672d2b748957b9
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_data_model"
+      relative: true
+    source: path
     version: "1.0.6"
   digit_scanner:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: "69580859ba9b63f32e40e6d56bf55a016eb623007ea06552b38f70056ea06dfe"
+      sha256: c8f82938906a11c516d445d7e5e27b7e6c6a1d07e0a608c2f90f63dd234241a5
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.5+1"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -430,10 +429,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "687906c379faedf72f97277a2d0a844bbfa41c908a46fd998332d888694cbe78"
+      sha256: f371af457d5be79c25d05b3e05c230c12be347c664c577619087f5575df8530f
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.14"
+    version: "0.2.1"
   dio:
     dependency: transitive
     description:
@@ -1313,10 +1312,9 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "4354d586163faa46a1880a72dfcc380025599d370a194e6f14a7bba68f17906c"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../registration_delivery"
+      relative: true
+    source: path
     version: "1.0.6"
   rxdart:
     dependency: transitive
@@ -1471,10 +1469,10 @@ packages:
     dependency: transitive
     description:
       name: survey_form
-      sha256: f601e5205ccd9d945d241789b30365203834d5d3e0ce718706a5f1cc4e49e137
+      sha256: "384860a28db67acbbf94725a1ec0a41c3e9eebeb9d196c02e441f8cdb53c793e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.1+1"
   synchronized:
     dependency: transitive
     description:
