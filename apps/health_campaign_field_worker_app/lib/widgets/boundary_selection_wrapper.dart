@@ -1,5 +1,5 @@
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/blocs/boundary/boundary.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,9 +11,9 @@ class BoundarySelectionWrapper extends StatelessWidget {
   final Widget child;
 
   const BoundarySelectionWrapper({
-    super.key,
+    Key? key,
     required this.child,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) =>

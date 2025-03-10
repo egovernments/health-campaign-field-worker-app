@@ -2,13 +2,13 @@ import 'dart:ui';
 
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
-import 'package:digit_components/blocs/localization.dart'
-    as component_localization;
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_dss/blocs/app_localization.dart'
     as digit_dss_localization;
 import 'package:digit_scanner/blocs/app_localization.dart'
     as scanner_localization;
+import 'package:digit_ui_components/services/AppLocalization.dart'
+    as component_localization;
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../blocs/localization/app_localization.dart';

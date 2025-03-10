@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_location_tracker/utils/utils.dart';

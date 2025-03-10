@@ -26,6 +26,16 @@ extension ContextUtilityExtensions on BuildContext {
 
   String get projectId => selectedProject.id;
 
+  String? get projectTypeCode {
+    final projectType = selectedProject.projectType;
+
+    if (projectType == null) {
+      return "";
+    }
+
+    return projectType;
+  }
+
   ProjectCycle? get selectedCycle {
     final projectBloc = _get<ProjectBloc>();
 
@@ -100,6 +110,7 @@ extension ContextUtilityExtensions on BuildContext {
       throw AppException('No boundary is selected');
     }
     // INFO: Set Boundary for packages
+    AttendanceSingleton().setBoundary(boundary: selectedBoundary);
     LocationTrackerSingleton()
         .setBoundaryName(boundaryName: selectedBoundary.code!);
     return selectedBoundary;

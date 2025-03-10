@@ -430,6 +430,7 @@ mixin _$LocalizationState {
   bool get loading => throw _privateConstructorUsedError;
   int get index => throw _privateConstructorUsedError;
   bool get isLocalizationLoadCompleted => throw _privateConstructorUsedError;
+  String? get retryModule => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $LocalizationStateCopyWith<LocalizationState> get copyWith =>
@@ -442,7 +443,11 @@ abstract class $LocalizationStateCopyWith<$Res> {
           LocalizationState value, $Res Function(LocalizationState) then) =
       _$LocalizationStateCopyWithImpl<$Res, LocalizationState>;
   @useResult
-  $Res call({bool loading, int index, bool isLocalizationLoadCompleted});
+  $Res call(
+      {bool loading,
+      int index,
+      bool isLocalizationLoadCompleted,
+      String? retryModule});
 }
 
 /// @nodoc
@@ -461,6 +466,7 @@ class _$LocalizationStateCopyWithImpl<$Res, $Val extends LocalizationState>
     Object? loading = null,
     Object? index = null,
     Object? isLocalizationLoadCompleted = null,
+    Object? retryModule = freezed,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -475,6 +481,10 @@ class _$LocalizationStateCopyWithImpl<$Res, $Val extends LocalizationState>
           ? _value.isLocalizationLoadCompleted
           : isLocalizationLoadCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      retryModule: freezed == retryModule
+          ? _value.retryModule
+          : retryModule // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -487,7 +497,11 @@ abstract class _$$LocalizationStateImplCopyWith<$Res>
       __$$LocalizationStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool loading, int index, bool isLocalizationLoadCompleted});
+  $Res call(
+      {bool loading,
+      int index,
+      bool isLocalizationLoadCompleted,
+      String? retryModule});
 }
 
 /// @nodoc
@@ -504,6 +518,7 @@ class __$$LocalizationStateImplCopyWithImpl<$Res>
     Object? loading = null,
     Object? index = null,
     Object? isLocalizationLoadCompleted = null,
+    Object? retryModule = freezed,
   }) {
     return _then(_$LocalizationStateImpl(
       loading: null == loading
@@ -518,6 +533,10 @@ class __$$LocalizationStateImplCopyWithImpl<$Res>
           ? _value.isLocalizationLoadCompleted
           : isLocalizationLoadCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      retryModule: freezed == retryModule
+          ? _value.retryModule
+          : retryModule // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -528,7 +547,8 @@ class _$LocalizationStateImpl implements _LocalizationState {
   const _$LocalizationStateImpl(
       {this.loading = false,
       this.index = 0,
-      this.isLocalizationLoadCompleted = false});
+      this.isLocalizationLoadCompleted = false,
+      this.retryModule});
 
   @override
   @JsonKey()
@@ -539,10 +559,12 @@ class _$LocalizationStateImpl implements _LocalizationState {
   @override
   @JsonKey()
   final bool isLocalizationLoadCompleted;
+  @override
+  final String? retryModule;
 
   @override
   String toString() {
-    return 'LocalizationState(loading: $loading, index: $index, isLocalizationLoadCompleted: $isLocalizationLoadCompleted)';
+    return 'LocalizationState(loading: $loading, index: $index, isLocalizationLoadCompleted: $isLocalizationLoadCompleted, retryModule: $retryModule)';
   }
 
   @override
@@ -555,12 +577,14 @@ class _$LocalizationStateImpl implements _LocalizationState {
             (identical(other.isLocalizationLoadCompleted,
                     isLocalizationLoadCompleted) ||
                 other.isLocalizationLoadCompleted ==
-                    isLocalizationLoadCompleted));
+                    isLocalizationLoadCompleted) &&
+            (identical(other.retryModule, retryModule) ||
+                other.retryModule == retryModule));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, loading, index, isLocalizationLoadCompleted);
+  int get hashCode => Object.hash(
+      runtimeType, loading, index, isLocalizationLoadCompleted, retryModule);
 
   @JsonKey(ignore: true)
   @override
@@ -574,7 +598,8 @@ abstract class _LocalizationState implements LocalizationState {
   const factory _LocalizationState(
       {final bool loading,
       final int index,
-      final bool isLocalizationLoadCompleted}) = _$LocalizationStateImpl;
+      final bool isLocalizationLoadCompleted,
+      final String? retryModule}) = _$LocalizationStateImpl;
 
   @override
   bool get loading;
@@ -582,6 +607,8 @@ abstract class _LocalizationState implements LocalizationState {
   int get index;
   @override
   bool get isLocalizationLoadCompleted;
+  @override
+  String? get retryModule;
   @override
   @JsonKey(ignore: true)
   _$$LocalizationStateImplCopyWith<_$LocalizationStateImpl> get copyWith =>

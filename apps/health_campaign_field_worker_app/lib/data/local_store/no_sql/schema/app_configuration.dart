@@ -75,6 +75,9 @@ class AppConfiguration {
   @Name('SEARCH_HOUSEHOLD_FILTERS')
   late List<SearchHouseHoldFilters>? searchHouseHoldFilters;
 
+  @Name('SEARCH_CLF_FILTERS')
+  late List<SearchCLFFilters>? searchCLFFilters;
+
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
@@ -171,6 +174,13 @@ class HouseholdDeletionReasonOptions {
 
 @embedded
 class SearchHouseHoldFilters {
+  late String name;
+  late String code;
+  late bool active;
+}
+
+@embedded
+class SearchCLFFilters {
   late String name;
   late String code;
   late bool active;

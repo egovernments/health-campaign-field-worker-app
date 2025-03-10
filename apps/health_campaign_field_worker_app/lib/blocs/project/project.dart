@@ -3,22 +3,24 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_dss/data/remote/dashboard.dart';
+import 'package:digit_dss/digit_dss.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
-import '../../models/entities/roles_type.dart';
+import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/least_level_boundary_singleton.dart';
 import '../../utils/utils.dart';
 
 part 'project.freezed.dart';
@@ -143,6 +145,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadOnline(ProjectEmitter emit) async {
+    final batchSize = await _getBatchSize();
     final userObject = await localSecureStore.userRequestModel;
     final uuid = userObject?.uuid;
 
@@ -184,19 +187,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       List<ProjectModel> staffProjects;
       try {
-        if (context.loggedInUserRoles
-            .where(
-              (role) => role.code == RolesType.districtSupervisor.toValue(),
-            )
-            .toList()
-            .isNotEmpty) {
-          final individual = await individualRemoteRepository.search(
-            IndividualSearchModel(
-              userUuid: [projectStaff.userId.toString()],
-            ),
-          );
-        }
-
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(
             id: projectStaff.projectId,
@@ -228,7 +218,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       // INFO : Need to add project load functions
 
       try {
-        await _loadProjectFacilities(projects);
+        await _loadProjectFacilities(projects, batchSize);
       } catch (_) {
         emit(
           state.copyWith(
@@ -277,9 +267,19 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         selectedProject: selectedProject,
       ),
     );
+
+    /* An empty BoundarySearchModel is sent to retrieve all boundaries from the repository.
+    This ensures that the entire dataset is fetched, as no specific filters or constraints are applied.
+    The retrieved boundaries are then processed to find the least level boundaries and set them in the singleton.*/
+    final boundaries = await boundaryLocalRepository.search(
+      BoundarySearchModel(),
+    );
+    LeastLevelBoundarySingleton()
+        .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
   }
 
-  FutureOr<void> _loadProjectFacilities(List<ProjectModel> projects) async {
+  FutureOr<void> _loadProjectFacilities(
+      List<ProjectModel> projects, int batchSize) async {
     final projectFacilities = await projectFacilityRemoteRepository.search(
       ProjectFacilitySearchModel(
         projectId: projects.map((e) => e.id).toList(),
@@ -289,9 +289,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
 
     final facilities = await facilityRemoteRepository.search(
-      FacilitySearchModel(
-        id: null,
-      ),
+      FacilitySearchModel(tenantId: envConfig.variables.tenantId),
+      limit: batchSize,
     );
 
     await facilityLocalRepository.bulkCreate(facilities);
@@ -385,10 +384,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           rowVersion.version = element.version;
           rowVersionList.add(rowVersion);
         }
-        await isar.writeTxn(() async {
-          await isar.rowVersionLists.clear();
+        isar.writeTxnSync(() {
+          isar.rowVersionLists.clear();
 
-          await isar.rowVersionLists.putAll(rowVersionList);
+          isar.rowVersionLists.putAllSync(rowVersionList);
         });
       } else {
         boundaries = await boundaryLocalRepository.search(
@@ -406,6 +405,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           );
         }
         await boundaryLocalRepository.bulkCreate(boundaries);
+        LeastLevelBoundarySingleton()
+            .setBoundary(boundaries: findLeastLevelBoundaries(boundaries));
         await localSecureStore.setSelectedProject(event.model);
       }
       await localSecureStore.setProjectSetUpComplete(event.model.id, true);
@@ -414,8 +415,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         loading: false,
         syncError: ProjectSyncErrorType.boundary,
       ));
-
-      return;
     }
 
     emit(state.copyWith(
@@ -423,6 +422,25 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: false,
       syncError: null,
     ));
+  }
+
+  FutureOr<int> _getBatchSize() async {
+    try {
+      final configs = await isar.appConfigurations.where().findAll();
+
+      final double speed = await bandwidthCheckRepository.pingBandwidthCheck(
+        bandWidthCheckModel: null,
+      );
+
+      int configuredBatchSize = getBatchSizeToBandwidth(
+        speed,
+        configs,
+        isDownSync: true,
+      );
+      return configuredBatchSize;
+    } catch (e) {
+      rethrow;
+    }
   }
 }
 

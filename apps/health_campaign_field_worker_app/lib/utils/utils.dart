@@ -3,25 +3,30 @@ library app_utils;
 import 'dart:async';
 import 'dart:io';
 
+import 'package:attendance_management/attendance_management.dart'
+    as attendance_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/digit_dialog.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/data_model.dart' as data_model;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
+import 'package:digit_dss/digit_dss.dart' as dss_mappers;
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
+import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
-import '../models/data_model.init.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -88,15 +93,12 @@ performBackgroundService({
 
   if (stopService) {
     if (isRunning) {
-      if (!isBackground && context != null) {
+      if (!isBackground && context != null && context.mounted) {
         if (context.mounted) {
-          DigitToast.show(
+          Toast.showToast(
             context,
-            options: DigitToastOptions(
-              'Background Service Stopped',
-              true,
-              DigitTheme.instance.mobileTheme,
-            ),
+            message: 'Background Service Stopped',
+            type: ToastType.error,
           );
         }
       }
@@ -104,14 +106,12 @@ performBackgroundService({
   } else {
     if (!isRunning && isOnline) {
       service.startService();
-      if (context != null) {
-        DigitToast.show(
+      if (context != null && context.mounted) {
+        requestDisableBatteryOptimization();
+        Toast.showToast(
           context,
-          options: DigitToastOptions(
-            'Background Service Started',
-            false,
-            DigitTheme.instance.mobileTheme,
-          ),
+          message: 'Background Service Started',
+          type: ToastType.success,
         );
       }
     }
@@ -233,7 +233,7 @@ void showDownloadDialog(
     case DigitProgressDialogType.checkFailed:
       DigitSyncDialog.show(
         context,
-        type: DigitSyncDialogType.failed,
+        type: DialogType.failed,
         label: model.title,
         primaryAction: DigitDialogActions(
           label: model.primaryButtonLabel ?? '',
@@ -252,7 +252,7 @@ void showDownloadDialog(
                   );
             } else {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.pop();
+              context.router.replaceAll([HomeRoute()]);
             }
           },
         ),
@@ -260,90 +260,187 @@ void showDownloadDialog(
           label: model.secondaryButtonLabel ?? '',
           action: (ctx) {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.pop();
+            context.router.replaceAll([HomeRoute()]);
           },
         ),
       );
     case DigitProgressDialogType.dataFound:
     case DigitProgressDialogType.pendingSync:
     case DigitProgressDialogType.insufficientStorage:
-      DigitDialog.show(
-        context,
-        options: DigitDialogOptions(
-          titleText: model.title,
+      showCustomPopup(
+        context: context,
+        builder: (ctx) => Popup(
+          title: model.title,
           titleIcon: Icon(
             dialogType == DigitProgressDialogType.insufficientStorage
                 ? Icons.warning
                 : Icons.info_outline_rounded,
             color: dialogType == DigitProgressDialogType.insufficientStorage
-                ? DigitTheme.instance.colorScheme.error
-                : DigitTheme.instance.colorScheme.surfaceTint,
+                ? Theme.of(context).colorTheme.alert.error
+                : Theme.of(context).colorTheme.text.primary,
           ),
-          contentText: model.content,
-          primaryAction: DigitDialogActions(
-            label: model.primaryButtonLabel ?? '',
-            action: (ctx) {
-              if (dialogType == DigitProgressDialogType.pendingSync) {
-                Navigator.of(context, rootNavigator: true).pop();
-                context.router.popUntilRouteWithName(HomeRoute.name);
-              } else {
-                if ((model.totalCount ?? 0) > 0) {
-                  context.read<BeneficiaryDownSyncBloc>().add(
-                        DownSyncBeneficiaryEvent(
-                          projectId: context.projectId,
-                          boundaryCode: model.boundary,
-                          // Batch Size need to be defined based on Internet speed.
-                          batchSize: model.batchSize ?? 1,
-                          initialServerCount: model.totalCount ?? 0,
-                          boundaryName: model.boundaryName,
-                        ),
-                      );
-                } else {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  context.read<BeneficiaryDownSyncBloc>().add(
-                        const DownSyncResetStateEvent(),
-                      );
-                }
-              }
-            },
-          ),
-          secondaryAction: model.secondaryButtonLabel != null
-              ? DigitDialogActions(
-                  label: model.secondaryButtonLabel ?? '',
-                  action: (ctx) {
+          description: model.content,
+          actions: [
+            DigitButton(
+                label: model.primaryButtonLabel ?? '',
+                onPressed: () {
+                  if (dialogType == DigitProgressDialogType.pendingSync) {
                     Navigator.of(context, rootNavigator: true).pop();
-                    context.router.popUntilRouteWithName(HomeRoute.name);
+                    context.router.replaceAll([HomeRoute()]);
+                  } else {
+                    if ((model.totalCount ?? 0) > 0) {
+                      context.read<BeneficiaryDownSyncBloc>().add(
+                            DownSyncBeneficiaryEvent(
+                              projectId: context.projectId,
+                              boundaryCode: model.boundary,
+                              // Batch Size need to be defined based on Internet speed.
+                              batchSize: model.batchSize ?? 1,
+                              initialServerCount: model.totalCount ?? 0,
+                              boundaryName: model.boundaryName,
+                            ),
+                          );
+                    } else {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.read<BeneficiaryDownSyncBloc>().add(
+                            const DownSyncResetStateEvent(),
+                          );
+                    }
+                  }
+                },
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.medium),
+            if (model.secondaryButtonLabel != null)
+              DigitButton(
+                  label: model.secondaryButtonLabel ?? '',
+                  onPressed: () async {
+                    await LocalSecureStore.instance.setManualSyncTrigger(false);
+                    if (context.mounted) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.replaceAll([HomeRoute()]);
+                    }
                   },
-                )
-              : null,
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.medium),
+          ],
         ),
       );
     case DigitProgressDialogType.inProgress:
-      DigitDialog.show(
-        context,
-        options: DigitDialogOptions(
-          title: StreamBuilder<double>(
+      showCustomPopup(
+        context: context,
+        builder: (ctx) => Popup(title: "", additionalWidgets: [
+          StreamBuilder<double>(
             stream: downloadProgressController?.stream,
             builder: (context, snapshot) {
               return ProgressIndicatorContainer(
                 label: '',
                 prefixLabel: '',
                 suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
-                        '',
+                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  DigitTheme.instance.colorScheme.secondary,
+                  Theme.of(context).colorTheme.primary.primary1,
                 ),
                 subLabel: model.title,
               );
             },
           ),
-        ),
+        ]),
       );
     default:
       return;
   }
+}
+
+// Existing _findLeastLevelBoundaryCode method remains unchanged
+String _findLeastLevelBoundaryCode(List<data_model.BoundaryModel> boundaries) {
+  data_model.BoundaryModel? highestBoundary;
+
+  // Find the boundary with the highest boundaryNum
+  for (var boundary in boundaries) {
+    if (highestBoundary == null ||
+        (boundary.boundaryNum ?? 0) > (highestBoundary.boundaryNum ?? 0)) {
+      highestBoundary = boundary;
+    }
+  }
+
+  // If the highest boundary is a leaf node (no children), it is the least-level boundary
+  if (highestBoundary?.children.isEmpty ?? true) {
+    // Return the boundary type if available, otherwise fallback to the label or an empty string
+    return highestBoundary?.boundaryType ?? highestBoundary?.label ?? "";
+  }
+
+  // If the highest boundary has children, recursively search in them
+  if (highestBoundary?.children != null) {
+    for (var child in highestBoundary!.children) {
+      String leastCode = _findLeastLevelBoundaryCode(
+          [child]); // Recursively find the least level
+      if (leastCode.isNotEmpty) {
+        return leastCode;
+      }
+    }
+  }
+
+  // If no boundary found
+  return "";
+}
+
+// Recursive function to find the least level boundary codes
+List<String> findLeastLevelBoundaries(
+    List<data_model.BoundaryModel> boundaries) {
+  // Find the least level boundary type
+  String leastLevelType = _findLeastLevelBoundaryCode(boundaries);
+
+  // Initialize a list to store the matching boundary codes with lowest level boundary type
+  List<String> leastLevelBoundaryCodes = [];
+
+  // Iterate through the boundaries to find matching codes
+  if (leastLevelType.isNotEmpty) {
+    for (var boundary in boundaries) {
+      // Check if the boundary matches the least-level type and has no children (leaf node)
+      if ((boundary.boundaryType == leastLevelType ||
+              boundary.label == leastLevelType) &&
+          boundary.children.isEmpty) {
+        // Found a least level boundary with no children (leaf node), add its code
+        leastLevelBoundaryCodes.add(boundary.code!);
+      } else if (boundary.children.isNotEmpty) {
+        // Recursively search in the children
+        List<String> childVillageCodes =
+            findLeastLevelBoundaries(boundary.children);
+        leastLevelBoundaryCodes.addAll(childVillageCodes);
+      }
+    }
+  }
+
+  // Return the list of matching boundary codes
+  return leastLevelBoundaryCodes;
+}
+
+//Function to read the localizations from ISAR,
+getLocalizationString(Isar isar, String selectedLocale) async {
+  List<dynamic> localizationValues = [];
+
+  final List<LocalizationWrapper> localizationList =
+      await isar.localizationWrappers
+          .filter()
+          .localeEqualTo(
+            selectedLocale.toString(),
+          )
+          .findAll();
+  if (localizationList.isNotEmpty) {
+    localizationValues.addAll(localizationList.first.localization!);
+  }
+
+  return localizationValues;
+}
+
+List<dss_mappers.DashboardConfigSchema?> filterDashboardConfig(
+    List<dss_mappers.DashboardConfigSchema?>? dashboardConfig,
+    String projectTypeCode) {
+  return dashboardConfig
+          ?.where((element) =>
+              element != null && element.projectTypeCode == projectTypeCode)
+          .toList() ??
+      [];
 }
 
 getSelectedLanguage(AppInitialized state, int index) {
@@ -360,35 +457,12 @@ getSelectedLanguage(AppInitialized state, int index) {
 
 initializeAllMappers() async {
   List<Future> initializations = [
-    Future(() => initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
+    Future(() => attendance_mappers.initializeMappers()),
+    Future(() => data_model_mappers.initializeMappers()),
+    Future(() => dss_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
-}
-
-int getSyncCount(List<OpLog> oplogs) {
-  int count = oplogs.where((element) {
-    switch (element.entityType) {
-      //add SyncCount case for package
-      case DataModelType.household:
-      case DataModelType.individual:
-      case DataModelType.householdMember:
-      case DataModelType.projectBeneficiary:
-      case DataModelType.task:
-      case DataModelType.stock:
-      case DataModelType.stockReconciliation:
-      case DataModelType.service:
-      case DataModelType.sideEffect:
-      case DataModelType.referral:
-      case DataModelType.hFReferral:
-      case DataModelType.attendance:
-        return true;
-      default:
-        return false;
-    }
-  }).length;
-
-  return count;
 }
 
 class LocalizationParams {

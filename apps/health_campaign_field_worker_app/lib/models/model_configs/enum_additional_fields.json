@@ -68,6 +68,14 @@
     {
       "name": "longitude",
       "value": "longitude"
+    },
+    {
+      "name": "mobile",
+      "value": "mobile"
+    },
+    {
+      "name": "employee",
+      "value": "EMPLOYEE"
     }
   ],
   "isEnum": true

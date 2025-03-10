@@ -1,9 +1,6 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
@@ -11,7 +8,10 @@ import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:digit_location_tracker/utils/utils.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +30,7 @@ import '../router/app_router.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/least_level_boundary_singleton.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
@@ -52,6 +53,7 @@ class _HomePageState extends LocalizedState<HomePage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
   late StreamSubscription<List<ConnectivityResult>> subscription;
+  bool isTriggerLocalisation = true;
 
   @override
   initState() {
@@ -132,11 +134,14 @@ class _HomePageState extends LocalizedState<HomePage> {
               ),
             ],
           ),
-          footer: PoweredByDigit(
-            version: Constants().version,
+          footer: Padding(
+            padding: const EdgeInsets.only(bottom: spacer2),
+            child: PoweredByDigit(
+              version: Constants().version,
+            ),
           ),
           children: [
-            const SizedBox(height: kPadding * 2),
+            const SizedBox(height: spacer2 * 2),
             // INFO : Need to add sync bloc of package Here
             BlocConsumer<SyncBloc, SyncState>(
               listener: (context, state) {
@@ -164,7 +169,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     if (context.mounted) {
                       DigitSyncDialog.show(
                         context,
-                        type: DigitSyncDialogType.inProgress,
+                        type: DialogType.inProgress,
                         label: localizations.translate(
                           i18.syncDialog.syncInProgressTitle,
                         ),
@@ -176,21 +181,20 @@ class _HomePageState extends LocalizedState<HomePage> {
                     Navigator.of(context, rootNavigator: true).pop();
                     await localSecureStore.setManualSyncTrigger(true);
                     if (context.mounted) {
-                      DigitSyncDialog.show(
-                        context,
-                        type: DigitSyncDialogType.complete,
-                        label: localizations.translate(
-                          i18.syncDialog.dataSyncedTitle,
-                        ),
-                        primaryAction: DigitDialogActions(
+                      DigitSyncDialog.show(context,
+                          type: DialogType.complete,
                           label: localizations.translate(
-                            i18.syncDialog.closeButtonLabel,
+                            i18.syncDialog.dataSyncedTitle,
                           ),
-                          action: (ctx) {
-                            Navigator.pop(ctx);
-                          },
-                        ),
-                      );
+                          primaryAction: DigitDialogActions(
+                            label: localizations.translate(
+                              i18.syncDialog.closeButtonLabel,
+                            ),
+                            action: (ctx) {
+                              Navigator.pop(ctx);
+                            },
+                          ),
+                          barrierDismissible: true);
                     }
                   },
                   failedSync: () async {
@@ -234,16 +238,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                   pendingSync: (count) {
                     return count == 0
                         ? const Offstage()
-                        : DigitInfoCard(
-                            icon: Icons.info,
-                            backgroundColor:
-                                theme.colorScheme.tertiaryContainer,
-                            iconColor: theme.colorScheme.surfaceTint,
-                            description: localizations
-                                .translate(i18.home.dataSyncInfoContent)
-                                .replaceAll('{}', count.toString()),
-                            title: localizations.translate(
-                              i18.home.dataSyncInfoLabel,
+                        : Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: spacer2,
+                            ),
+                            child: InfoCard(
+                              type: InfoType.info,
+                              description: localizations
+                                  .translate(i18.home.dataSyncInfoContent)
+                                  .replaceAll('{}', count.toString()),
+                              title: localizations.translate(
+                                i18.home.dataSyncInfoLabel,
+                              ),
                             ),
                           );
                   },
@@ -264,7 +270,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     DigitSyncDialog.show(
       context,
-      type: DigitSyncDialogType.failed,
+      type: DialogType.failed,
       label: message,
       primaryAction: DigitDialogActions(
         label: localizations.translate(
@@ -299,6 +305,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
             context.router.push(const UserDashboardRoute());
           },
         ),
@@ -316,14 +326,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                   if (context.mounted) _attemptSyncUp(context);
                 } else {
                   if (context.mounted) {
-                    DigitToast.show(
+                    Toast.showToast(
                       context,
-                      options: DigitToastOptions(
-                        localizations
-                            .translate(i18.common.coreCommonSyncInProgress),
-                        false,
-                        Theme.of(context),
-                      ),
+                      message: localizations
+                          .translate(i18.common.coreCommonSyncInProgress),
+                      type: ToastType.success,
                     );
                   }
                 }
@@ -336,7 +343,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.table_chart,
           label: i18.home.db,
-          onPressed: () {
+          onPressed: () async {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => DriftDbViewer(
@@ -352,6 +359,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
+            ;
             context.router.push(const UserDashboardRoute());
           },
         ),
@@ -363,6 +375,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+      i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -386,8 +399,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-    if (!context.selectedProject.name.contains('IRS')) {
-      filteredLabels.remove(i18.home.dashboard);
+    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
+      filteredLabels.remove(i18.home.db);
     }
 
     final List<Widget> widgetList =
@@ -424,6 +437,32 @@ class _HomePageState extends LocalizedState<HomePage> {
           );
     }
   }
+
+  void triggerLocalization() {
+    context.read<AppInitializationBloc>().state.maybeWhen(
+          orElse: () {},
+          initialized: (
+            AppConfiguration appConfiguration,
+            _,
+            __,
+          ) {
+            final appConfig = appConfiguration;
+            final localizationModulesList = appConfiguration.backendInterface;
+            final selectedLocale = AppSharedPreferences().getSelectedLocale;
+            LocalizationParams()
+                .setCode(LeastLevelBoundarySingleton().boundary);
+            context
+                .read<LocalizationBloc>()
+                .add(LocalizationEvent.onLoadLocalization(
+                  module:
+                      "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                  tenantId: appConfig.tenantId ?? "default",
+                  locale: selectedLocale!,
+                  path: Constants.localizationApiPath,
+                ));
+          },
+        );
+  }
 }
 
 // Function to set initial Data required for the packages to run
@@ -433,14 +472,16 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (
         AppConfiguration appConfiguration,
         List<ServiceRegistry> serviceRegistry,
-        DashboardConfigSchema? dashboardConfigSchema,
+        List<DashboardConfigSchema?>? dashboardConfigSchema,
       ) {
+        final filteredDashboardConfig = filterDashboardConfig(
+            dashboardConfigSchema ?? [], context.projectTypeCode ?? "");
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
-            dashboardConfig: dashboardConfigSchema,
+            dashboardConfig: filteredDashboardConfig.firstOrNull,
             appVersion: Constants().version,
             selectedProject: context.selectedProject,
             actionPath: Constants.getEndPoint(

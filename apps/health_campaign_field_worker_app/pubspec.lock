@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: attendance_management
-      sha256: "7221a7ed0d20cbbb45357dca59c6f6aa247e935247eeb5a8991b79fa809200e4"
+      sha256: "6b7c39aba4f4c26340daee8dcb8fde3823a28e3fae6065fd3abf3ed90d3c74c5"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4+1"
   audioplayers:
     dependency: transitive
     description:
@@ -266,7 +266,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -429,8 +429,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "packages/dart_mappable_builder"
-      ref: "1.6-final-dev"
-      resolved-ref: "17eb2fe2ac821856847ad0f214d414546aae4b48"
+      ref: master
+      resolved-ref: "9eb891657db6122039e462b4fb1920b93f819b80"
       url: "https://github.com/egovernments/health-campaign-field-worker-app/"
     source: git
     version: "4.2.3"
@@ -490,30 +490,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.1"
-  digit_components:
-    dependency: "direct main"
-    description:
-      name: digit_components
-      sha256: "7097c7e8bd2fa96415eb4049a7fc2e4cb3dcb5a913d63703ca69cb785a069300"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: c3bc7299a7d927ebb83d8e91c1d7a8a51f6a1d1295dafeacb642012b72b99a2f
+      sha256: bcb6c328a75df1442672e39c0dbae32bc9cb067a07a581bded672d2b748957b9
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   digit_dss:
     dependency: "direct main"
     description:
       name: digit_dss
-      sha256: cb5ae888503260dff1df2d4785ba2cac39a20348cfcd660e2212a8965b948dba
+      sha256: a58aae4c9ad5fe58562706fd5a83419c3fca316821ccc38e249189663e8a0f20
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -534,26 +526,26 @@ packages:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: c33af61ed9ab3d7740fc3c8948af4b763d946cba5e902f8bfb00948d4d69d60a
+      sha256: "69580859ba9b63f32e40e6d56bf55a016eb623007ea06552b38f70056ea06dfe"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   digit_showcase:
     dependency: "direct main"
     description:
       name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
+      sha256: b4f9009c0d1b33b6576fa2d480826cc36f2ba5f62c7330b9f7b436af39508b4e
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "57c4da5237be6025783e7357a02b6b492f02e38f711d674bf46f5f8c8a93ad76"
+      sha256: "80f3770380963d7ec5fde6be1b67cde8ceb63dec5fc68ae51b70d4ad2278c7dd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.4"
+    version: "0.0.2-dev.15"
   dio:
     dependency: "direct main"
     description:
@@ -610,14 +602,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.0"
-  easy_stepper:
-    dependency: transitive
-    description:
-      name: easy_stepper
-      sha256: "63f66314a509ec690c8152a41288961fd96ba9e92ef184299f068a5e78bd16ad"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.5+1"
   equatable:
     dependency: transitive
     description:
@@ -828,14 +812,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.13"
-  flutter_focus_watcher:
-    dependency: transitive
-    description:
-      name: flutter_focus_watcher
-      sha256: a72ee539ae0237961308a25839887ca93a0b1cb6f87b0d492b139c8fccff8e79
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   flutter_keyboard_visibility:
     dependency: "direct main"
     description:
@@ -1022,14 +998,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_typeahead:
-    dependency: transitive
-    description:
-      name: flutter_typeahead
-      sha256: b9942bd5b7611a6ec3f0730c477146cffa4cd4b051077983ba67ddfc9e7ee818
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.8.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1164,10 +1132,10 @@ packages:
     dependency: transitive
     description:
       name: gs1_barcode_parser
-      sha256: "9aaff47bdab7177deaf9248cc861ef41cf611d3f828498cb40b64bedcbf53391"
+      sha256: ff171bc40038de3f7178fbc32eaf9eebc3d35a3c4c00bb0281fe4a976d853a42
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.1.0"
   horizontal_data_table:
     dependency: transitive
     description:
@@ -1701,14 +1669,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.0.0"
-  pointer_interceptor:
-    dependency: transitive
-    description:
-      name: pointer_interceptor
-      sha256: adf7a637f97c077041d36801b43be08559fd4322d2127b3f20bb7be1b9eebc22
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.9.3+7"
   pool:
     dependency: transitive
     description:
@@ -1773,14 +1733,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  reactive_flutter_typeahead:
-    dependency: transitive
-    description:
-      name: reactive_flutter_typeahead
-      sha256: a5dbca4b537bd9dde245d4228e1a6ce937c05cd77c57ed45b9c05135540d5f1a
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   reactive_forms:
     dependency: "direct main"
     description:
@@ -1797,14 +1749,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  remove_emoji_input_formatter:
-    dependency: transitive
-    description:
-      name: remove_emoji_input_formatter
-      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+1"
   rxdart:
     dependency: transitive
     description:
@@ -2022,10 +1966,10 @@ packages:
     dependency: "direct main"
     description:
       name: sync_service
-      sha256: ba4720b48bf4a80c3299118000bf7851dae871480b75ab95f0e5a830cddc2e39
+      sha256: eb214ed7351f1f4ab63c90a23d2ad9f554ac92d73dbbe0dd7ce167776b941de9
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1-dev.1"
+    version: "1.0.0"
   synchronized:
     dependency: transitive
     description:

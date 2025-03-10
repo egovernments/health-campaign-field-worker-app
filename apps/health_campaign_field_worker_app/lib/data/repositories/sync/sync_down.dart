@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:sync_service/data/repositories/sync/remote_type.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
-import '../../../utils/environment_config.dart';
 import '../../network_manager.dart';
-import './remote_type.dart';
 
 class PerformSyncDown {
   static FutureOr<void> syncDown({

@@ -90,6 +90,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
     @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
     List<SearchHouseHoldFilters>? searchHouseHoldFilters,
+    @JsonKey(name: 'SEARCH_CLF_FILTERS')
+    List<SearchCLFFilters>? searchCLFFilters,
     @JsonKey(name: 'REFERRAL_REASONS')
     List<ReferralReasonType>? referralReasonList,
     @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
@@ -340,6 +342,18 @@ class SearchHouseHoldFilters with _$SearchHouseHoldFilters {
 
   factory SearchHouseHoldFilters.fromJson(Map<String, dynamic> json) =>
       _$SearchHouseHoldFiltersFromJson(json);
+}
+
+@freezed
+class SearchCLFFilters with _$SearchCLFFilters {
+  factory SearchCLFFilters({
+    required String name,
+    required String code,
+    required bool active,
+  }) = _SearchCLFFilters;
+
+  factory SearchCLFFilters.fromJson(Map<String, dynamic> json) =>
+      _$SearchCLFFiltersFromJson(json);
 }
 
 @freezed

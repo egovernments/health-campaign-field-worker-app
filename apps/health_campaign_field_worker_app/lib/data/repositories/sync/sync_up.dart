@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:sync_service/data/repositories/sync/remote_type.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../utils/environment_config.dart';
-import 'remote_type.dart';
 
 class PerformSyncUp {
   static FutureOr<void> syncUp({
@@ -176,7 +175,6 @@ class PerformSyncUp {
             final entities = getEntityModel(sublist, local);
             if (operationGroupedEntity.key == DataOperation.create) {
               switch (typeGroupedEntity.key) {
-
                 default:
                   await remote.bulkCreate(entities);
               }

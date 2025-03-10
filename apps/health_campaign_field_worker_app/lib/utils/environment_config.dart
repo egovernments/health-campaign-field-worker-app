@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 EnvironmentConfiguration envConfig = EnvironmentConfiguration.instance;
@@ -213,7 +213,8 @@ enum EnvType {
   dev("DEV"),
   uat("UAT"),
   qa("QA"),
-  prod("PROD");
+  prod("PROD"),
+  demo("DEMO");
 
   final String env;
 

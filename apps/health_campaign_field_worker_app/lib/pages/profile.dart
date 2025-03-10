@@ -1,8 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -55,7 +59,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
       );
 
       return fb.group(<String, Object>{
-        _name: FormControl<String>(value: user?.name, validators: []),
+        _name: FormControl<String>(value: user?.name, validators: [Validators.required]),
         _mobileNumberKey: FormControl<String>(
           value: user?.mobileNumber,
           validators: [
@@ -94,19 +98,19 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
               setState(() {
                 isLoading = true;
               });
-              Loaders.showLoadingDialog(context);
+              DigitLoaders.overlayLoader(context: context);
             },
             user: (value) {
               if (isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
               }
               if (isUpdate) {
-                DigitToast.show(context,
-                    options: DigitToastOptions(
-                        localizations
-                            .translate(i18.common.profileUpdateSuccess),
-                        false,
-                        theme));
+                Toast.showToast(
+                  context,
+                  message:
+                      localizations.translate(i18.common.profileUpdateSuccess),
+                  type: ToastType.success,
+                );
               }
               setState(() {
                 isLoading = false;
@@ -119,13 +123,10 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                 isLoading = false;
                 isUpdate = false;
               });
-              DigitToast.show(
+              Toast.showToast(
                 context,
-                options: DigitToastOptions(
-                  error ?? localizations.translate(error!),
-                  true,
-                  theme,
-                ),
+                message: error ?? localizations.translate(error!),
+                type: ToastType.error,
               );
             },
           );
@@ -138,123 +139,151 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                 builder:
                     (BuildContext context, FormGroup formGroup, Widget? child) {
                   return ScrollableContent(
-                    enableFixedButton: true,
+                    enableFixedDigitButton: true,
                     footer: DigitCard(
-                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                      padding:
-                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                      child: BlocBuilder<UserBloc, UserState>(
-                        builder: (ctx, state) {
-                          return DigitElevatedButton(
-                            onPressed: () async {
-                              final connectivityResult =
-                                  await (Connectivity().checkConnectivity());
-                              final isOnline = connectivityResult.firstOrNull ==
-                                      ConnectivityResult.wifi ||
-                                  connectivityResult.firstOrNull ==
-                                      ConnectivityResult.mobile;
+                        margin: const EdgeInsets.only(top: spacer2),
+                        children: [
+                          BlocBuilder<UserBloc, UserState>(
+                            builder: (ctx, state) {
+                              return DigitButton(
+                                label: localizations
+                                    .translate(i18.common.coreCommonSave),
+                                type: DigitButtonType.primary,
+                                size: DigitButtonSize.large,
+                                mainAxisSize: MainAxisSize.max,
+                                onPressed: () async {
+                                  final connectivityResult =
+                                      await (Connectivity()
+                                          .checkConnectivity());
+                                  final isOnline =
+                                      connectivityResult.firstOrNull ==
+                                              ConnectivityResult.wifi ||
+                                          connectivityResult.firstOrNull ==
+                                              ConnectivityResult.mobile;
 
-                              if (!isOnline) {
-                                if (context.mounted) {
-                                  DigitDialog.show(
-                                    context,
-                                    options: DigitDialogOptions(
-                                      titleText: AppLocalizations.of(context)
-                                          .translate(
-                                        i18.common.connectionLabel,
-                                      ),
-                                      contentText: AppLocalizations.of(context)
-                                          .translate(
-                                        i18.common.connectionContent,
-                                      ),
-                                      primaryAction: DigitDialogActions(
-                                        label: AppLocalizations.of(context)
-                                            .translate(
-                                          i18.common.coreCommonOk,
-                                        ),
-                                        action: (ctx) => Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop(),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              } else {
-                                formGroup.markAllAsTouched();
-                                if (!formGroup.valid) return;
-                                UserModel? user = state.mapOrNull(
-                                  user: (value) => value.userModel,
-                                );
-                                if (user != null) {
-                                  setState(() {
-                                    isUpdate = true;
-                                  });
-                                  final updatedUser = user.copyWith(
-                                    gender: formGroup.control(_genderKey).value
-                                        as String,
-                                    mobileNumber: formGroup
-                                        .control(_mobileNumberKey)
-                                        .value,
-                                    name: formGroup.control(_name).value
-                                        as String,
-                                    emailId: formGroup.control(_emailId).value
-                                        as String?,
-                                  );
-
-                                  ctx.read<UserBloc>().add(
-                                        UserEvent.updateUser(
-                                          user: updatedUser,
-                                          oldUser: user,
+                                  if (!isOnline) {
+                                    if (context.mounted) {
+                                      showCustomPopup(
+                                        context: context,
+                                        builder: (ctx) => Popup(
+                                          title: AppLocalizations.of(context)
+                                              .translate(
+                                            i18.common.connectionLabel,
+                                          ),
+                                          description:
+                                              AppLocalizations.of(context)
+                                                  .translate(
+                                            i18.common.connectionContent,
+                                          ),
+                                          actions: [
+                                            DigitButton(
+                                                label:
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                  i18.common.coreCommonOk,
+                                                ),
+                                                onPressed: () => Navigator.of(
+                                                      context,
+                                                      rootNavigator: true,
+                                                    ).pop(),
+                                                type: DigitButtonType.primary,
+                                                size: DigitButtonSize.large)
+                                          ],
                                         ),
                                       );
-                                }
-                              }
+                                    }
+                                  } else {
+                                    formGroup.markAllAsTouched();
+                                    if (!formGroup.valid) return;
+                                    UserModel? user = state.mapOrNull(
+                                      user: (value) => value.userModel,
+                                    );
+                                    if (user != null) {
+                                      setState(() {
+                                        isUpdate = true;
+                                      });
+                                      final updatedUser = user.copyWith(
+                                        gender: formGroup.control(_genderKey).value as String?,
+                                        mobileNumber: formGroup
+                                            .control(_mobileNumberKey)
+                                            .value,
+                                        name: formGroup.control(_name).value
+                                            as String,
+                                        emailId: formGroup
+                                            .control(_emailId)
+                                            .value as String?,
+                                      );
+
+                                      ctx.read<UserBloc>().add(
+                                            UserEvent.updateUser(
+                                              user: updatedUser,
+                                              oldUser: user,
+                                            ),
+                                          );
+                                    }
+                                  }
+                                },
+                              );
                             },
-                            child: Center(
-                              child: Text(
-                                localizations
-                                    .translate(i18.common.coreCommonSave),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                          ),
+                        ]),
                     header: const Column(children: [
                       BackNavigationHelpHeaderWidget(),
                     ]),
                     children: [
                       DigitCard(
-                        child: Column(
+                          margin: const EdgeInsets.all(spacer2),
                           children: [
-                            DigitTextFormField(
-                              formControlName: 'name',
-                              label: localizations.translate(
-                                i18.common.coreCommonName,
-                              ),
-                              maxLength: 200,
-                              isRequired: true,
+                            ReactiveWrapperField(
+                              formControlName: _name,
                               validationMessages: {
                                 'required': (object) => localizations.translate(
                                       '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
                                     ),
                               },
-                            ),
-                            DigitTextFormField(
-                              keyboardType: TextInputType.number,
-                              formControlName: _mobileNumberKey,
-                              label: localizations.translate(
-                                i18.common.coreCommonMobileNumber,
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(
+                                  i18.common.coreCommonName,
+                                ),
+                                isRequired: true,
+                                child: DigitTextFormInput(
+                                  charCount: true,
+                                  maxLength: 200,
+                                  errorMessage: field.errorText,
+                                  onChange: (value) {
+                                    formGroup.control(_name).value = value;
+                                  },
+                                  initialValue: formGroup.control(_name).value,
+                                ),
                               ),
-                              maxLength: 10,
-                              readOnly: true,
+                            ),
+                            ReactiveWrapperField(
+                              formControlName: _mobileNumberKey,
                               validationMessages: {
                                 'mobileNumber': (object) =>
                                     localizations.translate(i18
                                         .individualDetails
                                         .mobileNumberInvalidFormatValidationMessage),
                               },
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(
+                                  i18.common.coreCommonMobileNumber,
+                                ),
+                                capitalizedFirstLetter: false,
+                                child: DigitTextFormInput(
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 10,
+                                  readOnly: true,
+                                  charCount: true,
+                                  errorMessage: field.errorText,
+                                  onChange: (value) {
+                                    formGroup.control(_mobileNumberKey).value =
+                                        value;
+                                  },
+                                  initialValue:
+                                      formGroup.control(_mobileNumberKey).value,
+                                ),
+                              ),
                             ),
                             BlocBuilder<AppInitializationBloc,
                                 AppInitializationState>(
@@ -265,45 +294,59 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                   _,
                                   __,
                                 ) {
-                                  return Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            localizations.translate(
-                                              i18.common.coreCommonGender,
-                                            ),
-                                            style: theme.textTheme.titleMedium,
-                                          ),
-                                        ],
-                                      ),
-                                      ...appConfiguration.genderOptions!.map(
-                                          (e) => ReactiveRadioListTile<String>(
-                                                value: e.code,
-                                                title: Text(localizations
-                                                    .translate(e.code)),
-                                                formControlName: _genderKey,
-                                              )),
-                                    ],
+                                  return ReactiveWrapperField(
+                                    formControlName: _genderKey,
+                                    builder: (field) => LabeledField(
+                                        label: localizations.translate(
+                                          i18.common.coreCommonGender,
+                                        ),
+                                        child: RadioList(
+                                          radioDigitButtons: appConfiguration
+                                              .genderOptions!
+                                              .map((e) => RadioButtonModel(
+                                                  code: e.code,
+                                                  name: localizations
+                                                      .translate(e.code)))
+                                              .toList(),
+                                          groupValue: formGroup
+                                                  .control(_genderKey)
+                                                  .value ??
+                                              '',
+                                          onChanged: (value) {
+                                            formGroup
+                                                .control(_genderKey)
+                                                .value = value.code;
+                                          },
+                                        )),
                                   );
                                 },
                               ),
                             ),
-                            DigitTextFormField(
+                            ReactiveWrapperField(
                               formControlName: _emailId,
-                              label: localizations.translate(
-                                i18.common.coreCommonEmailId,
-                              ),
-                              maxLength: 200,
                               validationMessages: {
                                 'required': (object) => localizations.translate(
                                       '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
                                     ),
                               },
+                              builder: (field) => LabeledField(
+                                label: localizations.translate(
+                                  i18.common.coreCommonEmailId,
+                                ),
+                                capitalizedFirstLetter: false,
+                                child: DigitTextFormInput(
+                                  maxLength: 200,
+                                  charCount: true,
+                                  onChange: (value) {
+                                    formGroup.control(_emailId).value = value;
+                                  },
+                                  initialValue:
+                                      formGroup.control(_emailId).value,
+                                  errorMessage: field.errorText,
+                                ),
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
+                          ]),
                     ],
                   );
                 },

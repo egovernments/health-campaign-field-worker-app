@@ -1,5 +1,6 @@
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:flutter/material.dart';
+
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/localization.dart';
 import '../../data/repositories/local/localization.dart';
@@ -18,15 +19,14 @@ class AppLocalizations {
   static final List<Localization> _localizedStrings = <Localization>[];
 
   static LocalizationsDelegate<AppLocalizations> getDelegate(
-    AppConfiguration config,
-      LocalSqlDataStore sql,
-  ) =>
+          AppConfiguration config, LocalSqlDataStore sql) =>
       AppLocalizationsDelegate(config, sql);
 
   Future<bool> load() async {
     _localizedStrings.clear();
 
-    final listOfLocalizations = await LocalizationLocalRepository().returnLocalizationFromSQL(sql);
+    final listOfLocalizations =
+        await LocalizationLocalRepository().returnLocalizationFromSQL(sql);
 
     _localizedStrings.addAll(listOfLocalizations);
 

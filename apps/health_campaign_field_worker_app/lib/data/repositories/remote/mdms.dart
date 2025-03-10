@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
 
@@ -321,6 +321,14 @@ class MdmsRepository {
     appConfiguration.searchHouseHoldFilters =
         result.hcmWrapperModel?.searchHouseHoldFilters?.map((e) {
       final searchFilters = SearchHouseHoldFilters()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return searchFilters;
+    }).toList();
+    appConfiguration.searchCLFFilters =
+        result.hcmWrapperModel?.searchCLFFilters?.map((e) {
+      final searchFilters = SearchCLFFilters()
         ..name = e.name
         ..code = e.code
         ..active = e.active;
