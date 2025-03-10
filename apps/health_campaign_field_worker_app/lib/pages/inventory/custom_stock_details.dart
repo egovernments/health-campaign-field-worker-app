@@ -13,6 +13,7 @@ import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
+import 'package:inventory_management/utils/typedefs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:registration_delivery/utils/utils.dart' as registration_utils;
@@ -131,6 +132,38 @@ class CustomStockDetailsPageState
     transportTypes = InventorySingleton().transportType;
     context.read<LocationBloc>().add(const LoadLocationEvent());
     super.initState();
+  }
+
+  Future<bool> calculateStockData(
+      productVariantId, senderId, receiverId) async {
+    StockDataRepository stockRepository =
+        context.repository<StockModel, StockSearchModel>(context);
+    List<StockModel> stockModelsReceived = await stockRepository.search(
+      StockSearchModel(
+          productVariantId: productVariantId,
+          senderId: receiverId,
+          receiverId: senderId,
+          transactionReason: [TransactionReason.received.toValue()],
+          transactionType: [TransactionType.received.toValue()]),
+    );
+    List<StockModel> stockModelsReturned = await stockRepository.search(
+      StockSearchModel(
+          productVariantId: productVariantId,
+          senderId: receiverId,
+          receiverId: senderId,
+          transactionReason: [TransactionReason.returned.toValue()],
+          transactionType: [TransactionType.received.toValue()]),
+    );
+    int receivedStock = 0;
+    int returnedStock = 0;
+    for (var stock in stockModelsReceived) {
+      receivedStock += int.parse(stock.quantity ?? "0");
+    }
+    for (var stock in stockModelsReturned) {
+      returnedStock += int.parse(stock.quantity ?? "0");
+    }
+    if (returnedStock <= (receivedStock - returnedStock)) return true;
+    return false;
   }
 
   @override
@@ -528,6 +561,11 @@ class CustomStockDetailsPageState
 
                                           final stockReconciliationState =
                                               stockReconciliationBloc.state;
+
+                                          calculateStockData(
+                                              selectedProductVariant.id,
+                                              stockState.facilityModel!.id,
+                                              selectedFacilityId);
 
                                           if (stockReconciliationState
                                                       .stockInHand <
