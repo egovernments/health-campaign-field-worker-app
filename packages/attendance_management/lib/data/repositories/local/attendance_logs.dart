@@ -96,8 +96,9 @@ class AttendanceLogsLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-    List<AttendanceLogModel> entities,
-  ) async {
+    List<AttendanceLogModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+  }) async {
     return retryLocalCallOperation(() async {
       final logsCompanions = entities
           .map((e) => e.companion.copyWith(

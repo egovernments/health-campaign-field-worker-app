@@ -164,8 +164,9 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
 
   @override
   FutureOr<void> bulkCreate(
-    List<AttendanceRegisterModel> entities,
-  ) async {
+    List<AttendanceRegisterModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+      }) async {
     return retryLocalCallOperation(() async {
       final registerCompanions = entities.map((e) => e.companion).toList();
 

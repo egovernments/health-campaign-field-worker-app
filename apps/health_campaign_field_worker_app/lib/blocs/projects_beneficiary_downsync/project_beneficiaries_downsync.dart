@@ -101,10 +101,10 @@ class BeneficiaryDownSyncBloc
     DownSyncCheckTotalCountEvent event,
     BeneficiaryDownSyncEmitter emit,
   ) async {
-    if (event.pendingSyncCount > 0) {
-      emit(const BeneficiaryDownSyncState.loading(true));
-      emit(const BeneficiaryDownSyncState.pendingSync());
-    } else {
+    // if (event.pendingSyncCount > 0) {
+    //   emit(const BeneficiaryDownSyncState.loading(true));
+    //   emit(const BeneficiaryDownSyncState.pendingSync());
+    // } else {
       emit(const BeneficiaryDownSyncState.loading(true));
       await LocalSecureStore.instance.setManualSyncTrigger(true);
       final existingDownSyncData =
@@ -142,7 +142,7 @@ class BeneficiaryDownSyncBloc
         emit(const BeneficiaryDownSyncState.resetState());
         emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
       }
-    }
+    // }
   }
 
   FutureOr<void> _handleDownSyncOfBeneficiaries(

@@ -123,8 +123,9 @@ class HouseholdMemberLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-    List<HouseholdMemberModel> entities,
-  ) async {
+    List<HouseholdMemberModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+      }) async {
     return retryLocalCallOperation(() async {
       final householdMemberCompanions =
           entities.map((e) => e.companion).toList();
@@ -133,7 +134,7 @@ class HouseholdMemberLocalRepository
         batch.insertAll(
           sql.householdMember,
           householdMemberCompanions,
-          mode: InsertMode.insertOrReplace,
+          mode: mode,
         );
       });
     });
