@@ -266,7 +266,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -2021,10 +2021,11 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      path: "../../packages/survey_form"
-      relative: true
-    source: path
-    version: "1.0.1+1"
+      name: survey_form
+      sha256: "85a910c64f630c7ce7b76211769e870f47d7bcd92c24e6cdcbffcfd45a5ac4db"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1+2"
   sync_http:
     dependency: transitive
     description:

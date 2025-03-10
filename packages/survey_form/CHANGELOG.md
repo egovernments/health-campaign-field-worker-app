@@ -1,3 +1,9 @@
+## 1.0.1+2
+
+* Bug fix:
+    * Removed referralClientRefId
+    * Added the additional controller for the additional field attribute
+
 ## 1.0.1+1
 
 * Upgraded to latest package versions
