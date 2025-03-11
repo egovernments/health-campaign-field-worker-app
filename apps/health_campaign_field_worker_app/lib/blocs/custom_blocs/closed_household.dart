@@ -15,8 +15,8 @@ import 'package:registration_delivery/models/entities/status.dart'
     as reg_status;
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/typedefs.dart';
-import 'package:registration_delivery/utils/utils.dart';
 
+import '../../utils/constants.dart';
 part 'closed_household.freezed.dart';
 
 typedef ClosedHouseholdEmitter = Emitter<ClosedHouseholdState>;
@@ -244,8 +244,12 @@ class ClosedHouseholdBloc
           version: 1,
           fields: [
             AdditionalField(
-              "Reason",
+              Constants.closedHouseholdReason,
               event.reason,
+            ),
+            AdditionalField(
+              Constants.closedHouseholdReasonComment,
+              event.refuseReasonComment,
             )
           ],
         ),
@@ -326,6 +330,7 @@ class ClosedHouseholdBloc
 class ClosedHouseholdEvent with _$ClosedHouseholdEvent {
   const factory ClosedHouseholdEvent.handleSubmit({
     String? reason,
+    String? refuseReasonComment,
     @Default(0) double latitude,
     @Default(0) double longitude,
     @Default(0) double locationAccuracy,

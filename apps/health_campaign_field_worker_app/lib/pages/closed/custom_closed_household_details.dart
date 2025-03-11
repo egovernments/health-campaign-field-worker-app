@@ -33,6 +33,7 @@ class CustomClosedHouseholdDetailsPageState
     extends LocalizedState<CustomClosedHouseholdDetailsPage> {
   static const _administrationAreaKey = 'administrationArea';
   static const _householdHeadNameKey = 'householdHeadName';
+  static const _refusalCommentKey = 'refusalComment';
   static const _latKey = 'lat';
   static const _lngKey = 'lng';
   static const _reasonKey = 'reason';
@@ -58,6 +59,25 @@ class CustomClosedHouseholdDetailsPageState
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
     final reasonOptions = ["closed", "refusal"];
+
+    refuseCommentValidator(FormGroup form) {
+      if (form.control(_reasonKey).value == "REFUSAL") {
+        form.control(_refusalCommentKey).setValidators(
+          [
+            Validators.required,
+            Validators.delegate((validator) =>
+                utilsLocal.CustomValidator.requiredMin3(validator)),
+            Validators.maxLength(200)
+          ],
+          autoValidate: true,
+        );
+      } else {
+        form.control(_refusalCommentKey).setValidators(
+          [],
+          autoValidate: true,
+        );
+      }
+    }
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -125,6 +145,8 @@ class CustomClosedHouseholdDetailsPageState
 
                         final reason =
                             form.control(_reasonKey).value as String?;
+                        final String? refuseReasonComment =
+                            form.control(_refusalCommentKey).value as String?;
                         if (reason == null || reason.trim().isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -138,8 +160,9 @@ class CustomClosedHouseholdDetailsPageState
                           return;
                         }
 
-                        context.router.push(
-                            CustomClosedHouseholdSummaryRoute(reason: reason));
+                        context.router.push(CustomClosedHouseholdSummaryRoute(
+                            reason: reason,
+                            refuseReasonComment: refuseReasonComment));
                       },
                       child: Center(
                         child: Text(
@@ -204,6 +227,7 @@ class CustomClosedHouseholdDetailsPageState
                                   if (value.isNotEmpty) {
                                     form.control(_reasonKey).value =
                                         value.first;
+                                    refuseCommentValidator(form);
                                   } else if (true) {
                                     form.control(_reasonKey).value = null;
                                     setState(() {
@@ -221,6 +245,28 @@ class CustomClosedHouseholdDetailsPageState
                                   ? localizations
                                       .translate(i18.common.corecommonRequired)
                                   : null,
+                            ),
+                          ),
+                          Visibility(
+                            visible:
+                                form.control(_reasonKey).value == "REFUSAL",
+                            child: DigitTextFormField(
+                              formControlName: _refusalCommentKey,
+                              isRequired: true,
+                              label: localizations.translate(
+                                i18.closeHousehold.refuseReasonComment,
+                              ),
+                              validationMessages: {
+                                'required': (object) => localizations
+                                    .translate(i18.common.corecommonRequired),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', maxLength.toString()),
+                                'min3': (object) => localizations
+                                    .translate(
+                                        i18Local.common.min3CharsRequired)
+                                    .replaceAll('{}', ''),
+                              },
                             ),
                           ),
                           DigitTextFormField(
@@ -266,6 +312,7 @@ class CustomClosedHouseholdDetailsPageState
         ],
       ),
       _reasonKey: FormControl<String>(validators: []),
+      _refusalCommentKey: FormControl<String>(),
       _latKey: FormControl<double>(validators: []),
       _lngKey: FormControl<double>(),
       _accuracyKey: FormControl<double>(),
