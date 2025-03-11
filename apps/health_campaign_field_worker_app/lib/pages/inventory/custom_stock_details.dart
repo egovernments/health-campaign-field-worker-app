@@ -134,17 +134,17 @@ class CustomStockDetailsPageState
     super.initState();
   }
 
-  Future<bool> calculateStockData(
-      productVariantId, senderId, receiverId) async {
+  Future<bool> stockReturnValidaion(
+      int returned, productVariantId, senderId, receiverId) async {
     StockDataRepository stockRepository =
         context.repository<StockModel, StockSearchModel>(context);
-    List<StockModel> stockModelsReceived = await stockRepository.search(
+    List<StockModel> stockModelsIssued = await stockRepository.search(
       StockSearchModel(
           productVariantId: productVariantId,
           senderId: receiverId,
           receiverId: senderId,
-          transactionReason: [TransactionReason.received.toValue()],
-          transactionType: [TransactionType.received.toValue()]),
+          transactionReason: [],
+          transactionType: [TransactionType.dispatched.toValue()]),
     );
     List<StockModel> stockModelsReturned = await stockRepository.search(
       StockSearchModel(
@@ -154,16 +154,16 @@ class CustomStockDetailsPageState
           transactionReason: [TransactionReason.returned.toValue()],
           transactionType: [TransactionType.received.toValue()]),
     );
-    int receivedStock = 0;
+    int issuedStock = 0;
     int returnedStock = 0;
-    for (var stock in stockModelsReceived) {
-      receivedStock += int.parse(stock.quantity ?? "0");
+    for (var stock in stockModelsIssued) {
+      issuedStock += int.parse(stock.quantity ?? "0");
     }
     for (var stock in stockModelsReturned) {
       returnedStock += int.parse(stock.quantity ?? "0");
     }
-    if (returnedStock <= (receivedStock - returnedStock)) return true;
-    return false;
+    bool isValidate = (returned <= (issuedStock - returnedStock));
+    return isValidate;
   }
 
   @override
@@ -559,13 +559,62 @@ class CustomStockDetailsPageState
                                             }
                                           }
 
-                                          final stockReconciliationState =
+                                          StockReconciliationState
+                                              stockReconciliationState =
                                               stockReconciliationBloc.state;
 
-                                          calculateStockData(
-                                              selectedProductVariant.id,
-                                              stockState.facilityModel!.id,
-                                              selectedFacilityId);
+                                          if (entryType ==
+                                              StockRecordEntryType.returned) {
+                                            bool returnValidation =
+                                                await stockReturnValidaion(
+                                                    quantity,
+                                                    productVariant.id,
+                                                    stockState
+                                                        .facilityModel!.id,
+                                                    selectedFacilityId);
+                                            if (returnValidation == false) {
+                                              final alert =
+                                                  await DigitDialog.show<bool>(
+                                                context,
+                                                options: DigitDialogOptions(
+                                                  titleText:
+                                                      localizations.translate(
+                                                    i18_local.stockDetails
+                                                        .countDialogTitle,
+                                                  ),
+                                                  contentText: localizations
+                                                      .translate(
+                                                        i18_local.stockDetails
+                                                            .countContentValidation,
+                                                      )
+                                                      .replaceAll(
+                                                        '{}',
+                                                        stockReconciliationState
+                                                            .stockInHand
+                                                            .toString(),
+                                                      ),
+                                                  primaryAction:
+                                                      DigitDialogActions(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18_local.stockDetails
+                                                          .countDialogSuccess,
+                                                    ),
+                                                    action: (context) {
+                                                      Navigator.of(
+                                                        context,
+                                                        rootNavigator: true,
+                                                      ).pop(false);
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+
+                                              if (!(alert ?? false)) {
+                                                return;
+                                              }
+                                            }
+                                          }
 
                                           if (stockReconciliationState
                                                       .stockInHand <
