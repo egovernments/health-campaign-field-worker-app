@@ -118,6 +118,35 @@ abstract class OpLogManager<T extends EntityModel> {
         .entityTypeEqualTo(type)
         .findAllSync();
 
+    var updateOpLogs = isar.opLogs
+        .filter()
+        .syncedUpEqualTo(false)
+        .operationEqualTo(DataOperation.update)
+        .serverGeneratedIdIsNull()
+        .syncDownRetryCountLessThan(
+            DigitDataModelSingleton().syncDownRetryCount)
+        .syncedDownEqualTo(false)
+        .entityTypeEqualTo(type)
+        .findAllSync();
+
+    List<OpLog> retryOplog = [];
+
+    if (updateOpLogs.isNotEmpty) {
+      for (OpLog updateLog in updateOpLogs) {
+        var clientRefId = updateLog.clientReferenceId;
+        var createOplog = oplogs
+            .where((element) =>
+                element.clientReferenceId == clientRefId &&
+                element.serverGeneratedId != null)
+            .firstOrNull;
+        if (createOplog != null) {
+          retryOplog.add(updateLog);
+        }
+      }
+    }
+
+    oplogs.addAll(retryOplog);
+
     oplogs = oplogs
         .sortedBy((element) => element.createdAt)
         .where(
@@ -331,6 +360,7 @@ abstract class OpLogManager<T extends EntityModel> {
   String getClientReferenceId(T entity);
 
   bool? getNonRecoverableError(T entity);
+
   T applyServerGeneratedIdToEntity(
     T entity,
     String serverGeneratedId,

@@ -1,3 +1,8 @@
+## 1.0.4-dev.11-uniqueId
+
+* Added updateOplog for pending up sync
+* Added additionalFields to individual search entity
+
 ## 1.0.4-dev.10-uniqueId
 
 * Bug Fix:
