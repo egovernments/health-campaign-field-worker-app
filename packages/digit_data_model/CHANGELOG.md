@@ -1,3 +1,7 @@
+## 1.0.6+2
+
+* Added more enum types in beneficiaryType
+
 ## 1.0.6+1
 
 * Added PRODUCT as enum in beneficiaryType
