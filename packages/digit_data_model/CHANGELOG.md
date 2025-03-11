@@ -1,3 +1,11 @@
+## 1.0.7-dev.2
+
+* Version change in script for dynamic enum entity generation
+
+## 1.0.7-dev.1
+
+* Script changes for dynamic enum entity generation
+
 ## 1.0.6+1
 
 * Added PRODUCT as enum in beneficiaryType

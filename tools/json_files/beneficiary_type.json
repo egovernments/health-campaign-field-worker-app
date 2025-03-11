@@ -1,0 +1,34 @@
+{
+  "name": "BeneficiaryType",
+  "enumValues": [
+    {
+      "name": "individual",
+      "value": "INDIVIDUAL"
+    },
+    {
+      "name": "household",
+      "value": "HOUSEHOLD"
+    },
+    {
+      "name": "product",
+      "value": "PRODUCT"
+    },
+    {
+      "name": "specialGroups",
+      "value": "SPECIAL_GROUPS"
+    },
+    {
+      "name": "refugeeCamps",
+      "value": "REFUGEE_CAMPS"
+    },
+    {
+      "name": "sgProduct",
+      "value": "SG_PRODUCT"
+    },
+    {
+      "name": "rcProduct",
+      "value": "RC_PRODUCT"
+    }
+  ],
+  "isEnum": true
+}

@@ -26,7 +26,7 @@ class MasonEntityGenerator {
 
     // Construct the path to the .pub-cache directory
     final pubCachePath = Directory(
-      '$homeDirectory/.pub-cache/hosted/pub.dev/digit_data_model-1.0.4-dev.7/mason_templates',
+      '$homeDirectory/.pub-cache/hosted/pub.dev/digit_data_model-1.0.7-dev.2/mason_templates',
     );
 
     // Set the current directory to the constructed path
