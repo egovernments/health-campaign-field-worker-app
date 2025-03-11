@@ -26,13 +26,18 @@ class Postgen {
         await _deleteFile(path);
       }
 
-      if(!model.createEntity) {
+      if (!model.createEntity && !model.isEnum) {
         final path = p.join(
           'models',
           'entities',
           '${model.name.snakeCase}.dart',
         );
         await _deleteFile(path);
+      } else {
+        if (model.isEnum) {
+          await _generateEnumMapperDartFile(
+              model.name.snakeCase, model.enumValues);
+        }
       }
 
       if (model.isEnum) {
@@ -48,7 +53,7 @@ class Postgen {
         await _addImportStatement(model.name);
         await _addSqlTablesInGDartFile(variables);
       }
-    } catch(e) {
+    } catch (e) {
       print(e);
     }
   }
@@ -72,17 +77,20 @@ class Postgen {
     // Generate the tables and data classes
     String classCode = generateTableClassCode(vars);
     await appendToFile(classCode);
-    print("${name.toString().pascalCase}Table class is added in sql_store.g.dart");
+    print(
+        "${name.toString().pascalCase}Table class is added in sql_store.g.dart");
 
     // Generate the data class
     classCode = generateDataClassCode(vars);
     await appendToFile(classCode);
-    print("${name.toString().pascalCase}Data class is added in sql_store.g.dart");
+    print(
+        "${name.toString().pascalCase}Data class is added in sql_store.g.dart");
 
     // Generate the data class
     classCode = generateCompanionClassCode(vars);
     await appendToFile(classCode);
-    print("${name.toString().pascalCase}Companion class is added in sql_store.g.dart");
+    print(
+        "${name.toString().pascalCase}Companion class is added in sql_store.g.dart");
 
     // Check if the sql_store.g.dart file exists
     var sqlStoreFile = File("data/local_store/sql_store/sql_store.g.dart");
@@ -90,20 +98,19 @@ class Postgen {
     // Read the sql_store.g.dart file
     var sqlStoreFileContent = sqlStoreFile.readAsStringSync();
 
-    var localSqlDataStore = '''late final \$${name.toString().pascalCase}Table ${name.toString().camelCase} = \$${name.toString().pascalCase}Table(this);''';
+    var localSqlDataStore =
+        '''late final \$${name.toString().pascalCase}Table ${name.toString().camelCase} = \$${name.toString().pascalCase}Table(this);''';
     var schemaEntity = '${name.toString().camelCase},';
 
     var libraryIndex = sqlStoreFileContent.indexOf("super(e);");
     if (libraryIndex != -1) {
-      var endOfLibrary = libraryIndex +
-          "super(e);".length;
-      sqlStoreFileContent = sqlStoreFileContent.substring(0, (endOfLibrary + 1) as int?) +
-          localSqlDataStore + '\n' +
-          sqlStoreFileContent.substring((endOfLibrary + 1) as int);
+      var endOfLibrary = libraryIndex + "super(e);".length;
+      sqlStoreFileContent =
+          '${sqlStoreFileContent.substring(0, (endOfLibrary + 1) as int?)}$localSqlDataStore\n${sqlStoreFileContent.substring((endOfLibrary + 1) as int)}';
 
       // Write the updated content back to the utils.dart file
       sqlStoreFile.writeAsStringSync(sqlStoreFileContent);
-    }else {
+    } else {
       print('Could not find the target string');
     }
 
@@ -119,9 +126,8 @@ class Postgen {
 
       if (libraryIndex != -1) {
         var endOfLibrary = libraryIndex + 1;
-        sqlStoreFileContent = sqlStoreFileContent.substring(0, (endOfLibrary + 1) as int?) +
-            schemaEntity + '\n' +
-            sqlStoreFileContent.substring((endOfLibrary + 1) as int);
+        sqlStoreFileContent =
+            '${sqlStoreFileContent.substring(0, (endOfLibrary + 1) as int?)}$schemaEntity\n${sqlStoreFileContent.substring((endOfLibrary + 1) as int)}';
 
         // Write the updated content back to the utils.dart file
         sqlStoreFile.writeAsStringSync(sqlStoreFileContent);
@@ -137,19 +143,22 @@ class Postgen {
     String className = json['name'];
     StringBuffer classCode = StringBuffer();
 
-    classCode.writeln('''class ${className.pascalCase}Data extends DataClass implements Insertable<${className.pascalCase}Data> {''');
+    classCode.writeln(
+        '''class ${className.pascalCase}Data extends DataClass implements Insertable<${className.pascalCase}Data> {''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''final ${attribute['type']}${attribute['nullable'] == true ? '?' : ''} ${attribute['name']};''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''final ${attribute['type']}${attribute['nullable'] == true ? '?' : ''} ${attribute['name']};''');
     }
 
     classCode.writeln('''const ${className.pascalCase}Data(
       {''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''${attribute['nullable'] == true ? '' : "required"} this.${attribute['name']},''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''${attribute['nullable'] == true ? '' : "required"} this.${attribute['name']},''');
     }
 
     classCode.writeln('''});
@@ -158,7 +167,7 @@ class Postgen {
     final map = <String, Expression>{};''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
+      if (attribute['includeForTable'] == false) continue;
       classCode.writeln('''if (!nullToAbsent || ${attribute['name']} != null) {
       map['${attribute['name'].toString().snakeCase}'] = Variable<${attribute['type']}>(${attribute['name']});
     }''');
@@ -171,8 +180,9 @@ class Postgen {
     return ${className.pascalCase}Companion(''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''${attribute['name']}: ${attribute['name']} == null && nullToAbsent
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''${attribute['name']}: ${attribute['name']} == null && nullToAbsent
           ? const Value.absent()
           : Value(${attribute['name']}),''');
     }
@@ -186,8 +196,9 @@ class Postgen {
     return ${className.pascalCase}Data(''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''${attribute['name']}: serializer.fromJson<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}>(json['${attribute['name']}']),''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''${attribute['name']}: serializer.fromJson<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}>(json['${attribute['name']}']),''');
     }
 
     classCode.writeln(''');
@@ -198,8 +209,9 @@ class Postgen {
     return <String, dynamic>{''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln(''''${attribute['name']}': serializer.toJson<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}>(${attribute['name']}),''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          ''''${attribute['name']}': serializer.toJson<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}>(${attribute['name']}),''');
     }
 
     classCode.writeln('''};
@@ -208,11 +220,11 @@ class Postgen {
   ${className.pascalCase}Data copyWith({''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      if(attribute['nullable'] == true) {
-        classCode.writeln('''Value<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}> ${attribute['name']} = const Value.absent(),''');
-      }
-      else {
+      if (attribute['includeForTable'] == false) continue;
+      if (attribute['nullable'] == true) {
+        classCode.writeln(
+            '''Value<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}> ${attribute['name']} = const Value.absent(),''');
+      } else {
         classCode.writeln('''${attribute['type']}? ${attribute['name']},''');
       }
     }
@@ -221,13 +233,13 @@ class Postgen {
       ${className.pascalCase}Data(''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      if(attribute['nullable'] == true) {
+      if (attribute['includeForTable'] == false) continue;
+      if (attribute['nullable'] == true) {
         classCode.writeln('''${attribute['name']}:
         ${attribute['name']}.present ? ${attribute['name']}.value : this.${attribute['name']},''');
-      }
-      else {
-        classCode.writeln('''${attribute['name']}: ${attribute['name']} ?? this.${attribute['name']},''');
+      } else {
+        classCode.writeln(
+            '''${attribute['name']}: ${attribute['name']} ?? this.${attribute['name']},''');
       }
     }
 
@@ -237,8 +249,9 @@ class Postgen {
     return (StringBuffer('${className.pascalCase}Data(')''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''..write('${attribute['name']}: \$${attribute['name']}, ')''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''..write('${attribute['name']}: \$${attribute['name']}, ')''');
     }
 
     classCode.writeln('''..write(')'))
@@ -249,7 +262,7 @@ class Postgen {
   int get hashCode => Object.hashAll([''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
+      if (attribute['includeForTable'] == false) continue;
       classCode.writeln('''${attribute['name']},''');
     }
 
@@ -259,10 +272,11 @@ class Postgen {
       identical(this, other) ||
       (other is ${className.pascalCase}Data && ''');
 
-    int i=0;
+    int i = 0;
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == true) {
-        classCode.writeln('''other.${attribute['name']} == this.${attribute['name']} ${i < json['attributes'].length - 1 ? '&&' : ''} ''');
+      if (attribute['includeForTable'] == true) {
+        classCode.writeln(
+            '''other.${attribute['name']} == this.${attribute['name']} ${i < json['attributes'].length - 1 ? '&&' : ''} ''');
       }
       i++;
     }
@@ -278,7 +292,8 @@ class Postgen {
     String className = json['name'];
     StringBuffer classCode = StringBuffer();
 
-    classCode.writeln('''class \$${className.pascalCase}Table extends ${className.pascalCase} with TableInfo<\$${className.pascalCase}Table, ${className.pascalCase}Data> {
+    classCode.writeln(
+        '''class \$${className.pascalCase}Table extends ${className.pascalCase} with TableInfo<\$${className.pascalCase}Table, ${className.pascalCase}Data> {
         @override
         final GeneratedDatabase attachedDatabase;
         final String? _alias;
@@ -286,7 +301,7 @@ class Postgen {
 ''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
+      if (attribute['includeForTable'] == false) continue;
       classCode.writeln('''
       static const VerificationMeta _${attribute['name']}Meta = const VerificationMeta('${attribute['name']}');
       @override
@@ -309,13 +324,13 @@ class Postgen {
         List<GeneratedColumn> get \$columns => [''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
+      if (attribute['includeForTable'] == false) continue;
       classCode.writeln('''${attribute['name']},''');
     }
 
     classCode.writeln("];");
 
-    classCode.writeln(''' 
+    classCode.writeln('''
     @override
         String get aliasedName => _alias ?? actualTableName;
         @override
@@ -329,12 +344,13 @@ class Postgen {
         ''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''if (data.containsKey('${attribute['name'].toString().snakeCase}')) {
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''if (data.containsKey('${attribute['name'].toString().snakeCase}')) {
             context.handle(_${attribute['name']}Meta, ${attribute['name']}.isAcceptableOrUnknown(data['${attribute['name'].toString().snakeCase}']!, _${attribute['name']}Meta));
           }
           ''');
-      if(attribute['nullable'] == false) {
+      if (attribute['nullable'] == false) {
         classCode.writeln('''else if (isInserting) {
       context.missing(_${attribute['name']}Meta);
     }
@@ -347,8 +363,8 @@ class Postgen {
     ''');
 
     for (var sql_attribute in json['sqlAttributes']) {
-      if(sql_attribute['includeForTable'] == false) continue;
-      if(sql_attribute['isPk']) {
+      if (sql_attribute['includeForTable'] == false) continue;
+      if (sql_attribute['isPk']) {
         classCode.writeln('${sql_attribute['name']},');
       }
     }
@@ -359,8 +375,8 @@ class Postgen {
     final effectivePrefix = tablePrefix != null ? '\$tablePrefix.' : '';
     return ${className.pascalCase}Data(''');
 
-    for(var  attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
+    for (var attribute in json['attributes']) {
+      if (attribute['includeForTable'] == false) continue;
       classCode.writeln('''${attribute['name']}: attachedDatabase.typeMapping
           .read(DriftSqlType.${attribute['type'].toString().toLowerCase()}, data['\${effectivePrefix}${attribute['name'].toString().snakeCase}'])${attribute['nullable'] == false ? '!' : ''},''');
     }
@@ -379,30 +395,34 @@ class Postgen {
     String className = json['name'];
     StringBuffer classCode = StringBuffer();
 
-    classCode.writeln('''class ${className.pascalCase}Companion extends UpdateCompanion<${className.pascalCase}Data> {''');
+    classCode.writeln(
+        '''class ${className.pascalCase}Companion extends UpdateCompanion<${className.pascalCase}Data> {''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''final Value<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}> ${attribute['name']};''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''final Value<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}> ${attribute['name']};''');
     }
 
     classCode.writeln('''const ${className.pascalCase}Companion({''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''this.${attribute['name']} = const Value.absent(),''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode
+          .writeln('''this.${attribute['name']} = const Value.absent(),''');
     }
 
     classCode.writeln('''});
   ${className.pascalCase}Companion.insert({''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      if(attribute['nullable'] == false) {
-        classCode.writeln('''required ${attribute['type']} ${attribute['name']},''');
-      }
-      else {
-        classCode.writeln('''this.${attribute['name']} = const Value.absent(),''');
+      if (attribute['includeForTable'] == false) continue;
+      if (attribute['nullable'] == false) {
+        classCode
+            .writeln('''required ${attribute['type']} ${attribute['name']},''');
+      } else {
+        classCode
+            .writeln('''this.${attribute['name']} = const Value.absent(),''');
       }
     }
 
@@ -410,16 +430,18 @@ class Postgen {
   static Insertable<${className.pascalCase}Data> custom({''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''Expression<${attribute['type']}>? ${attribute['name']},''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''Expression<${attribute['type']}>? ${attribute['name']},''');
     }
 
     classCode.writeln('''}) {
     return RawValuesInsertable({''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''if (${attribute['name']} != null) '${attribute['name']}': ${attribute['name']},''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''if (${attribute['name']} != null) '${attribute['name']}': ${attribute['name']},''');
     }
 
     classCode.writeln(''' });
@@ -428,16 +450,18 @@ class Postgen {
   ${className.pascalCase}Companion copyWith({''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''Value<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}>? ${attribute['name']},''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''Value<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}>? ${attribute['name']},''');
     }
 
     classCode.writeln('''}) {
     return ${className.pascalCase}Companion(''');
 
     for (var attribute in json['attributes']) {
-      if(attribute['includeForTable'] == false) continue;
-      classCode.writeln('''${attribute['name']}: ${attribute['name']} ?? this.${attribute['name']},''');
+      if (attribute['includeForTable'] == false) continue;
+      classCode.writeln(
+          '''${attribute['name']}: ${attribute['name']} ?? this.${attribute['name']},''');
     }
 
     classCode.writeln(''');
@@ -450,9 +474,7 @@ class Postgen {
     for (var attribute in json['attributes']) {
       if (attribute['includeForTable'] == false) continue;
       classCode.writeln('''if (${attribute['name']}.present) {
-      map['${attribute['name']
-          .toString()
-          .snakeCase}'] = Variable<${attribute['type']}>(${attribute['name']}.value);
+      map['${attribute['name'].toString().snakeCase}'] = Variable<${attribute['type']}>(${attribute['name']}.value);
     }''');
     }
 
@@ -465,7 +487,8 @@ class Postgen {
 
     for (var attribute in json['attributes']) {
       if (attribute['includeForTable'] == false) continue;
-      classCode.writeln('''..write('${attribute['name']}: \$${attribute['name']}, ')''');
+      classCode.writeln(
+          '''..write('${attribute['name']}: \$${attribute['name']}, ')''');
     }
 
     classCode.writeln(''' ..write(')'))
@@ -476,7 +499,8 @@ class Postgen {
   }
 
   Future<void> appendToFile(String classCode) async {
-    final file = File('data/local_store/sql_store/sql_store.g.dart'); // Specify your file path
+    final file = File(
+        'data/local_store/sql_store/sql_store.g.dart'); // Specify your file path
     await file.writeAsString(classCode, mode: FileMode.append);
   }
 
@@ -504,11 +528,148 @@ class Postgen {
 
       if (!content.contains(tableStatement)) {
         // Add the table to the tables list.
-        final tablesListStart = content.indexOf('@DriftDatabase(tables: [') + '@DriftDatabase(tables: ['.length;
-        content = '${content.substring(0, tablesListStart)}\n  $tableStatement${content.substring(tablesListStart)}';
+        final tablesListStart = content.indexOf('@DriftDatabase(tables: [') +
+            '@DriftDatabase(tables: ['.length;
+        content =
+            '${content.substring(0, tablesListStart)}\n  $tableStatement${content.substring(tablesListStart)}';
       }
 
       await file.writeAsString(content);
     }
   }
+
+  _generateEnumMapperDartFile(String name, List<EnumValues> attributes) {
+    String generatedCode =
+        generateEnumMapper(name, attributes.map((e) => e.name).toList());
+
+    File file = File('models/entities/$name.mapper.dart');
+
+    file.create();
+
+    file.writeAsString(generatedCode);
+
+    // add the generated mapper to initialized file
+    _updateInitializeMappersFile(name);
+  }
+
+  void _updateInitializeMappersFile(String name) {
+    File initFile = File('data_model.init.dart');
+
+    if (!initFile.existsSync()) {
+      initFile.createSync(recursive: true);
+    }
+
+    String content = initFile.readAsStringSync();
+
+    // Extract existing aliases (pX)
+    RegExp aliasPattern =
+        RegExp(r"import 'models/entities/.*\.dart' as p(\d+);");
+    Iterable<Match> matches = aliasPattern.allMatches(content);
+
+    int nextAlias = matches
+            .map((m) => int.parse(m.group(1)!))
+            .fold(0, (max, num) => num > max ? num : max) +
+        1;
+
+    String importStatement =
+        "import 'models/entities/$name.mapper.dart' as p$nextAlias;";
+    String ensureInitCall =
+        "  p$nextAlias.${name.pascalCase}Mapper.ensureInitialized();";
+
+    // Check if import already exists
+    bool importExists = content.contains(RegExp(
+        r"import 'models/entities/" + name + r"\.mapper\.dart' as p\d+;"));
+
+    // Check if ensureInitialized() already exists
+    bool initCallExists = content
+        .contains(RegExp(r"p\d+\." + name + r"Mapper\.ensureInitialized\(\);"));
+
+    // Add import if it doesn’t exist
+    if (!importExists) {
+      content = importStatement + '\n' + content;
+    }
+
+    // Add ensureInitialized() call inside initializeMappers() if it doesn’t exist
+    if (!initCallExists) {
+      content = content.replaceFirst('void initializeMappers() {',
+          'void initializeMappers() {\n$ensureInitCall');
+    }
+
+    initFile.writeAsStringSync(content);
+  }
+}
+
+String generateEnumMapper(String enumName, List<String> values) {
+  StringBuffer classCode = StringBuffer();
+
+  classCode.writeln("""
+    // coverage:ignore-file
+    // GENERATED CODE - DO NOT MODIFY BY HAND
+    // ignore_for_file: type=lint
+    // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
+    // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
+
+    part of '${enumName.snakeCase}.dart';
+
+    class ${enumName.pascalCase}Mapper extends EnumMapper<${enumName.pascalCase}> {
+      ${enumName.pascalCase}Mapper._();
+
+      static ${enumName.pascalCase}Mapper? _instance;
+      static ${enumName.pascalCase}Mapper ensureInitialized() {
+        if (_instance == null) {
+          MapperContainer.globals.use(_instance = ${enumName.pascalCase}Mapper._());
+        }
+        return _instance!;
+      }
+
+      static ${enumName.pascalCase} fromValue(dynamic value) {
+        ensureInitialized();
+        return MapperContainer.globals.fromValue(value);
+      }
+
+      @override
+      ${enumName.pascalCase} decode(dynamic value) {
+        switch (value) {
+  """);
+
+  for (var val in values) {
+    classCode.writeln("""
+          case "$val":
+            return ${enumName.pascalCase}.${val.camelCase};""");
+  }
+
+  classCode.writeln("""
+          default:
+            throw MapperException.unknownEnumValue(value);
+        }
+      }
+
+      @override
+      dynamic encode(${enumName.pascalCase} self) {
+        switch (self) {
+  """);
+
+  for (var val in values) {
+    classCode.writeln("""
+          case ${enumName.pascalCase}.${val.camelCase}:
+            return "$val";""");
+  }
+
+  // Properly closing the switch and class
+  classCode.writeln("""
+          default:
+            throw MapperException.unknownEnumValue(self);
+        }
+      }
+    }
+
+    extension ${enumName.pascalCase}MapperExtension on ${enumName.pascalCase} {
+      dynamic toValue() {
+        ${enumName.pascalCase}Mapper.ensureInitialized();
+        return MapperContainer.globals.toValue<${enumName.pascalCase}>(this);
+      }
+    }
+  """);
+
+  return classCode.toString();
 }

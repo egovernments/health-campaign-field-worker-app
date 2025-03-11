@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:digit_data_model/entityGenerator.dart';
+import 'package:digit_data_model/utils/entity_creation/entity_generator.dart';
 
 // Run this script in tools directory
 void main() async {
@@ -11,7 +11,7 @@ void main() async {
   // Convert it to a Directory (typically project root is the parent of 'bin' or 'lib' or wherever this script is)
   Directory.current = appDir + '/tools';
 
-  String folderPath = 'jsonFiles';
+  String folderPath = 'json_files';
   final directory = Directory(folderPath);
 
   if (!directory.existsSync()) {

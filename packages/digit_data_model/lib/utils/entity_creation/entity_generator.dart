@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:digit_data_model/post_gen.dart';
 import 'package:mason/mason.dart';
 
+import 'post_gen.dart';
 import 'pre_gen.dart';
 
 class MasonEntityGenerator {

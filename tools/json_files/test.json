@@ -1,0 +1,22 @@
+{
+  "name": "BeneficiaryType2",
+  "enumValues": [
+    {
+      "name": "individual",
+      "value": "INDIVIDUAL"
+    },
+    {
+      "name": "household",
+      "value": "HOUSEHOLD"
+    },
+    {
+      "name": "product",
+      "value": "PRODUCT"
+    },
+    {
+      "name": "spq100",
+      "value": "SPQ100"
+    }
+  ],
+  "isEnum": true
+}

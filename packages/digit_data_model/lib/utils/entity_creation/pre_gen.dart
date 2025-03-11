@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:mason/mason.dart';
 
 import 'models.dart';
 
@@ -17,7 +16,7 @@ class PreGen {
 
       model = model.copyWith.attributes.addAll(
         [
-          AttributeModel(
+          const AttributeModel(
             name: 'auditCreatedBy',
             type: 'String',
             includeForQuery: false,
@@ -26,7 +25,7 @@ class PreGen {
             isPk: true,
             nullable: true,
           ),
-          AttributeModel(
+          const AttributeModel(
             name: 'nonRecoverableError',
             type: 'bool',
             includeForQuery: false,
@@ -35,7 +34,7 @@ class PreGen {
             nullable: true,
             defaultValue: 'false',
           ),
-          AttributeModel(
+          const AttributeModel(
             name: 'auditCreatedTime',
             type: 'int',
             includeForQuery: false,
@@ -43,7 +42,7 @@ class PreGen {
             includeForTable: true,
             nullable: true,
           ),
-          AttributeModel(
+          const AttributeModel(
             name: 'clientCreatedTime',
             type: 'int',
             includeForQuery: false,
@@ -51,7 +50,7 @@ class PreGen {
             includeForTable: true,
             nullable: true,
           ),
-          AttributeModel(
+          const AttributeModel(
             name: 'clientModifiedBy',
             type: 'String',
             includeForQuery: false,
@@ -59,7 +58,7 @@ class PreGen {
             includeForTable: true,
             nullable: true,
           ),
-          AttributeModel(
+          const AttributeModel(
             name: 'clientCreatedBy',
             type: 'String',
             includeForQuery: false,
@@ -67,7 +66,7 @@ class PreGen {
             includeForTable: true,
             nullable: true,
           ),
-          AttributeModel(
+          const AttributeModel(
             name: 'clientModifiedTime',
             type: 'int',
             includeForQuery: false,
@@ -75,7 +74,7 @@ class PreGen {
             includeForTable: true,
             nullable: true,
           ),
-          AttributeModel(
+          const AttributeModel(
             name: 'auditModifiedBy',
             type: 'String',
             includeForQuery: false,
@@ -83,7 +82,7 @@ class PreGen {
             includeForTable: true,
             nullable: true,
           ),
-          AttributeModel(
+          const AttributeModel(
             name: 'auditModifiedTime',
             type: 'int',
             includeForQuery: false,
@@ -92,7 +91,7 @@ class PreGen {
             nullable: true,
           ),
           if (model.persistBoundaryParameters) ...[
-            AttributeModel(
+            const AttributeModel(
               name: 'localityBoundaryCode',
               type: 'String',
               includeForQuery: false,
@@ -100,7 +99,7 @@ class PreGen {
               includeForTable: true,
               nullable: true,
             ),
-            AttributeModel(
+            const AttributeModel(
               name: 'localityBoundaryName',
               type: 'String',
               includeForQuery: false,
@@ -117,7 +116,7 @@ class PreGen {
           null) {
         model = model.copyWith.attributes.addAll(
           [
-            AttributeModel(
+            const AttributeModel(
               name: 'clientReferenceId',
               type: 'String',
               isPk: true,
@@ -127,7 +126,7 @@ class PreGen {
               includeForTable: false,
               nullable: false,
             ),
-            AttributeModel(
+            const AttributeModel(
               name: 'clientReferenceId',
               type: 'String',
               isPk: true,
@@ -144,7 +143,7 @@ class PreGen {
               .firstWhereOrNull((element) => element.name == 'tenantId') ==
           null) {
         model = model.copyWith.attributes.add(
-          AttributeModel(
+          const AttributeModel(
             name: 'tenantId',
             type: 'String',
             includeForQuery: true,
@@ -157,7 +156,7 @@ class PreGen {
               .firstWhereOrNull((element) => element.name == 'isDeleted') ==
           null) {
         model = model.copyWith.attributes.add(
-          AttributeModel(
+          const AttributeModel(
             name: 'isDeleted',
             type: 'bool',
             defaultValue: "false",
@@ -172,7 +171,7 @@ class PreGen {
               .firstWhereOrNull((element) => element.name == 'rowVersion') ==
           null) {
         model = model.copyWith.attributes.add(
-          AttributeModel(
+          const AttributeModel(
             name: 'rowVersion',
             type: 'int',
             includeForQuery: false,
@@ -188,7 +187,9 @@ class PreGen {
       );
 
       final sqlAttributes = <AttributeModel>[
-        ...model.attributes.where((element) => element.includeForTable).map((e) {
+        ...model.attributes
+            .where((element) => element.includeForTable)
+            .map((e) {
           final type = _getSqlType(e.type);
           final columnType = _getSqlColumnType(e.type);
           return e.copyWith(type: type, columnType: columnType);
