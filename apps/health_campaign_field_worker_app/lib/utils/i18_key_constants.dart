@@ -910,6 +910,8 @@ class StockReconciliationShowcase {
 class InventoryReportDetails {
   const InventoryReportDetails();
 
+  String get summaryReport => 'INVENTORY_REPORT_DETAILS_SUMMARY_REPORT_LABEL';
+
   String get dateLabel {
     return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
   }

@@ -24,6 +24,7 @@ mixin _$ClosedHouseholdEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? reason,
+            String? refuseReasonComment,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -40,6 +41,7 @@ mixin _$ClosedHouseholdEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? reason,
+            String? refuseReasonComment,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -56,6 +58,7 @@ mixin _$ClosedHouseholdEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? reason,
+            String? refuseReasonComment,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -158,6 +161,7 @@ abstract class _$$ClosedHouseholdSubmitEventImplCopyWith<$Res>
   @useResult
   $Res call(
       {String? reason,
+      String? refuseReasonComment,
       double latitude,
       double longitude,
       double locationAccuracy,
@@ -180,6 +184,7 @@ class __$$ClosedHouseholdSubmitEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? reason = freezed,
+    Object? refuseReasonComment = freezed,
     Object? latitude = null,
     Object? longitude = null,
     Object? locationAccuracy = null,
@@ -191,6 +196,10 @@ class __$$ClosedHouseholdSubmitEventImplCopyWithImpl<$Res>
       reason: freezed == reason
           ? _value.reason
           : reason // ignore: cast_nullable_to_non_nullable
+              as String?,
+      refuseReasonComment: freezed == refuseReasonComment
+          ? _value.refuseReasonComment
+          : refuseReasonComment // ignore: cast_nullable_to_non_nullable
               as String?,
       latitude: null == latitude
           ? _value.latitude
@@ -225,6 +234,7 @@ class __$$ClosedHouseholdSubmitEventImplCopyWithImpl<$Res>
 class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   const _$ClosedHouseholdSubmitEventImpl(
       {this.reason,
+      this.refuseReasonComment,
       this.latitude = 0,
       this.longitude = 0,
       this.locationAccuracy = 0,
@@ -234,6 +244,8 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
 
   @override
   final String? reason;
+  @override
+  final String? refuseReasonComment;
   @override
   @JsonKey()
   final double latitude;
@@ -252,7 +264,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
 
   @override
   String toString() {
-    return 'ClosedHouseholdEvent.handleSubmit(reason: $reason, latitude: $latitude, longitude: $longitude, locationAccuracy: $locationAccuracy, householdHeadName: $householdHeadName, tag: $tag, context: $context)';
+    return 'ClosedHouseholdEvent.handleSubmit(reason: $reason, refuseReasonComment: $refuseReasonComment, latitude: $latitude, longitude: $longitude, locationAccuracy: $locationAccuracy, householdHeadName: $householdHeadName, tag: $tag, context: $context)';
   }
 
   @override
@@ -261,6 +273,8 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
         (other.runtimeType == runtimeType &&
             other is _$ClosedHouseholdSubmitEventImpl &&
             (identical(other.reason, reason) || other.reason == reason) &&
+            (identical(other.refuseReasonComment, refuseReasonComment) ||
+                other.refuseReasonComment == refuseReasonComment) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -274,8 +288,8 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, reason, latitude, longitude,
-      locationAccuracy, householdHeadName, tag, context);
+  int get hashCode => Object.hash(runtimeType, reason, refuseReasonComment,
+      latitude, longitude, locationAccuracy, householdHeadName, tag, context);
 
   @JsonKey(ignore: true)
   @override
@@ -289,6 +303,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? reason,
+            String? refuseReasonComment,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -300,8 +315,8 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
             double locationAccuracy, String? householdHeadName)
         handleSummary,
   }) {
-    return handleSubmit(reason, latitude, longitude, locationAccuracy,
-        householdHeadName, tag, context);
+    return handleSubmit(reason, refuseReasonComment, latitude, longitude,
+        locationAccuracy, householdHeadName, tag, context);
   }
 
   @override
@@ -309,6 +324,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? reason,
+            String? refuseReasonComment,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -320,8 +336,8 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
             double locationAccuracy, String? householdHeadName)?
         handleSummary,
   }) {
-    return handleSubmit?.call(reason, latitude, longitude, locationAccuracy,
-        householdHeadName, tag, context);
+    return handleSubmit?.call(reason, refuseReasonComment, latitude, longitude,
+        locationAccuracy, householdHeadName, tag, context);
   }
 
   @override
@@ -329,6 +345,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? reason,
+            String? refuseReasonComment,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -342,8 +359,8 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
-      return handleSubmit(reason, latitude, longitude, locationAccuracy,
-          householdHeadName, tag, context);
+      return handleSubmit(reason, refuseReasonComment, latitude, longitude,
+          locationAccuracy, householdHeadName, tag, context);
     }
     return orElse();
   }
@@ -383,6 +400,7 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
 abstract class ClosedHouseholdSubmitEvent implements ClosedHouseholdEvent {
   const factory ClosedHouseholdSubmitEvent(
       {final String? reason,
+      final String? refuseReasonComment,
       final double latitude,
       final double longitude,
       final double locationAccuracy,
@@ -391,6 +409,7 @@ abstract class ClosedHouseholdSubmitEvent implements ClosedHouseholdEvent {
       final BuildContext? context}) = _$ClosedHouseholdSubmitEventImpl;
 
   String? get reason;
+  String? get refuseReasonComment;
   @override
   double get latitude;
   @override
@@ -519,6 +538,7 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? reason,
+            String? refuseReasonComment,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -539,6 +559,7 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? reason,
+            String? refuseReasonComment,
             double latitude,
             double longitude,
             double locationAccuracy,
@@ -559,6 +580,7 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? reason,
+            String? refuseReasonComment,
             double latitude,
             double longitude,
             double locationAccuracy,

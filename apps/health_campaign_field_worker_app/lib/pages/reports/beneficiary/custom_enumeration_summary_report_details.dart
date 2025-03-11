@@ -55,7 +55,6 @@ class _CustomEumerationSummaryReportDetailsState
 
   static const _dateKey = 'dateKey';
 
-  static const _title = "Summary Report";
 
   FormGroup _form() {
     return fb.group({});
@@ -92,7 +91,9 @@ class _CustomEumerationSummaryReportDetailsState
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    _title,
+                    localizations.translate(
+                                i18Local.inventoryReportDetails.summaryReport,
+                              ),
                     maxLines: 1,
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
@@ -106,7 +107,9 @@ class _CustomEumerationSummaryReportDetailsState
                     return SizedBox(
                       height: 400,
                       child: _ReportDetailsContent(
-                        title: _title,
+                        title: localizations.translate(
+                                i18Local.inventoryReportDetails.summaryReport,
+                              ),
                         data: DigitGridData(
                           columns: [
                             DigitGridColumn(

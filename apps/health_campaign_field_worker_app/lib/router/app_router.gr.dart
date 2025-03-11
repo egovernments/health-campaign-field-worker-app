@@ -97,6 +97,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: CustomClosedHouseholdSummaryPage(
           reason: args.reason,
+          refuseReasonComment: args.refuseReasonComment,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -769,7 +770,8 @@ class CustomClosedHouseholdDetailsRouteArgs {
 class CustomClosedHouseholdSummaryRoute
     extends PageRouteInfo<CustomClosedHouseholdSummaryRouteArgs> {
   CustomClosedHouseholdSummaryRoute({
-    required dynamic reason,
+    required String reason,
+    required String? refuseReasonComment,
     Key? key,
     AppLocalizations? appLocalizations,
     List<PageRouteInfo>? children,
@@ -777,6 +779,7 @@ class CustomClosedHouseholdSummaryRoute
           CustomClosedHouseholdSummaryRoute.name,
           args: CustomClosedHouseholdSummaryRouteArgs(
             reason: reason,
+            refuseReasonComment: refuseReasonComment,
             key: key,
             appLocalizations: appLocalizations,
           ),
@@ -792,11 +795,14 @@ class CustomClosedHouseholdSummaryRoute
 class CustomClosedHouseholdSummaryRouteArgs {
   const CustomClosedHouseholdSummaryRouteArgs({
     required this.reason,
+    required this.refuseReasonComment,
     this.key,
     this.appLocalizations,
   });
 
-  final dynamic reason;
+  final String reason;
+
+  final String? refuseReasonComment;
 
   final Key? key;
 
@@ -804,7 +810,7 @@ class CustomClosedHouseholdSummaryRouteArgs {
 
   @override
   String toString() {
-    return 'CustomClosedHouseholdSummaryRouteArgs{reason: $reason, key: $key, appLocalizations: $appLocalizations}';
+    return 'CustomClosedHouseholdSummaryRouteArgs{reason: $reason, refuseReasonComment: $refuseReasonComment, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

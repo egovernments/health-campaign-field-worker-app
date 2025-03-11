@@ -98,6 +98,9 @@ class Constants {
   static const String householdTypeKey = 'householdTypeKey';
   static const String nationalWarehouse = 'National Warehouse';
 
+  static const String closedHouseholdReason = 'Reason';
+  static const String closedHouseholdReasonComment = 'RefuseReasonComment';
+
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
     Isar isar,

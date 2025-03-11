@@ -20,10 +20,12 @@ import '../../blocs/custom_blocs/closed_household.dart' as custombloc;
 
 @RoutePage()
 class CustomClosedHouseholdSummaryPage extends LocalizedStatefulWidget {
-  final reason;
+  final String reason;
+  final String? refuseReasonComment;
 
   const CustomClosedHouseholdSummaryPage({
     required this.reason,
+    required this.refuseReasonComment,
     super.key,
     super.appLocalizations,
   });
@@ -49,8 +51,8 @@ class CustomClosedHouseholdSummaryPageState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
-        builder: (context, householdState) {
+    return BlocBuilder<custombloc.ClosedHouseholdBloc,
+        custombloc.ClosedHouseholdState>(builder: (context, householdState) {
       return Scaffold(
           body: ScrollableContent(
               enableFixedButton: true,
@@ -72,6 +74,8 @@ class CustomClosedHouseholdSummaryPageState
                               custombloc.ClosedHouseholdEvent.handleSubmit(
                                   reason:
                                       localizations.translate(widget.reason),
+                                  refuseReasonComment:
+                                      widget.refuseReasonComment,
                                   context: context,
                                   householdHeadName:
                                       householdState.householdHeadName,
