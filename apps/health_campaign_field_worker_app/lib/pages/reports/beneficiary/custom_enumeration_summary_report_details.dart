@@ -50,6 +50,9 @@ class _CustomEumerationSummaryReportDetailsState
   static const _householdKey = 'householdKey';
   static const _projectBeneficiaryKey = 'projectBeneficiaryKey';
   static const _closedHouseholdKey = 'closedHouseholdKey';
+  static const _closedHouseholdAbsentKey = 'closedHouseholdAbsentKey';
+  static const _closedHouseholdRefusedKey = 'closedHouseholdRefusedKey';
+
   static const _dateKey = 'dateKey';
 
   static const _title = "Summary Report";
@@ -149,6 +152,28 @@ class _CustomEumerationSummaryReportDetailsState
                                       .length *
                                   8,
                             ),
+                            DigitGridColumn(
+                              label: localizations.translate(i18Local
+                                  .inventoryReportDetails
+                                  .closedHouseholdRegisteredLabel),
+                              key: _closedHouseholdAbsentKey,
+                              width: localizations
+                                      .translate(i18Local.inventoryReportDetails
+                                          .closedHouseholdRegisteredAbsentLabel)
+                                      .length *
+                                  8,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate(i18Local
+                                  .inventoryReportDetails
+                                  .closedHouseholdRegisteredLabel),
+                              key: _closedHouseholdRefusedKey,
+                              width: localizations
+                                      .translate(i18Local.inventoryReportDetails
+                                          .closedHouseholdRegisteredRefusedLabel)
+                                      .length *
+                                  8,
+                            ),
                           ],
                           rows: [
                             for (final entry
@@ -177,6 +202,22 @@ class _CustomEumerationSummaryReportDetailsState
                                     key: _closedHouseholdKey,
                                     value: (entry.value[Constants
                                                     .closedHousehold] ??
+                                                0)
+                                            .toString() ??
+                                        "0",
+                                  ),
+                                  DigitGridCell(
+                                    key: _closedHouseholdAbsentKey,
+                                    value: (entry.value[Constants
+                                                    .closedHouseholdAbsent] ??
+                                                0)
+                                            .toString() ??
+                                        "0",
+                                  ),
+                                  DigitGridCell(
+                                    key: _closedHouseholdRefusedKey,
+                                    value: (entry.value[Constants
+                                                    .closedHouseholdRefused] ??
                                                 0)
                                             .toString() ??
                                         "0",

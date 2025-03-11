@@ -926,6 +926,14 @@ class InventoryReportDetails {
     return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_LABEL';
   }
 
+  String get closedHouseholdRegisteredAbsentLabel {
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_ABSENT_LABEL';
+  }
+
+  String get closedHouseholdRegisteredRefusedLabel {
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_REFUSED_LABEL';
+  }
+
   String get householdDistributedLabel {
     return 'DISTRIBUTION_SUMMARY_HOUSEHOLD_DISTRIBUTED_LABEL';
   }
