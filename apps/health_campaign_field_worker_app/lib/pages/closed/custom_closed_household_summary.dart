@@ -49,7 +49,7 @@ class CustomClosedHouseholdSummaryPageState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
+    return BlocBuilder<custombloc.ClosedHouseholdBloc, custombloc.ClosedHouseholdState>(
         builder: (context, householdState) {
       return Scaffold(
           body: ScrollableContent(
