@@ -509,10 +509,9 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "15b22c653992cfde889c8fd059c614b474df4b2f5315c6a90fd4e30604edb511"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.0.7-dev.2"
   digit_dss:
     dependency: "direct main"

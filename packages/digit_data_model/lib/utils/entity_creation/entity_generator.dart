@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:digit_data_model/utils/entity_creation/models.dart';
 import 'package:mason/mason.dart';
 
 import 'post_gen.dart';
@@ -9,16 +9,12 @@ import 'pre_gen.dart';
 class MasonEntityGenerator {
   // Function to run Mason template with provided JSON configuration
   Future<void> generateEntity(String jsonString) async {
-    // Parse the JSON configuration
-    final config = jsonDecode(jsonString);
+    ConfigModelMapper.ensureInitialized();
+    AttributeModelMapper.ensureInitialized();
+    EnumValuesMapper.ensureInitialized();
+    TableReferenceModelMapper.ensureInitialized();
 
-    // Extract name and attributes from the config
-    final name = config['name'];
-    final attributes = config['attributes'];
-    final enumValues = config['enumValues'];
-    final isEnum = config['isEnum'];
-    final customAttributes = config['customAttributes'];
-    final persistBoundaryParameters = config['persistBoundaryParameters'];
+    ConfigModel configModel = ConfigModelMapper.fromJson(jsonString);
 
     final homeDirectory = Platform.isWindows
         ? Platform.environment['USERPROFILE']
@@ -38,7 +34,7 @@ class MasonEntityGenerator {
     print('appDir: $appDir');
 
     final file = File(
-        '../lib/data/local_store/sql_store/tables/${name.toString().snakeCase}.dart');
+        '../lib/data/local_store/sql_store/tables/${configModel.name.toString().snakeCase}.dart');
 
     if (!await file.exists()) {
       // Load the Mason brick for entity generation
@@ -51,22 +47,13 @@ class MasonEntityGenerator {
       // Set the target directory for code generation
       final target = DirectoryGeneratorTarget(customTargetDirectory);
 
-      // Define variables to pass into Mason template
-      dynamic vars = {
-        "name": name,
-        "isEnum": isEnum,
-        "attributes": attributes,
-        "enumValues": enumValues,
-        "customAttributes": customAttributes,
-        "persistBoundaryParameters": persistBoundaryParameters
-      };
-
       PreGen preGen = PreGen();
 
-      vars = preGen.run(vars);
+      var vars = preGen.run(ConfigModelMapper.fromJson(jsonString));
 
       // Run the generator with the variables
-      await generator.generate(target, vars: vars);
+      await generator.generate(target,
+          vars: ConfigModelMapper.fromJson(jsonString).toMap());
 
       Directory.current = '../lib';
 
@@ -74,7 +61,7 @@ class MasonEntityGenerator {
 
       postGen.run(vars);
     } else {
-      print("Table with the name ${name} already exists");
+      print("Table with the name ${configModel.name} already exists");
     }
   }
 }

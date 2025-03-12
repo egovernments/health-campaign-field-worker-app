@@ -6,16 +6,13 @@ import 'package:path/path.dart' as p;
 import 'models.dart';
 
 class Postgen {
-  void run(dynamic vars) async {
+  void run(ConfigModel model) async {
     try {
-      final variables = vars;
-
       ConfigModelMapper.ensureInitialized();
       AttributeModelMapper.ensureInitialized();
       EnumValuesMapper.ensureInitialized();
       TableReferenceModelMapper.ensureInitialized();
 
-      ConfigModel model = ConfigModelMapper.fromMap(variables);
       if (!model.createRepository) {
         final path = p.join(
           'data',
@@ -26,18 +23,9 @@ class Postgen {
         await _deleteFile(path);
       }
 
-      if (!model.createEntity && !model.isEnum) {
-        final path = p.join(
-          'models',
-          'entities',
-          '${model.name.snakeCase}.dart',
-        );
-        await _deleteFile(path);
-      } else {
-        if (model.isEnum) {
-          await _generateEnumMapperDartFile(
-              model.name.snakeCase, model.enumValues);
-        }
+      if (model.isEnum) {
+        await _generateEnumMapperDartFile(
+            model.name.snakeCase, model.enumValues);
       }
 
       if (model.isEnum) {
@@ -51,7 +39,7 @@ class Postgen {
         await _deleteFile(path);
       } else {
         await _addImportStatement(model.name);
-        await _addSqlTablesInGDartFile(variables);
+        await _addSqlTablesInGDartFile(model);
       }
     } catch (e) {
       print(e);
@@ -71,23 +59,23 @@ class Postgen {
     }
   }
 
-  Future<void> _addSqlTablesInGDartFile(dynamic vars) async {
-    final name = vars['name'];
+  Future<void> _addSqlTablesInGDartFile(ConfigModel model) async {
+    final name = model.name;
 
     // Generate the tables and data classes
-    String classCode = generateTableClassCode(vars);
+    String classCode = generateTableClassCode(model);
     await appendToFile(classCode);
     print(
         "${name.toString().pascalCase}Table class is added in sql_store.g.dart");
 
     // Generate the data class
-    classCode = generateDataClassCode(vars);
+    classCode = generateDataClassCode(model);
     await appendToFile(classCode);
     print(
         "${name.toString().pascalCase}Data class is added in sql_store.g.dart");
 
     // Generate the data class
-    classCode = generateCompanionClassCode(vars);
+    classCode = generateCompanionClassCode(model);
     await appendToFile(classCode);
     print(
         "${name.toString().pascalCase}Companion class is added in sql_store.g.dart");
@@ -139,26 +127,26 @@ class Postgen {
     }
   }
 
-  String generateDataClassCode(Map<String, dynamic> json) {
-    String className = json['name'];
+  String generateDataClassCode(ConfigModel model) {
+    String className = model.name;
     StringBuffer classCode = StringBuffer();
 
     classCode.writeln(
         '''class ${className.pascalCase}Data extends DataClass implements Insertable<${className.pascalCase}Data> {''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln(
-          '''final ${attribute['type']}${attribute['nullable'] == true ? '?' : ''} ${attribute['name']};''');
+          '''final ${attribute.type}${attribute.nullable == true ? '?' : ''} ${attribute.name};''');
     }
 
     classCode.writeln('''const ${className.pascalCase}Data(
       {''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln(
-          '''${attribute['nullable'] == true ? '' : "required"} this.${attribute['name']},''');
+          '''${attribute.nullable == true ? '' : "required"} this.${attribute.name},''');
     }
 
     classCode.writeln('''});
@@ -166,10 +154,10 @@ class Postgen {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      classCode.writeln('''if (!nullToAbsent || ${attribute['name']} != null) {
-      map['${attribute['name'].toString().snakeCase}'] = Variable<${attribute['type']}>(${attribute['name']});
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      classCode.writeln('''if (!nullToAbsent || ${attribute.name} != null) {
+      map['${attribute.name.toString().snakeCase}'] = Variable<${attribute.type}>(${attribute.name});
     }''');
     }
 
@@ -179,12 +167,12 @@ class Postgen {
   ${className.pascalCase}Companion toCompanion(bool nullToAbsent) {
     return ${className.pascalCase}Companion(''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln(
-          '''${attribute['name']}: ${attribute['name']} == null && nullToAbsent
+          '''${attribute.name}: ${attribute.name} == null && nullToAbsent
           ? const Value.absent()
-          : Value(${attribute['name']}),''');
+          : Value(${attribute.name}),''');
     }
 
     classCode.writeln(''');
@@ -195,10 +183,10 @@ class Postgen {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ${className.pascalCase}Data(''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln(
-          '''${attribute['name']}: serializer.fromJson<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}>(json['${attribute['name']}']),''');
+          '''${attribute.name}: serializer.fromJson<${attribute.type}${attribute.nullable == true ? '?' : ''}>(json['${attribute.name}']),''');
     }
 
     classCode.writeln(''');
@@ -208,10 +196,10 @@ class Postgen {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln(
-          ''''${attribute['name']}': serializer.toJson<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}>(${attribute['name']}),''');
+          ''''${attribute.name}': serializer.toJson<${attribute.type}${attribute.nullable == true ? '?' : ''}>(${attribute.name}),''');
     }
 
     classCode.writeln('''};
@@ -219,27 +207,27 @@ class Postgen {
 
   ${className.pascalCase}Data copyWith({''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      if (attribute['nullable'] == true) {
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      if (attribute.nullable == true) {
         classCode.writeln(
-            '''Value<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}> ${attribute['name']} = const Value.absent(),''');
+            '''Value<${attribute.type}${attribute.nullable == true ? '?' : ''}> ${attribute.name} = const Value.absent(),''');
       } else {
-        classCode.writeln('''${attribute['type']}? ${attribute['name']},''');
+        classCode.writeln('''${attribute.type}? ${attribute.name},''');
       }
     }
 
     classCode.writeln('''}) =>
       ${className.pascalCase}Data(''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      if (attribute['nullable'] == true) {
-        classCode.writeln('''${attribute['name']}:
-        ${attribute['name']}.present ? ${attribute['name']}.value : this.${attribute['name']},''');
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      if (attribute.nullable == true) {
+        classCode.writeln('''${attribute.name}:
+        ${attribute.name}.present ? ${attribute.name}.value : this.${attribute.name},''');
       } else {
         classCode.writeln(
-            '''${attribute['name']}: ${attribute['name']} ?? this.${attribute['name']},''');
+            '''${attribute.name}: ${attribute.name} ?? this.${attribute.name},''');
       }
     }
 
@@ -248,10 +236,10 @@ class Postgen {
   String toString() {
     return (StringBuffer('${className.pascalCase}Data(')''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      classCode.writeln(
-          '''..write('${attribute['name']}: \$${attribute['name']}, ')''');
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      classCode
+          .writeln('''..write('${attribute.name}: \$${attribute.name}, ')''');
     }
 
     classCode.writeln('''..write(')'))
@@ -261,9 +249,9 @@ class Postgen {
   @override
   int get hashCode => Object.hashAll([''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      classCode.writeln('''${attribute['name']},''');
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      classCode.writeln('''${attribute.name},''');
     }
 
     classCode.writeln(''']);
@@ -273,10 +261,10 @@ class Postgen {
       (other is ${className.pascalCase}Data && ''');
 
     int i = 0;
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == true) {
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == true) {
         classCode.writeln(
-            '''other.${attribute['name']} == this.${attribute['name']} ${i < json['attributes'].length - 1 ? '&&' : ''} ''');
+            '''other.${attribute.name} == this.${attribute.name} ${i < model.attributes.length - 1 ? '&&' : ''} ''');
       }
       i++;
     }
@@ -288,8 +276,8 @@ class Postgen {
     return classCode.toString();
   }
 
-  String generateTableClassCode(Map<String, dynamic> json) {
-    String className = json['name'];
+  String generateTableClassCode(ConfigModel model) {
+    String className = model.name;
     StringBuffer classCode = StringBuffer();
 
     classCode.writeln(
@@ -300,14 +288,14 @@ class Postgen {
         \$${className.pascalCase}Table(this.attachedDatabase, [this._alias]);
 ''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln('''
-      static const VerificationMeta _${attribute['name']}Meta = const VerificationMeta('${attribute['name']}');
+      static const VerificationMeta _${attribute.name}Meta = const VerificationMeta('${attribute.name}');
       @override
-        late final GeneratedColumn<${attribute['type']}> ${attribute['name']} = GeneratedColumn<${attribute['type']}> (
-          '${attribute['name'].toString().snakeCase}', aliasedName, true,
-          type: DriftSqlType.${attribute['type'].toString().toLowerCase()}, requiredDuringInsert: false);
+        late final GeneratedColumn<${attribute.type}> ${attribute.name} = GeneratedColumn<${attribute.type}> (
+          '${attribute.name.toString().snakeCase}', aliasedName, true,
+          type: DriftSqlType.${attribute.type.toString().toLowerCase()}, requiredDuringInsert: false);
           
           ''');
     }
@@ -323,9 +311,9 @@ class Postgen {
     classCode.writeln('''@override
         List<GeneratedColumn> get \$columns => [''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      classCode.writeln('''${attribute['name']},''');
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      classCode.writeln('''${attribute.name},''');
     }
 
     classCode.writeln("];");
@@ -343,16 +331,16 @@ class Postgen {
           final data = instance.toColumns(true);
         ''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln(
-          '''if (data.containsKey('${attribute['name'].toString().snakeCase}')) {
-            context.handle(_${attribute['name']}Meta, ${attribute['name']}.isAcceptableOrUnknown(data['${attribute['name'].toString().snakeCase}']!, _${attribute['name']}Meta));
+          '''if (data.containsKey('${attribute.name.toString().snakeCase}')) {
+            context.handle(_${attribute.name}Meta, ${attribute.name}.isAcceptableOrUnknown(data['${attribute.name.toString().snakeCase}']!, _${attribute.name}Meta));
           }
           ''');
-      if (attribute['nullable'] == false) {
+      if (attribute.nullable == false) {
         classCode.writeln('''else if (isInserting) {
-      context.missing(_${attribute['name']}Meta);
+      context.missing(_${attribute.name}Meta);
     }
           ''');
       }
@@ -362,10 +350,10 @@ class Postgen {
   Set<GeneratedColumn> get \$primaryKey => {
     ''');
 
-    for (var sql_attribute in json['sqlAttributes']) {
-      if (sql_attribute['includeForTable'] == false) continue;
-      if (sql_attribute['isPk']) {
-        classCode.writeln('${sql_attribute['name']},');
+    for (var sql_attribute in model.sqlAttributes) {
+      if (sql_attribute.includeForTable == false) continue;
+      if (sql_attribute.isPk) {
+        classCode.writeln('${sql_attribute.name},');
       }
     }
 
@@ -375,10 +363,10 @@ class Postgen {
     final effectivePrefix = tablePrefix != null ? '\$tablePrefix.' : '';
     return ${className.pascalCase}Data(''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      classCode.writeln('''${attribute['name']}: attachedDatabase.typeMapping
-          .read(DriftSqlType.${attribute['type'].toString().toLowerCase()}, data['\${effectivePrefix}${attribute['name'].toString().snakeCase}'])${attribute['nullable'] == false ? '!' : ''},''');
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      classCode.writeln('''${attribute.name}: attachedDatabase.typeMapping
+          .read(DriftSqlType.${attribute.type.toString().toLowerCase()}, data['\${effectivePrefix}${attribute.name.toString().snakeCase}'])${attribute.nullable == false ? '!' : ''},''');
     }
 
     classCode.writeln(''' );
@@ -391,57 +379,54 @@ class Postgen {
     return classCode.toString();
   }
 
-  String generateCompanionClassCode(Map<String, dynamic> json) {
-    String className = json['name'];
+  String generateCompanionClassCode(ConfigModel model) {
+    String className = model.name;
     StringBuffer classCode = StringBuffer();
 
     classCode.writeln(
         '''class ${className.pascalCase}Companion extends UpdateCompanion<${className.pascalCase}Data> {''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln(
-          '''final Value<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}> ${attribute['name']};''');
+          '''final Value<${attribute.type}${attribute.nullable == true ? '?' : ''}> ${attribute.name};''');
     }
 
     classCode.writeln('''const ${className.pascalCase}Companion({''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      classCode
-          .writeln('''this.${attribute['name']} = const Value.absent(),''');
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      classCode.writeln('''this.${attribute.name} = const Value.absent(),''');
     }
 
     classCode.writeln('''});
   ${className.pascalCase}Companion.insert({''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      if (attribute['nullable'] == false) {
-        classCode
-            .writeln('''required ${attribute['type']} ${attribute['name']},''');
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      if (attribute.nullable == false) {
+        classCode.writeln('''required ${attribute.type} ${attribute.name},''');
       } else {
-        classCode
-            .writeln('''this.${attribute['name']} = const Value.absent(),''');
+        classCode.writeln('''this.${attribute.name} = const Value.absent(),''');
       }
     }
 
     classCode.writeln('''}) : clientReferenceId = Value(clientReferenceId);
   static Insertable<${className.pascalCase}Data> custom({''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      classCode.writeln(
-          '''Expression<${attribute['type']}>? ${attribute['name']},''');
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      classCode
+          .writeln('''Expression<${attribute.type}>? ${attribute.name},''');
     }
 
     classCode.writeln('''}) {
     return RawValuesInsertable({''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln(
-          '''if (${attribute['name']} != null) '${attribute['name']}': ${attribute['name']},''');
+          '''if (${attribute.name} != null) '${attribute.name}': ${attribute.name},''');
     }
 
     classCode.writeln(''' });
@@ -449,19 +434,19 @@ class Postgen {
 
   ${className.pascalCase}Companion copyWith({''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln(
-          '''Value<${attribute['type']}${attribute['nullable'] == true ? '?' : ''}>? ${attribute['name']},''');
+          '''Value<${attribute.type}${attribute.nullable == true ? '?' : ''}>? ${attribute.name},''');
     }
 
     classCode.writeln('''}) {
     return ${className.pascalCase}Companion(''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
       classCode.writeln(
-          '''${attribute['name']}: ${attribute['name']} ?? this.${attribute['name']},''');
+          '''${attribute.name}: ${attribute.name} ?? this.${attribute.name},''');
     }
 
     classCode.writeln(''');
@@ -471,10 +456,10 @@ class Postgen {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      classCode.writeln('''if (${attribute['name']}.present) {
-      map['${attribute['name'].toString().snakeCase}'] = Variable<${attribute['type']}>(${attribute['name']}.value);
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      classCode.writeln('''if (${attribute.name}.present) {
+      map['${attribute.name.toString().snakeCase}'] = Variable<${attribute.type}>(${attribute.name}.value);
     }''');
     }
 
@@ -485,10 +470,10 @@ class Postgen {
   String toString() {
     return (StringBuffer('${className.pascalCase}Companion(')''');
 
-    for (var attribute in json['attributes']) {
-      if (attribute['includeForTable'] == false) continue;
-      classCode.writeln(
-          '''..write('${attribute['name']}: \$${attribute['name']}, ')''');
+    for (var attribute in model.attributes) {
+      if (attribute.includeForTable == false) continue;
+      classCode
+          .writeln('''..write('${attribute.name}: \$${attribute.name}, ')''');
     }
 
     classCode.writeln(''' ..write(')'))

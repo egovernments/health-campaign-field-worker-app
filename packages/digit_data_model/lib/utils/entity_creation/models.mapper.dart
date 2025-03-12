@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'models.dart';
@@ -10,7 +10,6 @@ class ConfigModelMapper extends ClassMapperBase<ConfigModel> {
   ConfigModelMapper._();
 
   static ConfigModelMapper? _instance;
-
   static ConfigModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ConfigModelMapper._());
@@ -23,62 +22,49 @@ class ConfigModelMapper extends ClassMapperBase<ConfigModel> {
 
   static String _$name(ConfigModel v) => v.name;
   static const Field<ConfigModel, String> _f$name = Field('name', _$name);
-
   static bool _$persistBoundaryParameters(ConfigModel v) =>
       v.persistBoundaryParameters;
   static const Field<ConfigModel, bool> _f$persistBoundaryParameters = Field(
       'persistBoundaryParameters', _$persistBoundaryParameters,
       opt: true, def: false);
-
   static List<String> _$ignoreFields(ConfigModel v) => v.ignoreFields;
   static const Field<ConfigModel, List<String>> _f$ignoreFields =
       Field('ignoreFields', _$ignoreFields, opt: true, def: const []);
-
   static List<EnumValues> _$enumValues(ConfigModel v) => v.enumValues;
   static const Field<ConfigModel, List<EnumValues>> _f$enumValues =
       Field('enumValues', _$enumValues, opt: true, def: const []);
-
   static List<AttributeModel> _$attributes(ConfigModel v) => v.attributes;
   static const Field<ConfigModel, List<AttributeModel>> _f$attributes =
       Field('attributes', _$attributes, opt: true, def: const []);
-
   static List<AttributeModel> _$customAttributes(ConfigModel v) =>
       v.customAttributes;
   static const Field<ConfigModel, List<AttributeModel>> _f$customAttributes =
       Field('customAttributes', _$customAttributes, opt: true, def: const []);
-
   static List<AttributeModel> _$dateTimeAttributes(ConfigModel v) =>
       v.dateTimeAttributes;
   static const Field<ConfigModel, List<AttributeModel>> _f$dateTimeAttributes =
       Field('dateTimeAttributes', _$dateTimeAttributes,
           opt: true, def: const []);
-
   static List<AttributeModel> _$sqlAttributes(ConfigModel v) => v.sqlAttributes;
   static const Field<ConfigModel, List<AttributeModel>> _f$sqlAttributes =
       Field('sqlAttributes', _$sqlAttributes, opt: true, def: const []);
-
   static List<AttributeModel> _$referenceAttributes(ConfigModel v) =>
       v.referenceAttributes;
   static const Field<ConfigModel, List<AttributeModel>> _f$referenceAttributes =
       Field('referenceAttributes', _$referenceAttributes,
           opt: true, def: const []);
-
   static bool _$isEnum(ConfigModel v) => v.isEnum;
   static const Field<ConfigModel, bool> _f$isEnum =
       Field('isEnum', _$isEnum, opt: true, def: false);
-
   static bool _$createEntity(ConfigModel v) => v.createEntity;
   static const Field<ConfigModel, bool> _f$createEntity =
       Field('createEntity', _$createEntity, opt: true, def: false);
-
   static bool _$createRepository(ConfigModel v) => v.createRepository;
   static const Field<ConfigModel, bool> _f$createRepository =
       Field('createRepository', _$createRepository, opt: true, def: false);
-
   static bool _$isPlural(ConfigModel v) => v.isPlural;
   static const Field<ConfigModel, bool> _f$isPlural =
       Field('isPlural', _$isPlural, opt: true, def: false);
-
   static bool _$isSearchResponsePlural(ConfigModel v) =>
       v.isSearchResponsePlural;
   static const Field<ConfigModel, bool> _f$isSearchResponsePlural = Field(
@@ -146,7 +132,6 @@ mixin ConfigModelMappable {
 
   ConfigModelCopyWith<ConfigModel, ConfigModel, ConfigModel> get copyWith =>
       _ConfigModelCopyWithImpl(this as ConfigModel, $identity, $identity);
-
   @override
   String toString() {
     return ConfigModelMapper.ensureInitialized()
@@ -155,10 +140,8 @@ mixin ConfigModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ConfigModelMapper.ensureInitialized()
-                .isValueEqual(this as ConfigModel, other));
+    return ConfigModelMapper.ensureInitialized()
+        .equalsValue(this as ConfigModel, other);
   }
 
   @override
@@ -176,30 +159,23 @@ extension ConfigModelValueCopy<$R, $Out>
 abstract class ConfigModelCopyWith<$R, $In extends ConfigModel, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get ignoreFields;
-
   ListCopyWith<$R, EnumValues, EnumValuesCopyWith<$R, EnumValues, EnumValues>>
       get enumValues;
-
   ListCopyWith<$R, AttributeModel,
           AttributeModelCopyWith<$R, AttributeModel, AttributeModel>>
       get attributes;
-
   ListCopyWith<$R, AttributeModel,
           AttributeModelCopyWith<$R, AttributeModel, AttributeModel>>
       get customAttributes;
-
   ListCopyWith<$R, AttributeModel,
           AttributeModelCopyWith<$R, AttributeModel, AttributeModel>>
       get dateTimeAttributes;
-
   ListCopyWith<$R, AttributeModel,
           AttributeModelCopyWith<$R, AttributeModel, AttributeModel>>
       get sqlAttributes;
-
   ListCopyWith<$R, AttributeModel,
           AttributeModelCopyWith<$R, AttributeModel, AttributeModel>>
       get referenceAttributes;
-
   $R call(
       {String? name,
       bool? persistBoundaryParameters,
@@ -215,7 +191,6 @@ abstract class ConfigModelCopyWith<$R, $In extends ConfigModel, $Out>
       bool? createRepository,
       bool? isPlural,
       bool? isSearchResponsePlural});
-
   ConfigModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -227,49 +202,41 @@ class _ConfigModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<ConfigModel> $mapper =
       ConfigModelMapper.ensureInitialized();
-
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>
       get ignoreFields => ListCopyWith(
           $value.ignoreFields,
           (v, t) => ObjectCopyWith(v, $identity, t),
           (v) => call(ignoreFields: v));
-
   @override
   ListCopyWith<$R, EnumValues, EnumValuesCopyWith<$R, EnumValues, EnumValues>>
       get enumValues => ListCopyWith($value.enumValues,
           (v, t) => v.copyWith.$chain(t), (v) => call(enumValues: v));
-
   @override
   ListCopyWith<$R, AttributeModel,
           AttributeModelCopyWith<$R, AttributeModel, AttributeModel>>
       get attributes => ListCopyWith($value.attributes,
           (v, t) => v.copyWith.$chain(t), (v) => call(attributes: v));
-
   @override
   ListCopyWith<$R, AttributeModel,
           AttributeModelCopyWith<$R, AttributeModel, AttributeModel>>
       get customAttributes => ListCopyWith($value.customAttributes,
           (v, t) => v.copyWith.$chain(t), (v) => call(customAttributes: v));
-
   @override
   ListCopyWith<$R, AttributeModel,
           AttributeModelCopyWith<$R, AttributeModel, AttributeModel>>
       get dateTimeAttributes => ListCopyWith($value.dateTimeAttributes,
           (v, t) => v.copyWith.$chain(t), (v) => call(dateTimeAttributes: v));
-
   @override
   ListCopyWith<$R, AttributeModel,
           AttributeModelCopyWith<$R, AttributeModel, AttributeModel>>
       get sqlAttributes => ListCopyWith($value.sqlAttributes,
           (v, t) => v.copyWith.$chain(t), (v) => call(sqlAttributes: v));
-
   @override
   ListCopyWith<$R, AttributeModel,
           AttributeModelCopyWith<$R, AttributeModel, AttributeModel>>
       get referenceAttributes => ListCopyWith($value.referenceAttributes,
           (v, t) => v.copyWith.$chain(t), (v) => call(referenceAttributes: v));
-
   @override
   $R call(
           {String? name,
@@ -305,7 +272,6 @@ class _ConfigModelCopyWithImpl<$R, $Out>
         if (isSearchResponsePlural != null)
           #isSearchResponsePlural: isSearchResponsePlural
       }));
-
   @override
   ConfigModel $make(CopyWithData data) => ConfigModel(
       name: data.get(#name, or: $value.name),
@@ -339,7 +305,6 @@ class EnumValuesMapper extends ClassMapperBase<EnumValues> {
   EnumValuesMapper._();
 
   static EnumValuesMapper? _instance;
-
   static EnumValuesMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = EnumValuesMapper._());
@@ -352,7 +317,6 @@ class EnumValuesMapper extends ClassMapperBase<EnumValues> {
 
   static String _$name(EnumValues v) => v.name;
   static const Field<EnumValues, String> _f$name = Field('name', _$name);
-
   static String _$value(EnumValues v) => v.value;
   static const Field<EnumValues, String> _f$value = Field('value', _$value);
 
@@ -391,7 +355,6 @@ mixin EnumValuesMappable {
 
   EnumValuesCopyWith<EnumValues, EnumValues, EnumValues> get copyWith =>
       _EnumValuesCopyWithImpl(this as EnumValues, $identity, $identity);
-
   @override
   String toString() {
     return EnumValuesMapper.ensureInitialized()
@@ -400,10 +363,8 @@ mixin EnumValuesMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            EnumValuesMapper.ensureInitialized()
-                .isValueEqual(this as EnumValues, other));
+    return EnumValuesMapper.ensureInitialized()
+        .equalsValue(this as EnumValues, other);
   }
 
   @override
@@ -421,7 +382,6 @@ extension EnumValuesValueCopy<$R, $Out>
 abstract class EnumValuesCopyWith<$R, $In extends EnumValues, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? name, String? value});
-
   EnumValuesCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -433,11 +393,9 @@ class _EnumValuesCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<EnumValues> $mapper =
       EnumValuesMapper.ensureInitialized();
-
   @override
   $R call({String? name, String? value}) => $apply(FieldCopyWithData(
       {if (name != null) #name: name, if (value != null) #value: value}));
-
   @override
   EnumValues $make(CopyWithData data) => EnumValues(
       name: data.get(#name, or: $value.name),
@@ -453,7 +411,6 @@ class AttributeModelMapper extends ClassMapperBase<AttributeModel> {
   AttributeModelMapper._();
 
   static AttributeModelMapper? _instance;
-
   static AttributeModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AttributeModelMapper._());
@@ -466,54 +423,41 @@ class AttributeModelMapper extends ClassMapperBase<AttributeModel> {
 
   static String _$name(AttributeModel v) => v.name;
   static const Field<AttributeModel, String> _f$name = Field('name', _$name);
-
   static String _$type(AttributeModel v) => v.type;
   static const Field<AttributeModel, String> _f$type = Field('type', _$type);
-
   static String _$columnType(AttributeModel v) => v.columnType;
   static const Field<AttributeModel, String> _f$columnType =
       Field('columnType', _$columnType, opt: true, def: '');
-
   static bool _$isList(AttributeModel v) => v.isList;
   static const Field<AttributeModel, bool> _f$isList =
       Field('isList', _$isList, opt: true, def: false);
-
   static bool _$isPk(AttributeModel v) => v.isPk;
   static const Field<AttributeModel, bool> _f$isPk =
       Field('isPk', _$isPk, opt: true, def: false);
-
   static bool _$isEnum(AttributeModel v) => v.isEnum;
   static const Field<AttributeModel, bool> _f$isEnum =
       Field('isEnum', _$isEnum, opt: true, def: false);
-
   static bool _$nullable(AttributeModel v) => v.nullable;
   static const Field<AttributeModel, bool> _f$nullable =
       Field('nullable', _$nullable, opt: true, def: true);
-
   static bool _$includeForTable(AttributeModel v) => v.includeForTable;
   static const Field<AttributeModel, bool> _f$includeForTable =
       Field('includeForTable', _$includeForTable, opt: true, def: true);
-
   static bool _$includeForQuery(AttributeModel v) => v.includeForQuery;
   static const Field<AttributeModel, bool> _f$includeForQuery =
       Field('includeForQuery', _$includeForQuery, opt: true, def: false);
-
   static bool _$includeForEntity(AttributeModel v) => v.includeForEntity;
   static const Field<AttributeModel, bool> _f$includeForEntity =
       Field('includeForEntity', _$includeForEntity, opt: true, def: true);
-
   static bool _$createReference(AttributeModel v) => v.createReference;
   static const Field<AttributeModel, bool> _f$createReference =
       Field('createReference', _$createReference, opt: true, def: false);
-
   static String? _$referencePkName(AttributeModel v) => v.referencePkName;
   static const Field<AttributeModel, String> _f$referencePkName =
       Field('referencePkName', _$referencePkName, opt: true);
-
   static String? _$defaultValue(AttributeModel v) => v.defaultValue;
   static const Field<AttributeModel, String> _f$defaultValue =
       Field('defaultValue', _$defaultValue, opt: true);
-
   static List<TableReferenceModel> _$references(AttributeModel v) =>
       v.references;
   static const Field<AttributeModel, List<TableReferenceModel>> _f$references =
@@ -581,7 +525,6 @@ mixin AttributeModelMappable {
   AttributeModelCopyWith<AttributeModel, AttributeModel, AttributeModel>
       get copyWith => _AttributeModelCopyWithImpl(
           this as AttributeModel, $identity, $identity);
-
   @override
   String toString() {
     return AttributeModelMapper.ensureInitialized()
@@ -590,10 +533,8 @@ mixin AttributeModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttributeModelMapper.ensureInitialized()
-                .isValueEqual(this as AttributeModel, other));
+    return AttributeModelMapper.ensureInitialized()
+        .equalsValue(this as AttributeModel, other);
   }
 
   @override
@@ -616,7 +557,6 @@ abstract class AttributeModelCopyWith<$R, $In extends AttributeModel, $Out>
       TableReferenceModel,
       TableReferenceModelCopyWith<$R, TableReferenceModel,
           TableReferenceModel>> get references;
-
   $R call(
       {String? name,
       String? type,
@@ -632,7 +572,6 @@ abstract class AttributeModelCopyWith<$R, $In extends AttributeModel, $Out>
       String? referencePkName,
       String? defaultValue,
       List<TableReferenceModel>? references});
-
   AttributeModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -645,7 +584,6 @@ class _AttributeModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<AttributeModel> $mapper =
       AttributeModelMapper.ensureInitialized();
-
   @override
   ListCopyWith<
       $R,
@@ -655,7 +593,6 @@ class _AttributeModelCopyWithImpl<$R, $Out>
       $value.references,
       (v, t) => v.copyWith.$chain(t),
       (v) => call(references: v));
-
   @override
   $R call(
           {String? name,
@@ -688,7 +625,6 @@ class _AttributeModelCopyWithImpl<$R, $Out>
         if (defaultValue != $none) #defaultValue: defaultValue,
         if (references != null) #references: references
       }));
-
   @override
   AttributeModel $make(CopyWithData data) => AttributeModel(
       name: data.get(#name, or: $value.name),
@@ -717,7 +653,6 @@ class TableReferenceModelMapper extends ClassMapperBase<TableReferenceModel> {
   TableReferenceModelMapper._();
 
   static TableReferenceModelMapper? _instance;
-
   static TableReferenceModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = TableReferenceModelMapper._());
@@ -731,11 +666,9 @@ class TableReferenceModelMapper extends ClassMapperBase<TableReferenceModel> {
   static String _$table(TableReferenceModel v) => v.table;
   static const Field<TableReferenceModel, String> _f$table =
       Field('table', _$table);
-
   static String _$column(TableReferenceModel v) => v.column;
   static const Field<TableReferenceModel, String> _f$column =
       Field('column', _$column);
-
   static String _$pkName(TableReferenceModel v) => v.pkName;
   static const Field<TableReferenceModel, String> _f$pkName =
       Field('pkName', _$pkName);
@@ -781,7 +714,6 @@ mixin TableReferenceModelMappable {
           TableReferenceModel>
       get copyWith => _TableReferenceModelCopyWithImpl(
           this as TableReferenceModel, $identity, $identity);
-
   @override
   String toString() {
     return TableReferenceModelMapper.ensureInitialized()
@@ -790,10 +722,8 @@ mixin TableReferenceModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TableReferenceModelMapper.ensureInitialized()
-                .isValueEqual(this as TableReferenceModel, other));
+    return TableReferenceModelMapper.ensureInitialized()
+        .equalsValue(this as TableReferenceModel, other);
   }
 
   @override
@@ -813,7 +743,6 @@ extension TableReferenceModelValueCopy<$R, $Out>
 abstract class TableReferenceModelCopyWith<$R, $In extends TableReferenceModel,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? table, String? column, String? pkName});
-
   TableReferenceModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -826,7 +755,6 @@ class _TableReferenceModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<TableReferenceModel> $mapper =
       TableReferenceModelMapper.ensureInitialized();
-
   @override
   $R call({String? table, String? column, String? pkName}) =>
       $apply(FieldCopyWithData({
@@ -834,7 +762,6 @@ class _TableReferenceModelCopyWithImpl<$R, $Out>
         if (column != null) #column: column,
         if (pkName != null) #pkName: pkName
       }));
-
   @override
   TableReferenceModel $make(CopyWithData data) => TableReferenceModel(
       table: data.get(#table, or: $value.table),

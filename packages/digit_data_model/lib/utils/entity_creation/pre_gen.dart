@@ -3,16 +3,12 @@ import 'package:collection/collection.dart';
 import 'models.dart';
 
 class PreGen {
-  dynamic run(dynamic vars) {
+  dynamic run(ConfigModel model) {
     try {
-      final variables = vars;
-
       ConfigModelMapper.ensureInitialized();
       AttributeModelMapper.ensureInitialized();
       EnumValuesMapper.ensureInitialized();
       TableReferenceModelMapper.ensureInitialized();
-
-      ConfigModel model = ConfigModelMapper.fromMap(variables);
 
       model = model.copyWith.attributes.addAll(
         [
@@ -225,8 +221,8 @@ class PreGen {
         sqlAttributes: sqlAttributes,
         referenceAttributes: references,
       );
-      vars = updateModel.toMap();
-      return vars;
+      model = updateModel;
+      return model;
     } catch (e) {
       print(e);
     }
