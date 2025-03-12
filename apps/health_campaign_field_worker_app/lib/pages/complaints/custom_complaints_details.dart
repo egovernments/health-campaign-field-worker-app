@@ -591,7 +591,9 @@ class CustomComplaintsDetailsPageState
       ),
       _administrativeArea: FormControl<String>(
         value: localizations.translate((complaintDetails?.administrativeArea ??
-                ComplaintsSingleton().boundary.name)
+                ComplaintsSingleton().boundary?.code.toString() ??
+                ComplaintsSingleton().boundary?.name.toString() ??
+                "")
             .toString()),
         disabled: shouldDisableForm,
         validators: [Validators.required],
