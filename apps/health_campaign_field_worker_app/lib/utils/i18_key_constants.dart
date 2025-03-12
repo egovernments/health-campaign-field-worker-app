@@ -663,6 +663,9 @@ class Home {
   const Home();
 
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
+
+  String get refuseReasonComment => 'CLOSE_HOUSEHOLD_REASON_COMMENT';
+
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
