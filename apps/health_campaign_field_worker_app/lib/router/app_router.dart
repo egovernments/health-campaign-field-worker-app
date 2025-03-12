@@ -72,6 +72,8 @@ import 'package:complaints/blocs/localization/app_localization.dart';
 import '../pages/complaints/custom_complaint_type.dart';
 import '../pages/inventory/custom_stock_reconciliation.dart';
 import '../pages/inventory/custom_inventory_facility_selection.dart';
+import '../pages/complaints/custom_complaints_details_view.dart';
+import '../pages/complaints/custom_complaints_inbox.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -151,6 +153,11 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ComplaintsInboxRoute.page,
               path: 'complaints-inbox-items',
+              // initial: true,
+            ),
+            AutoRoute(
+              page: CustomComplaintsInboxRoute.page,
+              path: 'custom-complaints-inbox-items',
               initial: true,
             ),
             AutoRoute(
@@ -168,6 +175,14 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ComplaintsDetailsViewRoute.page,
               path: 'complaints-inbox-view-details',
+            ),
+            AutoRoute(
+              page: CustomComplaintsDetailsViewRoute.page,
+              path: 'custom-complaints-inbox-view-details',
+            ),
+            RedirectRoute(
+              path: 'complaints-inbox-view-details',
+              redirectTo: 'custom-complaints-inbox-view-details',
             ),
           ],
         ),

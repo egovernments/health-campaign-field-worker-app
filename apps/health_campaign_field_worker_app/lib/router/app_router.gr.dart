@@ -125,6 +125,27 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomComplaintsDetailsViewRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomComplaintsDetailsViewRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomComplaintsDetailsViewPage(
+          key: args.key,
+          complaint: args.complaint,
+        ),
+      );
+    },
+    CustomComplaintsInboxRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomComplaintsInboxRouteArgs>(
+          orElse: () => const CustomComplaintsInboxRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomComplaintsInboxPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomDeliverInterventionRoute.name: (routeData) {
       final args = routeData.argsAs<CustomDeliverInterventionRouteArgs>(
           orElse: () => const CustomDeliverInterventionRouteArgs());
@@ -889,6 +910,84 @@ class CustomComplaintsDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomComplaintsDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomComplaintsDetailsViewPage]
+class CustomComplaintsDetailsViewRoute
+    extends PageRouteInfo<CustomComplaintsDetailsViewRouteArgs> {
+  CustomComplaintsDetailsViewRoute({
+    Key? key,
+    required PgrServiceModel complaint,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomComplaintsDetailsViewRoute.name,
+          args: CustomComplaintsDetailsViewRouteArgs(
+            key: key,
+            complaint: complaint,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomComplaintsDetailsViewRoute';
+
+  static const PageInfo<CustomComplaintsDetailsViewRouteArgs> page =
+      PageInfo<CustomComplaintsDetailsViewRouteArgs>(name);
+}
+
+class CustomComplaintsDetailsViewRouteArgs {
+  const CustomComplaintsDetailsViewRouteArgs({
+    this.key,
+    required this.complaint,
+  });
+
+  final Key? key;
+
+  final PgrServiceModel complaint;
+
+  @override
+  String toString() {
+    return 'CustomComplaintsDetailsViewRouteArgs{key: $key, complaint: $complaint}';
+  }
+}
+
+/// generated route for
+/// [CustomComplaintsInboxPage]
+class CustomComplaintsInboxRoute
+    extends PageRouteInfo<CustomComplaintsInboxRouteArgs> {
+  CustomComplaintsInboxRoute({
+    Key? key,
+    ComplaintsLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomComplaintsInboxRoute.name,
+          args: CustomComplaintsInboxRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomComplaintsInboxRoute';
+
+  static const PageInfo<CustomComplaintsInboxRouteArgs> page =
+      PageInfo<CustomComplaintsInboxRouteArgs>(name);
+}
+
+class CustomComplaintsInboxRouteArgs {
+  const CustomComplaintsInboxRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final ComplaintsLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomComplaintsInboxRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
