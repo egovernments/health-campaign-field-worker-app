@@ -255,7 +255,7 @@ class CustomClosedHouseholdDetailsPageState
                               formControlName: _refusalCommentKey,
                               isRequired: true,
                               label: localizations.translate(
-                                i18Local.home.refuseReasonComment,
+                                i18Local.common.refuseReasonComment,
                               ),
                               validationMessages: {
                                 'required': (object) => localizations
