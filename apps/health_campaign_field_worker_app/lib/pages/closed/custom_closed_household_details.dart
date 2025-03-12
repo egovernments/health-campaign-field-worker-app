@@ -12,10 +12,10 @@ import '../../../utils/i18_key_constants.dart' as i18Local;
 import '../../blocs/custom_blocs/closed_household.dart' as custombloc;
 import '../../utils/utils.dart' as utilsLocal;
 
-import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+
+enum ClosedHouseholdReasons { closed, refusal }
 
 @RoutePage()
 class CustomClosedHouseholdDetailsPage extends LocalizedStatefulWidget {
@@ -58,10 +58,11 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
-    final reasonOptions = ["closed", "refusal"];
+    const reasonOptions = ClosedHouseholdReasons.values;
 
     refuseCommentValidator(FormGroup form) {
-      if (form.control(_reasonKey).value == "REFUSAL") {
+      if (form.control(_reasonKey).value ==
+          ClosedHouseholdReasons.refusal.name) {
         form.control(_refusalCommentKey).setValidators(
           [
             Validators.required,
@@ -219,9 +220,8 @@ class CustomClosedHouseholdDetailsPageState
                                   form.control(_reasonKey).value != null
                                       ? [form.control(_reasonKey).value]
                                       : [],
-                              options: reasonOptions
-                                  .map((e) => e.toUpperCase())
-                                  .toList(),
+                              options:
+                                  reasonOptions.map((e) => e.name).toList(),
                               onSelectionChanged: (value) {
                                 setState(() {
                                   if (value.isNotEmpty) {
@@ -239,7 +239,8 @@ class CustomClosedHouseholdDetailsPageState
                                 });
                               },
                               valueMapper: (value) {
-                                return localizations.translate(value);
+                                return localizations
+                                    .translate(value.toUpperCase());
                               },
                               errorMessage: form.control(_reasonKey).hasErrors
                                   ? localizations
@@ -248,13 +249,13 @@ class CustomClosedHouseholdDetailsPageState
                             ),
                           ),
                           Visibility(
-                            visible:
-                                form.control(_reasonKey).value == "REFUSAL",
+                            visible: form.control(_reasonKey).value ==
+                                ClosedHouseholdReasons.refusal.name,
                             child: DigitTextFormField(
                               formControlName: _refusalCommentKey,
                               isRequired: true,
                               label: localizations.translate(
-                                i18.closeHousehold.refuseReasonComment,
+                                i18Local.common.refuseReasonComment,
                               ),
                               validationMessages: {
                                 'required': (object) => localizations
