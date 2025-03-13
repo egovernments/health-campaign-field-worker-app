@@ -300,8 +300,10 @@ class CustomClosedHouseholdDetailsPageState
   FormGroup buildForm(ClosedHouseholdState state) {
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: localizations
-            .translate(ClosedHouseholdSingleton().boundary!.name.toString()),
+        value: localizations.translate(
+            ClosedHouseholdSingleton().boundary?.code.toString() ??
+                ClosedHouseholdSingleton().boundary?.name.toString() ??
+                ""),
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(

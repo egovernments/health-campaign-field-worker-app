@@ -247,10 +247,11 @@ class ClosedHouseholdBloc
               Constants.closedHouseholdReason,
               event.reason,
             ),
-            AdditionalField(
-              Constants.closedHouseholdReasonComment,
-              event.refuseReasonComment,
-            )
+            if (event.refuseReasonComment != null)
+              AdditionalField(
+                Constants.closedHouseholdReasonComment,
+                event.refuseReasonComment,
+              )
           ],
         ),
         projectBeneficiaryClientReferenceId:

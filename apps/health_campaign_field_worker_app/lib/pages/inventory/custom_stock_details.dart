@@ -931,7 +931,8 @@ class CustomStockDetailsPageState
                                           menuItems: productVariants,
                                           validationMessages: {
                                             'required': (object) =>
-                                                '${module.selectProductLabel}_IS_REQUIRED',
+                                                localizations.translate(
+                                                    '${module.selectProductLabel}_IS_REQUIRED'),
                                           },
                                         );
                                       },
