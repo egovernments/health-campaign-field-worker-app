@@ -1472,9 +1472,8 @@ class CustomStockDetailsPageState
                                   onChanged: (val) {
                                     if (val.value != null) {
                                       if (val.value > 10000000000) {
-                                        form
-                                            .control(_transactionQuantityKey)
-                                            .value = 10000;
+                                        form.control(_looseQuantityKey).value =
+                                            10000;
                                       }
                                       calculateFinalQuantity(form);
                                     }
