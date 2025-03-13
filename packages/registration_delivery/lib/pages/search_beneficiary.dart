@@ -183,6 +183,7 @@ class _SearchBeneficiaryPageState
                               Padding(
                                 padding: const EdgeInsets.all(spacer2),
                                 child: DigitSearchBar(
+                                  key: const Key('registration_delivery_search_bar'),
                                   controller: searchController,
                                   hintText: (RegistrationDeliverySingleton()
                                               .householdType ==
@@ -411,6 +412,7 @@ class _SearchBeneficiaryPageState
               padding: const EdgeInsets.all(spacer4),
               children: [
                 DigitButton(
+                  key: const Key('registration_delivery_register_household_button'),
                   capitalizeLetters: false,
                   label: (RegistrationDeliverySingleton().householdType ==
                           HouseholdType.community)

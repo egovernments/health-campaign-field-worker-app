@@ -69,6 +69,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                         margin: const EdgeInsets.only(top: spacer2),
                         children: [
                           DigitButton(
+                            key: const Key('house_details_next_button'),
                             onPressed: () {
                               form.markAllAsTouched();
                               if (form.control(_householdStructureKey).value ==
@@ -249,6 +250,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                               ),
                               houseShowcaseData.typeOfStructure.buildWith(
                                 child: SelectionCard<String>(
+                                  key: const Key('house_details_selection_card'),
                                   showParentContainer: true,
                                   isRequired: true,
                                   title: localizations.translate(

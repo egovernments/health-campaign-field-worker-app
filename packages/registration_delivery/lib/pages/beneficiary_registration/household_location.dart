@@ -132,6 +132,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                     BlocBuilder<LocationBloc, LocationState>(
                       builder: (context, locationState) {
                         return DigitButton(
+                          key: const Key('household_location_button'),
                           label: localizations.translate(
                             i18.householdLocation.actionLabel,
                           ),

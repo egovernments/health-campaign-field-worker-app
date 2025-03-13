@@ -126,6 +126,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     margin: const EdgeInsets.only(top: spacer2),
                     children: [
                       DigitButton(
+                        key: const Key('household_details_next_button'),
                         label: registrationState.mapOrNull(
                               editHousehold: (value) => localizations
                                   .translate(i18.common.coreCommonSave),

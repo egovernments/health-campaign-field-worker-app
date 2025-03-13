@@ -104,6 +104,10 @@ part 'sql_store.g.dart';
   Localization
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
+  // Add custom query method if absolutely needed
+  Future<List<QueryRow>> customQuery(String sql) async {
+    return await customSelect(sql).get();
+  }
   /// The constructor for `LocalSqlDataStore`.
   /// It calls the superclass constructor with `_openConnection()` as the argument.
   LocalSqlDataStore() : super(_openConnection());

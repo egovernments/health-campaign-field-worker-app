@@ -98,6 +98,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                           children: [
                                             Flexible(
                                               child: Text(
+                                                key: const Key('home_page_selected_boundary'),
                                                 boundaryName,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(

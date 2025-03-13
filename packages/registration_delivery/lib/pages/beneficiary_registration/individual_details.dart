@@ -114,6 +114,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                       valueListenable: clickedStatus,
                       builder: (context, bool isClicked, _) {
                         return DigitButton(
+                          key: const Key('individual_details_submit_button'),
                           label: state.mapOrNull(
                                 editIndividual: (value) => localizations
                                     .translate(i18.common.coreCommonSave),
@@ -405,6 +406,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             capitalizedFirstLetter: false,
                             isRequired: true,
                             child: DigitDropdown<String>(
+                              key: const Key('idTypeDropdown'),
                               selectedOption:
                                   (form.control(_idTypeKey).value != null)
                                       ? DropdownItem(
@@ -465,6 +467,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                           .validators
                                           .isNotEmpty,
                                       child: DigitTextFormInput(
+                                        key: const Key('idNumberInput'),
                                         readOnly:
                                             form.control(_idTypeKey).value ==
                                                 'DEFAULT',
@@ -489,6 +492,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           ),
                         individualDetailsShowcaseData.dateOfBirth.buildWith(
                           child: DigitDobPicker(
+                            key: const Key('dobPicker'),
                             datePickerFormControl: _dobKey,
                             datePickerLabel: localizations.translate(
                               i18.individualDetails.dobLabelText,
@@ -538,6 +542,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           ),
                         ),
                         SelectionCard<String>(
+                          key: const Key('genderSelectionCard'),
                           isRequired: true,
                           showParentContainer: true,
                           title: localizations.translate(
@@ -593,6 +598,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 i18.individualDetails.mobileNumberLabelText,
                               ),
                               child: DigitTextFormInput(
+                                key: const Key('mobileNumber'),
                                 keyboardType: TextInputType.number,
                                 maxLength: 10,
                                 inputFormatters: [

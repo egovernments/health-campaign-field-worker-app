@@ -359,6 +359,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
+          key: const Key('registration_delivery_home_card'),
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
