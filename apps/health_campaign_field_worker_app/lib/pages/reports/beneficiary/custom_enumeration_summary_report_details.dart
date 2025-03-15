@@ -65,8 +65,8 @@ class _CustomEumerationSummaryReportDetailsState
     return Scaffold(
       body: BlocBuilder<CustomEnumerationSummaryReportBloc,
           CustomEnumerationSummaryReportState>(
-        builder: (context, customEnumerationSumamryReportState) {
-          if (customEnumerationSumamryReportState
+        builder: (context, customEnumerationSummaryReportState) {
+          if (customEnumerationSummaryReportState
               is CustomEnumerationSummaryReportLoadingState) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -99,7 +99,7 @@ class _CustomEumerationSummaryReportDetailsState
                   ),
                 ),
               ),
-              if (customEnumerationSumamryReportState
+              if (customEnumerationSummaryReportState
                   is CustomEnumerationSummaryReportSummaryDataState)
                 ReactiveFormBuilder(
                   form: _form,
@@ -153,7 +153,7 @@ class _CustomEumerationSummaryReportDetailsState
                                       .translate(i18Local.inventoryReportDetails
                                           .closedHouseholdRegisteredLabel)
                                       .length *
-                                  8,
+                                  9,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
@@ -164,23 +164,23 @@ class _CustomEumerationSummaryReportDetailsState
                                       .translate(i18Local.inventoryReportDetails
                                           .closedHouseholdRegisteredAbsentLabel)
                                       .length *
-                                  8,
+                                  4,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
-                                  .closedHouseholdRegisteredLabel),
+                                  .closedHouseholdRegisteredRefusedLabel),
                               key: _closedHouseholdRefusedKey,
                               width: localizations
                                       .translate(i18Local.inventoryReportDetails
                                           .closedHouseholdRegisteredRefusedLabel)
                                       .length *
-                                  8,
+                                  4,
                             ),
                           ],
                           rows: [
                             for (final entry
-                                in customEnumerationSumamryReportState
+                                in customEnumerationSummaryReportState
                                     .summaryData.entries) ...[
                               DigitGridRow(
                                 [

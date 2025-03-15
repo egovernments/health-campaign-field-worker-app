@@ -8,6 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import '../../data/repositories/local/custom_task.dart';
+import '../../utils/app_enums.dart';
 import '../../utils/constants.dart';
 import '../../utils/environment_config.dart';
 
@@ -123,11 +124,11 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
         );
 
         String reason = getClosedReason(element);
-        if (reason.isEmpty) {
+        if (reason == ClosedHouseholdReasonsEnum.closed.name) {
           dateVsClosedHouseholdAbsentTask
               .putIfAbsent(dateKey, () => [])
               .add(element);
-        } else if (reason == "REFUSAL") {
+        } else if (reason == ClosedHouseholdReasonsEnum.refusal.name) {
           dateVsClosedHouseholdRefusedTask
               .putIfAbsent(dateKey, () => [])
               .add(element);
@@ -310,7 +311,7 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
 
   String getClosedReason(TaskModel task) {
     var reason = "";
-    var reasonKey = "REASON";
+    var reasonKey = "Reason";
 
     if (task.additionalFields == null ||
         (task.additionalFields?.fields ?? []).isEmpty) {
