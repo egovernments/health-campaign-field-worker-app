@@ -134,15 +134,15 @@ class CustomStockDetailsPageState
     super.initState();
   }
 
-  Future<bool> stockReturnValidaion(
+  Future<bool> stockReturnValidation(
       int returned, productVariantId, senderId, receiverId) async {
     StockDataRepository stockRepository =
         context.repository<StockModel, StockSearchModel>(context);
     List<StockModel> stockModelsIssued = await stockRepository.search(
       StockSearchModel(
           productVariantId: productVariantId,
-          senderId: receiverId,
-          receiverId: senderId,
+          senderId: senderId,
+          receiverId: receiverId,
           transactionReason: [],
           transactionType: [TransactionType.dispatched.toValue()]),
     );
@@ -155,14 +155,14 @@ class CustomStockDetailsPageState
           transactionType: [TransactionType.received.toValue()]),
     );
     int issuedStock = 0;
-    int returnedStock = 0;
+    int preReturnedStock = 0;
     for (var stock in stockModelsIssued) {
       issuedStock += int.parse(stock.quantity ?? "0");
     }
     for (var stock in stockModelsReturned) {
-      returnedStock += int.parse(stock.quantity ?? "0");
+      preReturnedStock += int.parse(stock.quantity ?? "0");
     }
-    bool isValidate = (returned <= (issuedStock - returnedStock));
+    bool isValidate = (returned <= (issuedStock - preReturnedStock));
     return isValidate;
   }
 
@@ -566,7 +566,7 @@ class CustomStockDetailsPageState
                                           if (entryType ==
                                               StockRecordEntryType.returned) {
                                             bool returnValidation =
-                                                await stockReturnValidaion(
+                                                await stockReturnValidation(
                                                     quantity,
                                                     productVariant.id,
                                                     stockState
