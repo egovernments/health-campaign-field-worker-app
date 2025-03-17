@@ -5,6 +5,7 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../utils/app_enums.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import '../../../router/app_router.dart';
@@ -15,7 +16,7 @@ import '../../utils/utils.dart' as utilsLocal;
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 
-enum ClosedHouseholdReasons { closed, refusal }
+
 
 @RoutePage()
 class CustomClosedHouseholdDetailsPage extends LocalizedStatefulWidget {
@@ -58,11 +59,11 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
-    const reasonOptions = ClosedHouseholdReasons.values;
+    const reasonOptions = ClosedHouseholdReasonsEnum.values;
 
     refuseCommentValidator(FormGroup form) {
       if (form.control(_reasonKey).value ==
-          ClosedHouseholdReasons.refusal.name) {
+          ClosedHouseholdReasonsEnum.refusal.name) {
         form.control(_refusalCommentKey).setValidators(
           [
             Validators.required,
@@ -250,7 +251,7 @@ class CustomClosedHouseholdDetailsPageState
                           ),
                           Visibility(
                             visible: form.control(_reasonKey).value ==
-                                ClosedHouseholdReasons.refusal.name,
+                                ClosedHouseholdReasonsEnum.refusal.name,
                             child: DigitTextFormField(
                               formControlName: _refusalCommentKey,
                               isRequired: true,

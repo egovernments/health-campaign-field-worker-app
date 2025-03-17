@@ -15,6 +15,7 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:inventory_management/utils/typedefs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import 'package:registration_delivery/utils/utils.dart' as registration_utils;
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
@@ -26,6 +27,7 @@ import 'package:registration_delivery/utils/utils.dart'
     as CustomValidatorRegistration;
 
 import '../../router/app_router.dart';
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import '../custom_qr_scanner.dart';
 
@@ -44,6 +46,7 @@ class CustomStockDetailsPageState
     extends LocalizedState<CustomStockDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
+  static const _looseQuantityKey = 'looseQuantity';
   static const _transactionQuantityKey = 'quantity';
   static const _transactionReasonKey = 'transactionReason';
   static const _waybillNumberKey = 'waybillNumber';
@@ -78,6 +81,7 @@ class CustomStockDetailsPageState
         Validators.min(0),
         Validators.max(10000),
       ]),
+      _looseQuantityKey: FormControl<int>(validators: []),
       _transactionReasonKey: FormControl<String>(validators: []),
       _waybillNumberKey: FormControl<String>(
         validators: [],
@@ -210,6 +214,8 @@ class CustomStockDetailsPageState
                 String transactionPartyLabel;
                 String balesCountLabel;
                 String quantityCountLabel;
+                String looseQuantityCountLabel =
+                    i18_local.stockDetails.looseQuantityLabel;
                 String? transactionReasonLabel;
                 String? transactionReason;
                 String transactionType;
@@ -436,6 +442,10 @@ class CustomStockDetailsPageState
                                           final quantity = form
                                               .control(_transactionQuantityKey)
                                               .value;
+
+                                          final looseQuantity = form
+                                              .control(_looseQuantityKey)
+                                              .value as int?;
 
                                           final waybillNumber = form
                                               .control(_waybillNumberKey)
@@ -854,6 +864,11 @@ class CustomStockDetailsPageState
                                                             _balesQuantityKey,
                                                             balesQuantity
                                                                 .toString()),
+                                                      if (looseQuantity != null)
+                                                        AdditionalField(
+                                                            _looseQuantityKey,
+                                                            looseQuantity
+                                                                .toString()),
                                                       if (transportTypeName !=
                                                           null)
                                                         AdditionalField(
@@ -1079,6 +1094,20 @@ class CustomStockDetailsPageState
                                                   CircularProgressIndicator(),
                                             ),
                                         fetched: (facilities, allFacilities) {
+                                          List<FacilityModel>
+                                              filteredFacilities = [];
+
+                                          filteredFacilities.addAll(facilities);
+
+                                          // add national level facility to the list
+                                          filteredFacilities.addAll(
+                                              allFacilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants
+                                                          .nationalWarehouse)
+                                                  .toList());
+
                                           return InkWell(
                                             onTap: () async {
                                               clearQRCodes();
@@ -1099,12 +1128,12 @@ class CustomStockDetailsPageState
                                                   .control(_deliveryTeamKey)
                                                   .value = '';
 
-                                              final facility =
-                                                  await context.router.push(
-                                                          CustomInventoryFacilitySelectionRoute(
-                                                              facilities:
-                                                                  allFacilities))
-                                                      as FacilityModel?;
+                                              final facility = await context
+                                                      .router
+                                                      .push(CustomInventoryFacilitySelectionRoute(
+                                                          facilities:
+                                                              filteredFacilities))
+                                                  as FacilityModel?;
 
                                               if (facility == null) return;
                                               form
@@ -1295,7 +1324,8 @@ class CustomStockDetailsPageState
                                                   final facility =
                                                       await context.router.push(
                                                     CustomInventoryFacilitySelectionRoute(
-                                                      facilities: allFacilities,
+                                                      facilities:
+                                                          filteredFacilities,
                                                     ),
                                                   ) as FacilityModel?;
 
@@ -1490,7 +1520,58 @@ class CustomStockDetailsPageState
                                             '${quantityCountLabel}_MIN_ERROR',
                                           ),
                                     },
+                                    onChanged: (formGroup) {
+                                      calculateFinalQuantity(form);
+                                    },
                                   ),
+                                DigitTextFormField(
+                                  key: const Key(_looseQuantityKey),
+                                  formControlName: _looseQuantityKey,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                                  isRequired: false,
+                                  validationMessages: {
+                                    "number": (object) =>
+                                        localizations.translate(
+                                          '${quantityCountLabel}_ERROR',
+                                        ),
+                                    "max": (object) => localizations.translate(
+                                          '${quantityCountLabel}_MAX_ERROR',
+                                        ),
+                                    "min": (object) => localizations.translate(
+                                          '${quantityCountLabel}_MIN_ERROR',
+                                        ),
+                                  },
+                                  onChanged: (val) {
+                                    calculateFinalQuantity(form);
+                                    if (val.value != null) {
+                                      if (val.value > 10000000000) {
+                                        form.control(_looseQuantityKey).value =
+                                            10000;
+                                      }
+                                      form
+                                          .control(_looseQuantityKey)
+                                          .setValidators(
+                                        [
+                                          Validators.number(),
+                                          Validators.min(0),
+                                          Validators.max(10000),
+                                        ],
+                                        autoValidate: true,
+                                      );
+                                    } else {
+                                      form
+                                          .control(_looseQuantityKey)
+                                          .setValidators([],
+                                              autoValidate: true);
+                                    }
+                                  },
+                                  label: localizations.translate(
+                                    looseQuantityCountLabel,
+                                  ),
+                                ),
                                 //Transaction Quantity
                                 DigitTextFormField(
                                   key: const Key(_transactionQuantityKey),
@@ -1500,6 +1581,7 @@ class CustomStockDetailsPageState
                                     decimal: true,
                                   ),
                                   isRequired: true,
+                                  readOnly: true,
                                   validationMessages: {
                                     "number": (object) =>
                                         localizations.translate(
@@ -1521,9 +1603,8 @@ class CustomStockDetailsPageState
                                       }
                                     }
                                   },
-                                  label: localizations.translate(
-                                    quantityCountLabel,
-                                  ),
+                                  label: localizations
+                                      .translate(quantityCountLabel),
                                 ),
                                 //Delivery Team
                                 AbsorbPointer(
@@ -2065,6 +2146,20 @@ class CustomStockDetailsPageState
         ),
       ),
     );
+  }
+
+// sets final quantity value based on other quantity
+  void calculateFinalQuantity(FormGroup form) {
+    final balesQuantity = form.control(_balesQuantityKey).value as int?;
+    final looseQuantity = form.control(_looseQuantityKey).value as int?;
+
+    if (balesQuantity != null) {
+      final quantity = balesQuantity * 50 + (looseQuantity ?? 0);
+
+      setState(() {
+        form.control(_transactionQuantityKey).value = quantity;
+      });
+    }
   }
 
   void clearQRCodes() {

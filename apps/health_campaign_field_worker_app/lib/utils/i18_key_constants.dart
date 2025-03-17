@@ -936,6 +936,14 @@ class InventoryReportDetails {
     return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_LABEL';
   }
 
+  String get closedHouseholdRegisteredAbsentLabel {
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_ABSENT_LABEL';
+  }
+
+  String get closedHouseholdRegisteredRefusedLabel {
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_REFUSED_LABEL';
+  }
+
   String get householdDistributedLabel {
     return 'DISTRIBUTION_SUMMARY_HOUSEHOLD_DISTRIBUTED_LABEL';
   }
@@ -1147,6 +1155,7 @@ class StockDetails {
 
   String get balesDamagedCountLabel => 'STOCK_DETAILS_BALES_DAMAGED';
   String get balesQuantityRequiredError => 'BALES_QUANTITY_REQUIRED_ERROR';
+  String get looseQuantityLabel => 'STOCK_DETAILS_LOOSE_QUANTITY_LABEL';
 
   // comments
   String get manualScanCommentsLabel =>

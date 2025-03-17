@@ -1,0 +1,1 @@
+enum ClosedHouseholdReasonsEnum { closed, refusal }
