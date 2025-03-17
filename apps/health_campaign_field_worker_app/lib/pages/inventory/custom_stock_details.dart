@@ -13,6 +13,7 @@ import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
+import 'package:inventory_management/utils/typedefs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:registration_delivery/utils/utils.dart' as registration_utils;
@@ -131,6 +132,38 @@ class CustomStockDetailsPageState
     transportTypes = InventorySingleton().transportType;
     context.read<LocationBloc>().add(const LoadLocationEvent());
     super.initState();
+  }
+
+  Future<bool> stockReturnValidation(
+      int returned, productVariantId, senderId, receiverId) async {
+    StockDataRepository stockRepository =
+        context.repository<StockModel, StockSearchModel>(context);
+    List<StockModel> stockModelsIssued = await stockRepository.search(
+      StockSearchModel(
+          productVariantId: productVariantId,
+          senderId: senderId,
+          receiverId: receiverId,
+          transactionReason: [],
+          transactionType: [TransactionType.dispatched.toValue()]),
+    );
+    List<StockModel> stockModelsReturned = await stockRepository.search(
+      StockSearchModel(
+          productVariantId: productVariantId,
+          senderId: receiverId,
+          receiverId: senderId,
+          transactionReason: [TransactionReason.returned.toValue()],
+          transactionType: [TransactionType.received.toValue()]),
+    );
+    int issuedStock = 0;
+    int preReturnedStock = 0;
+    for (var stock in stockModelsIssued) {
+      issuedStock += int.parse(stock.quantity ?? "0");
+    }
+    for (var stock in stockModelsReturned) {
+      preReturnedStock += int.parse(stock.quantity ?? "0");
+    }
+    bool isValidate = (returned <= (issuedStock - preReturnedStock));
+    return isValidate;
   }
 
   @override
@@ -526,8 +559,62 @@ class CustomStockDetailsPageState
                                             }
                                           }
 
-                                          final stockReconciliationState =
+                                          StockReconciliationState
+                                              stockReconciliationState =
                                               stockReconciliationBloc.state;
+
+                                          if (entryType ==
+                                              StockRecordEntryType.returned) {
+                                            bool returnValidation =
+                                                await stockReturnValidation(
+                                                    quantity,
+                                                    productVariant.id,
+                                                    stockState
+                                                        .facilityModel!.id,
+                                                    selectedFacilityId);
+                                            if (returnValidation == false) {
+                                              final alert =
+                                                  await DigitDialog.show<bool>(
+                                                context,
+                                                options: DigitDialogOptions(
+                                                  titleText:
+                                                      localizations.translate(
+                                                    i18_local.stockDetails
+                                                        .countDialogTitle,
+                                                  ),
+                                                  contentText: localizations
+                                                      .translate(
+                                                        i18_local.stockDetails
+                                                            .countContentValidation,
+                                                      )
+                                                      .replaceAll(
+                                                        '{}',
+                                                        stockReconciliationState
+                                                            .stockInHand
+                                                            .toString(),
+                                                      ),
+                                                  primaryAction:
+                                                      DigitDialogActions(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18_local.stockDetails
+                                                          .countDialogSuccess,
+                                                    ),
+                                                    action: (context) {
+                                                      Navigator.of(
+                                                        context,
+                                                        rootNavigator: true,
+                                                      ).pop(false);
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+
+                                              if (!(alert ?? false)) {
+                                                return;
+                                              }
+                                            }
+                                          }
 
                                           if (stockReconciliationState
                                                       .stockInHand <
