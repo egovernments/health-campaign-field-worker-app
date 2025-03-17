@@ -297,8 +297,8 @@ class _CustomDigitScannerPageState
           bottom: (kPadding * 7.5),
           height: widget.isGS1code
               ? state.barCodes.length < 3
-                  ? (state.barCodes.length * 60) + 80
-                  : (3 * 60) + 80
+                  ? (state.barCodes.length * 60) + 60
+                  : (3 * 60)
               : state.qrCodes.length < 2
                   ? ((state.qrCodes.length + 1) * 60)
                   : (3 * 60),
