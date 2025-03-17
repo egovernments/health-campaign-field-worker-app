@@ -80,19 +80,7 @@ class CustomStockDetailsPageState
         Validators.min(0),
         Validators.max(10000),
       ]),
-      _looseQuantityKey: FormControl<int>(
-        validators: [
-          StockRecordEntryType.receipt,
-          StockRecordEntryType.dispatch,
-          StockRecordEntryType.returned
-        ].contains(stockType)
-            ? [
-                Validators.number(),
-                Validators.min(0),
-                Validators.max(10000),
-              ]
-            : [],
-      ),
+      _looseQuantityKey: FormControl<int>(validators: []),
       _transactionReasonKey: FormControl<String>(validators: []),
       _waybillNumberKey: FormControl<String>(
         validators: [],
@@ -1470,12 +1458,27 @@ class CustomStockDetailsPageState
                                         ),
                                   },
                                   onChanged: (val) {
+                                    calculateFinalQuantity(form);
                                     if (val.value != null) {
                                       if (val.value > 10000000000) {
                                         form.control(_looseQuantityKey).value =
                                             10000;
                                       }
-                                      calculateFinalQuantity(form);
+                                      form
+                                          .control(_looseQuantityKey)
+                                          .setValidators(
+                                        [
+                                          Validators.number(),
+                                          Validators.min(0),
+                                          Validators.max(10000),
+                                        ],
+                                        autoValidate: true,
+                                      );
+                                    } else {
+                                      form
+                                          .control(_looseQuantityKey)
+                                          .setValidators([],
+                                              autoValidate: true);
                                     }
                                   },
                                   label: localizations.translate(
@@ -1513,9 +1516,8 @@ class CustomStockDetailsPageState
                                       }
                                     }
                                   },
-                                  label: localizations.translate(
-                                    looseQuantityCountLabel,
-                                  ),
+                                  label: localizations
+                                      .translate(quantityCountLabel),
                                 ),
                                 //Delivery Team
                                 AbsorbPointer(
