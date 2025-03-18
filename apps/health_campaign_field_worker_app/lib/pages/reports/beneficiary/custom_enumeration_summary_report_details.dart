@@ -55,7 +55,6 @@ class _CustomEumerationSummaryReportDetailsState
 
   static const _dateKey = 'dateKey';
 
-
   FormGroup _form() {
     return fb.group({});
   }
@@ -92,8 +91,8 @@ class _CustomEumerationSummaryReportDetailsState
                   alignment: Alignment.centerLeft,
                   child: Text(
                     localizations.translate(
-                                i18Local.inventoryReportDetails.summaryReport,
-                              ),
+                      i18Local.inventoryReportDetails.summaryReport,
+                    ),
                     maxLines: 1,
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
@@ -108,8 +107,8 @@ class _CustomEumerationSummaryReportDetailsState
                       height: 400,
                       child: _ReportDetailsContent(
                         title: localizations.translate(
-                                i18Local.inventoryReportDetails.summaryReport,
-                              ),
+                          i18Local.inventoryReportDetails.summaryReport,
+                        ),
                         data: DigitGridData(
                           columns: [
                             DigitGridColumn(
@@ -158,7 +157,7 @@ class _CustomEumerationSummaryReportDetailsState
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
-                                  .closedHouseholdRegisteredLabel),
+                                  .closedHouseholdRegisteredAbsentLabel),
                               key: _closedHouseholdAbsentKey,
                               width: localizations
                                       .translate(i18Local.inventoryReportDetails
