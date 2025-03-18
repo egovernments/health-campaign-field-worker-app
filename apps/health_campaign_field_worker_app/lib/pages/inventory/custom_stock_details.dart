@@ -1524,54 +1524,64 @@ class CustomStockDetailsPageState
                                       calculateFinalQuantity(form);
                                     },
                                   ),
-                                DigitTextFormField(
-                                  key: const Key(_looseQuantityKey),
-                                  formControlName: _looseQuantityKey,
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                                  isRequired: false,
-                                  validationMessages: {
-                                    "number": (object) =>
-                                        localizations.translate(
-                                          '${quantityCountLabel}_ERROR',
-                                        ),
-                                    "max": (object) => localizations.translate(
-                                          '${quantityCountLabel}_MAX_ERROR',
-                                        ),
-                                    "min": (object) => localizations.translate(
-                                          '${quantityCountLabel}_MIN_ERROR',
-                                        ),
-                                  },
-                                  onChanged: (val) {
-                                    calculateFinalQuantity(form);
-                                    if (val.value != null) {
-                                      if (val.value > 10000000000) {
-                                        form.control(_looseQuantityKey).value =
-                                            10000;
+                                if ([
+                                      StockRecordEntryType.receipt,
+                                      StockRecordEntryType.dispatch,
+                                      StockRecordEntryType.returned
+                                    ].contains(entryType) ||
+                                    transactionReasonType ==
+                                        TransactionReason.damagedInTransit)
+                                  DigitTextFormField(
+                                    key: const Key(_looseQuantityKey),
+                                    formControlName: _looseQuantityKey,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                    isRequired: false,
+                                    validationMessages: {
+                                      "number": (object) =>
+                                          localizations.translate(
+                                            '${quantityCountLabel}_ERROR',
+                                          ),
+                                      "max": (object) =>
+                                          localizations.translate(
+                                            '${quantityCountLabel}_MAX_ERROR',
+                                          ),
+                                      "min": (object) =>
+                                          localizations.translate(
+                                            '${quantityCountLabel}_MIN_ERROR',
+                                          ),
+                                    },
+                                    onChanged: (val) {
+                                      calculateFinalQuantity(form);
+                                      if (val.value != null) {
+                                        if (val.value > 10000000000) {
+                                          form
+                                              .control(_looseQuantityKey)
+                                              .value = 10000;
+                                        }
+                                        form
+                                            .control(_looseQuantityKey)
+                                            .setValidators(
+                                          [
+                                            Validators.number(),
+                                            Validators.min(0),
+                                            Validators.max(10000),
+                                          ],
+                                          autoValidate: true,
+                                        );
+                                      } else {
+                                        form
+                                            .control(_looseQuantityKey)
+                                            .setValidators([],
+                                                autoValidate: true);
                                       }
-                                      form
-                                          .control(_looseQuantityKey)
-                                          .setValidators(
-                                        [
-                                          Validators.number(),
-                                          Validators.min(0),
-                                          Validators.max(10000),
-                                        ],
-                                        autoValidate: true,
-                                      );
-                                    } else {
-                                      form
-                                          .control(_looseQuantityKey)
-                                          .setValidators([],
-                                              autoValidate: true);
-                                    }
-                                  },
-                                  label: localizations.translate(
-                                    looseQuantityCountLabel,
+                                    },
+                                    label: localizations.translate(
+                                      looseQuantityCountLabel,
+                                    ),
                                   ),
-                                ),
                                 //Transaction Quantity
                                 DigitTextFormField(
                                   key: const Key(_transactionQuantityKey),
@@ -1581,7 +1591,13 @@ class CustomStockDetailsPageState
                                     decimal: true,
                                   ),
                                   isRequired: true,
-                                  readOnly: true,
+                                  readOnly: ([
+                                        StockRecordEntryType.receipt,
+                                        StockRecordEntryType.dispatch,
+                                        StockRecordEntryType.returned
+                                      ].contains(entryType) ||
+                                      transactionReasonType ==
+                                          TransactionReason.damagedInTransit),
                                   validationMessages: {
                                     "number": (object) =>
                                         localizations.translate(
@@ -2158,7 +2174,11 @@ class CustomStockDetailsPageState
 
       setState(() {
         form.control(_transactionQuantityKey).value = quantity;
+        form.control(_transactionQuantityKey).markAsTouched();
       });
+    } else {
+      form.control(_transactionQuantityKey).value = null;
+      form.control(_transactionQuantityKey).markAsTouched();
     }
   }
 
