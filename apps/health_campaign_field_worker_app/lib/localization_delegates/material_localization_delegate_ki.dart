@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 class MaterialLocalizationDelegateKi
@@ -10,7 +11,38 @@ class MaterialLocalizationDelegateKi
 
   @override
   Future<MaterialLocalizations> load(Locale locale) async {
-    return MaterialLocalizationKi();
+    intl.DateFormat fullYearFormat;
+    intl.DateFormat compactDateFormat;
+    intl.DateFormat shortDateFormat;
+    intl.DateFormat mediumDateFormat;
+    intl.DateFormat longDateFormat;
+    intl.DateFormat yearMonthFormat;
+    intl.DateFormat shortMonthDayFormat;
+
+    fullYearFormat = intl.DateFormat.y();
+    compactDateFormat = intl.DateFormat.yMd();
+    shortDateFormat = intl.DateFormat.yMMMd();
+    mediumDateFormat = intl.DateFormat.MMMEd();
+    longDateFormat = intl.DateFormat.yMMMMEEEEd();
+    yearMonthFormat = intl.DateFormat.yMMMM();
+    shortMonthDayFormat = intl.DateFormat.MMMd();
+
+    intl.NumberFormat decimalFormat;
+    intl.NumberFormat twoDigitZeroPaddedFormat;
+
+    decimalFormat = intl.NumberFormat.decimalPattern();
+    twoDigitZeroPaddedFormat = intl.NumberFormat('00');
+
+    return MaterialLocalizationKiBI(
+        fullYearFormat: fullYearFormat,
+        compactDateFormat: compactDateFormat,
+        shortDateFormat: shortDateFormat,
+        mediumDateFormat: mediumDateFormat,
+        longDateFormat: longDateFormat,
+        yearMonthFormat: yearMonthFormat,
+        shortMonthDayFormat: shortMonthDayFormat,
+        decimalFormat: decimalFormat,
+        twoDigitZeroPaddedFormat: twoDigitZeroPaddedFormat);
   }
 
   @override
@@ -19,628 +51,599 @@ class MaterialLocalizationDelegateKi
   }
 }
 
-class MaterialLocalizationKi extends MaterialLocalizations {
+class MaterialLocalizationKi extends GlobalMaterialLocalizations {
+  /// Create an instance of the translation bundle for English.
+  ///
+  /// For details on the meaning of the arguments, see [GlobalMaterialLocalizations].
+  const MaterialLocalizationKi({
+    super.localeName = 'en',
+    required super.fullYearFormat,
+    required super.compactDateFormat,
+    required super.shortDateFormat,
+    required super.mediumDateFormat,
+    required super.longDateFormat,
+    required super.yearMonthFormat,
+    required super.shortMonthDayFormat,
+    required super.decimalFormat,
+    required super.twoDigitZeroPaddedFormat,
+  });
+
+  @override
+  String get aboutListTileTitleRaw => r'About $applicationName';
+
+  @override
+  String get alertDialogLabel => 'Alert';
+
+  @override
+  String get anteMeridiemAbbreviation => 'AM';
+
+  @override
+  String get backButtonTooltip => 'Back';
+
+  @override
+  String get bottomSheetLabel => 'Bottom Sheet';
+
   @override
-  String aboutListTileTitle(String applicationName) {
-    return applicationName;
-  }
+  String get calendarModeButtonLabel => 'Switch to calendar';
 
   @override
-  // TODO: implement alertDialogLabel
-  String get alertDialogLabel => "";
+  String get cancelButtonLabel => 'Cancel';
 
   @override
-  // TODO: implement anteMeridiemAbbreviation
-  String get anteMeridiemAbbreviation => "";
+  String get clearButtonTooltip => 'Clear text';
 
   @override
-  // TODO: implement backButtonTooltip
-  String get backButtonTooltip => "";
+  String get closeButtonLabel => 'Close';
 
   @override
-  // TODO: implement bottomSheetLabel
-  String get bottomSheetLabel => "";
+  String get closeButtonTooltip => 'Close';
 
   @override
-  // TODO: implement calendarModeButtonLabel
-  String get calendarModeButtonLabel => "";
+  String get collapsedHint => 'Expanded';
 
   @override
-  // TODO: implement cancelButtonLabel
-  String get cancelButtonLabel => "";
+  String get collapsedIconTapHint => 'Expand';
 
   @override
-  // TODO: implement clearButtonTooltip
-  String get clearButtonTooltip => "";
+  String get continueButtonLabel => 'Continue';
 
   @override
-  // TODO: implement closeButtonLabel
-  String get closeButtonLabel => "";
+  String get copyButtonLabel => 'Copy';
 
   @override
-  // TODO: implement closeButtonTooltip
-  String get closeButtonTooltip => "";
+  String get currentDateLabel => 'Today';
 
   @override
-  // TODO: implement continueButtonLabel
-  String get continueButtonLabel => "";
+  String get cutButtonLabel => 'Cut';
 
   @override
-  // TODO: implement copyButtonLabel
-  String get copyButtonLabel => "";
+  String get dateHelpText => 'mm/dd/yyyy';
 
   @override
-  // TODO: implement currentDateLabel
-  String get currentDateLabel => "";
+  String get dateInputLabel => 'Enter Date';
 
   @override
-  // TODO: implement cutButtonLabel
-  String get cutButtonLabel => "";
+  String get dateOutOfRangeLabel => 'Out of range.';
 
   @override
-  // TODO: implement dateHelpText
-  String get dateHelpText => "";
+  String get datePickerHelpText => 'Hitamo itariki';
 
   @override
-  // TODO: implement dateInputLabel
-  String get dateInputLabel => "";
+  String get dateRangeEndDateSemanticLabelRaw => r'End date $fullDate';
 
   @override
-  // TODO: implement dateOutOfRangeLabel
-  String get dateOutOfRangeLabel => "";
+  String get dateRangeEndLabel => 'End Date';
 
   @override
-  // TODO: implement datePickerHelpText
-  String get datePickerHelpText => "";
+  String get dateRangePickerHelpText => 'Select range';
 
   @override
-  String dateRangeEndDateSemanticLabel(String formattedDate) {
-    return formattedDate;
-  }
+  String get dateRangeStartDateSemanticLabelRaw => r'Start date $fullDate';
 
   @override
-  // TODO: implement dateRangeEndLabel
-  String get dateRangeEndLabel => "";
+  String get dateRangeStartLabel => 'Start Date';
 
   @override
-  // TODO: implement dateRangePickerHelpText
-  String get dateRangePickerHelpText => "";
+  String get dateSeparator => '/';
 
   @override
-  String dateRangeStartDateSemanticLabel(String formattedDate) {
-    // TODO: implement dateRangeStartDateSemanticLabel
-    return formattedDate;
-  }
+  String get deleteButtonTooltip => 'Delete';
 
   @override
-  // TODO: implement dateRangeStartLabel
-  String get dateRangeStartLabel => "";
+  String get dialModeButtonLabel => 'Switch to dial picker mode';
 
   @override
-  // TODO: implement dateSeparator
-  String get dateSeparator => "";
+  String get dialogLabel => 'Dialog';
 
   @override
-  // TODO: implement deleteButtonTooltip
-  String get deleteButtonTooltip => "";
+  String get drawerLabel => 'Navigation menu';
 
   @override
-  // TODO: implement dialModeButtonLabel
-  String get dialModeButtonLabel => "";
+  String get expandedHint => 'Collapsed';
 
   @override
-  // TODO: implement dialogLabel
-  String get dialogLabel => "";
+  String get expandedIconTapHint => 'Collapse';
 
   @override
-  // TODO: implement drawerLabel
-  String get drawerLabel => "";
+  String get expansionTileCollapsedHint => 'double tap to expand';
 
   @override
-  // TODO: implement firstDayOfWeekIndex
-  int get firstDayOfWeekIndex =>
-      (intl.DateFormat().dateSymbols.FIRSTDAYOFWEEK + 1) % 7;
+  String get expansionTileCollapsedTapHint => 'Expand for more details';
 
   @override
-  // TODO: implement firstPageTooltip
-  String get firstPageTooltip => "";
+  String get expansionTileExpandedHint => 'double tap to collapse';
 
   @override
-  String formatCompactDate(DateTime date) {
-    return intl.DateFormat().format(date);
-  }
+  String get expansionTileExpandedTapHint => 'Collapse';
 
   @override
-  String formatDecimal(int number) {
-    // TODO: implement formatDecimal
-    return intl.NumberFormat.decimalPattern().format(number);
-  }
+  String get firstPageTooltip => 'First page';
 
   @override
-  String formatFullDate(DateTime date) {
-    return intl.DateFormat().format(date);
-  }
+  String get hideAccountsLabel => 'Hide accounts';
 
   @override
-  String formatHour(TimeOfDay timeOfDay, {bool alwaysUse24HourFormat = false}) {
-    return timeOfDay.hour.toString();
-  }
+  String get inputDateModeButtonLabel => 'Switch to input';
 
   @override
-  String formatMediumDate(DateTime date) {
-    return intl.DateFormat().format(date);
-  }
+  String get inputTimeModeButtonLabel => 'Switch to text input mode';
 
   @override
-  String formatMinute(TimeOfDay timeOfDay) {
-    return timeOfDay.minute.toString();
-  }
+  String get invalidDateFormatLabel => 'Invalid format.';
 
   @override
-  String formatMonthYear(DateTime date) {
-    return intl.DateFormat().format(date);
-  }
+  String get invalidDateRangeLabel => 'Invalid range.';
 
   @override
-  String formatShortDate(DateTime date) {
-    return intl.DateFormat().format(date);
-  }
+  String get invalidTimeLabel => 'Enter a valid time';
 
   @override
-  String formatShortMonthDay(DateTime date) {
-    return intl.DateFormat().format(date);
-  }
+  String get keyboardKeyAlt => 'Alt';
 
   @override
-  String formatTimeOfDay(TimeOfDay timeOfDay,
-      {bool alwaysUse24HourFormat = false}) {
-    return timeOfDay.period.name;
-  }
+  String get keyboardKeyAltGraph => 'AltGr';
 
   @override
-  String formatYear(DateTime date) {
-    return intl.DateFormat().format(date);
-  }
+  String get keyboardKeyBackspace => 'Backspace';
 
   @override
-  // TODO: implement hideAccountsLabel
-  String get hideAccountsLabel => "";
+  String get keyboardKeyCapsLock => 'Caps Lock';
 
   @override
-  // TODO: implement inputDateModeButtonLabel
-  String get inputDateModeButtonLabel => "";
+  String get keyboardKeyChannelDown => 'Channel Down';
 
   @override
-  // TODO: implement inputTimeModeButtonLabel
-  String get inputTimeModeButtonLabel => "";
+  String get keyboardKeyChannelUp => 'Channel Up';
 
   @override
-  // TODO: implement invalidDateFormatLabel
-  String get invalidDateFormatLabel => "";
+  String get keyboardKeyControl => 'Ctrl';
 
   @override
-  // TODO: implement invalidDateRangeLabel
-  String get invalidDateRangeLabel => "";
+  String get keyboardKeyDelete => 'Del';
 
   @override
-  // TODO: implement invalidTimeLabel
-  String get invalidTimeLabel => "";
+  String get keyboardKeyEject => 'Eject';
 
   @override
-  // TODO: implement keyboardKeyAlt
-  String get keyboardKeyAlt => "";
+  String get keyboardKeyEnd => 'End';
 
   @override
-  // TODO: implement keyboardKeyAltGraph
-  String get keyboardKeyAltGraph => "";
+  String get keyboardKeyEscape => 'Esc';
 
   @override
-  // TODO: implement keyboardKeyBackspace
-  String get keyboardKeyBackspace => "";
+  String get keyboardKeyFn => 'Fn';
 
   @override
-  // TODO: implement keyboardKeyCapsLock
-  String get keyboardKeyCapsLock => "";
+  String get keyboardKeyHome => 'Home';
 
   @override
-  // TODO: implement keyboardKeyChannelDown
-  String get keyboardKeyChannelDown => "";
+  String get keyboardKeyInsert => 'Insert';
 
   @override
-  // TODO: implement keyboardKeyChannelUp
-  String get keyboardKeyChannelUp => "";
+  String get keyboardKeyMeta => 'Meta';
 
   @override
-  // TODO: implement keyboardKeyControl
-  String get keyboardKeyControl => "";
+  String get keyboardKeyMetaMacOs => 'Command';
 
   @override
-  // TODO: implement keyboardKeyDelete
-  String get keyboardKeyDelete => "";
+  String get keyboardKeyMetaWindows => 'Win';
 
   @override
-  // TODO: implement keyboardKeyEject
-  String get keyboardKeyEject => "";
+  String get keyboardKeyNumLock => 'Num Lock';
 
   @override
-  // TODO: implement keyboardKeyEnd
-  String get keyboardKeyEnd => "";
+  String get keyboardKeyNumpad0 => 'Num 0';
 
   @override
-  // TODO: implement keyboardKeyEscape
-  String get keyboardKeyEscape => "";
+  String get keyboardKeyNumpad1 => 'Num 1';
 
   @override
-  // TODO: implement keyboardKeyFn
-  String get keyboardKeyFn => "";
+  String get keyboardKeyNumpad2 => 'Num 2';
 
   @override
-  // TODO: implement keyboardKeyHome
-  String get keyboardKeyHome => "";
+  String get keyboardKeyNumpad3 => 'Num 3';
 
   @override
-  // TODO: implement keyboardKeyInsert
-  String get keyboardKeyInsert => "";
+  String get keyboardKeyNumpad4 => 'Num 4';
 
   @override
-  // TODO: implement keyboardKeyMeta
-  String get keyboardKeyMeta => "";
+  String get keyboardKeyNumpad5 => 'Num 5';
 
   @override
-  // TODO: implement keyboardKeyMetaMacOs
-  String get keyboardKeyMetaMacOs => "";
+  String get keyboardKeyNumpad6 => 'Num 6';
 
   @override
-  // TODO: implement keyboardKeyMetaWindows
-  String get keyboardKeyMetaWindows => "";
+  String get keyboardKeyNumpad7 => 'Num 7';
 
   @override
-  // TODO: implement keyboardKeyNumLock
-  String get keyboardKeyNumLock => "";
+  String get keyboardKeyNumpad8 => 'Num 8';
 
   @override
-  // TODO: implement keyboardKeyNumpad0
-  String get keyboardKeyNumpad0 => "";
+  String get keyboardKeyNumpad9 => 'Num 9';
 
   @override
-  // TODO: implement keyboardKeyNumpad1
-  String get keyboardKeyNumpad1 => "";
+  String get keyboardKeyNumpadAdd => 'Num +';
 
   @override
-  // TODO: implement keyboardKeyNumpad2
-  String get keyboardKeyNumpad2 => "";
+  String get keyboardKeyNumpadComma => 'Num ,';
 
   @override
-  // TODO: implement keyboardKeyNumpad3
-  String get keyboardKeyNumpad3 => "";
+  String get keyboardKeyNumpadDecimal => 'Num .';
 
   @override
-  // TODO: implement keyboardKeyNumpad4
-  String get keyboardKeyNumpad4 => "";
+  String get keyboardKeyNumpadDivide => 'Num /';
 
   @override
-  // TODO: implement keyboardKeyNumpad5
-  String get keyboardKeyNumpad5 => "";
+  String get keyboardKeyNumpadEnter => 'Num Enter';
 
   @override
-  // TODO: implement keyboardKeyNumpad6
-  String get keyboardKeyNumpad6 => "";
+  String get keyboardKeyNumpadEqual => 'Num =';
 
   @override
-  // TODO: implement keyboardKeyNumpad7
-  String get keyboardKeyNumpad7 => "";
+  String get keyboardKeyNumpadMultiply => 'Num *';
 
   @override
-  // TODO: implement keyboardKeyNumpad8
-  String get keyboardKeyNumpad8 => "";
+  String get keyboardKeyNumpadParenLeft => 'Num (';
 
   @override
-  // TODO: implement keyboardKeyNumpad9
-  String get keyboardKeyNumpad9 => "";
+  String get keyboardKeyNumpadParenRight => 'Num )';
 
   @override
-  // TODO: implement keyboardKeyNumpadAdd
-  String get keyboardKeyNumpadAdd => "";
+  String get keyboardKeyNumpadSubtract => 'Num -';
 
   @override
-  // TODO: implement keyboardKeyNumpadComma
-  String get keyboardKeyNumpadComma => "";
+  String get keyboardKeyPageDown => 'PgDown';
 
   @override
-  // TODO: implement keyboardKeyNumpadDecimal
-  String get keyboardKeyNumpadDecimal => "";
+  String get keyboardKeyPageUp => 'PgUp';
 
   @override
-  // TODO: implement keyboardKeyNumpadDivide
-  String get keyboardKeyNumpadDivide => "";
+  String get keyboardKeyPower => 'Power';
 
   @override
-  // TODO: implement keyboardKeyNumpadEnter
-  String get keyboardKeyNumpadEnter => "";
+  String get keyboardKeyPowerOff => 'Power Off';
 
   @override
-  // TODO: implement keyboardKeyNumpadEqual
-  String get keyboardKeyNumpadEqual => "";
+  String get keyboardKeyPrintScreen => 'Print Screen';
 
   @override
-  // TODO: implement keyboardKeyNumpadMultiply
-  String get keyboardKeyNumpadMultiply => "";
+  String get keyboardKeyScrollLock => 'Scroll Lock';
 
   @override
-  // TODO: implement keyboardKeyNumpadParenLeft
-  String get keyboardKeyNumpadParenLeft => "";
+  String get keyboardKeySelect => 'Select';
 
   @override
-  // TODO: implement keyboardKeyNumpadParenRight
-  String get keyboardKeyNumpadParenRight => "";
+  String get keyboardKeyShift => 'Shift';
 
   @override
-  // TODO: implement keyboardKeyNumpadSubtract
-  String get keyboardKeyNumpadSubtract => "";
+  String get keyboardKeySpace => 'Space';
 
   @override
-  // TODO: implement keyboardKeyPageDown
-  String get keyboardKeyPageDown => "";
+  String get lastPageTooltip => 'Last page';
 
   @override
-  // TODO: implement keyboardKeyPageUp
-  String get keyboardKeyPageUp => "";
+  String? get licensesPackageDetailTextFew => null;
 
   @override
-  // TODO: implement keyboardKeyPower
-  String get keyboardKeyPower => "";
+  String? get licensesPackageDetailTextMany => null;
 
   @override
-  // TODO: implement keyboardKeyPowerOff
-  String get keyboardKeyPowerOff => "";
+  String? get licensesPackageDetailTextOne => '1 license';
 
   @override
-  // TODO: implement keyboardKeyPrintScreen
-  String get keyboardKeyPrintScreen => "";
+  String get licensesPackageDetailTextOther => r'$licenseCount licenses';
 
   @override
-  // TODO: implement keyboardKeyScrollLock
-  String get keyboardKeyScrollLock => "";
+  String? get licensesPackageDetailTextTwo => null;
 
   @override
-  // TODO: implement keyboardKeySelect
-  String get keyboardKeySelect => "";
+  String? get licensesPackageDetailTextZero => 'No licenses';
 
   @override
-  // TODO: implement keyboardKeyShift
-  String get keyboardKeyShift => "";
+  String get licensesPageTitle => 'Licenses';
 
   @override
-  // TODO: implement keyboardKeySpace
-  String get keyboardKeySpace => "";
+  String get lookUpButtonLabel => 'Look Up';
 
   @override
-  // TODO: implement lastPageTooltip
-  String get lastPageTooltip => "";
+  String get menuBarMenuLabel => 'Menu bar menu';
 
   @override
-  String licensesPackageDetailText(int licenseCount) {
-    return licenseCount.toString();
-  }
+  String get menuDismissLabel => 'Dismiss menu';
 
   @override
-  // TODO: implement licensesPageTitle
-  String get licensesPageTitle => "";
+  String get modalBarrierDismissLabel => 'Dismiss';
 
   @override
-  // TODO: implement lookUpButtonLabel
-  String get lookUpButtonLabel => "";
+  String get moreButtonTooltip => 'More';
 
   @override
-  // TODO: implement menuBarMenuLabel
-  String get menuBarMenuLabel => "";
+  String get nextMonthTooltip => 'Next month';
 
   @override
-  // TODO: implement menuDismissLabel
-  String get menuDismissLabel => "";
+  String get nextPageTooltip => 'Next page';
 
   @override
-  // TODO: implement modalBarrierDismissLabel
-  String get modalBarrierDismissLabel => "";
+  String get okButtonLabel => 'Nibyo';
 
   @override
-  // TODO: implement moreButtonTooltip
-  String get moreButtonTooltip => "";
+  String get openAppDrawerTooltip => 'Open navigation menu';
 
   @override
-  // TODO: implement narrowWeekdays
-  List<String> get narrowWeekdays =>
-      intl.DateFormat().dateSymbols.NARROWWEEKDAYS;
+  String get pageRowsInfoTitleRaw => r'$firstRow–$lastRow of $rowCount';
 
   @override
-  // TODO: implement nextMonthTooltip
-  String get nextMonthTooltip => "";
+  String get pageRowsInfoTitleApproximateRaw =>
+      r'$firstRow–$lastRow of about $rowCount';
 
   @override
-  // TODO: implement nextPageTooltip
-  String get nextPageTooltip => "";
+  String get pasteButtonLabel => 'Shyira';
 
   @override
-  // TODO: implement okButtonLabel
-  String get okButtonLabel => "";
+  String get popupMenuLabel => 'Popup menu';
 
   @override
-  // TODO: implement openAppDrawerTooltip
-  String get openAppDrawerTooltip => "";
+  String get postMeridiemAbbreviation => 'PM';
 
   @override
-  String pageRowsInfoTitle(
-      int firstRow, int lastRow, int rowCount, bool rowCountIsApproximate) {
-    return "$firstRow-$lastRow-$rowCount-$rowCountIsApproximate";
-  }
+  String get previousMonthTooltip => 'Previous month';
 
   @override
-  DateTime? parseCompactDate(String? inputString) {
-    return inputString == null ? null : DateTime.parse(inputString);
-  }
+  String get previousPageTooltip => 'Previous page';
 
   @override
-  // TODO: implement pasteButtonLabel
-  String get pasteButtonLabel => "";
+  String get refreshIndicatorSemanticLabel => 'Refresh';
 
   @override
-  // TODO: implement popupMenuLabel
-  String get popupMenuLabel => "";
+  String? get remainingTextFieldCharacterCountFew => null;
 
   @override
-  // TODO: implement postMeridiemAbbreviation
-  String get postMeridiemAbbreviation => "";
+  String? get remainingTextFieldCharacterCountMany => null;
 
   @override
-  // TODO: implement previousMonthTooltip
-  String get previousMonthTooltip => "";
+  String? get remainingTextFieldCharacterCountOne => '1 character remaining';
 
   @override
-  // TODO: implement previousPageTooltip
-  String get previousPageTooltip => "";
+  String get remainingTextFieldCharacterCountOther =>
+      r'$remainingCount characters remaining';
 
   @override
-  // TODO: implement refreshIndicatorSemanticLabel
-  String get refreshIndicatorSemanticLabel => "";
+  String? get remainingTextFieldCharacterCountTwo => null;
 
   @override
-  String remainingTextFieldCharacterCount(int remaining) {
-    return remaining.toString();
-  }
+  String? get remainingTextFieldCharacterCountZero => 'No characters remaining';
 
   @override
-  // TODO: implement reorderItemDown
-  String get reorderItemDown => "";
+  String get reorderItemDown => 'Move down';
 
   @override
-  // TODO: implement reorderItemLeft
-  String get reorderItemLeft => "";
+  String get reorderItemLeft => 'Move left';
 
   @override
-  // TODO: implement reorderItemRight
-  String get reorderItemRight => "";
+  String get reorderItemRight => 'Move right';
 
   @override
-  // TODO: implement reorderItemToEnd
-  String get reorderItemToEnd => "";
+  String get reorderItemToEnd => 'Move to the end';
 
   @override
-  // TODO: implement reorderItemToStart
-  String get reorderItemToStart => "";
+  String get reorderItemToStart => 'Move to the start';
 
   @override
-  // TODO: implement reorderItemUp
-  String get reorderItemUp => "";
+  String get reorderItemUp => 'Move up';
 
   @override
-  // TODO: implement rowsPerPageTitle
-  String get rowsPerPageTitle => "";
+  String get rowsPerPageTitle => 'Rows per page:';
 
   @override
-  // TODO: implement saveButtonLabel
-  String get saveButtonLabel => "";
+  String get saveButtonLabel => 'Save';
 
   @override
-  // TODO: implement scanTextButtonLabel
-  String get scanTextButtonLabel => "";
+  String get scanTextButtonLabel => 'Scan text';
 
   @override
-  // TODO: implement scrimLabel
-  String get scrimLabel => "";
+  String get scrimLabel => 'Scrim';
 
   @override
-  String scrimOnTapHint(String modalRouteContentName) {
-    return modalRouteContentName;
-  }
+  String get scrimOnTapHintRaw => r'Close $modalRouteContentName';
 
   @override
-  // TODO: implement scriptCategory
   ScriptCategory get scriptCategory => ScriptCategory.englishLike;
 
   @override
-  // TODO: implement searchFieldLabel
-  String get searchFieldLabel => "";
+  String get searchFieldLabel => 'Search';
 
   @override
-  // TODO: implement searchWebButtonLabel
-  String get searchWebButtonLabel => "";
+  String get searchWebButtonLabel => 'Search Web';
 
   @override
-  // TODO: implement selectAllButtonLabel
-  String get selectAllButtonLabel => "";
+  String get selectAllButtonLabel => 'Select all';
 
   @override
-  // TODO: implement selectYearSemanticsLabel
-  String get selectYearSemanticsLabel => "";
+  String get selectYearSemanticsLabel => 'Select year';
 
   @override
-  // TODO: implement selectedDateLabel
-  String get selectedDateLabel => "";
+  String get selectedDateLabel => 'Selected';
 
   @override
-  String selectedRowCountTitle(int selectedRowCount) {
-    return selectedRowCount.toString();
-  }
+  String? get selectedRowCountTitleFew => null;
 
   @override
-  // TODO: implement shareButtonLabel
-  String get shareButtonLabel => "";
+  String? get selectedRowCountTitleMany => null;
 
   @override
-  // TODO: implement showAccountsLabel
-  String get showAccountsLabel => "";
+  String? get selectedRowCountTitleOne => '1 item selected';
 
   @override
-  // TODO: implement showMenuTooltip
-  String get showMenuTooltip => "";
+  String get selectedRowCountTitleOther => r'$selectedRowCount items selected';
 
   @override
-  // TODO: implement signedInLabel
-  String get signedInLabel => "";
+  String? get selectedRowCountTitleTwo => null;
 
   @override
-  String tabLabel({required int tabIndex, required int tabCount}) {
-    return "$tabIndex-$tabCount";
-  }
+  String? get selectedRowCountTitleZero => 'No items selected';
 
   @override
-  TimeOfDayFormat timeOfDayFormat({bool alwaysUse24HourFormat = false}) {
-    return TimeOfDayFormat.HH_colon_mm;
-  }
+  String get shareButtonLabel => 'Share';
 
   @override
-  // TODO: implement timePickerDialHelpText
-  String get timePickerDialHelpText => "";
+  String get showAccountsLabel => 'Show accounts';
 
   @override
-  // TODO: implement timePickerHourLabel
-  String get timePickerHourLabel => "";
+  String get showMenuTooltip => 'Show menu';
 
   @override
-  // TODO: implement timePickerHourModeAnnouncement
-  String get timePickerHourModeAnnouncement => "";
+  String get signedInLabel => 'Signed in';
 
   @override
-  // TODO: implement timePickerInputHelpText
-  String get timePickerInputHelpText => "";
+  String get tabLabelRaw => r'Tab $tabIndex of $tabCount';
 
   @override
-  // TODO: implement timePickerMinuteLabel
-  String get timePickerMinuteLabel => "";
+  TimeOfDayFormat get timeOfDayFormatRaw => TimeOfDayFormat.h_colon_mm_space_a;
 
   @override
-  // TODO: implement timePickerMinuteModeAnnouncement
-  String get timePickerMinuteModeAnnouncement => "";
+  String get timePickerDialHelpText => 'Select time';
 
   @override
-  // TODO: implement unspecifiedDate
-  String get unspecifiedDate => "";
+  String get timePickerHourLabel => 'Hour';
 
   @override
-  // TODO: implement unspecifiedDateRange
-  String get unspecifiedDateRange => "";
+  String get timePickerHourModeAnnouncement => 'Select hours';
 
   @override
-  // TODO: implement viewLicensesButtonLabel
-  String get viewLicensesButtonLabel => "";
+  String get timePickerInputHelpText => 'Enter time';
+
+  @override
+  String get timePickerMinuteLabel => 'Minute';
+
+  @override
+  String get timePickerMinuteModeAnnouncement => 'Select minutes';
+
+  @override
+  String get unspecifiedDate => 'Date';
+
+  @override
+  String get unspecifiedDateRange => 'Date Range';
+
+  @override
+  String get viewLicensesButtonLabel => 'View licenses';
+}
+
+/// The translations for English, as used in India (`en_IN`).
+class MaterialLocalizationKiBI extends MaterialLocalizationKi {
+  /// Create an instance of the translation bundle for English, as used in India.
+  ///
+  /// For details on the meaning of the arguments, see [GlobalMaterialLocalizations].
+  const MaterialLocalizationKiBI({
+    super.localeName = 'en_IN',
+    required super.fullYearFormat,
+    required super.compactDateFormat,
+    required super.shortDateFormat,
+    required super.mediumDateFormat,
+    required super.longDateFormat,
+    required super.yearMonthFormat,
+    required super.shortMonthDayFormat,
+    required super.decimalFormat,
+    required super.twoDigitZeroPaddedFormat,
+  });
+
+  @override
+  String get shareButtonLabel => 'Share...';
+
+  @override
+  String get lookUpButtonLabel => 'Look up';
+
+  @override
+  String get expansionTileExpandedHint => 'double-tap to collapse';
+
+  @override
+  String get expansionTileCollapsedHint => 'double-tap to expand';
+
+  @override
+  String get bottomSheetLabel => 'Bottom sheet';
+
+  @override
+  String get keyboardKeyCapsLock => 'Caps lock';
+
+  @override
+  String get keyboardKeyChannelUp => 'Channel up';
+
+  @override
+  String get keyboardKeyChannelDown => 'Channel down';
+
+  @override
+  String get keyboardKeyNumLock => 'Num lock';
+
+  @override
+  String get keyboardKeyScrollLock => 'Scroll lock';
+
+  @override
+  String get keyboardKeyPrintScreen => 'Print screen';
+
+  @override
+  String get keyboardKeyPowerOff => 'Power off';
+
+  @override
+  String get keyboardKeyNumpadEnter => 'Num enter';
+
+  @override
+  String get dateInputLabel => 'Enter date';
+
+  @override
+  String get dateRangeEndLabel => 'End date';
+
+  @override
+  String get dateRangeStartLabel => 'Start date';
+
+  @override
+  String get unspecifiedDateRange => 'Date range';
+
+  @override
+  String get dateHelpText => 'dd/mm/yyyy';
+
+  @override
+  String get licensesPageTitle => 'Licences';
+
+  @override
+  String? get licensesPackageDetailTextZero => 'No licences';
+
+  @override
+  String? get licensesPackageDetailTextOne => '1 licence';
+
+  @override
+  String get licensesPackageDetailTextOther => r'$licenseCount licences';
+
+  @override
+  String get viewLicensesButtonLabel => 'View licences';
+
+  @override
+  String get popupMenuLabel => 'Pop-up menu';
+
+  @override
+  String get dialogLabel => 'Dialogue';
+
+  @override
+  String get reorderItemLeft => 'Move to the left';
+
+  @override
+  String get reorderItemRight => 'Move to the right';
 }
