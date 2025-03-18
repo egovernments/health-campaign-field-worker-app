@@ -87,7 +87,7 @@ class MaterialLocalizationKi extends GlobalMaterialLocalizations {
   String get calendarModeButtonLabel => 'Switch to calendar';
 
   @override
-  String get cancelButtonLabel => 'Cancel';
+  String get cancelButtonLabel => 'Kureka';
 
   @override
   String get clearButtonTooltip => 'Clear text';
