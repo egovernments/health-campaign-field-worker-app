@@ -278,10 +278,12 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
                                   children: [
                                     tableData.isNotEmpty
                                         ? SizedBox(
-                                          height: tableData.length * 49 + 16,
-                                          child: table.DigitTable(
+                                            height:
+                                                tableData.length * 50 + 70 + 16,
+                                            child: table.DigitTable(
                                               showSelectedState: false,
-                                              tableHeight: tableData.length * 49,
+                                              tableHeight:
+                                                  tableData.length * 50 + 70,
                                               tableWidth: MediaQuery.of(context)
                                                   .size
                                                   .width,
@@ -294,7 +296,7 @@ class _CustomMarkAttendancePageState extends State<CustomMarkAttendancePage> {
                                               ),
                                               rows: tableData,
                                             ),
-                                        )
+                                          )
                                         : NoResultCard(
                                             align: Alignment.center,
                                             label: localizations.translate(
