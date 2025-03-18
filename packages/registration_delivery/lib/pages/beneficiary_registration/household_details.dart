@@ -408,8 +408,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 : localizations.translate(
                                     i18.householdDetails.householdDetailsLabel,
                                   ),
-                            headingStyle: textTheme.headingXl.copyWith(color:
-                            theme.colorTheme.primary.primary2),
+                            headingStyle: textTheme.headingXl.copyWith(
+                                color: theme.colorTheme.primary.primary2),
                             description: localizations.translate(
                               i18.householdDetails.householdDetailsDescription,
                             ),
@@ -620,8 +620,18 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
                                   ],
-                                  minValue: children + pregnantWomen != 0
-                                      ? children + pregnantWomen
+                                  minValue: form
+                                                  .control(_childrenCountKey)
+                                                  .value +
+                                              form
+                                                  .control(
+                                                      _pregnantWomenCountKey)
+                                                  .value !=
+                                          0
+                                      ? form.control(_childrenCountKey).value +
+                                          form
+                                              .control(_pregnantWomenCountKey)
+                                              .value
                                       : 1,
                                   maxValue: !isCommunity ? 30 : 1000000,
                                   maxLength: 5,
