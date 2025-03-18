@@ -251,7 +251,9 @@ class _ComplaintsInboxItem extends StatelessWidget {
               ),
               LabelValueItem(
                 label: localizations.translate(i18.complaints.inboxAreaLabel),
-                value: item.address.locality?.name ?? "",
+                value: localizations.translate(item.address.locality?.code ??
+                    item.address.locality?.name ??
+                    ""),
                 labelFlex: 5,
               ),
               LabelValueItem(
