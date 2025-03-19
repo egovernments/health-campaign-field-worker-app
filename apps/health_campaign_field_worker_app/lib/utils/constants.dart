@@ -96,7 +96,15 @@ class Constants {
   static const String refugeeCamp = "refugeeCamp";
   static const String communityKey = 'communityKey';
   static const String householdTypeKey = 'householdTypeKey';
-  static const String nationalWarehouse = 'National Warehouse';
+
+  static const String warehouse = "Warehouse";
+  static const String healthFacility = "Health Facility";
+  static const String storingResource = "Storing Resource";
+  static const String distributionPoint = "Distribution Point";
+  static const String nationalWarehouse = "National Warehouse";
+  static const String provincialWarehouse = "Provincial Warehouse";
+  static const String districtWarehouse = "District Warehouse";
+  static const String deliveryTeam = "DeliveryTeam";
 
   static const String closedHouseholdReason = 'Reason';
   static const String closedHouseholdReasonComment = 'RefuseReasonComment';

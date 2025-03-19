@@ -170,6 +170,23 @@ class CustomStockDetailsPageState
     return isValidate;
   }
 
+  List<FacilityModel> filterFacilities(
+      List<FacilityModel> facilities, List<FacilityModel> allFacilities) {
+    List<FacilityModel> filteredFacilities = [];
+
+    filteredFacilities.addAll(facilities);
+
+    // add national level facility to the list
+    filteredFacilities.addAll(allFacilities
+        .where((element) => element.usage == Constants.nationalWarehouse)
+        .toList());
+    // add district facility to the list
+    filteredFacilities.addAll(allFacilities
+        .where((element) => element.usage == Constants.deliveryTeam)
+        .toList());
+    return filteredFacilities;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -1095,18 +1112,9 @@ class CustomStockDetailsPageState
                                             ),
                                         fetched: (facilities, allFacilities) {
                                           List<FacilityModel>
-                                              filteredFacilities = [];
-
-                                          filteredFacilities.addAll(facilities);
-
-                                          // add national level facility to the list
-                                          filteredFacilities.addAll(
-                                              allFacilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants
-                                                          .nationalWarehouse)
-                                                  .toList());
+                                              filteredFacilities =
+                                              filterFacilities(
+                                                  facilities, allFacilities);
 
                                           return InkWell(
                                             onTap: () async {
@@ -1692,10 +1700,6 @@ class CustomStockDetailsPageState
                                       ),
                                       isRequired: false,
                                       formControlName: _waybillNumberKey,
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                        decimal: true,
-                                      ),
                                       onChanged: (value) {
                                         if (value.value == "") {
                                           form
