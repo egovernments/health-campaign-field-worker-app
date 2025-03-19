@@ -363,10 +363,10 @@ packages:
     dependency: "direct main"
     description:
       name: complaints
-      sha256: cba8a9d32754fa28a0987d844b9b050aacb5c62a7345dfd41254f26b0bb4f0ea
+      sha256: "40215bb0c0c260048b7767057b302676706ffd282f35f22b5027cea0800ef80e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2+1"
+    version: "1.0.2"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -552,10 +552,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: f90416b7e3099a6a92a4bcb4c4cdb672242587f12c221cfc7af87d1980faa20a
+      sha256: "687906c379faedf72f97277a2d0a844bbfa41c908a46fd998332d888694cbe78"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1-dev.1"
+    version: "0.0.2-dev.14"
   dio:
     dependency: "direct main"
     description:

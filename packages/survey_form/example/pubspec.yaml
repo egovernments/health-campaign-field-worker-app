@@ -28,7 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  digit_ui_components: ^0.2.1-dev.1
+  digit_ui_components: ^0.0.2-dev.13
   survey_form:
     path: ../
 
