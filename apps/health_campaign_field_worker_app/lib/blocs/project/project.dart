@@ -339,6 +339,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ProjectFacilitySearchModel(
         projectId: projects.map((e) => e.id).toList(),
       ),
+      limit: 1000,
     );
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
@@ -347,6 +348,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       FacilitySearchModel(
         id: null,
       ),
+      limit: 1000,
     );
 
     await facilityLocalRepository.bulkCreate(facilities);
