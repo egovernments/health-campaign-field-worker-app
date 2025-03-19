@@ -116,6 +116,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       },
                       getBatchSize: (
                         batchSize,
+                        forceDownSync,
                         projectId,
                         boundaryCode,
                         pendingSync,
@@ -128,6 +129,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                   pendingSyncCount: pendingSyncCount,
                                   boundaryName: boundaryName,
                                   batchSize: batchSize,
+                                  forceDownSync: forceDownSync,
                                 ),
                               ),
                       report: (downSyncCriteriaList) {
@@ -157,7 +159,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         dialogType: DigitProgressDialogType.pendingSync,
                         isPop: true,
                       ),
-                      dataFound: (initialServerCount, batchSize) =>
+                      dataFound: (initialServerCount, batchSize, forceDownSync) =>
                           showDownloadDialog(
                         context,
                         model: DownloadBeneficiary(

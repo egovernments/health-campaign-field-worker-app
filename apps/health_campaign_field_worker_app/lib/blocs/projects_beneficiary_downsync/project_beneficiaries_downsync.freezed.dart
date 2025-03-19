@@ -18,11 +18,21 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$BeneficiaryDownSyncEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int batchSize,
+            int initialServerCount,
+            String boundaryName,
+            bool? forceDownSync)
         downSync,
-    required TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)
         checkForData,
     required TResult Function(
             List<AppConfiguration> appConfiguration,
@@ -38,10 +48,15 @@ mixin _$BeneficiaryDownSyncEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult? Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult? Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -53,10 +68,15 @@ mixin _$BeneficiaryDownSyncEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -127,7 +147,8 @@ abstract class _$$DownSyncBeneficiaryEventImplCopyWith<$Res> {
       String boundaryCode,
       int batchSize,
       int initialServerCount,
-      String boundaryName});
+      String boundaryName,
+      bool? forceDownSync});
 }
 
 /// @nodoc
@@ -148,6 +169,7 @@ class __$$DownSyncBeneficiaryEventImplCopyWithImpl<$Res>
     Object? batchSize = null,
     Object? initialServerCount = null,
     Object? boundaryName = null,
+    Object? forceDownSync = freezed,
   }) {
     return _then(_$DownSyncBeneficiaryEventImpl(
       projectId: null == projectId
@@ -170,6 +192,10 @@ class __$$DownSyncBeneficiaryEventImplCopyWithImpl<$Res>
           ? _value.boundaryName
           : boundaryName // ignore: cast_nullable_to_non_nullable
               as String,
+      forceDownSync: freezed == forceDownSync
+          ? _value.forceDownSync
+          : forceDownSync // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -182,7 +208,8 @@ class _$DownSyncBeneficiaryEventImpl implements DownSyncBeneficiaryEvent {
       required this.boundaryCode,
       required this.batchSize,
       required this.initialServerCount,
-      required this.boundaryName});
+      required this.boundaryName,
+      this.forceDownSync});
 
   @override
   final String projectId;
@@ -194,10 +221,12 @@ class _$DownSyncBeneficiaryEventImpl implements DownSyncBeneficiaryEvent {
   final int initialServerCount;
   @override
   final String boundaryName;
+  @override
+  final bool? forceDownSync;
 
   @override
   String toString() {
-    return 'BeneficiaryDownSyncEvent.downSync(projectId: $projectId, boundaryCode: $boundaryCode, batchSize: $batchSize, initialServerCount: $initialServerCount, boundaryName: $boundaryName)';
+    return 'BeneficiaryDownSyncEvent.downSync(projectId: $projectId, boundaryCode: $boundaryCode, batchSize: $batchSize, initialServerCount: $initialServerCount, boundaryName: $boundaryName, forceDownSync: $forceDownSync)';
   }
 
   @override
@@ -214,12 +243,14 @@ class _$DownSyncBeneficiaryEventImpl implements DownSyncBeneficiaryEvent {
             (identical(other.initialServerCount, initialServerCount) ||
                 other.initialServerCount == initialServerCount) &&
             (identical(other.boundaryName, boundaryName) ||
-                other.boundaryName == boundaryName));
+                other.boundaryName == boundaryName) &&
+            (identical(other.forceDownSync, forceDownSync) ||
+                other.forceDownSync == forceDownSync));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, projectId, boundaryCode,
-      batchSize, initialServerCount, boundaryName);
+      batchSize, initialServerCount, boundaryName, forceDownSync);
 
   @JsonKey(ignore: true)
   @override
@@ -231,11 +262,21 @@ class _$DownSyncBeneficiaryEventImpl implements DownSyncBeneficiaryEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int batchSize,
+            int initialServerCount,
+            String boundaryName,
+            bool? forceDownSync)
         downSync,
-    required TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)
         checkForData,
     required TResult Function(
             List<AppConfiguration> appConfiguration,
@@ -247,18 +288,23 @@ class _$DownSyncBeneficiaryEventImpl implements DownSyncBeneficiaryEvent {
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
   }) {
-    return downSync(
-        projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
+    return downSync(projectId, boundaryCode, batchSize, initialServerCount,
+        boundaryName, forceDownSync);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult? Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult? Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -266,18 +312,23 @@ class _$DownSyncBeneficiaryEventImpl implements DownSyncBeneficiaryEvent {
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
   }) {
-    return downSync?.call(
-        projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
+    return downSync?.call(projectId, boundaryCode, batchSize,
+        initialServerCount, boundaryName, forceDownSync);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -287,8 +338,8 @@ class _$DownSyncBeneficiaryEventImpl implements DownSyncBeneficiaryEvent {
     required TResult orElse(),
   }) {
     if (downSync != null) {
-      return downSync(
-          projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
+      return downSync(projectId, boundaryCode, batchSize, initialServerCount,
+          boundaryName, forceDownSync);
     }
     return orElse();
   }
@@ -340,13 +391,15 @@ abstract class DownSyncBeneficiaryEvent implements BeneficiaryDownSyncEvent {
       required final String boundaryCode,
       required final int batchSize,
       required final int initialServerCount,
-      required final String boundaryName}) = _$DownSyncBeneficiaryEventImpl;
+      required final String boundaryName,
+      final bool? forceDownSync}) = _$DownSyncBeneficiaryEventImpl;
 
   String get projectId;
   String get boundaryCode;
   int get batchSize;
   int get initialServerCount;
   String get boundaryName;
+  bool? get forceDownSync;
   @JsonKey(ignore: true)
   _$$DownSyncBeneficiaryEventImplCopyWith<_$DownSyncBeneficiaryEventImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -364,6 +417,7 @@ abstract class _$$DownSyncCheckTotalCountEventImplCopyWith<$Res> {
       String boundaryCode,
       int pendingSyncCount,
       int batchSize,
+      bool forceDownSync,
       String boundaryName});
 }
 
@@ -384,6 +438,7 @@ class __$$DownSyncCheckTotalCountEventImplCopyWithImpl<$Res>
     Object? boundaryCode = null,
     Object? pendingSyncCount = null,
     Object? batchSize = null,
+    Object? forceDownSync = null,
     Object? boundaryName = null,
   }) {
     return _then(_$DownSyncCheckTotalCountEventImpl(
@@ -403,6 +458,10 @@ class __$$DownSyncCheckTotalCountEventImplCopyWithImpl<$Res>
           ? _value.batchSize
           : batchSize // ignore: cast_nullable_to_non_nullable
               as int,
+      forceDownSync: null == forceDownSync
+          ? _value.forceDownSync
+          : forceDownSync // ignore: cast_nullable_to_non_nullable
+              as bool,
       boundaryName: null == boundaryName
           ? _value.boundaryName
           : boundaryName // ignore: cast_nullable_to_non_nullable
@@ -420,6 +479,7 @@ class _$DownSyncCheckTotalCountEventImpl
       required this.boundaryCode,
       required this.pendingSyncCount,
       required this.batchSize,
+      required this.forceDownSync,
       required this.boundaryName});
 
   @override
@@ -431,11 +491,13 @@ class _$DownSyncCheckTotalCountEventImpl
   @override
   final int batchSize;
   @override
+  final bool forceDownSync;
+  @override
   final String boundaryName;
 
   @override
   String toString() {
-    return 'BeneficiaryDownSyncEvent.checkForData(projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, batchSize: $batchSize, boundaryName: $boundaryName)';
+    return 'BeneficiaryDownSyncEvent.checkForData(projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, batchSize: $batchSize, forceDownSync: $forceDownSync, boundaryName: $boundaryName)';
   }
 
   @override
@@ -451,13 +513,15 @@ class _$DownSyncCheckTotalCountEventImpl
                 other.pendingSyncCount == pendingSyncCount) &&
             (identical(other.batchSize, batchSize) ||
                 other.batchSize == batchSize) &&
+            (identical(other.forceDownSync, forceDownSync) ||
+                other.forceDownSync == forceDownSync) &&
             (identical(other.boundaryName, boundaryName) ||
                 other.boundaryName == boundaryName));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, projectId, boundaryCode,
-      pendingSyncCount, batchSize, boundaryName);
+      pendingSyncCount, batchSize, forceDownSync, boundaryName);
 
   @JsonKey(ignore: true)
   @override
@@ -470,11 +534,21 @@ class _$DownSyncCheckTotalCountEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int batchSize,
+            int initialServerCount,
+            String boundaryName,
+            bool? forceDownSync)
         downSync,
-    required TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)
         checkForData,
     required TResult Function(
             List<AppConfiguration> appConfiguration,
@@ -486,18 +560,23 @@ class _$DownSyncCheckTotalCountEventImpl
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
   }) {
-    return checkForData(
-        projectId, boundaryCode, pendingSyncCount, batchSize, boundaryName);
+    return checkForData(projectId, boundaryCode, pendingSyncCount, batchSize,
+        forceDownSync, boundaryName);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult? Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult? Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -505,18 +584,23 @@ class _$DownSyncCheckTotalCountEventImpl
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
   }) {
-    return checkForData?.call(
-        projectId, boundaryCode, pendingSyncCount, batchSize, boundaryName);
+    return checkForData?.call(projectId, boundaryCode, pendingSyncCount,
+        batchSize, forceDownSync, boundaryName);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -526,8 +610,8 @@ class _$DownSyncCheckTotalCountEventImpl
     required TResult orElse(),
   }) {
     if (checkForData != null) {
-      return checkForData(
-          projectId, boundaryCode, pendingSyncCount, batchSize, boundaryName);
+      return checkForData(projectId, boundaryCode, pendingSyncCount, batchSize,
+          forceDownSync, boundaryName);
     }
     return orElse();
   }
@@ -580,12 +664,14 @@ abstract class DownSyncCheckTotalCountEvent
       required final String boundaryCode,
       required final int pendingSyncCount,
       required final int batchSize,
+      required final bool forceDownSync,
       required final String boundaryName}) = _$DownSyncCheckTotalCountEventImpl;
 
   String get projectId;
   String get boundaryCode;
   int get pendingSyncCount;
   int get batchSize;
+  bool get forceDownSync;
   String get boundaryName;
   @JsonKey(ignore: true)
   _$$DownSyncCheckTotalCountEventImplCopyWith<
@@ -722,11 +808,21 @@ class _$DownSyncGetBatchSizeEventImpl implements DownSyncGetBatchSizeEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int batchSize,
+            int initialServerCount,
+            String boundaryName,
+            bool? forceDownSync)
         downSync,
-    required TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)
         checkForData,
     required TResult Function(
             List<AppConfiguration> appConfiguration,
@@ -746,10 +842,15 @@ class _$DownSyncGetBatchSizeEventImpl implements DownSyncGetBatchSizeEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult? Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult? Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -765,10 +866,15 @@ class _$DownSyncGetBatchSizeEventImpl implements DownSyncGetBatchSizeEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -883,11 +989,21 @@ class _$DownSyncReportEventImpl implements DownSyncReportEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int batchSize,
+            int initialServerCount,
+            String boundaryName,
+            bool? forceDownSync)
         downSync,
-    required TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)
         checkForData,
     required TResult Function(
             List<AppConfiguration> appConfiguration,
@@ -906,10 +1022,15 @@ class _$DownSyncReportEventImpl implements DownSyncReportEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult? Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult? Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -924,10 +1045,15 @@ class _$DownSyncReportEventImpl implements DownSyncReportEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -1029,11 +1155,21 @@ class _$DownSyncResetStateEventImpl implements DownSyncResetStateEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int batchSize,
+            int initialServerCount,
+            String boundaryName,
+            bool? forceDownSync)
         downSync,
-    required TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)
+    required TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)
         checkForData,
     required TResult Function(
             List<AppConfiguration> appConfiguration,
@@ -1052,10 +1188,15 @@ class _$DownSyncResetStateEventImpl implements DownSyncResetStateEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult? Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult? Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult? Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -1070,10 +1211,15 @@ class _$DownSyncResetStateEventImpl implements DownSyncResetStateEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount, String boundaryName)?
+            int initialServerCount, String boundaryName, bool? forceDownSync)?
         downSync,
-    TResult Function(String projectId, String boundaryCode,
-            int pendingSyncCount, int batchSize, String boundaryName)?
+    TResult Function(
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            int batchSize,
+            bool forceDownSync,
+            String boundaryName)?
         checkForData,
     TResult Function(List<AppConfiguration> appConfiguration, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)?
@@ -1139,12 +1285,19 @@ mixin _$BeneficiaryDownSyncState {
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
@@ -1156,12 +1309,14 @@ mixin _$BeneficiaryDownSyncState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
@@ -1173,12 +1328,13 @@ mixin _$BeneficiaryDownSyncState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -1341,12 +1497,19 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState {
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
@@ -1361,12 +1524,14 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
@@ -1381,12 +1546,13 @@ class _$DownSyncInProgressStateImpl extends _DownSyncInProgressState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -1548,12 +1714,19 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState {
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
@@ -1568,12 +1741,14 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
@@ -1588,12 +1763,13 @@ class _$DownSyncSuccessStateImpl extends _DownSyncSuccessState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -1692,6 +1868,7 @@ abstract class _$$DownSyncGetBatchSizeStateImplCopyWith<$Res> {
   @useResult
   $Res call(
       {int batchSize,
+      bool forceDownSync,
       String projectId,
       String boundaryCode,
       int pendingSyncCount,
@@ -1712,6 +1889,7 @@ class __$$DownSyncGetBatchSizeStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? batchSize = null,
+    Object? forceDownSync = null,
     Object? projectId = null,
     Object? boundaryCode = null,
     Object? pendingSyncCount = null,
@@ -1722,6 +1900,10 @@ class __$$DownSyncGetBatchSizeStateImplCopyWithImpl<$Res>
           ? _value.batchSize
           : batchSize // ignore: cast_nullable_to_non_nullable
               as int,
+      null == forceDownSync
+          ? _value.forceDownSync
+          : forceDownSync // ignore: cast_nullable_to_non_nullable
+              as bool,
       null == projectId
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
@@ -1745,12 +1927,19 @@ class __$$DownSyncGetBatchSizeStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
-  const _$DownSyncGetBatchSizeStateImpl(this.batchSize, this.projectId,
-      this.boundaryCode, this.pendingSyncCount, this.boundaryName)
+  const _$DownSyncGetBatchSizeStateImpl(
+      this.batchSize,
+      this.forceDownSync,
+      this.projectId,
+      this.boundaryCode,
+      this.pendingSyncCount,
+      this.boundaryName)
       : super._();
 
   @override
   final int batchSize;
+  @override
+  final bool forceDownSync;
   @override
   final String projectId;
   @override
@@ -1762,7 +1951,7 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
 
   @override
   String toString() {
-    return 'BeneficiaryDownSyncState.getBatchSize(batchSize: $batchSize, projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, boundaryName: $boundaryName)';
+    return 'BeneficiaryDownSyncState.getBatchSize(batchSize: $batchSize, forceDownSync: $forceDownSync, projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, boundaryName: $boundaryName)';
   }
 
   @override
@@ -1772,6 +1961,8 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
             other is _$DownSyncGetBatchSizeStateImpl &&
             (identical(other.batchSize, batchSize) ||
                 other.batchSize == batchSize) &&
+            (identical(other.forceDownSync, forceDownSync) ||
+                other.forceDownSync == forceDownSync) &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.boundaryCode, boundaryCode) ||
@@ -1783,8 +1974,8 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, batchSize, projectId,
-      boundaryCode, pendingSyncCount, boundaryName);
+  int get hashCode => Object.hash(runtimeType, batchSize, forceDownSync,
+      projectId, boundaryCode, pendingSyncCount, boundaryName);
 
   @JsonKey(ignore: true)
   @override
@@ -1798,20 +1989,27 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
   }) {
-    return getBatchSize(
-        batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
+    return getBatchSize(batchSize, forceDownSync, projectId, boundaryCode,
+        pendingSyncCount, boundaryName);
   }
 
   @override
@@ -1819,20 +2017,22 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
   }) {
-    return getBatchSize?.call(
-        batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
+    return getBatchSize?.call(batchSize, forceDownSync, projectId, boundaryCode,
+        pendingSyncCount, boundaryName);
   }
 
   @override
@@ -1840,12 +2040,13 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -1854,8 +2055,8 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
     required TResult orElse(),
   }) {
     if (getBatchSize != null) {
-      return getBatchSize(
-          batchSize, projectId, boundaryCode, pendingSyncCount, boundaryName);
+      return getBatchSize(batchSize, forceDownSync, projectId, boundaryCode,
+          pendingSyncCount, boundaryName);
     }
     return orElse();
   }
@@ -1928,6 +2129,7 @@ class _$DownSyncGetBatchSizeStateImpl extends _DownSyncGetBatchSizeState {
 abstract class _DownSyncGetBatchSizeState extends BeneficiaryDownSyncState {
   const factory _DownSyncGetBatchSizeState(
       final int batchSize,
+      final bool forceDownSync,
       final String projectId,
       final String boundaryCode,
       final int pendingSyncCount,
@@ -1935,6 +2137,7 @@ abstract class _DownSyncGetBatchSizeState extends BeneficiaryDownSyncState {
   const _DownSyncGetBatchSizeState._() : super._();
 
   int get batchSize;
+  bool get forceDownSync;
   String get projectId;
   String get boundaryCode;
   int get pendingSyncCount;
@@ -2013,12 +2216,19 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
@@ -2033,12 +2243,14 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
@@ -2053,12 +2265,13 @@ class _$DownSyncLoadingStateImpl extends _DownSyncLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -2193,12 +2406,19 @@ class _$DownSyncInsufficientStorageStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
@@ -2213,12 +2433,14 @@ class _$DownSyncInsufficientStorageStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
@@ -2233,12 +2455,13 @@ class _$DownSyncInsufficientStorageStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -2331,7 +2554,7 @@ abstract class _$$DownSyncDataFoundStateImplCopyWith<$Res> {
           $Res Function(_$DownSyncDataFoundStateImpl) then) =
       __$$DownSyncDataFoundStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int initialServerCount, int batchSize});
+  $Res call({int initialServerCount, int batchSize, bool forceDownSync});
 }
 
 /// @nodoc
@@ -2349,6 +2572,7 @@ class __$$DownSyncDataFoundStateImplCopyWithImpl<$Res>
   $Res call({
     Object? initialServerCount = null,
     Object? batchSize = null,
+    Object? forceDownSync = null,
   }) {
     return _then(_$DownSyncDataFoundStateImpl(
       null == initialServerCount
@@ -2359,6 +2583,10 @@ class __$$DownSyncDataFoundStateImplCopyWithImpl<$Res>
           ? _value.batchSize
           : batchSize // ignore: cast_nullable_to_non_nullable
               as int,
+      null == forceDownSync
+          ? _value.forceDownSync
+          : forceDownSync // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -2366,17 +2594,20 @@ class __$$DownSyncDataFoundStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState {
-  const _$DownSyncDataFoundStateImpl(this.initialServerCount, this.batchSize)
+  const _$DownSyncDataFoundStateImpl(
+      this.initialServerCount, this.batchSize, this.forceDownSync)
       : super._();
 
   @override
   final int initialServerCount;
   @override
   final int batchSize;
+  @override
+  final bool forceDownSync;
 
   @override
   String toString() {
-    return 'BeneficiaryDownSyncState.dataFound(initialServerCount: $initialServerCount, batchSize: $batchSize)';
+    return 'BeneficiaryDownSyncState.dataFound(initialServerCount: $initialServerCount, batchSize: $batchSize, forceDownSync: $forceDownSync)';
   }
 
   @override
@@ -2387,11 +2618,14 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState {
             (identical(other.initialServerCount, initialServerCount) ||
                 other.initialServerCount == initialServerCount) &&
             (identical(other.batchSize, batchSize) ||
-                other.batchSize == batchSize));
+                other.batchSize == batchSize) &&
+            (identical(other.forceDownSync, forceDownSync) ||
+                other.forceDownSync == forceDownSync));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, initialServerCount, batchSize);
+  int get hashCode =>
+      Object.hash(runtimeType, initialServerCount, batchSize, forceDownSync);
 
   @JsonKey(ignore: true)
   @override
@@ -2405,19 +2639,26 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState {
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
   }) {
-    return dataFound(initialServerCount, batchSize);
+    return dataFound(initialServerCount, batchSize, forceDownSync);
   }
 
   @override
@@ -2425,19 +2666,21 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
   }) {
-    return dataFound?.call(initialServerCount, batchSize);
+    return dataFound?.call(initialServerCount, batchSize, forceDownSync);
   }
 
   @override
@@ -2445,12 +2688,13 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -2459,7 +2703,7 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState {
     required TResult orElse(),
   }) {
     if (dataFound != null) {
-      return dataFound(initialServerCount, batchSize);
+      return dataFound(initialServerCount, batchSize, forceDownSync);
     }
     return orElse();
   }
@@ -2531,12 +2775,14 @@ class _$DownSyncDataFoundStateImpl extends _DownSyncDataFoundState {
 
 abstract class _DownSyncDataFoundState extends BeneficiaryDownSyncState {
   const factory _DownSyncDataFoundState(
-          final int initialServerCount, final int batchSize) =
-      _$DownSyncDataFoundStateImpl;
+      final int initialServerCount,
+      final int batchSize,
+      final bool forceDownSync) = _$DownSyncDataFoundStateImpl;
   const _DownSyncDataFoundState._() : super._();
 
   int get initialServerCount;
   int get batchSize;
+  bool get forceDownSync;
   @JsonKey(ignore: true)
   _$$DownSyncDataFoundStateImplCopyWith<_$DownSyncDataFoundStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -2583,12 +2829,19 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState {
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
@@ -2603,12 +2856,14 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
@@ -2623,12 +2878,13 @@ class _$DownSyncResetStateImpl extends _DownSyncResetState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -2757,12 +3013,19 @@ class _$DownSynnCountCheckFailedStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
@@ -2777,12 +3040,14 @@ class _$DownSynnCountCheckFailedStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
@@ -2797,12 +3062,13 @@ class _$DownSynnCountCheckFailedStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -2929,12 +3195,19 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState {
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
@@ -2949,12 +3222,14 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
@@ -2969,12 +3244,13 @@ class _$DownSyncFailureStateImpl extends _DownSyncFailureState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -3137,12 +3413,19 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState {
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
@@ -3157,12 +3440,14 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
@@ -3177,12 +3462,13 @@ class _$DownSyncReportStateImpl extends _DownSyncReportState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,
@@ -3317,12 +3603,19 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState {
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function(DownsyncModel downSyncResult) success,
-    required TResult Function(int batchSize, String projectId,
-            String boundaryCode, int pendingSyncCount, String boundaryName)
+    required TResult Function(
+            int batchSize,
+            bool forceDownSync,
+            String projectId,
+            String boundaryCode,
+            int pendingSyncCount,
+            String boundaryName)
         getBatchSize,
     required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
-    required TResult Function(int initialServerCount, int batchSize) dataFound,
+    required TResult Function(
+            int initialServerCount, int batchSize, bool forceDownSync)
+        dataFound,
     required TResult Function() resetState,
     required TResult Function() totalCountCheckFailed,
     required TResult Function() failed,
@@ -3337,12 +3630,14 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function(DownsyncModel downSyncResult)? success,
-    TResult? Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult? Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
-    TResult? Function(int initialServerCount, int batchSize)? dataFound,
+    TResult? Function(
+            int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult? Function()? resetState,
     TResult? Function()? totalCountCheckFailed,
     TResult? Function()? failed,
@@ -3357,12 +3652,13 @@ class _$DownSyncPendingSyncStateImpl extends _DownSyncPendingSyncState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function(DownsyncModel downSyncResult)? success,
-    TResult Function(int batchSize, String projectId, String boundaryCode,
-            int pendingSyncCount, String boundaryName)?
+    TResult Function(int batchSize, bool forceDownSync, String projectId,
+            String boundaryCode, int pendingSyncCount, String boundaryName)?
         getBatchSize,
     TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
-    TResult Function(int initialServerCount, int batchSize)? dataFound,
+    TResult Function(int initialServerCount, int batchSize, bool forceDownSync)?
+        dataFound,
     TResult Function()? resetState,
     TResult Function()? totalCountCheckFailed,
     TResult Function()? failed,

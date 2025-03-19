@@ -71,110 +71,115 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.object,
       target: r'FirebaseConfig',
     ),
-    r'GENDER_OPTIONS_POPULATOR': PropertySchema(
+    r'FORCE_DOWNSYNC': PropertySchema(
       id: 9,
+      name: r'FORCE_DOWNSYNC',
+      type: IsarType.bool,
+    ),
+    r'GENDER_OPTIONS_POPULATOR': PropertySchema(
+      id: 10,
       name: r'GENDER_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'GenderOptions',
     ),
     r'HOUSEHOLD_DELETION_REASON_OPTIONS': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'HOUSEHOLD_DELETION_REASON_OPTIONS',
       type: IsarType.objectList,
       target: r'HouseholdDeletionReasonOptions',
     ),
     r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS',
       type: IsarType.objectList,
       target: r'HouseholdMemberDeletionReasonOptions',
     ),
     r'ID_TYPE_OPTIONS_POPULATOR': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'ID_TYPE_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'IdTypeOptions',
     ),
     r'LANGUAGES': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'LANGUAGES',
       type: IsarType.objectList,
       target: r'Languages',
     ),
     r'NETWORK_DETECTION': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'NETWORK_DETECTION',
       type: IsarType.string,
     ),
     r'PERSISTENCE_MODE': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'PERSISTENCE_MODE',
       type: IsarType.string,
     ),
     r'PROXIMITY_SEARCH_RANGE': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'PROXIMITY_SEARCH_RANGE',
       type: IsarType.double,
     ),
     r'SEARCH_CLF_FILTERS': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'SEARCH_CLF_FILTERS',
       type: IsarType.objectList,
       target: r'SearchCLFFilters',
     ),
     r'SEARCH_HOUSEHOLD_FILTERS': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'SEARCH_HOUSEHOLD_FILTERS',
       type: IsarType.objectList,
       target: r'SearchHouseHoldFilters',
     ),
     r'SYNC_METHOD': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -605,86 +610,87 @@ void _appConfigurationSerialize(
     FirebaseConfigSchema.serialize,
     object.firebaseConfig,
   );
+  writer.writeBool(offsets[9], object.forceDownSync);
   writer.writeObjectList<GenderOptions>(
-    offsets[9],
+    offsets[10],
     allOffsets,
     GenderOptionsSchema.serialize,
     object.genderOptions,
   );
   writer.writeObjectList<HouseholdDeletionReasonOptions>(
-    offsets[10],
+    offsets[11],
     allOffsets,
     HouseholdDeletionReasonOptionsSchema.serialize,
     object.householdDeletionReasonOptions,
   );
   writer.writeObjectList<HouseholdMemberDeletionReasonOptions>(
-    offsets[11],
+    offsets[12],
     allOffsets,
     HouseholdMemberDeletionReasonOptionsSchema.serialize,
     object.householdMemberDeletionReasonOptions,
   );
   writer.writeObjectList<IdTypeOptions>(
-    offsets[12],
+    offsets[13],
     allOffsets,
     IdTypeOptionsSchema.serialize,
     object.idTypeOptions,
   );
   writer.writeObjectList<Languages>(
-    offsets[13],
+    offsets[14],
     allOffsets,
     LanguagesSchema.serialize,
     object.languages,
   );
-  writer.writeString(offsets[14], object.networkDetection);
-  writer.writeString(offsets[15], object.persistenceMode);
-  writer.writeDouble(offsets[16], object.maxRadius);
+  writer.writeString(offsets[15], object.networkDetection);
+  writer.writeString(offsets[16], object.persistenceMode);
+  writer.writeDouble(offsets[17], object.maxRadius);
   writer.writeObjectList<SearchCLFFilters>(
-    offsets[17],
+    offsets[18],
     allOffsets,
     SearchCLFFiltersSchema.serialize,
     object.searchCLFFilters,
   );
   writer.writeObjectList<SearchHouseHoldFilters>(
-    offsets[18],
+    offsets[19],
     allOffsets,
     SearchHouseHoldFiltersSchema.serialize,
     object.searchHouseHoldFilters,
   );
-  writer.writeString(offsets[19], object.syncMethod);
-  writer.writeString(offsets[20], object.syncTrigger);
-  writer.writeString(offsets[21], object.tenantId);
+  writer.writeString(offsets[20], object.syncMethod);
+  writer.writeString(offsets[21], object.syncTrigger);
+  writer.writeString(offsets[22], object.tenantId);
   writer.writeObjectList<TransportTypes>(
-    offsets[22],
+    offsets[23],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[23],
+    offsets[24],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[24],
+    offsets[25],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[25],
+    offsets[26],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[26],
+    offsets[27],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[27],
+    offsets[28],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -750,88 +756,89 @@ AppConfiguration _appConfigurationDeserialize(
     FirebaseConfigSchema.deserialize,
     allOffsets,
   );
+  object.forceDownSync = reader.readBoolOrNull(offsets[9]);
   object.genderOptions = reader.readObjectList<GenderOptions>(
-    offsets[9],
+    offsets[10],
     GenderOptionsSchema.deserialize,
     allOffsets,
     GenderOptions(),
   );
   object.householdDeletionReasonOptions =
       reader.readObjectList<HouseholdDeletionReasonOptions>(
-    offsets[10],
+    offsets[11],
     HouseholdDeletionReasonOptionsSchema.deserialize,
     allOffsets,
     HouseholdDeletionReasonOptions(),
   );
   object.householdMemberDeletionReasonOptions =
       reader.readObjectList<HouseholdMemberDeletionReasonOptions>(
-    offsets[11],
+    offsets[12],
     HouseholdMemberDeletionReasonOptionsSchema.deserialize,
     allOffsets,
     HouseholdMemberDeletionReasonOptions(),
   );
   object.idTypeOptions = reader.readObjectList<IdTypeOptions>(
-    offsets[12],
+    offsets[13],
     IdTypeOptionsSchema.deserialize,
     allOffsets,
     IdTypeOptions(),
   );
   object.languages = reader.readObjectList<Languages>(
-    offsets[13],
+    offsets[14],
     LanguagesSchema.deserialize,
     allOffsets,
     Languages(),
   );
-  object.networkDetection = reader.readStringOrNull(offsets[14]);
-  object.persistenceMode = reader.readStringOrNull(offsets[15]);
-  object.maxRadius = reader.readDoubleOrNull(offsets[16]);
+  object.networkDetection = reader.readStringOrNull(offsets[15]);
+  object.persistenceMode = reader.readStringOrNull(offsets[16]);
+  object.maxRadius = reader.readDoubleOrNull(offsets[17]);
   object.searchCLFFilters = reader.readObjectList<SearchCLFFilters>(
-    offsets[17],
+    offsets[18],
     SearchCLFFiltersSchema.deserialize,
     allOffsets,
     SearchCLFFilters(),
   );
   object.searchHouseHoldFilters = reader.readObjectList<SearchHouseHoldFilters>(
-    offsets[18],
+    offsets[19],
     SearchHouseHoldFiltersSchema.deserialize,
     allOffsets,
     SearchHouseHoldFilters(),
   );
-  object.syncMethod = reader.readStringOrNull(offsets[19]);
-  object.syncTrigger = reader.readStringOrNull(offsets[20]);
-  object.tenantId = reader.readStringOrNull(offsets[21]);
+  object.syncMethod = reader.readStringOrNull(offsets[20]);
+  object.syncTrigger = reader.readStringOrNull(offsets[21]);
+  object.tenantId = reader.readStringOrNull(offsets[22]);
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[22],
+    offsets[23],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[23],
+    offsets[24],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[24],
+    offsets[25],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[25],
+    offsets[26],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[26],
+    offsets[27],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[27],
+    offsets[28],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -907,101 +914,103 @@ P _appConfigurationDeserializeProp<P>(
         allOffsets,
       )) as P;
     case 9:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 10:
       return (reader.readObjectList<GenderOptions>(
         offset,
         GenderOptionsSchema.deserialize,
         allOffsets,
         GenderOptions(),
       )) as P;
-    case 10:
+    case 11:
       return (reader.readObjectList<HouseholdDeletionReasonOptions>(
         offset,
         HouseholdDeletionReasonOptionsSchema.deserialize,
         allOffsets,
         HouseholdDeletionReasonOptions(),
       )) as P;
-    case 11:
+    case 12:
       return (reader.readObjectList<HouseholdMemberDeletionReasonOptions>(
         offset,
         HouseholdMemberDeletionReasonOptionsSchema.deserialize,
         allOffsets,
         HouseholdMemberDeletionReasonOptions(),
       )) as P;
-    case 12:
+    case 13:
       return (reader.readObjectList<IdTypeOptions>(
         offset,
         IdTypeOptionsSchema.deserialize,
         allOffsets,
         IdTypeOptions(),
       )) as P;
-    case 13:
+    case 14:
       return (reader.readObjectList<Languages>(
         offset,
         LanguagesSchema.deserialize,
         allOffsets,
         Languages(),
       )) as P;
-    case 14:
-      return (reader.readStringOrNull(offset)) as P;
     case 15:
       return (reader.readStringOrNull(offset)) as P;
     case 16:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 17:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 18:
       return (reader.readObjectList<SearchCLFFilters>(
         offset,
         SearchCLFFiltersSchema.deserialize,
         allOffsets,
         SearchCLFFilters(),
       )) as P;
-    case 18:
+    case 19:
       return (reader.readObjectList<SearchHouseHoldFilters>(
         offset,
         SearchHouseHoldFiltersSchema.deserialize,
         allOffsets,
         SearchHouseHoldFilters(),
       )) as P;
-    case 19:
-      return (reader.readStringOrNull(offset)) as P;
     case 20:
       return (reader.readStringOrNull(offset)) as P;
     case 21:
       return (reader.readStringOrNull(offset)) as P;
     case 22:
+      return (reader.readStringOrNull(offset)) as P;
+    case 23:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 23:
+    case 24:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 24:
+    case 25:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 25:
+    case 26:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 26:
+    case 27:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 27:
+    case 28:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -1799,6 +1808,34 @@ extension AppConfigurationQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'FIREBASE_CONFIG',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      forceDownSyncIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'FORCE_DOWNSYNC',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      forceDownSyncIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'FORCE_DOWNSYNC',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      forceDownSyncEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'FORCE_DOWNSYNC',
+        value: value,
       ));
     });
   }
@@ -4181,6 +4218,20 @@ extension AppConfigurationQueryLinks
 extension AppConfigurationQuerySortBy
     on QueryBuilder<AppConfiguration, AppConfiguration, QSortBy> {
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      sortByForceDownSync() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'FORCE_DOWNSYNC', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      sortByForceDownSyncDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'FORCE_DOWNSYNC', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
       sortByNetworkDetection() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'NETWORK_DETECTION', Sort.asc);
@@ -4267,6 +4318,20 @@ extension AppConfigurationQuerySortBy
 
 extension AppConfigurationQuerySortThenBy
     on QueryBuilder<AppConfiguration, AppConfiguration, QSortThenBy> {
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      thenByForceDownSync() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'FORCE_DOWNSYNC', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      thenByForceDownSyncDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'FORCE_DOWNSYNC', Sort.desc);
+    });
+  }
+
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
       thenByNetworkDetection() {
     return QueryBuilder.apply(this, (query) {
@@ -4367,6 +4432,13 @@ extension AppConfigurationQuerySortThenBy
 
 extension AppConfigurationQueryWhereDistinct
     on QueryBuilder<AppConfiguration, AppConfiguration, QDistinct> {
+  QueryBuilder<AppConfiguration, AppConfiguration, QDistinct>
+      distinctByForceDownSync() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'FORCE_DOWNSYNC');
+    });
+  }
+
   QueryBuilder<AppConfiguration, AppConfiguration, QDistinct>
       distinctByNetworkDetection({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -4480,6 +4552,13 @@ extension AppConfigurationQueryProperty
       firebaseConfigProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'FIREBASE_CONFIG');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, bool?, QQueryOperations>
+      forceDownSyncProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'FORCE_DOWNSYNC');
     });
   }
 

@@ -54,8 +54,9 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
 
   @override
   FutureOr<void> bulkCreate(
-    List<ProjectBeneficiaryModel> entities,
-  ) async {
+    List<ProjectBeneficiaryModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+      }) async {
     return retryLocalCallOperation(() async {
       final projectBeneficiaryCompanions =
           entities.map((e) => e.companion).toList();
@@ -64,7 +65,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
         batch.insertAll(
           sql.projectBeneficiary,
           projectBeneficiaryCompanions,
-          mode: InsertMode.insertOrReplace,
+          mode: mode,
         );
       });
     });

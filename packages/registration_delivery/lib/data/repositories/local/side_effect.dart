@@ -129,8 +129,9 @@ class SideEffectLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-    List<SideEffectModel> entities,
-  ) async {
+    List<SideEffectModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+      }) async {
     return retryLocalCallOperation(() async {
       final sideEffectCompanions = entities.map((e) => e.companion).toList();
 
@@ -138,7 +139,7 @@ class SideEffectLocalRepository
         batch.insertAll(
           sql.sideEffect,
           sideEffectCompanions,
-          mode: InsertMode.insertOrReplace,
+          mode: mode,
         );
       });
     });

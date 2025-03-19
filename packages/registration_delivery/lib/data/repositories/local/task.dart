@@ -314,8 +314,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
   @override
   FutureOr<void> bulkCreate(
-    List<TaskModel> entities,
-  ) async {
+    List<TaskModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+      }) async {
     final taskCompanions = entities.map((e) => e.companion).toList();
 
     List<AddressCompanion> addressCompanions = [];
@@ -348,18 +349,26 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
       batch.insertAll(
         sql.task,
         taskCompanions,
-        mode: InsertMode.insertOrReplace,
+        mode: mode,
       );
 
       if (addressCompanions.isNotEmpty) {
         batch.insertAll(
           sql.address,
           addressCompanions.whereNotNull().toList(),
-          mode: InsertMode.insertOrReplace,
+          mode: mode,
         );
       }
+      if(mode == InsertMode.insertOrIgnore){
+        batch.insertAll(
+          sql.taskResource,
+          resourceCompanions,
+          mode: mode,
+        );
+      }else{
+        batch.insertAllOnConflictUpdate(sql.taskResource, resourceCompanions);
+      }
 
-      batch.insertAllOnConflictUpdate(sql.taskResource, resourceCompanions);
     });
   }
 

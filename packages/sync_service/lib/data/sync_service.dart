@@ -98,10 +98,12 @@ class SyncService {
   FutureOr<void> writeToEntityDB(
     Map<String, dynamic> response,
     List<LocalRepository> localRepositories,
+      bool isForceDownSync
   ) async {
     SyncServiceSingleton().entityMapper?.writeToEntityDB(
           response,
           localRepositories,
+          isForceDownSync
         );
   }
 

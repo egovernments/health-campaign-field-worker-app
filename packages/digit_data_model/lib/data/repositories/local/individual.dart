@@ -283,8 +283,9 @@ class IndividualLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-    List<IndividualModel> entities,
-  ) async {
+    List<IndividualModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+      }) async {
     return retryLocalCallOperation(() async {
       final individualCompanions = entities.map((e) => e.companion).toList();
 
@@ -333,24 +334,24 @@ class IndividualLocalRepository
           batch.insertAll(
             sql.name,
             nameCompanions.whereNotNull().toList(),
-            mode: InsertMode.insertOrReplace,
+            mode: mode,
           );
         }
 
         batch.insertAll(
           sql.address,
           addressCompanions,
-          mode: InsertMode.insertOrReplace,
+          mode: mode,
         );
         batch.insertAll(
           sql.identifier,
           identifierCompanions.whereNotNull().toList(),
-          mode: InsertMode.insertOrReplace,
+          mode: mode,
         );
         batch.insertAll(
           sql.individual,
           individualCompanions,
-          mode: InsertMode.insertOrReplace,
+          mode: mode,
         );
       });
     });

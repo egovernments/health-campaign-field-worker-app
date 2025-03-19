@@ -13,6 +13,7 @@ abstract class SyncEntityMapperListener {
   FutureOr<void> writeToEntityDB(
     Map<String, dynamic> response,
     List<LocalRepository> localRepositories,
+      bool isForceDownSync,
   );
 
   /// Returns the sync count for the given list of `OpLog` objects.

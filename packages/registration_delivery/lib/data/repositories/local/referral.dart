@@ -134,8 +134,9 @@ class ReferralLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-    List<ReferralModel> entities,
-  ) async {
+    List<ReferralModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+      }) async {
     return retryLocalCallOperation(() async {
       final referralCompanions = entities.map((e) => e.companion).toList();
 
@@ -143,7 +144,7 @@ class ReferralLocalRepository
         batch.insertAll(
           sql.referral,
           referralCompanions,
-          mode: InsertMode.insertOrReplace,
+          mode: mode,
         );
       });
     });

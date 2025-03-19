@@ -201,8 +201,9 @@ class HFReferralLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-    List<HFReferralModel> entities,
-  ) async {
+    List<HFReferralModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace,
+      }) async {
     return retryLocalCallOperation(() async {
       final referralCompanions = entities
           .map((e) => e.companion.copyWith(

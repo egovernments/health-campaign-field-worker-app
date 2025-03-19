@@ -100,8 +100,9 @@ class FacilityLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-    List<FacilityModel> entities,
-  ) async {
+    List<FacilityModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+      }) async {
     return retryLocalCallOperation(() async {
       final facilityCompanions = entities.map((e) => e.companion).toList();
 

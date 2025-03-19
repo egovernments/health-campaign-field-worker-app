@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../utils/constants.dart';
@@ -418,7 +419,7 @@ abstract class LocalRepository<D extends EntityModel,
     if (createOpLog) await createOplogEntry(entity, dataOperation);
   }
 
-  FutureOr<void> bulkCreate(List<D> entities) => throw UnimplementedError();
+  FutureOr<void> bulkCreate(List<D> entities, {InsertMode mode = InsertMode.insertOrReplace}) => throw UnimplementedError();
 
   @override
   @mustCallSuper

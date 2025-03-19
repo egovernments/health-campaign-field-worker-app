@@ -30,8 +30,9 @@ class BoundaryLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-    List<BoundaryModel> entities,
-  ) async {
+    List<BoundaryModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+      }) async {
     return retryLocalCallOperation(() async {
       final boundaryCompanions = entities.map((e) => e.companion).toList();
 

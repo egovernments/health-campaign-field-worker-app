@@ -21,6 +21,9 @@ class AppConfiguration {
   @Name("SYNC_TRIGGER")
   late String? syncTrigger;
 
+  @Name("FORCE_DOWNSYNC")
+  late bool? forceDownSync;
+
   @Name("LANGUAGES")
   late List<Languages>? languages;
 

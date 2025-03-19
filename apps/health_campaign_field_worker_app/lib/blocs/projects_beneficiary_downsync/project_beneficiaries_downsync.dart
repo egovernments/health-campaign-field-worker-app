@@ -86,6 +86,7 @@ class BeneficiaryDownSyncBloc
       );
       emit(BeneficiaryDownSyncState.getBatchSize(
         configuredBatchSize,
+        event.appConfiguration.first.forceDownSync ?? false,
         event.projectId,
         event.boundaryCode,
         event.pendingSyncCount,
@@ -101,7 +102,7 @@ class BeneficiaryDownSyncBloc
     DownSyncCheckTotalCountEvent event,
     BeneficiaryDownSyncEmitter emit,
   ) async {
-    if (event.pendingSyncCount > 0) {
+    if (event.pendingSyncCount > 0 && event.forceDownSync == false) {
       emit(const BeneficiaryDownSyncState.loading(true));
       emit(const BeneficiaryDownSyncState.pendingSync());
     } else {
@@ -136,6 +137,7 @@ class BeneficiaryDownSyncBloc
         emit(BeneficiaryDownSyncState.dataFound(
           serverTotalCount,
           event.batchSize,
+          event.forceDownSync
         ));
       } else {
         await LocalSecureStore.instance.setManualSyncTrigger(false);
@@ -211,7 +213,7 @@ class BeneficiaryDownSyncBloc
                 taskLocalRepository,
                 sideEffectLocalRepository,
                 referralLocalRepository,
-              ]);
+              ], event.forceDownSync ?? false);
               // Update the local downSync data for the boundary with the new values
               totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
 
@@ -277,6 +279,7 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required int batchSize,
     required int initialServerCount,
     required String boundaryName,
+    bool? forceDownSync,
   }) = DownSyncBeneficiaryEvent;
 
   const factory BeneficiaryDownSyncEvent.checkForData({
@@ -284,6 +287,7 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required String boundaryCode,
     required int pendingSyncCount,
     required int batchSize,
+    required bool forceDownSync,
     required String boundaryName,
   }) = DownSyncCheckTotalCountEvent;
 
@@ -313,6 +317,7 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
   ) = _DownSyncSuccessState;
   const factory BeneficiaryDownSyncState.getBatchSize(
     int batchSize,
+    bool forceDownSync,
     String projectId,
     String boundaryCode,
     int pendingSyncCount,
@@ -325,6 +330,7 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
   const factory BeneficiaryDownSyncState.dataFound(
     int initialServerCount,
     int batchSize,
+      bool forceDownSync
   ) = _DownSyncDataFoundState;
   const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;
   const factory BeneficiaryDownSyncState.totalCountCheckFailed() =

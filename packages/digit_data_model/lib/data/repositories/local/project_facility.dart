@@ -67,8 +67,9 @@ class ProjectFacilityLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-    List<ProjectFacilityModel> entities,
-  ) async {
+    List<ProjectFacilityModel> entities,{
+        InsertMode mode = InsertMode.insertOrReplace, // Default to insertOrReplace
+      }) async {
     return retryLocalCallOperation(() async {
       final projectFacilityCompanions =
           entities.map((e) => e.companion).toList();
