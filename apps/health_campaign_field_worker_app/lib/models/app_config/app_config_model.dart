@@ -183,6 +183,7 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
     @JsonKey(name: 'TENANT_ID') final String? tenantId,
     @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
+    @JsonKey(name: 'FORCE_DOWNSYNC') final bool? forceDownsync,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>

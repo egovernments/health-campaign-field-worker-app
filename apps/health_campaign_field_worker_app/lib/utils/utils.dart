@@ -304,6 +304,7 @@ void showDownloadDialog(
                             DownSyncBeneficiaryEvent(
                               projectId: context.projectId,
                               boundaryCode: model.boundary,
+                              forceDownSync: model.appConfiguartion?.forceDownSync ?? false,
                               // Batch Size need to be defined based on Internet speed.
                               batchSize: model.batchSize ?? 1,
                               initialServerCount: model.totalCount ?? 0,

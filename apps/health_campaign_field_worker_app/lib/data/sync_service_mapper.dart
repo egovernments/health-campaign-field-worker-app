@@ -18,7 +18,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
   FutureOr<void> writeToEntityDB(
       Map<String, dynamic> response,
       List<LocalRepository<EntityModel, EntitySearchModel>>
-          localRepositories) async {
+          localRepositories, bool isForceDownSync) async {
     try {
       for (int i = 0; i <= response.keys.length - 1; i++) {
         if (response.keys.elementAt(i) != 'DownsyncCriteria') {
@@ -26,6 +26,8 @@ class SyncServiceMapper extends SyncEntityMapperListener {
             DataModels.getDataModelForEntityName(response.keys.elementAt(i)),
             localRepositories,
           );
+          
+          final insertMode  = isForceDownSync ? InsertMode.insertOrIgnore : InsertMode.insertOrReplace;
           final List<dynamic> entityResponse =
               response[response.keys.elementAt(i)] ?? [];
 
@@ -37,12 +39,12 @@ class SyncServiceMapper extends SyncEntityMapperListener {
               final entity = entityList
                   .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
                   .toList();
-              await local.bulkCreate(entity, mode: InsertMode.insertOrIgnore);
+              await local.bulkCreate(entity, mode: insertMode);
             case "Households":
               final entity = entityList
                   .map((e) => HouseholdModelMapper.fromJson(jsonEncode(e)))
                   .toList();
-              await local.bulkCreate(entity, mode: InsertMode.insertOrIgnore);
+              await local.bulkCreate(entity, mode: insertMode);
             case "HouseholdMembers":
               final entity = entityList
                   .map(
@@ -51,33 +53,33 @@ class SyncServiceMapper extends SyncEntityMapperListener {
                     ),
                   )
                   .toList();
-              await local.bulkCreate(entity, mode: InsertMode.insertOrIgnore);
+              await local.bulkCreate(entity, mode: insertMode);
             case "ProjectBeneficiaries":
               final entity = entityList
                   .map((e) =>
                       ProjectBeneficiaryModelMapper.fromJson(jsonEncode(e)))
                   .toList();
-              await local.bulkCreate(entity, mode: InsertMode.insertOrIgnore);
+              await local.bulkCreate(entity, mode: insertMode);
             case "Tasks":
               final entity = entityList
                   .map((e) => TaskModelMapper.fromJson(jsonEncode(e)))
                   .toList();
-              await local.bulkCreate(entity, mode: InsertMode.insertOrIgnore);
+              await local.bulkCreate(entity, mode: insertMode);
             case "SideEffects":
               final entity = entityList
                   .map((e) => SideEffectModelMapper.fromJson(jsonEncode(e)))
                   .toList();
-              await local.bulkCreate(entity, mode: InsertMode.insertOrIgnore);
+              await local.bulkCreate(entity, mode: insertMode);
             case "Referrals":
               final entity = entityList
                   .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
                   .toList();
-              await local.bulkCreate(entity, mode: InsertMode.insertOrIgnore);
+              await local.bulkCreate(entity, mode: insertMode);
             default:
               final entity = entityList
                   .map((e) => EntityModelMapper.fromJson(jsonEncode(e)))
                   .toList();
-              await local.bulkCreate(entity, mode: InsertMode.insertOrIgnore);
+              await local.bulkCreate(entity, mode: insertMode);
           }
         }
       }

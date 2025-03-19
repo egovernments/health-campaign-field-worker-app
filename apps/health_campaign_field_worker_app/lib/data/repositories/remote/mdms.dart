@@ -149,7 +149,8 @@ class MdmsRepository {
       ..tenantId = appConfig?.tenantId
       ..maxRadius = appConfig?.maxRadius
       ..backgroundServiceConfig = backgroundServiceConfig
-      ..firebaseConfig = firebaseConfig;
+      ..firebaseConfig = firebaseConfig
+      ..forceDownSync = appConfig?.forceDownsync;
 
     final List<Languages>? languageList =
         commonMasters?.stateInfo.first.languages.map((element) {

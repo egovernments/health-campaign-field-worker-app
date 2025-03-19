@@ -165,6 +165,7 @@ class _BoundarySelectionPageState
                                   },
                                   getBatchSize: (
                                     batchSize,
+                                    forceDownSync,
                                     projectId,
                                     boundaryCode,
                                     pendingSyncCount,
@@ -184,6 +185,7 @@ class _BoundarySelectionPageState
                                                   .value!.name
                                                   .toString(),
                                               batchSize: batchSize,
+                                              forceDownSync: forceDownSync,
                                             ),
                                           ),
                                   pendingSync: () => showDownloadDialog(
@@ -210,7 +212,7 @@ class _BoundarySelectionPageState
                                         DigitProgressDialogType.pendingSync,
                                     isPop: true,
                                   ),
-                                  dataFound: (initialServerCount, batchSize) {
+                                  dataFound: (initialServerCount, batchSize, forceDownSync) {
                                     clickedStatus.value = false;
                                     showDownloadDialog(
                                       context,
