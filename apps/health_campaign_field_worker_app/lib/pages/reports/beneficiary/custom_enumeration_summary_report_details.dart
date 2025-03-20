@@ -163,7 +163,7 @@ class _CustomEumerationSummaryReportDetailsState
                                       .translate(i18Local.inventoryReportDetails
                                           .closedHouseholdRegisteredAbsentLabel)
                                       .length *
-                                  4,
+                                  10,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
@@ -174,7 +174,7 @@ class _CustomEumerationSummaryReportDetailsState
                                       .translate(i18Local.inventoryReportDetails
                                           .closedHouseholdRegisteredRefusedLabel)
                                       .length *
-                                  4,
+                                  10,
                             ),
                           ],
                           rows: [
