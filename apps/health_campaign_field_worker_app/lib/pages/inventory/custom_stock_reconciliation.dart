@@ -28,6 +28,8 @@ import 'package:inventory_management/widgets/component_wrapper/product_variant_b
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
 
+import '../../utils/utils.dart' show StockCustomValidator;
+
 @RoutePage()
 class CustomStockReconciliationPage extends LocalizedStatefulWidget {
   const CustomStockReconciliationPage({
@@ -762,25 +764,5 @@ class CustomStockReconciliationPageState
                 !InventorySingleton().isWareHouseMgr!,
           ),
         );
-  }
-}
-
-class StockCustomValidator {
-  /// Validates that the control's value is a valid stock count.
-  /// The value must be a non-negative integer less than or equal to 10000.
-  static Map<String, dynamic>? validStockCount(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value == null || control.value.toString().isEmpty) {
-      return {'required': true};
-    }
-
-    var parsed = int.tryParse(control.value) ?? 0;
-    if (parsed < 0) {
-      return {'min': true};
-    } else if (parsed > 10000 || (parsed == 0 && parsed.toString() != control.value.toString())) {
-      return {'max': true};
-    }
-    return null;
   }
 }

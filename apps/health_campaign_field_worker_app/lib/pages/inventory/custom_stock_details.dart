@@ -4,8 +4,6 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
-import 'package:digit_ui_components/widgets/atoms/reactive_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
@@ -15,7 +13,6 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:inventory_management/utils/typedefs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 
 import 'package:registration_delivery/utils/utils.dart' as registration_utils;
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
@@ -23,10 +20,9 @@ import '../../../widgets/localized.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
-import 'package:registration_delivery/utils/utils.dart'
-    as CustomValidatorRegistration;
 
 import '../../router/app_router.dart';
+import '../../utils/utils.dart' show StockCustomValidator;
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import '../custom_qr_scanner.dart';
@@ -78,8 +74,8 @@ class CustomStockDetailsPageState
       _transactionQuantityKey: FormControl<int>(validators: [
         Validators.number(),
         Validators.required,
-        Validators.min(0),
-        Validators.max(10000),
+        Validators.min(1),
+        Validators.delegate(StockCustomValidator.validStockCount)
       ]),
       _looseQuantityKey: FormControl<int>(validators: []),
       _transactionReasonKey: FormControl<String>(validators: []),
@@ -103,6 +99,7 @@ class CustomStockDetailsPageState
                 Validators.required,
                 Validators.min(0),
                 Validators.max(10000),
+                Validators.delegate(StockCustomValidator.validStockCount)
               ]
             : [],
       ),
@@ -138,7 +135,7 @@ class CustomStockDetailsPageState
     super.initState();
   }
 
-  Future<bool> stockReturnValidation(
+  Future<(bool, int)> stockReturnValidation(
       int returned, productVariantId, senderId, receiverId) async {
     StockDataRepository stockRepository =
         context.repository<StockModel, StockSearchModel>(context);
@@ -167,14 +164,16 @@ class CustomStockDetailsPageState
       preReturnedStock += int.parse(stock.quantity ?? "0");
     }
     bool isValidate = (returned <= (issuedStock - preReturnedStock));
-    return isValidate;
+    return (isValidate, issuedStock - preReturnedStock);
   }
 
   List<FacilityModel> filterFacilities(
       List<FacilityModel> facilities, List<FacilityModel> allFacilities) {
     List<FacilityModel> filteredFacilities = [];
 
-    filteredFacilities.addAll(facilities);
+    filteredFacilities.addAll(facilities
+        .where((e) => e.usage == Constants.districtWarehouse)
+        .toList());
 
     // add national level facility to the list
     filteredFacilities.addAll(allFacilities
@@ -592,14 +591,14 @@ class CustomStockDetailsPageState
 
                                           if (entryType ==
                                               StockRecordEntryType.returned) {
-                                            bool returnValidation =
+                                            (bool, int) returnValidation =
                                                 await stockReturnValidation(
                                                     quantity,
                                                     productVariant.id,
                                                     stockState
                                                         .facilityModel!.id,
                                                     selectedFacilityId);
-                                            if (returnValidation == false) {
+                                            if (returnValidation.$1 == false) {
                                               final alert =
                                                   await DigitDialog.show<bool>(
                                                 context,
@@ -615,11 +614,9 @@ class CustomStockDetailsPageState
                                                             .countContentValidation,
                                                       )
                                                       .replaceAll(
-                                                        '{}',
-                                                        stockReconciliationState
-                                                            .stockInHand
-                                                            .toString(),
-                                                      ),
+                                                          '{}',
+                                                          returnValidation.$2
+                                                              .toString()),
                                                   primaryAction:
                                                       DigitDialogActions(
                                                     label:
@@ -1066,6 +1063,9 @@ class CustomStockDetailsPageState
                                             Validators.number(),
                                             Validators.min(0),
                                             Validators.max(10000),
+                                            Validators.delegate(
+                                                StockCustomValidator
+                                                    .validStockCount)
                                           ], autoValidate: true);
                                           transactionReasonType =
                                               TransactionReason
@@ -1530,8 +1530,12 @@ class CustomStockDetailsPageState
                                     },
                                     onChanged: (formGroup) {
                                       calculateFinalQuantity(form);
+                                      form
+                                          .control(_balesQuantityKey)
+                                          .markAsTouched();
                                     },
                                   ),
+                                //Loose Quantity
                                 if ([
                                       StockRecordEntryType.receipt,
                                       StockRecordEntryType.dispatch,
@@ -1563,12 +1567,10 @@ class CustomStockDetailsPageState
                                     },
                                     onChanged: (val) {
                                       calculateFinalQuantity(form);
+                                      form
+                                          .control(_looseQuantityKey)
+                                          .markAsTouched();
                                       if (val.value != null) {
-                                        if (val.value > 10000000000) {
-                                          form
-                                              .control(_looseQuantityKey)
-                                              .value = 10000;
-                                        }
                                         form
                                             .control(_looseQuantityKey)
                                             .setValidators(
@@ -1576,6 +1578,9 @@ class CustomStockDetailsPageState
                                             Validators.number(),
                                             Validators.min(0),
                                             Validators.max(10000),
+                                            Validators.delegate(
+                                                StockCustomValidator
+                                                    .validStockCount)
                                           ],
                                           autoValidate: true,
                                         );
@@ -1619,13 +1624,9 @@ class CustomStockDetailsPageState
                                         ),
                                   },
                                   onChanged: (val) {
-                                    if (val.value != null) {
-                                      if (val.value > 10000000000) {
-                                        form
-                                            .control(_transactionQuantityKey)
-                                            .value = 10000;
-                                      }
-                                    }
+                                    form
+                                        .control(_transactionQuantityKey)
+                                        .markAsTouched();
                                   },
                                   label: localizations
                                       .translate(quantityCountLabel),
@@ -1765,6 +1766,7 @@ class CustomStockDetailsPageState
                                             Validators.number(),
                                             Validators.min(0),
                                             Validators.max(maxCount),
+                                            // Validators.delegate(StockCustomValidator.validStockCount)
                                           ],
                                           autoValidate: true,
                                           updateParent: true,
