@@ -1,3 +1,10 @@
+## 1.0.6+2
+
+* BugFix:
+    * Refused label change
+    * Label change for action buttons in delivery intervention and summary
+    * Updated member count to match min value according to children count and pregnant women count
+
 ## 1.0.6+1
 
 * Updated to latest packages

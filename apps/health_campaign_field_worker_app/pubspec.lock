@@ -509,10 +509,11 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
-    version: "1.0.6+1"
+      name: digit_data_model
+      sha256: "8e67281c34e030b471a33d8889cb4e96d94d3d9fa6c6cf833e5d6d792ace1471"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6+2"
   digit_dss:
     dependency: "direct main"
     description:
@@ -1800,17 +1801,18 @@ packages:
     dependency: "direct main"
     description:
       name: referral_reconciliation
-      sha256: c4ee4e8cf64c80359982669dea91f1eda60bc655b15984bae421179c154a9284
+      sha256: "5d3ea365246978776c0d247d9dbe35ebc04b7df1b85d7f38db20ec7e4021b977"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4+1"
+    version: "1.0.4+2"
   registration_delivery:
     dependency: "direct main"
     description:
-      path: "../../packages/registration_delivery"
-      relative: true
-    source: path
-    version: "1.0.6+1"
+      name: registration_delivery
+      sha256: "01bdb6ad7d0e5c9e4a18d4749d1390edb04b5348da402961f718edecf9e5fd40"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6+2"
   rxdart:
     dependency: transitive
     description:
@@ -2020,10 +2022,10 @@ packages:
     dependency: "direct main"
     description:
       name: survey_form
-      sha256: "85a910c64f630c7ce7b76211769e870f47d7bcd92c24e6cdcbffcfd45a5ac4db"
+      sha256: e81e71beff6c4982ff6944ad34da056ea5b4adba860d9552a5eb554356dd816d
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1+2"
+    version: "1.0.1+3"
   sync_http:
     dependency: transitive
     description:

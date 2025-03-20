@@ -477,6 +477,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                           .value
                                           .toString(),
                                   onChange: (value) {
+                                    setState(() {});
                                     if (value.isEmpty) {
                                       _pregnantWomenController.text = '0';
                                       form
@@ -562,6 +563,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       form.control(_childrenCountKey).value = 0;
                                       return;
                                     }
+                                    setState(() {});
                                     // Remove leading zeros
                                     String newValue = value;
 
