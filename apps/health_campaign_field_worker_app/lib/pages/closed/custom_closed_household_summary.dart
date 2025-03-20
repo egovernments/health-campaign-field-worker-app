@@ -159,7 +159,8 @@ class CustomClosedHouseholdSummaryPageState
                           LabelValuePair(
                             label: localizations.translate(
                                 i18Local.beneficiaryDetails.reasonLabelText),
-                            value: localizations.translate(widget.reason),
+                            value: localizations
+                                .translate(widget.reason.toUpperCase()),
                           )
                         ]),
                   ),
