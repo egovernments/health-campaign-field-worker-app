@@ -109,6 +109,8 @@ class Constants {
   static const String closedHouseholdReason = 'Reason';
   static const String closedHouseholdReasonComment = 'RefuseReasonComment';
 
+  static const int maxCount = 10000;
+
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
     Isar isar,
