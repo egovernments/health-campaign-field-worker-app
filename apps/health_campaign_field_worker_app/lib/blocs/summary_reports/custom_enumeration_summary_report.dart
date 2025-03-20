@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/utils/typedefs.dart'
     hide ProductVariantDataRepository;
@@ -30,6 +31,28 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
   }) : super(const CustomEnumerationSummaryReportEmptyState()) {
     on(_handleLoadDataEvent);
     on(_handleLoadingEvent);
+  }
+
+  Map<String, Map<String, int>> sortMapByDateKey(
+      Map<String, Map<String, int>> map) {
+    List<String> sortedKeys = map.keys.sorted((a, b) => _compareAB(a, b));
+    Map<String, Map<String, int>> newMap = {};
+
+    for (var key in sortedKeys) {
+      if (map[key] != null) newMap[key] = map[key]!;
+    }
+    return newMap;
+  }
+
+  int _compareAB(String a, String b) {
+    try {
+      int aTimestamp = DigitDateUtils.dateToTimeStamp(a);
+      int bTimestamp = DigitDateUtils.dateToTimeStamp(b);
+
+      if (aTimestamp > bTimestamp) return 1;
+      if (aTimestamp < bTimestamp) return -1;
+    } catch (e) {}
+    return 0;
   }
 
   Future<void> _handleLoadDataEvent(
@@ -225,6 +248,7 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       }
       dateVsEntityVsCountMap[date] = elementVsCount;
     }
+    dateVsEntityVsCountMap = sortMapByDateKey(dateVsEntityVsCountMap);
   }
 
   void populateDateVsCountMap(
