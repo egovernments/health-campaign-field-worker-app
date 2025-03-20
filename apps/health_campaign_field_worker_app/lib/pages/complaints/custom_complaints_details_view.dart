@@ -114,7 +114,10 @@ class CustomComplaintsDetailsViewPage extends StatelessWidget {
                   LabelValueItem(
                     label:
                         localizations.translate(i18.complaints.inboxAreaLabel),
-                    value: complaint.address.locality?.name ?? "",
+                    value: localizations.translate(
+                        complaint.address.locality?.code ??
+                            complaint.address.locality?.name ??
+                            ""),
                     labelFlex: 5,
                   ),
                   LabelValueItem(
