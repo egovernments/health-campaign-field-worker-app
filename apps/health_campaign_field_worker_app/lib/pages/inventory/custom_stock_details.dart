@@ -75,7 +75,7 @@ class CustomStockDetailsPageState
         Validators.number(),
         Validators.required,
         Validators.min(1),
-        Validators.delegate(StockCustomValidator.validStockCount)
+        Validators.delegate(StockCustomValidator.max)
       ]),
       _looseQuantityKey: FormControl<int>(validators: []),
       _transactionReasonKey: FormControl<String>(validators: []),
@@ -99,7 +99,7 @@ class CustomStockDetailsPageState
                 Validators.required,
                 Validators.min(0),
                 Validators.max(10000),
-                Validators.delegate(StockCustomValidator.validStockCount)
+                Validators.delegate(StockCustomValidator.max)
               ]
             : [],
       ),
@@ -1064,8 +1064,7 @@ class CustomStockDetailsPageState
                                             Validators.min(0),
                                             Validators.max(10000),
                                             Validators.delegate(
-                                                StockCustomValidator
-                                                    .validStockCount)
+                                                StockCustomValidator.max)
                                           ], autoValidate: true);
                                           transactionReasonType =
                                               TransactionReason
@@ -1579,8 +1578,7 @@ class CustomStockDetailsPageState
                                             Validators.min(0),
                                             Validators.max(10000),
                                             Validators.delegate(
-                                                StockCustomValidator
-                                                    .validStockCount)
+                                                StockCustomValidator.max)
                                           ],
                                           autoValidate: true,
                                         );
@@ -1766,7 +1764,7 @@ class CustomStockDetailsPageState
                                             Validators.number(),
                                             Validators.min(0),
                                             Validators.max(maxCount),
-                                            // Validators.delegate(StockCustomValidator.validStockCount)
+                                            // Validators.delegate(StockCustomValidator.max)
                                           ],
                                           autoValidate: true,
                                           updateParent: true,
