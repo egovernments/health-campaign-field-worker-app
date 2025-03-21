@@ -734,6 +734,9 @@ class CustomDeliverInterventionPageState
                                                       i18.deliverIntervention
                                                           .deliveryCommentLabel,
                                                     ),
+                                                    onChanged: (value) {
+                                                      setState(() {});
+                                                    },
                                                     validationMessages: {
                                                       'sizeLessThan2': (object) =>
                                                           localizations
