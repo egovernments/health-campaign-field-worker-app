@@ -417,7 +417,7 @@ class CustomComplaintsDetailsPageState
                                     i18.complaints.validationRequiredError),
                                 'maxLength': (object) => localizations
                                     .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', '64'),
+                                    .replaceAll('{}', '49'),
                               },
                               builder: (field) {
                                 return LabeledField(
@@ -488,7 +488,7 @@ class CustomComplaintsDetailsPageState
                               validationMessages: {
                                 'maxLength': (object) => localizations
                                     .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', '64'),
+                                    .replaceAll('{}', '49'),
                               },
                               builder: (field) {
                                 return LabeledField(
@@ -496,12 +496,13 @@ class CustomComplaintsDetailsPageState
                                     i18.complaints.supervisorName,
                                   ),
                                   child: DigitTextFormInput(
-                                    errorMessage: field.errorText,
-                                    initialValue: field.value,
-                                    onChange: (value) => form
-                                        .control(_supervisorName)
-                                        .value = value,
-                                  ),
+                                      errorMessage: field.errorText,
+                                      initialValue: field.value,
+                                      onChange: (value) {
+                                        form.control(_supervisorName).value =
+                                            value;
+                                        setState(() {});
+                                      }),
                                 );
                               }),
                           ReactiveWrapperField<String>(
@@ -606,7 +607,10 @@ class CustomComplaintsDetailsPageState
       _complainantName: FormControl<String>(
         value: complaintDetails?.complainantName,
         disabled: shouldDisableForm,
-        validators: [Validators.required, Validators.maxLength(64)],
+        validators: [
+          Validators.required,
+          Validators.maxLength(49)
+        ], // Max length changed to 49 as per backend validation
       ),
       _complainantContactNumber: FormControl<String>(
         value: complaintDetails?.complainantContactNumber,
@@ -622,7 +626,9 @@ class CustomComplaintsDetailsPageState
       _supervisorName: FormControl<String>(
         value: complaintDetails?.supervisorName,
         disabled: shouldDisableForm,
-        validators: [Validators.maxLength(64)],
+        validators: [
+          Validators.maxLength(49)
+        ], // Max length changed to 49 as per backend validation
       ),
       _supervisorContactNumber: FormControl<String>(
         value: complaintDetails?.supervisorContactNumber,
