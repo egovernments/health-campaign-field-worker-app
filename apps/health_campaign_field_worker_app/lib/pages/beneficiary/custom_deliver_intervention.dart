@@ -284,224 +284,222 @@ class CustomDeliverInterventionPageState
                                                   return DigitElevatedButton(
                                                     onPressed: isClicked
                                                         ? null
-                                                        : () async {
-                                                            bednetScanned =
-                                                                scannerState
-                                                                    .barCodes
-                                                                    .length;
+                                                        : !form.valid
+                                                            ? null
+                                                            : () async {
+                                                                bednetScanned =
+                                                                    scannerState
+                                                                        .barCodes
+                                                                        .length;
 
-                                                            final List<
-                                                                    GS1Barcode>
-                                                                barcodes =
-                                                                scannerState
-                                                                    .barCodes;
-                                                            List<AdditionalField>
-                                                                codeAdditionalFields =
-                                                                [];
-                                                            for (var element
-                                                                in barcodes) {
-                                                              List<String>
-                                                                  keys = [];
-                                                              List<String>
-                                                                  values = [];
-                                                              for (var e
-                                                                  in element
+                                                                final List<
+                                                                        GS1Barcode>
+                                                                    barcodes =
+                                                                    scannerState
+                                                                        .barCodes;
+                                                                List<AdditionalField>
+                                                                    codeAdditionalFields =
+                                                                    [];
+                                                                for (var element
+                                                                    in barcodes) {
+                                                                  List<String>
+                                                                      keys = [];
+                                                                  List<String>
+                                                                      values =
+                                                                      [];
+                                                                  for (var e in element
                                                                       .elements
                                                                       .entries) {
-                                                                e.value.rawData;
-                                                                keys.add(
-                                                                  e.key
-                                                                      .toString(),
-                                                                );
-                                                                values.add(
-                                                                  e.value.data
-                                                                      .toString(),
-                                                                );
-                                                              }
-                                                              codeAdditionalFields
-                                                                  .add(
-                                                                AdditionalField(
-                                                                  keys.join(
-                                                                      '|'),
-                                                                  values.join(
-                                                                      '|'),
-                                                                ),
-                                                              );
-                                                            }
+                                                                    e.value
+                                                                        .rawData;
+                                                                    keys.add(
+                                                                      e.key
+                                                                          .toString(),
+                                                                    );
+                                                                    values.add(
+                                                                      e.value
+                                                                          .data
+                                                                          .toString(),
+                                                                    );
+                                                                  }
+                                                                  codeAdditionalFields
+                                                                      .add(
+                                                                    AdditionalField(
+                                                                      keys.join(
+                                                                          '|'),
+                                                                      values.join(
+                                                                          '|'),
+                                                                    ),
+                                                                  );
+                                                                }
 
-                                                            final deliveredProducts =
-                                                                ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value
-                                                                    as List<
-                                                                        ProductVariantModel?>);
-                                                            final hasEmptyResources =
-                                                                hasEmptyOrNullResources(
-                                                                    deliveredProducts);
-                                                            final hasZeroQuantity =
-                                                                hasEmptyOrZeroQuantity(
-                                                                    form);
-                                                            final hasDuplicates =
-                                                                hasDuplicateResources(
-                                                                    deliveredProducts,
-                                                                    form);
+                                                                final deliveredProducts =
+                                                                    ((form.control(_resourceDeliveredKey)
+                                                                                as FormArray)
+                                                                            .value
+                                                                        as List<
+                                                                            ProductVariantModel?>);
+                                                                final hasEmptyResources =
+                                                                    hasEmptyOrNullResources(
+                                                                        deliveredProducts);
+                                                                final hasZeroQuantity =
+                                                                    hasEmptyOrZeroQuantity(
+                                                                        form);
+                                                                final hasDuplicates =
+                                                                    hasDuplicateResources(
+                                                                        deliveredProducts,
+                                                                        form);
 
-                                                            if (hasEmptyResources) {
-                                                              await DigitToast
-                                                                  .show(
-                                                                context,
-                                                                options:
-                                                                    DigitToastOptions(
-                                                                  localizations
-                                                                      .translate(i18
+                                                                if (hasEmptyResources) {
+                                                                  await DigitToast
+                                                                      .show(
+                                                                    context,
+                                                                    options:
+                                                                        DigitToastOptions(
+                                                                      localizations.translate(i18
                                                                           .deliverIntervention
                                                                           .resourceDeliveredValidation),
-                                                                  true,
-                                                                  theme,
-                                                                ),
-                                                              );
-                                                            } else if (hasDuplicates) {
-                                                              await DigitToast
-                                                                  .show(
-                                                                context,
-                                                                options:
-                                                                    DigitToastOptions(
-                                                                  localizations
-                                                                      .translate(i18
+                                                                      true,
+                                                                      theme,
+                                                                    ),
+                                                                  );
+                                                                } else if (hasDuplicates) {
+                                                                  await DigitToast
+                                                                      .show(
+                                                                    context,
+                                                                    options:
+                                                                        DigitToastOptions(
+                                                                      localizations.translate(i18
                                                                           .deliverIntervention
                                                                           .resourceDuplicateValidation),
-                                                                  true,
-                                                                  theme,
-                                                                ),
-                                                              );
-                                                            } else if (hasZeroQuantity) {
-                                                              await DigitToast
-                                                                  .show(
-                                                                context,
-                                                                options:
-                                                                    DigitToastOptions(
-                                                                  localizations
-                                                                      .translate(i18
+                                                                      true,
+                                                                      theme,
+                                                                    ),
+                                                                  );
+                                                                } else if (hasZeroQuantity) {
+                                                                  await DigitToast
+                                                                      .show(
+                                                                    context,
+                                                                    options:
+                                                                        DigitToastOptions(
+                                                                      localizations.translate(i18
                                                                           .deliverIntervention
                                                                           .resourceCannotBeZero),
-                                                                  true,
-                                                                  theme,
-                                                                ),
-                                                              );
-                                                            }
-                                                            // info : show dialog stating less bednet scanned then the permissible count
-                                                            else if (bednetScanned <
-                                                                bednetCount) {
-                                                              await DigitToast
-                                                                  .show(
-                                                                context,
-                                                                options:
-                                                                    DigitToastOptions(
-                                                                  localizations
-                                                                      .translate(i18Local
+                                                                      true,
+                                                                      theme,
+                                                                    ),
+                                                                  );
+                                                                }
+                                                                // info : show dialog stating less bednet scanned then the permissible count
+                                                                else if (bednetScanned <
+                                                                    bednetCount) {
+                                                                  await DigitToast
+                                                                      .show(
+                                                                    context,
+                                                                    options:
+                                                                        DigitToastOptions(
+                                                                      localizations.translate(i18Local
                                                                           .deliverIntervention
                                                                           .bednetScanLessThanCount),
-                                                                  true,
-                                                                  theme,
-                                                                ),
-                                                              );
-                                                            }
-                                                            // info : show dialog stating more bednet scanned then the permissible count
-                                                            else if (bednetScanned >
-                                                                bednetCount) {
-                                                              await DigitToast
-                                                                  .show(
-                                                                context,
-                                                                options:
-                                                                    DigitToastOptions(
-                                                                  localizations
-                                                                      .translate(i18Local
+                                                                      true,
+                                                                      theme,
+                                                                    ),
+                                                                  );
+                                                                }
+                                                                // info : show dialog stating more bednet scanned then the permissible count
+                                                                else if (bednetScanned >
+                                                                    bednetCount) {
+                                                                  await DigitToast
+                                                                      .show(
+                                                                    context,
+                                                                    options:
+                                                                        DigitToastOptions(
+                                                                      localizations.translate(i18Local
                                                                           .deliverIntervention
                                                                           .bednetScanMoreThanCount),
-                                                                  true,
-                                                                  theme,
-                                                                ),
-                                                              );
-                                                            } else {
-                                                              final shouldSubmit =
-                                                                  await DigitDialog
-                                                                      .show<
-                                                                          bool>(
-                                                                context,
-                                                                options:
-                                                                    DigitDialogOptions(
-                                                                  titleText:
-                                                                      localizations
-                                                                          .translate(
-                                                                    i18.deliverIntervention
-                                                                        .dialogTitle,
-                                                                  ),
-                                                                  contentText:
-                                                                      localizations
-                                                                          .translate(
-                                                                    i18.deliverIntervention
-                                                                        .dialogContent,
-                                                                  ),
-                                                                  primaryAction:
-                                                                      DigitDialogActions(
-                                                                    label: localizations
-                                                                        .translate(
-                                                                      i18.common
-                                                                          .coreCommonSubmit,
+                                                                      true,
+                                                                      theme,
                                                                     ),
-                                                                    action:
-                                                                        (context) {
-                                                                      clickedStatus
-                                                                              .value =
-                                                                          true;
-                                                                      Navigator
-                                                                          .of(
-                                                                        context,
-                                                                        rootNavigator:
-                                                                            true,
-                                                                      ).pop(
-                                                                          true);
-                                                                    },
-                                                                  ),
-                                                                  secondaryAction:
-                                                                      DigitDialogActions(
-                                                                    label: localizations
-                                                                        .translate(
-                                                                      i18.common
-                                                                          .coreCommonCancel,
-                                                                    ),
-                                                                    action: (context) =>
-                                                                        Navigator
+                                                                  );
+                                                                } else {
+                                                                  final shouldSubmit =
+                                                                      await DigitDialog
+                                                                          .show<
+                                                                              bool>(
+                                                                    context,
+                                                                    options:
+                                                                        DigitDialogOptions(
+                                                                      titleText:
+                                                                          localizations
+                                                                              .translate(
+                                                                        i18.deliverIntervention
+                                                                            .dialogTitle,
+                                                                      ),
+                                                                      contentText:
+                                                                          localizations
+                                                                              .translate(
+                                                                        i18.deliverIntervention
+                                                                            .dialogContent,
+                                                                      ),
+                                                                      primaryAction:
+                                                                          DigitDialogActions(
+                                                                        label: localizations
+                                                                            .translate(
+                                                                          i18.common
+                                                                              .coreCommonSubmit,
+                                                                        ),
+                                                                        action:
+                                                                            (context) {
+                                                                          clickedStatus.value =
+                                                                              true;
+                                                                          Navigator
+                                                                              .of(
+                                                                            context,
+                                                                            rootNavigator:
+                                                                                true,
+                                                                          ).pop(
+                                                                              true);
+                                                                        },
+                                                                      ),
+                                                                      secondaryAction:
+                                                                          DigitDialogActions(
+                                                                        label: localizations
+                                                                            .translate(
+                                                                          i18.common
+                                                                              .coreCommonCancel,
+                                                                        ),
+                                                                        action: (context) => Navigator
                                                                             .of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true,
+                                                                        ).pop(
+                                                                            false),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                  if ((shouldSubmit ??
+                                                                          false) &&
+                                                                      context
+                                                                          .mounted) {
+                                                                    context
+                                                                        .read<
+                                                                            LocationBloc>()
+                                                                        .add(
+                                                                            const LoadLocationEvent());
+                                                                    handleLocationState(
+                                                                      locationState,
                                                                       context,
-                                                                      rootNavigator:
-                                                                          true,
-                                                                    ).pop(false),
-                                                                  ),
-                                                                ),
-                                                              );
-                                                              if ((shouldSubmit ??
-                                                                      false) &&
-                                                                  context
-                                                                      .mounted) {
-                                                                context
-                                                                    .read<
-                                                                        LocationBloc>()
-                                                                    .add(
-                                                                        const LoadLocationEvent());
-                                                                handleLocationState(
-                                                                  locationState,
-                                                                  context,
-                                                                  deliveryInterventionState,
-                                                                  form,
-                                                                  householdMemberWrapper,
-                                                                  projectBeneficiary!
-                                                                      .first,
-                                                                  codeAdditionalFields,
-                                                                );
-                                                              }
-                                                            }
-                                                          },
+                                                                      deliveryInterventionState,
+                                                                      form,
+                                                                      householdMemberWrapper,
+                                                                      projectBeneficiary!
+                                                                          .first,
+                                                                      codeAdditionalFields,
+                                                                    );
+                                                                  }
+                                                                }
+                                                              },
                                                     child: Center(
                                                       child: Text(
                                                         localizations.translate(
