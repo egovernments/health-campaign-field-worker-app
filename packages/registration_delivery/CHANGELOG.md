@@ -1,3 +1,9 @@
+## 1.0.6+3
+
+* BugFix:
+    * If there is no checklist redirect to BeneficiaryDetailsRoute instead of
+      DeliverInterventionRoute
+
 ## 1.0.6+2
 
 * BugFix:
