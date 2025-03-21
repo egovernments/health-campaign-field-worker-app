@@ -735,6 +735,34 @@ class CustomDeliverInterventionPageState
                                                           .deliveryCommentLabel,
                                                     ),
                                                     onChanged: (value) {
+                                                      String? comment =
+                                                          value.value;
+                                                      if (comment != null &&
+                                                          comment
+                                                              .trim()
+                                                              .isNotEmpty) {
+                                                        form
+                                                            .control(
+                                                                _deliveryCommentKey)
+                                                            .setValidators([
+                                                          Validators.delegate(
+                                                              (validator) =>
+                                                                  CustomValidator
+                                                                      .sizeLessThan2(
+                                                                          validator))
+                                                        ], autoValidate: true);
+                                                      } else {
+                                                        form
+                                                            .control(
+                                                                _deliveryCommentKey)
+                                                            .setValidators([],
+                                                                autoValidate:
+                                                                    true);
+                                                      }
+                                                      form
+                                                          .control(
+                                                              _deliveryCommentKey)
+                                                          .markAsTouched();
                                                       setState(() {});
                                                     },
                                                     validationMessages: {
@@ -1079,10 +1107,7 @@ class CustomDeliverInterventionPageState
                     .value
                 : ''
             : null,
-        validators: [
-          Validators.delegate(
-              (validator) => CustomValidator.sizeLessThan2(validator))
-        ],
+        validators: [],
       ),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
         [
