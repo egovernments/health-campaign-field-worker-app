@@ -108,6 +108,7 @@ class Constants {
 
   static const String closedHouseholdReason = 'Reason';
   static const String closedHouseholdReasonComment = 'RefuseReasonComment';
+  static const String status = "status";
 
   static const int maxCount = 10000;
 

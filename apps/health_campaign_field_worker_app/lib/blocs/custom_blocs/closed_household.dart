@@ -104,6 +104,15 @@ class ClosedHouseholdBloc
               ClosedHouseholdSingleton().loggedInUserUuid.toString(),
           lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
         ),
+        additionalFields: HouseholdAdditionalFields(
+          version: 1,
+          fields: [
+            AdditionalField(
+              Constants.status,
+              reg_status.Status.closeHousehold.toValue(),
+            )
+          ],
+        ),
       );
       var individual = IndividualModel(
         clientReferenceId: IdGen.i.identifier,
