@@ -75,7 +75,7 @@ class CustomStockDetailsPageState
         Validators.number(),
         Validators.required,
         Validators.min(1),
-        Validators.delegate(StockCustomValidator.max)
+        Validators.max(10000),
       ]),
       _looseQuantityKey: FormControl<int>(validators: []),
       _transactionReasonKey: FormControl<String>(validators: []),
@@ -99,7 +99,6 @@ class CustomStockDetailsPageState
                 Validators.required,
                 Validators.min(0),
                 Validators.max(10000),
-                Validators.delegate(StockCustomValidator.max)
               ]
             : [],
       ),
@@ -1042,6 +1041,13 @@ class CustomStockDetailsPageState
                                       menuItems: reasons ?? [],
                                       formControlName: _transactionReasonKey,
                                       onChanged: (value) {
+                                        form.control(_balesQuantityKey).value =
+                                            null;
+                                        form.control(_looseQuantityKey).value =
+                                            null;
+                                        form
+                                            .control(_transactionQuantityKey)
+                                            .value = null;
                                         form
                                             .control(_balesQuantityKey)
                                             .setValidators([],
@@ -1063,8 +1069,6 @@ class CustomStockDetailsPageState
                                             Validators.number(),
                                             Validators.min(0),
                                             Validators.max(10000),
-                                            Validators.delegate(
-                                                StockCustomValidator.max)
                                           ], autoValidate: true);
                                           transactionReasonType =
                                               TransactionReason
@@ -1505,11 +1509,15 @@ class CustomStockDetailsPageState
                                     transactionReasonType ==
                                         TransactionReason.damagedInTransit)
                                   DigitTextFormField(
-                                    keyboardType: TextInputType.number,
+                                    key: const Key(_balesQuantityKey),
+                                    formControlName: _balesQuantityKey,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
                                     label: localizations.translate(
                                       balesCountLabel,
                                     ),
-                                    formControlName: _balesQuantityKey,
                                     isRequired: true,
                                     validationMessages: {
                                       "number": (object) =>
@@ -1577,8 +1585,6 @@ class CustomStockDetailsPageState
                                             Validators.number(),
                                             Validators.min(0),
                                             Validators.max(10000),
-                                            Validators.delegate(
-                                                StockCustomValidator.max)
                                           ],
                                           autoValidate: true,
                                         );
@@ -1626,8 +1632,17 @@ class CustomStockDetailsPageState
                                         .control(_transactionQuantityKey)
                                         .markAsTouched();
                                   },
-                                  label: localizations
-                                      .translate(quantityCountLabel),
+                                  label: ([
+                                            StockRecordEntryType.receipt,
+                                            StockRecordEntryType.dispatch,
+                                            StockRecordEntryType.returned
+                                          ].contains(entryType) ||
+                                          transactionReasonType ==
+                                              TransactionReason
+                                                  .damagedInTransit)
+                                      ? "${localizations.translate(quantityCountLabel)} (${localizations.translate(balesCountLabel)} * x + ${localizations.translate(looseQuantityCountLabel)})"
+                                      : localizations
+                                          .translate(quantityCountLabel),
                                 ),
                                 //Delivery Team
                                 AbsorbPointer(

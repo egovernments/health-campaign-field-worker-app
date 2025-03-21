@@ -62,21 +62,6 @@ class StockCustomValidator {
     }
     return null;
   }
-
-  static Map<String, dynamic>? max(
-    AbstractControl<dynamic> control,
-  ) {
-    // if (control.value == null) {
-    //   return {'required': true};
-    // }
-
-    int parsed = control.value ?? 0;
-    if (parsed > Constants.maxCount ||
-        (parsed == 0 && parsed.toString() != control.value.toString())) {
-      return {'max': true};
-    }
-    return null;
-  }
 }
 
 class CustomValidator {
