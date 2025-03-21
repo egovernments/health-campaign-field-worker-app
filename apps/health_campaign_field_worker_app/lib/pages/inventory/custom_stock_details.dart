@@ -899,7 +899,7 @@ class CustomStockDetailsPageState
                                                       ],
                                                       if (scannerState
                                                           .barCodes.isNotEmpty)
-                                                        addBarCodesToFields(
+                                                        ...addBarCodesToFields(
                                                             scannerState
                                                                 .barCodes),
                                                       // adding qrcodes data if any
@@ -2223,16 +2223,18 @@ class CustomStockDetailsPageState
   ///
   /// @param barCodes The list of GS1Barcode objects to be processed.
   /// @return A map where the keys and values are joined by '|'.
-  AdditionalField addBarCodesToFields(List<GS1Barcode> barCodes) {
-    List<String> keys = [];
-    List<String> values = [];
+  List<AdditionalField> addBarCodesToFields(List<GS1Barcode> barCodes) {
+    List<AdditionalField> additionalFields = [];
     for (var element in barCodes) {
+      List<String> keys = [];
+      List<String> values = [];
       for (var e in element.elements.entries) {
         keys.add(e.key.toString());
         values.add(e.value.data.toString());
       }
+      additionalFields.add(AdditionalField(keys.join('|'), values.join('|')));
     }
-    return AdditionalField(keys.join('|'), values.join('|'));
+    return additionalFields;
   }
 }
 
