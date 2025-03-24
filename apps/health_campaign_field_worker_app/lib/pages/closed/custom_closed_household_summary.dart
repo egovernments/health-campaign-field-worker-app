@@ -72,8 +72,7 @@ class CustomClosedHouseholdSummaryPageState
                         onPressed: () {
                           context.read<custombloc.ClosedHouseholdBloc>().add(
                               custombloc.ClosedHouseholdEvent.handleSubmit(
-                                  reason:
-                                      localizations.translate(widget.reason),
+                                  reason: widget.reason.toUpperCase(),
                                   refuseReasonComment:
                                       widget.refuseReasonComment,
                                   context: context,
