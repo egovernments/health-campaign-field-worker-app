@@ -26,6 +26,8 @@ class Postgen {
       if (model.isEnum) {
         await _generateEnumMapperDartFile(
             model.name.snakeCase, model.enumValues);
+      } else {
+        await _generateMapperDartFile(model);
       }
 
       if (model.isEnum) {
@@ -38,8 +40,24 @@ class Postgen {
         );
         await _deleteFile(path);
       } else {
+        print('Generating table for: ' + model.name);
+
+        print('📌 Postgen started for: ${model.name}');
+        print('✅ sqlAttributes before processing: ${model.sqlAttributes}');
+
+        if (model.sqlAttributes.isEmpty) {
+          print(
+              "⚠️ Warning: No sqlAttributes found. Table might not have attributes.");
+          return;
+        }
+
         await _addImportStatement(model.name);
         await _addSqlTablesInGDartFile(model);
+
+        final file = File(
+            '../lib/data/local_store/sql_store/tables/${model.name.toString().snakeCase}.dart');
+
+        print(file.readAsStringSync());
       }
     } catch (e) {
       print(e);
@@ -99,7 +117,8 @@ class Postgen {
       // Write the updated content back to the utils.dart file
       sqlStoreFile.writeAsStringSync(sqlStoreFileContent);
     } else {
-      print('Could not find the target string');
+      print(
+          'Could not find the target string, check if attributes are missing in sqlAttributes.');
     }
 
     // The target substring we want to search after
@@ -376,7 +395,10 @@ class Postgen {
   \$${className.pascalCase}Table createAlias(String alias) {
     return \$${className.pascalCase}Table(attachedDatabase, alias);
   }}''');
-    return classCode.toString();
+
+    var table = classCode.toString();
+
+    return table;
   }
 
   String generateCompanionClassCode(ConfigModel model) {
@@ -581,6 +603,385 @@ class Postgen {
     }
 
     initFile.writeAsStringSync(content);
+  }
+
+  Future<void> _generateMapperDartFile(ConfigModel model) async {
+    final fileName = '${model.name.snakeCase}.mapper.dart';
+    final filePath = 'models/entities/$fileName';
+    final file = File(filePath);
+
+    if (!file.existsSync()) {
+      await file.create(recursive: true);
+    }
+
+    final buffer = StringBuffer();
+
+    buffer.writeln("""
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
+
+part of '${model.name.snakeCase}.dart';
+""");
+
+    buffer.writeln(_generateSearchModelMapper(model));
+    buffer.writeln(_generateModelMapper(model));
+    buffer.writeln(_generateAdditionalFieldsMapper(model));
+
+    await file.writeAsString(buffer.toString());
+    print("✅ Mapper file generated: $filePath");
+  }
+
+  String _generateSearchModelMapper(ConfigModel model) {
+    final className = '${model.name.pascalCase}SearchModel';
+    final buffer = StringBuffer();
+
+    buffer.writeln("""
+class ${className}Mapper extends SubClassMapperBase<$className> {
+  ${className}Mapper._();
+
+  static ${className}Mapper? _instance;
+  static ${className}Mapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ${className}Mapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = '$className';
+""");
+
+    for (var attr in model.attributes) {
+      final fieldType = attr.isList ? 'List<${attr.type}>' : attr.type;
+      buffer.writeln("""
+  static $fieldType? _\$${attr.name}($className v) => v.${attr.name};
+  static const Field<$className, $fieldType> _f\$${attr.name} =
+      Field('${attr.name}', _\$${attr.name}, opt: ${attr.nullable ? 'true' : 'false'});
+  """);
+    }
+
+    buffer.writeln("""
+  static AdditionalFields? _\$additionalFields($className v) => v.additionalFields;
+  static const Field<$className, AdditionalFields> _f\$additionalFields =
+      Field('additionalFields', _\$additionalFields, mode: FieldMode.member);
+
+  @override
+  final MappableFields<$className> fields = const {
+""");
+
+    for (var attr in model.attributes) {
+      buffer.writeln("""    #${attr.name}: _f\$${attr.name},""");
+    }
+
+    buffer.writeln("""
+    #additionalFields: _f\$additionalFields,
+  };
+
+  static $className _instantiate(DecodingData data) {
+    return $className.ignoreDeleted(
+      ${model.attributes.map((attr) => "${attr.name}: data.dec(_f\$${attr.name}),").join('\n      ')}
+      additionalFields: data.dec(_f\$additionalFields),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+
+  @override
+  late final ClassMapperBase superMapper = EntitySearchModelMapper.ensureInitialized();
+
+  static $className fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<$className>(map);
+  }
+
+  static $className fromJson(String json) {
+    return ensureInitialized().decodeJson<$className>(json);
+  }
+}
+
+/// Mixin for $className
+mixin ${className}Mappable {
+  String toJson() => ${className}Mapper.ensureInitialized().encodeJson<$className>(this as $className);
+  Map<String, dynamic> toMap() => ${className}Mapper.ensureInitialized().encodeMap<$className>(this as $className);
+
+  \$classNameCopyWith<$className, $className, $className> get copyWith =>
+      _${className}CopyWithImpl(this as $className, \$identity, \$identity);
+
+  @override
+  String toString() {
+    return ${className}Mapper.ensureInitialized().stringifyValue(this as $className);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return ${className}Mapper.ensureInitialized().equalsValue(this as $className, other);
+  }
+
+  @override
+  int get hashCode {
+    return ${className}Mapper.ensureInitialized().hashValue(this as $className);
+  }
+}
+
+/// Abstract CopyWith class
+abstract class ${className}CopyWith<\$R, \$In extends $className, \$Out> implements EntitySearchModelCopyWith<\$R, \$In, \$Out>{
+  ${model.attributes.map((attr) => """
+  ListCopyWith<\$R, String, ObjectCopyWith<\$R, String, String>>? get ${attr.name};
+  """).join('\n  ')}
+
+  \$R call({${model.attributes.map((attr) => "${attr.type}${attr.nullable ? '?' : ''} ${attr.name}").join(', ')}});
+  ${className}CopyWith<\$R2, \$In, \$Out2> \$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t);
+}
+
+/// Extension for $className copyWith
+extension ${className}ValueCopy<\$R, \$Out> on ObjectCopyWith<\$R, $className, \$Out> {
+  ${className}CopyWith<\$R, $className, \$Out> get \$as$className =>
+      \$base.as((v, t, t2) => _${className}CopyWithImpl(v, t, t2));
+}
+
+/// CopyWith implementation for $className
+class _${className}CopyWithImpl<\$R, \$Out>
+    extends ClassCopyWithBase<\$R, $className, \$Out>
+    implements ${className}CopyWith<\$R, $className, \$Out> {
+  _${className}CopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<$className> \$mapper = ${className}Mapper.ensureInitialized();
+
+  ${model.attributes.map((attr) => """
+  @override
+  ListCopyWith<\$R, String, ObjectCopyWith<\$R, String, String>>? get ${attr.name} =>
+      \$value.${attr.name} == null || \$value.${attr.name}!.isEmpty
+          ? null
+          : ListCopyWith(
+              \$value.${attr.name}!,
+              (v, t) => ObjectCopyWith(v, \$identity, t),
+              (v) => call(${attr.name}: v));
+  """).join('\n  ')}
+
+  @override
+  \$R call({Object? ${model.attributes.map((attr) => "${attr.name} = \$none").join(', ')}}) =>
+      \$apply(FieldCopyWithData({
+        ${model.attributes.map((attr) => "if (${attr.name} != \$none) #${attr.name}: ${attr.name},").join('\n        ')}
+      }));
+
+  @override
+  $className \$make(CopyWithData data) =>
+      $className.ignoreDeleted(
+        ${model.attributes.map((attr) => "${attr.name}: data.get(#${attr.name}, or: \$value.${attr.name}),").join('\n        ')}
+      );
+
+  @override
+  ${className}CopyWith<\$R2, $className, \$Out2> \$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t) =>
+      _${className}CopyWithImpl(\$value, \$cast, t);
+}
+""");
+
+    return buffer.toString();
+  }
+
+  String _generateModelMapper(ConfigModel model) {
+    final className = '${model.name.pascalCase}Model';
+    final buffer = StringBuffer();
+
+    buffer.writeln("""
+class ${className}Mapper extends SubClassMapperBase<$className> {
+  ${className}Mapper._();
+
+  static ${className}Mapper? _instance;
+  static ${className}Mapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ${className}Mapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = '$className';
+
+  static $className fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<$className>(map);
+  }
+
+  static $className fromJson(String json) {
+    return ensureInitialized().decodeJson<$className>(json);
+  }
+}
+
+/// Mixin for $className
+mixin ${className}Mappable {
+  String toJson() => ${className}Mapper.ensureInitialized().encodeJson<$className>(this as $className);
+  Map<String, dynamic> toMap() => ${className}Mapper.ensureInitialized().encodeMap<$className>(this as $className);
+
+  \$classNameCopyWith<$className, $className, $className> get copyWith =>
+      _${className}CopyWithImpl(this as $className, \$identity, \$identity);
+}
+
+/// Abstract CopyWith class
+abstract class ${className}CopyWith<\$R, \$In extends $className, \$Out> {
+  ${model.name.pascalCase}AdditionalFieldsCopyWith<\$R, ${model.name.pascalCase}AdditionalFields,
+      ${model.name.pascalCase}AdditionalFields>? get additionalFields;
+  AuditDetailsCopyWith<\$R, AuditDetails, AuditDetails>? get auditDetails;
+  ClientAuditDetailsCopyWith<\$R, ClientAuditDetails, ClientAuditDetails>? get clientAuditDetails;
+
+  \$R call({${model.attributes.map((attr) => "${attr.type}? ${attr.name}").join(', ')}});
+  ${className}CopyWith<\$R2, \$In, \$Out2> \$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t);
+}
+
+/// Extension for $className copyWith
+extension ${className}ValueCopy<\$R, \$Out> on ObjectCopyWith<\$R, $className, \$Out> {
+  ${className}CopyWith<\$R, $className, \$Out> get \$as$className =>
+      \$base.as((v, t, t2) => _${className}CopyWithImpl(v, t, t2));
+}
+
+/// CopyWith implementation for $className
+class _${className}CopyWithImpl<\$R, \$Out>
+    extends ClassCopyWithBase<\$R, $className, \$Out>
+    implements ${className}CopyWith<\$R, $className, \$Out> {
+  _${className}CopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<$className> \$mapper = ${className}Mapper.ensureInitialized();
+
+  @override
+  ${model.name.pascalCase}AdditionalFieldsCopyWith<\$R, ${model.name.pascalCase}AdditionalFields,
+          ${model.name.pascalCase}AdditionalFields>?
+      get additionalFields => \$value.additionalFields?.copyWith
+          .\$chain((v) => call(additionalFields: v));
+
+  @override
+  AuditDetailsCopyWith<\$R, AuditDetails, AuditDetails>? get auditDetails =>
+      \$value.auditDetails?.copyWith.\$chain((v) => call(auditDetails: v));
+
+  @override
+  ClientAuditDetailsCopyWith<\$R, ClientAuditDetails, ClientAuditDetails>? get clientAuditDetails =>
+      \$value.clientAuditDetails?.copyWith.\$chain((v) => call(clientAuditDetails: v));
+
+  @override
+  \$R call({Object? additionalFields = \$none, ${model.attributes.map((attr) => "Object? ${attr.name} = \$none").join(', ')}}) =>
+      \$apply(FieldCopyWithData({
+        if (additionalFields != \$none) #additionalFields: additionalFields,
+        ${model.attributes.map((attr) => "if (${attr.name} != \$none) #${attr.name}: ${attr.name},").join('\n        ')}
+      }));
+
+  @override
+  $className \$make(CopyWithData data) => $className(
+      additionalFields: data.get(#additionalFields, or: \$value.additionalFields),
+      ${model.attributes.map((attr) => "${attr.name}: data.get(#${attr.name}, or: \$value.${attr.name}),").join('\n      ')}
+  );
+
+  @override
+  ${className}CopyWith<\$R2, $className, \$Out2> \$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t) =>
+      _${className}CopyWithImpl(\$value, \$cast, t);
+}
+""");
+
+    return buffer.toString();
+  }
+
+  String _generateAdditionalFieldsMapper(ConfigModel model) {
+    final className = '${model.name.pascalCase}AdditionalFields';
+    final buffer = StringBuffer();
+
+    buffer.writeln("""
+class ${className}Mapper extends SubClassMapperBase<$className> {
+  ${className}Mapper._();
+
+  static ${className}Mapper? _instance;
+  static ${className}Mapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ${className}Mapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = '$className';
+
+  static $className fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<$className>(map);
+  }
+
+  static $className fromJson(String json) {
+    return ensureInitialized().decodeJson<$className>(json);
+  }
+}
+
+/// Mixin for $className
+mixin ${className}Mappable {
+  String toJson() => ${className}Mapper.ensureInitialized().encodeJson<$className>(this as $className);
+  Map<String, dynamic> toMap() => ${className}Mapper.ensureInitialized().encodeMap<$className>(this as $className);
+
+  \$classNameCopyWith<$className, $className, $className> get copyWith =>
+      _${className}CopyWithImpl(this as $className, \$identity, \$identity);
+}
+
+/// Abstract CopyWith class
+abstract class ${className}CopyWith<\$R, \$In extends $className, \$Out> {
+  ListCopyWith<\$R, AdditionalField, AdditionalFieldCopyWith<\$R, AdditionalField, AdditionalField>>? get fields;
+  \$R call({String? schema, int? version, List<AdditionalField>? fields});
+  ${className}CopyWith<\$R2, \$In, \$Out2> \$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t);
+}
+
+/// Extension for $className copyWith
+extension ${className}ValueCopy<\$R, \$Out> on ObjectCopyWith<\$R, $className, \$Out> {
+  ${className}CopyWith<\$R, $className, \$Out> get \$as$className =>
+      \$base.as((v, t, t2) => _${className}CopyWithImpl(v, t, t2));
+}
+
+/// CopyWith implementation for $className
+class _${className}CopyWithImpl<\$R, \$Out>
+    extends ClassCopyWithBase<\$R, $className, \$Out>
+    implements ${className}CopyWith<\$R, $className, \$Out> {
+  _${className}CopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<$className> \$mapper = ${className}Mapper.ensureInitialized();
+
+  @override
+  ListCopyWith<\$R, AdditionalField, AdditionalFieldCopyWith<\$R, AdditionalField, AdditionalField>>?
+      get fields => \$value.fields != null
+          ? ListCopyWith(
+              \$value.fields!,
+              (v, t) => v.copyWith.\$chain(t),
+              (v) => call(fields: v),
+            )
+          : null;
+
+  @override
+  \$R call({String? schema, int? version, List<AdditionalField>? fields}) =>
+      \$apply(FieldCopyWithData({
+        if (schema != null) #schema: schema,
+        if (version != null) #version: version,
+        if (fields != null) #fields: fields
+      }));
+
+  @override
+  $className \$make(CopyWithData data) =>
+      $className(
+        schema: data.get(#schema, or: \$value.schema),
+        version: data.get(#version, or: \$value.version),
+        fields: data.get(#fields, or: \$value.fields),
+      );
+
+  @override
+  ${className}CopyWith<\$R2, $className, \$Out2> \$chain<\$R2, \$Out2>(Then<\$Out2, \$R2> t) =>
+      _${className}CopyWithImpl(\$value, \$cast, t);
+}
+""");
+
+    return buffer.toString();
   }
 }
 

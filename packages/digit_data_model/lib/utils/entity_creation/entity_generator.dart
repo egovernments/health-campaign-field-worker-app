@@ -48,18 +48,24 @@ class MasonEntityGenerator {
       final target = DirectoryGeneratorTarget(customTargetDirectory);
 
       PreGen preGen = PreGen();
+      print('📌 Before PreGen: ' + configModel.toMap().toString());
 
-      var vars = preGen.run(ConfigModelMapper.fromJson(jsonString));
+      var vars = preGen.run(configModel);
+
+      print("📌 Vars passed to Mason: $vars");
 
       // Run the generator with the variables
-      await generator.generate(target,
-          vars: ConfigModelMapper.fromJson(jsonString).toMap());
+      await generator.generate(target, vars: vars.toMap());
 
       Directory.current = '../lib';
 
       Postgen postGen = Postgen();
+      print('📌 Before Postgen: ' + vars.toString());
 
       postGen.run(vars);
+      print("✅ After PostGen, sqlAttributes: ${vars.sqlAttributes}");
+
+      print(file.readAsStringSync());
     } else {
       print("Table with the name ${configModel.name} already exists");
     }

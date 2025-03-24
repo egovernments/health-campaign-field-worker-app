@@ -10,6 +10,7 @@ class PreGen {
       EnumValuesMapper.ensureInitialized();
       TableReferenceModelMapper.ensureInitialized();
 
+      print('Initial attributes: ' + model.attributes.toString());
       model = model.copyWith.attributes.addAll(
         [
           const AttributeModel(
@@ -110,6 +111,7 @@ class PreGen {
       if (model.attributes.firstWhereOrNull(
               (element) => element.name == 'clientReferenceId') ==
           null) {
+        print('Initial attributes: ' + model.attributes.toString());
         model = model.copyWith.attributes.addAll(
           [
             const AttributeModel(
@@ -176,6 +178,7 @@ class PreGen {
         );
       }
 
+      print('Filtered attributes for SQL: ' + model.attributes.toString());
       model = model.copyWith(
         attributes: model.attributes
             .where((e) => !model.ignoreFields.contains(e.name))
@@ -222,6 +225,9 @@ class PreGen {
         referenceAttributes: references,
       );
       model = updateModel;
+
+      print('✅ Final sqlAttributes: ${model.sqlAttributes}');
+
       return model;
     } catch (e) {
       print(e);
