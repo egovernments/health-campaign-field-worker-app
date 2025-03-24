@@ -134,16 +134,16 @@ class ServiceLocalRepository
         }).toList();
 
         serviceList.add(ServiceModel(
-          clientId: data.clientId,
-          id: data.id,
-          tenantId: data.tenantId,
-          rowVersion: data.rowVersion,
-          isActive: data.isActive,
-          isDeleted: data.isDeleted,
-          serviceDefId: data.serviceDefId,
-          createdAt: data.createdAt,
-          attributes: res.whereNotNull().toList(),
-        ));
+            clientId: data.clientId,
+            id: data.id,
+            tenantId: data.tenantId,
+            rowVersion: data.rowVersion,
+            isActive: data.isActive,
+            isDeleted: data.isDeleted,
+            serviceDefId: data.serviceDefId,
+            createdAt: data.createdAt,
+            attributes: res.whereNotNull().toList(),
+            relatedClientReferenceId: data.relatedClientReferenceId));
       }
 
       return serviceList;

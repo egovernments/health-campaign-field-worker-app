@@ -16,7 +16,6 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
-import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -66,9 +65,8 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                       localizations.translate(
                         i18.common.coreCommonSummaryDetails,
                       ),
-                      style: textTheme.headingXl.copyWith(
-                        color: theme.colorTheme.primary.primary2
-                      ),
+                      style: textTheme.headingXl
+                          .copyWith(color: theme.colorTheme.primary.primary2),
                     ),
                   ),
                 ),
@@ -81,7 +79,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                       builder: (context, bool isClicked, _) {
                         return DigitButton(
                           label: localizations
-                              .translate(i18.common.coreCommonNext),
+                              .translate(i18.common.coreCommonSubmit),
                           type: DigitButtonType.primary,
                           size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
@@ -194,30 +192,31 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 withDivider: false,
                                 items: [
                                   LabelValueItem(
-                                    label: localizations.translate(
-                                        i18.householdLocation.villageLabel),
-                                    value: localizations.translate(deliverState
-                                            .householdMemberWrapper
-                                            ?.household
-                                            ?.address
-                                            ?.locality
-                                            ?.code ??
-                                        i18.common.coreCommonNA),
-                                    isInline: true,
-                                    labelFlex: 5,
-                                      padding: const EdgeInsets.only(bottom: spacer2)
-                                  ),
+                                      label: localizations.translate(
+                                          i18.householdLocation.villageLabel),
+                                      value: localizations.translate(
+                                          deliverState
+                                                  .householdMemberWrapper
+                                                  ?.household
+                                                  ?.address
+                                                  ?.locality
+                                                  ?.code ??
+                                              i18.common.coreCommonNA),
+                                      isInline: true,
+                                      labelFlex: 5,
+                                      padding: const EdgeInsets.only(
+                                          bottom: spacer2)),
                                   LabelValueItem(
-                                    label: localizations.translate(i18
-                                        .householdLocation.landmarkFormLabel),
-                                    value: deliverState.householdMemberWrapper
-                                            ?.household?.address?.landmark ??
-                                        localizations
-                                            .translate(i18.common.coreCommonNA),
-                                    isInline: true,
-                                    labelFlex: 5,
-                                      padding: const EdgeInsets.only(top: spacer2)
-                                  ),
+                                      label: localizations.translate(i18
+                                          .householdLocation.landmarkFormLabel),
+                                      value: deliverState.householdMemberWrapper
+                                              ?.household?.address?.landmark ??
+                                          localizations.translate(
+                                              i18.common.coreCommonNA),
+                                      isInline: true,
+                                      labelFlex: 5,
+                                      padding:
+                                          const EdgeInsets.only(top: spacer2)),
                                 ]),
                           ]),
                       DigitCard(
@@ -233,16 +232,16 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 withDivider: false,
                                 items: [
                                   LabelValueItem(
-                                    label: localizations.translate(
-                                        i18.beneficiaryDetails.totalMembers),
-                                    value: deliverState.householdMemberWrapper
-                                            ?.household?.memberCount
-                                            .toString() ??
-                                        '0',
-                                    isInline: true,
-                                    labelFlex: 5,
-                                      padding: const EdgeInsets.only(bottom: spacer2)
-                                  ),
+                                      label: localizations.translate(
+                                          i18.beneficiaryDetails.totalMembers),
+                                      value: deliverState.householdMemberWrapper
+                                              ?.household?.memberCount
+                                              .toString() ??
+                                          '0',
+                                      isInline: true,
+                                      labelFlex: 5,
+                                      padding: const EdgeInsets.only(
+                                          bottom: spacer2)),
                                   LabelValueItem(
                                     label: localizations.translate(i18
                                         .householdDetails
@@ -265,26 +264,26 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                     labelFlex: 5,
                                   ),
                                   LabelValueItem(
-                                    label: localizations.translate(i18
-                                        .householdDetails
-                                        .noOfChildrenBelow5YearsLabel),
-                                    value: deliverState
-                                            .householdMemberWrapper
-                                            ?.household
-                                            ?.additionalFields
-                                            ?.fields
-                                            .where((h) =>
-                                                h.key ==
-                                                AdditionalFieldsType.children
-                                                    .toValue())
-                                            .firstOrNull
-                                            ?.value
-                                            .toString() ??
-                                        '0',
-                                    isInline: true,
-                                    labelFlex: 5,
-                                      padding: const EdgeInsets.only(top: spacer2)
-                                  ),
+                                      label: localizations.translate(i18
+                                          .householdDetails
+                                          .noOfChildrenBelow5YearsLabel),
+                                      value: deliverState
+                                              .householdMemberWrapper
+                                              ?.household
+                                              ?.additionalFields
+                                              ?.fields
+                                              .where((h) =>
+                                                  h.key ==
+                                                  AdditionalFieldsType.children
+                                                      .toValue())
+                                              .firstOrNull
+                                              ?.value
+                                              .toString() ??
+                                          '0',
+                                      isInline: true,
+                                      labelFlex: 5,
+                                      padding:
+                                          const EdgeInsets.only(top: spacer2)),
                                 ]),
                           ]),
                       DigitCard(
@@ -300,51 +299,51 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 withDivider: false,
                                 items: [
                                   LabelValueItem(
-                                    label: localizations.translate(
-                                        i18.householdDetails.noOfRoomsLabel),
-                                    value: deliverState
-                                            .householdMemberWrapper
-                                            ?.household
-                                            ?.additionalFields
-                                            ?.fields
-                                            .where((h) =>
-                                                h.key ==
-                                                AdditionalFieldsType.noOfRooms
-                                                    .toValue())
-                                            .firstOrNull
-                                            ?.value
-                                            .toString() ??
-                                        '0',
-                                    isInline: true,
-                                    labelFlex: 5,
-                                      padding: const EdgeInsets.only(bottom: spacer2)
-                                  ),
+                                      label: localizations.translate(
+                                          i18.householdDetails.noOfRoomsLabel),
+                                      value: deliverState
+                                              .householdMemberWrapper
+                                              ?.household
+                                              ?.additionalFields
+                                              ?.fields
+                                              .where((h) =>
+                                                  h.key ==
+                                                  AdditionalFieldsType.noOfRooms
+                                                      .toValue())
+                                              .firstOrNull
+                                              ?.value
+                                              .toString() ??
+                                          '0',
+                                      isInline: true,
+                                      labelFlex: 5,
+                                      padding: const EdgeInsets.only(
+                                          bottom: spacer2)),
                                   LabelValueItem(
-                                    label: localizations.translate(
-                                        i18.householdDetails.typeOfStructure),
-                                    value: (deliverState
-                                                .householdMemberWrapper
-                                                ?.household
-                                                ?.additionalFields
-                                                ?.fields
-                                                .where((h) =>
-                                                    h.key ==
-                                                    AdditionalFieldsType
-                                                        .houseStructureTypes
-                                                        .toValue())
-                                                .firstOrNull
-                                                ?.value ??
-                                            [])
-                                        .toString()
-                                        .split('|')
-                                        .map(
-                                            (item) => getLocalizedMessage(item))
-                                        .toList()
-                                        .join(', '),
-                                    isInline: true,
-                                    labelFlex: 5,
-                                      padding: const EdgeInsets.only(top: spacer2)
-                                  ),
+                                      label: localizations.translate(
+                                          i18.householdDetails.typeOfStructure),
+                                      value: (deliverState
+                                                  .householdMemberWrapper
+                                                  ?.household
+                                                  ?.additionalFields
+                                                  ?.fields
+                                                  .where((h) =>
+                                                      h.key ==
+                                                      AdditionalFieldsType
+                                                          .houseStructureTypes
+                                                          .toValue())
+                                                  .firstOrNull
+                                                  ?.value ??
+                                              [])
+                                          .toString()
+                                          .split('|')
+                                          .map((item) =>
+                                              getLocalizedMessage(item))
+                                          .toList()
+                                          .join(', '),
+                                      isInline: true,
+                                      labelFlex: 5,
+                                      padding:
+                                          const EdgeInsets.only(top: spacer2)),
                                 ]),
                           ]),
                       BlocBuilder<ProductVariantBloc, ProductVariantState>(
@@ -421,7 +420,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               localizations.translate(
                                                   i18.common.coreCommonNA),
                                       labelFlex: 5,
-                                        padding: EdgeInsets.zero,
+                                      padding: EdgeInsets.zero,
                                     ),
                                   ]),
                             ]);

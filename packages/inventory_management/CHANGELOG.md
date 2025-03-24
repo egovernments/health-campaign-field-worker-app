@@ -1,3 +1,9 @@
+## 1.0.5+1
+
+* Bug Fix:
+    * Double selection of dropdown items fields, productVariant, reason, transport type
+* Updated to latest digit_components
+
 ## 1.0.5
 
 * Upgraded to latest versions

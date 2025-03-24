@@ -52,6 +52,7 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
   final String? id;
   final String clientId;
   final String? serviceDefId;
+  final String? relatedClientReferenceId;
   final bool? isActive;
   final String? accountId;
   final Map<String, dynamic>? additionalDetails;
@@ -67,6 +68,7 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
     this.id,
     required this.clientId,
     this.serviceDefId,
+    this.relatedClientReferenceId,
     this.isActive,
     this.accountId,
     this.additionalDetails,
@@ -83,27 +85,27 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
   //Helper object to represents the data you want to insert or update in a table
   ServiceCompanion get companion {
     return ServiceCompanion(
-      auditCreatedBy: Value(auditDetails?.createdBy),
-      auditCreatedTime: Value(auditDetails?.createdTime),
-      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
-      clientCreatedTime: Value(clientAuditDetails?.createdTime),
-      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
-      clientCreatedBy: Value(clientAuditDetails?.createdBy),
-      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
-      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
-      id: Value(id),
-      clientId: Value(clientId),
-      serviceDefId: Value(serviceDefId),
-      isActive: Value(isActive),
-      accountId: Value(accountId),
-      additionalDetails: Value(jsonEncode(additionalDetails)),
-      createdAt: Value(createdAt),
-      nonRecoverableError: Value(nonRecoverableError),
-      tenantId: Value(tenantId),
-      rowVersion: Value(rowVersion),
-    );
+        auditCreatedBy: Value(auditDetails?.createdBy),
+        auditCreatedTime: Value(auditDetails?.createdTime),
+        auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+        clientCreatedTime: Value(clientAuditDetails?.createdTime),
+        clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+        clientCreatedBy: Value(clientAuditDetails?.createdBy),
+        clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
+        auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+        additionalFields: Value(additionalFields?.toJson()),
+        isDeleted: Value(isDeleted),
+        id: Value(id),
+        clientId: Value(clientId),
+        serviceDefId: Value(serviceDefId),
+        isActive: Value(isActive),
+        accountId: Value(accountId),
+        additionalDetails: Value(jsonEncode(additionalDetails)),
+        createdAt: Value(createdAt),
+        nonRecoverableError: Value(nonRecoverableError),
+        tenantId: Value(tenantId),
+        rowVersion: Value(rowVersion),
+        relatedClientReferenceId: Value(relatedClientReferenceId));
   }
 }
 

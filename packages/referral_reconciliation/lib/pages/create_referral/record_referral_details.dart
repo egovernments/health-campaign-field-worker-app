@@ -179,7 +179,7 @@ class _RecordReferralDetailsPageState
                                                           ServiceSearchEvent(
                                                             serviceSearchModel:
                                                                 ServiceSearchModel(
-                                                              clientId:
+                                                              relatedClientReferenceId:
                                                                   recordState
                                                                       .mapOrNull(
                                                                 create: (value) => value
@@ -431,7 +431,8 @@ class _RecordReferralDetailsPageState
                                       },
                                     ),
                                   ]),
-                              serviceSearch: (value1, value2, value3) {
+                              serviceSearch:
+                                  (serviceList, selectedService, loading) {
                                 return DigitCard(
                                     cardType: CardType.primary,
                                     children: [
@@ -486,7 +487,8 @@ class _RecordReferralDetailsPageState
                                                           .control(
                                                               _referralReason)
                                                           .value as String;
-                                                      if (value1.isNotEmpty) {
+                                                      if (serviceList
+                                                          .isNotEmpty) {
                                                         context
                                                             .read<
                                                                 ReferralReconServiceDefinitionBloc>()
@@ -501,7 +503,7 @@ class _RecordReferralDetailsPageState
                                                               ServiceSearchEvent(
                                                                 serviceSearchModel:
                                                                     ServiceSearchModel(
-                                                                  clientId:
+                                                                  relatedClientReferenceId:
                                                                       recordState
                                                                           .mapOrNull(
                                                                     create: (value) => value

@@ -66,7 +66,6 @@ abstract class $SurveyFormRoute extends _i7.AutoRouterModule {
         routeData: routeData,
         child: _i4.SurveyFormViewPage(
           key: args.key,
-          referralClientRefId: args.referralClientRefId,
           appLocalizations: args.appLocalizations,
         ),
       );
@@ -238,14 +237,12 @@ class SurveyFormPreviewRouteArgs {
 class SurveyFormViewRoute extends _i7.PageRouteInfo<SurveyFormViewRouteArgs> {
   SurveyFormViewRoute({
     _i8.Key? key,
-    String? referralClientRefId,
     _i10.SurveyFormLocalization? appLocalizations,
     List<_i7.PageRouteInfo>? children,
   }) : super(
           SurveyFormViewRoute.name,
           args: SurveyFormViewRouteArgs(
             key: key,
-            referralClientRefId: referralClientRefId,
             appLocalizations: appLocalizations,
           ),
           initialChildren: children,
@@ -260,19 +257,16 @@ class SurveyFormViewRoute extends _i7.PageRouteInfo<SurveyFormViewRouteArgs> {
 class SurveyFormViewRouteArgs {
   const SurveyFormViewRouteArgs({
     this.key,
-    this.referralClientRefId,
     this.appLocalizations,
   });
 
   final _i8.Key? key;
 
-  final String? referralClientRefId;
-
   final _i10.SurveyFormLocalization? appLocalizations;
 
   @override
   String toString() {
-    return 'SurveyFormViewRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
+    return 'SurveyFormViewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
