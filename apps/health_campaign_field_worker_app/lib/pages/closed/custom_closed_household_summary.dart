@@ -86,20 +86,6 @@ class CustomClosedHouseholdSummaryPageState
                                       ? scannerState.qrCodes.first
                                       : null));
 
-                          // context.read<ClosedHouseholdBloc>().add(
-                          //     ClosedHouseholdEvent.handleSubmit(
-                          //         context: context,
-                          //         householdHeadName:
-                          //             householdState.householdHeadName,
-                          //         locationAccuracy:
-                          //             householdState.locationAccuracy,
-                          //         longitude: householdState.longitude,
-                          //         latitude: householdState.latitude,
-                          //         tag: scannerState.qrCodes.isNotEmpty
-                          //             ? scannerState.qrCodes.first
-                          //             : null));
-
-                          ///clear the scanner
                           context.router
                               .push(ClosedHouseholdAcknowledgementRoute());
                         },
