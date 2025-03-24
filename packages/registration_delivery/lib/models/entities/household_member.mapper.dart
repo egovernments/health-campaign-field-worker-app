@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'household_member.dart';
@@ -85,6 +85,12 @@ class HouseholdMemberSearchModelMapper
   static const Field<HouseholdMemberSearchModel, AdditionalFields>
       _f$additionalFields =
       Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+  static int? _$offset(HouseholdMemberSearchModel v) => v.offset;
+  static const Field<HouseholdMemberSearchModel, int> _f$offset =
+      Field('offset', _$offset, mode: FieldMode.member);
+  static int? _$limit(HouseholdMemberSearchModel v) => v.limit;
+  static const Field<HouseholdMemberSearchModel, int> _f$limit =
+      Field('limit', _$limit, mode: FieldMode.member);
 
   @override
   final MappableFields<HouseholdMemberSearchModel> fields = const {
@@ -101,6 +107,8 @@ class HouseholdMemberSearchModelMapper
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #offset: _f$offset,
+    #limit: _f$limit,
   };
   @override
   final bool ignoreNull = true;
@@ -165,10 +173,8 @@ mixin HouseholdMemberSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            HouseholdMemberSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as HouseholdMemberSearchModel, other));
+    return HouseholdMemberSearchModelMapper.ensureInitialized()
+        .equalsValue(this as HouseholdMemberSearchModel, other);
   }
 
   @override
@@ -500,10 +506,8 @@ mixin HouseholdMemberModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            HouseholdMemberModelMapper.ensureInitialized()
-                .isValueEqual(this as HouseholdMemberModel, other));
+    return HouseholdMemberModelMapper.ensureInitialized()
+        .equalsValue(this as HouseholdMemberModel, other);
   }
 
   @override
@@ -726,10 +730,8 @@ mixin HouseholdMemberAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            HouseholdMemberAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as HouseholdMemberAdditionalFields, other));
+    return HouseholdMemberAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as HouseholdMemberAdditionalFields, other);
   }
 
   @override

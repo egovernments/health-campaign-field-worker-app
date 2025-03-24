@@ -1,500 +1,1123 @@
-# Health Campaigns Field Worker App
+📦 Health Campaign Management - Field Worker's App
+====================================================
 
-[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
 
-This project is maintained using [Melos](https://melos.invertase.dev).
 
-## Getting Started
+✨ Overview
+--------
 
-### Pre-requisites
+The Health Campaign Management (HCM) [latest version](https://github.com/egovernments/health-campaign-field-worker-app/tags) field worker's app is part of the DIGIT Health Platform. It empowers frontline teams to manage health campaigns efficiently, even in low or no network coverage areas. With its offline-first functionality and configurable design, the app is built to address the unique needs of field workers, ensuring seamless data collection, beneficiary management, and campaign tracking.
 
-1. Flutter:
-   The project is built using Flutter. The project uses the 3.16.5 [https://docs.flutter.dev/release/archive] version of Flutter. The path should
-   contain `flutter`.
-2. Dart
-   `dart` should be available in the path and should use the same version as the bundled version that comes with Flutter
+--------
 
-### Install Melos
+✨ Key Features
+------------
 
-```shell
-dart pub global activate melos
+-   **Offline Mode**: Perform all tasks without active internet connectivity.
+
+-   **Four New Modules**: Enable efficient task execution for frontline workers.
+
+-   **Configurable Design**: Adaptable to various campaign needs through server-based configurations.
+
+-   **Multi-Round Campaign Support**: Manage multiple campaign cycles with eligibility checks, delivery tracking, and side-effect recording.
+
+-   **Sync Mechanism**: Bidirectional sync (up and down) ensures consistent data between the app and server.
+
+-   **Beneficiary Data Management**: Optimized retrieval and duplication prevention for beneficiary records.
+
+-   **Permission-Based Access**: Data sync tailored to user roles and assigned projects.
+
+--------
+
+✨ Architecture
+------------
+
+The high-level architecture of the app is divided into three core parts:
+
+1.  **Frontend**: Built using Flutter for a multi-platform, user-friendly experience.
+
+2.  **Backend Services**: Syncs with MDMS, localisation, and other backend services.
+
+3.  **Database**: Combines SQLite and ISAR for flexible offline data storage.
+
+--------
+
+✨ Tech Stack/Core Dependencies
+----------------------------
+
+-   **Flutter**: Framework to build multi-platform apps.
+
+-   **SQLite**: SQL offline database for structured data.
+
+-   **ISAR**: NoSQL offline database for high-performance storage.
+
+-   **Dio**: HTTP client for network communication.
+
+--------
+
+✨ Design Considerations
+---------------------
+
+
+
+###  ✅ General Considerations
+
+-   Works seamlessly in low/no network coverage areas.
+
+-   Highly configurable, with settings managed through MDMS.
+
+-   Designed for Android devices, ensuring compatibility with users who have low-tech literacy.
+
+
+
+###  ✅ Sync Mechanism
+
+-   **Sync Down**: Fetch configurations and data from the server (e.g., localisation, master data).
+
+-   **Sync Up**: Upload collected data to the server.
+
+-   **Login & Sync**: Syncing can only occur while the user is online.
+
+
+
+###  ✅ Configurability
+
+Key configurations include:
+
+-   Offline-first or online-only mode.
+
+-   Backend service URLs and endpoints (no app rebuild required for updates).
+
+-   Data refresh intervals for previously fetched configurations.
+
+-   Supported languages and localisation data.
+
+
+
+###  ✅ Operational Log (Op Log)
+
+All offline actions are logged and processed during sync-up to ensure data consistency and integrity.
+
+
+
+###  ✅ Network Manager
+
+A network manager component abstracts the online/offline logic, enabling seamless data handling by other app components.
+
+--------
+
+✨ Modules and Features
+--------------------
+
+
+
+###  ✅ Down Sync of Beneficiaries
+
+Ensures the local device database is updated with the latest beneficiary data while preventing duplicate records.
+
+**Key Features:**
+
+-   Uses offset and limit for efficient pagination.
+
+-   Adapts batch size based on internet speed.
+
+-   Essential for reducing redundancy within the same boundary.
+
+**Use Case:**
+
+-   Particularly useful in multi-user scenarios where teams operate in the same geographical boundary.
+
+
+
+###  ✅ Multi-Round Campaigns
+
+Supports tracking and delivery processes across multiple cycles.
+
+**Key Features:**
+
+-   Fetches configurations dynamically from MDMS.
+
+-   Checks eligibility criteria based on age and project configurations.
+
+-   Tracks delivery status, side effects, and referrals.
+
+-   Resets statuses (e.g., Beneficiary Refused) for each new cycle.
+
+**Delivery Status Tracking:**
+
+-   **Not Eligible**: Fails age or cycle eligibility criteria.
+
+-   **Beneficiary Refused**: User declined the delivery.
+
+-   **Beneficiary Referred**: Referred to a health facility.
+
+-   **Visited**: Delivery successfully completed.
+
+-   **Not Visited**: Delivery not completed.
+
+
+
+* * * * *
+
+
+
+📦 Packages
+====================
+
+
+
+As a part of the release, we have extracted the features of the Frontline Worker's App as individual packages:
+
+1.  [**Registration & Delivery Package**](#registration-delivery)
+
+2.  [**Referral Reconciliation Package**](#referral-reconciliation)
+
+3.  [**Inventory Management Package**](#inventory-management)
+
+4.  [**Attendance Management Package**](#attendance-management)
+
+5.  [**Closed Household Package**](#closed-household)
+
+6.  [**DIGIT Scanner Package**](#digit-scanner)
+
+7.  [**DIGIT Showcase Package**](#digit-showcase)
+
+8.  [**Digit Data Model Package**](#digit-data-model)
+
+9.  [**DIGIT DSS Package**](#digit-dss)
+
+10. [**Complaints Package**](#complaints)
+
+11. [**Survey Form Package**](#survey-form)
+
+12. [**Sync Service Package**](#sync-service)
+
+These are the packages which are created for this.
+
+
+
+* * * * *
+
+
+
+Getting Started (Generalized for All Packages)
+====================
+
+To get started with any package, follow these steps:
+
+### **Step 1: Add Dependencies**
+
+Add the following dependencies in your **pubspec.yaml** file:
+
+```
+dependencies:
+  <package_name>: ^latest_version
 ```
 
-### Clean Melos Installation
+### **Step 2: Run the Import Script**
 
-```shell
-melos clean
+To integrate this package with the HCM Application, locate the main function for integration in the respective tool's import file. For example, `health-campaign-field-worker-app/tools/<package_name>_imports.dart`.
+
+```
+health-campaign-field-worker-app/tools/<package_name>_imports.dart
 ```
 
-### Bootstrap Melos
+This will automatically handle:\
+✅ Imports\
+✅ Mapper initializers\
+✅ Route configuration\
+✅ Initial data setup\
+✅ Repository initialization
 
-```shell
-melos bootstrap
+
+### **Step 3: Run Build Runner**
+
+Ensure you are in the correct project directory:
+
+```
+apps/health_campaign_field_worker_app
 ```
 
-Running this scrip will bootstrap `melos`, which would generate melos build scripts, add `pubspec_overrides` and
-generate build files.
+Run the following command:
 
----
-
-## Install Mason and required bricks
-
-This project uses [mason](https://pub.dev/packages/mason_cli) to generate the following
-
-1. Serializable model classes
-    * `[ClassName]EntityModel extends EntityModel`
-    * `[ClassName]EntitySearchModel extends EntitySearchModel`
-2. Remote repositories
-3. Drift table configuration
-
-To install mason, associated bricks and to generate the data models from config run the following script.
-
-```shell
-./tools/install_bricks.sh
+```
+dart run build_runner build --delete-conflicting-outputs
 ```
 
-## Mason Configuration
+This will add the package route to **router.gr.dart**.
 
-The `digit_entity` mason bricks require JSON configuration to work.
 
-### Example
+### **Step 4: Install the Application**
 
-Digit entity config is defined in `individual.json`
+After running the build command, install the application on your device to have the module integrated with your base app.
 
-```json
-{
-  "name": "individual",
-  "createRepository": true,
-  "attributes": [
-    {
-      "name": "id",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
-      "name": "userId",
-      "type": "String"
-    },
-    {
-      "name": "dateOfBirth",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
-      "name": "mobileNumber",
-      "type": "String"
-    },
-    {
-      "name": "altContactNumber",
-      "type": "String"
-    },
-    {
-      "name": "email",
-      "type": "String"
-    },
-    {
-      "name": "fatherName",
-      "type": "String"
-    },
-    {
-      "name": "husbandName",
-      "type": "String"
-    },
-    {
-      "name": "photo",
-      "type": "String"
+
+### **Step 5: Sync Data**
+
+To ensure proper data synchronization, follow any additional steps for down-syncing or up-syncing based on your use case.
+
+By following these general steps, you can successfully integrate and use any of the packages within your application.
+
+
+
+* * * * *
+
+
+<a name="closed-household"></a>
+🏚️ **Closed Household Package**
+====================
+
+The **Closed Household** package is a new module built as a Flutter package (`closed_household`). It will be a dependency for the **Registration and Delivery** package.
+
+
+### Link to the Pub Package:
+
+-   [closed_household | Flutter package](https://pub.dev/packages/closed_household)
+
+
+
+🎭 Role
+-------
+
+👤 **Distributor**
+
+
+
+✨ Features
+----------
+
+-   **Create a Closed Household**: Enables creating a closed household record.
+
+
+-   **Update Task**: Updates the task if a closed household is registered.
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+
+### Sequence Diagram
+
+
+![closed_household](https://github.com/user-attachments/assets/00af8e4c-ec07-4843-a573-fd01f090584d)
+
+
+* * * * *
+
+
+<a name="registration-delivery"></a>
+📝 **Registration & Delivery Package**
+====================
+
+This package provides a way to register a household and individual members and deliver the resources to the registered households.
+
+
+### Link to the Pub Package:
+
+-   [registration_delivery | Flutter package](https://pub.dev/packages/registration_delivery)
+
+
+
+🎭 Role
+-------
+
+👤 **DISTRIBUTOR**
+
+
+
+✨ Features
+----------
+
+-   **Register new households and individuals**: Register new records for households and individuals.
+
+
+-   **Search existing households and individuals**: Easily search for already registered records.
+
+
+-   **Update existing records**: Modify details for existing households and individuals.
+
+
+-   **Record service delivery**: Track healthcare interventions delivered to households and individuals for a single-round campaign.
+
+
+-   **Auto-calculation of resources**: Automatically calculate resources to be delivered to a household or individual based on the configured rules.
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+
+### **✨ Downsyncing Data During Boundary Selection**
+
+If you need to **downsync registration-delivery data** during boundary selection, modify **project_beneficiaries_downsync.dart** by including the following repositories:
+
+```
+final LocalRepository<HouseholdModel, HouseholdSearchModel> householdLocalRepository;
+final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel> householdMemberLocalRepository;
+final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> projectBeneficiaryLocalRepository;
+final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
+final LocalRepository<SideEffectModel, SideEffectSearchModel> sideEffectLocalRepository;
+final LocalRepository<ReferralModel, ReferralSearchModel> referralLocalRepository;
+```
+
+Next, locate the method:
+
+```
+networkManager.writeToEntityDb
+```
+
+Ensure it includes the repositories:
+
+```
+householdLocalRepository,
+householdMemberLocalRepository,
+projectBeneficiaryLocalRepository,
+taskLocalRepository,
+sideEffectLocalRepository,
+referralLocalRepository,
+```
+
+**These changes will enable the down sync of registration & delivery data.**
+
+* * * * *
+
+### **✨ Registries Update**
+
+When users **downsync data** by passing **project ID & boundary code**, the server returns responses **only for the selected boundary**.
+
+
+
+#### **✅ Response Entities:**
+
+-   **Household**
+
+-   **Individual**
+
+-   **House Member**
+
+
+
+#### **Scenarios**
+
+1️⃣ **Updating project-specific data**\
+2️⃣ **Creating new project-specific data**
+
+-   **Beneficiary (Mandatory)**
+
+-   **Task & related entities (Optional)**
+
+* * * * *
+
+### **✨ Filtering Mechanism**
+
+To enable better data access, we introduce **filters**:
+
+-   **Registered**
+
+-   **Unregistered**
+
+-   **Closed**
+
+-   **Combination of Filters**
+
+-   **Proximity Enabled Search**
+
+-   **Search by Name**
+
+A **query builder** is used to fetch results dynamically (example below for an individual-based project).
+
+
+![registration1](https://github.com/user-attachments/assets/0811967a-19fd-4e8c-bfa0-9e55dba84f3f)
+
+
+* * * * *
+
+### **✨ Fields in Registration Flow**
+
+#### **✅ GPS Accuracy**
+
+-   Captured on the **Household Location** screen.
+
+
+
+#### **✅ Pregnant Women & Children Count**
+
+-   Entered on the **Member Screen**.
+
+-   Stored in the **Additional Fields Object** of the **Household Member entity**.
+
+
+
+#### **✅ Household Structure Selection**
+
+-   A new screen has been added to **capture household structure**.
+
+-   Structure data is fetched from **MDMS** and displayed as a **card selection UI**.
+
+-   The selected value is stored in the **Additional Details Object** in the **Household Entity**.
+
+* * * * *
+
+### **✨ Closed House Data Capture**
+
+-   A **new module** named **closed_household** has been built.
+
+-   This will be a **dependency** of the **registration and delivery package**.
+
+* * * * *
+
+### **✨ Handling Unsuccessful Deliveries**
+
+For **household-based flows**, a feature has been introduced to **capture reasons for unsuccessful deliveries**.
+
+* * * * *
+
+### **✨ Final Steps**
+
+Once all the above modifications are implemented, rerun:
+
+```
+dart run build_runner build --delete-conflicting-outputs
+```
+
+This ensures proper integration of **Registration & Delivery** within the **HCM app**.
+
+
+
+### Sequence Diagram
+
+
+![registration4_sequence](https://github.com/user-attachments/assets/80596e68-1cc5-4caf-b0e5-f37bf11c1142)
+
+![registration5_sequence png](https://github.com/user-attachments/assets/f9e76ba5-015f-4c7d-8afc-1b1de600b794)
+
+
+* * * * *
+
+
+<a name="inventory-management"></a>
+📦 **Inventory Management Package**
+====================
+
+This package enables the user to manage the stocks of a health campaign. The user can record the stocks received, issued, returned, damaged, and lost.
+
+
+### Link to the Pub Package:
+
+-   [inventory_management | Flutter package](https://pub.dev/packages/inventory_management)
+
+
+
+🎭 Role
+-------
+
+👤 **DISTRIBUTOR**
+👤 **WAREHOUSE_MANAGER**
+
+
+
+✨ Features
+----------
+
+-   **Manage Stocks**: Record the receipt, issue, return, damage, and loss of stocks.
+-   **Stock Reconciliation**: Reconcile the stock data.
+-   **View Reports**: View the reports of the stocks.
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+
+### Sequence Diagram
+
+
+![Inventory](https://github.com/user-attachments/assets/a7f26405-2af5-4148-8ca7-d8ed5bf1a92d)
+
+
+* * * * *
+
+
+<a name="referral-reconciliation"></a>
+🔄 **Referral Reconciliation Package**
+====================
+
+This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally via the **Digit HCM app**.
+
+
+### Link to the Pub Package:
+
+-   [referral_reconciliation | Flutter package](https://pub.dev/packages/referral_reconciliation)
+
+
+
+🎭 Role
+-------
+
+👤 **HEALTH_FACILITY_WORKER**
+
+
+
+✨ Features
+----------
+
+-   **Track referrals made by on-field health workers**: Enables tracking of all referrals to various health facilities.
+
+
+-   **Capture beneficiary referral details**: Includes the reason for referrals, diagnosis, and any further applicable details.
+
+
+-   **Detailed record keeping**: Ensures all referral cases are documented digitally for better monitoring.
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+
+### Sequence Diagram
+
+
+![referral_reconcilation](https://github.com/user-attachments/assets/3165fccf-3b62-41ca-a8ca-0dbb875f2a59)
+
+
+* * * * *
+
+
+<a name="attendance-management"></a>
+🕒 **Attendance Management Package**
+====================
+
+The **Attendance Management package** is a comprehensive solution for tracking and managing attendance within the **Digit HCM app**.
+
+
+
+### **Link to the Pub Package:**
+
+-   [attendance_management | Flutter package](https://pub.dev/packages/attendance_management)
+
+
+
+🎭 Role
+-------
+
+👤 **SUPERVISOR**
+
+
+
+✨ Features
+----------
+
+-   **Attendance Pages**:\
+    The package includes several UI pages for attendance management:
+
+    -   **mark_attendance.dart** -- Allows users to mark attendance.
+
+    -   **manage_attendance.dart** -- Provides an interface for managing and updating attendance records.
+
+    -   **session_select.dart** -- Enables users to select attendance sessions conveniently.
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+
+### **✅ Fetch Attendance Registers & Attendee Data**
+
+Navigate to the **Project Bloc**, where attendance data should be fetched after login.
+
+Add the following repositories:
+
+```
+final RemoteRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
+  attendanceRemoteRepository;
+
+final LocalRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
+  attendanceLocalRepository;
+
+final LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>
+  attendanceLogLocalRepository;
+
+final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
+  attendanceLogRemoteRepository;
+```
+
+* * * * *
+
+### **✅ Fetch Attendance Data Based on User Role**
+
+Find the section where **project staff search** is handled.\
+Modify the **try-catch block** to fetch attendance data based on role:
+
+```
+if (context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.districtSupervisor.toValue(),
+        )
+        .toList()
+        .isNotEmpty) {
+      final individual = await individualRemoteRepository.search(
+        IndividualSearchModel(
+          userUuid: [projectStaff.userId.toString()],
+        ),
+      );
+      final attendanceRegisters = await attendanceRemoteRepository.search(
+        AttendanceRegisterSearchModel(
+          staffId: individual.first.id,
+          referenceId: projectStaff.projectId,
+        ),
+      );
+      await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+
+      for (final register in attendanceRegisters) {
+        if (register.attendees != null &&
+            (register.attendees ?? []).isNotEmpty) {
+          try {
+            final individuals = await individualRemoteRepository.search(
+              IndividualSearchModel(
+                id: register.attendees!
+                    .map((e) => e.individualId!)
+                    .toList(),
+              ),
+            );
+            await individualLocalRepository.bulkCreate(individuals);
+            final logs = await attendanceLogRemoteRepository.search(
+              AttendanceLogSearchModel(
+                registerId: register.id,
+              ),
+            );
+            await attendanceLogLocalRepository.bulkCreate(logs);
+          } catch (_) {
+            emit(state.copyWith(
+              loading: false,
+              syncError: ProjectSyncErrorType.project,
+            ));
+
+            return;
+          }
+        }
+      }
     }
-  ],
-  "customAttributes": [
-    {
-      "name": "name",
-      "type": "name",
-      "includeForQuery": true
-    },
-    {
-      "name": "bloodGroup",
-      "type": "bloodGroup",
-      "isEnum": true
-    },
-    {
-      "name": "address",
-      "type": "address",
-      "isList": true
-    },
-    {
-      "name": "gender",
-      "type": "gender",
-      "isEnum": true,
-      "includeForQuery": true
-    },
-    {
-      "name": "identifiers",
-      "type": "identifier",
-      "isList": true,
-      "includeForQuery": true
-    }
-  ],
-  "isEnum": false
-}
 ```
 
-The following properties are significant
+* * * * *
 
-* `name` - Name of the entity, repository and table
-* `entity-name` - A custom name
-* `createRepository` - Whether this configuration requires a remote repository
-* `isEnum` - Weather this is an Enum definition. Tables are not created for enums
-* `attributes`: Used for defining native types
-    * `name` - Name of the property
-    * `type` - Data type [String, int, double, bool]
-    * `includeForQuery` - Whether this attribute should be included in the `EntitySearchModel`
-    * `includeForEntity` - Whether this attribute should be included for `EntityModel`
-    * `includeForTable` - Whether this attribute should be included for tables
-    * `isList` - Whether this attribute represents a List
-    * `nullable` - is this attribute NNBD
-* `customAttributes` - Used for defining non-native types
-    * `name` - Name of the property
-    * `type` - Data type (Also triggers an import for the same)
-    * `includeForQuery` - Whether this attribute should be included in the `EntitySearchModel`
-    * `includeForEntity` - Whether this attribute should be included for `EntityModel`
-    * `includeForTable` - Whether this attribute should be included for tables
-    * `isList` - Whether this attribute represents a List
-    * `nullable` - is this attribute NNBD
-    * `isEnum` - Whether this is an Enum parameter
-* `dateTimeAttributes` - Used to define date time attributes
-    * `name` - Name of the property
-    * `type` - Must be DateTime
-    * `nullable` - is this attribute NNBD
+### **✅ Run Build Runner Again**
 
-#### Output
+Ensure you are still in:
 
-1. Entity `lib/models/entities/individual.dart`
+```
+apps/health_campaign_field_worker_app
+```
 
-```dart
-// Generated using mason. Do not modify by hand
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
+Then, run the build runner command again:
 
-import '../data_model.dart';
-import '../../data/local_store/sql_store/sql_store.dart';
+```
+dart run build_runner build --delete-conflicting-outputs
+```
 
-@MappableClass(ignoreNull: true)
-class IndividualSearchModel extends EntitySearchModel {
-  final String? id;
-  final String? dateOfBirth;
-  final List<String>? clientReferenceId;
-  final String? tenantId;
-  final NameSearchModel? name;
-  final Gender? gender;
-  final List<IdentifierSearchModel>? identifiers;
+This will ensure the package route is properly integrated into **router.gr.dart**.
 
-  IndividualSearchModel({
-    this.id,
-    this.dateOfBirth,
-    this.clientReferenceId,
-    this.tenantId,
-    this.name,
-    this.gender,
-    this.identifiers,
-    super.boundaryCode,
-    super.isDeleted,
-  }) : super();
 
-  @MappableConstructor()
-  IndividualSearchModel.ignoreDeleted({
-    this.id,
-    this.dateOfBirth,
-    this.clientReferenceId,
-    this.tenantId,
-    this.name,
-    this.gender,
-    this.identifiers,
-    super.boundaryCode,
-  }) : super(isDeleted: false);
-}
 
-@MappableClass(ignoreNull: true)
-class IndividualModel extends EntityModel {
+### Sequence Diagram
 
-  static const schemaName = 'Individual';
 
-  final String? id;
-  final String? userId;
-  final String? dateOfBirth;
-  final String? mobileNumber;
-  final String? altContactNumber;
-  final String? email;
-  final String? fatherName;
-  final String? husbandName;
-  final String? photo;
-  final String clientReferenceId;
-  final String? tenantId;
-  final int? rowVersion;
-  final NameModel? name;
-  final BloodGroup? bloodGroup;
-  final List<AddressModel>? address;
-  final Gender? gender;
-  final List<IdentifierModel>? identifiers;
-  final IndividualAdditionalFields? additionalFields;
+![attendance](https://github.com/user-attachments/assets/fb278b1d-9877-43a3-a2d5-551bae2db4e4)
 
-  IndividualModel({
-    this.additionalFields,
-    this.id,
-    this.userId,
-    this.dateOfBirth,
-    this.mobileNumber,
-    this.altContactNumber,
-    this.email,
-    this.fatherName,
-    this.husbandName,
-    this.photo,
-    required this.clientReferenceId,
-    this.tenantId,
-    this.rowVersion,
-    this.name,
-    this.bloodGroup,
-    this.address,
-    this.gender,
-    this.identifiers,
-    super.auditDetails,
-    super.isDeleted = false,
-  }) : super();
 
-  IndividualCompanion get companion {
-    return IndividualCompanion(
-      auditCreatedBy: Value(auditDetails?.createdBy),
-      auditCreatedTime: Value(auditDetails?.createdTime),
-      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
-      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
-      id: Value(id),
-      userId: Value(userId),
-      dateOfBirth: Value(dateOfBirth),
-      mobileNumber: Value(mobileNumber),
-      altContactNumber: Value(altContactNumber),
-      email: Value(email),
-      fatherName: Value(fatherName),
-      husbandName: Value(husbandName),
-      photo: Value(photo),
-      clientReferenceId: Value(clientReferenceId),
-      tenantId: Value(tenantId),
-      rowVersion: Value(rowVersion),
-      bloodGroup: Value(bloodGroup),
-      gender: Value(gender),
-    );
-  }
-}
+* * * * *
 
-@MappableClass(ignoreNull: true)
-class IndividualAdditionalFields extends AdditionalFields {
-  IndividualAdditionalFields({
-    super.schema = 'Individual',
-    required super.version,
-    super.fields,
+
+<a name="digit-data-model"></a>
+🔢 Digit Data Model Package
+====================
+
+The `digit_data_model` package is a comprehensive data modeling library for the project. It defines various **classes, enums, and functions** used throughout the project. The package is written in **Dart** and is primarily used in **Flutter applications**.
+
+### **Link to the Pub Package:**
+
+-   [digit data model | Flutter package](https://pub.dev/packages/digit_data_model)
+
+
+✨ Features
+----------
+
+-   **Data Models** -- Provides predefined models like `DataModel`, `EntityModel`, `EntitySearchModel`, `AdditionalFields`, `AuditDetails`, etc.
+
+-   **Model Provider** -- Includes a `ModelProvider` abstract class and a `ModelProviderRegistry` to register and retrieve models.
+
+-   **Data Model Type Enum** -- Defines a `DataModelType` enum representing different model types.
+
+-   **Mapping Annotations** -- Uses `dart_mappable` for generating mapping code, enabling **JSON serialization/deserialization**.
+
+-   **Data Repositories** -- Provides `DataRepository`, `RemoteRepository`, and `LocalRepository` for handling data operations.
+
+-   **SQL Store** -- Uses `Drift` for SQLite database integration with **reactive persistence**.
+
+-   **Schema Versioning** -- Supports **database migrations** through schema versioning.
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+Below are some examples of how you can use this package:
+
+
+
+📖 Examples
+-----------
+
+### ✅ Creating a Custom Search Model
+
+```
+class ExampleSearchModel extends EntitySearchModel {
+  ExampleSearchModel({
+    required this.employeeId,
+    required this.attendanceDate,
+    required this.status,
   });
 }
 ```
 
-2. Table `lib/data/local_store/sql_store/tables/individual.dart`
 
-```dart
-// Generated using mason. Do not modify by hand
+### ✅ Creating Additional Fields
 
-import 'package:drift/drift.dart';
-
-import '../../../../models/entities/blood_group.dart';
-import '../../../../models/entities/gender.dart';
-
-class Individual extends Table {
-  TextColumn get id => text().nullable()();
-
-  TextColumn get userId => text().nullable()();
-
-  TextColumn get dateOfBirth => text().nullable()();
-
-  TextColumn get mobileNumber => text().nullable()();
-
-  TextColumn get altContactNumber => text().nullable()();
-
-  TextColumn get email => text().nullable()();
-
-  TextColumn get fatherName => text().nullable()();
-
-  TextColumn get husbandName => text().nullable()();
-
-  TextColumn get photo => text().nullable()();
-
-  TextColumn get auditCreatedBy => text().nullable()();
-
-  IntColumn get auditCreatedTime => integer().nullable()();
-
-  TextColumn get auditModifiedBy => text().nullable()();
-
-  IntColumn get auditModifiedTime => integer().nullable()();
-
-  TextColumn get clientReferenceId => text()();
-
-  TextColumn get tenantId => text().nullable()();
-
-  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
-
-  IntColumn get rowVersion => integer().nullable()();
-
-  IntColumn get bloodGroup => intEnum<BloodGroup>().nullable()();
-
-  IntColumn get gender => intEnum<Gender>().nullable()();
-
-  TextColumn get additionalFields => text().nullable()();
-
-  @override
-  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,};
-}
 ```
-
-3. Repository `lib/data/repositories/remote/individual.dart`
-
-```dart
-// Generated using mason. Do not modify by hand
-
-import '../../../models/data_model.dart';
-import '../../data_repository.dart';
-
-class IndividualRemoteRepository extends RemoteRepository<IndividualModel, IndividualSearchModel> {
-  IndividualRemoteRepository(super.dio, {
-    required super.actionMap,
-    super.entityName = 'Individual',
+class ExampleAdditionalFields extends AdditionalFields {
+  ExampleAdditionalFields({
+    required this.field1,
+    required this.field2,
   });
-
-  @override
-  DataModelType get type => DataModelType.individual;
 }
 ```
 
-### Further customization
 
-The `digit_entity` templates can be further customized by modifying the bricks and/or altering the `pre_gen`
-or `post_gen` scripts.
+### ✅ Implementing a Local Repository
 
-The `pre_gen.dart` file contains transformation code that take the entity configuration and transform it
-to `ConfigModel`, `AttributModel`, `TableReferenceModel`, and `EnumValues` all of which are defined
-within `hooks/lib/models.dart`.
-
-The `ConfigModel` is finally passed to the following `__brick__` configuration
-
-* `mason_templates/digit_entity/__brick__/models/entities/{{name.snakeCase()}}.dart`
-* `mason_templates/digit_entity/__brick__/data/repositories/remote/{{name.snakeCase()}}.dart`
-* `mason_templates/digit_entity/__brick__/data/local_store/sql_store/tables/{{name.snakeCase()}}.dart`
-
----
-
-## Firebase configuration
-
-The project uses firebase for offline crash reporting. The firebase configuration is managed by flutterfire CLI tools.
-
-### Setup
-
-1. Install firebase CLI. Online instructions can be found [here](https://firebase.google.com/docs/cli#setup_update_cli)
-
-```shell
-curl -sL https://firebase.tools | bash
 ```
-
-2. Login
-
-```shell
-firebase login
-```
-
-3. Install Flutterfire CLI
-
-```shell
-dart pub global activate flutterfire_cli
-```
-
-### Add firebase to app
-
-To add firebase to an existing flutter application, `cd` into the app directory and run
-
-```shell
-flutterfire configure
-```
-
-This will start you on a guided process to select project, installation targets, etc. Once done, it will create the
-following files.
-
-1. `android/app/google_services.json`
-2. `ios/Runner/GoogleService-info.plist`
-3. `lib/firebase_options.dart`
-
-These files contain configuration information that link the flutter app with firebase. Common firebase configuration
-needs to be carried out in `packages/digit_firebase_configuration`.
-
-#### Configuration
-
-Crashlytics is configured inside `lib/digit_firebase_services.dart#initialize` function. This function initializes the
-Firebase project. No Firebase libraries should be accessed before `initialize`  is called. The function should assign
-error handlers to `FlutterError.onError` and `PlatformDispatcher.instance.onError`. Any uncaught exception will bubble
-upto this point and will trigger a Crash event which will be cached by Crashlytics until network is available.
-
-```dart
-Future initialize({
-  required FirebaseOptions options,
-  ValueChanged<String>? onErrorMessage,
-}) async {
-  await Firebase.initializeApp(options: options);
-
-  FlutterError.onError = (errorDetails) {
-    onErrorMessage?.call(
-      'Diagnostic node: '
-          '${errorDetails.summary.name.toString()}',
-    );
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
-
-  PlatformDispatcher.instance.onError = (error, stack) {
-    onErrorMessage?.call(error.toString());
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+class ExampleLocalRepository
+    extends LocalRepository<ExampleModel, ExampleSearchModel> {
+  ExampleLocalRepository(super.sql, super.opLogManager);
 }
 ```
 
-#### MDMS Configuration
 
-The firebase project can be activated or deactivated based on MDMS configuration. The configuration is managed in
+### ✅ Implementing a Remote Repository
 
-##### app_configuration.dart
-
-```dart
-@Collection()
-class AppConfiguration {
-  // 
-  //
-  @Name('FIREBASE_CONFIG')
-  FirebaseConfig? firebaseConfig;
-}
-
-@embedded
-class FirebaseConfig {
-  bool? enableCrashlytics;
-  bool? enableAnalytics;
+```
+class ExampleRemoteRepository
+    extends RemoteRepository<ExampleModel, ExampleSearchModel> {
+  ExampleRemoteRepository(super.apiClient, super.opLogManager);
 }
 ```
 
-#### main.dart
 
-```dart
-void main() {
-  if (enableCrashlytics) {
-    firebase_services.initialize(
-      options: DefaultFirebaseOptions.currentPlatform,
-      onErrorMessage: (value) {
-        AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
-      },
-    );
-  }
+* * * * *
+
+<a name="digit-dss"></a>
+📊 DIGIT DSS Package
+====================
+
+
+**Digit_dss** is a Flutter package designed to facilitate the seamless integration of dynamic dashboards into your mobile application. This package allows developers to configure and render various types of charts directly from a dashboard configuration, enabling a flexible and customizable approach to data visualization.
+
+
+### **Link to the Pub Package:**
+
+-   [digit dss | Flutter package](https://pub.dev/packages/digit_dss)
+
+
+✨ Features
+----------
+
+-  Dynamic charts configuration\
+-  Support for **Metric Charts**\
+-  Support for **Table Charts**
+
+🎭 Role
+-------
+
+👤 **DISTRICT_SUPERVISOR**
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+
+### Sequence Diagram
+
+
+![Digit_dss](https://github.com/user-attachments/assets/d2a14ab2-19b7-4023-a5e5-aecd6c75d3ab)
+
+
+* * * * *
+
+
+<a name="complaints"></a>
+📢 Complaints Package
+=====================
+
+
+The **Complaints Package** provides a streamlined way for users to register complaints related to **health campaigns**. It enables users to:\
+✔️ File complaints specifying the type and detailed information\
+✔️ Choose from predefined categories to classify complaints\
+✔️ Access past complaint records
+
+
+### **Link to the Pub Package:**
+
+-   [complaints | Flutter package](https://pub.dev/packages/complaints)
+
+
+🎭 Role
+-------
+
+👤 **DISTRIBUTOR**
+
+✨ Features
+----------
+
+-   📝 **Register complaints** easily
+
+-   📜 **Access past complaint records** for tracking
+
+-   📂 **Choose from predefined categories** to classify complaints
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+### Sequence Diagram
+
+
+![complaints](https://github.com/user-attachments/assets/8bc35c49-700c-42da-b317-d2ab0c47cd0d)
+
+
+* * * * *
+
+
+<a name="survey-form"></a>
+📝 Survey Form Package
+======================
+
+
+The **Survey Form Package** enables users to fill out **questionnaires** efficiently. It provides a user-friendly interface for submitting responses, ensuring that **health campaign-related feedback** and data are collected **accurately**.
+
+
+### **Link to the Pub Package:**
+
+-   [survey form | Flutter package](https://pub.dev/packages/survey_form)
+
+
+🎭 Role
+-------
+
+👤 **DISTRIBUTOR**
+
+✨ Features
+----------
+
+✔️ **Selection Box, Check-Box, and Text Fields** to support various data types\
+✔️ **Accurately captures employee-specific boundaries** for relevant survey responses\
+✔️ **Allows employees to view their submitted responses**
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+### Sequence Diagram
+
+
+![survey](https://github.com/user-attachments/assets/d5815a0e-7fe1-405c-920e-845c818d0d7b)
+
+
+* * * * *
+
+
+<a name="sync-service"></a>
+🔄 Sync Service Package
+=======================
+
+
+The **Sync Service Package** provides access to **sync-related configurations and listeners**, ensuring seamless data synchronization. It includes key components such as **SyncEntityMapperListener, syncDownRetryCount, and persistenceConfiguration**.
+
+### **Link to the Pub Package:**
+
+-   [sync service | Flutter package](https://pub.dev/packages/sync_service)
+
+
+✨ Features
+----------
+
+✔️ **SyncBloc:** Handles refresh and sync operations\
+✔️ **SyncEntityMapperListener:** Defines methods for sync entity mapping\
+✔️ **SyncService:** Performs sync operations like `performSync`, `writeToEntityDB`, and `getPendingSyncRecordsCount`\
+✔️ **Repositories:** Manages local and remote repositories with `getRemoteForType` and `getLocalForType`\
+✔️ **Sync Operations:** `PerformSyncDown` and `PerformSyncUp` for bidirectional sync\
+✔️ **Models:** Bandwidth Model
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+### 🛠 Usage
+
+#### 1️⃣ Extend the `SyncUpOperation` class and implement the required methods:
+
+```
+class CustomSyncRegistry implements SyncUpOperation {
+  CustomSyncRegistry({this.remote});
 }
+```
+
+#### 2️⃣ Extend the `SyncEntityMapperListener` class and implement the required methods:
+
+```
+class SyncServiceMapper extends SyncEntityMapperListener {
+  // Implement required methods
+}
+```
+
+
+* * * * *
+
+
+<a name="digit-scanner"></a>
+🔍 DIGIT Scanner Package
+========================
+
+
+The **DIGIT Scanner Package** is used for scanning **QR codes** and **GS1 barcodes** in Flutter applications.
+
+
+### **Link to the Pub Package:**
+
+-   [digit scanner | Flutter package](https://pub.dev/packages/digit_scanner)
+
+
+✨ Features
+----------
+
+✔️ **Scan QR Codes & GS1 Barcodes**\
+✔️ **Manage Scanner State using Bloc**\
+✔️ **Navigate to Scanner Page with Custom Parameters**\
+✔️ **Listen & Retrieve Scanned Codes Easily**
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+🚀 How to Use
+-------------
+
+### 1️⃣ Initialize **DigitScannerBloc**
+
+```
+BlocProvider(
+  create: (_) => DigitScannerBloc(const DigitScannerState()),
+),
+```
+
+### 2️⃣ Clear the Scanner State
+
+```
+context.read<DigitScannerBloc>().add(
+  const DigitScannerEvent.handleScanner(),
+);
+```
+
+### 3️⃣ Navigate to the **DIGIT Scanner Page**
+
+```
+context.router.push(
+  DigitScannerRoute(
+    quantity: 1,     // Max number of codes to be scanned
+    isGS1code: false, // Set to true for GS1 barcode scanning
+    singleValue: true, // Set to false for scanning multiple codes
+  ),
+);
+```
+
+### 4️⃣ Listen to Scanner State Changes
+
+```
+BlocListener<DigitScannerBloc, DigitScannerState>(
+  listener: (context, scannerState) {
+    if (scannerState.qrCodes.isNotEmpty) {
+      // Handle scanned codes
+    }
+  },
+  child: BlocBuilder<DigitScannerBloc, DigitScannerState>(
+    builder: (context, scannerState) {
+      if (scannerState.qrCodes.isNotEmpty) {
+        return Text(scannerState.qrCodes.last);
+      } else {
+        return Container();
+      }
+    },
+  ),
+);
+```
+
+
+![scanner](https://github.com/user-attachments/assets/613c2934-9379-4fb7-8103-d9ba7c0383ed)
+
+
+* * * * *
+
+
+<a name="digit-showcase"></a>
+📦 DIGIT Showcase Package
+========================
+
+
+The **Digit Showcase Package** provides an easy way to **highlight** or **showcase** widgets in your Flutter application. It helps guide users by visually emphasizing UI elements.
+
+
+### **Link to the Pub Package:**
+
+-   [digit showcase | Flutter package](https://pub.dev/packages/digit_showcase)
+
+✨ Features
+----------
+
+✔️ **Highlight widgets dynamically**\
+✔️ **Guide users through the UI with visual cues**\
+✔️ **Enable automatic scrolling to showcased widgets**\
+✔️ **Supports localization for messages**
+
+
+### **Integrating with the HCM Application:** [Getting Started](#getting-started-generalized-for-all-packages)
+
+
+🚀 How to Use
+-------------
+
+### 1️⃣ Wrap the **Top Layer** with `ShowcaseWidget`
+
+```
+ShowcaseWidget(
+  enableAutoScroll: true,
+  builder: Builder(
+    builder: (context) {
+      // Your widget tree
+    },
+  ),
+);
+```
+
+### 2️⃣ Provide Localization for the Showcase Widget
+
+```
+final date = ShowcaseItemBuilder(
+  messageLocalizationKey: i18.showcase_date.date,
+);
+```
+
+### 3️⃣ Use `.buildWith` to Highlight the Widget
+
+```
+date.buildWith(
+  child: Text('Date'),
+);
 ```
 
 ## Showcase Configuration
@@ -566,7 +1189,7 @@ class _ChecklistDataShowcaseData {
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../showcase_wrappers.dart';
 
-part 'checklist_data.dart';
+part 'survey_form_data.dart';
 
 final checklistDataShowcaseData = _ChecklistDataShowcaseData();
 ```
@@ -700,7 +1323,18 @@ class _ChecklistBoundaryViewPageState extends LocalizedState<ChecklistBoundaryVi
 }
 ```
 
-## Data Sync
+<img src="https://github.com/user-attachments/assets/61ac10fa-5cbf-4b13-970a-d3f33f4cc346" alt="Showcase" width="300">
+
+<img src="https://github.com/user-attachments/assets/5cc40377-8c2e-4d03-8c73-609bcfd89a28" alt="Showcase" width="300">
+
+
+
+* * * * *
+
+
+
+🔄 Data Sync
+========================
 
 Currently, the app is configured to run only on `PersistenceConfiguration.offlineFirst` mode. With the offline first
 approach the local data store is considered as the **Source of truth**. Data persisted in the local data store is synced
@@ -751,3 +1385,98 @@ The following steps describe the manual synchronization process:
     - If it is a SINGLE_CREATE operation:
         - The network manager sends a Single create request to the Remote repository and returns success.
 13. Success is returned to complete the sync up process.
+
+
+* * * * *
+
+
+Codebase
+--------
+
+The source code is available on GitHub: [**Health Campaign Field Worker App Repository**](https://github.com/egovernments/health-campaign-field-worker-app)
+
+Installation
+------------
+
+### Prerequisites
+
+-   Flutter SDK (latest stable version)
+
+-   Android device or emulator
+
+### Steps
+
+1.  Clone the repository:
+
+    ```
+    git clone https://github.com/egovernments/health-campaign-field-worker-app.git
+    ```
+
+2.  Navigate to the project directory:
+
+    ```
+    cd health-campaign-field-worker-app
+    ```
+
+3.  Install dependencies:
+
+    ```
+    flutter pub get
+    ```
+
+4.  Create a `.env` file and add the following environment variables:
+
+    ```
+    BASE_URL=
+    MDMS_API_PATH=
+    TENANT_ID=
+    ACTIONS_API_PATH=
+    SYNC_DOWN_RETRY_COUNT=
+    RETRY_TIME_INTERVAL=
+    CONNECT_TIMEOUT=
+    RECEIVE_TIMEOUT=
+    SEND_TIMEOUT=
+    HIERARCHY_TYPE="MICROPLAN"
+    CHECK_BANDWIDTH_API="/project/check/bandwidth"
+    ENV_NAME="DEMO"
+    ```
+
+5.  Run the app:
+
+    ```
+    flutter run
+    ```
+
+Contributing
+------------
+
+Contributions are welcome! Follow these steps to contribute:
+
+1.  Fork the repository.
+
+2.  Create a feature branch:
+
+    ```
+    git checkout -b feature-name
+    ```
+
+3.  Commit your changes:
+
+    ```
+    git commit -m "Add some feature"
+    ```
+
+4.  Push to the branch:
+
+    ```
+    git push origin feature-name
+    ```
+
+5.  Open a pull request.
+
+
+Documentation
+-------------
+
+For more detailed documentation, visit the [DIGIT Health Platform](https://health.digit.org/).
+

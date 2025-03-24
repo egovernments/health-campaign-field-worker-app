@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'facility.dart';
@@ -21,6 +21,9 @@ class FacilitySearchModelMapper
   @override
   final String id = 'FacilitySearchModel';
 
+  static String? _$name(FacilitySearchModel v) => v.name;
+  static const Field<FacilitySearchModel, String> _f$name =
+      Field('name', _$name, opt: true);
   static List<String>? _$id(FacilitySearchModel v) => v.id;
   static const Field<FacilitySearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
@@ -50,6 +53,7 @@ class FacilitySearchModelMapper
 
   @override
   final MappableFields<FacilitySearchModel> fields = const {
+    #name: _f$name,
     #id: _f$id,
     #isPermanent: _f$isPermanent,
     #usage: _f$usage,
@@ -72,6 +76,7 @@ class FacilitySearchModelMapper
 
   static FacilitySearchModel _instantiate(DecodingData data) {
     return FacilitySearchModel.ignoreDeleted(
+        name: data.dec(_f$name),
         id: data.dec(_f$id),
         isPermanent: data.dec(_f$isPermanent),
         usage: data.dec(_f$usage),
@@ -115,10 +120,8 @@ mixin FacilitySearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            FacilitySearchModelMapper.ensureInitialized()
-                .isValueEqual(this as FacilitySearchModel, other));
+    return FacilitySearchModelMapper.ensureInitialized()
+        .equalsValue(this as FacilitySearchModel, other);
   }
 
   @override
@@ -140,7 +143,8 @@ abstract class FacilitySearchModelCopyWith<$R, $In extends FacilitySearchModel,
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
   @override
   $R call(
-      {List<String>? id,
+      {String? name,
+      List<String>? id,
       bool? isPermanent,
       String? usage,
       int? storageCapacity,
@@ -166,13 +170,15 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
           : null;
   @override
   $R call(
-          {Object? id = $none,
+          {Object? name = $none,
+          Object? id = $none,
           Object? isPermanent = $none,
           Object? usage = $none,
           Object? storageCapacity = $none,
           Object? tenantId = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
+        if (name != $none) #name: name,
         if (id != $none) #id: id,
         if (isPermanent != $none) #isPermanent: isPermanent,
         if (usage != $none) #usage: usage,
@@ -183,6 +189,7 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
   @override
   FacilitySearchModel $make(CopyWithData data) =>
       FacilitySearchModel.ignoreDeleted(
+          name: data.get(#name, or: $value.name),
           id: data.get(#id, or: $value.id),
           isPermanent: data.get(#isPermanent, or: $value.isPermanent),
           usage: data.get(#usage, or: $value.usage),
@@ -240,6 +247,9 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
   static AddressModel? _$address(FacilityModel v) => v.address;
   static const Field<FacilityModel, AddressModel> _f$address =
       Field('address', _$address, opt: true);
+  static String? _$name(FacilityModel v) => v.name;
+  static const Field<FacilityModel, String> _f$name =
+      Field('name', _$name, opt: true);
   static AuditDetails? _$auditDetails(FacilityModel v) => v.auditDetails;
   static const Field<FacilityModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -262,6 +272,7 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
     #tenantId: _f$tenantId,
     #rowVersion: _f$rowVersion,
     #address: _f$address,
+    #name: _f$name,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -288,6 +299,7 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
         tenantId: data.dec(_f$tenantId),
         rowVersion: data.dec(_f$rowVersion),
         address: data.dec(_f$address),
+        name: data.dec(_f$name),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -327,10 +339,8 @@ mixin FacilityModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            FacilityModelMapper.ensureInitialized()
-                .isValueEqual(this as FacilityModel, other));
+    return FacilityModelMapper.ensureInitialized()
+        .equalsValue(this as FacilityModel, other);
   }
 
   @override
@@ -367,6 +377,7 @@ abstract class FacilityModelCopyWith<$R, $In extends FacilityModel, $Out>
       String? tenantId,
       int? rowVersion,
       AddressModel? address,
+      String? name,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -407,6 +418,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
           Object? tenantId = $none,
           Object? rowVersion = $none,
           Object? address = $none,
+          Object? name = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -421,6 +433,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
         if (tenantId != $none) #tenantId: tenantId,
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (address != $none) #address: address,
+        if (name != $none) #name: name,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -439,6 +452,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
       tenantId: data.get(#tenantId, or: $value.tenantId),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       address: data.get(#address, or: $value.address),
+      name: data.get(#name, or: $value.name),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),
@@ -535,10 +549,8 @@ mixin FacilityAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            FacilityAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as FacilityAdditionalFields, other));
+    return FacilityAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as FacilityAdditionalFields, other);
   }
 
   @override

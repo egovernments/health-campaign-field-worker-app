@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 
 import '../../models/request_info/request_info_model.dart';
 import '../../utils/constants.dart';
+import '../../utils/environment_config.dart';
 import '../local_store/secure_store/secure_store.dart';
 
 class AuthTokenInterceptor extends Interceptor {
@@ -26,15 +27,16 @@ class AuthTokenInterceptor extends Interceptor {
       options.data = {
         ...options.data,
         "RequestInfo": RequestInfoModel(
-          apiId: RequestInfoData.apiId,
-          ver: RequestInfoData.ver,
-          ts: DateTime.now().millisecondsSinceEpoch,
-          action: options.path.split('/').last,
-          did: RequestInfoData.did,
-          key: "1",
-          authToken: authToken,
-          userInfo: userInfo,
-        ).toJson(),
+                apiId: RequestInfoData.apiId,
+                ver: RequestInfoData.ver,
+                ts: DateTime.now().millisecondsSinceEpoch,
+                action: options.path.split('/').last,
+                did: RequestInfoData.did,
+                key: "1",
+                authToken: authToken,
+                userInfo: userInfo,
+                tenantId: envConfig.variables.tenantId)
+            .toJson(),
       };
     }
     super.onRequest(options, handler);

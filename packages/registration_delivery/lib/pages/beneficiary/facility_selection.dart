@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
@@ -24,12 +25,13 @@ class FacilitySelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RegistrationDeliveryLocalization localizations =
-        RegistrationDeliveryLocalization.of(context);
+    RegistrationDeliveryLocalization.of(context);
     final theme = Theme.of(context);
     final BorderSide borderSide = BorderSide(
       color: theme.colorScheme.outline,
       width: 1.0,
     );
+    final textTheme = theme.digitTextTheme(context);
 
     return SafeArea(
       child: ReactiveFormBuilder(
@@ -47,7 +49,6 @@ class FacilitySelectionPage extends StatelessWidget {
                       .toLowerCase();
                   final lowerCaseQuery = query.toLowerCase();
                   return localizedFacilityIdWithPrefix.contains(lowerCaseQuery);
-                  return false;
                 }).toList();
 
                 return ScrollableContent(
@@ -61,29 +62,33 @@ class FacilitySelectionPage extends StatelessWidget {
                         color: Colors.white,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: kPadding * 2),
+                            horizontal: spacer2*2,
+                          ),
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(kPadding),
+                                padding: const EdgeInsets.all(spacer2),
                                 child: Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
                                     localizations.translate(
                                       i18.common.facilitySearchHeaderLabel,
                                     ),
-                                    style: theme.textTheme.displayMedium,
+                                    style: textTheme.headingXl,
                                     textAlign: TextAlign.left,
                                   ),
                                 ),
                               ),
-                              const DigitTextFormField(
-                                suffix: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(Icons.search),
+                              Padding(
+                                padding: const EdgeInsets.all(spacer2),
+                                child: ReactiveWrapperField(
+                                  formControlName: _facilityName,
+                                  builder: (field)=> DigitSearchFormInput(
+                                    onChange: (value){
+                                      form.control(_facilityName).value=value;
+                                    },
+                                  ),
                                 ),
-                                label: '',
-                                formControlName: _facilityName,
                               ),
                             ],
                           ),
@@ -92,22 +97,23 @@ class FacilitySelectionPage extends StatelessWidget {
                     ),
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (context, index) {
+                            (context, index) {
                           final facility = filteredFacilities[index];
 
                           return Container(
                             color: Colors.white,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: kPadding),
+                                horizontal: spacer2
+                            ),
                             child: Container(
                               margin: const EdgeInsets.symmetric(
-                                  horizontal: kPadding),
+                                  horizontal: spacer2),
                               decoration: BoxDecoration(
                                 color:
-                                    DigitTheme.instance.colors.alabasterWhite,
+                                DigitTheme.instance.colors.light.paperPrimary,
                                 border: Border(
                                   top:
-                                      index == 0 ? borderSide : BorderSide.none,
+                                  index == 0 ? borderSide : BorderSide.none,
                                   bottom: index == filteredFacilities.length - 1
                                       ? borderSide
                                       : BorderSide.none,
@@ -120,10 +126,10 @@ class FacilitySelectionPage extends StatelessWidget {
                                   Navigator.of(context).pop(facility);
                                 },
                                 child: Container(
-                                  margin: const EdgeInsets.all(kPadding),
+                                  margin: const EdgeInsets.all(spacer2),
                                   decoration: BoxDecoration(
                                     color: DigitTheme
-                                        .instance.colors.alabasterWhite,
+                                        .instance.colors.light.paperPrimary,
                                     border: Border(
                                       bottom: BorderSide(
                                         color: theme.colorScheme.outline,
@@ -132,7 +138,7 @@ class FacilitySelectionPage extends StatelessWidget {
                                     ),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(kPadding * 2),
+                                    padding: const EdgeInsets.all(spacer2 * 2),
                                     child: Text(
                                       localizations
                                           .translate('FAC_${facility.id}'),

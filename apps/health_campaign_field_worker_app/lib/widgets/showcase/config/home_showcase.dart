@@ -19,7 +19,7 @@ class _HomePageShowcaseData {
         warehouseManagerSyncData,
         inventoryReport,
         supervisorProgressBar,
-        supervisorMyChecklist,
+        supervisorMySurveyForm,
         supervisorComplaints,
         supervisorSyncData,
         deleteAll,
@@ -68,8 +68,8 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.supervisorProgressBar,
   );
 
-  final supervisorMyChecklist = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.homeShowcase.supervisorMyChecklist,
+  final supervisorMySurveyForm = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.supervisorMySurveyForm,
   );
 
   final supervisorComplaints = ShowcaseItemBuilder(
@@ -105,4 +105,6 @@ class _HomePageShowcaseData {
   final closedHouseHold = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.closedHouseHoldLabel,
   );
+
+  final clf = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.clf);
 }

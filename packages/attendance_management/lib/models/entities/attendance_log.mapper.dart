@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'attendance_log.dart';
@@ -149,10 +149,8 @@ mixin AttendanceLogSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttendanceLogSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as AttendanceLogSearchModel, other));
+    return AttendanceLogSearchModelMapper.ensureInitialized()
+        .equalsValue(this as AttendanceLogSearchModel, other);
   }
 
   @override
@@ -416,10 +414,8 @@ mixin AttendanceLogModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttendanceLogModelMapper.ensureInitialized()
-                .isValueEqual(this as AttendanceLogModel, other));
+    return AttendanceLogModelMapper.ensureInitialized()
+        .equalsValue(this as AttendanceLogModel, other);
   }
 
   @override

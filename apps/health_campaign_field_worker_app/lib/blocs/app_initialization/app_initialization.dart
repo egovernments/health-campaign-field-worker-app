@@ -106,6 +106,7 @@ class AppInitializationBloc
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
                     MasterEnums.searchHouseHoldFilters.toValue(),
+                    MasterEnums.searchCLFFilters.toValue()
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -169,19 +170,20 @@ class AppInitializationBloc
               ),
             ).toJson(),
           );
-          final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
-                  jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                      [ModuleEnums.hcm.toValue()])
-              .dashboardConfigWrapper;
+          if (dashboardConfigWrapper.isNotEmpty) {
+            final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
+                    jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                        [ModuleEnums.hcm.toValue().toString()])
+                .dashboardConfigWrapper;
 
-          if (dashboardConfigs.isNotEmpty) {
-            await dashboardRemoteRepository.writeToDashboardConfigDB(
-                DashboardConfigPrimaryWrapper.fromJson(
-                        jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                            [ModuleEnums.hcm.toValue()])
-                    .dashboardConfigWrapper
-                    .first,
-                isar);
+            if (dashboardConfigs.isNotEmpty) {
+              await dashboardRemoteRepository.writeToDashboardConfigDB(
+                  DashboardConfigPrimaryWrapper.fromJson(
+                          jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                              [ModuleEnums.hcm.toValue().toString()])
+                      .dashboardConfigWrapper,
+                  isar);
+            }
           }
         } catch (e) {
           debugPrint(e.toString());
@@ -206,11 +208,11 @@ class AppInitializationBloc
   ) async {
     final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
     final configs = await isar.appConfigurations.where().findAll();
-    final dashboardConfigs = await isar.dashboardConfigSchemas
+    final dashboardConfigs = await isar.dashboardConfigSchemaLists
         .where()
         .filter()
-        .chartsIsNotNull()
-        .chartsIsNotEmpty()
+        .dashboardConfigsIsNotNull()
+        .dashboardConfigsIsNotEmpty()
         .findAll();
 
     if (serviceRegistryList.isEmpty) {
@@ -223,7 +225,7 @@ class AppInitializationBloc
     return MdmsConfig(
       appConfigs: configs,
       serviceRegistryList: serviceRegistryList,
-      dashboardConfigSchema: dashboardConfigs.firstOrNull,
+      dashboardConfigSchema: dashboardConfigs.first.dashboardConfigs,
     );
   }
 }
@@ -242,12 +244,13 @@ class AppInitializationState with _$AppInitializationState {
   const factory AppInitializationState.uninitialized() = AppUninitialized;
 
   const factory AppInitializationState.loading() = AppInitializing;
+
   const factory AppInitializationState.failed() = AppInitializationFailed;
 
   const factory AppInitializationState.initialized({
     required AppConfiguration appConfiguration,
     @Default([]) List<ServiceRegistry> serviceRegistryList,
-    DashboardConfigSchema? dashboardConfigSchema,
+    List<DashboardConfigSchema?>? dashboardConfigSchema,
   }) = AppInitialized;
 
   Map<DataModelType, Map<ApiOperation, String>> get entityActionMapping {
@@ -311,7 +314,8 @@ class AppInitializationState with _$AppInitializationState {
 class MdmsConfig {
   final List<AppConfiguration> appConfigs;
   final List<ServiceRegistry> serviceRegistryList;
-  final DashboardConfigSchema? dashboardConfigSchema;
+  final List<DashboardConfigSchema?>? dashboardConfigSchema;
+
 
   const MdmsConfig(
       {required this.appConfigs,

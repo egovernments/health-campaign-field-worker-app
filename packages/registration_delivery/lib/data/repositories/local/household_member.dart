@@ -4,7 +4,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
-import 'package:registration_delivery/utils/utils.dart';
 
 class HouseholdMemberLocalRepository
     extends LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
@@ -20,6 +19,9 @@ class HouseholdMemberLocalRepository
   ]) async {
     return retryLocalCallOperation<List<HouseholdMemberModel>>(() async {
       final selectQuery = sql.select(sql.householdMember).join([]);
+      if (query.limit != null && query.offset != null) {
+        selectQuery.limit(query.limit!, offset: query.offset);
+      }
       final results = await (selectQuery
             ..where(
               buildAnd(

@@ -1,3 +1,27 @@
+## 1.0.5+1
+
+* Bug Fix:
+    * Double selection of dropdown items fields, productVariant, reason, transport type
+* Updated to latest digit_components
+
+## 1.0.5
+
+* Upgraded to latest versions
+* Added the boundary new variable in inventory singleton class to get the code of the selected
+  boundary
+* UI/UX fixes
+
+## 1.0.4
+
+* Upgrade to Flutter 3.22
+* Updated digit_data_model, digit_scanner to latest version
+* Migrated to digit_ui_components
+
+## 1.0.3+5
+
+* Added audit and client audit details in stock reconciliation
+* Updated digit_data_model and components to latest version
+
 ## 1.0.3+4
 
 * Updated wayBillNumber validation

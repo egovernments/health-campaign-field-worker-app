@@ -1,20 +1,23 @@
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-
-import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/widgets/digit_card.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
-import 'package:digit_components/widgets/scrollable_content.dart';
+import 'package:complaints/complaints.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_location_tracker/data/oplog/oplog.dart';
+import 'package:digit_location_tracker/data/repositories/local/location_tracker.dart';
+import 'package:digit_location_tracker/data/repositories/remote/location_tracker.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
@@ -64,14 +67,15 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                 failed: () => ScrollableContent(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  footer: DigitCard(
-                    child: DigitElevatedButton(
+                  footer: DigitCard(children: [
+                    DigitButton(
+                      label: 'Close',
+                      mainAxisSize: MainAxisSize.max,
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large,
                       onPressed: () => exit(0),
-                      child: const Center(
-                        child: Text('Close'),
-                      ),
                     ),
-                  ),
+                  ]),
                   children: const [
                     Center(
                       child: Text('Internet not available. Try later.'),
@@ -180,13 +184,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
-          LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
-        create: (_) => PgrServiceLocalRepository(
-          sql,
-          PgrServiceOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
           LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
         create: (_) => HouseholdMemberLocalRepository(
           sql,
@@ -264,7 +261,22 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           StockReconciliationOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<UserActionModel, UserActionSearchModel>>(
+        create: (_) => LocationTrackerLocalBaseRepository(
+          sql,
+          LocationTrackerOpLogManager(isar),
+        ),
+      ),
       // INFO Need to add packages here
+
+      RepositoryProvider<
+          LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
+        create: (_) => PgrServiceLocalRepository(
+          sql,
+          PgrServiceOpLogManager(isar),
+        ),
+      ),
     ];
   }
 
@@ -386,14 +398,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        if (value == DataModelType.complaints)
-          RepositoryProvider<
-              RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
-            create: (_) => PgrServiceRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
+
         if (value == DataModelType.user)
           RepositoryProvider<RemoteRepository<UserModel, UserSearchModel>>(
             create: (_) => UserRemoteRepository(
@@ -485,7 +490,22 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             create: (_) =>
                 StockReconciliationRemoteRepository(dio, actionMap: actions),
           ),
+        if (value == DataModelType.userLocation)
+          RepositoryProvider<
+              RemoteRepository<UserActionModel, UserActionSearchModel>>(
+            create: (_) =>
+                LocationTrackerRemoteRepository(dio, actionMap: actions),
+          ),
         // INFO Need to add packages here
+
+        if (value == DataModelType.complaints)
+          RepositoryProvider<
+              RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
+            create: (_) => PgrServiceRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
       ]);
     }
 

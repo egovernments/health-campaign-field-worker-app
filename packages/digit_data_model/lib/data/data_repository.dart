@@ -35,7 +35,7 @@ abstract class DataRepository<D extends EntityModel,
 
 /// `RemoteRepository` is an abstract class that extends `DataRepository` and provides additional functionality for remote repositories.
 abstract class RemoteRepository<D extends EntityModel,
-R extends EntitySearchModel> extends DataRepository<D, R> {
+    R extends EntitySearchModel> extends DataRepository<D, R> {
   final Dio dio;
   final String entityName;
   final bool isPlural;
@@ -61,19 +61,19 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
   String get bulkDeletePath => actionMap[ApiOperation.bulkDelete] ?? '';
 
   RemoteRepository(
-      this.dio, {
-        required this.actionMap,
-        required this.entityName,
-        this.isPlural = false,
-        this.isSearchResponsePlural = false,
-      });
+    this.dio, {
+    required this.actionMap,
+    required this.entityName,
+    this.isPlural = false,
+    this.isSearchResponsePlural = false,
+  });
 
   @override
   FutureOr<List<D>> search(
-      R query, {
-        int? offSet,
-        int? limit,
-      }) async {
+    R query, {
+    int? offSet,
+    int? limit,
+  }) async {
     Response response;
 
     try {
@@ -90,15 +90,15 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
             data: entityName == 'User'
                 ? query.toMap()
                 : {
-              isPlural
-                  ? entityNamePlural
-                  : entityName == 'ServiceDefinition'
-                  ? 'ServiceDefinitionCriteria'
-                  : entityName == 'Downsync'
-                  ? 'DownsyncCriteria'
-                  : entityName:
-              isPlural ? [query.toMap()] : query.toMap(),
-            },
+                    isPlural
+                            ? entityNamePlural
+                            : entityName == 'ServiceDefinition'
+                                ? 'ServiceDefinitionCriteria'
+                                : entityName == 'Downsync'
+                                    ? 'DownsyncCriteria'
+                                    : entityName:
+                        isPlural ? [query.toMap()] : query.toMap(),
+                  },
           );
         },
       );
@@ -129,9 +129,9 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
     }
 
     final entityResponse = await responseMap[
-    (isSearchResponsePlural || entityName == 'ServiceDefinition')
-        ? entityNamePlural
-        : entityName];
+        (isSearchResponsePlural || entityName == 'ServiceDefinition')
+            ? entityNamePlural
+            : entityName];
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
@@ -147,7 +147,7 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
       mapperRes =
           entityList.map((e) => MapperContainer.globals.fromMap<D>(e)).toList();
     } catch (e) {
-      rethrow ;
+      rethrow;
     }
 
     return mapperRes;
@@ -164,10 +164,10 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
   }
 
   FutureOr<Map<String, dynamic>> downSync(
-      R query, {
-        int? offSet,
-        int? limit,
-      }) async {
+    R query, {
+    int? offSet,
+    int? limit,
+  }) async {
     Response response;
 
     try {
@@ -183,7 +183,7 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
             },
             data: {
               entityName == 'Downsync' ? 'DownsyncCriteria' : entityName:
-              query.toMap(),
+                  query.toMap(),
             },
           );
         },
@@ -245,6 +245,9 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
           options: Options(headers: {
             "content-type": 'application/json',
           }),
+          queryParameters: {
+            "tenantId": DigitDataModelSingleton().tenantId,
+          },
           data: {
             EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
           },
@@ -261,6 +264,9 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
           options: Options(headers: {
             "content-type": 'application/json',
           }),
+          queryParameters: {
+            "tenantId": DigitDataModelSingleton().tenantId,
+          },
           data: {
             EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
             "apiOperation": "UPDATE",
@@ -271,9 +277,9 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
   }
 
   FutureOr<Response> dumpError(
-      List<EntityModel> entities,
-      DataOperation operation,
-      ) async {
+    List<EntityModel> entities,
+    DataOperation operation,
+  ) async {
     return executeFuture(
       future: () async {
         String url = "";
@@ -291,7 +297,7 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
         }
 
         return await dio.post(
-          'error-handler/handle-error', // [TODO: Update this URL]
+          DigitDataModelSingleton().errorDumpApiPath,
           options: Options(headers: {
             "content-type": 'application/json',
           }),
@@ -330,6 +336,9 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
           options: Options(headers: {
             "content-type": 'application/json',
           }),
+          queryParameters: {
+            "tenantId": DigitDataModelSingleton().tenantId,
+          },
           data: {
             EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
             "apiOperation": "DELETE",
@@ -348,9 +357,9 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
           data: entityName == 'User'
               ? {entityName: entity.toMap()}
               : {
-            entityName: [entity.toMap()],
-            "apiOperation": "UPDATE",
-          },
+                  entityName: [entity.toMap()],
+                  "apiOperation": "UPDATE",
+                },
         );
       },
     );

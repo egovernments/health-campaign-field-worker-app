@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'stock.dart';
@@ -70,6 +70,9 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
       v.transactionReason;
   static const Field<StockSearchModel, List<String>> _f$transactionReason =
       Field('transactionReason', _$transactionReason, opt: true);
+  static int? _$dateOfEntry(StockSearchModel v) => v.dateOfEntry;
+  static const Field<StockSearchModel, int> _f$dateOfEntry =
+      Field('dateOfEntry', _$dateOfEntry, opt: true);
   static String? _$boundaryCode(StockSearchModel v) => v.boundaryCode;
   static const Field<StockSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -80,6 +83,9 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
       v.additionalFields;
   static const Field<StockSearchModel, AdditionalFields> _f$additionalFields =
       Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+  static DateTime? _$dateOfEntryTime(StockSearchModel v) => v.dateOfEntryTime;
+  static const Field<StockSearchModel, DateTime> _f$dateOfEntryTime =
+      Field('dateOfEntryTime', _$dateOfEntryTime, mode: FieldMode.member);
 
   @override
   final MappableFields<StockSearchModel> fields = const {
@@ -98,9 +104,11 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
     #clientReferenceId: _f$clientReferenceId,
     #transactionType: _f$transactionType,
     #transactionReason: _f$transactionReason,
+    #dateOfEntry: _f$dateOfEntry,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #dateOfEntryTime: _f$dateOfEntryTime,
   };
   @override
   final bool ignoreNull = true;
@@ -130,6 +138,7 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
         clientReferenceId: data.dec(_f$clientReferenceId),
         transactionType: data.dec(_f$transactionType),
         transactionReason: data.dec(_f$transactionReason),
+        dateOfEntry: data.dec(_f$dateOfEntry),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -167,10 +176,8 @@ mixin StockSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            StockSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as StockSearchModel, other));
+    return StockSearchModelMapper.ensureInitialized()
+        .equalsValue(this as StockSearchModel, other);
   }
 
   @override
@@ -212,6 +219,7 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       List<String>? clientReferenceId,
       List<String>? transactionType,
       List<String>? transactionReason,
+      int? dateOfEntry,
       String? boundaryCode});
   StockSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -266,6 +274,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
           Object? clientReferenceId = $none,
           Object? transactionType = $none,
           Object? transactionReason = $none,
+          Object? dateOfEntry = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
@@ -285,6 +294,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (transactionType != $none) #transactionType: transactionType,
         if (transactionReason != $none) #transactionReason: transactionReason,
+        if (dateOfEntry != $none) #dateOfEntry: dateOfEntry,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -309,6 +319,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
       transactionType: data.get(#transactionType, or: $value.transactionType),
       transactionReason:
           data.get(#transactionReason, or: $value.transactionReason),
+      dateOfEntry: data.get(#dateOfEntry, or: $value.dateOfEntry),
       boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -331,6 +342,9 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   @override
   final String id = 'StockModel';
 
+  static int? _$dateOfEntry(StockModel v) => v.dateOfEntry;
+  static const Field<StockModel, int> _f$dateOfEntry =
+      Field('dateOfEntry', _$dateOfEntry, opt: true);
   static StockAdditionalFields? _$additionalFields(StockModel v) =>
       v.additionalFields;
   static const Field<StockModel, StockAdditionalFields> _f$additionalFields =
@@ -402,9 +416,13 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   static bool? _$isDeleted(StockModel v) => v.isDeleted;
   static const Field<StockModel, bool> _f$isDeleted =
       Field('isDeleted', _$isDeleted, opt: true, def: false);
+  static DateTime? _$dateOfEntryTime(StockModel v) => v.dateOfEntryTime;
+  static const Field<StockModel, DateTime> _f$dateOfEntryTime =
+      Field('dateOfEntryTime', _$dateOfEntryTime, mode: FieldMode.member);
 
   @override
   final MappableFields<StockModel> fields = const {
+    #dateOfEntry: _f$dateOfEntry,
     #additionalFields: _f$additionalFields,
     #id: _f$id,
     #tenantId: _f$tenantId,
@@ -428,6 +446,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
+    #dateOfEntryTime: _f$dateOfEntryTime,
   };
   @override
   final bool ignoreNull = true;
@@ -442,6 +461,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
 
   static StockModel _instantiate(DecodingData data) {
     return StockModel(
+        dateOfEntry: data.dec(_f$dateOfEntry),
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
         tenantId: data.dec(_f$tenantId),
@@ -500,10 +520,8 @@ mixin StockModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            StockModelMapper.ensureInitialized()
-                .isValueEqual(this as StockModel, other));
+    return StockModelMapper.ensureInitialized()
+        .equalsValue(this as StockModel, other);
   }
 
   @override
@@ -529,7 +547,8 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       get clientAuditDetails;
   @override
   $R call(
-      {StockAdditionalFields? additionalFields,
+      {int? dateOfEntry,
+      StockAdditionalFields? additionalFields,
       String? id,
       String? tenantId,
       String? facilityId,
@@ -577,7 +596,8 @@ class _StockModelCopyWithImpl<$R, $Out>
           .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
-          {Object? additionalFields = $none,
+          {Object? dateOfEntry = $none,
+          Object? additionalFields = $none,
           Object? id = $none,
           Object? tenantId = $none,
           Object? facilityId = $none,
@@ -601,6 +621,7 @@ class _StockModelCopyWithImpl<$R, $Out>
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
+        if (dateOfEntry != $none) #dateOfEntry: dateOfEntry,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
@@ -631,6 +652,7 @@ class _StockModelCopyWithImpl<$R, $Out>
       }));
   @override
   StockModel $make(CopyWithData data) => StockModel(
+      dateOfEntry: data.get(#dateOfEntry, or: $value.dateOfEntry),
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
@@ -753,10 +775,8 @@ mixin StockAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            StockAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as StockAdditionalFields, other));
+    return StockAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as StockAdditionalFields, other);
   }
 
   @override

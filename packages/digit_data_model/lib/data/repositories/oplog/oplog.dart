@@ -72,7 +72,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .syncedDownEqualTo(false)
         .nonRecoverableErrorEqualTo(false)
         .syncDownRetryCountGreaterThan(
-          5 - 1,
+          DigitDataModelSingleton().syncDownRetryCount - 1,
         )
         .createdByEqualTo(createdBy)
         .findAllSync();
@@ -112,7 +112,8 @@ abstract class OpLogManager<T extends EntityModel> {
     var oplogs = isar.opLogs
         .filter()
         .syncedUpEqualTo(true)
-        .syncDownRetryCountLessThan(5)
+        .syncDownRetryCountLessThan(
+            DigitDataModelSingleton().syncDownRetryCount)
         .syncedDownEqualTo(false)
         .entityTypeEqualTo(type)
         .findAllSync();
@@ -122,6 +123,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .where(
           (element) =>
               element.entityType != DataModelType.service &&
+              element.entityType != DataModelType.userLocation &&
               element.entityType != DataModelType.complaints,
           // Added service so that we don't get the response from the server
         )
@@ -144,7 +146,7 @@ abstract class OpLogManager<T extends EntityModel> {
       });
     } catch (e) {
       if (kDebugMode) {
-        print('error in isar ${e}');
+        print('error in isar $e');
       }
       rethrow;
     }
@@ -298,7 +300,8 @@ abstract class OpLogManager<T extends EntityModel> {
       OpLogEntry updatedEntry = entry.copyWith(
         syncDownRetryCount: syncDownRetryCount + 1,
       );
-      if (updatedEntry.syncDownRetryCount >= 5) {
+      if (updatedEntry.syncDownRetryCount >=
+          DigitDataModelSingleton().syncDownRetryCount) {
         markAsNonRecoverable = true;
         updatedEntry = updatedEntry.copyWith(nonRecoverableError: true);
       }
@@ -314,7 +317,8 @@ abstract class OpLogManager<T extends EntityModel> {
       await Future.delayed(const Duration(seconds: 1));
     } else {
       await Future.delayed(Duration(
-        seconds: 5 * oplogs.first.syncDownRetryCount,
+        seconds: DigitDataModelSingleton().retryTimeInterval *
+            oplogs.first.syncDownRetryCount,
       ));
     }
 

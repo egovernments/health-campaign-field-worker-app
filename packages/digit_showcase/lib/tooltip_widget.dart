@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:digit_showcase/showcase.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import 'measure_size.dart';
@@ -11,6 +12,7 @@ class ToolTipWidget extends StatefulWidget {
   final VoidCallback? onSkip;
   final VoidCallback? onNext;
   final String? nextTitle;
+  final String? skipTitle;
   final GetPosition? position;
   final Offset? offset;
   final Size? screenSize;
@@ -47,6 +49,7 @@ class ToolTipWidget extends StatefulWidget {
     this.onSkip,
     this.onNext,
     this.nextTitle,
+    this.skipTitle,
     required this.position,
     required this.offset,
     required this.screenSize,
@@ -335,6 +338,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
 
     if (widget.container == null) {
       final theme = Theme.of(context);
+      
 
       return Positioned(
         top: contentY,
@@ -445,30 +449,13 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                               ),
                                     ),
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: spacer2),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      TextButton(
-                                        style: TextButton.styleFrom(
-                                          foregroundColor:
-                                              theme.colorScheme.onBackground,
-                                          tapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                        ),
-                                        onPressed: widget.onSkip,
-                                        child: const Text('Skip'),
-                                      ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            tapTargetSize: MaterialTapTargetSize
-                                                .shrinkWrap,
-                                            textStyle: const TextStyle(
-                                              fontStyle: FontStyle.normal,
-                                            )),
-                                        onPressed: widget.onNext,
-                                        child: const Text('Next'),
-                                      ),
+                                      DigitButton(label: widget.skipTitle ?? 'Skip', onPressed: (){if(widget.onSkip != null){widget.onSkip!();}}, type: DigitButtonType.secondary, size: DigitButtonSize.medium,),
+                                      const SizedBox(width: spacer2),
+                                      DigitButton(label: widget.nextTitle ?? 'Next', onPressed: (){if(widget.onNext != null){widget.onNext!();}}, type: DigitButtonType.primary, size: DigitButtonSize.medium,)
                                     ],
                                   ),
                                 ],
@@ -535,7 +522,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
     final textPainter = TextPainter(
       text: TextSpan(text: text, style: style),
       maxLines: 1,
-      textScaleFactor: MediaQuery.of(context).textScaleFactor,
+      textScaler: MediaQuery.of(context).textScaler,
       textDirection: TextDirection.ltr,
     )..layout();
     return textPainter.size;

@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/enum/app_enums.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
+import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 
 import '../../../router/registration_delivery_router.gm.dart';
-import '../../../widgets/localized.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../widgets/localized.dart';
 
 @RoutePage()
 class SplashAcknowledgementPage extends LocalizedStatefulWidget {
@@ -43,17 +45,23 @@ class SplashAcknowledgementPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: DigitAcknowledgement.success(
-        action: () {
-          context.router.maybePop();
-        },
-        enableBackToSearch: widget.enableBackToSearch ?? true,
-        actionLabel:
-            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+      body: PanelCard(
+        type: PanelType.success,
+        actions: [
+          DigitButton(
+            label: localizations
+                .translate(i18.acknowledgementSuccess.actionLabelText),
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
+            onPressed: () {
+              context.router.maybePop();
+            },
+          ),
+        ],
         description: localizations.translate(
           i18.acknowledgementSuccess.acknowledgementDescriptionText,
         ),
-        label: localizations
+        title: localizations
             .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
       ),
     );

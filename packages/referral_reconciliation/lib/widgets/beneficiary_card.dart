@@ -1,4 +1,4 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
 
@@ -23,48 +23,71 @@ class ReferralBeneficiaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(kPadding / 2),
+          padding: EdgeInsets.all(theme.spacerTheme.spacer2 / 2),
           child: Text(
             title,
-            style: theme.textTheme.headlineSmall,
+            style: textTheme.headingS,
           ),
         ),
         Offstage(
           offstage: status == null,
           child: status == ReferralReconEnums.visited.toValue()
-              ? DigitIconButton(
-                  icon: Icons.check_circle,
-                  iconText: ReferralReconLocalization.of(context)
-                      .translate(status.toString()),
-                  iconTextColor: theme.colorScheme.onSurfaceVariant,
-                  iconColor: theme.colorScheme.onSurfaceVariant,
+              ? Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      color: theme.colorTheme.alert.success,
+                    ),
+                    SizedBox(
+                      width: theme.spacerTheme.spacer1,
+                    ),
+                    Text(
+                      ReferralReconLocalization.of(context)
+                          .translate(status.toString()),
+                      style: TextStyle(
+                          color: Colors.green,
+                          fontSize: theme.spacerTheme.spacer4),
+                    )
+                  ],
                 )
-              : DigitIconButton(
-                  icon: Icons.info_rounded,
-                  iconText: ReferralReconLocalization.of(context)
-                      .translate(status.toString()),
-                  iconTextColor: theme.colorScheme.error,
-                  iconColor: theme.colorScheme.error,
+              : Row(
+                  children: [
+                    Icon(
+                      Icons.info_rounded,
+                      color: theme.colorTheme.alert.error,
+                    ),
+                    SizedBox(
+                      width: theme.spacerTheme.spacer1,
+                    ),
+                    Text(
+                      ReferralReconLocalization.of(context)
+                          .translate(status.toString()),
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: theme.spacerTheme.spacer4),
+                    )
+                  ],
                 ),
         ),
         Padding(
-          padding: const EdgeInsets.all(kPadding / 2),
+          padding: EdgeInsets.all(theme.spacerTheme.spacer2 / 2),
           child: Text(
             subtitle,
-            style: theme.textTheme.bodyMedium,
+            style: textTheme.bodyS,
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(kPadding / 2),
+          padding: EdgeInsets.all(theme.spacerTheme.spacer2 / 2),
           child: Text(
             description,
-            style: theme.textTheme.bodySmall,
+            style: textTheme.bodyS,
           ),
         ),
       ],

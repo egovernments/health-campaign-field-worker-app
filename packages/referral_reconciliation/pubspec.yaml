@@ -1,6 +1,6 @@
 name: referral_reconciliation
 description: "This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally via the Digit HCM app"
-version: 1.0.2+1
+version: 1.0.4+2
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/referral_reconciliation
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
@@ -11,38 +11,40 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_components: ^1.0.1+1
-  flutter_bloc: ^8.1.1
-  freezed_annotation: ^2.1.0
-  reactive_forms: ^14.1.0
+  digit_ui_components: ^0.2.0
+  flutter_bloc: ^8.1.5
+  freezed_annotation: ^2.4.1
+  reactive_forms: ^17.0.0
+  intl: ^0.19.0
+  flutter_svg: ^2.0.10+1
+  dart_mappable: ^4.2.2
+  drift: ^2.18.0
+  auto_route: ^8.1.3
+  collection: ^1.18.0
+  dio: ^5.4.3+1
+  location: ^6.0.2
+  uuid: ^4.4.0
+  recase: ^4.1.0
+  pluto_grid: ^8.0.0
   fluttertoast: ^8.1.2
   overlay_builder: ^1.1.0
-  intl: ^0.18.0
-  flutter_svg: ^2.0.8
-  dart_mappable: ^4.2.0
-  drift: ^2.0.0
   sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
   path: ^1.8.2
-  drift_db_viewer: ^2.0.0
-  uuid: ^3.0.6
-  recase: ^4.1.0
-  pluto_grid: ^7.0.1
-  digit_scanner: ^1.0.3+1
+  digit_scanner: ^1.0.5+1
   group_radio_button: ^1.3.0
-  flutter_keyboard_visibility: ^5.4.0
-  auto_route: ^7.8.4
-  collection: ^1.16.0
-  digit_data_model: ^1.0.4-dev.6-uniqueId
+  flutter_keyboard_visibility: ^5.4.1
+  digit_data_model: ^1.0.6+1
   stream_transform: ^2.1.0
+  survey_form: ^1.0.1+3
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
-  dart_code_metrics: ^5.7.6
+  flutter_lints: ^4.0.0
   freezed: ^2.1.0+1
-  build_runner: ^2.4.7
+  build_runner: ^2.4.11
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
   bloc_test: ^9.1.0
@@ -52,9 +54,10 @@ dev_dependencies:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
       ref: master
       path: ./packages/dart_mappable_builder
-  auto_route_generator: ^7.3.2
+  auto_route_generator: ^8.0.0
 
 flutter:
   assets:
     - assets/images/
     - assets/icons/svg/
+    - assets/animated_json/

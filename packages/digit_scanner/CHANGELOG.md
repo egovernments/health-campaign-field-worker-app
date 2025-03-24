@@ -1,10 +1,28 @@
+## 1.0.5+1
+
+* Updated to latest package versions
+
+## 1.0.5
+
+* Updated to latest package versions
+* Ui update
+
+## 1.0.4
+
+* Updated to latest package versions
+* Updated flutter version to 3.22
+* Migrated to digit_ui_components
+
 ## 1.0.3+1
+
 * Updated Digit_Components
 
 ## 1.0.3
+
 * Manual code entry fixes with stable version
 
 ## 1.0.3-dev.1
+
 * Fix for manual entry result not reflecting
 
 ## 1.0.2

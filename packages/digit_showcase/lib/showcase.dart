@@ -295,6 +295,9 @@ class Showcase extends StatefulWidget {
   /// Provides text direction of tooltip description.
   final TextDirection? descriptionTextDirection;
 
+  final String? nextTitle;
+  final String? skipTitle;
+
   /// Provides a callback when barrier has been clicked.
   ///
   /// Note-: Even if barrier interactions are disabled, this handler
@@ -344,6 +347,8 @@ class Showcase extends StatefulWidget {
     this.descriptionPadding,
     this.titleTextDirection,
     this.descriptionTextDirection,
+    this.nextTitle,
+    this.skipTitle,
     this.onBarrierClick,
   })  : height = null,
         width = null,
@@ -401,6 +406,8 @@ class Showcase extends StatefulWidget {
         titlePadding = null,
         descriptionPadding = null,
         titleTextDirection = null,
+        nextTitle = null,
+        skipTitle = null,
         descriptionTextDirection = null,
         assert(overlayOpacity >= 0.0 && overlayOpacity <= 1.0,
             "overlay opacity must be between 0 and 1.");
@@ -611,7 +618,7 @@ class _ShowcaseState extends State<Showcase> {
             onSkip: () {
               showCaseWidgetState.dismiss();
             },
-            nextTitle: 'Next',
+            nextTitle: widget.nextTitle ?? 'Next',
             position: position,
             offset: offset,
             screenSize: screenSize,

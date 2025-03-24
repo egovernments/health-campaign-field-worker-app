@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_showcase/showcase_widget.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 
@@ -11,8 +11,10 @@ import 'config/showcase_constants.dart';
 
 class ShowcaseButton extends LocalizedStatefulWidget {
   final Iterable<GlobalKey>? showcaseFor;
+  final bool isCommunity;
 
-  const ShowcaseButton({super.key, this.showcaseFor});
+  const ShowcaseButton(
+      {super.key, this.showcaseFor, required this.isCommunity});
 
   @override
   LocalizedState<ShowcaseButton> createState() => ShowcaseButtonState();
@@ -44,10 +46,10 @@ class ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              kPadding,
-              kPadding,
-              kPadding / 2,
-              kPadding,
+              spacer2,
+              spacer2,
+              spacer2 / 2,
+              spacer2,
             ),
             child: Text(
               RegistrationDeliveryLocalization.of(context)
@@ -68,13 +70,21 @@ class ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
           (e) => e.showcaseKey,
         );
       case HouseholdLocationRoute.name:
-        return householdLocationShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
+        return (widget.isCommunity)
+            ? clfLocationShowCaseData.showcaseData.map(
+                (e) => e.showcaseKey,
+              )
+            : householdLocationShowcaseData.showcaseData.map(
+                (e) => e.showcaseKey,
+              );
       case HouseHoldDetailsRoute.name:
-        return householdDetailsShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
+        return (widget.isCommunity)
+            ? clfDetailsShowcaseData.showcaseData.map(
+                (e) => e.showcaseKey,
+              )
+            : householdDetailsShowcaseData.showcaseData.map(
+                (e) => e.showcaseKey,
+              );
       case IndividualDetailsRoute.name:
         return individualDetailsShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,

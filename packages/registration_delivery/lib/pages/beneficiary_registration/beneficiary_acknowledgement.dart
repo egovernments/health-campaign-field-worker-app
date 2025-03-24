@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:digit_data_model/models/entities/identifier_types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,27 +41,38 @@ class BeneficiaryAcknowledgementPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: DigitAcknowledgement.success(
-        action: () {
-          context.router.maybePop();
-        },
-        secondaryAction: () {
-          final bloc = context.read<SearchBlocWrapper>();
+      body: Padding(
+        padding: const EdgeInsets.all(spacer2),
+        child: PanelCard(
+          type: PanelType.success,
+          title: localizations
+              .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
+          actions: [
+            DigitButton(
+                label: localizations.translate(
+                  i18.householdDetails.viewHouseHoldDetailsAction,
+                ),
+                onPressed: () {
+                  final bloc = context.read<SearchBlocWrapper>();
 
-          context.router.popAndPush(
-            BeneficiaryWrapperRoute(
-              wrapper: bloc.state.householdMembers.first,
-            ),
-          );
-        },
-        enableViewHousehold: widget.enableViewHousehold ?? false,
-        secondaryLabel: localizations.translate(
-          i18.householdDetails.viewHouseHoldDetailsAction,
-        ),
-        actionLabel:
-            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
-        description: localizations.translate(
-          i18.acknowledgementSuccess.acknowledgementDescriptionText,
+                  context.router.popAndPush(
+                    BeneficiaryWrapperRoute(
+                      wrapper: bloc.state.householdMembers.first,
+                    ),
+                  );
+                },
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large),
+            DigitButton(
+                label: localizations
+                    .translate(i18.acknowledgementSuccess.actionLabelText),
+                onPressed: () => context.router.maybePop(),
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large),
+          ],
+          description: localizations.translate(
+            i18.acknowledgementSuccess.acknowledgementDescriptionText,
+          ),
         ),
         subLabel: getSubText(wrapper),
         label: localizations

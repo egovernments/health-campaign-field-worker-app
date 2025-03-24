@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'attendance_register.dart';
@@ -49,6 +49,10 @@ class AttendanceRegisterSearchModelMapper
   static int? _$limit(AttendanceRegisterSearchModel v) => v.limit;
   static const Field<AttendanceRegisterSearchModel, int> _f$limit =
       Field('limit', _$limit, opt: true);
+  static String? _$localityCode(AttendanceRegisterSearchModel v) =>
+      v.localityCode;
+  static const Field<AttendanceRegisterSearchModel, String> _f$localityCode =
+      Field('localityCode', _$localityCode, opt: true);
   static String? _$boundaryCode(AttendanceRegisterSearchModel v) =>
       v.boundaryCode;
   static const Field<AttendanceRegisterSearchModel, String> _f$boundaryCode =
@@ -75,6 +79,7 @@ class AttendanceRegisterSearchModelMapper
     #referenceId: _f$referenceId,
     #offSet: _f$offSet,
     #limit: _f$limit,
+    #localityCode: _f$localityCode,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -100,6 +105,7 @@ class AttendanceRegisterSearchModelMapper
         referenceId: data.dec(_f$referenceId),
         offSet: data.dec(_f$offSet),
         limit: data.dec(_f$limit),
+        localityCode: data.dec(_f$localityCode),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -140,10 +146,8 @@ mixin AttendanceRegisterSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttendanceRegisterSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as AttendanceRegisterSearchModel, other));
+    return AttendanceRegisterSearchModelMapper.ensureInitialized()
+        .equalsValue(this as AttendanceRegisterSearchModel, other);
   }
 
   @override
@@ -174,6 +178,7 @@ abstract class AttendanceRegisterSearchModelCopyWith<
       String? referenceId,
       int? offSet,
       int? limit,
+      String? localityCode,
       String? boundaryCode});
   AttendanceRegisterSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -200,6 +205,7 @@ class _AttendanceRegisterSearchModelCopyWithImpl<$R, $Out>
           Object? referenceId = $none,
           Object? offSet = $none,
           Object? limit = $none,
+          Object? localityCode = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
@@ -210,6 +216,7 @@ class _AttendanceRegisterSearchModelCopyWithImpl<$R, $Out>
         if (referenceId != $none) #referenceId: referenceId,
         if (offSet != $none) #offSet: offSet,
         if (limit != $none) #limit: limit,
+        if (localityCode != $none) #localityCode: localityCode,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -223,6 +230,7 @@ class _AttendanceRegisterSearchModelCopyWithImpl<$R, $Out>
           referenceId: data.get(#referenceId, or: $value.referenceId),
           offSet: data.get(#offSet, or: $value.offSet),
           limit: data.get(#limit, or: $value.limit),
+          localityCode: data.get(#localityCode, or: $value.localityCode),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -280,6 +288,9 @@ class AttendanceRegisterModelMapper
   static int? _$startDate(AttendanceRegisterModel v) => v.startDate;
   static const Field<AttendanceRegisterModel, int> _f$startDate =
       Field('startDate', _$startDate, opt: true);
+  static String? _$localityCode(AttendanceRegisterModel v) => v.localityCode;
+  static const Field<AttendanceRegisterModel, String> _f$localityCode =
+      Field('localityCode', _$localityCode, opt: true);
   static int? _$endDate(AttendanceRegisterModel v) => v.endDate;
   static const Field<AttendanceRegisterModel, int> _f$endDate =
       Field('endDate', _$endDate, opt: true);
@@ -333,6 +344,7 @@ class AttendanceRegisterModelMapper
     #nonRecoverableError: _f$nonRecoverableError,
     #rowVersion: _f$rowVersion,
     #startDate: _f$startDate,
+    #localityCode: _f$localityCode,
     #endDate: _f$endDate,
     #individualList: _f$individualList,
     #attendees: _f$attendees,
@@ -367,6 +379,7 @@ class AttendanceRegisterModelMapper
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         rowVersion: data.dec(_f$rowVersion),
         startDate: data.dec(_f$startDate),
+        localityCode: data.dec(_f$localityCode),
         endDate: data.dec(_f$endDate),
         individualList: data.dec(_f$individualList),
         attendees: data.dec(_f$attendees),
@@ -414,10 +427,8 @@ mixin AttendanceRegisterModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttendanceRegisterModelMapper.ensureInitialized()
-                .isValueEqual(this as AttendanceRegisterModel, other));
+    return AttendanceRegisterModelMapper.ensureInitialized()
+        .equalsValue(this as AttendanceRegisterModel, other);
   }
 
   @override
@@ -467,6 +478,7 @@ abstract class AttendanceRegisterModelCopyWith<
       bool? nonRecoverableError,
       int? rowVersion,
       int? startDate,
+      String? localityCode,
       int? endDate,
       List<IndividualModel>? individualList,
       List<AttendeeModel>? attendees,
@@ -546,6 +558,7 @@ class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
           Object? nonRecoverableError = $none,
           Object? rowVersion = $none,
           Object? startDate = $none,
+          Object? localityCode = $none,
           Object? endDate = $none,
           Object? individualList = $none,
           Object? attendees = $none,
@@ -568,6 +581,7 @@ class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
           #nonRecoverableError: nonRecoverableError,
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (startDate != $none) #startDate: startDate,
+        if (localityCode != $none) #localityCode: localityCode,
         if (endDate != $none) #endDate: endDate,
         if (individualList != $none) #individualList: individualList,
         if (attendees != $none) #attendees: attendees,
@@ -593,6 +607,7 @@ class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       startDate: data.get(#startDate, or: $value.startDate),
+      localityCode: data.get(#localityCode, or: $value.localityCode),
       endDate: data.get(#endDate, or: $value.endDate),
       individualList: data.get(#individualList, or: $value.individualList),
       attendees: data.get(#attendees, or: $value.attendees),

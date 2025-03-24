@@ -1,4 +1,5 @@
-import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
 
 class ProgressIndicatorContainer extends StatelessWidget {
@@ -22,29 +23,31 @@ class ProgressIndicatorContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Text(
           label,
-          style: theme.textTheme.bodyMedium,
+          style: textTheme.bodyS,
           textAlign: TextAlign.center,
         ),
         Padding(
-          padding: const EdgeInsets.all(kPadding * 2),
+          padding: const EdgeInsets.all(spacer2 * 2),
           child: Column(
             children: [
               LinearProgressIndicator(
+                backgroundColor: theme.colorTheme.generic.background,
                 valueColor: valueColor ??
                     AlwaysStoppedAnimation<Color>(
-                      theme.colorScheme.onSurfaceVariant,
+                      theme.colorTheme.primary.primary1,
                     ),
                 value: value,
                 minHeight: 7.0,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: kPadding + 4),
+                padding: const EdgeInsets.only(top: spacer2 + 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -55,7 +58,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
                     ),
                     Text(
                       suffixLabel,
-                      style: theme.textTheme.bodyMedium,
+                      style: textTheme.bodyS,
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -67,11 +70,11 @@ class ProgressIndicatorContainer extends StatelessWidget {
         if (subLabel != null)
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(kPadding),
+              padding: const EdgeInsets.all(spacer2),
               child: Text(
                 subLabel ?? '',
                 style: TextStyle(
-                  color: theme.colorScheme.secondary,
+                  color: theme.colorTheme.text.secondary,
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),

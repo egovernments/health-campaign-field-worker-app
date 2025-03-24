@@ -2,8 +2,8 @@
 import 'dart:convert';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
+import 'package:digit_data_model/data_model.dart';
 
 part 'attributes.mapper.dart';
 
@@ -15,7 +15,7 @@ class AttributesSearchModel extends EntitySearchModel
   final String? referenceId;
   final String? tenantId;
   final String? code;
-  final String? isActive;
+  final bool? isActive;
   final bool? required;
   final String? regex;
   final int? order;
@@ -59,7 +59,7 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
   final String? tenantId;
   final String? code;
   final List<String>? values;
-  final String? isActive;
+  final bool? isActive;
   final bool? required;
   final String? regex;
   final int? order;
@@ -111,8 +111,8 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
       regex: Value(regex),
       order: Value(order),
       nonRecoverableError: Value(nonRecoverableError),
-      additionalDetails: Value(jsonEncode(additionalDetails)),
       rowVersion: Value(rowVersion),
+      additionalDetails: Value(jsonEncode(additionalDetails)),
     );
   }
 }
