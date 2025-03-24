@@ -10,15 +10,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/global_search_parameters.dart';
 
 import '../../data/repositories/local/individual_global_search.dart';
-import '../../models/entities/household.dart';
-import '../../models/entities/household_member.dart';
-import '../../models/entities/project_beneficiary.dart';
-import '../../models/entities/referral.dart';
-import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
-import '../../models/entities/task.dart';
-import '../../utils/typedefs.dart';
-import '../search_households/search_households.dart';
 
 part 'household_overview.freezed.dart';
 

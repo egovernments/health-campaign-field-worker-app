@@ -966,20 +966,16 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               if (isWareHouseMgr)
                                 ReactiveWrapperField(
                                     formControlName: _waybillNumberKey,
-                          keyboardType:
-                          const TextInputType.numberWithOptions(
-                          decimal: true,
-                          ),
-                          validationMessages: {
-                          'maxLength': (object) => localizations
-                              .translate(
-                          i18.common.maxCharsRequired)
-                              .replaceAll('{}', '200'),
-                          'minLength': (object) => localizations
-                              .translate(
-                          i18.common.min2CharsRequired)
-                              .replaceAll('{}', ''),
-                          },
+                                    validationMessages: {
+                                      'maxLength': (object) => localizations
+                                          .translate(
+                                              i18.common.maxCharsRequired)
+                                          .replaceAll('{}', '200'),
+                                      'minLength': (object) => localizations
+                                          .translate(
+                                              i18.common.min2CharsRequired)
+                                          .replaceAll('{}', ''),
+                                    },
                                     builder: (field) {
                                       return InputField(
                                         type: InputType.text,
@@ -989,6 +985,11 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         onChange: (val) {
                                           field.control.value = val;
                                         },
+                                        keyboardType: const TextInputType
+                                            .numberWithOptions(
+                                          decimal: true,
+                                        ),
+                                        errorMessage: field.errorText,
                                       );
                                     }),
                               if (isWareHouseMgr)

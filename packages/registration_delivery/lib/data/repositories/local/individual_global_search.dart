@@ -241,11 +241,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       return selectQuery;
     } else if (params.nameSearch != null ||
         params.nameSearch!.isNotEmpty && selectQuery == null) {
-      selectQuery = super
-          .sql
-          .individual
-          .select()
-          .join([joinName(sql), joinIdentifier(sql), joinIndividualAddress(sql)]);
+      selectQuery = super.sql.individual.select().join(
+          [joinName(sql), joinIdentifier(sql), joinIndividualAddress(sql)]);
 
       if (params.householdClientReferenceId != null) {
         await searchByName(selectQuery, params, sql);
@@ -307,14 +304,21 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           params.householdClientReferenceId == null) {
         selectQuery = searchByBuildingName(selectQuery, params, sql);
       } else {
-        selectQuery = selectQuery.join([
-          joinName(sql),
-          joinIdentifier(sql)
-        ]);
+        selectQuery = selectQuery.join([joinName(sql), joinIdentifier(sql)]);
         selectQuery = searchByName(selectQuery, params, sql);
       }
     }
     return selectQuery;
+  }
+
+  searchByBuildingName(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
+    return selectQuery.where(buildAnd([
+      if (params.nameSearch != null)
+        buildOr([
+          sql.address.buildingName.contains(params.nameSearch!),
+        ]),
+    ]));
   }
 
   searchByName(
@@ -477,7 +481,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       Status.toAdminister.name: Status.toAdminister,
       Status.closeHousehold.name: Status.closeHousehold,
     };
-    var applyFilter = filter;
     var appliedFilter = statusMap[filter]!.toValue();
     if (selectQuery == null) {
       selectQuery = sql.select(sql.task).join([
@@ -545,13 +548,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
   joinProjectBeneficiary(LocalSqlDataStore sql) {
     return leftOuterJoin(sql.projectBeneficiary,
         sql.projectBeneficiary.clientReferenceId.isNotNull());
-  }
-
-  joinIdentifier(LocalSqlDataStore sql) {
-    return leftOuterJoin(
-        sql.identifier,
-        sql.identifier.clientReferenceId
-            .equalsExp(sql.individual.clientReferenceId));
   }
 
   // Executing custom select query on top of filterSelectQuery to get count

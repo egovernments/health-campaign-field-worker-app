@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -86,58 +87,39 @@ class MemberCard extends StatelessWidget {
                       Align(
                           alignment: Alignment.topLeft,
                           child: Padding(
-                            padding: const EdgeInsets.all(kPadding),
+                            padding: const EdgeInsets.all(spacer2),
                             child: Container(
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: DigitTheme.instance.colorScheme.primary,
+                                  color:
+                                      DigitTheme.instance.colorScheme.primary,
                                 ),
-
-                                child: Padding(
-                                  padding: const EdgeInsets.all(
-                                    kPadding,
-                                  ),
-                                  child: Text(
-                                    individual.identifiers
-                                        ?.lastWhereOrNull(
-                                          (e) =>
-                                      e.identifierType ==
-                                          IdentifierTypes
-                                              .uniqueBeneficiaryID
-                                              .toValue(),
-                                    )
-                                        ?.identifierId ??
-                                        localizations
-                                            .translate(i18.common.noResultsFound),
-                                  ),
-
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(kPadding),
-
-                                  ),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(spacer2),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(
-                                    kPadding,
-                                  ),
-                                  child: Text(
-                                    individual.identifiers
-                                        ?.lastWhereOrNull(
-                                          (e) =>
-                                      e.identifierType ==
-                                          IdentifierTypes.uniqueBeneficiaryID
-                                              .toValue(),
-                                    )
-                                        ?.identifierId ??
-                                        localizations
-                                            .translate(i18.common.noResultsFound),
-                                  ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                  spacer2,
+                                ),
+                                child: Text(
+                                  individual.identifiers
+                                          ?.lastWhereOrNull(
+                                            (e) =>
+                                                e.identifierType ==
+                                                IdentifierTypes
+                                                    .uniqueBeneficiaryID
+                                                    .toValue(),
+                                          )
+                                          ?.identifierId ??
+                                      localizations
+                                          .translate(i18.common.noResultsFound),
                                 ),
                               ),
                             ),
                           ))
-                          else
-                          const Offstage(),
+                    else
+                      const Offstage(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -323,7 +305,7 @@ class MemberCard extends StatelessWidget {
                                     onPressed: () {
                                       final bloc =
                                           context.read<HouseholdOverviewBloc>();
-                                      
+
                                       final serviceDefinitionBloc = context
                                           .read<ServiceDefinitionBloc>()
                                           .state;

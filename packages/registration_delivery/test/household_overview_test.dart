@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/models/entities/household.dart';
@@ -94,6 +94,7 @@ void main() {
       offset: null,
       limit: null,
       filter: [],
+      identifierId: '1ce2-3f4g-5h6i',
     ));
     registerFallbackValue(HouseholdSearchModel());
     registerFallbackValue(HouseholdMemberSearchModel());

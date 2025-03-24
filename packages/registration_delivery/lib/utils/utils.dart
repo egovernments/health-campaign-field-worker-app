@@ -5,9 +5,10 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/household.dart';
@@ -145,12 +146,12 @@ bool checkEligibilityForAgeAndSideEffect(
       if (projectType?.validMaxAge != null &&
           projectType?.validMinAge != null) {
         return (projectType?.validMinAge != null &&
-              projectType?.validMaxAge != null)
-          ? totalAgeMonths >= projectType!.validMinAge! &&
-                  totalAgeMonths <= projectType.validMaxAge!
-              ? true
-              : false
-          : false;
+                projectType?.validMaxAge != null)
+            ? totalAgeMonths >= projectType!.validMinAge! &&
+                    totalAgeMonths <= projectType.validMaxAge!
+                ? true
+                : false
+            : false;
       }
       return false;
     }
