@@ -51,6 +51,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
     final results = await houseHoldGlobalSearchRepository.houseHoldGlobalSearch(
       GlobalSearchParameters(
+          householdType: event.globalSearchParams.householdType,
           projectId: event.globalSearchParams.projectId,
           isProximityEnabled: event.globalSearchParams.isProximityEnabled,
           latitude: event.globalSearchParams.latitude,
@@ -333,7 +334,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     if (projectBeneficiariesList.isNotEmpty) {
       if (taskList.isEmpty) {
         taskList =
-            await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
+            await fetchTaskByProjectBeneficiary(projectBeneficiariesList);
       }
       sideEffectsList =
           await sideEffectDataRepository.search(SideEffectSearchModel(

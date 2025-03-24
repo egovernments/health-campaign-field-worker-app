@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_record.dart';
 import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_service_definition.dart';
@@ -62,7 +62,8 @@ class _HFCreateReferralWrapperPageState
                   context.repository<ServiceModel, ServiceSearchModel>(context),
             )..add(ServiceSearchEvent(
                   serviceSearchModel: ServiceSearchModel(
-                clientId: widget.referralReconciliation?.clientReferenceId,
+                relatedClientReferenceId:
+                    widget.referralReconciliation?.clientReferenceId,
               ))),
             child: BlocProvider(
               create: (_) => RecordHFReferralBloc(

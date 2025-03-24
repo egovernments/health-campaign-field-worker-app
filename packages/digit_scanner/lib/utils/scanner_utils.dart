@@ -1,9 +1,10 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
 import 'package:digit_scanner/utils/extensions/extensions.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
@@ -25,39 +26,49 @@ class DigitScannerUtils {
           i18.scanner.scannerDialogContent,
         )
         .replaceAll('{quantity}', quantity.toString());
-    await DigitDialog.show<bool>(
-      context,
-      options: DigitDialogOptions(
-        titleText: localizations.translate(
+    await showCustomPopup(
+      context: context,
+      builder: (popupContext) => Popup(
+        title: localizations.translate(
           i18.scanner.scannerDialogTitle,
         ),
-        contentText: contentLocalization,
-        primaryAction: DigitDialogActions(
-          label: localizations.translate(
-            i18.scanner.scannerDialogPrimaryAction,
+        onOutsideTap: () {
+          Navigator.of(popupContext).pop();
+        },
+        description: contentLocalization,
+        type: PopUpType.simple,
+        actions: [
+          DigitButton(
+            label: localizations.translate(
+              i18.scanner.scannerDialogPrimaryAction,
+            ),
+            onPressed: () {
+              Navigator.of(
+                popupContext,
+                rootNavigator: true,
+              ).pop(false);
+            },
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
           ),
-          action: (ctx) {
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).pop(false);
-          },
-        ),
-        secondaryAction: DigitDialogActions(
-          label: localizations.translate(
-            i18.scanner.scannerDialogSecondaryAction,
-          ),
-          action: (ctx) {
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).pop(true);
+          DigitButton(
+            label: localizations.translate(
+              i18.scanner.scannerDialogSecondaryAction,
+            ),
+            onPressed: () {
+              Navigator.of(
+                context,
+                rootNavigator: true,
+              ).pop(true);
 
-            Navigator.of(
-              context,
-            ).pop();
-          },
-        ),
+              Navigator.of(
+                context,
+              ).pop();
+            },
+            type: DigitButtonType.secondary,
+            size: DigitButtonSize.large,
+          ),
+        ],
       ),
     );
   }
@@ -96,7 +107,14 @@ class DigitScannerUtils {
     setText('');
 
     // Process the image to detect barcodes
-    final barcodes = await barcodeScanner.processImage(inputImage);
+    final List<Barcode> barcodes;
+
+    try {
+      barcodes = await barcodeScanner.processImage(inputImage);
+    } catch (e) {
+      debugPrint('Error processing image: $e');
+      return;
+    }
 
     // Check if the input image has valid metadata for size and rotation
     if (inputImage.metadata?.size != null &&
@@ -127,13 +145,13 @@ class DigitScannerUtils {
               await storeValue(parsedResult);
             } else {
               // Handle error if there is a mismatch in the scanned resource count
-              await handleError(localizations
-                  .translate(i18.scanner.scannedResourceCountMisMatch));
+              await handleError(
+                  localizations.translate(i18.scanner.invalidBarcode));
             }
           } catch (e) {
             // Handle error if parsing fails
-            await handleError(localizations
-                .translate(i18.scanner.scannedResourceCountMisMatch));
+            await handleError(
+                localizations.translate(i18.scanner.resourcesScanFailed));
           }
         } else {
           // For non-GS1 codes
@@ -189,13 +207,10 @@ class DigitScannerUtils {
     // Check if the player has completed playing or if the result list is empty
     if (player.state == PlayerState.completed || result.isEmpty) {
       // Display a toast message with the provided error message
-      DigitToast.show(
+      Toast.showToast(
         context,
-        options: DigitToastOptions(
-          localizations.translate(message), // Translate the message
-          true, // Show as an error
-          DigitTheme.instance.mobileTheme, // Use the current theme
-        ),
+        type: ToastType.error,
+        message: localizations.translate(message),
       );
     }
 

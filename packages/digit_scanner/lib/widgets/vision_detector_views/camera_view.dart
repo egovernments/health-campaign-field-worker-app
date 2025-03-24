@@ -1,26 +1,31 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import 'package:digit_scanner/widgets/localized.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 class CameraView extends LocalizedStatefulWidget {
   const CameraView({
-    Key? key,
+    super.key,
     required this.customPaint,
     required this.onImage,
     this.onCameraFeedReady,
     this.onDetectorViewModeChanged,
     this.onCameraLensDirectionChanged,
     this.initialCameraLensDirection = CameraLensDirection.back,
+    this.onBackButtonPressed,
     required this.cameraController,
     required this.cameras,
-  }) : super(key: key);
+  });
 
   final CustomPaint? customPaint;
   final Function(InputImage inputImage) onImage;
@@ -30,6 +35,7 @@ class CameraView extends LocalizedStatefulWidget {
   final CameraLensDirection initialCameraLensDirection;
   final CameraController? cameraController;
   final List<CameraDescription> cameras;
+  final VoidCallback? onBackButtonPressed;
 
   @override
   State<CameraView> createState() => _CameraViewState();
@@ -44,7 +50,6 @@ class _CameraViewState extends State<CameraView> {
   double _maxAvailableZoom = 1.0;
   double _minAvailableExposureOffset = 0.0;
   double _maxAvailableExposureOffset = 0.0;
-  double _currentExposureOffset = 0.0;
   bool _changingCameraLens = false;
 
   @override
@@ -75,13 +80,14 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Widget _liveFeedBody(BuildContext context) {
+    final theme = Theme.of(context);
     final localizations = ScannerLocalization.of(context);
 
     if (_cameras.isEmpty) return Container();
     if (_controller == null) return Container();
     if (_controller?.value.isInitialized == false) return Container();
     return Container(
-      color: DigitTheme.instance.colorScheme.onSurface,
+      color: theme.colorTheme.generic.background,
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -115,11 +121,12 @@ class _CameraViewState extends State<CameraView> {
           width: 50.0,
           child: FloatingActionButton(
             heroTag: Object(),
-            onPressed: () => Navigator.of(context).pop(),
-            backgroundColor: DigitTheme.instance.colorScheme.onSurface,
-            child: const Icon(
+            onPressed: widget.onBackButtonPressed,
+            backgroundColor: Theme.of(context).colorTheme.generic.background,
+            child: Icon(
               Icons.arrow_back_ios_outlined,
               size: 20,
+              color: Theme.of(context).colorTheme.text.primary,
             ),
           ),
         ),
@@ -181,7 +188,7 @@ class _CameraViewState extends State<CameraView> {
                     min: _minAvailableZoom,
                     max: _maxAvailableZoom,
                     activeColor: DigitTheme.instance.colorScheme.onPrimary,
-                    inactiveColor: const DigitColors().seaShellGray,
+                    inactiveColor: const DigitColors().light.genericBackground,
                     onChanged: (value) async {
                       setState(() {
                         _currentZoomLevel = value;
@@ -201,7 +208,8 @@ class _CameraViewState extends State<CameraView> {
                     child: Center(
                       child: Text(
                         '${_currentZoomLevel.toStringAsFixed(1)}x',
-                        style: TextStyle(color: const DigitColors().white),
+                        style: TextStyle(
+                            color: const DigitColors().light.paperPrimary),
                       ),
                     ),
                   ),
@@ -227,7 +235,7 @@ class _CameraViewState extends State<CameraView> {
                 padding: const EdgeInsets.all(3.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    width: kPadding / 2,
+                    width: spacer1,
                     color: DigitTheme.instance.colorScheme.error,
                   ),
                 ),
@@ -253,12 +261,17 @@ class _CameraViewState extends State<CameraView> {
       _controller?.getMaxZoomLevel().then((value) {
         _maxAvailableZoom = value;
       });
-      _currentExposureOffset = 0.0;
       _controller?.getMinExposureOffset().then((value) {
         _minAvailableExposureOffset = value;
+        if (kDebugMode) {
+          print('minAvailableExposureOffset: $_minAvailableExposureOffset');
+        }
       });
       _controller?.getMaxExposureOffset().then((value) {
         _maxAvailableExposureOffset = value;
+        if (kDebugMode) {
+          print('maxAvailableExposureOffset: $_maxAvailableExposureOffset');
+        }
       });
       _controller?.startImageStream(_processCameraImage).then((value) {
         if (widget.onCameraFeedReady != null) {
@@ -339,16 +352,28 @@ class _CameraViewState extends State<CameraView> {
     // * nv21 for Android
     // * bgra8888 for iOS
     if (format == null ||
-        (Platform.isAndroid && format != InputImageFormat.nv21) ||
-        (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
+        (Platform.isAndroid &&
+            !(format == InputImageFormat.nv21 ||
+                format == InputImageFormat.yv12 ||
+                format == InputImageFormat.yuv_420_888)) ||
+        (Platform.isIOS &&
+            !(format == InputImageFormat.bgra8888 ||
+                format == InputImageFormat.yuv420))) {
+      return null;
+    }
 
     // since format is constraint to nv21 or bgra8888, both only have one plane
-    if (image.planes.length != 1) return null;
+    if (image.planes.isEmpty) return null;
     final plane = image.planes.first;
+    final WriteBuffer allBytes = WriteBuffer();
+    for (Plane plane in image.planes) {
+      allBytes.putUint8List(plane.bytes);
+    }
+    final bytes = allBytes.done().buffer.asUint8List();
 
     // compose InputImage using bytes
     return InputImage.fromBytes(
-      bytes: plane.bytes,
+      bytes: bytes,
       metadata: InputImageMetadata(
         size: Size(image.width.toDouble(), image.height.toDouble()),
         rotation: rotation, // used only in Android

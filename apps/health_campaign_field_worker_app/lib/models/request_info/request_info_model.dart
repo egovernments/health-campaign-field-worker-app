@@ -29,6 +29,7 @@ class RequestInfoModel with _$RequestInfoModel {
     final String? msgId,
     final String? authToken,
     final UserRequestModel? userInfo,
+    final String? tenantId,
   }) = _RequestInfoModel;
 
   factory RequestInfoModel.fromJson(Map<String, dynamic> json) =>

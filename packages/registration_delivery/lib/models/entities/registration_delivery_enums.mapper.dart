@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'registration_delivery_enums.dart';
@@ -33,6 +33,8 @@ class RegistrationDeliveryEnumsMapper
         return RegistrationDeliveryEnums.userName;
       case "IEC":
         return RegistrationDeliveryEnums.iec;
+      case "ELIGIBILITY":
+        return RegistrationDeliveryEnums.eligibility;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -47,6 +49,8 @@ class RegistrationDeliveryEnumsMapper
         return "userName";
       case RegistrationDeliveryEnums.iec:
         return "IEC";
+      case RegistrationDeliveryEnums.eligibility:
+        return "ELIGIBILITY";
     }
   }
 }

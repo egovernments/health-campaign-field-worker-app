@@ -9,6 +9,7 @@ class SideEffect extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get projectId => text().nullable()();
   TextColumn get taskClientReferenceId => text().nullable()();
+  TextColumn get projectBeneficiaryClientReferenceId => text().nullable()();
   IntColumn get reAttempts => integer().nullable()();
   TextColumn get symptoms => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();

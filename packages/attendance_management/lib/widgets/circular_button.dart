@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
@@ -34,6 +35,7 @@ class CircularButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Align(
       alignment: Alignment.centerLeft,
       child: GestureDetector(
@@ -42,8 +44,8 @@ class CircularButton extends StatelessWidget {
             ? Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(
-                      kPadding / 4,
+                    padding: EdgeInsets.all(
+                      theme.spacerTheme.spacer2 / 4,
                     ),
                     child: CustomPaint(
                       size: const Size(
@@ -51,13 +53,13 @@ class CircularButton extends StatelessWidget {
                         30,
                       ),
                       painter: HalfCirclePainter(
-                        color: const DigitColors().amber,
+                        color: theme.colorTheme.alert.warning,
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
-                      left: kPadding / 2,
+                    padding: EdgeInsets.only(
+                      left: theme.spacerTheme.spacer2 / 2,
                     ),
                     child: Text(
                       AttendanceLocalization.of(context)
@@ -65,7 +67,7 @@ class CircularButton extends StatelessWidget {
                       style: DigitTheme
                           .instance.mobileTheme.textTheme.labelSmall
                           ?.apply(
-                        color: const DigitColors().amber,
+                        color: theme.colorTheme.alert.warning,
                       ),
                     ),
                   ),
@@ -76,35 +78,35 @@ class CircularButton extends StatelessWidget {
                   Container(
                     height: 30,
                     width: 30,
-                    margin: const EdgeInsets.all(
-                      kPadding / 4,
+                    margin: EdgeInsets.all(
+                      theme.spacerTheme.spacer2 / 4,
                     ),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: index.isNegative || index == 0.0
                           ? Colors.white
                           : index == 0.5
-                              ? const DigitColors().amber
-                              : const DigitColors().darkSpringGreen,
+                              ? theme.colorTheme.alert.warning
+                              : theme.colorTheme.alert.success,
                       border: Border.all(
                         width: 2,
                         color: onTap != null
                             ? index.isNegative
                                 ? Colors.black
                                 : index == 0.0
-                                    ? const DigitColors().lavaRed
+                                    ? theme.colorTheme.alert.error
                                     : index == 0.5
-                                        ? const DigitColors().amber
-                                        : const DigitColors().darkSpringGreen
-                            : const DigitColors().cloudGray,
+                                        ? theme.colorTheme.alert.warning
+                                        : theme.colorTheme.alert.success
+                            : Colors.grey,
                         style: BorderStyle.solid,
                       ),
                     ),
                   ),
                   if (index != -1)
                     Padding(
-                      padding: const EdgeInsets.only(
-                        left: kPadding / 2,
+                      padding: EdgeInsets.only(
+                        left: theme.spacerTheme.spacer2 / 2,
                       ),
                       child: Text(
                         AttendanceLocalization.of(context).translate(
@@ -115,9 +117,9 @@ class CircularButton extends StatelessWidget {
                             .instance.mobileTheme.textTheme.labelSmall
                             ?.apply(
                           color: index == 0.0
-                              ? const DigitColors().lavaRed
-                              : const DigitColors().darkSpringGreen,
-                        ),
+                              ? theme.colorTheme.alert.error
+                              : theme.colorTheme.alert.success
+                        )
                       ),
                     ),
                 ],

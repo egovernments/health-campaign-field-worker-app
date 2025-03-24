@@ -1,4 +1,4 @@
-import 'package:digit_components/theme/colors.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -35,6 +35,7 @@ class ReadonlyDigitGrid extends LocalizedStatefulWidget {
 class ReadonlyDigitGridState extends LocalizedState<ReadonlyDigitGrid> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     // Returns a PlutoGrid with the given configuration and data
     return PlutoGrid(
       mode: PlutoGridMode.readOnly,
@@ -51,15 +52,15 @@ class ReadonlyDigitGridState extends LocalizedState<ReadonlyDigitGrid> {
           restoreAutoSizeAfterFrozenColumn: true,
         ),
         style: PlutoGridStyleConfig(
-          gridBorderColor: const DigitColors().seaShellGray,
-          oddRowColor: const DigitColors().seaShellGray,
-          borderColor: const DigitColors().seaShellGray,
+          gridBorderColor: theme.colorTheme.generic.background,
+          oddRowColor: theme.colorTheme.generic.background,
+          borderColor: theme.colorTheme.generic.background,
           iconColor: Colors.transparent,
           evenRowColor: Colors.transparent,
-          activatedColor: const DigitColors().burningOrange.withOpacity(
+          activatedColor: theme.colorTheme.primary.primary1.withOpacity(
                 0.2,
               ),
-          activatedBorderColor: const DigitColors().burningOrange.withOpacity(
+          activatedBorderColor: theme.colorTheme.primary.primary1.withOpacity(
                 0.8,
               ),
           enableRowColorAnimation: true,

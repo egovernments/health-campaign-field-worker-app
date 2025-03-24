@@ -1,9 +1,12 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -15,7 +18,6 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
-import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class RefusedDeliveryPage extends LocalizedStatefulWidget {
@@ -35,8 +37,6 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
 
   @override
   void initState() {
-    final registrationState = context.read<HouseholdOverviewBloc>().state;
-
     super.initState();
   }
 
@@ -45,6 +45,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
     final theme = Theme.of(context);
     final bloc = context.read<HouseholdOverviewBloc>();
     final router = context.router;
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -53,209 +54,208 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
               BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
                 builder: (context, registrationState) {
                   return ScrollableContent(
-                    enableFixedButton: true,
+                    enableFixedDigitButton: true,
                     header: const Column(
                       children: [
                         BackNavigationHelpHeaderWidget(
-                          showcaseButton: ShowcaseButton(),
                           showHelp: false,
                         ),
                       ],
                     ),
                     footer: DigitCard(
-                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                      padding:
-                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                      child: DigitElevatedButton(
-                        onPressed: () {
-                          form.markAllAsTouched();
+                        margin: const EdgeInsets.only(top: spacer2),
+                        children: [
+                          DigitButton(
+                            label: localizations.translate(
+                              i18.householdLocation.actionLabel,
+                            ),
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () {
+                              form.markAllAsTouched();
 
-                          if (form.control(_reasonOfRefusal).value == null) {
-                            setState(() {
-                              form
-                                  .control(_reasonOfRefusal)
-                                  .setErrors({'': true});
-                            });
-                          }
+                              if (form.control(_reasonOfRefusal).value ==
+                                  null) {
+                                setState(() {
+                                  form
+                                      .control(_reasonOfRefusal)
+                                      .setErrors({'': true});
+                                });
+                              }
 
-                          if (!form.valid) return;
+                              if (!form.valid) return;
 
-                          final reasonOfRefusal =
-                              form.control(_reasonOfRefusal).value;
+                              final reasonOfRefusal =
+                                  form.control(_reasonOfRefusal).value;
 
-                          final refusalComment =
-                              form.control(_deliveryCommentKey).value;
+                              final refusalComment =
+                                  form.control(_deliveryCommentKey).value;
 
-                          final projectBeneficiary =
-                              RegistrationDeliverySingleton().beneficiaryType !=
-                                      BeneficiaryType.individual
-                                  ? [
-                                      registrationState.householdMemberWrapper
-                                          .projectBeneficiaries?.first
-                                    ]
-                                  : registrationState.householdMemberWrapper
-                                      .projectBeneficiaries
-                                      ?.where(
-                                        (element) =>
-                                            element
-                                                .beneficiaryClientReferenceId ==
-                                            registrationState.selectedIndividual
-                                                ?.clientReferenceId,
-                                      )
-                                      .toList();
+                              final projectBeneficiary =
+                                  RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
+                                          BeneficiaryType.individual
+                                      ? [
+                                          registrationState
+                                              .householdMemberWrapper
+                                              .projectBeneficiaries
+                                              ?.first
+                                        ]
+                                      : registrationState.householdMemberWrapper
+                                          .projectBeneficiaries
+                                          ?.where(
+                                            (element) =>
+                                                element
+                                                    .beneficiaryClientReferenceId ==
+                                                registrationState
+                                                    .selectedIndividual
+                                                    ?.clientReferenceId,
+                                          )
+                                          .toList();
 
-                          // Determine the status based on the reason of refusal
-                          String status;
-                          if (reasonOfRefusal ==
-                              Status.beneficiaryRefused.toValue()) {
-                            status = Status.beneficiaryRefused.toValue();
-                          } else {
-                            status = Status.administeredFailed.toValue();
-                          }
-                          final oldTask =
-                              RegistrationDeliverySingleton().beneficiaryType !=
+                              // Determine the status based on the reason of refusal
+                              String status;
+                              if (reasonOfRefusal ==
+                                  Status.beneficiaryRefused.toValue()) {
+                                status = Status.beneficiaryRefused.toValue();
+                              } else {
+                                status = Status.administeredFailed.toValue();
+                              }
+                              final oldTask = RegistrationDeliverySingleton()
+                                          .beneficiaryType !=
                                       BeneficiaryType.individual
                                   ? registrationState
                                       .householdMemberWrapper.tasks?.last
                                   : null;
 
-                          context.read<DeliverInterventionBloc>().add(
-                                DeliverInterventionSubmitEvent(
-                                  navigateToSummary: true,
-                                  householdMemberWrapper:
-                                      registrationState.householdMemberWrapper,
-                                  task: _getTaskModel(
-                                      oldTask,
-                                      projectBeneficiary
-                                          ?.first?.clientReferenceId,
-                                      status,
-                                      reasonOfRefusal,
-                                      refusalComment,
-                                      registrationState.householdMemberWrapper
-                                          .members?.first.address?.first),
-                                  isEditing: false,
-                                  boundaryModel:
-                                      RegistrationDeliverySingleton().boundary!,
-                                ),
-                              );
-                          context.router.push(DeliverySummaryRoute());
-                        },
-                        child: Center(
-                          child: Text(
-                            localizations.translate(
-                              i18.householdLocation.actionLabel,
-                            ),
+                              context.read<DeliverInterventionBloc>().add(
+                                    DeliverInterventionSubmitEvent(
+                                      navigateToSummary: true,
+                                      householdMemberWrapper: registrationState
+                                          .householdMemberWrapper,
+                                      task: _getTaskModel(
+                                          oldTask,
+                                          projectBeneficiary
+                                              ?.first?.clientReferenceId,
+                                          status,
+                                          reasonOfRefusal,
+                                          refusalComment,
+                                          registrationState
+                                              .householdMemberWrapper
+                                              .members
+                                              ?.first
+                                              .address
+                                              ?.first),
+                                      isEditing: false,
+                                      boundaryModel:
+                                          RegistrationDeliverySingleton()
+                                              .boundary!,
+                                    ),
+                                  );
+                              context.router.push(DeliverySummaryRoute());
+                            },
                           ),
-                        ),
-                      ),
-                    ),
+                        ]),
                     slivers: [
                       SliverToBoxAdapter(
                         child: DigitCard(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+                            margin: const EdgeInsets.all(spacer2),
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    0, 0, 0, kPadding),
-                                child: Text(
-                                  localizations.translate(
-                                    i18.deliverIntervention
-                                        .refusedDeliveryLabel,
-                                  ),
-                                  style: theme.textTheme.displayMedium,
+                              Text(
+                                localizations.translate(
+                                  "${RegistrationDeliverySingleton().projectType!.code}_${i18.deliverIntervention.refusedDeliveryLabel}",
                                 ),
+                                style: textTheme.headingXl,
                               ),
-                              Column(children: [
-                                refusedDeliveryShowcaseData.dateOfVisit
-                                    .buildWith(
-                                  child: DigitDateFormPicker(
-                                    isEnabled: false,
-                                    formControlName: _dataOfRefusalKey,
+                              refusedDeliveryShowcaseData.dateOfVisit.buildWith(
+                                child: ReactiveWrapperField(
+                                  formControlName: _dataOfRefusalKey,
+                                  builder: (field) => LabeledField(
                                     label: localizations.translate(
                                       i18.deliverIntervention
                                           .refusedDeliveryVisitDateLabel,
                                     ),
-                                    confirmText: localizations.translate(
-                                      i18.common.coreCommonOk,
-                                    ),
-                                    cancelText: localizations.translate(
-                                      i18.common.coreCommonCancel,
-                                    ),
-                                    isRequired: false,
-                                    padding: const EdgeInsets.only(
-                                      top: kPadding,
+                                    child: DigitDateFormInput(
+                                      readOnly: true,
+                                      confirmText: localizations.translate(
+                                        i18.common.coreCommonOk,
+                                      ),
+                                      cancelText: localizations.translate(
+                                        i18.common.coreCommonCancel,
+                                      ),
+                                      initialValue: DateFormat('dd MMM yyyy')
+                                          .format(form
+                                              .control(_dataOfRefusalKey)
+                                              .value),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: kPadding,
-                                ),
-                                refusedDeliveryShowcaseData.reasonOfRefusal
-                                    .buildWith(
-                                  child: LabeledField(
-                                    label: localizations.translate(
-                                      i18.deliverIntervention
-                                          .reasonForRefusalLabel,
-                                    ),
-                                    isRequired: true,
-                                    child: SelectionBox<String>(
-                                      width: MediaQuery.of(context).size.width *
-                                          .36,
-                                      allowMultipleSelection: false,
-                                      options: RegistrationDeliverySingleton()
-                                              .refusalReasons ??
-                                          [],
-                                      onSelectionChanged: (value) {
-                                        form
-                                            .control(_reasonOfRefusal)
-                                            .markAsTouched();
+                              ),
+                              refusedDeliveryShowcaseData.reasonOfRefusal
+                                  .buildWith(
+                                child: SelectionCard<String>(
+                                  title: localizations.translate(
+                                    "${RegistrationDeliverySingleton().projectType!.code}_${i18.deliverIntervention.reasonForRefusalLabel}",
+                                  ),
+                                  showParentContainer: true,
+                                  isRequired: true,
+                                  width:
+                                      MediaQuery.of(context).size.width * .34,
+                                  allowMultipleSelection: false,
+                                  options: RegistrationDeliverySingleton()
+                                          .refusalReasons ??
+                                      [],
+                                  onSelectionChanged: (value) {
+                                    form
+                                        .control(_reasonOfRefusal)
+                                        .markAsTouched();
+                                    setState(() {
+                                      if (value.isNotEmpty) {
+                                        form.control(_reasonOfRefusal).value =
+                                            value.first;
+                                      } else {
+                                        form.control(_reasonOfRefusal).value =
+                                            null;
                                         setState(() {
-                                          if (value.isNotEmpty) {
-                                            form
-                                                .control(_reasonOfRefusal)
-                                                .value = value.first;
-                                          } else {
-                                            form
-                                                .control(_reasonOfRefusal)
-                                                .value = null;
-                                            setState(() {
-                                              form
-                                                  .control(_reasonOfRefusal)
-                                                  .setErrors({'': true});
-                                            });
-                                          }
+                                          form
+                                              .control(_reasonOfRefusal)
+                                              .setErrors({'': true});
                                         });
-                                      },
-                                      valueMapper: (value) {
-                                        return localizations.translate(
-                                            'REASON_${value.toString()}');
-                                      },
-                                      errorMessage: form
-                                                  .control(_reasonOfRefusal)
-                                                  .hasErrors &&
-                                              form
-                                                  .control(_reasonOfRefusal)
-                                                  .touched
-                                          ? localizations.translate(
-                                              i18.common.corecommonRequired)
-                                          : null,
-                                    ),
-                                  ),
+                                      }
+                                    });
+                                  },
+                                  valueMapper: (value) {
+                                    return localizations.translate(
+                                        'REASON_${value.toString()}');
+                                  },
+                                  errorMessage: form
+                                              .control(_reasonOfRefusal)
+                                              .hasErrors &&
+                                          form.control(_reasonOfRefusal).touched
+                                      ? localizations.translate(
+                                          i18.common.corecommonRequired)
+                                      : null,
                                 ),
-                                refusedDeliveryShowcaseData.comments.buildWith(
-                                  child: DigitTextFormField(
-                                    formControlName: _deliveryCommentKey,
+                              ),
+                              refusedDeliveryShowcaseData.comments.buildWith(
+                                child: ReactiveWrapperField(
+                                  formControlName: _deliveryCommentKey,
+                                  builder: (field) => LabeledField(
                                     label: localizations.translate(i18
                                         .deliverIntervention
                                         .reasonForRefusalCommentLabel),
+                                    child: DigitTextFormInput(
+                                      onChange: (value) {
+                                        form
+                                            .control(_deliveryCommentKey)
+                                            .value = value;
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ]),
-                            ],
-                          ),
-                        ),
+                              ),
+                            ]),
                       ),
                     ],
                   );

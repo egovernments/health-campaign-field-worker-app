@@ -81,6 +81,8 @@ class Common {
 
   String get noResultsFound => 'NO_RESULTS_FOUND';
 
+  String get commentKey => 'COMMENT_KEY';
+
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';

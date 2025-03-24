@@ -1,13 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_stepper.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_stepper.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -111,14 +116,15 @@ class DeliverInterventionPageState
       HouseholdMemberWrapper householdMember,
       ProjectBeneficiaryModel projectBeneficiary) {
     if (context.mounted) {
-      DigitComponentsUtils().showLocationCapturingDialog(
-          context,
-          localizations.translate(i18.common.locationCapturing),
-          DigitSyncDialogType.inProgress);
+      DigitComponentsUtils.showDialog(
+        context,
+        localizations.translate(i18.common.locationCapturing),
+        DialogType.inProgress,
+      );
 
       Future.delayed(const Duration(seconds: 2), () {
         // After delay, hide the initial dialog
-        DigitComponentsUtils().hideDialog(context);
+        DigitComponentsUtils.hideDialog(context);
         handleCapturedLocationState(
             locationState,
             context,
@@ -133,13 +139,13 @@ class DeliverInterventionPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
-    List<StepsModel> generateSteps(int numberOfDoses) {
+    List<StepperData> generateSteps(int numberOfDoses) {
       return List.generate(numberOfDoses, (index) {
-        return StepsModel(
+        return StepperData(
           title:
               '${localizations.translate(i18.deliverIntervention.dose)}${index + 1}',
-          number: (index + 1).toString(),
         );
       });
     }
@@ -214,17 +220,30 @@ class DeliverInterventionPageState
                       final steps = generateSteps(numberOfDoses);
                       if ((productVariants ?? []).isEmpty && context.mounted) {
                         SchedulerBinding.instance.addPostFrameCallback((_) {
-                          DigitToast.show(
-                            context,
-                            options: DigitToastOptions(
-                              localizations.translate(
-                                i18.deliverIntervention
-                                    .checkForProductVariantsConfig,
-                              ),
-                              true,
-                              theme,
-                            ),
-                          );
+                          showCustomPopup(
+                              context: context,
+                              builder: (popUpContext) => Popup(
+                                      title: localizations.translate(
+                                        i18.common.noResultsFound,
+                                      ),
+                                      description: localizations.translate(
+                                        i18.deliverIntervention
+                                            .checkForProductVariantsConfig,
+                                      ),
+                                      type: PopUpType.alert,
+                                      actions: [
+                                        DigitButton(
+                                          label: localizations.translate(
+                                            i18.common.coreCommonOk,
+                                          ),
+                                          onPressed: () {
+                                            context.router.maybePop();
+                                            Navigator.of(popUpContext).pop();
+                                          },
+                                          type: DigitButtonType.primary,
+                                          size: DigitButtonSize.large,
+                                        ),
+                                      ]));
                         });
                       }
 
@@ -248,212 +267,219 @@ class DeliverInterventionPageState
                                 ),
                                 builder: (context, form, child) {
                                   return ScrollableContent(
-                                    enableFixedButton: true,
+                                    enableFixedDigitButton: true,
                                     footer: BlocBuilder<DeliverInterventionBloc,
                                         DeliverInterventionState>(
                                       builder: (context, state) {
                                         return DigitCard(
-                                          margin: const EdgeInsets.fromLTRB(
-                                              0, kPadding, 0, 0),
-                                          padding: const EdgeInsets.fromLTRB(
-                                              kPadding, 0, kPadding, 0),
-                                          child: ValueListenableBuilder(
-                                            valueListenable: clickedStatus,
-                                            builder:
-                                                (context, bool isClicked, _) {
-                                              return BlocBuilder<LocationBloc,
-                                                      LocationState>(
-                                                  builder:
-                                                      (context, locationState) {
-                                                return DigitElevatedButton(
-                                                  onPressed: isClicked
-                                                      ? null
-                                                      : () async {
-                                                          final deliveredProducts =
-                                                              ((form.control(_resourceDeliveredKey)
-                                                                          as FormArray)
-                                                                      .value
-                                                                  as List<
-                                                                      ProductVariantModel?>);
-                                                          final hasEmptyResources =
-                                                              hasEmptyOrNullResources(
-                                                                  deliveredProducts);
-                                                          final hasZeroQuantity =
-                                                              hasEmptyOrZeroQuantity(
-                                                                  form);
-                                                          final hasDuplicates =
-                                                              hasDuplicateResources(
-                                                                  deliveredProducts,
-                                                                  form);
-
-                                                          if (hasEmptyResources) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceDeliveredValidation),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
-                                                          } else if (hasDuplicates) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceDuplicateValidation),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
-                                                          } else if (hasZeroQuantity) {
-                                                            await DigitToast
-                                                                .show(
-                                                              context,
-                                                              options:
-                                                                  DigitToastOptions(
-                                                                localizations
-                                                                    .translate(i18
-                                                                        .deliverIntervention
-                                                                        .resourceCannotBeZero),
-                                                                true,
-                                                                theme,
-                                                              ),
-                                                            );
-                                                          } else {
-                                                            context
-                                                                .read<
-                                                                    LocationBloc>()
-                                                                .add(
-                                                                    const LoadLocationEvent());
-                                                            handleLocationState(
-                                                              locationState,
-                                                              context,
-                                                              deliveryInterventionState,
-                                                              form,
-                                                              householdMemberWrapper,
-                                                              projectBeneficiary!
-                                                                  .first,
-                                                            );
-                                                          }
-                                                        },
-                                                  child: Center(
-                                                    child: Text(
-                                                      localizations.translate(
+                                            margin: const EdgeInsets.only(
+                                                top: spacer2),
+                                            children: [
+                                              ValueListenableBuilder(
+                                                valueListenable: clickedStatus,
+                                                builder: (context,
+                                                    bool isClicked, _) {
+                                                  return BlocBuilder<
+                                                          LocationBloc,
+                                                          LocationState>(
+                                                      builder: (context,
+                                                          locationState) {
+                                                    return DigitButton(
+                                                      label: localizations
+                                                          .translate(
                                                         i18.common
-                                                            .coreCommonSubmit,
+                                                            .coreCommonNext,
                                                       ),
-                                                    ),
-                                                  ),
-                                                );
-                                              });
-                                            },
-                                          ),
-                                        );
+                                                      type: DigitButtonType
+                                                          .primary,
+                                                      size:
+                                                          DigitButtonSize.large,
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      isDisabled: isClicked,
+                                                      onPressed: () async {
+                                                        final deliveredProducts =
+                                                            ((form.control(_resourceDeliveredKey)
+                                                                        as FormArray)
+                                                                    .value
+                                                                as List<
+                                                                    ProductVariantModel?>);
+                                                        final hasEmptyResources =
+                                                            hasEmptyOrNullResources(
+                                                                deliveredProducts);
+                                                        final hasZeroQuantity =
+                                                            hasEmptyOrZeroQuantity(
+                                                                form);
+                                                        final hasDuplicates =
+                                                            hasDuplicateResources(
+                                                                deliveredProducts,
+                                                                form);
+
+                                                        if (hasEmptyResources) {
+                                                          Toast.showToast(
+                                                              context,
+                                                              message: localizations
+                                                                  .translate(i18
+                                                                      .deliverIntervention
+                                                                      .resourceDeliveredValidation),
+                                                              type: ToastType
+                                                                  .error);
+                                                        } else if (hasDuplicates) {
+                                                          Toast.showToast(
+                                                              context,
+                                                              message: localizations
+                                                                  .translate(i18
+                                                                      .deliverIntervention
+                                                                      .resourceDuplicateValidation),
+                                                              type: ToastType
+                                                                  .error);
+                                                        } else if (hasZeroQuantity) {
+                                                          Toast.showToast(
+                                                              context,
+                                                              message: localizations
+                                                                  .translate(i18
+                                                                      .deliverIntervention
+                                                                      .resourceCannotBeZero),
+                                                              type: ToastType
+                                                                  .error);
+                                                        } else {
+                                                          context
+                                                              .read<
+                                                                  LocationBloc>()
+                                                              .add(
+                                                                  const LoadLocationEvent());
+                                                          handleLocationState(
+                                                            locationState,
+                                                            context,
+                                                            deliveryInterventionState,
+                                                            form,
+                                                            householdMemberWrapper,
+                                                            projectBeneficiary!
+                                                                .first,
+                                                          );
+                                                        }
+                                                      },
+                                                    );
+                                                  });
+                                                },
+                                              ),
+                                            ]);
                                       },
                                     ),
                                     header: const Column(children: [
-                                      BackNavigationHelpHeaderWidget(
-                                        showHelp: false,
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(bottom: spacer2),
+                                        child: BackNavigationHelpHeaderWidget(
+                                          showHelp: false,
+                                        ),
                                       ),
                                     ]),
                                     children: [
                                       Column(
                                         children: [
                                           DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
+                                              margin:
+                                                  const EdgeInsets.all(spacer2),
                                               children: [
                                                 Text(
                                                   localizations.translate(
                                                     i18.deliverIntervention
                                                         .deliverInterventionLabel,
                                                   ),
-                                                  style: theme
-                                                      .textTheme.displayMedium,
+                                                  style: textTheme.headingXl
+                                                      .copyWith(
+                                                          color: theme
+                                                              .colorTheme
+                                                              .primary
+                                                              .primary2),
                                                 ),
                                                 if (RegistrationDeliverySingleton()
                                                         .beneficiaryType ==
                                                     BeneficiaryType.individual)
-                                                  DigitTextFormField(
-                                                    readOnly: true,
+                                                  ReactiveWrapperField(
                                                     formControlName:
                                                         _doseAdministrationKey,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    label: localizations
-                                                        .translate(i18
-                                                            .deliverIntervention
-                                                            .currentCycle),
+                                                    builder: (field) =>
+                                                        LabeledField(
+                                                      label: localizations
+                                                          .translate(i18
+                                                              .deliverIntervention
+                                                              .currentCycle),
+                                                      child: DigitTextFormInput(
+                                                        readOnly: true,
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        initialValue: form
+                                                            .control(
+                                                                _doseAdministrationKey)
+                                                            .value,
+                                                      ),
+                                                    ),
                                                   ),
                                                 if (numberOfDoses > 1)
-                                                  DigitStepper(
-                                                    activeStep:
-                                                        deliveryInterventionState
-                                                                .dose -
-                                                            1,
-                                                    stepRadius: 12.5,
-                                                    steps: steps,
-                                                    maxStepReached: 3,
-                                                    lineLength: (MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width -
-                                                            12.5 *
-                                                                2 *
-                                                                steps.length -
-                                                            50) /
-                                                        (steps.length - 1),
+                                                  SizedBox(
+                                                    height: MediaQuery.sizeOf(
+                                                                context)
+                                                            .height *
+                                                        0.07,
+                                                    child: DigitStepper(
+                                                      activeIndex:
+                                                          deliveryInterventionState
+                                                                  .dose -
+                                                              1,
+                                                      stepperList: steps,
+                                                      inverted: true,
+                                                    ),
                                                   ),
-                                                DigitDateFormPicker(
-                                                  isEnabled: false,
+                                                ReactiveWrapperField(
                                                   formControlName:
                                                       _dateOfAdministrationKey,
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.householdDetails
-                                                        .dateOfRegistrationLabel,
-                                                  ),
-                                                  confirmText:
-                                                      localizations.translate(
-                                                    i18.common.coreCommonOk,
-                                                  ),
-                                                  cancelText:
-                                                      localizations.translate(
-                                                    i18.common.coreCommonCancel,
-                                                  ),
-                                                  isRequired: false,
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    top: kPadding,
+                                                  builder: (field) =>
+                                                      LabeledField(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.householdDetails
+                                                          .dateOfRegistrationLabel,
+                                                    ),
+                                                    child: DigitDateFormInput(
+                                                      readOnly: true,
+                                                      initialValue: DateFormat(
+                                                              'dd MMM yyyy')
+                                                          .format(form
+                                                              .control(
+                                                                  _dateOfAdministrationKey)
+                                                              .value)
+                                                          .toString(),
+                                                      confirmText: localizations
+                                                          .translate(
+                                                        i18.common.coreCommonOk,
+                                                      ),
+                                                      cancelText: localizations
+                                                          .translate(
+                                                        i18.common
+                                                            .coreCommonCancel,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
+                                              ]),
                                           DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
+                                              margin:
+                                                  const EdgeInsets.all(spacer2),
                                               children: [
                                                 Text(
                                                   localizations.translate(
                                                     i18.deliverIntervention
                                                         .deliverInterventionResourceLabel,
                                                   ),
-                                                  style: theme
-                                                      .textTheme.headlineLarge,
+                                                  style: textTheme.headingXl
+                                                      .copyWith(
+                                                          color: theme
+                                                              .colorTheme
+                                                              .primary
+                                                              .primary2),
                                                 ),
                                                 ..._controllers.map((e) =>
                                                     ResourceBeneficiaryCard(
@@ -484,101 +510,97 @@ class DeliverInterventionPageState
                                                       },
                                                     )),
                                                 Center(
-                                                  child: DigitIconButton(
-                                                    onPressed: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? () async {
-                                                            addController(form);
-                                                            setState(() {
-                                                              _controllers.add(
-                                                                _controllers
-                                                                    .length,
-                                                              );
-                                                            });
-                                                          }
-                                                        : null,
-                                                    icon: Icons.add_circle,
-                                                    iconColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconTextColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconText:
+                                                  child: DigitButton(
+                                                    label:
                                                         localizations.translate(
                                                       i18.deliverIntervention
                                                           .resourceAddBeneficiary,
                                                     ),
+                                                    type: DigitButtonType
+                                                        .tertiary,
+                                                    size:
+                                                        DigitButtonSize.medium,
+                                                    isDisabled: ((form.control(_resourceDeliveredKey)
+                                                                            as FormArray)
+                                                                        .value ??
+                                                                    [])
+                                                                .length <
+                                                            (productVariants ??
+                                                                    [])
+                                                                .length
+                                                        ? false
+                                                        : true,
+                                                    onPressed: () async {
+                                                      addController(form);
+                                                      setState(() {
+                                                        _controllers.add(
+                                                          _controllers.length,
+                                                        );
+                                                      });
+                                                    },
+                                                    prefixIcon:
+                                                        Icons.add_circle,
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
+                                              ]),
                                           DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
+                                              margin:
+                                                  const EdgeInsets.all(spacer2),
                                               children: [
                                                 Text(
                                                   localizations.translate(
                                                     i18.deliverIntervention
                                                         .deliveryCommentHeading,
                                                   ),
-                                                  style: theme
-                                                      .textTheme.headlineLarge,
+                                                  style: textTheme.headingXl
+                                                      .copyWith(
+                                                          color: theme
+                                                              .colorTheme
+                                                              .primary
+                                                              .primary2),
                                                 ),
-                                                DigitReactiveSearchDropdown<
-                                                    String>(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliveryCommentLabel,
-                                                  ),
-                                                  form: form,
-                                                  menuItems:
-                                                      RegistrationDeliverySingleton()
-                                                          .deliveryCommentOptions!
-                                                          .map((e) {
-                                                    return localizations
-                                                        .translate(e);
-                                                  }).toList()
-                                                        ..sort((a, b) =>
-                                                            a.compareTo(b)),
+                                                ReactiveWrapperField(
                                                   formControlName:
                                                       _deliveryCommentKey,
-                                                  valueMapper: (value) => value,
-                                                  emptyText: localizations
-                                                      .translate(i18
-                                                          .common.noMatchFound),
-                                                )
-                                              ],
-                                            ),
-                                          ),
+                                                  builder: (field) =>
+                                                      LabeledField(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .deliveryCommentLabel,
+                                                    ),
+                                                    child:
+                                                        DigitDropdown<String>(
+                                                      items:
+                                                          RegistrationDeliverySingleton()
+                                                              .deliveryCommentOptions!
+                                                              .map((e) =>
+                                                                  DropdownItem(
+                                                                    name: localizations
+                                                                        .translate(
+                                                                            e),
+                                                                    code: e,
+                                                                  ))
+                                                              .toList()
+                                                            ..sort((a, b) => a
+                                                                .code
+                                                                .compareTo(
+                                                                    b.code)),
+                                                      emptyItemText:
+                                                          localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .noMatchFound),
+                                                      onChange: (value) {
+                                                        form
+                                                            .control(
+                                                                _deliveryCommentKey)
+                                                            .value = value;
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ]),
                                         ],
                                       ),
                                     ],
@@ -805,8 +827,8 @@ class DeliverInterventionPageState
                           ?.cycles![bloc.cycle - 1]
                           .deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
-                      overViewbloc.householdMemberWrapper.household)!
-                  .productVariants
+                      overViewbloc.householdMemberWrapper.household)
+                  ?.productVariants
                   ?.length ??
               0;
 

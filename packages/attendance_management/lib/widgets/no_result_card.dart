@@ -1,4 +1,4 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -21,7 +21,7 @@ class NoResultCard extends StatelessWidget {
     return Align(
         alignment: align,
         child: Padding(
-            padding: const EdgeInsets.all(kPadding),
+            padding: EdgeInsets.all(theme.spacerTheme.spacer2),
             child: Column(
               children: [
                 SvgPicture.asset(noResultSvg),

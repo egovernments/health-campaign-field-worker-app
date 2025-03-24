@@ -9,7 +9,7 @@ class Attributes extends Table {
   TextColumn get tenantId => text().nullable()();
   TextColumn get code => text().nullable()();
   TextColumn get values => text().nullable()();
-  TextColumn get isActive => text().nullable()();
+  BoolColumn get isActive => boolean().nullable()();
   BoolColumn get required => boolean().nullable()();
   TextColumn get regex => text().nullable()();
   IntColumn get order => integer().nullable()();
