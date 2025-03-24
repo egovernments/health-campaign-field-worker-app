@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/identifier_types.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +41,9 @@ class BeneficiaryAcknowledgementPageState
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(spacer2),
@@ -47,7 +51,14 @@ class BeneficiaryAcknowledgementPageState
           type: PanelType.success,
           title: localizations
               .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
-          additionalDetails: [Text(getSubText(wrapper))],
+          additionalDetails: [
+            Text(
+              getSubText(wrapper),
+              textAlign: TextAlign.center,
+              style: textTheme.headingM
+                  .copyWith(color: const DigitColors().light.paperPrimary),
+            )
+          ],
           actions: [
             DigitButton(
                 label: localizations.translate(
