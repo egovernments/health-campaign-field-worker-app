@@ -7,6 +7,7 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
@@ -289,7 +290,7 @@ class _CustomSearchBeneficiaryPageStateState
                     child: CircularProgressIndicator(),
                   ),
                 ),
-              BlocListener<DigitScannerBloc, DigitScannerState>(
+              BlocListener<CustomDigitScannerBloc, CustomDigitScannerState>(
                 listener: (context, scannerState) {
                   if (scannerState.qrCodes.isNotEmpty) {
                     context.read<SearchBlocWrapper>().tagSearchBloc.add(
@@ -328,10 +329,10 @@ class _CustomSearchBeneficiaryPageStateState
                               householdMember: i,
                               onOpenPressed: () async {
                                 final scannerBloc =
-                                    context.read<DigitScannerBloc>();
+                                    context.read<CustomDigitScannerBloc>();
 
                                 scannerBloc.add(
-                                  const DigitScannerEvent.handleScanner(),
+                                  const CustomDigitScannerEvent.handleScanner(),
                                 );
 
                                 if ((i.tasks != null &&
@@ -413,8 +414,8 @@ class _CustomSearchBeneficiaryPageStateState
                                 : () {
                                     FocusManager.instance.primaryFocus
                                         ?.unfocus();
-                                    context.read<DigitScannerBloc>().add(
-                                          const DigitScannerEvent
+                                    context.read<CustomDigitScannerBloc>().add(
+                                          const CustomDigitScannerEvent
                                               .handleScanner(),
                                         );
                                     context.router.push(

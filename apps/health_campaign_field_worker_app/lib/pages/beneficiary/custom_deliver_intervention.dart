@@ -10,6 +10,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 import 'package:health_campaign_field_worker_app/pages/custom_qr_scanner.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
@@ -252,8 +253,8 @@ class CustomDeliverInterventionPageState
                                   return productVariants;
                                 },
                               );
-                              return BlocBuilder<DigitScannerBloc,
-                                      DigitScannerState>(
+                              return BlocBuilder<CustomDigitScannerBloc,
+                                      CustomDigitScannerState>(
                                   builder: (context, scannerState) {
                                 return ReactiveFormBuilder(
                                   form: () => buildForm(

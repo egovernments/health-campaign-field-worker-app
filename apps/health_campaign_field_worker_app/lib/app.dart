@@ -1,3 +1,4 @@
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_dss/digit_dss.dart';
@@ -105,8 +106,8 @@ class MainApplicationState extends State<MainApplication>
 
               BlocProvider(
                 create: (_) {
-                  return DigitScannerBloc(
-                    const DigitScannerState(),
+                  return CustomDigitScannerBloc(
+                    const CustomDigitScannerState(),
                   );
                 },
                 lazy: false,

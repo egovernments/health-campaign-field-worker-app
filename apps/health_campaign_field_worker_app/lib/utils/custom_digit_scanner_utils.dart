@@ -13,6 +13,7 @@ import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/widgets/vision_detector_views/painters/barcode_detector_painter.dart';
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 import '../utils/i18_key_constants.dart' as i18Local;
 import 'package:digit_scanner/utils/constants.dart';
 
@@ -122,7 +123,7 @@ class CustomDigitScannerUtils {
         inputImage.metadata?.rotation != null) {
       // If barcodes are found
       if (barcodes.isNotEmpty) {
-        final bloc = context.read<DigitScannerBloc>();
+        final bloc = context.read<CustomDigitScannerBloc>();
 
         // Check if the widget is scanning GS1 codes
         if (isGS1code) {
@@ -234,7 +235,7 @@ class CustomDigitScannerUtils {
     player.play(AssetSource(DigitScannerConstants().audioFilePath));
 
     // Access the DigitScannerBloc from the context
-    final bloc = context.read<DigitScannerBloc>();
+    final bloc = context.read<CustomDigitScannerBloc>();
 
     // Make a copy of the current QR codes from the bloc state
     List<String> codes = List.from(initialCodes);
@@ -251,7 +252,7 @@ class CustomDigitScannerUtils {
     updateCodes(codes);
 
     // Dispatch an event to update the bloc with the new barcode and QR code lists
-    bloc.add(DigitScannerEvent.handleScanner(
+    bloc.add(CustomDigitScannerEvent.handleScanner(
       barCode: bloc.state.barCodes, // Keep existing barcodes
       qrCode: codes, // Update QR codes with the new list
     ));
@@ -271,7 +272,7 @@ class CustomDigitScannerUtils {
     final parsedResult = scanData;
 
     // Access the DigitScannerBloc from the context
-    final bloc = context.read<DigitScannerBloc>();
+    final bloc = context.read<CustomDigitScannerBloc>();
 
     // Play the add sound to indicate a successful scan
     player.play(AssetSource(DigitScannerConstants().audioFilePath));
@@ -291,7 +292,7 @@ class CustomDigitScannerUtils {
     result.add(parsedResult);
 
     // Dispatch an event to update the bloc with the new barcode and existing QR code lists
-    bloc.add(DigitScannerEvent.handleScanner(
+    bloc.add(CustomDigitScannerEvent.handleScanner(
       barCode: result, // Update barcodes with the new list
       qrCode: bloc.state.qrCodes, // Keep existing QR codes
     ));
