@@ -183,12 +183,21 @@ class Constants {
     final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ?? true;
 
     if (enableCrashlytics) {
-      firebase_services.initialize(
-        options: DefaultFirebaseOptions.currentPlatform,
-        onErrorMessage: (value) {
-          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
-        },
-      );
+      if (envConfig.variables.envType == EnvType.prod) {
+        firebase_services.initialize(
+          options: ProdFirebaseOptions.currentPlatform,
+          onErrorMessage: (value) {
+            AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+          },
+        );
+      } else {
+        firebase_services.initialize(
+          options: DefaultFirebaseOptions.currentPlatform,
+          onErrorMessage: (value) {
+            AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+          },
+        );
+      }
     }
 
     _version = version;
