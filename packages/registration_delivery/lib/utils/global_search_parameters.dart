@@ -24,7 +24,7 @@ class GlobalSearchParameters {
       required this.offset,
       required this.limit,
       required this.filter,
-      required this.identifierId,
+      this.identifierId,
       this.totalCount,
       this.projectId,
       this.householdClientReferenceId,

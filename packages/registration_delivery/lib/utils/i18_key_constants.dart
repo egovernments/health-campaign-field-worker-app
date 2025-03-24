@@ -144,6 +144,8 @@ class SearchBeneficiary {
   String get communityProximityLabel =>
       'BENEFICIARY_SEARCH_COMMUNITY_PROXIMITY_LABEL_TEXT';
 
+  String get beneficiaryIdLabel => 'BENEFICIARY_ID_SEARCH_LABEL_TEXT';
+
   String get clfSearchHintText => 'BENEFICIARY_CLF_SEARCH_HINT_TEXT';
 
   String get searchCLFLabel => 'BENEFICIARY_SEARCH_CLF_LABEL_TEXT';
@@ -158,6 +160,8 @@ class SearchBeneficiary {
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
 
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
+
+  String get beneficiaryIdSearchHintText => 'BENEFICIARY_ID_SEARCH_HINT_TEXT';
 
   String get beneficiaryIndividualSearchHintText =>
       'BENEFICIARY_INDIVIDUAL_SEARCH_HINT_TEXT';
@@ -206,7 +210,9 @@ class BeneficiaryDetails {
   String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
+
   String get beneficiaryId => 'BENEFICIARY_ID';
+
   String get ctaProceed => 'PROCEED';
 
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';

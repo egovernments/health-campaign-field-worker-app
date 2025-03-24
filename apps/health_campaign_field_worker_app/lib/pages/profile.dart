@@ -59,7 +59,8 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
       );
 
       return fb.group(<String, Object>{
-        _name: FormControl<String>(value: user?.name, validators: [Validators.required]),
+        _name: FormControl<String>(
+            value: user?.name, validators: [Validators.required]),
         _mobileNumberKey: FormControl<String>(
           value: user?.mobileNumber,
           validators: [
@@ -203,7 +204,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                         isUpdate = true;
                                       });
                                       final updatedUser = user.copyWith(
-                                        gender: formGroup.control(_genderKey).value as String?,
+                                        gender: formGroup
+                                            .control(_genderKey)
+                                            .value as String?,
                                         mobileNumber: formGroup
                                             .control(_mobileNumberKey)
                                             .value,

@@ -336,7 +336,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           localizations.translate(
                             i18.individualDetails.individualsDetailsLabelText,
                           ),
-                          style: textTheme.headingXl.copyWith(color: theme.colorTheme.primary.primary2),
+                          style: textTheme.headingXl.copyWith(
+                              color: theme.colorTheme.primary.primary2),
                         ),
                         Column(
                           children: [
@@ -345,9 +346,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               child: ReactiveWrapperField(
                                 formControlName: _individualNameKey,
                                 validationMessages: {
-                                  'required': (object) => localizations.translate(
-                                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                                  ),
+                                  'required': (object) =>
+                                      localizations.translate(
+                                        '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                      ),
                                   'maxLength': (object) => localizations
                                       .translate(i18.common.maxCharsRequired)
                                       .replaceAll('{}', maxLength.toString()),
@@ -359,7 +361,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   isRequired: true,
                                   child: DigitTextFormInput(
                                     initialValue:
-                                    form.control(_individualNameKey).value,
+                                        form.control(_individualNameKey).value,
                                     onChange: (value) {
                                       form.control(_individualNameKey).value =
                                           value;
@@ -369,20 +371,22 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 ),
                               ),
                             ),
-                            if(widget.isHeadOfHousehold)
-                              const SizedBox(height: spacer2,),
+                            if (widget.isHeadOfHousehold)
+                              const SizedBox(
+                                height: spacer2,
+                              ),
                             Offstage(
                               offstage: !widget.isHeadOfHousehold,
                               child: DigitCheckbox(
                                 capitalizeFirstLetter: false,
                                 label: (RegistrationDeliverySingleton()
-                                    .householdType ==
-                                    HouseholdType.community)
-                                    ? localizations.translate(
-                                    i18.individualDetails.clfCheckboxLabelText)
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? localizations.translate(i18
+                                        .individualDetails.clfCheckboxLabelText)
                                     : localizations.translate(
-                                  i18.individualDetails.checkboxLabelText,
-                                ),
+                                        i18.individualDetails.checkboxLabelText,
+                                      ),
                                 value: widget.isHeadOfHousehold,
                                 readOnly: widget.isHeadOfHousehold,
                                 onChanged: (_) {},
@@ -424,13 +428,13 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 form.control(_idTypeKey).value = value.code;
                                 setState(() {
                                   if (value.code ==
-                                    IdentifierTypes.defaultID.toValue()) {
+                                      IdentifierTypes.defaultID.toValue()) {
                                     form.control(_idNumberKey).value =
                                         IdGen.i.identifier.toString();
-                                } else if (value ==
-                                    IdentifierTypes.uniqueBeneficiaryID
-                                        .toValue()) {
-                                  setUniqueBeneficiaryId(form);
+                                  } else if (value ==
+                                      IdentifierTypes.uniqueBeneficiaryID
+                                          .toValue()) {
+                                    setUniqueBeneficiaryId(form);
                                   } else {
                                     form.control(_idNumberKey).value = null;
                                   }
@@ -446,7 +450,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             ),
                           ),
                         ),
-                        if (form.control(_idTypeKey).value != IdentifierTypes.defaultID.toValue() &&
+                        if (form.control(_idTypeKey).value !=
+                                IdentifierTypes.defaultID.toValue() &&
                             form.control(_idTypeKey).value !=
                                 IdentifierTypes.uniqueBeneficiaryID.toValue())
                           Column(
@@ -472,10 +477,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                           .validators
                                           .isNotEmpty,
                                       child: DigitTextFormInput(
-                                        readOnly:
-                                        form.control(_idTypeKey).value ==
-                                            IdentifierTypes.defaultID
-                                                .toValue() ||
+                                        readOnly: form
+                                                    .control(_idTypeKey)
+                                                    .value ==
+                                                IdentifierTypes.defaultID
+                                                    .toValue() ||
                                             form.control(_idTypeKey).value ==
                                                 IdentifierTypes
                                                     .uniqueBeneficiaryID
@@ -496,9 +502,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             ],
                           ),
                         if (form.control(_idTypeKey).value ==
-                                  IdentifierTypes.defaultID.toValue() ||
-                              form.control(_idTypeKey).value ==
-                                  IdentifierTypes.uniqueBeneficiaryID.toValue())
+                                IdentifierTypes.defaultID.toValue() ||
+                            form.control(_idTypeKey).value ==
+                                IdentifierTypes.uniqueBeneficiaryID.toValue())
                           const SizedBox(
                             height: spacer2,
                           ),
@@ -523,7 +529,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             yearsAndMonthsErrMsg: localizations.translate(
                               i18.individualDetails.yearsAndMonthsErrorText,
                             ),
-                            errorMessage: _getDobErrorMessage(form.control(_dobKey)),
+                            errorMessage:
+                                _getDobErrorMessage(form.control(_dobKey)),
                             initialDate: before150Years,
                             initialValue: getInitialDateValue(form),
                             onChangeOfFormControl: (value) {
@@ -820,9 +827,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     if (!control.hasErrors) return null;
 
     final dobValue = control.value;
-    final age = dobValue != null
-        ? DigitDateUtils.calculateAge(dobValue)
-        : null;
+    final age = dobValue != null ? DigitDateUtils.calculateAge(dobValue) : null;
 
     if (dobValue == null) {
       return localizations.translate(i18.common.corecommonRequired);

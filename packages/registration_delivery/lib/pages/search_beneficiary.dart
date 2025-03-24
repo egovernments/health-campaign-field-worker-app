@@ -160,11 +160,11 @@ class _SearchBeneficiaryPageState
                                         onChanged: (value) {
                                           searchController.clear();
                                           searchBeneficiaryController.clear();
-                                            setState(() {
-                                              isProximityEnabled = value;
-                                              lat = locationState.latitude!;
-                                              long = locationState.longitude!;
-                                            });
+                                          setState(() {
+                                            isProximityEnabled = value;
+                                            lat = locationState.latitude!;
+                                            long = locationState.longitude!;
+                                          });
 
                                           if (locationState.hasPermissions &&
                                               value &&
@@ -196,6 +196,23 @@ class _SearchBeneficiaryPageState
                                           i18.searchBeneficiary
                                               .beneficiarySearchHintText,
                                         ),
+                                  textCapitalization: TextCapitalization.words,
+                                  onChanged: (value) {
+                                    if (value.isEmpty ||
+                                        value.trim().length > 2) {
+                                      triggerGlobalSearchEvent();
+                                    }
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(spacer2),
+                                child: DigitSearchBar(
+                                  controller: searchBeneficiaryController,
+                                  hintText: localizations.translate(
+                                    i18.searchBeneficiary
+                                        .beneficiaryIdSearchHintText,
+                                  ),
                                   textCapitalization: TextCapitalization.words,
                                   onChanged: (value) {
                                     if (value.isEmpty ||
@@ -427,26 +444,24 @@ class _SearchBeneficiaryPageState
                   type: DigitButtonType.primary,
                   size: DigitButtonSize.large,
                   isDisabled: (searchHouseholdsState.searchQuery != null &&
-                                searchHouseholdsState
-                                    .searchQuery!.isNotEmpty) ||
-                            (searchHouseholdsState.beneficiaryIdQuery != null &&
-                                searchHouseholdsState
-                                    .beneficiaryIdQuery!.isNotEmpty)
+                              searchHouseholdsState.searchQuery!.isNotEmpty) ||
+                          (searchHouseholdsState.beneficiaryIdQuery != null &&
+                              searchHouseholdsState
+                                  .beneficiaryIdQuery!.isNotEmpty)
                       ? false
                       : true,
-                  onPressed:() {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            context.read<DigitScannerBloc>().add(
-                                  const DigitScannerEvent.handleScanner(),
-                                );
-                            context.router
-                                .push(BeneficiaryRegistrationWrapperRoute(
-                              initialState: BeneficiaryRegistrationCreateState(
-                                searchQuery: searchHouseholdsState.searchQuery,
-                              ),
-                            ));
-                            searchController.clear();
-                            searchBeneficiaryController.clear();
+                  onPressed: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    context.read<DigitScannerBloc>().add(
+                          const DigitScannerEvent.handleScanner(),
+                        );
+                    context.router.push(BeneficiaryRegistrationWrapperRoute(
+                      initialState: BeneficiaryRegistrationCreateState(
+                        searchQuery: searchHouseholdsState.searchQuery,
+                      ),
+                    ));
+                    searchController.clear();
+                    searchBeneficiaryController.clear();
                     selectedFilters = [];
                     blocWrapper.clearEvent();
                   },
@@ -456,11 +471,11 @@ class _SearchBeneficiaryPageState
                   type: DigitButtonType.secondary,
                   size: DigitButtonSize.large,
                   mainAxisSize: MainAxisSize.max,
-                    onPressed: () {
-                      blocWrapper.clearEvent();
-                      selectedFilters = [];
-                      searchController.clear();
-                      searchBeneficiaryController.clear();
+                  onPressed: () {
+                    blocWrapper.clearEvent();
+                    selectedFilters = [];
+                    searchController.clear();
+                    searchBeneficiaryController.clear();
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const DigitScannerPage(
@@ -543,28 +558,28 @@ class _SearchBeneficiaryPageState
         blocWrapper.individualGlobalSearchBloc.add(
             SearchHouseholdsEvent.individualGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
-          isProximityEnabled: isProximityEnabled,
-          latitude: lat,
-          projectId: RegistrationDeliverySingleton().projectId!,
-          longitude: long,
-          maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-          filter: selectedFilters,
-          offset: isPagination
-              ? blocWrapper.individualGlobalSearchBloc.state.offset
-              : offset,
-          limit: isPagination
-              ? blocWrapper.individualGlobalSearchBloc.state.limit
-              : limit,
-          householdType: RegistrationDeliverySingleton().householdType,
-          identifierId:
-                    searchBeneficiaryController.text.trim().length > 2
-                        ? searchBeneficiaryController.text.trim()
-                        : blocWrapper.searchHouseholdsBloc.state
-                        .beneficiaryIdQuery
-                )));
+                    isProximityEnabled: isProximityEnabled,
+                    latitude: lat,
+                    projectId: RegistrationDeliverySingleton().projectId!,
+                    longitude: long,
+                    maxRadius: RegistrationDeliverySingleton().maxRadius,
+                    nameSearch: searchController.text.trim().length > 2
+                        ? searchController.text.trim()
+                        : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+                    filter: selectedFilters,
+                    offset: isPagination
+                        ? blocWrapper.individualGlobalSearchBloc.state.offset
+                        : offset,
+                    limit: isPagination
+                        ? blocWrapper.individualGlobalSearchBloc.state.limit
+                        : limit,
+                    householdType: RegistrationDeliverySingleton()
+                        .householdType,
+                    identifierId:
+                        searchBeneficiaryController.text.trim().length > 2
+                            ? searchBeneficiaryController.text.trim()
+                            : blocWrapper.searchHouseholdsBloc.state
+                                .beneficiaryIdQuery)));
       }
     } else {
       if (isProximityEnabled ||
@@ -574,27 +589,27 @@ class _SearchBeneficiaryPageState
         blocWrapper.houseHoldGlobalSearchBloc.add(
             SearchHouseholdsEvent.houseHoldGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
-          isProximityEnabled: isProximityEnabled,
-          latitude: lat,
-          longitude: long,
-          projectId: RegistrationDeliverySingleton().projectId!,
-          maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-          filter: selectedFilters,
-          offset: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
-              : offset,
-          limit: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
-              : limit,
-          householdType: RegistrationDeliverySingleton().householdType,
+                    isProximityEnabled: isProximityEnabled,
+                    latitude: lat,
+                    longitude: long,
+                    projectId: RegistrationDeliverySingleton().projectId!,
+                    maxRadius: RegistrationDeliverySingleton().maxRadius,
+                    nameSearch: searchController.text.trim().length > 2
+                        ? searchController.text.trim()
+                        : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+                    filter: selectedFilters,
+                    offset: isPagination
+                        ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+                        : offset,
+                    limit: isPagination
+                        ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+                        : limit,
+                    householdType:
+                        RegistrationDeliverySingleton().householdType,
                     identifierId: searchBeneficiaryController.text.length > 2
                         ? searchBeneficiaryController.text.trim()
                         : blocWrapper
-                        .searchHouseholdsBloc.state.beneficiaryIdQuery
-                )));
+                            .searchHouseholdsBloc.state.beneficiaryIdQuery)));
       }
     }
   }
