@@ -27,7 +27,6 @@ import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
-import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
@@ -431,7 +430,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       IdentifierTypes.defaultID.toValue()) {
                                     form.control(_idNumberKey).value =
                                         IdGen.i.identifier.toString();
-                                  } else if (value ==
+                                  } else if (value.code ==
                                       IdentifierTypes.uniqueBeneficiaryID
                                           .toValue()) {
                                     setUniqueBeneficiaryId(form);
