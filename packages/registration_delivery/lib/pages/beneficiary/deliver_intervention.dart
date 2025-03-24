@@ -288,7 +288,7 @@ class DeliverInterventionPageState
                                                       label: localizations
                                                           .translate(
                                                         i18.common
-                                                            .coreCommonSubmit,
+                                                            .coreCommonNext,
                                                       ),
                                                       type: DigitButtonType
                                                           .primary,
@@ -368,7 +368,8 @@ class DeliverInterventionPageState
                                     ),
                                     header: const Column(children: [
                                       Padding(
-                                        padding: EdgeInsets.only(bottom:spacer2),
+                                        padding:
+                                            EdgeInsets.only(bottom: spacer2),
                                         child: BackNavigationHelpHeaderWidget(
                                           showHelp: false,
                                         ),
@@ -386,7 +387,12 @@ class DeliverInterventionPageState
                                                     i18.deliverIntervention
                                                         .deliverInterventionLabel,
                                                   ),
-                                                  style: textTheme.headingXl.copyWith(color: theme.colorTheme.primary.primary2),
+                                                  style: textTheme.headingXl
+                                                      .copyWith(
+                                                          color: theme
+                                                              .colorTheme
+                                                              .primary
+                                                              .primary2),
                                                 ),
                                                 if (RegistrationDeliverySingleton()
                                                         .beneficiaryType ==
@@ -468,9 +474,12 @@ class DeliverInterventionPageState
                                                     i18.deliverIntervention
                                                         .deliverInterventionResourceLabel,
                                                   ),
-                                                  style: textTheme.headingXl.copyWith(
-                                                    color: theme.colorTheme.primary.primary2
-                                                  ),
+                                                  style: textTheme.headingXl
+                                                      .copyWith(
+                                                          color: theme
+                                                              .colorTheme
+                                                              .primary
+                                                              .primary2),
                                                 ),
                                                 ..._controllers.map((e) =>
                                                     ResourceBeneficiaryCard(
@@ -543,9 +552,12 @@ class DeliverInterventionPageState
                                                     i18.deliverIntervention
                                                         .deliveryCommentHeading,
                                                   ),
-                                                  style: textTheme.headingXl.copyWith(
-                                                    color: theme.colorTheme.primary.primary2
-                                                  ),
+                                                  style: textTheme.headingXl
+                                                      .copyWith(
+                                                          color: theme
+                                                              .colorTheme
+                                                              .primary
+                                                              .primary2),
                                                 ),
                                                 ReactiveWrapperField(
                                                   formControlName:
