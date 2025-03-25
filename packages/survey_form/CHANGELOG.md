@@ -1,3 +1,19 @@
+## 1.0.1+3
+
+* Bug fix:
+    * Added relatedClientReferenceId to search model
+    * Modified search query to include relatedClientReferenceId
+
+## 1.0.1+2
+
+* Bug fix:
+    * Removed referralClientRefId
+    * Added the additional controller for the additional field attribute
+
+## 1.0.1+1
+
+* Upgraded to latest package versions
+
 ## 1.0.1
 
 * Modified ServiceSearchModel with relatedClientReferenceId and search query

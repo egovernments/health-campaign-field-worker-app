@@ -18,7 +18,6 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
-import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class RefusedDeliveryPage extends LocalizedStatefulWidget {
@@ -165,12 +164,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                             children: [
                               Text(
                                 localizations.translate(
-                                  RegistrationDeliverySingleton()
-                                          .projectType!
-                                          .code
-                                          .toString() +
-                                      i18.deliverIntervention
-                                          .refusedDeliveryLabel,
+                                  "${RegistrationDeliverySingleton().projectType!.code}_${i18.deliverIntervention.refusedDeliveryLabel}",
                                 ),
                                 style: textTheme.headingXl,
                               ),
@@ -202,12 +196,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                   .buildWith(
                                 child: SelectionCard<String>(
                                   title: localizations.translate(
-                                    RegistrationDeliverySingleton()
-                                            .projectType!
-                                            .code
-                                            .toString() +
-                                        i18.deliverIntervention
-                                            .reasonForRefusalLabel,
+                                    "${RegistrationDeliverySingleton().projectType!.code}_${i18.deliverIntervention.reasonForRefusalLabel}",
                                   ),
                                   showParentContainer: true,
                                   isRequired: true,
