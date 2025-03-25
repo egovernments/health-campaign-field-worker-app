@@ -147,11 +147,12 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
         );
 
         String reason = getClosedReason(element);
-        if (reason == ClosedHouseholdReasonsEnum.closed.name) {
+        if (reason == ClosedHouseholdReasonsEnum.closed.name.toUpperCase()) {
           dateVsClosedHouseholdAbsentTask
               .putIfAbsent(dateKey, () => [])
               .add(element);
-        } else if (reason == ClosedHouseholdReasonsEnum.refusal.name) {
+        } else if (reason ==
+            ClosedHouseholdReasonsEnum.refusal.name.toUpperCase()) {
           dateVsClosedHouseholdRefusedTask
               .putIfAbsent(dateKey, () => [])
               .add(element);
