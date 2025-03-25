@@ -485,6 +485,9 @@ class HouseholdDetails {
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
 
+  String get viewInstitutionDetailsAction =>
+      'VIEW_INSTITUTION_DETAILS_ACTION_LABEL';
+
   String get noOfRoomsLabel => 'NO_OF_ROOMS_LABEL';
 
   String get noOfRoomsCLFLabel => 'NO_OF_ROOMS_CLF_LABEL';

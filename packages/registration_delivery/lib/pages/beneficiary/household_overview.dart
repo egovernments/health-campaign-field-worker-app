@@ -108,20 +108,6 @@ class _HouseholdOverviewPageState
                       footer: DigitCard(
                         margin: const EdgeInsets.only(top: spacer2),
                         children: [
-                          DigitButton(
-                            mainAxisSize: MainAxisSize.max,
-                            onPressed: () => addIndividual(
-                              context,
-                              state.householdMemberWrapper.household!,
-                            ),
-                            label: localizations.translate(
-                              i18.householdOverView
-                                  .householdOverViewAddActionText,
-                            ),
-                            prefixIcon: Icons.add_circle,
-                            type: DigitButtonType.secondary,
-                            size: DigitButtonSize.medium,
-                          ),
                           Offstage(
                             offstage:
                                 beneficiaryType == BeneficiaryType.individual ||
