@@ -94,21 +94,22 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                 .map((i) => i.userUuid.toString())
                 .toList();
             await processDashboardConfig(
-              dashboardConfig
+              dashboardConfig: dashboardConfig
                       ?.where((chart) =>
                           (chart.name ?? '').isNotEmpty &&
                           (chart.chartType ?? '').isNotEmpty)
                       .toList() ??
                   [],
-              startDate,
-              endDate,
-              isar,
-              event.selectedDate,
-              dashboardRemoteRepo,
-              DashboardSingleton().actionPath,
-              DashboardSingleton().tenantId,
-              DashboardSingleton().projectId,
-              userUUIDList,
+              startDate: startDate,
+              endDate: endDate,
+              isar: isar,
+              lastSelectedDate: event.selectedDate,
+              dashboardRemoteRepo: dashboardRemoteRepo,
+              actionPath: DashboardSingleton().actionPath,
+              tenantId: DashboardSingleton().tenantId,
+              projectId: DashboardSingleton().projectId,
+              projectTypeId: DashboardSingleton().projectTypeId,
+              userList: userUUIDList,
             ); // Process dashboard configuration
 
             add(DashboardEvent.handleSearch(

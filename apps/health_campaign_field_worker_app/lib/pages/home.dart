@@ -97,7 +97,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final state = context.read<AuthBloc>().state;
     final localSecureStore = LocalSecureStore.instance;
     if (state is! AuthAuthenticatedState) {
@@ -865,6 +864,7 @@ void setPackagesSingleton(BuildContext context) {
         );
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
+            projectTypeId: context.selectedProject.projectTypeId ?? '',
             tenantId: envConfig.variables.tenantId,
             dashboardConfig: filteredDashboardConfig.firstOrNull,
             appVersion: Constants().version,

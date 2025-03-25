@@ -101,17 +101,19 @@ DashboardRequestModel getRequestModel({
 }
 
 Future<void> processDashboardConfig(
-  List<DashboardChartConfigSchema> dashboardConfig,
-  int startDate,
-  int endDate,
-  Isar isar,
-  DateTime lastSelectedDate,
-  DashboardRemoteRepository dashboardRemoteRepo,
-  String actionPath,
-  String tenantId,
-  String projectId,
-  List<String> userList,
-) async {
+    {
+  required List<DashboardChartConfigSchema> dashboardConfig,
+  required int startDate,
+  required int endDate,
+  required Isar isar,
+  DateTime? lastSelectedDate,
+  required DashboardRemoteRepository dashboardRemoteRepo,
+  required String actionPath,
+  required String tenantId,
+  required String projectId,
+  String? projectTypeId,
+  List<String>? userList,
+}) async {
   if (dashboardConfig.isNotEmpty) {
     for (var entry in dashboardConfig) {
       String visualizationType = entry.chartType ?? '';
@@ -124,8 +126,11 @@ Future<void> processDashboardConfig(
                 visualizationType: visualizationType,
                 visualizationCode: visualizationCode,
                 filters: {
-                  DSSEnums.uuid.toValue(): userList,
-                  DSSEnums.projectId.toValue(): projectId
+                  if((userList ?? []).isNotEmpty)
+                    DSSEnums.uuid.toValue(): userList,
+                  DSSEnums.projectId.toValue(): projectId,
+                  if(projectTypeId != null)
+                    DSSEnums.projectTypeId.toValue(): projectTypeId,
                 },
                 moduleLevel: "",
                 queryType: "",
@@ -163,6 +168,7 @@ class DashboardSingleton {
 
   String? _tenantId;
   String? _projectId;
+  String? _projectTypeId;
   String? _actionPath;
   String? _appVersion;
   ProjectModel? _selectedProject;
@@ -170,6 +176,7 @@ class DashboardSingleton {
 
   void setInitialData({
     required String projectId,
+    required String projectTypeId,
     required String tenantId,
     required String actionPath,
     required String appVersion,
@@ -177,6 +184,7 @@ class DashboardSingleton {
     DashboardConfigSchema? dashboardConfig,
   }) {
     _projectId = projectId;
+    _projectTypeId = projectTypeId;
     _tenantId = tenantId;
     _actionPath = actionPath.trim().isNotEmpty
         ? actionPath
@@ -189,6 +197,7 @@ class DashboardSingleton {
   String get tenantId => _tenantId ?? '';
 
   String get projectId => _projectId ?? '';
+  String get projectTypeId => _projectTypeId ?? '';
 
   String get appVersion => _appVersion ?? '';
 

@@ -39,6 +39,8 @@ class DSSEnumsMapper extends EnumMapper<DSSEnums> {
         return DSSEnums.number;
       case "percentage":
         return DSSEnums.percentage;
+      case "projectTypeId":
+        return DSSEnums.projectTypeId;
       case "responseData":
         return DSSEnums.responseData;
       case "day":
@@ -77,6 +79,8 @@ class DSSEnumsMapper extends EnumMapper<DSSEnums> {
         return "number";
       case DSSEnums.percentage:
         return "percentage";
+      case DSSEnums.projectTypeId:
+        return "projectTypeId";
       case DSSEnums.responseData:
         return "responseData";
       case DSSEnums.day:
