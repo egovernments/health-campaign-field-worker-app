@@ -57,9 +57,11 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                     enableFixedDigitButton: true,
                     header: const Column(
                       children: [
-                        BackNavigationHelpHeaderWidget(
-                          showcaseButton: ShowcaseButton(),
-                          showHelp: false,
+                        Padding(
+                          padding: EdgeInsets.only(bottom: spacer2),
+                          child: BackNavigationHelpHeaderWidget(
+                            showHelp: false,
+                          ),
                         ),
                       ],
                     ),
@@ -227,12 +229,21 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                             margin: const EdgeInsets.all(spacer2),
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(0),
+                                padding: EdgeInsets.zero,
                                 child: Text(
-                                  localizations.translate(
+                                  (RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community)
+                                      ? localizations.translate(
+                                          i18.householdDetails
+                                              .clfStructureDetailsLabel,
+                                        )
+                                      :localizations.translate(
                                     i18.householdDetails.houseDetailsLabel,
                                   ),
-                                  style: textTheme.headingXl,
+                                  style: textTheme.headingXl.copyWith(
+                                    color: theme.colorTheme.primary.primary2
+                                  ),
                                 ),
                               ),
                               houseShowcaseData.typeOfStructure.buildWith(
@@ -297,7 +308,12 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 child: ReactiveWrapperField(
                                   formControlName: _noOfRoomsKey,
                                   builder: (field) => LabeledField(
-                                    label: localizations.translate(
+                                    label: (RegistrationDeliverySingleton()
+                                                .householdType ==
+                                            HouseholdType.community)
+                                        ? localizations.translate(i18
+                                            .householdDetails.noOfRoomsCLFLabel)
+                                        :localizations.translate(
                                       i18.householdDetails.noOfRoomsLabel,
                                     ),
                                     child: DigitNumericFormInput(

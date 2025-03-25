@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -64,6 +68,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     bool isDistributor = context.loggedInUserRoles
         .where(
           (role) => role.code == RolesType.distributor.toValue(),
@@ -88,20 +93,21 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
               __,
             ) =>
                 ScrollableContent(
-              footer: SizedBox(
-                child: DigitCard(
-                  margin: const EdgeInsets.only(top: kPadding),
-                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                  child: DigitElevatedButton(
-                    onPressed: () {
-                      context.router.replace(HomeRoute());
-                    },
-                    child: Text(localizations.translate(
-                      i18.acknowledgementSuccess.goToHome,
-                    )),
-                  ),
-                ),
-              ),
+              footer: DigitCard(
+                  margin: const EdgeInsets.only(top: spacer2),
+                  children: [
+                    DigitButton(
+                      mainAxisSize: MainAxisSize.max,
+                      label: localizations.translate(
+                        i18.acknowledgementSuccess.goToHome,
+                      ),
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large,
+                      onPressed: () {
+                        context.router.replace(HomeRoute());
+                      },
+                    ),
+                  ]),
               header: const BackNavigationHelpHeaderWidget(),
               children: [
                 BlocListener<BeneficiaryDownSyncBloc, BeneficiaryDownSyncState>(
@@ -116,7 +122,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           },
                         DigitSyncDialog.show(
                           context,
-                          type: DigitSyncDialogType.inProgress,
+                          type: DialogType.inProgress,
                           label: 'Loading',
                           barrierDismissible: false,
                         ),
@@ -246,7 +252,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           i18.beneficiaryDetails.downloadreport,
                         )}\n\n\n${localizations.translate(
                           i18.beneficiaryDetails.boundary,
-                        )} ${result.boundaryName}\n${localizations.translate(
+                        )} ${localizations.translate(result.locality!)}\n${localizations.translate(
                           i18.beneficiaryDetails.status,
                         )} ${localizations.translate(
                           i18.beneficiaryDetails.downloadcompleted,
@@ -262,7 +268,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           descriptionTableData: {
                             localizations.translate(
                               i18.beneficiaryDetails.boundary,
-                            ): result.boundaryName!,
+                            ): localizations.translate(result.locality!),
                             localizations.translate(
                               i18.beneficiaryDetails.status,
                             ): localizations.translate(
@@ -353,65 +359,68 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                   },
                   child: Column(children: [
                     Padding(
-                      padding: const EdgeInsets.all(kPadding),
+                      padding: const EdgeInsets.all(spacer2),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           localizations.translate(
                             i18.beneficiaryDetails.datadownloadreport,
                           ),
-                          style: theme.textTheme.displayMedium,
+                          style: textTheme.headingXl,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
                     ...downSyncList.map(
                       (e) => DigitCard(
-                        child: Column(
+                          margin: const EdgeInsets.all(spacer2),
+                          padding: const EdgeInsets.all(spacer1),
                           children: [
-                            DigitTableCard(
-                              element: {
-                                localizations.translate(
-                                  i18.beneficiaryDetails.boundary,
-                                ): e.boundaryName!,
-                                localizations.translate(
-                                  i18.beneficiaryDetails.status,
-                                ): e.offset == 0 && e.limit == 0
-                                    ? localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .downloadcompleted,
-                                      )
-                                    : localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .partialdownloaded,
-                                      ),
-                                localizations.translate(
-                                  i18.beneficiaryDetails.downloadtime,
-                                ): e.lastSyncedTime != null
-                                    ? '${DigitDateUtils.getTimeFromTimestamp(e.lastSyncedTime!)} on ${DigitDateUtils.getDateFromTimestamp(e.lastSyncedTime!)}'
-                                    : '--',
-                                localizations.translate(
-                                  i18.beneficiaryDetails.totalrecorddownload,
-                                ): e.offset == 0 && e.limit == 0
-                                    ? '${e.totalCount}/${e.totalCount}'
-                                    : '${e.offset}/${e.totalCount}',
-                              },
-                            ),
-                            DigitOutLineButton(
+                            LabelValueSummary(items: [
+                              LabelValueItem(
+                                  labelFlex: 5,
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.boundary,
+                                  ),
+                                  value: localizations.translate(e.locality!)),
+                              LabelValueItem(
+                                  labelFlex: 5,
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.status,
+                                  ),
+                                  value: e.offset == 0 && e.limit == 0
+                                      ? localizations.translate(
+                                          i18.beneficiaryDetails
+                                              .downloadcompleted,
+                                        )
+                                      : localizations.translate(
+                                          i18.beneficiaryDetails
+                                              .partialdownloaded,
+                                        )),
+                              LabelValueItem(
+                                  labelFlex: 5,
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.downloadtime,
+                                  ),
+                                  value: e.lastSyncedTime != null
+                                      ? '${DigitDateUtils.getTimeFromTimestamp(e.lastSyncedTime!)} on ${DigitDateUtils.getDateFromTimestamp(e.lastSyncedTime!)}'
+                                      : '--'),
+                              LabelValueItem(
+                                  labelFlex: 5,
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.totalrecorddownload,
+                                  ),
+                                  value: e.offset == 0 && e.limit == 0
+                                      ? '${e.totalCount}/${e.totalCount}'
+                                      : '${e.offset}/${e.totalCount}')
+                            ]),
+                            DigitButton(
                               label: localizations.translate(
                                 i18.beneficiaryDetails.download,
                               ),
-                              buttonStyle: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                side: BorderSide(
-                                  width: 1.0,
-                                  color: theme.colorScheme.secondary,
-                                ),
-                                minimumSize: Size(
-                                  MediaQuery.of(context).size.width,
-                                  50,
-                                ),
-                              ),
+                              mainAxisSize: MainAxisSize.max,
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.large,
                               onPressed: () {
                                 setState(() {
                                   selectedBoundary = BoundaryModel(
@@ -432,9 +441,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                     );
                               },
                             ),
-                          ],
-                        ),
-                      ),
+                          ]),
                     ),
                     downSyncList.isEmpty
                         ? NoResultCard(

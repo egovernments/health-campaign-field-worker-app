@@ -1,4 +1,5 @@
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 
@@ -24,6 +25,7 @@ class BeneficiaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -33,7 +35,7 @@ class BeneficiaryCard extends StatelessWidget {
           padding: const EdgeInsets.all(spacer1),
           child: Text(
             title,
-            style: theme.textTheme.headlineSmall,
+            style: textTheme.headingS,
           ),
         ),
         if (status != null)
@@ -51,8 +53,8 @@ class BeneficiaryCard extends StatelessWidget {
                             ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${status.toString()}'
                             : status.toString()),
                     capitalizeLetters: false,
-                    textColor: theme.colorScheme.onSurfaceVariant,
-                    iconColor: theme.colorScheme.onSurfaceVariant,
+                    textColor: theme.colorTheme.alert.success,
+                    iconColor: theme.colorTheme.alert.success,
                     isDisabled: true,
                     onPressed: () {},
                     type: DigitButtonType.tertiary,
@@ -62,8 +64,8 @@ class BeneficiaryCard extends StatelessWidget {
                     prefixIcon: Icons.info_rounded,
                     label: RegistrationDeliveryLocalization.of(context)
                         .translate(status.toString()),
-                    textColor: theme.colorScheme.error,
-                    iconColor: theme.colorScheme.error,
+                    textColor: theme.colorTheme.alert.error,
+                    iconColor: theme.colorTheme.alert.error,
                     type: DigitButtonType.tertiary,
                     size: DigitButtonSize.medium,
                     isDisabled: true,
@@ -75,7 +77,7 @@ class BeneficiaryCard extends StatelessWidget {
             padding: const EdgeInsets.all(4),
             child: Text(
               subtitle!,
-              style: theme.textTheme.bodyMedium,
+              style: textTheme.bodyS,
             ),
           ),
         if (description != null)
@@ -83,7 +85,7 @@ class BeneficiaryCard extends StatelessWidget {
             padding: const EdgeInsets.all(4),
             child: Text(
               description!,
-              style: theme.textTheme.bodySmall,
+              style: textTheme.bodyXS,
             ),
           ),
       ],

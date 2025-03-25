@@ -1,6 +1,31 @@
-## 1.0.5+3
+## 1.0.6+3
 
-* Added Eligibility checklist
+* BugFix:
+    * If there is no checklist redirect to BeneficiaryDetailsRoute instead of
+      DeliverInterventionRoute
+
+## 1.0.6+2
+
+* BugFix:
+    * Refused label change
+    * Label change for action buttons in delivery intervention and summary
+    * Updated member count to match min value according to children count and pregnant women count
+
+## 1.0.6+1
+
+* Updated to latest packages
+
+## 1.0.6
+
+* Added support for Eligibility checklist
+* Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
+  relatedClientReference in additionalFields
+* UI/UX fixes
+* Updated to latest packages
+
+## 1.0.5+2-dev.1
+
+* Added support for Eligibility checklist
 * Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing
   relatedClientReference in additionalFields
 

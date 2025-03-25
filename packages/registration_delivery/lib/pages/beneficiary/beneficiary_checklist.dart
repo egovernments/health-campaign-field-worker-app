@@ -4,8 +4,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -14,7 +17,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
 import 'package:survey_form/survey_form.dart';
 
@@ -79,8 +81,11 @@ class _BeneficiaryChecklistPageState
             state.mapOrNull(
               serviceDefinitionFetch: (value) {
                 selectedServiceDefinition = value.serviceDefinitionList
-                    .where((element) => element.code.toString().contains(
-                        '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                    .where((element) =>
+                        element.code.toString().contains(
+                            '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}') ||
+                        element.code.toString().contains(
+                            '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
                     .toList()
                     .firstOrNull;
 
@@ -101,12 +106,15 @@ class _BeneficiaryChecklistPageState
               serviceDefinitionFetch: (value) {
                 return ScrollableContent(
                   header: Column(children: [
-                    BackNavigationHelpHeaderWidget(
-                      showHelp: false,
-                      handleBack: () {
-                        //TODO: direct go back is not working, need to check
-                        Navigator.pop(context);
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: spacer2),
+                      child: BackNavigationHelpHeaderWidget(
+                        showHelp: false,
+                        handleBack: () {
+                          //TODO: direct go back is not working, need to check
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
                   ]),
                   enableFixedDigitButton: true,
@@ -187,6 +195,11 @@ class _BeneficiaryChecklistPageState
                                                     .ctaProceed,
                                               ),
                                               onPressed: () {
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop();
+                                                DigitLoaders.overlayLoader(
+                                                    context: context);
                                                 createSubmitRequest(
                                                     decidedFlow: decidedFlow);
                                                 Navigator.of(context,
@@ -195,6 +208,7 @@ class _BeneficiaryChecklistPageState
                                                 navigateToDecidedFlow(
                                                     context, decidedFlow);
                                               },
+                                              capitalizeLetters: false,
                                               type: DigitButtonType.primary,
                                               size: DigitButtonSize.large),
                                           DigitButton(
@@ -206,6 +220,7 @@ class _BeneficiaryChecklistPageState
                                                         rootNavigator: true)
                                                     .pop();
                                               },
+                                              capitalizeLetters: false,
                                               type: DigitButtonType.secondary,
                                               size: DigitButtonSize.large)
                                         ]));
@@ -224,12 +239,17 @@ class _BeneficiaryChecklistPageState
                                 '${localizations.translate(
                                   selectedServiceDefinition!.code.toString(),
                                 )} ${localizations.translate(i18.checklist.checklist)}',
-                                style: textTheme.headingXl,
+                                style: textTheme.headingXl.copyWith(
+                                    color: theme.colorTheme.primary.primary2),
                               ),
                             ),
                             ...initialAttributes!.map((
                               e,
                             ) {
+                              String? description = e.additionalFields?.fields
+                                  .where((a) => a.key == 'helpText')
+                                  .firstOrNull
+                                  ?.value;
                               int index = (initialAttributes ?? []).indexOf(e);
 
                               return Column(children: [
@@ -254,27 +274,46 @@ class _BeneficiaryChecklistPageState
 
                                       return null;
                                     },
-                                    builder: (field) => LabeledField(
-                                      label: localizations.translate(
-                                        '${selectedServiceDefinition?.code}.${e.code}',
-                                      ),
-                                      isRequired: e.required ?? false,
-                                      child: DigitTextFormInput(
-                                        onChange: (value) {
-                                          field.didChange(value);
-                                          controller[index].text = value;
-                                          checklistFormKey.currentState
-                                              ?.validate();
-                                        },
-                                        isRequired: e.required ?? false,
-                                        controller: controller[index],
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(
-                                            "[a-zA-Z0-9]",
-                                          )),
-                                        ],
-                                      ),
+                                    builder: (field) => Column(
+                                      children: [
+                                        LabeledField(
+                                          label: localizations.translate(
+                                            '${selectedServiceDefinition?.code}.${e.code}',
+                                          ),
+                                          description: description != null
+                                              ? localizations.translate(
+                                                  '${value.selectedServiceDefinition?.code}.$description',
+                                                )
+                                              : null,
+                                          labelStyle: textTheme.headingM
+                                              .copyWith(
+                                                  color: theme
+                                                      .colorTheme.text.primary),
+                                          descriptionStyle: textTheme.bodyS
+                                              .copyWith(
+                                                  color: theme.colorTheme.text
+                                                      .secondary),
+                                          isRequired: e.required ?? false,
+                                          capitalizedFirstLetter: false,
+                                          child: DigitTextFormInput(
+                                            onChange: (value) {
+                                              field.didChange(value);
+                                              controller[index].text = value;
+                                              checklistFormKey.currentState
+                                                  ?.validate();
+                                            },
+                                            isRequired: e.required ?? false,
+                                            controller: controller[index],
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(
+                                                "[a-zA-Z0-9]",
+                                              )),
+                                            ],
+                                          ),
+                                        ),
+                                        const DigitDivider(),
+                                      ],
                                     ),
                                   ),
                                 ] else if (e.dataType == 'Number' &&
@@ -299,166 +338,279 @@ class _BeneficiaryChecklistPageState
 
                                       return null;
                                     },
-                                    builder: (field) => LabeledField(
-                                      label: localizations
-                                          .translate(
-                                            '${value.selectedServiceDefinition?.code}.${e.code}',
-                                          )
-                                          .trim(),
-                                      isRequired: e.required ?? false,
-                                      child: DigitTextFormInput(
-                                        onChange: (value) {
-                                          field.didChange(value);
-                                          controller[index].text = value;
-                                          checklistFormKey.currentState
-                                              ?.validate();
-                                        },
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(
-                                            "[0-9]",
-                                          )),
-                                        ],
-                                        controller: controller[index],
-                                      ),
+                                    builder: (field) => Column(
+                                      children: [
+                                        LabeledField(
+                                          label: localizations
+                                              .translate(
+                                                '${value.selectedServiceDefinition?.code}.${e.code}',
+                                              )
+                                              .trim(),
+                                          isRequired: e.required ?? false,
+                                          capitalizedFirstLetter: false,
+                                          labelStyle: textTheme.headingM
+                                              .copyWith(
+                                                  color: theme
+                                                      .colorTheme.text.primary),
+                                          descriptionStyle: textTheme.bodyS
+                                              .copyWith(
+                                                  color: theme.colorTheme.text
+                                                      .secondary),
+                                          description: description != null
+                                              ? localizations.translate(
+                                                  '${value.selectedServiceDefinition?.code}.$description',
+                                                )
+                                              : null,
+                                          child: DigitTextFormInput(
+                                            onChange: (value) {
+                                              field.didChange(value);
+                                              controller[index].text = value;
+                                              checklistFormKey.currentState
+                                                  ?.validate();
+                                            },
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(
+                                                "[0-9]",
+                                              )),
+                                            ],
+                                            controller: controller[index],
+                                          ),
+                                        ),
+                                        const DigitDivider()
+                                      ],
                                     ),
                                   ),
                                 ] else if (e.dataType == 'SingleValueList') ...[
                                   if (!(e.code ?? '').contains('.'))
                                     _buildSurveyForm(
-                                      e,
-                                      index,
-                                      selectedServiceDefinition,
-                                      context,
-                                    )
+                                        e,
+                                        index,
+                                        selectedServiceDefinition,
+                                        context,
+                                        description)
                                 ] else if (e.dataType == 'MultiValueList' &&
                                     !(e.code ?? '').contains('.')) ...[
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(spacer2),
                                       child: Column(
                                         children: [
-                                          Text(
-                                            '${localizations.translate(
-                                              '${selectedServiceDefinition?.code}.${e.code}',
-                                            )} ${e.required == true ? '*' : ''}',
-                                            style: textTheme.headingM,
+                                          LabeledField(
+                                            label: localizations.translate(
+                                              '${value.selectedServiceDefinition?.code}.${e.code}',
+                                            ),
+                                            description: description != null
+                                                ? localizations.translate(
+                                                    '${value.selectedServiceDefinition?.code}.$description',
+                                                  )
+                                                : null,
+                                            labelStyle: textTheme.headingM
+                                                .copyWith(
+                                                    color: theme.colorTheme.text
+                                                        .primary),
+                                            descriptionStyle: textTheme.bodyS
+                                                .copyWith(
+                                                    color: theme.colorTheme.text
+                                                        .secondary),
+                                            isRequired: e.required ?? false,
+                                            child: BlocBuilder<ServiceBloc,
+                                                ServiceState>(
+                                              builder: (context, state) {
+                                                return Column(
+                                                  children: e.values!
+                                                      .map((e) => DigitCheckbox(
+                                                            label: e,
+                                                            value: controller[
+                                                                    index]
+                                                                .text
+                                                                .split('.')
+                                                                .contains(e),
+                                                            onChanged: (value) {
+                                                              context
+                                                                  .read<
+                                                                      ServiceBloc>()
+                                                                  .add(
+                                                                    ServiceSurveyFormEvent(
+                                                                      value: e
+                                                                          .toString(),
+                                                                      submitTriggered:
+                                                                          submitTriggered,
+                                                                    ),
+                                                                  );
+                                                              final String ele;
+                                                              var val =
+                                                                  controller[
+                                                                          index]
+                                                                      .text
+                                                                      .split(
+                                                                          '.');
+                                                              if (val.contains(
+                                                                  e)) {
+                                                                val.remove(e);
+                                                                ele = val
+                                                                    .join(".");
+                                                              } else {
+                                                                ele =
+                                                                    "${controller[index].text}.$e";
+                                                              }
+                                                              controller[index]
+                                                                      .value =
+                                                                  TextEditingController
+                                                                      .fromValue(
+                                                                TextEditingValue(
+                                                                  text: ele,
+                                                                ),
+                                                              ).value;
+                                                            },
+                                                          ))
+                                                      .toList(),
+                                                );
+                                              },
+                                            ),
                                           ),
+                                          const DigitDivider(),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  BlocBuilder<ServiceBloc, ServiceState>(
-                                    builder: (context, state) {
-                                      return Column(
-                                        children: e.values!
-                                            .map((e) => DigitCheckbox(
-                                                  label: e,
-                                                  value: controller[index]
-                                                      .text
-                                                      .split('.')
-                                                      .contains(e),
-                                                  onChanged: (value) {
-                                                    context
-                                                        .read<ServiceBloc>()
-                                                        .add(
-                                                          ServiceSurveyFormEvent(
-                                                            value: e.toString(),
-                                                            submitTriggered:
-                                                                submitTriggered,
-                                                          ),
-                                                        );
-                                                    final String ele;
-                                                    var val = controller[index]
-                                                        .text
-                                                        .split('.');
-                                                    if (val.contains(e)) {
-                                                      val.remove(e);
-                                                      ele = val.join(".");
-                                                    } else {
-                                                      ele =
-                                                          "${controller[index].text}.$e";
-                                                    }
-                                                    controller[index].value =
-                                                        TextEditingController
-                                                            .fromValue(
-                                                      TextEditingValue(
-                                                        text: ele,
-                                                      ),
-                                                    ).value;
-                                                  },
-                                                ))
-                                            .toList(),
-                                      );
-                                    },
-                                  ),
                                 ] else if (e.dataType == 'Boolean') ...[
                                   if (!(e.code ?? '').contains('.'))
-                                    BlocBuilder<ServiceBloc, ServiceState>(
-                                      builder: (context, state) {
-                                        return Align(
-                                          alignment: Alignment.topLeft,
-                                          child: SelectionCard<bool>(
-                                            showParentContainer: true,
-                                            title: localizations.translate(
-                                              '${selectedServiceDefinition?.code}.${e.code}',
-                                            ),
-                                            isRequired: e.required ?? false,
-                                            allowMultipleSelection: false,
-                                            width: 110,
-                                            valueMapper: (value) {
-                                              return value
-                                                  ? localizations.translate(
-                                                      i18.common.coreCommonYes,
-                                                    )
-                                                  : localizations.translate(
-                                                      i18.common.coreCommonNo,
-                                                    );
-                                            },
-                                            errorMessage: (!validFields &&
-                                                    (controller[index].text ==
-                                                        ''))
-                                                ? localizations.translate(i18
-                                                    .common.corecommonRequired)
-                                                : null,
-                                            initialSelection:
-                                                controller[index].text == 'true'
-                                                    ? [true]
-                                                    : controller[index].text ==
-                                                            'false'
-                                                        ? [false]
-                                                        : [],
-                                            options: const [true, false],
-                                            onSelectionChanged: (curValue) {
-                                              if (curValue.isNotEmpty) {
-                                                context.read<ServiceBloc>().add(
-                                                      ServiceSurveyFormEvent(
-                                                        value:
-                                                            curValue.toString(),
-                                                        submitTriggered:
-                                                            submitTriggered,
+                                    DigitCard(
+                                        cardType: CardType.primary,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(spacer2),
+                                              child: LabeledField(
+                                                label: localizations.translate(
+                                                  '${selectedServiceDefinition?.code}.${e.code}',
+                                                ),
+                                                capitalizedFirstLetter: false,
+                                                description: description != null
+                                                    ? localizations.translate(
+                                                        '${value.selectedServiceDefinition?.code}.$description',
+                                                      )
+                                                    : null,
+                                                labelStyle: textTheme.headingM
+                                                    .copyWith(
+                                                        color: theme.colorTheme
+                                                            .text.primary),
+                                                descriptionStyle:
+                                                    textTheme.bodyS.copyWith(
+                                                        color: theme.colorTheme
+                                                            .text.secondary),
+                                                isRequired: e.required ?? false,
+                                                child: BlocBuilder<ServiceBloc,
+                                                    ServiceState>(
+                                                  builder: (context, state) {
+                                                    return FormField<bool>(
+                                                      autovalidateMode:
+                                                          AutovalidateMode
+                                                              .onUserInteraction,
+                                                      validator: (value) {
+                                                        if (e.required ==
+                                                                true &&
+                                                            (controller[index]
+                                                                        .text ==
+                                                                    null ||
+                                                                controller[index]
+                                                                        .text ==
+                                                                    '')) {
+                                                          return localizations
+                                                              .translate(
+                                                            i18.common
+                                                                .coreCommonReasonRequired,
+                                                          );
+                                                        }
+
+                                                        return null;
+                                                      },
+                                                      builder: (field) =>
+                                                          Column(
+                                                        children: [
+                                                          SelectionCard<bool>(
+                                                            showParentContainer:
+                                                                true,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.3,
+                                                            errorMessage:
+                                                                field.errorText,
+                                                            allowMultipleSelection:
+                                                                false,
+                                                            valueMapper:
+                                                                (value) {
+                                                              return value
+                                                                  ? localizations
+                                                                      .translate(
+                                                                      i18.common
+                                                                          .coreCommonYes,
+                                                                    )
+                                                                  : localizations
+                                                                      .translate(
+                                                                      i18.common
+                                                                          .coreCommonNo,
+                                                                    );
+                                                            },
+                                                            initialSelection: controller[
+                                                                            index]
+                                                                        .text ==
+                                                                    'true'
+                                                                ? [true]
+                                                                : controller[index]
+                                                                            .text ==
+                                                                        'false'
+                                                                    ? [false]
+                                                                    : [],
+                                                            options: const [
+                                                              true,
+                                                              false
+                                                            ],
+                                                            onSelectionChanged:
+                                                                (curValue) {
+                                                              field.didChange(
+                                                                  curValue
+                                                                      .first);
+                                                              if (curValue
+                                                                  .isNotEmpty) {
+                                                                context
+                                                                    .read<
+                                                                        ServiceBloc>()
+                                                                    .add(
+                                                                      ServiceSurveyFormEvent(
+                                                                        value: curValue
+                                                                            .toString(),
+                                                                        submitTriggered:
+                                                                            submitTriggered,
+                                                                      ),
+                                                                    );
+                                                                controller[index]
+                                                                        .value =
+                                                                    TextEditingValue(
+                                                                  text: curValue
+                                                                      .first
+                                                                      .toString(),
+                                                                );
+                                                              }
+                                                            },
+                                                          ),
+                                                          const DigitDivider(),
+                                                        ],
                                                       ),
                                                     );
-                                                setState(() {
-                                                  controller[index].value =
-                                                      TextEditingValue(
-                                                    text: curValue.first
-                                                        .toString(),
-                                                  );
-                                                });
-                                              } else {
-                                                controller[index].value =
-                                                    const TextEditingValue(
-                                                  text: '',
-                                                );
-                                              }
-                                            },
+                                                  },
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        );
-                                      },
-                                    ),
+                                        ]),
                                 ],
                               ]);
                             }),
@@ -499,12 +651,13 @@ class _BeneficiaryChecklistPageState
   }
 
   Widget _buildSurveyForm(
-    AttributesModel item,
-    int index,
-    ServiceDefinitionModel? selectedServiceDefinition,
-    BuildContext context,
-  ) {
+      AttributesModel item,
+      int index,
+      ServiceDefinitionModel? selectedServiceDefinition,
+      BuildContext context,
+      String? description) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
       final childItems = getNextQuestions(
@@ -526,117 +679,192 @@ class _BeneficiaryChecklistPageState
         }
       }
 
-      return Column(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0), // Add padding here
-              child: Text(
-                '${localizations.translate(
+      return Align(
+        alignment: Alignment.topLeft,
+        child: Column(
+          children: [
+            LabeledField(
+                charCondition: true,
+                capitalizedFirstLetter: false,
+                label: localizations.translate(
                   '${selectedServiceDefinition?.code}.${item.code}',
-                )} ${item.required == true ? '*' : ''}',
-                style: theme.textTheme.headlineSmall,
-              ),
-            ),
-          ),
-          Column(
-            children: [
-              BlocBuilder<ServiceBloc, ServiceState>(
-                builder: (context, state) {
-                  return RadioGroup<String>.builder(
-                    groupValue: controller[index].text.trim(),
-                    onChanged: (value) {
-                      context.read<ServiceBloc>().add(
-                            ServiceSurveyFormEvent(
-                              value: Random().nextInt(100).toString(),
-                              submitTriggered: submitTriggered,
-                            ),
-                          );
-                      setState(() {
-                        // Clear child controllers and update visibility
-                        for (final matchingChildItem in childItems) {
-                          final childIndex =
-                              initialAttributes?.indexOf(matchingChildItem);
-                          if (childIndex != null) {
-                            controller[childIndex].clear();
-                            visibleChecklistIndexes
-                                .removeWhere((v) => v == childIndex);
-                          }
-                        }
+                ),
+                description: description != null
+                    ? localizations.translate(
+                        '${selectedServiceDefinition?.code}.$description',
+                      )
+                    : null,
+                labelStyle: textTheme.headingM
+                    .copyWith(color: theme.colorTheme.text.primary),
+                descriptionStyle: textTheme.bodyS
+                    .copyWith(color: theme.colorTheme.text.secondary),
+                isRequired: item.required ?? false,
+                child: Column(children: [
+                  BlocBuilder<ServiceBloc, ServiceState>(
+                    builder: (context, state) {
+                      return Align(
+                          alignment: Alignment.topLeft,
+                          child: FormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value1) {
+                                if (item.required == true &&
+                                    (controller[index].text == null ||
+                                        controller[index].text == '')) {
+                                  return localizations.translate(
+                                    i18.common.coreCommonReasonRequired,
+                                  );
+                                }
 
-                        // Update the current controller's value
-                        controller[index].value =
-                            TextEditingController.fromValue(
-                          TextEditingValue(
-                            text: value!,
-                          ),
-                        ).value;
+                                return null;
+                              },
+                              builder: (field) => RadioList(
+                                    radioDigitButtons: item.values != null
+                                        ? item.values!
+                                            .where((e) =>
+                                                e !=
+                                                i18.checklist.notSelectedKey)
+                                            .toList()
+                                            .map((item) => RadioButtonModel(
+                                                  code: item,
+                                                  name: localizations.translate(
+                                                    '${selectedServiceDefinition?.code}.${item.trim()}',
+                                                  ),
+                                                ))
+                                            .toList()
+                                        : [],
+                                    errorMessage: field.errorText,
+                                    sentenceCaseEnabled: false,
+                                    groupValue: controller[index].text.trim(),
+                                    onChanged: (value) {
+                                      field.didChange(value);
+                                      context.read<ServiceBloc>().add(
+                                            ServiceSurveyFormEvent(
+                                              value: Random()
+                                                  .nextInt(100)
+                                                  .toString(),
+                                              submitTriggered: submitTriggered,
+                                            ),
+                                          );
+                                      setState(() {
+                                        // Clear child controllers and update visibility
+                                        for (final matchingChildItem
+                                            in childItems) {
+                                          final childIndex = initialAttributes
+                                              ?.indexOf(matchingChildItem);
+                                          if (childIndex != null) {
+                                            // controller[childIndex].clear();
+                                            visibleChecklistIndexes.removeWhere(
+                                                (v) => v == childIndex);
+                                          }
+                                        }
 
-                        if (excludedIndexes.isNotEmpty) {
-                          for (int i = 0; i < excludedIndexes.length; i++) {
-                            // Clear excluded child controllers
-                            if (item.dataType != 'SingleValueList') {
-                              // controller[excludedIndexes[i]].value =
-                              //     TextEditingController.fromValue(
-                              //   const TextEditingValue(
-                              //     text: '',
-                              //   ),
-                              // ).value;
-                            }
-                          }
-                        }
+                                        // Update the current controller's value
+                                        controller[index].value =
+                                            TextEditingController.fromValue(
+                                          TextEditingValue(
+                                            text: value!.code,
+                                          ),
+                                        ).value;
 
-                        // Remove corresponding controllers based on the removed attributes
-                      });
+                                        if (excludedIndexes.isNotEmpty) {
+                                          for (int i = 0;
+                                              i < excludedIndexes.length;
+                                              i++) {
+                                            // Clear excluded child controllers
+                                            if (item.dataType !=
+                                                'SingleValueList') {
+                                              // controller[excludedIndexes[i]].value =
+                                              //     TextEditingController.fromValue(
+                                              //   const TextEditingValue(
+                                              //     text: '',
+                                              //   ),
+                                              // ).value;
+                                            }
+                                          }
+                                        }
+                                        // Remove corresponding controllers based on the removed attributes
+                                      });
+                                    },
+                                  )));
                     },
-                    items: item.values != null
-                        ? item.values!
-                            .where((e) => e != i18.checklist.notSelectedKey)
-                            .toList()
-                        : [],
-                    itemBuilder: (item) => RadioButtonBuilder(
-                      localizations.translate(
-                        item.trim().toUpperCase(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              BlocBuilder<ServiceBloc, ServiceState>(
-                builder: (context, state) {
-                  final hasError = (item.required == true &&
-                      controller[index].text.isEmpty &&
-                      submitTriggered);
+                  ),
+                  BlocBuilder<ServiceBloc, ServiceState>(
+                    builder: (context, state) {
+                      return (controller[index].text ==
+                                  item.values?[1].trim() &&
+                              item.dataType != 'SingleValueList')
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                left: spacer1,
+                                right: spacer1,
+                                bottom: spacer4,
+                              ),
+                              child: FormField<String>(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (value1) {
+                                  if (item.required == true &&
+                                      (additionalController[index].text ==
+                                              null ||
+                                          additionalController[index].text ==
+                                              '')) {
+                                    return localizations.translate(
+                                      i18.common.coreCommonReasonRequired,
+                                    );
+                                  }
 
-                  return Offstage(
-                    offstage: !hasError,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        localizations.translate(
-                          i18.common.corecommonRequired,
-                        ),
-                        style: TextStyle(
-                          color: theme.colorScheme.error,
-                        ),
-                      ),
+                                  return null;
+                                },
+                                builder: (field) {
+                                  return LabeledField(
+                                      label: localizations.translate(
+                                        '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
+                                      ),
+                                      description: description != null
+                                          ? localizations.translate(
+                                              '${selectedServiceDefinition?.code}.$description',
+                                            )
+                                          : null,
+                                      labelStyle: textTheme.headingM.copyWith(
+                                          color: theme.colorTheme.text.primary),
+                                      descriptionStyle: textTheme.bodyS
+                                          .copyWith(
+                                              color: theme
+                                                  .colorTheme.text.secondary),
+                                      isRequired: item.required ?? false,
+                                      capitalizedFirstLetter: false,
+                                      child: DigitTextFormInput(
+                                        onChange: (value) {
+                                          field.didChange(value);
+                                          additionalController[index].text =
+                                              value;
+                                        },
+                                        errorMessage: field.errorText,
+                                        maxLength: 1000,
+                                        charCount: true,
+                                        controller: additionalController[index],
+                                      ));
+                                },
+                              ),
+                            )
+                          : const SizedBox();
+                    },
+                  ),
+                  if (childItems.isNotEmpty &&
+                      controller[index].text.trim().isNotEmpty) ...[
+                    _buildNestedSurveyForm(
+                      item.code.toString(),
+                      index,
+                      controller[index].text.trim(),
+                      context,
+                      description,
                     ),
-                  );
-                },
-              ),
-            ],
-          ),
-          if (childItems.isNotEmpty &&
-              controller[index].text.trim().isNotEmpty) ...[
-            _buildNestedSurveyForm(
-              item.code.toString(),
-              index,
-              controller[index].text.trim(),
-              context,
-            ),
+                  ],
+                ])),
+            const DigitDivider(),
           ],
-        ],
+        ),
       );
     } else if (item.dataType == 'String') {
       return FormField<String>(
@@ -654,26 +882,41 @@ class _BeneficiaryChecklistPageState
             return null;
           },
           builder: (field) {
-            return LabeledField(
-              label: localizations.translate(
-                '${selectedServiceDefinition?.code}.${item.code}',
-              ),
-              isRequired: item.required ?? false,
-              child: DigitTextFormInput(
-                maxLength: 1000,
-                charCount: true,
-                onChange: (value) {
-                  field.didChange(value);
-                  controller[index].text = value;
-                },
-                errorMessage: field.errorText,
-                controller: controller[index],
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(
-                    "[a-zA-Z0-9 ]",
-                  )),
-                ],
-              ),
+            return Column(
+              children: [
+                LabeledField(
+                  label: localizations.translate(
+                    '${selectedServiceDefinition?.code}.${item.code}',
+                  ),
+                  description: description != null
+                      ? localizations.translate(
+                          '${selectedServiceDefinition?.code}.$description',
+                        )
+                      : null,
+                  labelStyle: textTheme.headingM
+                      .copyWith(color: theme.colorTheme.text.primary),
+                  descriptionStyle: textTheme.bodyS
+                      .copyWith(color: theme.colorTheme.text.secondary),
+                  isRequired: item.required ?? false,
+                  capitalizedFirstLetter: false,
+                  child: DigitTextFormInput(
+                    maxLength: 1000,
+                    charCount: true,
+                    onChange: (value) {
+                      field.didChange(value);
+                      controller[index].text = value;
+                    },
+                    errorMessage: field.errorText,
+                    controller: controller[index],
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(
+                        "[a-zA-Z0-9 ]",
+                      )),
+                    ],
+                  ),
+                ),
+                const DigitDivider(),
+              ],
             );
           });
     } else if (item.dataType == 'Number') {
@@ -694,143 +937,194 @@ class _BeneficiaryChecklistPageState
             return null;
           },
           builder: (field) {
-            return LabeledField(
-              label: localizations
-                  .translate(
-                    '${selectedServiceDefinition?.code}.${item.code}',
-                  )
-                  .trim(),
-              isRequired: item.required ?? false,
-              child: DigitTextFormInput(
-                onChange: (value) {
-                  field.didChange(value);
-                  controller[index].text = value;
-                },
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(
-                    "[0-9]",
-                  )),
-                ],
-                errorMessage: field.errorText,
-                controller: controller[index],
-              ),
+            return Column(
+              children: [
+                LabeledField(
+                  label: localizations
+                      .translate(
+                        '${selectedServiceDefinition?.code}.${item.code}',
+                      )
+                      .trim(),
+                  description: description != null
+                      ? localizations.translate(
+                          '${selectedServiceDefinition?.code}.$description',
+                        )
+                      : null,
+                  labelStyle: textTheme.headingM
+                      .copyWith(color: theme.colorTheme.text.primary),
+                  descriptionStyle: textTheme.bodyS
+                      .copyWith(color: theme.colorTheme.text.secondary),
+                  isRequired: item.required ?? false,
+                  capitalizedFirstLetter: false,
+                  child: DigitTextFormInput(
+                    onChange: (value) {
+                      field.didChange(value);
+                      controller[index].text = value;
+                    },
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(
+                        "[0-9]",
+                      )),
+                    ],
+                    errorMessage: field.errorText,
+                    controller: controller[index],
+                  ),
+                ),
+                const DigitDivider(),
+              ],
             );
           });
     } else if (item.dataType == 'MultiValueList') {
       return Align(
         alignment: Alignment.topLeft,
-        child: Padding(
-          padding: const EdgeInsets.all(spacer2),
-          child: LabeledField(
-            label: localizations.translate(
-              '${selectedServiceDefinition?.code}.${item.code}',
-            ),
-            isRequired: item.required ?? false,
-            child: BlocBuilder<ServiceBloc, ServiceState>(
-              builder: (context, state) {
-                return Column(
-                  children: item.values!
-                      .map((e) => DigitCheckbox(
-                            label: localizations.translate(
-                                '${selectedServiceDefinition?.code}.${e}'),
-                            value:
-                                controller[index].text.split('.').contains(e),
-                            onChanged: (value) {
-                              context.read<ServiceBloc>().add(
-                                    ServiceSurveyFormEvent(
-                                      value: e.toString(),
-                                      submitTriggered: submitTriggered,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(spacer2),
+              child: LabeledField(
+                label: localizations.translate(
+                  '${selectedServiceDefinition?.code}.${item.code}',
+                ),
+                description: description != null
+                    ? localizations.translate(
+                        '${selectedServiceDefinition?.code}.$description',
+                      )
+                    : null,
+                labelStyle: textTheme.headingM
+                    .copyWith(color: theme.colorTheme.text.primary),
+                descriptionStyle: textTheme.bodyS
+                    .copyWith(color: theme.colorTheme.text.secondary),
+                isRequired: item.required ?? false,
+                capitalizedFirstLetter: false,
+                child: BlocBuilder<ServiceBloc, ServiceState>(
+                  builder: (context, state) {
+                    return Column(
+                      children: item.values!
+                          .map((e) => DigitCheckbox(
+                                label: localizations.translate(
+                                    '${selectedServiceDefinition?.code}.${e}'),
+                                value: controller[index]
+                                    .text
+                                    .split('.')
+                                    .contains(e),
+                                onChanged: (value) {
+                                  context.read<ServiceBloc>().add(
+                                        ServiceSurveyFormEvent(
+                                          value: e.toString(),
+                                          submitTriggered: submitTriggered,
+                                        ),
+                                      );
+                                  final String ele;
+                                  var val = controller[index].text.split('.');
+                                  if (val.contains(e)) {
+                                    val.remove(e);
+                                    ele = val.join(".");
+                                  } else {
+                                    ele = "${controller[index].text}.$e";
+                                  }
+                                  controller[index].value =
+                                      TextEditingController.fromValue(
+                                    TextEditingValue(
+                                      text: ele,
                                     ),
-                                  );
-                              final String ele;
-                              var val = controller[index].text.split('.');
-                              if (val.contains(e)) {
-                                val.remove(e);
-                                ele = val.join(".");
-                              } else {
-                                ele = "${controller[index].text}.$e";
-                              }
-                              controller[index].value =
-                                  TextEditingController.fromValue(
-                                TextEditingValue(
-                                  text: ele,
-                                ),
-                              ).value;
-                            },
-                          ))
-                      .toList(),
-                );
-              },
+                                  ).value;
+                                },
+                              ))
+                          .toList(),
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
+            const DigitDivider(),
+          ],
         ),
       );
     } else if (item.dataType == 'Boolean') {
       return Align(
         alignment: Alignment.topLeft,
-        child: Padding(
-          padding: const EdgeInsets.all(spacer2),
-          child: LabeledField(
-            label: localizations.translate(
-              '${selectedServiceDefinition?.code}.${item.code}',
-            ),
-            isRequired: item.required ?? false,
-            child: BlocBuilder<ServiceBloc, ServiceState>(
-              builder: (context, state) {
-                return FormField<bool>(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) {
-                    if (item.required == true &&
-                        (controller[index].text == '')) {
-                      return localizations.translate(
-                        i18.common.coreCommonReasonRequired,
-                      );
-                    }
-
-                    return null;
-                  },
-                  builder: (field) => SelectionCard(
-                    errorMessage: field.errorText,
-                    allowMultipleSelection: false,
-                    valueMapper: (value) {
-                      return value
-                          ? localizations.translate(
-                              i18.common.coreCommonYes,
-                            )
-                          : localizations.translate(
-                              i18.common.coreCommonNo,
-                            );
-                    },
-                    initialSelection: const [false],
-                    options: const [true, false],
-                    onSelectionChanged: (value) {
-                      field.didChange(value.first);
-                      context.read<ServiceBloc>().add(
-                            ServiceSurveyFormEvent(
-                              value: value.toString(),
-                              submitTriggered: submitTriggered,
-                            ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(spacer2),
+              child: LabeledField(
+                label: localizations.translate(
+                  '${selectedServiceDefinition?.code}.${item.code}',
+                ),
+                description: description != null
+                    ? localizations.translate(
+                        '${selectedServiceDefinition?.code}.$description',
+                      )
+                    : null,
+                labelStyle: textTheme.headingM
+                    .copyWith(color: theme.colorTheme.text.primary),
+                descriptionStyle: textTheme.bodyS
+                    .copyWith(color: theme.colorTheme.text.secondary),
+                isRequired: item.required ?? false,
+                capitalizedFirstLetter: false,
+                child: BlocBuilder<ServiceBloc, ServiceState>(
+                  builder: (context, state) {
+                    return FormField<bool>(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (item.required == true &&
+                            (controller[index].text == null ||
+                                controller[index].text == '')) {
+                          return localizations.translate(
+                            i18.common.coreCommonReasonRequired,
                           );
-                      final String ele;
-                      var val = controller[index].text.split('.');
-                      if (val.contains(e)) {
-                        val.remove(e);
-                        ele = val.join(".");
-                      } else {
-                        ele = "${controller[index].text}.$e";
-                      }
-                      controller[index].value = TextEditingController.fromValue(
-                        TextEditingValue(
-                          text: ele,
-                        ),
-                      ).value;
-                    },
-                  ),
-                );
-              },
+                        }
+
+                        return null;
+                      },
+                      builder: (field) => SelectionCard(
+                        showParentContainer: true,
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        errorMessage: field.errorText,
+                        allowMultipleSelection: false,
+                        valueMapper: (value) {
+                          return value
+                              ? localizations.translate(
+                                  i18.common.coreCommonYes,
+                                )
+                              : localizations.translate(
+                                  i18.common.coreCommonNo,
+                                );
+                        },
+                        initialSelection: const [false],
+                        options: const [true, false],
+                        onSelectionChanged: (value) {
+                          field.didChange(value.first);
+                          context.read<ServiceBloc>().add(
+                                ServiceSurveyFormEvent(
+                                  value: value.toString(),
+                                  submitTriggered: submitTriggered,
+                                ),
+                              );
+                          final String ele;
+                          var val = controller[index].text.split('.');
+                          if (val.contains(e)) {
+                            val.remove(e);
+                            ele = val.join(".");
+                          } else {
+                            ele = "${controller[index].text}.$e";
+                          }
+                          controller[index].value =
+                              TextEditingController.fromValue(
+                            TextEditingValue(
+                              text: ele,
+                            ),
+                          ).value;
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
+            const DigitDivider(),
+          ],
         ),
       );
     } else {
@@ -839,12 +1133,8 @@ class _BeneficiaryChecklistPageState
   }
 
   // Function to build nested SurveyForm for child attributes
-  Widget _buildNestedSurveyForm(
-    String parentCode,
-    int parentIndex,
-    String parentControllerValue,
-    BuildContext context,
-  ) {
+  Widget _buildNestedSurveyForm(String parentCode, int parentIndex,
+      String parentControllerValue, BuildContext context, String? description) {
     // Retrieve child items for the given parent code
     final childItems = getNextQuestions(
       parentCode,
@@ -856,18 +1146,19 @@ class _BeneficiaryChecklistPageState
         // Build cards for each matching child attribute
         for (final matchingChildItem in childItems.where((childItem) =>
             childItem.code!.startsWith('$parentCode.$parentControllerValue.')))
-          Card(
-            margin: const EdgeInsets.only(bottom: 8.0, left: 4.0, right: 4.0),
-            color: countDots(matchingChildItem.code ?? '') % 4 == 2
-                ? const Color.fromRGBO(238, 238, 238, 1)
-                : const DigitColors().light.paperPrimary,
-            child: _buildSurveyForm(
-              matchingChildItem,
-              initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
-              // Pass parentIndex here as we're building at the same level
-              selectedServiceDefinition,
-              context,
-            ),
+          DigitCard(
+            margin: const EdgeInsets.only(
+                bottom: spacer2, left: spacer2, right: spacer2),
+            cardType: CardType.secondary,
+            children: [
+              _buildSurveyForm(
+                  matchingChildItem,
+                  initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
+                  // Pass parentIndex here as we're building at the same level
+                  selectedServiceDefinition,
+                  context,
+                  description)
+            ],
           ),
       ],
     );
@@ -895,8 +1186,8 @@ class _BeneficiaryChecklistPageState
 
     // Get the precedence flow attribute if defined
     String? precedenceFlowCode = serviceDefinition.additionalFields?.fields
-        .firstWhere((element) => element.key == 'precedenceFlow')
-        .value;
+        .firstWhereOrNull((element) => element.key == 'precedenceFlow')
+        ?.value;
 
     AttributesModel? precedenceAttribute =
         serviceDefinition.attributes?.firstWhereOrNull(
@@ -1090,7 +1381,12 @@ class _BeneficiaryChecklistPageState
             projectBeneficiaryClientRefId: widget.beneficiaryClientRefId!));
         break;
       case Status.toAdminister:
-        ctx.router.navigate(BeneficiaryDetailsRoute());
+        if (selectedServiceDefinition!.code!
+            .contains(RegistrationDeliveryEnums.iec.toValue())) {
+          ctx.router.navigate(DeliverInterventionRoute());
+        } else {
+          ctx.router.navigate(BeneficiaryDetailsRoute());
+        }
         break;
       default:
         Navigator.of(ctx).pop();

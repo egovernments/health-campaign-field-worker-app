@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -64,13 +64,13 @@ class ProjectFacilitySelectionPage extends StatelessWidget {
                       color: Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.only(
-                          left: kPadding * 2,
-                          right: kPadding * 2,
+                          left: spacer2 * 2,
+                          right: spacer2 * 2,
                         ),
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(kPadding),
+                              padding: const EdgeInsets.all(spacer2),
                               child: Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
@@ -82,13 +82,12 @@ class ProjectFacilitySelectionPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const DigitTextFormField(
-                              suffix: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.search),
-                              ),
-                              label: '',
+                            ReactiveWrapperField(
                               formControlName: _facilityName,
+                              builder: (field) => DigitSearchFormInput(
+                                onChange: (value) =>
+                                    form.control(_facilityName).value = value,
+                              ),
                             ),
                           ],
                         ),
@@ -107,7 +106,7 @@ class ProjectFacilitySelectionPage extends StatelessWidget {
                           child: Container(
                             margin: const EdgeInsets.only(left: 8, right: 8),
                             decoration: BoxDecoration(
-                              color: DigitTheme.instance.colors.alabasterWhite,
+                              color: const DigitColors().light.paperSecondary,
                               border: Border(
                                 top: index == 0 ? borderSide : BorderSide.none,
                                 bottom: (filteredProjectFacilities != null &&
@@ -126,13 +125,13 @@ class ProjectFacilitySelectionPage extends StatelessWidget {
                               },
                               child: Container(
                                 margin: const EdgeInsets.only(
-                                  top: kPadding,
-                                  left: kPadding,
-                                  right: kPadding,
+                                  top: spacer2,
+                                  left: spacer2,
+                                  right: spacer2,
                                 ),
                                 decoration: BoxDecoration(
                                   color:
-                                      DigitTheme.instance.colors.alabasterWhite,
+                                      const DigitColors().light.paperSecondary,
                                   border: Border(
                                     bottom: BorderSide(
                                       //                   <--- left side
@@ -143,9 +142,9 @@ class ProjectFacilitySelectionPage extends StatelessWidget {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
-                                    left: kPadding * 2,
-                                    bottom: kPadding * 2,
-                                    top: kPadding * 2,
+                                    left: spacer4,
+                                    bottom: spacer4,
+                                    top: spacer4,
                                   ),
                                   child: Text(projectFacility != null
                                       ? localizations.translate(

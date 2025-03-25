@@ -68,10 +68,11 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      path: "../../packages/attendance_management"
-      relative: true
-    source: path
-    version: "1.0.3+1"
+      name: attendance_management
+      sha256: "976d2b2f7c7c79bf8f05647a4138b66dab9017316697222223d888273a95f96a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4+2"
   audioplayers:
     dependency: transitive
     description:
@@ -265,7 +266,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -339,10 +340,11 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      path: "../../packages/closed_household"
-      relative: true
-    source: path
-    version: "1.0.3"
+      name: closed_household
+      sha256: "966e319584acabfb940decc3c240964363f7b93c71833d8bd147df19d99c2e92"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5+1"
   code_builder:
     dependency: transitive
     description:
@@ -363,10 +365,10 @@ packages:
     dependency: "direct main"
     description:
       name: complaints
-      sha256: "6e383d4be32cee58696258c2f58176ef9869b2afc4aeed252e4b3757eb4bfb76"
+      sha256: cba8a9d32754fa28a0987d844b9b050aacb5c62a7345dfd41254f26b0bb4f0ea
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2+1"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -504,29 +506,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.1"
-  digit_components:
-    dependency: "direct main"
-    description:
-      name: digit_components
-      sha256: "7097c7e8bd2fa96415eb4049a7fc2e4cb3dcb5a913d63703ca69cb785a069300"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
-    version: "1.0.5+1"
+      name: digit_data_model
+      sha256: "8e67281c34e030b471a33d8889cb4e96d94d3d9fa6c6cf833e5d6d792ace1471"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6+2"
   digit_dss:
     dependency: "direct main"
     description:
       name: digit_dss
-      sha256: cb5ae888503260dff1df2d4785ba2cac39a20348cfcd660e2212a8965b948dba
+      sha256: e1a541a5360413ed903ee77af580faf93623160aa5e7143e8bc1d0ec44dd980b
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4+1"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -547,26 +542,26 @@ packages:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: c33af61ed9ab3d7740fc3c8948af4b763d946cba5e902f8bfb00948d4d69d60a
+      sha256: c8f82938906a11c516d445d7e5e27b7e6c6a1d07e0a608c2f90f63dd234241a5
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5+1"
   digit_showcase:
     dependency: "direct main"
     description:
       name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
+      sha256: "4667b29e652738a1621e907359da327594c288417f5dfa3da60e77f0342a4eae"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2+1"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "57c4da5237be6025783e7357a02b6b492f02e38f711d674bf46f5f8c8a93ad76"
+      sha256: f371af457d5be79c25d05b3e05c230c12be347c664c577619087f5575df8530f
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.4"
+    version: "0.2.1"
   dio:
     dependency: "direct main"
     description:
@@ -631,14 +626,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.0"
-  easy_stepper:
-    dependency: transitive
-    description:
-      name: easy_stepper
-      sha256: "63f66314a509ec690c8152a41288961fd96ba9e92ef184299f068a5e78bd16ad"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.5+1"
   equatable:
     dependency: transitive
     description:
@@ -849,14 +836,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.13"
-  flutter_focus_watcher:
-    dependency: transitive
-    description:
-      name: flutter_focus_watcher
-      sha256: a72ee539ae0237961308a25839887ca93a0b1cb6f87b0d492b139c8fccff8e79
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   flutter_keyboard_visibility:
     dependency: "direct main"
     description:
@@ -1043,14 +1022,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_typeahead:
-    dependency: transitive
-    description:
-      name: flutter_typeahead
-      sha256: b9942bd5b7611a6ec3f0730c477146cffa4cd4b051077983ba67ddfc9e7ee818
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.8.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1357,10 +1328,11 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      path: "../../packages/inventory_management"
-      relative: true
-    source: path
-    version: "1.0.4"
+      name: inventory_management
+      sha256: "68271fd2f99fae4b3f826403b16b6b3568bb74ba96dc92c45c1eff457fdbcd49"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5+1"
   io:
     dependency: transitive
     description:
@@ -1745,14 +1717,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.0.0"
-  pointer_interceptor:
-    dependency: transitive
-    description:
-      name: pointer_interceptor
-      sha256: adf7a637f97c077041d36801b43be08559fd4322d2127b3f20bb7be1b9eebc22
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.9.3+7"
   pool:
     dependency: transitive
     description:
@@ -1817,14 +1781,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  reactive_flutter_typeahead:
-    dependency: transitive
-    description:
-      name: reactive_flutter_typeahead
-      sha256: a5dbca4b537bd9dde245d4228e1a6ce937c05cd77c57ed45b9c05135540d5f1a
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   reactive_forms:
     dependency: "direct main"
     description:
@@ -1845,25 +1801,17 @@ packages:
     dependency: "direct main"
     description:
       name: referral_reconciliation
-      sha256: "0b7e439b105b7cc4c89cff822b801ab8eecce497031be1572e5415aa1e871208"
+      sha256: "5d3ea365246978776c0d247d9dbe35ebc04b7df1b85d7f38db20ec7e4021b977"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4+2"
   registration_delivery:
     dependency: "direct main"
     description:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.5+3"
-  remove_emoji_input_formatter:
-    dependency: transitive
-    description:
-      name: remove_emoji_input_formatter
-      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+1"
+    version: "1.0.6+2"
   rxdart:
     dependency: transitive
     description:
@@ -2072,10 +2020,11 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      path: "../../packages/survey_form"
-      relative: true
-    source: path
-    version: "1.0.0"
+      name: survey_form
+      sha256: e81e71beff6c4982ff6944ad34da056ea5b4adba860d9552a5eb554356dd816d
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1+3"
   sync_http:
     dependency: transitive
     description:
@@ -2088,10 +2037,10 @@ packages:
     dependency: "direct main"
     description:
       name: sync_service
-      sha256: ba4720b48bf4a80c3299118000bf7851dae871480b75ab95f0e5a830cddc2e39
+      sha256: eb214ed7351f1f4ab63c90a23d2ad9f554ac92d73dbbe0dd7ce167776b941de9
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1-dev.1"
+    version: "1.0.0"
   synchronized:
     dependency: transitive
     description:

@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:survey_form/survey_form.dart';
 
+import '/widgets/status_filter/status_filter.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -94,31 +95,34 @@ class _HouseholdOverviewPageState
                       return true;
                     },
                     child: ScrollableContent(
-                      header: BackNavigationHelpHeaderWidget(
-                        handleBack: () {
-                          context
-                              .read<SearchHouseholdsBloc>()
-                              .add(const SearchHouseholdsEvent.clear());
-                        },
+                      header: Padding(
+                        padding: const EdgeInsets.only(bottom: spacer2),
+                        child: BackNavigationHelpHeaderWidget(
+                          handleBack: () {
+                            context
+                                .read<SearchHouseholdsBloc>()
+                                .add(const SearchHouseholdsEvent.clear());
+                          },
+                        ),
                       ),
                       enableFixedDigitButton: true,
                       footer: DigitCard(
                         margin: const EdgeInsets.only(top: spacer2),
                         children: [
-                          DigitButton(
-                            mainAxisSize: MainAxisSize.max,
-                            onPressed: () => addIndividual(
-                              context,
-                              state.householdMemberWrapper.household!,
-                            ),
-                            label: localizations.translate(
-                              i18.householdOverView
-                                  .householdOverViewAddActionText,
-                            ),
-                            prefixIcon: Icons.add_circle,
-                            type: DigitButtonType.secondary,
-                            size: DigitButtonSize.medium,
-                          ),
+                        DigitButton(
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () => addIndividual(
+                          context,
+                          state.householdMemberWrapper.household!,
+                        ),
+                        label: localizations.translate(
+                          i18.householdOverView
+                              .householdOverViewAddActionText,
+                        ),
+                        prefixIcon: Icons.add_circle,
+                        type: DigitButtonType.secondary,
+                        size: DigitButtonSize.medium,
+                      ),
                           Offstage(
                             offstage:
                                 beneficiaryType == BeneficiaryType.individual ||
@@ -160,10 +164,10 @@ class _HouseholdOverviewPageState
                                                         (value, model) {
                                                       if (value
                                                           .where((element) =>
-                                                              element.code
-                                                                  .toString()
-                                                                  .contains(
-                                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                      element.code
+                                                          .toString()
+                                                          .contains(
+                                                          '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
                                                               element.code
                                                                   .toString()
                                                                   .contains(
@@ -459,7 +463,9 @@ class _HouseholdOverviewPageState
                                               : localizations.translate(i18
                                                   .householdOverView
                                                   .householdOverViewLabel),
-                                          style: textTheme.headingXl,
+                                          style: textTheme.headingXl.copyWith(
+                                            color: theme.colorTheme.primary.primary2
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -500,13 +506,14 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(
                                                   i18.householdLocation
                                                       .administrationAreaFormLabel,
-                                                ): state
-                                                    .householdMemberWrapper
-                                                    .headOfHousehold
-                                                    ?.address
-                                                    ?.first
-                                                    .locality
-                                                    ?.code,
+                                                ): localizations.translate(state
+                                                        .householdMemberWrapper
+                                                        .headOfHousehold
+                                                        ?.address
+                                                        ?.first
+                                                        .locality
+                                                        ?.code ??
+                                                    i18.common.coreCommonNA),
                                               }),
                                             ],
                                           );
@@ -528,13 +535,14 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(
                                                   i18.householdLocation
                                                       .administrationAreaFormLabel,
-                                                ): state
-                                                    .householdMemberWrapper
-                                                    .headOfHousehold
-                                                    ?.address
-                                                    ?.first
-                                                    .locality
-                                                    ?.code,
+                                                ): localizations.translate(state
+                                                        .householdMemberWrapper
+                                                        .headOfHousehold
+                                                        ?.address
+                                                        ?.first
+                                                        .locality
+                                                        ?.code ??
+                                                    i18.common.coreCommonNA),
                                                 localizations.translate(
                                                   i18.deliverIntervention
                                                       .memberCountText,
@@ -1000,6 +1008,20 @@ class _HouseholdOverviewPageState
                                     ),
                                   ],
                                 ),
+                                DigitButton(
+                                  mainAxisSize: MainAxisSize.max,
+                                  onPressed: () => addIndividual(
+                                    context,
+                                    state.householdMemberWrapper.household!,
+                                  ),
+                                  label: localizations.translate(
+                                    i18.householdOverView
+                                        .householdOverViewAddActionText,
+                                  ),
+                                  prefixIcon: Icons.add_circle,
+                                  type: DigitButtonType.tertiary,
+                                  size: DigitButtonSize.large,
+                                ),
                               ]),
                         ),
                       ],
@@ -1109,8 +1131,9 @@ class _HouseholdOverviewPageState
               RegistrationDeliverySingleton().beneficiaryType!,
           offset: offset,
           limit: limit,
-          searchByName:
-              searchController.text.isNotEmpty ? searchController.text : null,
+          searchByName: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : null,
           selectedFilter: selectedFilters,
         ),
       );

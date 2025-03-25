@@ -1,6 +1,7 @@
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:attendance_management/widgets/circular_button.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -69,7 +70,7 @@ Future<void> markAttendance(WidgetTester widgetTester) async {
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
   //tap on Proceed
-  await widgetTester.tap(find.widgetWithText(DigitElevatedButton, 'Proceed'));
+  await widgetTester.tap(find.widgetWithText(DigitButton, 'Proceed'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
   //confirm the submission

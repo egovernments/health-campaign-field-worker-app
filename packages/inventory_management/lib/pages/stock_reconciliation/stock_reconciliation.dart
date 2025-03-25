@@ -294,7 +294,9 @@ class StockReconciliationPageState
                                       i18.stockReconciliationDetails
                                           .reconciliationPageTitle,
                                     ),
-                                    style: Theme.of(context).digitTextTheme(context).headingXl,
+                                    style: Theme.of(context)
+                                        .digitTextTheme(context)
+                                        .headingXl,
                                   ),
                                   if (InventorySingleton().isWareHouseMgr!)
                                     BlocConsumer<FacilityBloc, FacilityState>(
@@ -414,6 +416,26 @@ class StockReconciliationPageState
                                                       .productLabel,
                                                 ),
                                                 child: DigitDropdown(
+                                                  selectedOption: (form
+                                                              .control(
+                                                                  _productVariantKey)
+                                                              .value !=
+                                                          null)
+                                                      ? DropdownItem(
+                                                          name: localizations.translate((form
+                                                                          .control(
+                                                                              _productVariantKey)
+                                                                          .value
+                                                                      as ProductVariantModel)
+                                                                  .sku ??
+                                                              (form.control(_productVariantKey).value
+                                                                      as ProductVariantModel)
+                                                                  .id),
+                                                          code: (form.control(_productVariantKey).value
+                                                                  as ProductVariantModel)
+                                                              .id)
+                                                      : const DropdownItem(
+                                                          name: '', code: ''),
                                                   emptyItemText:
                                                       localizations.translate(
                                                     i18.common.noMatchFound,
@@ -548,18 +570,22 @@ class StockReconciliationPageState
                                   ReactiveWrapperField(
                                       formControlName: _manualCountKey,
                                       validationMessages: {
-                                        "required": (object) => i18
-                                            .stockReconciliationDetails
-                                            .manualCountRequiredError,
-                                        "number": (object) => i18
-                                            .stockReconciliationDetails
-                                            .manualCountInvalidType,
-                                        "min": (object) => i18
-                                            .stockReconciliationDetails
-                                            .manualCountMinError,
-                                        "max": (object) => i18
-                                            .stockReconciliationDetails
-                                            .manualCountMaxError,
+                                        "required": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .manualCountRequiredError),
+                                        "number": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .manualCountInvalidType),
+                                        "min": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .manualCountMinError),
+                                        "max": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .manualCountMaxError),
                                       },
                                       showErrors: (control) =>
                                           control.invalid && control.touched,

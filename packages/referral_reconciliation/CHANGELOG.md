@@ -1,3 +1,19 @@
+## 1.0.4+2
+
+* BugFix:
+    * Modified Search to include relatedClientReference instead of clientId
+    * Sending relatedClientReferenceId in service model during create
+
+## 1.0.4+1
+
+* Updated to latest package versions
+
+## 1.0.4
+
+* Updated to latest package versions
+* UI/UX fixes
+* Bug fixes
+
 ## 1.0.3+1
 
 * Modified ServiceAttributes referenceId and ServiceModel clientId to IdGen and passing

@@ -593,6 +593,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                         ),
                         children: [
                           DigitCard(
+                            margin: const EdgeInsets.all(spacer2),
                             children: [
                               Text(
                                 localizations.translate(pageTitle),
@@ -641,6 +642,26 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   code: variant.id,
                                                 );
                                               }).toList(),
+                                              selectedOption: (form
+                                                          .control(
+                                                              _productVariantKey)
+                                                          .value !=
+                                                      null)
+                                                  ? DropdownItem(
+                                                      name: localizations.translate((form
+                                                                      .control(
+                                                                          _productVariantKey)
+                                                                      .value
+                                                                  as ProductVariantModel)
+                                                              .sku ??
+                                                          (form.control(_productVariantKey).value
+                                                                  as ProductVariantModel)
+                                                              .id),
+                                                      code: (form.control(_productVariantKey).value
+                                                              as ProductVariantModel)
+                                                          .id)
+                                                  : const DropdownItem(
+                                                      name: '', code: ''),
                                               onSelect: (value) {
                                                 /// Find the selected product variant model by matching the id
                                                 final selectedVariant =
@@ -684,6 +705,22 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             code: reason.toString(),
                                           );
                                         }).toList(),
+                                        selectedOption: (form
+                                                    .control(
+                                                        _transactionReasonKey)
+                                                    .value !=
+                                                null)
+                                            ? DropdownItem(
+                                                name: localizations.translate(form
+                                                    .control(
+                                                        _transactionReasonKey)
+                                                    .value),
+                                                code: form
+                                                    .control(
+                                                        _transactionReasonKey)
+                                                    .value)
+                                            : const DropdownItem(
+                                                name: '', code: ''),
                                         onSelect: (value) {
                                           final selectedReason =
                                               reasons?.firstWhere(
@@ -970,6 +1007,23 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   .transportTypeLabel,
                                             ),
                                             child: DigitDropdown(
+                                              selectedOption: (form
+                                                          .control(
+                                                              _typeOfTransportKey)
+                                                          .value !=
+                                                      null)
+                                                  ? DropdownItem(
+                                                      name: localizations
+                                                          .translate(form
+                                                              .control(
+                                                                  _typeOfTransportKey)
+                                                              .value),
+                                                      code: form
+                                                          .control(
+                                                              _typeOfTransportKey)
+                                                          .value)
+                                                  : const DropdownItem(
+                                                      name: '', code: ''),
                                               emptyItemText:
                                                   localizations.translate(
                                                 i18.common.noMatchFound,
