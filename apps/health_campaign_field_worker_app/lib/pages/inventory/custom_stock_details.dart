@@ -302,7 +302,8 @@ class CustomStockDetailsPageState
                         builder: (context, scannerState) {
                       if (scannerState.barCodes.isNotEmpty) {
                         scannedResources.clear();
-                        scannedResources.addAll(scannerState.barCodes);
+                        scannedResources.addAll(
+                            scannerState.barCodes.map((e) => e.$2).toList());
                       }
 
                       return ScrollableContent(
@@ -521,7 +522,9 @@ class CustomStockDetailsPageState
                                               .read<CustomDigitScannerBloc>()
                                               .state;
                                           final List<GS1Barcode> barcodes =
-                                              scannerState.barCodes;
+                                              scannerState.barCodes
+                                                  .map((e) => e.$2)
+                                                  .toList();
 
                                           final List<String> qrCodes =
                                               scannerState.qrCodes;
@@ -902,8 +905,6 @@ class CustomStockDetailsPageState
                                                       if (scannerState
                                                           .barCodes.isNotEmpty)
                                                         ...addBarCodesToFields(
-                                                            scannerState
-                                                                .manualBarCodes,
                                                             scannerState
                                                                 .barCodes),
                                                       // adding qrcodes data if any
@@ -2233,15 +2234,16 @@ class CustomStockDetailsPageState
   /// @param barCodes The list of GS1Barcode objects to be processed.
   /// @return A map where the keys and values are joined by '|'.
   List<AdditionalField> addBarCodesToFields(
-      List<String> manualBarCodes, List<GS1Barcode> barCodes) {
+      List<(BarcodeScanType, GS1Barcode)> barCodes) {
     List<AdditionalField> additionalFields = [];
     for (var element in barCodes) {
       List<String> keys = [];
       List<String> values = [];
-      for (var e in element.elements.entries) {
+      BarcodeScanType barcodeScanType = element.$1;
+      for (var e in element.$2.elements.entries) {
         String key = e.key.toString();
-        if (manualBarCodes.contains(e.value.toString())) {
-          key = "manual_$key";
+        if (barcodeScanType == BarcodeScanType.manual) {
+          key = "manual_${e.key}";
         }
         keys.add(key);
         values.add(e.value.data.toString());

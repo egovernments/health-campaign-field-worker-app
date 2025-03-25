@@ -135,7 +135,7 @@ class CustomDigitScannerUtils {
 
             // Check if the barcode has already been scanned
             final alreadyScanned = bloc.state.barCodes.any((element) =>
-                element.elements.entries.last.value.data ==
+                element.$2.elements.entries.last.value.data ==
                 parsedResult.elements.entries.last.value.data);
 
             if (alreadyScanned) {
@@ -265,8 +265,8 @@ class CustomDigitScannerUtils {
     required BuildContext context,
     required GS1Barcode scanData,
     required AudioPlayer player,
-    required Function(List<GS1Barcode>) updateResult,
-    required List<GS1Barcode> initialResult,
+    required Function(List<(BarcodeScanType, GS1Barcode)>) updateResult,
+    required List<(BarcodeScanType, GS1Barcode)> initialResult,
   }) async {
     // Assign the scanned data to a local variable
     final parsedResult = scanData;
@@ -281,15 +281,15 @@ class CustomDigitScannerUtils {
     await Future.delayed(const Duration(seconds: 3));
 
     // Make a copy of the current barcodes from the bloc state
-    List<GS1Barcode> result = List.from(initialResult);
+    List<(BarcodeScanType, GS1Barcode)> result = List.from(initialResult);
 
     // Remove duplicate entries based on the last value in the elements map
     result.removeDuplicates(
-      (element) => element.elements.entries.last.value.data,
+      (element) => element.$2.elements.entries.last.value.data,
     );
 
     // Add the new parsed result to the list
-    result.add(parsedResult);
+    result.add((BarcodeScanType.scan, parsedResult));
 
     // Dispatch an event to update the bloc with the new barcode and existing QR code lists
     bloc.add(CustomDigitScannerEvent.handleScanner(

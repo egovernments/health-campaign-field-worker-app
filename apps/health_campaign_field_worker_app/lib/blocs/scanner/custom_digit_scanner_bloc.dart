@@ -7,6 +7,8 @@ import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 
 part 'custom_digit_scanner_bloc.freezed.dart';
 
+enum BarcodeScanType { manual, scan }
+
 typedef CustomDigitScannerEmitter = Emitter<CustomDigitScannerState>;
 
 class CustomDigitScannerBloc
@@ -34,8 +36,7 @@ class CustomDigitScannerBloc
 @freezed
 class CustomDigitScannerEvent with _$CustomDigitScannerEvent {
   const factory CustomDigitScannerEvent.handleScanner({
-    @Default([]) List<String> manualBarCodes,
-    @Default([]) List<GS1Barcode> barCode,
+    @Default([]) List<(BarcodeScanType, GS1Barcode)> barCode,
     @Default([]) List<String> qrCode,
     @Default('') String manualCode,
   }) = CustomDigitScannerScanEvent;
@@ -44,8 +45,7 @@ class CustomDigitScannerEvent with _$CustomDigitScannerEvent {
 @freezed
 class CustomDigitScannerState with _$CustomDigitScannerState {
   const factory CustomDigitScannerState({
-    @Default([]) List<String> manualBarCodes,
-    @Default([]) List<GS1Barcode> barCodes,
+    @Default([]) List<(BarcodeScanType, GS1Barcode)> barCodes,
     @Default([]) List<String> qrCodes,
     @Default(false) bool loading,
     @Default(false) bool duplicate,

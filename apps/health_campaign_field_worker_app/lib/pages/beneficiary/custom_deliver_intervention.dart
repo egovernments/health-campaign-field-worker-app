@@ -297,7 +297,10 @@ class CustomDeliverInterventionPageState
                                                                         GS1Barcode>
                                                                     barcodes =
                                                                     scannerState
-                                                                        .barCodes;
+                                                                        .barCodes
+                                                                        .map((e) =>
+                                                                            e.$2)
+                                                                        .toList();
                                                                 List<AdditionalField>
                                                                     codeAdditionalFields =
                                                                     [];

@@ -16,27 +16,27 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CustomDigitScannerEvent {
-  List<String> get manualBarCodes => throw _privateConstructorUsedError;
-  List<GS1Barcode> get barCode => throw _privateConstructorUsedError;
+  List<(BarcodeScanType, GS1Barcode)> get barCode =>
+      throw _privateConstructorUsedError;
   List<String> get qrCode => throw _privateConstructorUsedError;
   String get manualCode => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<String> manualBarCodes,
-            List<GS1Barcode> barCode, List<String> qrCode, String manualCode)
+    required TResult Function(List<(BarcodeScanType, GS1Barcode)> barCode,
+            List<String> qrCode, String manualCode)
         handleScanner,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<String> manualBarCodes, List<GS1Barcode> barCode,
+    TResult? Function(List<(BarcodeScanType, GS1Barcode)> barCode,
             List<String> qrCode, String manualCode)?
         handleScanner,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<String> manualBarCodes, List<GS1Barcode> barCode,
+    TResult Function(List<(BarcodeScanType, GS1Barcode)> barCode,
             List<String> qrCode, String manualCode)?
         handleScanner,
     required TResult orElse(),
@@ -71,8 +71,7 @@ abstract class $CustomDigitScannerEventCopyWith<$Res> {
       _$CustomDigitScannerEventCopyWithImpl<$Res, CustomDigitScannerEvent>;
   @useResult
   $Res call(
-      {List<String> manualBarCodes,
-      List<GS1Barcode> barCode,
+      {List<(BarcodeScanType, GS1Barcode)> barCode,
       List<String> qrCode,
       String manualCode});
 }
@@ -91,20 +90,15 @@ class _$CustomDigitScannerEventCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? manualBarCodes = null,
     Object? barCode = null,
     Object? qrCode = null,
     Object? manualCode = null,
   }) {
     return _then(_value.copyWith(
-      manualBarCodes: null == manualBarCodes
-          ? _value.manualBarCodes
-          : manualBarCodes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       barCode: null == barCode
           ? _value.barCode
           : barCode // ignore: cast_nullable_to_non_nullable
-              as List<GS1Barcode>,
+              as List<(BarcodeScanType, GS1Barcode)>,
       qrCode: null == qrCode
           ? _value.qrCode
           : qrCode // ignore: cast_nullable_to_non_nullable
@@ -127,8 +121,7 @@ abstract class _$$CustomDigitScannerScanEventImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<String> manualBarCodes,
-      List<GS1Barcode> barCode,
+      {List<(BarcodeScanType, GS1Barcode)> barCode,
       List<String> qrCode,
       String manualCode});
 }
@@ -146,20 +139,15 @@ class __$$CustomDigitScannerScanEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? manualBarCodes = null,
     Object? barCode = null,
     Object? qrCode = null,
     Object? manualCode = null,
   }) {
     return _then(_$CustomDigitScannerScanEventImpl(
-      manualBarCodes: null == manualBarCodes
-          ? _value._manualBarCodes
-          : manualBarCodes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       barCode: null == barCode
           ? _value._barCode
           : barCode // ignore: cast_nullable_to_non_nullable
-              as List<GS1Barcode>,
+              as List<(BarcodeScanType, GS1Barcode)>,
       qrCode: null == qrCode
           ? _value._qrCode
           : qrCode // ignore: cast_nullable_to_non_nullable
@@ -176,27 +164,16 @@ class __$$CustomDigitScannerScanEventImplCopyWithImpl<$Res>
 
 class _$CustomDigitScannerScanEventImpl implements CustomDigitScannerScanEvent {
   const _$CustomDigitScannerScanEventImpl(
-      {final List<String> manualBarCodes = const [],
-      final List<GS1Barcode> barCode = const [],
+      {final List<(BarcodeScanType, GS1Barcode)> barCode = const [],
       final List<String> qrCode = const [],
       this.manualCode = ''})
-      : _manualBarCodes = manualBarCodes,
-        _barCode = barCode,
+      : _barCode = barCode,
         _qrCode = qrCode;
 
-  final List<String> _manualBarCodes;
+  final List<(BarcodeScanType, GS1Barcode)> _barCode;
   @override
   @JsonKey()
-  List<String> get manualBarCodes {
-    if (_manualBarCodes is EqualUnmodifiableListView) return _manualBarCodes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_manualBarCodes);
-  }
-
-  final List<GS1Barcode> _barCode;
-  @override
-  @JsonKey()
-  List<GS1Barcode> get barCode {
+  List<(BarcodeScanType, GS1Barcode)> get barCode {
     if (_barCode is EqualUnmodifiableListView) return _barCode;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_barCode);
@@ -217,7 +194,7 @@ class _$CustomDigitScannerScanEventImpl implements CustomDigitScannerScanEvent {
 
   @override
   String toString() {
-    return 'CustomDigitScannerEvent.handleScanner(manualBarCodes: $manualBarCodes, barCode: $barCode, qrCode: $qrCode, manualCode: $manualCode)';
+    return 'CustomDigitScannerEvent.handleScanner(barCode: $barCode, qrCode: $qrCode, manualCode: $manualCode)';
   }
 
   @override
@@ -225,8 +202,6 @@ class _$CustomDigitScannerScanEventImpl implements CustomDigitScannerScanEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CustomDigitScannerScanEventImpl &&
-            const DeepCollectionEquality()
-                .equals(other._manualBarCodes, _manualBarCodes) &&
             const DeepCollectionEquality().equals(other._barCode, _barCode) &&
             const DeepCollectionEquality().equals(other._qrCode, _qrCode) &&
             (identical(other.manualCode, manualCode) ||
@@ -236,7 +211,6 @@ class _$CustomDigitScannerScanEventImpl implements CustomDigitScannerScanEvent {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_manualBarCodes),
       const DeepCollectionEquality().hash(_barCode),
       const DeepCollectionEquality().hash(_qrCode),
       manualCode);
@@ -251,33 +225,33 @@ class _$CustomDigitScannerScanEventImpl implements CustomDigitScannerScanEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<String> manualBarCodes,
-            List<GS1Barcode> barCode, List<String> qrCode, String manualCode)
+    required TResult Function(List<(BarcodeScanType, GS1Barcode)> barCode,
+            List<String> qrCode, String manualCode)
         handleScanner,
   }) {
-    return handleScanner(manualBarCodes, barCode, qrCode, manualCode);
+    return handleScanner(barCode, qrCode, manualCode);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<String> manualBarCodes, List<GS1Barcode> barCode,
+    TResult? Function(List<(BarcodeScanType, GS1Barcode)> barCode,
             List<String> qrCode, String manualCode)?
         handleScanner,
   }) {
-    return handleScanner?.call(manualBarCodes, barCode, qrCode, manualCode);
+    return handleScanner?.call(barCode, qrCode, manualCode);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<String> manualBarCodes, List<GS1Barcode> barCode,
+    TResult Function(List<(BarcodeScanType, GS1Barcode)> barCode,
             List<String> qrCode, String manualCode)?
         handleScanner,
     required TResult orElse(),
   }) {
     if (handleScanner != null) {
-      return handleScanner(manualBarCodes, barCode, qrCode, manualCode);
+      return handleScanner(barCode, qrCode, manualCode);
     }
     return orElse();
   }
@@ -313,15 +287,12 @@ class _$CustomDigitScannerScanEventImpl implements CustomDigitScannerScanEvent {
 
 abstract class CustomDigitScannerScanEvent implements CustomDigitScannerEvent {
   const factory CustomDigitScannerScanEvent(
-      {final List<String> manualBarCodes,
-      final List<GS1Barcode> barCode,
+      {final List<(BarcodeScanType, GS1Barcode)> barCode,
       final List<String> qrCode,
       final String manualCode}) = _$CustomDigitScannerScanEventImpl;
 
   @override
-  List<String> get manualBarCodes;
-  @override
-  List<GS1Barcode> get barCode;
+  List<(BarcodeScanType, GS1Barcode)> get barCode;
   @override
   List<String> get qrCode;
   @override
@@ -334,8 +305,8 @@ abstract class CustomDigitScannerScanEvent implements CustomDigitScannerEvent {
 
 /// @nodoc
 mixin _$CustomDigitScannerState {
-  List<String> get manualBarCodes => throw _privateConstructorUsedError;
-  List<GS1Barcode> get barCodes => throw _privateConstructorUsedError;
+  List<(BarcodeScanType, GS1Barcode)> get barCodes =>
+      throw _privateConstructorUsedError;
   List<String> get qrCodes => throw _privateConstructorUsedError;
   bool get loading => throw _privateConstructorUsedError;
   bool get duplicate => throw _privateConstructorUsedError;
@@ -352,8 +323,7 @@ abstract class $CustomDigitScannerStateCopyWith<$Res> {
       _$CustomDigitScannerStateCopyWithImpl<$Res, CustomDigitScannerState>;
   @useResult
   $Res call(
-      {List<String> manualBarCodes,
-      List<GS1Barcode> barCodes,
+      {List<(BarcodeScanType, GS1Barcode)> barCodes,
       List<String> qrCodes,
       bool loading,
       bool duplicate});
@@ -373,21 +343,16 @@ class _$CustomDigitScannerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? manualBarCodes = null,
     Object? barCodes = null,
     Object? qrCodes = null,
     Object? loading = null,
     Object? duplicate = null,
   }) {
     return _then(_value.copyWith(
-      manualBarCodes: null == manualBarCodes
-          ? _value.manualBarCodes
-          : manualBarCodes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       barCodes: null == barCodes
           ? _value.barCodes
           : barCodes // ignore: cast_nullable_to_non_nullable
-              as List<GS1Barcode>,
+              as List<(BarcodeScanType, GS1Barcode)>,
       qrCodes: null == qrCodes
           ? _value.qrCodes
           : qrCodes // ignore: cast_nullable_to_non_nullable
@@ -414,8 +379,7 @@ abstract class _$$CustomDigitScannerStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<String> manualBarCodes,
-      List<GS1Barcode> barCodes,
+      {List<(BarcodeScanType, GS1Barcode)> barCodes,
       List<String> qrCodes,
       bool loading,
       bool duplicate});
@@ -434,21 +398,16 @@ class __$$CustomDigitScannerStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? manualBarCodes = null,
     Object? barCodes = null,
     Object? qrCodes = null,
     Object? loading = null,
     Object? duplicate = null,
   }) {
     return _then(_$CustomDigitScannerStateImpl(
-      manualBarCodes: null == manualBarCodes
-          ? _value._manualBarCodes
-          : manualBarCodes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       barCodes: null == barCodes
           ? _value._barCodes
           : barCodes // ignore: cast_nullable_to_non_nullable
-              as List<GS1Barcode>,
+              as List<(BarcodeScanType, GS1Barcode)>,
       qrCodes: null == qrCodes
           ? _value._qrCodes
           : qrCodes // ignore: cast_nullable_to_non_nullable
@@ -469,28 +428,17 @@ class __$$CustomDigitScannerStateImplCopyWithImpl<$Res>
 
 class _$CustomDigitScannerStateImpl implements _CustomDigitScannerState {
   const _$CustomDigitScannerStateImpl(
-      {final List<String> manualBarCodes = const [],
-      final List<GS1Barcode> barCodes = const [],
+      {final List<(BarcodeScanType, GS1Barcode)> barCodes = const [],
       final List<String> qrCodes = const [],
       this.loading = false,
       this.duplicate = false})
-      : _manualBarCodes = manualBarCodes,
-        _barCodes = barCodes,
+      : _barCodes = barCodes,
         _qrCodes = qrCodes;
 
-  final List<String> _manualBarCodes;
+  final List<(BarcodeScanType, GS1Barcode)> _barCodes;
   @override
   @JsonKey()
-  List<String> get manualBarCodes {
-    if (_manualBarCodes is EqualUnmodifiableListView) return _manualBarCodes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_manualBarCodes);
-  }
-
-  final List<GS1Barcode> _barCodes;
-  @override
-  @JsonKey()
-  List<GS1Barcode> get barCodes {
+  List<(BarcodeScanType, GS1Barcode)> get barCodes {
     if (_barCodes is EqualUnmodifiableListView) return _barCodes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_barCodes);
@@ -514,7 +462,7 @@ class _$CustomDigitScannerStateImpl implements _CustomDigitScannerState {
 
   @override
   String toString() {
-    return 'CustomDigitScannerState(manualBarCodes: $manualBarCodes, barCodes: $barCodes, qrCodes: $qrCodes, loading: $loading, duplicate: $duplicate)';
+    return 'CustomDigitScannerState(barCodes: $barCodes, qrCodes: $qrCodes, loading: $loading, duplicate: $duplicate)';
   }
 
   @override
@@ -522,8 +470,6 @@ class _$CustomDigitScannerStateImpl implements _CustomDigitScannerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CustomDigitScannerStateImpl &&
-            const DeepCollectionEquality()
-                .equals(other._manualBarCodes, _manualBarCodes) &&
             const DeepCollectionEquality().equals(other._barCodes, _barCodes) &&
             const DeepCollectionEquality().equals(other._qrCodes, _qrCodes) &&
             (identical(other.loading, loading) || other.loading == loading) &&
@@ -534,7 +480,6 @@ class _$CustomDigitScannerStateImpl implements _CustomDigitScannerState {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_manualBarCodes),
       const DeepCollectionEquality().hash(_barCodes),
       const DeepCollectionEquality().hash(_qrCodes),
       loading,
@@ -550,16 +495,13 @@ class _$CustomDigitScannerStateImpl implements _CustomDigitScannerState {
 
 abstract class _CustomDigitScannerState implements CustomDigitScannerState {
   const factory _CustomDigitScannerState(
-      {final List<String> manualBarCodes,
-      final List<GS1Barcode> barCodes,
+      {final List<(BarcodeScanType, GS1Barcode)> barCodes,
       final List<String> qrCodes,
       final bool loading,
       final bool duplicate}) = _$CustomDigitScannerStateImpl;
 
   @override
-  List<String> get manualBarCodes;
-  @override
-  List<GS1Barcode> get barCodes;
+  List<(BarcodeScanType, GS1Barcode)> get barCodes;
   @override
   List<String> get qrCodes;
   @override
