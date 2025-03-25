@@ -280,16 +280,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
       }
-      try {
-        await _loadServiceDefinition(projects);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            loading: false,
-            syncError: ProjectSyncErrorType.serviceDefinitions,
-          ),
-        );
-      }
     }
 
     emit(ProjectState(
@@ -479,7 +469,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             action: ApiOperation.search.toValue(),
             entityName: DashboardResponseModel.schemaName);
 
-        final filteredDashboardConfig = filterDashboardConfig(dashboardConfig.isNotEmpty ? dashboardConfig.first.dashboardConfigs : null,
+        final filteredDashboardConfig = filterDashboardConfig(
+            dashboardConfig.isNotEmpty
+                ? dashboardConfig.first.dashboardConfigs
+                : null,
             event.model.additionalDetails?.projectType?.code ?? "");
 
         if (filteredDashboardConfig.isNotEmpty &&
@@ -507,8 +500,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .map((i) => i.userUuid.toString())
               .toList();
           await processDashboardConfig(
-            dashboardConfig.first.dashboardConfigs?.where(
-                    (config) => config.projectTypeId == event.model.projectTypeId || config.projectTypeCode == event.model.projectType).first.charts  ?? [],
+            dashboardConfig.first.dashboardConfigs
+                    ?.where((config) =>
+                        config.projectTypeId == event.model.projectTypeId ||
+                        config.projectTypeCode == event.model.projectType)
+                    .first
+                    .charts ??
+                [],
             startDate,
             endDate,
             isar,
