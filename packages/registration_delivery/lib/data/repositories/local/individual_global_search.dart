@@ -173,7 +173,14 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               .toList();
         }
 
-        return {"data": data, "total_count": data.isNotEmpty ? count : 0};
+        return {
+          "data": data,
+          "total_count": data.isNotEmpty
+              ? count
+              : params.offset! > 0
+                  ? params.totalCount
+                  : 0
+        };
       }
     } else {
       var proximitySelectQuery =
