@@ -209,7 +209,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                                     double.parse(plot.value.toString())
                                         .toInt()
                                         .toString()))
-                                : ''
+                                : '-'
                             : double.parse(plot.value.toString()) ==
                                     double.parse(plot.value.toString()).toInt()
                                 ? double.parse(plot.value.toString())
