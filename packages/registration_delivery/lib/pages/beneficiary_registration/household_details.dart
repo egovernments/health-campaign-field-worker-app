@@ -406,9 +406,10 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 ? localizations.translate(
                                     i18.householdDetails.clfDetailsLabel,
                                   )
-                                :localizations.translate(
-                              i18.householdDetails.householdDetailsLabel,
-                            ),headingStyle: textTheme.headingXl.copyWith(
+                                : localizations.translate(
+                                    i18.householdDetails.householdDetailsLabel,
+                                  ),
+                            headingStyle: textTheme.headingXl.copyWith(
                                 color: theme.colorTheme.primary.primary2),
                             description: localizations.translate(
                               i18.householdDetails.householdDetailsDescription,

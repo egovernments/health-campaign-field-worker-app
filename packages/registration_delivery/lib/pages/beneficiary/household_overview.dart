@@ -35,7 +35,6 @@ import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/member_card/member_card.dart';
 import '../../widgets/table_card/table_card.dart';
-import '/widgets/status_filter/status_filter.dart';
 
 @RoutePage()
 class HouseholdOverviewPage extends LocalizedStatefulWidget {
@@ -109,20 +108,20 @@ class _HouseholdOverviewPageState
                       footer: DigitCard(
                         margin: const EdgeInsets.only(top: spacer2),
                         children: [
-                        DigitButton(
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () => addIndividual(
-                          context,
-                          state.householdMemberWrapper.household!,
-                        ),
-                        label: localizations.translate(
-                          i18.householdOverView
-                              .householdOverViewAddActionText,
-                        ),
-                        prefixIcon: Icons.add_circle,
-                        type: DigitButtonType.secondary,
-                        size: DigitButtonSize.medium,
-                      ),
+                          DigitButton(
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () => addIndividual(
+                              context,
+                              state.householdMemberWrapper.household!,
+                            ),
+                            label: localizations.translate(
+                              i18.householdOverView
+                                  .householdOverViewAddActionText,
+                            ),
+                            prefixIcon: Icons.add_circle,
+                            type: DigitButtonType.secondary,
+                            size: DigitButtonSize.medium,
+                          ),
                           Offstage(
                             offstage:
                                 beneficiaryType == BeneficiaryType.individual ||
@@ -164,10 +163,10 @@ class _HouseholdOverviewPageState
                                                         (value, model) {
                                                       if (value
                                                           .where((element) =>
-                                                      element.code
-                                                          .toString()
-                                                          .contains(
-                                                          '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                              element.code
+                                                                  .toString()
+                                                                  .contains(
+                                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
                                                               element.code
                                                                   .toString()
                                                                   .contains(
@@ -464,8 +463,8 @@ class _HouseholdOverviewPageState
                                                   .householdOverView
                                                   .householdOverViewLabel),
                                           style: textTheme.headingXl.copyWith(
-                                            color: theme.colorTheme.primary.primary2
-                                          ),
+                                              color: theme
+                                                  .colorTheme.primary.primary2),
                                         ),
                                       ),
                                     ),

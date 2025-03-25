@@ -526,19 +526,19 @@ class _BoundarySelectionPageState
                                                 if (context.mounted) {
                                                   if (isOnline &&
                                                       (isDistributor ||
-                                                            isCommunityCreator)) {
-                                                      context
-                                                          .read<
-                                                              BeneficiaryDownSyncBloc>()
-                                                          .add(
-                                                            DownSyncGetBatchSizeEvent(
-                                                              appConfiguration: [
-                                                                appConfiguration,
-                                                              ],
-                                                              projectId: context
-                                                                  .projectId,
-                                                              boundaryCode:
-                                                                  selectedBoundary!
+                                                          isCommunityCreator)) {
+                                                    context
+                                                        .read<
+                                                            BeneficiaryDownSyncBloc>()
+                                                        .add(
+                                                          DownSyncGetBatchSizeEvent(
+                                                            appConfiguration: [
+                                                              appConfiguration,
+                                                            ],
+                                                            projectId: context
+                                                                .projectId,
+                                                            boundaryCode:
+                                                                selectedBoundary!
                                                                     .value!.code
                                                                     .toString(),
                                                             pendingSyncCount:

@@ -299,8 +299,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                         .householdLocationLabelText,
                                   ),
                             headingStyle: textTheme.headingXl.copyWith(
-                              color: theme.colorTheme.primary.primary2
-                            ),
+                                color: theme.colorTheme.primary.primary2),
                             description: (RegistrationDeliverySingleton()
                                         .householdType ==
                                     HouseholdType.community)

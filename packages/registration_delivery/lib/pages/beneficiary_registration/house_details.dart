@@ -17,7 +17,6 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
-import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseDetailsPage extends LocalizedStatefulWidget {
@@ -238,12 +237,12 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                           i18.householdDetails
                                               .clfStructureDetailsLabel,
                                         )
-                                      :localizations.translate(
-                                    i18.householdDetails.houseDetailsLabel,
-                                  ),
+                                      : localizations.translate(
+                                          i18.householdDetails
+                                              .houseDetailsLabel,
+                                        ),
                                   style: textTheme.headingXl.copyWith(
-                                    color: theme.colorTheme.primary.primary2
-                                  ),
+                                      color: theme.colorTheme.primary.primary2),
                                 ),
                               ),
                               houseShowcaseData.typeOfStructure.buildWith(
@@ -313,9 +312,9 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                             HouseholdType.community)
                                         ? localizations.translate(i18
                                             .householdDetails.noOfRoomsCLFLabel)
-                                        :localizations.translate(
-                                      i18.householdDetails.noOfRoomsLabel,
-                                    ),
+                                        : localizations.translate(
+                                            i18.householdDetails.noOfRoomsLabel,
+                                          ),
                                     child: DigitNumericFormInput(
                                       minValue: 1,
                                       maxValue: 20,
