@@ -23,10 +23,12 @@ class AppLocalizations {
       AppLocalizationsDelegate(config, sql);
 
   Future<bool> load() async {
-    _localizedStrings.clear();
-
     final listOfLocalizations =
         await LocalizationLocalRepository().returnLocalizationFromSQL(sql);
+
+    if (listOfLocalizations.isNotEmpty) {
+      _localizedStrings.clear();
+    }
 
     _localizedStrings.addAll(listOfLocalizations);
 
