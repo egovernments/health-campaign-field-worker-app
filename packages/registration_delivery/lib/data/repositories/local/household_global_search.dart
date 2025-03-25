@@ -444,7 +444,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   _returnHouseHoldModel(results, totalCount) {
     var data = results
         .map((e) {
-          final household = e.readTable(sql.household);
+          final household = e.readTableOrNull(sql.household);
           final address = e.readTableOrNull(sql.address);
 
           return HouseholdModel(
