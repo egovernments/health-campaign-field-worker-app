@@ -1163,8 +1163,8 @@ class CustomStockDetailsPageState
                                                 selectedFacilityId =
                                                     facility.id;
                                               });
-                                              if (facility.id ==
-                                                  'Delivery Team') {
+                                              if (facility.usage ==
+                                                  Constants.deliveryTeam) {
                                                 setState(() {
                                                   deliveryTeamSelected = true;
 
@@ -1358,8 +1358,8 @@ class CustomStockDetailsPageState
                                                     selectedFacilityId =
                                                         facility.id;
                                                   });
-                                                  if (facility.id ==
-                                                      'Delivery Team') {
+                                                  if (facility.usage ==
+                                                      Constants.deliveryTeam) {
                                                     setState(() {
                                                       deliveryTeamSelected =
                                                           true;
