@@ -645,7 +645,7 @@ class _CustomDigitScannerPageState
         await Future.delayed(const Duration(seconds: 2));
         return;
       }
-      await DigitScannerUtils().storeCode(
+      await CustomDigitScannerUtils().storeCode(
         context: currentContext,
         code: code,
         player: player,
