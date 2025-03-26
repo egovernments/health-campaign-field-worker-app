@@ -67,6 +67,8 @@ abstract class $SurveyFormRoute extends _i7.AutoRouterModule {
         child: _i4.SurveyFormViewPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          hideFooter: args.hideFooter,
+          hideHeader: args.hideHeader,
         ),
       );
     },
@@ -238,12 +240,16 @@ class SurveyFormViewRoute extends _i7.PageRouteInfo<SurveyFormViewRouteArgs> {
   SurveyFormViewRoute({
     _i8.Key? key,
     _i10.SurveyFormLocalization? appLocalizations,
+    bool hideFooter = false,
+    bool hideHeader = false,
     List<_i7.PageRouteInfo>? children,
   }) : super(
           SurveyFormViewRoute.name,
           args: SurveyFormViewRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            hideFooter: hideFooter,
+            hideHeader: hideHeader,
           ),
           initialChildren: children,
         );
@@ -258,15 +264,21 @@ class SurveyFormViewRouteArgs {
   const SurveyFormViewRouteArgs({
     this.key,
     this.appLocalizations,
+    this.hideFooter = false,
+    this.hideHeader = false,
   });
 
   final _i8.Key? key;
 
   final _i10.SurveyFormLocalization? appLocalizations;
 
+  final bool hideFooter;
+
+  final bool hideHeader;
+
   @override
   String toString() {
-    return 'SurveyFormViewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'SurveyFormViewRouteArgs{key: $key, appLocalizations: $appLocalizations, hideFooter: $hideFooter, hideHeader: $hideHeader}';
   }
 }
 
