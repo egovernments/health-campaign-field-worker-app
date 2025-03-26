@@ -558,23 +558,23 @@ class CustomStockDetailsPageState
                                               return;
                                             }
 
-                                            if (qrCodes.isNotEmpty &&
-                                                (manualScanComments == null ||
-                                                    manualScanComments
-                                                        .isEmpty)) {
-                                              await DigitToast.show(
-                                                context,
-                                                options: DigitToastOptions(
-                                                  localizations.translate(i18_local
-                                                      .stockDetails
-                                                      .manualScanCommentRequired),
-                                                  true,
-                                                  theme,
-                                                ),
-                                              );
+                                            // if (qrCodes.isNotEmpty &&
+                                            //     (manualScanComments == null ||
+                                            //         manualScanComments
+                                            //             .isEmpty)) {
+                                            //   await DigitToast.show(
+                                            //     context,
+                                            //     options: DigitToastOptions(
+                                            //       localizations.translate(i18_local
+                                            //           .stockDetails
+                                            //           .manualScanCommentRequired),
+                                            //       true,
+                                            //       theme,
+                                            //     ),
+                                            //   );
 
-                                              return;
-                                            }
+                                            //   return;
+                                            // }
 
                                             int qrCodeCount = 0;
 
