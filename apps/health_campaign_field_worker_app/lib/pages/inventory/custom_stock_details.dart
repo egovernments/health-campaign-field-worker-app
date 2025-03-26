@@ -7,6 +7,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 import 'package:inventory_management/blocs/stock_reconciliation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -197,8 +198,8 @@ class CustomStockDetailsPageState
       onPopInvoked: (didPop) {
         final stockState = context.read<RecordStockBloc>().state;
         if (stockState.primaryId != null) {
-          context.read<DigitScannerBloc>().add(
-                DigitScannerEvent.handleScanner(
+          context.read<CustomDigitScannerBloc>().add(
+                CustomDigitScannerEvent.handleScanner(
                   barCode: [],
                   qrCode: [stockState.primaryId.toString()],
                 ),
@@ -296,11 +297,13 @@ class CustomStockDetailsPageState
                 return ReactiveFormBuilder(
                   form: () => _form(entryType),
                   builder: (context, form, child) {
-                    return BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                    return BlocBuilder<CustomDigitScannerBloc,
+                            CustomDigitScannerState>(
                         builder: (context, scannerState) {
                       if (scannerState.barCodes.isNotEmpty) {
                         scannedResources.clear();
-                        scannedResources.addAll(scannerState.barCodes);
+                        scannedResources.addAll(
+                            scannerState.barCodes.map((e) => e.$2).toList());
                       }
 
                       return ScrollableContent(
@@ -311,8 +314,8 @@ class CustomStockDetailsPageState
                               final stockState =
                                   context.read<RecordStockBloc>().state;
                               if (stockState.primaryId != null) {
-                                context.read<DigitScannerBloc>().add(
-                                      DigitScannerEvent.handleScanner(
+                                context.read<CustomDigitScannerBloc>().add(
+                                      CustomDigitScannerEvent.handleScanner(
                                         barCode: [],
                                         qrCode: [
                                           stockState.primaryId.toString()
@@ -516,10 +519,12 @@ class CustomStockDetailsPageState
                                           final List<AdditionalField>
                                               additionalFields = [];
                                           final scannerState = context
-                                              .read<DigitScannerBloc>()
+                                              .read<CustomDigitScannerBloc>()
                                               .state;
                                           final List<GS1Barcode> barcodes =
-                                              scannerState.barCodes;
+                                              scannerState.barCodes
+                                                  .map((e) => e.$2)
+                                                  .toList();
 
                                           final List<String> qrCodes =
                                               scannerState.qrCodes;
@@ -1158,8 +1163,8 @@ class CustomStockDetailsPageState
                                                 selectedFacilityId =
                                                     facility.id;
                                               });
-                                              if (facility.id ==
-                                                  'Delivery Team') {
+                                              if (facility.usage ==
+                                                  Constants.deliveryTeam) {
                                                 setState(() {
                                                   deliveryTeamSelected = true;
 
@@ -1353,8 +1358,8 @@ class CustomStockDetailsPageState
                                                     selectedFacilityId =
                                                         facility.id;
                                                   });
-                                                  if (facility.id ==
-                                                      'Delivery Team') {
+                                                  if (facility.usage ==
+                                                      Constants.deliveryTeam) {
                                                     setState(() {
                                                       deliveryTeamSelected =
                                                           true;
@@ -1658,8 +1663,11 @@ class CustomStockDetailsPageState
                                       String? value = val.value as String?;
                                       if (value != null &&
                                           value.trim().isNotEmpty) {
-                                        context.read<DigitScannerBloc>().add(
-                                              DigitScannerEvent.handleScanner(
+                                        context
+                                            .read<CustomDigitScannerBloc>()
+                                            .add(
+                                              CustomDigitScannerEvent
+                                                  .handleScanner(
                                                 barCode: [],
                                                 qrCode: [value],
                                                 manualCode: value,
@@ -1840,6 +1848,10 @@ class CustomStockDetailsPageState
                                           .translate(
                                               i18.common.maxCharsRequired)
                                           .replaceAll('{}', '200'),
+                                      'minLength': (object) => localizations
+                                          .translate(
+                                              i18.common.min2CharsRequired)
+                                          .replaceAll('{}', '200'),
                                       'min2': (object) => localizations
                                           .translate(
                                               i18.common.min2CharsRequired)
@@ -1855,6 +1867,12 @@ class CustomStockDetailsPageState
                                       i18.stockDetails.vehicleNumberLabel,
                                     ),
                                     formControlName: _vehicleNumberKey,
+                                    validationMessages: {
+                                      'minLength': (object) => localizations
+                                          .translate(
+                                              i18.common.min2CharsRequired)
+                                          .replaceAll('{}', '200'),
+                                    },
                                   ),
                                 //Comments
                                 DigitTextFormField(
@@ -1887,6 +1905,9 @@ class CustomStockDetailsPageState
                                     'sizeLessThan2': (object) =>
                                         localizations.translate(
                                             i18_local.common.min3CharsRequired),
+                                    'minLength': (object) => localizations
+                                        .translate(i18.common.min2CharsRequired)
+                                        .replaceAll('{}', '200'),
                                   },
                                 ),
 
@@ -2202,7 +2223,9 @@ class CustomStockDetailsPageState
   }
 
   void clearQRCodes() {
-    context.read<DigitScannerBloc>().add(const DigitScannerEvent.handleScanner(
+    context
+        .read<CustomDigitScannerBloc>()
+        .add(const CustomDigitScannerEvent.handleScanner(
           barCode: [],
           qrCode: [],
         ));
@@ -2223,13 +2246,19 @@ class CustomStockDetailsPageState
   ///
   /// @param barCodes The list of GS1Barcode objects to be processed.
   /// @return A map where the keys and values are joined by '|'.
-  List<AdditionalField> addBarCodesToFields(List<GS1Barcode> barCodes) {
+  List<AdditionalField> addBarCodesToFields(
+      List<(BarcodeScanType, GS1Barcode)> barCodes) {
     List<AdditionalField> additionalFields = [];
     for (var element in barCodes) {
       List<String> keys = [];
       List<String> values = [];
-      for (var e in element.elements.entries) {
-        keys.add(e.key.toString());
+      BarcodeScanType barcodeScanType = element.$1;
+      for (var e in element.$2.elements.entries) {
+        String key = e.key.toString();
+        if (barcodeScanType == BarcodeScanType.manual) {
+          key = "manual_${e.key}";
+        }
+        keys.add(key);
         values.add(e.value.data.toString());
       }
       additionalFields.add(AdditionalField(keys.join('|'), values.join('|')));

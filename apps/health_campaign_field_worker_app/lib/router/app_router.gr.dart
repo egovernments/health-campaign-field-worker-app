@@ -1044,7 +1044,7 @@ class CustomDigitScannerRoute
     ScannerLocalization? appLocalizations,
     required int quantity,
     required bool isGS1code,
-    List<GS1Barcode> gs1CodeList = const [],
+    List<(BarcodeScanType, GS1Barcode)> gs1CodeList = const [],
     bool singleValue = false,
     bool isEditEnabled = false,
     bool manualEnabled = true,
@@ -1093,7 +1093,7 @@ class CustomDigitScannerRouteArgs {
 
   final bool isGS1code;
 
-  final List<GS1Barcode> gs1CodeList;
+  final List<(BarcodeScanType, GS1Barcode)> gs1CodeList;
 
   final bool singleValue;
 

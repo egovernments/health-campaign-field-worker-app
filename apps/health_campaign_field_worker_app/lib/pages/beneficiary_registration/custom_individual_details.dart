@@ -11,6 +11,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -146,7 +147,8 @@ class CustomIndividualDetailsPageState
                             form.control(_genderKey).setErrors({'': true});
                           });
                         }
-                        final scannerBloc = context.read<DigitScannerBloc>();
+                        final scannerBloc =
+                            context.read<CustomDigitScannerBloc>();
                         if (scannerBloc.state.qrCodes.isEmpty) {
                           await DigitToast.show(
                             context,
@@ -204,7 +206,7 @@ class CustomIndividualDetailsPageState
                                         ProjectBeneficiarySearchModel>>()
                                 as ProjectBeneficiaryLocalRepository;
                             final scannerBloc =
-                                context.read<DigitScannerBloc>();
+                                context.read<CustomDigitScannerBloc>();
                             final projectBeneficiary = await repository.search(
                                 ProjectBeneficiarySearchModel(
                                     tag: [scannerBloc.state.qrCodes.first]));
@@ -226,7 +228,7 @@ class CustomIndividualDetailsPageState
                             } else {
                               clickedStatus.value = true;
                               final scannerBloc =
-                                  context.read<DigitScannerBloc>();
+                                  context.read<CustomDigitScannerBloc>();
                               bloc.add(
                                 BeneficiaryRegistrationSummaryEvent(
                                   projectId: projectId!,
@@ -248,7 +250,7 @@ class CustomIndividualDetailsPageState
                             loading,
                           ) {
                             final scannerBloc =
-                                context.read<DigitScannerBloc>();
+                                context.read<CustomDigitScannerBloc>();
                             final individual = _getIndividualModel(
                               context,
                               form: form,
@@ -318,7 +320,7 @@ class CustomIndividualDetailsPageState
 
                             if (context.mounted) {
                               final scannerBloc =
-                                  context.read<DigitScannerBloc>();
+                                  context.read<CustomDigitScannerBloc>();
 
                               if (scannerBloc.state.duplicate) {
                                 DigitToast.show(
@@ -551,7 +553,8 @@ class CustomIndividualDetailsPageState
                                 widget.isHeadOfHousehold) ||
                             (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
-                          BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                          BlocBuilder<CustomDigitScannerBloc,
+                              CustomDigitScannerState>(
                             buildWhen: (p, c) {
                               return true;
                             },
@@ -750,8 +753,9 @@ class CustomIndividualDetailsPageState
     final individual = state.mapOrNull<IndividualModel>(
       editIndividual: (value) {
         if (value.projectBeneficiaryModel?.tag != null) {
-          context.read<DigitScannerBloc>().add(DigitScannerScanEvent(
-              barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
+          context.read<CustomDigitScannerBloc>().add(
+              CustomDigitScannerScanEvent(
+                  barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
         }
 
         return value.individualModel;

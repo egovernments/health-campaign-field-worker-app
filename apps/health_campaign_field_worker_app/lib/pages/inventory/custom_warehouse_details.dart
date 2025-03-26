@@ -5,6 +5,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 import 'package:health_campaign_field_worker_app/pages/inventory/custom_inventory_facility_selection.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -106,7 +107,8 @@ class CustomWarehouseDetailsPageState
                   onTap: () {
                     FocusScope.of(context).unfocus();
                   },
-                  child: BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                  child: BlocBuilder<CustomDigitScannerBloc,
+                      CustomDigitScannerState>(
                     builder: (context, scannerState) {
                       return ReactiveFormBuilder(
                         form: () => buildForm(
@@ -166,9 +168,10 @@ class CustomWarehouseDetailsPageState
                                                           : null;
 
                                               context
-                                                  .read<DigitScannerBloc>()
+                                                  .read<
+                                                      CustomDigitScannerBloc>()
                                                   .add(
-                                                    const DigitScannerEvent
+                                                    const CustomDigitScannerEvent
                                                         .handleScanner(
                                                         qrCode: [],
                                                         barCode: []),
@@ -332,9 +335,9 @@ class CustomWarehouseDetailsPageState
                                           readOnly: true,
                                           onTap: () async {
                                             context
-                                                .read<DigitScannerBloc>()
+                                                .read<CustomDigitScannerBloc>()
                                                 .add(
-                                                  const DigitScannerEvent
+                                                  const CustomDigitScannerEvent
                                                       .handleScanner(
                                                     barCode: [],
                                                     qrCode: [],
@@ -391,7 +394,9 @@ class CustomWarehouseDetailsPageState
   }
 
   void clearQRCodes() {
-    context.read<DigitScannerBloc>().add(const DigitScannerEvent.handleScanner(
+    context
+        .read<CustomDigitScannerBloc>()
+        .add(const CustomDigitScannerEvent.handleScanner(
           barCode: [],
           qrCode: [],
         ));

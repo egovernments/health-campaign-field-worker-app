@@ -8,6 +8,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 
 import '../../../widgets/localized.dart';
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
@@ -43,9 +44,8 @@ class CustomClosedHouseholdSummaryPageState
 
   @override
   void initState() {
-    context
-        .read<DigitScannerBloc>()
-        .add(const DigitScannerEvent.handleScanner(qrCode: [], barCode: []));
+    context.read<CustomDigitScannerBloc>().add(
+        const CustomDigitScannerEvent.handleScanner(qrCode: [], barCode: []));
     super.initState();
   }
 
@@ -63,8 +63,8 @@ class CustomClosedHouseholdSummaryPageState
                 margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                 padding:
                     const EdgeInsets.fromLTRB(kPadding, kPadding, kPadding, 0),
-                child: BlocBuilder<DigitScannerBloc, DigitScannerState>(
-                    builder: (context, scannerState) {
+                child: BlocBuilder<CustomDigitScannerBloc,
+                    CustomDigitScannerState>(builder: (context, scannerState) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

@@ -35,6 +35,7 @@ import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
+import '../blocs/scanner/custom_digit_scanner_bloc.dart';
 import '../blocs/summary_reports/custom_enumeration_summary_report.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';

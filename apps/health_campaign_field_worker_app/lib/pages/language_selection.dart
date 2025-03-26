@@ -85,7 +85,7 @@ class LanguageSelectionPage extends StatelessWidget {
                                     ),
                                   );
                             },
-                            onLanguageSubmit: () => context.router.push(
+                            onLanguageSubmit: () => context.router.replace(
                               LoginRoute(),
                             ),
                             languageSubmitLabel: AppLocalizations.of(context)

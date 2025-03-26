@@ -13,6 +13,7 @@ import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/widgets/vision_detector_views/painters/barcode_detector_painter.dart';
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 import '../utils/i18_key_constants.dart' as i18Local;
 import 'package:digit_scanner/utils/constants.dart';
 
@@ -122,7 +123,7 @@ class CustomDigitScannerUtils {
         inputImage.metadata?.rotation != null) {
       // If barcodes are found
       if (barcodes.isNotEmpty) {
-        final bloc = context.read<DigitScannerBloc>();
+        final bloc = context.read<CustomDigitScannerBloc>();
 
         // Check if the widget is scanning GS1 codes
         if (isGS1code) {
@@ -134,7 +135,7 @@ class CustomDigitScannerUtils {
 
             // Check if the barcode has already been scanned
             final alreadyScanned = bloc.state.barCodes.any((element) =>
-                element.elements.entries.last.value.data ==
+                element.$2.elements.entries.last.value.data ==
                 parsedResult.elements.entries.last.value.data);
 
             if (alreadyScanned) {
@@ -234,7 +235,7 @@ class CustomDigitScannerUtils {
     player.play(AssetSource(DigitScannerConstants().audioFilePath));
 
     // Access the DigitScannerBloc from the context
-    final bloc = context.read<DigitScannerBloc>();
+    final bloc = context.read<CustomDigitScannerBloc>();
 
     // Make a copy of the current QR codes from the bloc state
     List<String> codes = List.from(initialCodes);
@@ -251,7 +252,7 @@ class CustomDigitScannerUtils {
     updateCodes(codes);
 
     // Dispatch an event to update the bloc with the new barcode and QR code lists
-    bloc.add(DigitScannerEvent.handleScanner(
+    bloc.add(CustomDigitScannerEvent.handleScanner(
       barCode: bloc.state.barCodes, // Keep existing barcodes
       qrCode: codes, // Update QR codes with the new list
     ));
@@ -264,14 +265,14 @@ class CustomDigitScannerUtils {
     required BuildContext context,
     required GS1Barcode scanData,
     required AudioPlayer player,
-    required Function(List<GS1Barcode>) updateResult,
-    required List<GS1Barcode> initialResult,
+    required Function(List<(BarcodeScanType, GS1Barcode)>) updateResult,
+    required List<(BarcodeScanType, GS1Barcode)> initialResult,
   }) async {
     // Assign the scanned data to a local variable
     final parsedResult = scanData;
 
     // Access the DigitScannerBloc from the context
-    final bloc = context.read<DigitScannerBloc>();
+    final bloc = context.read<CustomDigitScannerBloc>();
 
     // Play the add sound to indicate a successful scan
     player.play(AssetSource(DigitScannerConstants().audioFilePath));
@@ -280,18 +281,18 @@ class CustomDigitScannerUtils {
     await Future.delayed(const Duration(seconds: 3));
 
     // Make a copy of the current barcodes from the bloc state
-    List<GS1Barcode> result = List.from(initialResult);
+    List<(BarcodeScanType, GS1Barcode)> result = List.from(initialResult);
 
     // Remove duplicate entries based on the last value in the elements map
     result.removeDuplicates(
-      (element) => element.elements.entries.last.value.data,
+      (element) => element.$2.elements.entries.last.value.data,
     );
 
     // Add the new parsed result to the list
-    result.add(parsedResult);
+    result.add((BarcodeScanType.scan, parsedResult));
 
     // Dispatch an event to update the bloc with the new barcode and existing QR code lists
-    bloc.add(DigitScannerEvent.handleScanner(
+    bloc.add(CustomDigitScannerEvent.handleScanner(
       barCode: result, // Update barcodes with the new list
       qrCode: bloc.state.qrCodes, // Keep existing QR codes
     ));

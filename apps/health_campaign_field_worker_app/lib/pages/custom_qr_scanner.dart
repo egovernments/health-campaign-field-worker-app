@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
@@ -29,7 +30,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
   final bool singleValue;
   final int quantity;
   final bool isGS1code;
-  final List<GS1Barcode> gs1CodeList;
+  final List<(BarcodeScanType, GS1Barcode)> gs1CodeList;
   final bool isEditEnabled;
   final bool manualEnabled;
   final ScanType scanType;
@@ -62,7 +63,7 @@ class _CustomDigitScannerPageState
   CameraController? _cameraController;
   static List<CameraDescription> _cameras = [];
   int _cameraIndex = -1;
-  List<GS1Barcode> result = [];
+  List<(BarcodeScanType, GS1Barcode)> result = [];
   List<String> codes = [];
   bool manualCode = false;
   bool flashStatus = false;
@@ -87,7 +88,7 @@ class _CustomDigitScannerPageState
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: BlocBuilder<DigitScannerBloc, DigitScannerState>(
+      body: BlocBuilder<CustomDigitScannerBloc, CustomDigitScannerState>(
         builder: (context, state) {
           return _cameras.isNotEmpty
               ? !manualCode
@@ -122,13 +123,13 @@ class _CustomDigitScannerPageState
       result = widget.gs1CodeList;
     } else if (!widget.isEditEnabled) {
       context
-          .read<DigitScannerBloc>()
-          .add(const DigitScannerEvent.handleScanner());
+          .read<CustomDigitScannerBloc>()
+          .add(const CustomDigitScannerEvent.handleScanner());
     }
   }
 
   Widget _scanCodeWidget(
-      BuildContext context, ThemeData theme, DigitScannerState state) {
+      BuildContext context, ThemeData theme, CustomDigitScannerState state) {
     return Stack(
       children: <Widget>[
         Container(
@@ -225,8 +226,8 @@ class _CustomDigitScannerPageState
                 ),
                 TextButton(
                   onPressed: () {
-                    context.read<DigitScannerBloc>().add(
-                          DigitScannerEvent.handleScanner(
+                    context.read<CustomDigitScannerBloc>().add(
+                          CustomDigitScannerEvent.handleScanner(
                             barCode: result,
                             qrCode: [],
                           ),
@@ -279,8 +280,8 @@ class _CustomDigitScannerPageState
                     ),
                   );
                 } else {
-                  final bloc = context.read<DigitScannerBloc>();
-                  bloc.add(DigitScannerEvent.handleScanner(
+                  final bloc = context.read<CustomDigitScannerBloc>();
+                  bloc.add(CustomDigitScannerEvent.handleScanner(
                     barCode: state.barCodes,
                     qrCode: state.qrCodes,
                   ));
@@ -374,8 +375,8 @@ class _CustomDigitScannerPageState
                                 child: Text(
                                   overflow: TextOverflow.ellipsis,
                                   widget.isGS1code
-                                      ? state.barCodes[index].elements.entries
-                                          .last.value.data
+                                      ? state.barCodes[index].$2.elements
+                                          .entries.last.value.data
                                           .toString()
                                       : DigitScannerUtils().trimString(
                                           state.qrCodes[index].toString()),
@@ -388,9 +389,11 @@ class _CustomDigitScannerPageState
                                   size: 24,
                                 ),
                                 onPressed: () {
-                                  final bloc = context.read<DigitScannerBloc>();
+                                  final bloc =
+                                      context.read<CustomDigitScannerBloc>();
                                   if (widget.isGS1code) {
-                                    List<GS1Barcode> newResult = List.from(
+                                    List<(BarcodeScanType, GS1Barcode)>
+                                        newResult = List.from(
                                       state.barCodes,
                                     );
                                     newResult.removeAt(index);
@@ -399,7 +402,7 @@ class _CustomDigitScannerPageState
                                     });
 
                                     bloc.add(
-                                      DigitScannerEvent.handleScanner(
+                                      CustomDigitScannerEvent.handleScanner(
                                         barCode: result,
                                         qrCode: state.qrCodes,
                                       ),
@@ -414,7 +417,7 @@ class _CustomDigitScannerPageState
                                     });
 
                                     bloc.add(
-                                      DigitScannerEvent.handleScanner(
+                                      CustomDigitScannerEvent.handleScanner(
                                         barCode: state.barCodes,
                                         qrCode: codes,
                                       ),
@@ -438,7 +441,7 @@ class _CustomDigitScannerPageState
   }
 
   Widget _manualCodeWidget(ThemeData theme) {
-    return BlocBuilder<DigitScannerBloc, DigitScannerState>(
+    return BlocBuilder<CustomDigitScannerBloc, CustomDigitScannerState>(
         builder: (context, state) {
       return ReactiveFormBuilder(
           form: () => buildForm(),
@@ -475,14 +478,16 @@ class _CustomDigitScannerPageState
                             theme,
                           ));
                     } else {
-                      final bloc = context.read<DigitScannerBloc>();
+                      final bloc = context.read<CustomDigitScannerBloc>();
                       String code = form.control(_manualCodeFormKey).value;
                       if (widget.isGS1code && balePattern.hasMatch(code)) {
                         final String barcode = '00$code';
                         final parser = GS1BarcodeParser.defaultParser();
-                        GS1Barcode dataResult = parser.parse(barcode);
-                        List<String?> barCodes =
-                            result.map((e) => e.getAIsRawData["00"]).toList();
+                        (BarcodeScanType, GS1Barcode) dataResult =
+                            (BarcodeScanType.manual, parser.parse(barcode));
+                        List<String?> barCodes = result
+                            .map((e) => e.$2.getAIsRawData["00"])
+                            .toList();
 
                         if (result.length >= widget.quantity) {
                           await DigitToast.show(
@@ -495,7 +500,7 @@ class _CustomDigitScannerPageState
                             ),
                           );
                         } else if (barCodes
-                            .contains(dataResult.getAIsRawData["00"])) {
+                            .contains(dataResult.$2.getAIsRawData["00"])) {
                           await handleErrorWrapper(
                             i18Local.deliverIntervention.resourceAlreadyScanned,
                           );
@@ -504,7 +509,7 @@ class _CustomDigitScannerPageState
                           result = [...result, dataResult];
                         }
                         bloc.add(
-                          DigitScannerEvent.handleScanner(
+                          CustomDigitScannerEvent.handleScanner(
                             barCode: result,
                             qrCode: state.qrCodes,
                           ),
@@ -525,7 +530,7 @@ class _CustomDigitScannerPageState
                           codes.add(form.control(_manualCodeFormKey).value);
                         }
                         bloc.add(
-                          DigitScannerEvent.handleScanner(
+                          CustomDigitScannerEvent.handleScanner(
                             barCode: state.barCodes,
                             qrCode: codes,
                           ),
@@ -594,7 +599,7 @@ class _CustomDigitScannerPageState
       updateCustomPaint: (customPaint) => _customPaint = customPaint,
       isGS1code: widget.isGS1code,
       quantity: widget.quantity,
-      result: result,
+      result: result.map((e) => e.$2).toList(),
       handleError: handleErrorWrapper,
       storeValue: storeValueWrapper,
       storeCode: storeCodeWrapper,
@@ -640,7 +645,7 @@ class _CustomDigitScannerPageState
         await Future.delayed(const Duration(seconds: 2));
         return;
       }
-      await DigitScannerUtils().storeCode(
+      await CustomDigitScannerUtils().storeCode(
         context: currentContext,
         code: code,
         player: player,
@@ -667,7 +672,7 @@ class _CustomDigitScannerPageState
   }
 
   Future<void> storeValueWrapper(GS1Barcode scanData) async {
-    await DigitScannerUtils().storeValue(
+    await CustomDigitScannerUtils().storeValue(
       context: currentContext,
       scanData: scanData,
       player: player,
