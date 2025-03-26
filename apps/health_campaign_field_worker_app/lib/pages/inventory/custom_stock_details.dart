@@ -1848,6 +1848,10 @@ class CustomStockDetailsPageState
                                           .translate(
                                               i18.common.maxCharsRequired)
                                           .replaceAll('{}', '200'),
+                                      'minLength': (object) => localizations
+                                          .translate(
+                                              i18.common.min2CharsRequired)
+                                          .replaceAll('{}', '200'),
                                       'min2': (object) => localizations
                                           .translate(
                                               i18.common.min2CharsRequired)
@@ -1863,6 +1867,12 @@ class CustomStockDetailsPageState
                                       i18.stockDetails.vehicleNumberLabel,
                                     ),
                                     formControlName: _vehicleNumberKey,
+                                    validationMessages: {
+                                      'minLength': (object) => localizations
+                                          .translate(
+                                              i18.common.min2CharsRequired)
+                                          .replaceAll('{}', '200'),
+                                    },
                                   ),
                                 //Comments
                                 DigitTextFormField(
@@ -1895,6 +1905,9 @@ class CustomStockDetailsPageState
                                     'sizeLessThan2': (object) =>
                                         localizations.translate(
                                             i18_local.common.min3CharsRequired),
+                                    'minLength': (object) => localizations
+                                        .translate(i18.common.min2CharsRequired)
+                                        .replaceAll('{}', '200'),
                                   },
                                 ),
 
