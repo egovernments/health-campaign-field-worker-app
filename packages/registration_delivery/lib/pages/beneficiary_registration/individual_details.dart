@@ -18,9 +18,11 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:survey_form/pages/survey_form_view.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../models/entities/beneficiary_checklist_enums.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -698,6 +700,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                     ),
                                   ),
                           ),
+
+                        SurveyFormViewPage(hideFooter: true, hideHeader: true, checklistType: BeneficiaryChecklistEnums.individual.toValue(), hideBackAlert: true, useScaffold: false,)
                       ]),
                 ),
               ],

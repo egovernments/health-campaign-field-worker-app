@@ -36,6 +36,7 @@ dev_dependencies:
   freezed: ^2.2.0
   bloc_test: ^9.1.0
   mocktail: ^1.0.2
+  build_runner: ^2.4.11
   dart_mappable_builder:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
