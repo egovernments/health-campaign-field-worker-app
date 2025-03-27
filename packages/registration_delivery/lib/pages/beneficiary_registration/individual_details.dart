@@ -56,6 +56,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
+  final checklistKey = GlobalKey<SurveyFormViewPageState>();
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +140,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 form.control(_genderKey).setErrors({'': true});
                               });
                             }
+                            bool validForm = checklistKey.currentState?.validateSurveyForm() ?? false;
+
+                            if(validForm == false) return;
                             final userId = RegistrationDeliverySingleton()
                                 .loggedInUserUuid;
                             final projectId =
@@ -166,6 +170,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   form: form,
                                   oldIndividual: null,
                                 );
+
+                                checklistKey.currentState?.submitSurvey(latitude: 876765, longitude: 89798, relatedReferenceId: individual.clientReferenceId);
 
                                 final boundary =
                                     RegistrationDeliverySingleton().boundary;
@@ -226,6 +232,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   form: form,
                                   oldIndividual: individualModel,
                                 );
+                                checklistKey.currentState?.submitSurvey(latitude: 876765, longitude: 89798, relatedReferenceId: individual.clientReferenceId);
                                 final tag = scannerBloc.state.qrCodes.isNotEmpty
                                     ? scannerBloc.state.qrCodes.first
                                     : null;
@@ -283,6 +290,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   context,
                                   form: form,
                                 );
+
+                                checklistKey.currentState?.submitSurvey(latitude: 876765, longitude: 89798, relatedReferenceId: individual.clientReferenceId);
 
                                 if (context.mounted) {
                                   final scannerBloc =
@@ -610,6 +619,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             ),
                           ),
                         ),
+
+                        SurveyFormViewPage(key: checklistKey,hideFooter: true, hideHeader: true, checklistType: BeneficiaryChecklistEnums.individual.toValue(), hideBackAlert: true, useScaffold: false,),
                         // const SizedBox(height: spacer4),
                         if ((RegistrationDeliverySingleton().beneficiaryType ==
                                     BeneficiaryType.household &&
@@ -701,7 +712,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   ),
                           ),
 
-                        SurveyFormViewPage(hideFooter: true, hideHeader: true, checklistType: BeneficiaryChecklistEnums.individual.toValue(), hideBackAlert: true, useScaffold: false,)
+
                       ]),
                 ),
               ],

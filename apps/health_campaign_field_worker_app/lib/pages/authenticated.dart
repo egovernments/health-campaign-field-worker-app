@@ -209,6 +209,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           referralLocalRepository: ctx.read<
                               LocalRepository<ReferralModel,
                                   ReferralSearchModel>>(),
+                          serviceLocalRepository: ctx.read<
+                              LocalRepository<ServiceModel, ServiceSearchModel>>(),
                         ),
                       ),
                       BlocProvider(

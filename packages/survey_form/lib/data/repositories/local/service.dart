@@ -9,6 +9,84 @@ class ServiceLocalRepository
     extends LocalRepository<ServiceModel, ServiceSearchModel> {
   ServiceLocalRepository(super.sql, super.opLogManager);
 
+  @override
+  FutureOr<void> bulkCreate(
+      List<ServiceModel> entities,
+      )async {
+    return retryLocalCallOperation(() async {
+      // Collect all service companions
+      final serviceCompanions = entities.map((e) => e.companion).toList();
+
+      // Collect all attribute companions from all entities
+      final List<Insertable<ServiceAttribute>> attributesCompanions = [];
+      for (final entity in entities) {
+        if (entity.attributes != null) {
+          for (final attr in entity.attributes!) {
+            attributesCompanions.add(attr.companion);
+          }
+        }
+      }
+
+      await sql.batch((batch) async {
+        // Bulk insert services
+        if (serviceCompanions.isNotEmpty) {
+          batch.insertAll(
+            sql.service,
+            serviceCompanions,
+            mode: InsertMode.insertOrReplace,
+          );
+        }
+
+        // Bulk insert attributes
+        if (attributesCompanions.isNotEmpty) {
+          batch.insertAll(
+            sql.serviceAttributes,
+            attributesCompanions,
+            mode: InsertMode.insertOrReplace,
+          );
+        }
+      });
+
+      // final newEntity = ServiceModel(
+      //   id: entity.id,
+      //   clientId: entity.clientId,
+      //   serviceDefId: entity.serviceDefId,
+      //   isActive: entity.isActive,
+      //   accountId: entity.accountId,
+      //   tenantId: entity.tenantId,
+      //   isDeleted: entity.isDeleted,
+      //   rowVersion: entity.rowVersion,
+      //   additionalFields: entity.additionalFields,
+      //   auditDetails: entity.auditDetails,
+      //   clientAuditDetails: entity.clientAuditDetails,
+      //   attributes: entity.attributes?.map((e) {
+      //     return e.dataType == 'Number'
+      //         ? e.copyWith(value: int.tryParse(e.value))
+      //         : e.dataType == 'MultiValueList'
+      //         ? e.copyWith(
+      //       value: e.value.toString().split('.'),
+      //       additionalDetails: e.additionalDetails != null
+      //           ? {"value": e.additionalDetails}
+      //           : null,
+      //     )
+      //         : e.dataType == 'SingleValueList'
+      //         ? e.copyWith(
+      //       additionalDetails: e.additionalDetails != null
+      //           ? {"value": e.additionalDetails}
+      //           : null,
+      //     )
+      //         : e;
+      //   }).toList(),
+      // );
+      //
+      // await super.create(
+      //   newEntity,
+      //   dataOperation: DataOperation.singleCreate,
+      //   createOpLog: true,
+      // );
+    });
+  }
+
   // function to create a Service entity in the local database
   @override
   FutureOr<void> create(
@@ -41,6 +119,7 @@ class ServiceLocalRepository
       final newEntity = ServiceModel(
         id: entity.id,
         clientId: entity.clientId,
+        referenceId: entity.referenceId,
         serviceDefId: entity.serviceDefId,
         isActive: entity.isActive,
         accountId: entity.accountId,
@@ -95,9 +174,9 @@ class ServiceLocalRepository
                 sql.service.clientId.equals(
                   query.clientId!,
                 ),
-              if (query.relatedClientReferenceId != null)
-                sql.service.relatedClientReferenceId
-                    .equals(query.relatedClientReferenceId!),
+              if (query.referenceId != null)
+                sql.service.referenceId
+                    .equals(query.referenceId!),
             ])))
           .get();
 
@@ -143,7 +222,7 @@ class ServiceLocalRepository
             serviceDefId: data.serviceDefId,
             createdAt: data.createdAt,
             attributes: res.whereNotNull().toList(),
-            relatedClientReferenceId: data.relatedClientReferenceId));
+            referenceId: data.referenceId));
       }
 
       return serviceList;

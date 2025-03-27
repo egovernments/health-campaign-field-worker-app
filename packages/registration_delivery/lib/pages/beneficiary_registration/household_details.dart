@@ -51,6 +51,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   final TextEditingController _childrenController = TextEditingController();
   final TextEditingController _memberController = TextEditingController();
 
+  final checklistKey = GlobalKey<SurveyFormViewPageState>();
+
   @override
   void dispose() {
     _pregnantWomenController.dispose();
@@ -153,12 +155,17 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           final children =
                               form.control(_childrenCountKey).value as int;
 
+                          bool validForm = checklistKey.currentState?.validateSurveyForm() ?? false;
+
+                          if(validForm == false) return;
+
                           if (memberCount < (pregnantWomen + children)) {
                             Toast.showToast(context,
                                 message: localizations.translate(
                                     i18.householdDetails.memberCountError),
                                 type: ToastType.error);
                           } else {
+
                             registrationState.maybeWhen(
                               orElse: () {
                                 return;
@@ -267,6 +274,10 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                           )
                                         ]));
 
+                                checklistKey.currentState?.submitSurvey(latitude: 876765, longitude: 89798, relatedReferenceId: householdModel?.clientReferenceId ??
+                                    IdGen.i.identifier);
+
+
                                 bloc.add(
                                   BeneficiaryRegistrationSaveHouseholdDetailsEvent(
                                     household: household,
@@ -339,6 +350,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                             children,
                                           )
                                         ]));
+
+                                checklistKey.currentState?.submitSurvey(latitude: 876765, longitude: 89798, relatedReferenceId: householdModel.clientReferenceId);
 
                                 bloc.add(
                                   BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
@@ -683,7 +696,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               ),
                             ),
                           ),
-                          SurveyFormViewPage(hideFooter: true, hideHeader: true, checklistType: BeneficiaryChecklistEnums.household.toValue(), hideBackAlert: true, useScaffold: false,)
+                          SurveyFormViewPage(key: checklistKey, hideFooter: true, hideHeader: true, checklistType: BeneficiaryChecklistEnums.household.toValue(), hideBackAlert: true, useScaffold: false,)
                         ]),
                   ),
                 ],
