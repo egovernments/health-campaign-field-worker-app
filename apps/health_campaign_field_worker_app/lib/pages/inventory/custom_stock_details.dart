@@ -521,10 +521,17 @@ class CustomStockDetailsPageState
                                           final scannerState = context
                                               .read<CustomDigitScannerBloc>()
                                               .state;
-                                          final List<GS1Barcode> barcodes =
-                                              scannerState.barCodes
-                                                  .map((e) => e.$2)
-                                                  .toList();
+                                          final List<
+                                                  (BarcodeScanType, GS1Barcode)>
+                                              barcodes = scannerState.barCodes;
+
+                                          final ifManualBaleScan = barcodes
+                                                  .where((element) =>
+                                                      element.$1 ==
+                                                      BarcodeScanType.manual)
+                                                  .isEmpty
+                                              ? false
+                                              : true;
 
                                           final List<String> qrCodes =
                                               scannerState.qrCodes;
@@ -537,10 +544,8 @@ class CustomStockDetailsPageState
                                                   TransactionReason
                                                       .damagedInTransit) {
                                             if (balesQuantity != null &&
-                                                (barcodes.length +
-                                                        qrCodes.length) !=
-                                                    int.parse(balesQuantity
-                                                        .toString()) &&
+                                                (barcodes.length) !=
+                                                    balesQuantity &&
                                                 (baleMismtachComments == null ||
                                                     baleMismtachComments
                                                         .isEmpty)) {
@@ -558,25 +563,27 @@ class CustomStockDetailsPageState
                                               return;
                                             }
 
-                                            // if (qrCodes.isNotEmpty &&
-                                            //     (manualScanComments == null ||
-                                            //         manualScanComments
-                                            //             .isEmpty)) {
-                                            //   await DigitToast.show(
-                                            //     context,
-                                            //     options: DigitToastOptions(
-                                            //       localizations.translate(i18_local
-                                            //           .stockDetails
-                                            //           .manualScanCommentRequired),
-                                            //       true,
-                                            //       theme,
-                                            //     ),
-                                            //   );
+                                            if (ifManualBaleScan &&
+                                                (manualScanComments == null ||
+                                                    manualScanComments
+                                                        .isEmpty)) {
+                                              await DigitToast.show(
+                                                context,
+                                                options: DigitToastOptions(
+                                                  localizations.translate(i18_local
+                                                      .stockDetails
+                                                      .manualScanCommentRequired),
+                                                  true,
+                                                  theme,
+                                                ),
+                                              );
 
-                                            //   return;
-                                            // }
+                                              return;
+                                            }
 
                                             int qrCodeCount = 0;
+                                            //TODO :  change this , as on this page no manual qr entry ,only qr scanning
+                                            // so change this to save those
 
                                             for (var qrCode in qrCodes) {
                                               additionalFields.add(
