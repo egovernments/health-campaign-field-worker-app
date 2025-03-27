@@ -155,9 +155,9 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
                             alignment: Alignment.center,
                             child: InfoCard(
                               title: localizations
-                                  .translate(i18.dashboard.noteHeader),
+                                  .translate('${i18.dashboard.noteHeader}_${DashboardSingleton().selectedProject?.projectType ?? ''}'),
                               description: localizations
-                                  .translate(i18.dashboard.noteDescription),
+                                  .translate('${i18.dashboard.noteDescription}_${DashboardSingleton().selectedProject?.projectType ?? ''}'),
                               type: InfoType.info,
                             ),
                           )
