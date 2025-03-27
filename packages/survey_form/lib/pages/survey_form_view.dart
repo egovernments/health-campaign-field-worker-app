@@ -92,6 +92,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   void submitSurvey({
     required double? latitude,
     required double? longitude,
+    String? relatedReferenceId,
   }) {
     final referenceId = IdGen.i.identifier;
     List<ServiceAttributesModel> attributes = [];
@@ -146,6 +147,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
           ),
           tenantId: selectedServiceDefinition!.tenantId,
           clientId: referenceId,
+          referenceId: relatedReferenceId,
           serviceDefId: selectedServiceDefinition?.id,
           attributes: attributes,
           rowVersion: 1,
@@ -513,7 +515,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
         return state.maybeMap(
           orElse: () => Text(state.runtimeType.toString()),
           serviceDefinitionFetch: (value) {
-            return widget.hideHeader ? Column(children: [..._buildForm()],) : ScrollableContent(
+            return widget.hideHeader ? Form(key: surveyFormKey,child: Column(children: [..._buildForm()],)) : ScrollableContent(
               controller: null,
               primary: false,
               header: widget.hideHeader ? null :const BackNavigationHelpHeaderWidget(),
@@ -1078,7 +1080,7 @@ return [
                       child: BlocBuilder<ServiceBloc,
                           ServiceState>(
                         builder: (context, state) {
-                          return FormField<bool>(
+                          return FormField<String>(
                             autovalidateMode:
                             AutovalidateMode
                                 .onUserInteraction,
@@ -1100,59 +1102,32 @@ return [
                               return null;
                             },
                             builder: (field) =>
-                                SelectionCard<bool>(
+                                SelectionCard<String>(
                                   errorMessage:
                                   field.errorText,
-                                  allowMultipleSelection:
-                                  false,
+                                  allowMultipleSelection:getSelectionType(e),
                                   valueMapper: (value) {
-                                    return value
-                                        ? localizations
+                                    return localizations
                                         .translate(
-                                      i18.common
-                                          .coreCommonYes,
-                                    )
-                                        : localizations
-                                        .translate(
-                                      i18.common
-                                          .coreCommonNo,
+                                      value
                                     );
                                   },
-                                  initialSelection:
-                                  controller[index]
-                                      .text ==
-                                      'true'
-                                      ? [true]
-                                      : controller[index]
-                                      .text ==
-                                      'false'
-                                      ? [false]
+                                  initialSelection: controller[index].text.isNotEmpty
+                                      ? controller[index].text.split('.')
                                       : [],
-                                  options: const [
-                                    true,
-                                    false
-                                  ],
-                                  onSelectionChanged:
-                                      (curValue) {
-                                    field.didChange(
-                                        curValue.first);
+                                  options: getOptionLabels(e),
+                                  onSelectionChanged: (curValue) {
+                                    field.didChange(curValue.join('.')); // Join list values with '.'
                                     if (curValue.isNotEmpty) {
-                                      context
-                                          .read<ServiceBloc>()
-                                          .add(
+                                      context.read<ServiceBloc>().add(
                                         ServiceSurveyFormEvent(
-                                          value: curValue
-                                              .toString(),
-                                          submitTriggered:
-                                          submitTriggered,
+                                          value: curValue.join('.'), // Send joined string as value
+                                          submitTriggered: submitTriggered,
                                         ),
                                       );
-                                      controller[index]
-                                          .value =
-                                          TextEditingValue(
-                                            text: curValue.first
-                                                .toString(),
-                                          );
+                                      controller[index].value = TextEditingValue(
+                                        text: curValue.join('.'), // Store as a single string
+                                      );
                                     }
                                   },
                                 ),
@@ -1582,7 +1557,7 @@ return [
             charCondition: true,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
-                return FormField<bool>(
+                return FormField<String>(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
                     if (item.required == true &&
@@ -1597,39 +1572,30 @@ return [
                   },
                   builder: (field) => SelectionCard(
                     errorMessage: field.errorText,
-                    allowMultipleSelection: false,
+                    allowMultipleSelection:getSelectionType(item),
                     valueMapper: (value) {
-                      return value
-                          ? localizations.translate(
-                              i18.common.coreCommonYes,
-                            )
-                          : localizations.translate(
-                              i18.common.coreCommonNo,
-                            );
+                      return localizations
+                          .translate(
+                          value
+                      );
                     },
-                    initialSelection: const [false],
-                    options: const [true, false],
-                    onSelectionChanged: (value) {
-                      field.didChange(value.first);
-                      context.read<ServiceBloc>().add(
-                            ServiceSurveyFormEvent(
-                              value: value.toString(),
-                              submitTriggered: submitTriggered,
-                            ),
-                          );
-                      final String ele;
-                      var val = controller[index].text.split('.');
-                      if (val.contains(e)) {
-                        val.remove(e);
-                        ele = val.join(".");
-                      } else {
-                        ele = "${controller[index].text}.$e";
+                    initialSelection: controller[index].text.isNotEmpty
+                        ? controller[index].text.split('.')
+                        : [],
+                    options: getOptionLabels(item),
+                    onSelectionChanged: (curValue) {
+                      field.didChange(curValue.join('.')); // Join list values with '.'
+                      if (curValue.isNotEmpty) {
+                        context.read<ServiceBloc>().add(
+                          ServiceSurveyFormEvent(
+                            value: curValue.join('.'), // Send joined string as value
+                            submitTriggered: submitTriggered,
+                          ),
+                        );
+                        controller[index].value = TextEditingValue(
+                          text: curValue.join('.'), // Store as a single string
+                        );
                       }
-                      controller[index].value = TextEditingController.fromValue(
-                        TextEditingValue(
-                          text: ele,
-                        ),
-                      ).value;
                     },
                   ),
                 );

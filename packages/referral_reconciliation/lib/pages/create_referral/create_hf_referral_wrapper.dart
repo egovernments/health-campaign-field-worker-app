@@ -62,7 +62,7 @@ class _HFCreateReferralWrapperPageState
                   context.repository<ServiceModel, ServiceSearchModel>(context),
             )..add(ServiceSearchEvent(
                   serviceSearchModel: ServiceSearchModel(
-                relatedClientReferenceId:
+                referenceId:
                     widget.referralReconciliation?.clientReferenceId,
               ))),
             child: BlocProvider(

@@ -69,6 +69,9 @@ abstract class $SurveyFormRoute extends _i7.AutoRouterModule {
           appLocalizations: args.appLocalizations,
           hideFooter: args.hideFooter,
           hideHeader: args.hideHeader,
+          hideBackAlert: args.hideBackAlert,
+          checklistType: args.checklistType,
+          useScaffold: args.useScaffold,
         ),
       );
     },
@@ -242,6 +245,9 @@ class SurveyFormViewRoute extends _i7.PageRouteInfo<SurveyFormViewRouteArgs> {
     _i10.SurveyFormLocalization? appLocalizations,
     bool hideFooter = false,
     bool hideHeader = false,
+    bool hideBackAlert = false,
+    String? checklistType,
+    bool useScaffold = true,
     List<_i7.PageRouteInfo>? children,
   }) : super(
           SurveyFormViewRoute.name,
@@ -250,6 +256,9 @@ class SurveyFormViewRoute extends _i7.PageRouteInfo<SurveyFormViewRouteArgs> {
             appLocalizations: appLocalizations,
             hideFooter: hideFooter,
             hideHeader: hideHeader,
+            hideBackAlert: hideBackAlert,
+            checklistType: checklistType,
+            useScaffold: useScaffold,
           ),
           initialChildren: children,
         );
@@ -266,6 +275,9 @@ class SurveyFormViewRouteArgs {
     this.appLocalizations,
     this.hideFooter = false,
     this.hideHeader = false,
+    this.hideBackAlert = false,
+    this.checklistType,
+    this.useScaffold = true,
   });
 
   final _i8.Key? key;
@@ -276,9 +288,15 @@ class SurveyFormViewRouteArgs {
 
   final bool hideHeader;
 
+  final bool hideBackAlert;
+
+  final String? checklistType;
+
+  final bool useScaffold;
+
   @override
   String toString() {
-    return 'SurveyFormViewRouteArgs{key: $key, appLocalizations: $appLocalizations, hideFooter: $hideFooter, hideHeader: $hideHeader}';
+    return 'SurveyFormViewRouteArgs{key: $key, appLocalizations: $appLocalizations, hideFooter: $hideFooter, hideHeader: $hideHeader, hideBackAlert: $hideBackAlert, checklistType: $checklistType, useScaffold: $useScaffold}';
   }
 }
 

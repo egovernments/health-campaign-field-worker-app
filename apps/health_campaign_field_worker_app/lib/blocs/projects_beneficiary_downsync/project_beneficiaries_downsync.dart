@@ -6,6 +6,7 @@ import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -39,6 +40,7 @@ class BeneficiaryDownSyncBloc
   sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
       referralLocalRepository;
+  final LocalRepository<ServiceModel, ServiceSearchModel> serviceLocalRepository;
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
@@ -50,6 +52,7 @@ class BeneficiaryDownSyncBloc
     required this.taskLocalRepository,
     required this.sideEffectLocalRepository,
     required this.referralLocalRepository,
+    required this.serviceLocalRepository,
   }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
     on(_handleCheckTotalCount);
@@ -211,6 +214,7 @@ class BeneficiaryDownSyncBloc
                 taskLocalRepository,
                 sideEffectLocalRepository,
                 referralLocalRepository,
+                serviceLocalRepository,
               ]);
               // Update the local downSync data for the boundary with the new values
               totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];

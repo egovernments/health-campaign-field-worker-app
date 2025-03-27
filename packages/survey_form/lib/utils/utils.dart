@@ -67,3 +67,31 @@ class SurveyFormSingleton {
     _persistenceConfiguration = configuration;
   }
 }
+
+bool getSelectionType(AttributesModel model) {
+  // Check if additionalFields is not null
+  if (model.additionalFields != null) {
+    // Loop through the fields to find the key 'selectionType'
+    for (var field in model.additionalFields!.fields) {
+      if (field.key == 'selectionType') {
+        return field.value == 'multiple';
+      }
+    }
+  }
+  return false;
+}
+
+
+List<String> getOptionLabels(AttributesModel model) {
+  if (model.additionalFields != null) {
+    for (var field in model.additionalFields!.fields) {
+      if (field.value is Map && field.value.containsKey('options')) {
+        var options = field.value['options'] as List;
+        return options.map((option) => option['label'].toString()).toList();
+      }
+    }
+  }
+  // Return default values if no options are found
+  return ['CORE_COMMON_YES', 'CORE_COMMON_NO'];
+}
+

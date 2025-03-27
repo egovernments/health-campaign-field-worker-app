@@ -26,10 +26,9 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
   static String? _$clientId(ServiceSearchModel v) => v.clientId;
   static const Field<ServiceSearchModel, String> _f$clientId =
       Field('clientId', _$clientId, opt: true);
-  static String? _$relatedClientReferenceId(ServiceSearchModel v) =>
-      v.relatedClientReferenceId;
-  static const Field<ServiceSearchModel, String> _f$relatedClientReferenceId =
-      Field('relatedClientReferenceId', _$relatedClientReferenceId, opt: true);
+  static String? _$referenceId(ServiceSearchModel v) => v.referenceId;
+  static const Field<ServiceSearchModel, String> _f$referenceId =
+      Field('referenceId', _$referenceId, opt: true);
   static String? _$serviceDefId(ServiceSearchModel v) => v.serviceDefId;
   static const Field<ServiceSearchModel, String> _f$serviceDefId =
       Field('serviceDefId', _$serviceDefId, opt: true);
@@ -57,7 +56,7 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
   final MappableFields<ServiceSearchModel> fields = const {
     #id: _f$id,
     #clientId: _f$clientId,
-    #relatedClientReferenceId: _f$relatedClientReferenceId,
+    #referenceId: _f$referenceId,
     #serviceDefId: _f$serviceDefId,
     #accountId: _f$accountId,
     #createdAt: _f$createdAt,
@@ -81,7 +80,7 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
     return ServiceSearchModel.ignoreDeleted(
         id: data.dec(_f$id),
         clientId: data.dec(_f$clientId),
-        relatedClientReferenceId: data.dec(_f$relatedClientReferenceId),
+        referenceId: data.dec(_f$referenceId),
         serviceDefId: data.dec(_f$serviceDefId),
         accountId: data.dec(_f$accountId),
         createdAt: data.dec(_f$createdAt),
@@ -148,7 +147,7 @@ abstract class ServiceSearchModelCopyWith<$R, $In extends ServiceSearchModel,
   $R call(
       {String? id,
       String? clientId,
-      String? relatedClientReferenceId,
+      String? referenceId,
       String? serviceDefId,
       String? accountId,
       String? createdAt,
@@ -170,7 +169,7 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? id = $none,
           Object? clientId = $none,
-          Object? relatedClientReferenceId = $none,
+          Object? referenceId = $none,
           Object? serviceDefId = $none,
           Object? accountId = $none,
           Object? createdAt = $none,
@@ -179,8 +178,7 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (clientId != $none) #clientId: clientId,
-        if (relatedClientReferenceId != $none)
-          #relatedClientReferenceId: relatedClientReferenceId,
+        if (referenceId != $none) #referenceId: referenceId,
         if (serviceDefId != $none) #serviceDefId: serviceDefId,
         if (accountId != $none) #accountId: accountId,
         if (createdAt != $none) #createdAt: createdAt,
@@ -192,8 +190,7 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
       ServiceSearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
           clientId: data.get(#clientId, or: $value.clientId),
-          relatedClientReferenceId: data.get(#relatedClientReferenceId,
-              or: $value.relatedClientReferenceId),
+          referenceId: data.get(#referenceId, or: $value.referenceId),
           serviceDefId: data.get(#serviceDefId, or: $value.serviceDefId),
           accountId: data.get(#accountId, or: $value.accountId),
           createdAt: data.get(#createdAt, or: $value.createdAt),
@@ -233,10 +230,9 @@ class ServiceModelMapper extends SubClassMapperBase<ServiceModel> {
   static String? _$serviceDefId(ServiceModel v) => v.serviceDefId;
   static const Field<ServiceModel, String> _f$serviceDefId =
       Field('serviceDefId', _$serviceDefId, opt: true);
-  static String? _$relatedClientReferenceId(ServiceModel v) =>
-      v.relatedClientReferenceId;
-  static const Field<ServiceModel, String> _f$relatedClientReferenceId =
-      Field('relatedClientReferenceId', _$relatedClientReferenceId, opt: true);
+  static String? _$referenceId(ServiceModel v) => v.referenceId;
+  static const Field<ServiceModel, String> _f$referenceId =
+      Field('referenceId', _$referenceId, opt: true);
   static bool? _$isActive(ServiceModel v) => v.isActive;
   static const Field<ServiceModel, bool> _f$isActive =
       Field('isActive', _$isActive, opt: true);
@@ -281,7 +277,7 @@ class ServiceModelMapper extends SubClassMapperBase<ServiceModel> {
     #id: _f$id,
     #clientId: _f$clientId,
     #serviceDefId: _f$serviceDefId,
-    #relatedClientReferenceId: _f$relatedClientReferenceId,
+    #referenceId: _f$referenceId,
     #isActive: _f$isActive,
     #accountId: _f$accountId,
     #additionalDetails: _f$additionalDetails,
@@ -311,7 +307,7 @@ class ServiceModelMapper extends SubClassMapperBase<ServiceModel> {
         id: data.dec(_f$id),
         clientId: data.dec(_f$clientId),
         serviceDefId: data.dec(_f$serviceDefId),
-        relatedClientReferenceId: data.dec(_f$relatedClientReferenceId),
+        referenceId: data.dec(_f$referenceId),
         isActive: data.dec(_f$isActive),
         accountId: data.dec(_f$accountId),
         additionalDetails: data.dec(_f$additionalDetails),
@@ -397,7 +393,7 @@ abstract class ServiceModelCopyWith<$R, $In extends ServiceModel, $Out>
       String? id,
       String? clientId,
       String? serviceDefId,
-      String? relatedClientReferenceId,
+      String? referenceId,
       bool? isActive,
       String? accountId,
       Map<String, dynamic>? additionalDetails,
@@ -455,7 +451,7 @@ class _ServiceModelCopyWithImpl<$R, $Out>
           Object? id = $none,
           String? clientId,
           Object? serviceDefId = $none,
-          Object? relatedClientReferenceId = $none,
+          Object? referenceId = $none,
           Object? isActive = $none,
           Object? accountId = $none,
           Object? additionalDetails = $none,
@@ -472,8 +468,7 @@ class _ServiceModelCopyWithImpl<$R, $Out>
         if (id != $none) #id: id,
         if (clientId != null) #clientId: clientId,
         if (serviceDefId != $none) #serviceDefId: serviceDefId,
-        if (relatedClientReferenceId != $none)
-          #relatedClientReferenceId: relatedClientReferenceId,
+        if (referenceId != $none) #referenceId: referenceId,
         if (isActive != $none) #isActive: isActive,
         if (accountId != $none) #accountId: accountId,
         if (additionalDetails != $none) #additionalDetails: additionalDetails,
@@ -495,8 +490,7 @@ class _ServiceModelCopyWithImpl<$R, $Out>
       id: data.get(#id, or: $value.id),
       clientId: data.get(#clientId, or: $value.clientId),
       serviceDefId: data.get(#serviceDefId, or: $value.serviceDefId),
-      relatedClientReferenceId: data.get(#relatedClientReferenceId,
-          or: $value.relatedClientReferenceId),
+      referenceId: data.get(#referenceId, or: $value.referenceId),
       isActive: data.get(#isActive, or: $value.isActive),
       accountId: data.get(#accountId, or: $value.accountId),
       additionalDetails:
