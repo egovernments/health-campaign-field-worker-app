@@ -32,6 +32,7 @@ class DigitTableCard extends StatelessWidget {
       padding: const EdgeInsets.all(0),
       items: element.keys
           .map((e) => LabelValueItem(
+        maxLines: 5,
                 label: e,
                 value: element[e].toString(),
         labelFlex: 9,
