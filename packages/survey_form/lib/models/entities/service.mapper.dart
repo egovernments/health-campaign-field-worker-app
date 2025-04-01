@@ -26,8 +26,8 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
   static String? _$clientId(ServiceSearchModel v) => v.clientId;
   static const Field<ServiceSearchModel, String> _f$clientId =
       Field('clientId', _$clientId, opt: true);
-  static String? _$referenceId(ServiceSearchModel v) => v.referenceId;
-  static const Field<ServiceSearchModel, String> _f$referenceId =
+  static List<String>? _$referenceId(ServiceSearchModel v) => v.referenceId;
+  static const Field<ServiceSearchModel, List<String>> _f$referenceId =
       Field('referenceId', _$referenceId, opt: true);
   static String? _$serviceDefId(ServiceSearchModel v) => v.serviceDefId;
   static const Field<ServiceSearchModel, String> _f$serviceDefId =
@@ -143,11 +143,12 @@ extension ServiceSearchModelValueCopy<$R, $Out>
 
 abstract class ServiceSearchModelCopyWith<$R, $In extends ServiceSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get referenceId;
   @override
   $R call(
       {String? id,
       String? clientId,
-      String? referenceId,
+      List<String>? referenceId,
       String? serviceDefId,
       String? accountId,
       String? createdAt,
@@ -165,6 +166,14 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<ServiceSearchModel> $mapper =
       ServiceSearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get referenceId => $value.referenceId != null
+          ? ListCopyWith(
+              $value.referenceId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(referenceId: v))
+          : null;
   @override
   $R call(
           {Object? id = $none,

@@ -14,7 +14,7 @@ class ServiceSearchModel extends EntitySearchModel
     with ServiceSearchModelMappable {
   final String? id;
   final String? clientId;
-  final String? referenceId;
+  final List<String>? referenceId;
   final String? serviceDefId;
   final String? accountId;
   final String? createdAt;

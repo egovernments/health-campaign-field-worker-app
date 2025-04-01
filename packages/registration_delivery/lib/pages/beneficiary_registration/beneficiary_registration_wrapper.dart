@@ -117,7 +117,9 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
               taskDataRepository: task,
               sideEffectDataRepository: sideEffect,
               individualGlobalSearchRepository: individualGlobalSearch,
-              referralDataRepository: referral)
+              referralDataRepository: referral,
+            serviceDataRepository: service,
+          )
             ..add(HouseholdOverviewReloadEvent(
                 projectId: RegistrationDeliverySingleton().selectedProject!.id,
                 projectBeneficiaryType:

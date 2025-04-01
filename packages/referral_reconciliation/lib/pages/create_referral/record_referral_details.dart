@@ -184,9 +184,9 @@ class _RecordReferralDetailsPageState
                                                                       .mapOrNull(
                                                                 create: (value) => value
                                                                         .viewOnly
-                                                                    ? value
-                                                                        .hfReferralModel
-                                                                        ?.clientReferenceId
+                                                                    ? [value
+                                                                    .hfReferralModel
+                                                                    ?.clientReferenceId ?? '']
                                                                     : null,
                                                               ),
                                                             ),
@@ -508,9 +508,9 @@ class _RecordReferralDetailsPageState
                                                                           .mapOrNull(
                                                                     create: (value) => value
                                                                             .viewOnly
-                                                                        ? value
-                                                                            .hfReferralModel
-                                                                            ?.clientReferenceId
+                                                                        ? [value
+                                                                        .hfReferralModel
+                                                                        ?.clientReferenceId ?? '']
                                                                         : null,
                                                                   ),
                                                                 ),

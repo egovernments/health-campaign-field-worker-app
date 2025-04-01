@@ -565,6 +565,8 @@ class HouseholdOverView {
 
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
+
+  String get householdOverViewAge => 'HOUSEHOLD_OVER_VIEW_AGE';
 }
 
 class MemberCard {
@@ -602,6 +604,8 @@ class MemberCard {
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
 
   String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
+  String get noOfChildren => 'MEMBER_CARD_NO_OF_CHILDREN';
+  String get addChildLabel => 'MEMBER_CARD_ADD_CHILD_LABEL';
 }
 
 class DeliverIntervention {
