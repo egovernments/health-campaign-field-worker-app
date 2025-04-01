@@ -24,6 +24,7 @@ import '../../models/entities/task.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
+import '../table_card/table_card.dart';
 
 class MemberCard extends StatelessWidget {
   final String name;
@@ -194,6 +195,26 @@ class MemberCard extends StatelessWidget {
                 ],
               ),
             ),
+            // DigitTableCard(
+            //   element: {
+            //       for (var attribute in state
+            //           .householdMemberWrapper
+            //           .individualChecklists!
+            //           .where((e) =>
+            //       e.referenceId ==
+            //           state
+            //               .selectedIndividual
+            //               ?.clientReferenceId)
+            //           .first
+            //           .attributes ??
+            //           [])
+            //         localizations.translate(
+            //             '${RegistrationDeliverySingleton().selectedProject?.name}.INDIVIDUAL.DISTRIBUTOR.${attribute?.attributeCode}' //TODO:
+            //         ):
+            //         localizations
+            //             .translate(attribute?.value)
+            //   },
+            // ),
             Padding(
               padding: const EdgeInsets.only(left: spacer1, bottom: spacer2),
               child: Offstage(
