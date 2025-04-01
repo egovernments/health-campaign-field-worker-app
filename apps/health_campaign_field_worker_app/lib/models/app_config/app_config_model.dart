@@ -81,6 +81,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<IdTypeOptions> idTypeOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptions,
+    @JsonKey(name: 'REFUGEE_CAMPS')
+    required List<RefugeeCampOptions> refugeeCampOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
     required List<BackendInterface> backendInterface,
     @JsonKey(name: 'CALL_SUPPORT')
@@ -213,6 +215,17 @@ class DeliveryCommentOptions with _$DeliveryCommentOptions {
 
   factory DeliveryCommentOptions.fromJson(Map<String, dynamic> json) =>
       _$DeliveryCommentOptionsFromJson(json);
+}
+
+@freezed
+class RefugeeCampOptions with _$RefugeeCampOptions {
+  factory RefugeeCampOptions({
+    required String name,
+    required String code,
+  }) = _RefugeeCampOptions;
+
+  factory RefugeeCampOptions.fromJson(Map<String, dynamic> json) =>
+      _$RefugeeCampOptionsFromJson(json);
 }
 
 @freezed

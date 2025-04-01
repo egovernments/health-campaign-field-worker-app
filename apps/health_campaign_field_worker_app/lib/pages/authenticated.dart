@@ -1,3 +1,4 @@
+import 'package:survey_form/survey_form.dart';
 import 'dart:async';
 
 import 'package:digit_components/digit_components.dart';
@@ -62,8 +63,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 } else {
                                   final boundaryName =
                                       AppLocalizations.of(context).translate(
-                                    selectedBoundary.name ??
-                                        selectedBoundary.code ??
+                                    selectedBoundary.code ??
+                                        selectedBoundary.name ??
                                         i18.projectSelection.onProjectMapped,
                                   );
 
@@ -112,6 +113,14 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   drawer: showDrawer ? const Drawer(child: SideBar()) : null,
                   body: MultiBlocProvider(
                     providers: [
+                      BlocProvider(
+                        create: (_) => ServiceBloc(
+                          const ServiceEmptyState(),
+                          serviceDataRepository: context
+                              .repository<ServiceModel, ServiceSearchModel>(),
+                        ),
+                      ),
+
                       // INFO : Need to add bloc of package Here
 
                       BlocProvider(

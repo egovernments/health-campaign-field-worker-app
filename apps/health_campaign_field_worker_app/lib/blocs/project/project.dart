@@ -1,3 +1,4 @@
+import 'package:survey_form/survey_form.dart';
 // GENERATED using mason_cli
 import 'dart:async';
 import 'dart:core';
@@ -33,6 +34,40 @@ part 'project.freezed.dart';
 typedef ProjectEmitter = Emitter<ProjectState>;
 
 class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
+  FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
+    final configs = await isar.appConfigurations.where().findAll();
+    final userObject = await localSecureStore.userRequestModel;
+    List<String> codes = [];
+    for (UserRoleModel elements in userObject!.roles) {
+      configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+        for (final project in projects) {
+          codes.add(
+            '${project.name}.$element.${elements.code.snakeCase.toUpperCase()}',
+          );
+        }
+      });
+    }
+
+    final serviceDefinition = await serviceDefinitionRemoteRepository
+        .search(ServiceDefinitionSearchModel(
+      tenantId: envConfig.variables.tenantId,
+      code: codes,
+    ));
+
+    for (var element in serviceDefinition) {
+      await serviceDefinitionLocalRepository.create(
+        element,
+        createOpLog: false,
+      );
+    }
+  }
+
+  /// Service Definition Repositories
+  final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionRemoteRepository;
+  final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionLocalRepository;
+
   final LocalSecureStore localSecureStore;
   final Isar isar;
   final MdmsRepository mdmsRepository;
@@ -100,6 +135,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final DashboardRemoteRepository dashboardRemoteRepository;
 
   ProjectBloc({
+    required this.serviceDefinitionRemoteRepository,
+    required this.serviceDefinitionLocalRepository,
     LocalSecureStore? localSecureStore,
     required this.bandwidthCheckRepository,
     required this.projectStaffRemoteRepository,
@@ -165,8 +202,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadOnline(ProjectEmitter emit) async {
-    final batchSize = await _getBatchSize();
-
     final userObject = await localSecureStore.userRequestModel;
     final uuid = userObject?.uuid;
 
@@ -208,59 +243,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       List<ProjectModel> staffProjects;
       try {
-        if (context.loggedInUserRoles
-            .where(
-              (role) =>
-                  role.code == RolesType.districtSupervisor.toValue() ||
-                  role.code == RolesType.attendanceStaff.toValue(),
-            )
-            .toList()
-            .isNotEmpty) {
-          final individual = await individualRemoteRepository.search(
-            IndividualSearchModel(
-              userUuid: [projectStaff.userId.toString()],
-            ),
-          );
-          if (individual.isNotEmpty) {
-            final attendanceRegisters = await attendanceRemoteRepository.search(
-              AttendanceRegisterSearchModel(
-                staffId: individual.first.id,
-                referenceId: projectStaff.projectId,
-              ),
-            );
-            await attendanceLocalRepository.bulkCreate(attendanceRegisters);
-
-            for (final register in attendanceRegisters) {
-              if (register.attendees != null &&
-                  (register.attendees ?? []).isNotEmpty) {
-                try {
-                  final individuals = await individualRemoteRepository.search(
-                    IndividualSearchModel(
-                      id: register.attendees!
-                          .map((e) => e.individualId!)
-                          .toList(),
-                    ),
-                  );
-                  await individualLocalRepository.bulkCreate(individuals);
-                  final logs = await attendanceLogRemoteRepository.search(
-                    AttendanceLogSearchModel(
-                      registerId: register.id,
-                    ),
-                  );
-                  await attendanceLogLocalRepository.bulkCreate(logs);
-                } catch (_) {
-                  emit(state.copyWith(
-                    loading: false,
-                    syncError: ProjectSyncErrorType.project,
-                  ));
-
-                  return;
-                }
-              }
-            }
-          }
-        }
-
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(
             id: projectStaff.projectId,
@@ -290,7 +272,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     if (projects.isNotEmpty) {
       // INFO : Need to add project load functions
-
+      try {
+        await _loadServiceDefinition(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.serviceDefinitions,
+          ),
+        );
+      }
       try {
         await _loadProjectFacilities(projects);
       } catch (_) {
@@ -348,6 +339,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ProjectFacilitySearchModel(
         projectId: projects.map((e) => e.id).toList(),
       ),
+      limit: 1000,
     );
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
@@ -356,6 +348,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       FacilitySearchModel(
         id: null,
       ),
+      limit: 1000,
     );
 
     await facilityLocalRepository.bulkCreate(facilities);
@@ -398,6 +391,53 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     List<BoundaryModel> boundaries;
     try {
       try {
+        if (context.loggedInUserRoles
+            .where(
+              (role) =>
+                  role.code == RolesType.districtSupervisor.toValue() ||
+                  role.code == RolesType.attendanceStaff.toValue(),
+            )
+            .toList()
+            .isNotEmpty) {
+          final attendanceRegisters = await attendanceRemoteRepository.search(
+            AttendanceRegisterSearchModel(
+              staffId: context.loggedInIndividualId,
+              referenceId: event.model.id,
+              localityCode: event.model.address?.boundary,
+            ),
+          );
+          await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+
+          for (final register in attendanceRegisters) {
+            if (register.attendees != null &&
+                (register.attendees ?? []).isNotEmpty) {
+              try {
+                final individuals = await individualRemoteRepository.search(
+                  IndividualSearchModel(
+                    id: register.attendees!
+                        .map((e) => e.individualId!)
+                        .toList(),
+                  ),
+                );
+                await individualLocalRepository.bulkCreate(individuals);
+                final logs = await attendanceLogRemoteRepository.search(
+                  AttendanceLogSearchModel(
+                    registerId: register.id,
+                  ),
+                );
+                await attendanceLogLocalRepository.bulkCreate(logs);
+              } catch (_) {
+                emit(state.copyWith(
+                  loading: false,
+                  syncError: ProjectSyncErrorType.project,
+                ));
+
+                return;
+              }
+            }
+          }
+        }
+
         final startDate = DateTime(
                 DateTime.now().year, DateTime.now().month, DateTime.now().day)
             .toLocal()
@@ -551,25 +591,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: false,
       syncError: null,
     ));
-  }
-
-  FutureOr<int> _getBatchSize() async {
-    try {
-      final configs = await isar.appConfigurations.where().findAll();
-
-      final double speed = await bandwidthCheckRepository.pingBandwidthCheck(
-        bandWidthCheckModel: null,
-      );
-
-      int configuredBatchSize = getBatchSizeToBandwidth(
-        speed,
-        configs,
-        isDownSync: true,
-      );
-      return configuredBatchSize;
-    } catch (e) {
-      rethrow;
-    }
   }
 }
 

@@ -5,6 +5,8 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
+import 'package:health_campaign_field_worker_app/pages/inventory/custom_inventory_facility_selection.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
@@ -105,7 +107,8 @@ class CustomWarehouseDetailsPageState
                   onTap: () {
                     FocusScope.of(context).unfocus();
                   },
-                  child: BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                  child: BlocBuilder<CustomDigitScannerBloc,
+                      CustomDigitScannerState>(
                     builder: (context, scannerState) {
                       return ReactiveFormBuilder(
                         form: () => buildForm(
@@ -165,9 +168,10 @@ class CustomWarehouseDetailsPageState
                                                           : null;
 
                                               context
-                                                  .read<DigitScannerBloc>()
+                                                  .read<
+                                                      CustomDigitScannerBloc>()
                                                   .add(
-                                                    const DigitScannerEvent
+                                                    const CustomDigitScannerEvent
                                                         .handleScanner(
                                                         qrCode: [],
                                                         barCode: []),
@@ -179,22 +183,6 @@ class CustomWarehouseDetailsPageState
                                                     localizations.translate(
                                                       i18.stockDetails
                                                           .facilityRequired,
-                                                    ),
-                                                    true,
-                                                    theme,
-                                                  ),
-                                                );
-                                              } else if (deliveryTeamSelected &&
-                                                  (teamCode == null ||
-                                                      teamCode
-                                                          .trim()
-                                                          .isEmpty)) {
-                                                DigitToast.show(
-                                                  context,
-                                                  options: DigitToastOptions(
-                                                    localizations.translate(
-                                                      i18.stockDetails
-                                                          .teamCodeRequired,
                                                     ),
                                                     true,
                                                     theme,
@@ -298,7 +286,7 @@ class CustomWarehouseDetailsPageState
                                             await Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                InventoryFacilitySelectionPage(
+                                                CustomInventoryFacilitySelectionPage(
                                               facilities: facilities,
                                             ),
                                           ),
@@ -347,9 +335,9 @@ class CustomWarehouseDetailsPageState
                                           readOnly: true,
                                           onTap: () async {
                                             context
-                                                .read<DigitScannerBloc>()
+                                                .read<CustomDigitScannerBloc>()
                                                 .add(
-                                                  const DigitScannerEvent
+                                                  const CustomDigitScannerEvent
                                                       .handleScanner(
                                                     barCode: [],
                                                     qrCode: [],
@@ -362,7 +350,7 @@ class CustomWarehouseDetailsPageState
                                                     .push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    InventoryFacilitySelectionPage(
+                                                    CustomInventoryFacilitySelectionPage(
                                                   facilities: facilities,
                                                 ),
                                               ),
@@ -390,53 +378,6 @@ class CustomWarehouseDetailsPageState
                                         ),
                                       ),
                                     ),
-                                    if (deliveryTeamSelected)
-                                      DigitTextFormField(
-                                        label: localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .teamCodeLabel,
-                                        ),
-                                        formControlName: _teamCodeKey,
-                                        onChanged: (val) {
-                                          String? value = val as String?;
-                                          if (value != null &&
-                                              value.trim().isNotEmpty) {
-                                            context
-                                                .read<DigitScannerBloc>()
-                                                .add(
-                                                  DigitScannerEvent
-                                                      .handleScanner(
-                                                    barCode: [],
-                                                    qrCode: [value],
-                                                  ),
-                                                );
-                                          } else {
-                                            clearQRCodes();
-                                          }
-                                        },
-                                        isRequired: true,
-                                        suffix: IconButton(
-                                          onPressed: () {
-                                            //[TODO: Add route to auto_route]
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const DigitScannerPage(
-                                                  quantity: 1,
-                                                  isGS1code: false,
-                                                  singleValue: false,
-                                                ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
-                                            );
-                                          },
-                                          icon: Icon(
-                                            Icons.qr_code_2,
-                                            color: theme.colorScheme.secondary,
-                                          ),
-                                        ),
-                                      ),
                                   ],
                                 ),
                               ),
@@ -453,7 +394,9 @@ class CustomWarehouseDetailsPageState
   }
 
   void clearQRCodes() {
-    context.read<DigitScannerBloc>().add(const DigitScannerEvent.handleScanner(
+    context
+        .read<CustomDigitScannerBloc>()
+        .add(const CustomDigitScannerEvent.handleScanner(
           barCode: [],
           qrCode: [],
         ));

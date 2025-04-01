@@ -14,6 +14,7 @@ const homeShowcase = HomeShowcase();
 const privacyPolicy = PrivacyPolicy();
 
 const memberCard = MemberCard();
+const attendance = Attendance();
 const householdOverView = HouseholdOverView();
 const deliverIntervention = DeliverIntervention();
 
@@ -22,6 +23,7 @@ const householdLocation = HouseholdLocation();
 const searchBeneficiary = SearchBeneficiary();
 const individualDetails = IndividualDetails();
 const beneficiaryDetails = BeneficiaryDetails();
+const stockDetails = StockDetails();
 
 const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
@@ -43,6 +45,12 @@ class MemberCard {
   const MemberCard();
 
   String get deliverDetailsUpdateLabel => "DELIVER_DETAILS_UPDATE_LABEL";
+}
+
+class Attendance {
+  const Attendance();
+  String get identityCardNumber => "IDENTITY_CARD_NUMBER";
+  String get phoneNumber => "PHONE_NUMBER";
 }
 
 class HouseholdOverView {
@@ -79,6 +87,8 @@ class HouseholdOverView {
 class DeliverIntervention {
   const DeliverIntervention();
 
+  String get scanningITNs => "DELIVER_INTERVENTION_SCANNING_ITNS";
+
   String get memberCountText => "MEMBER_COUNT_TEXT";
   String get bednetCountText => "BEDNET_COUNT_TEXT";
 
@@ -90,11 +100,14 @@ class DeliverIntervention {
   String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
   String get bednetScanLessThanCount => 'NET_SCANNED_LESS_THAN_COUNT_LABEL';
   String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
+  String get patternValidationFailed => 'PATTERN_VALIDATION_FAILED';
+  String get couldNotParseTheCode => 'COULD_NOT_PARSE_CODE';
   String get informationBulletOne => 'INFORMATION_BULLET_ONE';
   String get informationBulletTwo => 'INFORMATION_BULLET_TWO';
   String get informationBulletThree => 'INFORMATION_BULLET_THREE';
   String get informationBulletFour => 'INFORMATION_BULLET_FOUR';
   String get scanValidResource => 'SCAN_VALID_RESOURCE';
+  String get resourceAlreadyScanned => 'RESOURCES_ALREADY_SCANNED';
 }
 
 class Common {
@@ -161,16 +174,19 @@ class Common {
   String get coreCommonYes => 'CORE_COMMON_YES';
 
   String get coreCommonNo => 'CORE_COMMON_NO';
+
   String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
 
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
+
   String get min3CharsRequired => 'MIN_REQUIRED_3';
 
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
   String get maxValue => 'MAX_VALUE_ALLOWED';
+
   String get minValue => 'MIN_VALUE_ALLOWED';
 
   String get noResultsFound => 'NO_RESULTS_FOUND';
@@ -178,6 +194,7 @@ class Common {
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
   String get projectFacilitySearchHeaderLabel =>
       'PROJECT_FACILITY_SEARCH_HEADER_LABEL';
 
@@ -188,7 +205,10 @@ class Common {
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
+
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+
+  String get refuseReasonComment => 'CLOSE_HOUSEHOLD_REASON_COMMENT';
 }
 
 class HomeShowcase {
@@ -239,6 +259,10 @@ class HomeShowcase {
   }
 
   String get supervisorMyChecklist {
+    return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
+  }
+
+  String get supervisorMySurveyForm {
     return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
   }
 
@@ -646,6 +670,7 @@ class Home {
   const Home();
 
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
+
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
@@ -680,7 +705,11 @@ class Home {
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
   String get viewSummaryReportsLabel => 'VIEW_SUMMARY_REPORTS_LABEL';
 
+  String get mySurveyForm => 'MY_CHECK_LIST_LABEL';
+
   String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
+  String get beneficiaryDistributionLabel =>
+      'HOME_BENEFICIARY_DISTRIBUTION_LABEL';
 }
 
 class AcknowledgementSuccess {
@@ -825,6 +854,9 @@ class Complaints {
 
   String get validationRadioRequiredError =>
       'COMPLAINTS_VALIDATION_RADIO_REQUIRED_ERROR';
+
+  String get supervisorContactNumberMinLength =>
+      'COMPLAINTS_SUPERVISOR_NUMBER_MIN_LENGTH';
 }
 
 class SyncDialog {
@@ -886,6 +918,8 @@ class StockReconciliationShowcase {
 class InventoryReportDetails {
   const InventoryReportDetails();
 
+  String get summaryReport => 'INVENTORY_REPORT_DETAILS_SUMMARY_REPORT_LABEL';
+
   String get dateLabel {
     return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
   }
@@ -895,11 +929,19 @@ class InventoryReportDetails {
   }
 
   String get projectBeneficiaryRegisteredLabel {
-    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_LABEL';
+    return 'ENUMERATION_SUMMARY_PROJECT_BENEFICIARY_REGISTERED_LABEL';
   }
 
   String get closedHouseholdRegisteredLabel {
-    return 'ENUMERATION_SUMMARY_PROJECT_BENEFICIARY_REGISTERED_LABEL';
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_LABEL';
+  }
+
+  String get closedHouseholdRegisteredAbsentLabel {
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_ABSENT_LABEL';
+  }
+
+  String get closedHouseholdRegisteredRefusedLabel {
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_REFUSED_LABEL';
   }
 
   String get householdDistributedLabel {
@@ -992,6 +1034,8 @@ class HouseholdLocation {
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+
+  String get refugeeCampLabel => 'REFUGEE_CAMP_LABEL';
 }
 
 class SearchBeneficiary {
@@ -1030,6 +1074,9 @@ class IndividualDetails {
   const IndividualDetails();
 
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
+
+  String get nationalIdCardNumberLabelText =>
+      'NATIONAL_ID_CARD_NUMBER_LABEL_TEXT';
 
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
@@ -1080,8 +1127,65 @@ class IndividualDetails {
   String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
 }
 
+class StockDetails {
+  const StockDetails();
+
+  /// Quantity sent/received/lost/damaged label
+  String get quantityReceivedLabel => 'STOCK_DETAILS_QUANTITY_RECEIVED';
+
+  String get quantitySentLabel => 'STOCK_DETAILS_QUANTITY_SENT';
+
+  String get quantityReturnedLabel => 'STOCK_DETAILS_QUANTITY_RETURNED';
+
+  String get quantityLostLabel => 'STOCK_DETAILS_QUANTITY_LOST';
+
+  String get quantityGainedLabel => 'STOCK_DETAILS_QUANTITY_GAINED';
+
+  String get quantityDamagedLabel => 'STOCK_DETAILS_QUANTITY_DAMAGED';
+
+  String get balesReceivedCountLabel => 'STOCK_DETAILS_BALES_RECEIVED';
+
+  String get balesSentCountLabel => 'STOCK_DETAILS_BALES_SENT';
+
+  String get balesReturnedCountLabel => 'STOCK_DETAILS_BALES_RETURNED';
+
+  String get balesLostCountLabel => 'STOCK_DETAILS_BALES_LOST';
+
+  String get balesGainedCountLabel => 'STOCK_DETAILS_BALES_GAINED';
+
+  String get balesDamagedCountLabel => 'STOCK_DETAILS_BALES_DAMAGED';
+  String get balesQuantityRequiredError => 'BALES_QUANTITY_REQUIRED_ERROR';
+  String get looseQuantityLabel => 'STOCK_DETAILS_LOOSE_QUANTITY_LABEL';
+
+  // comments
+  String get manualScanCommentsLabel =>
+      'STOCK_DETAILS_MANUAL_SCAN_COMMENTS_LABEL';
+
+  String get baleMismatchCommentsLabel =>
+      'STOCK_DETAILS_BALE_MISMATCH_COMMENTS_LABEL';
+
+  String get baleMismatchCommentRequired => 'BALE_MISMATCH_COMMENT_REQUIRED';
+
+  String get manualScanCommentRequired => 'MANUAL_SCAN_COMMENT_REQUIRED';
+
+  String get reconciliationCommentRequired => 'RECONCILIATION_COMMENT_REQUIRED';
+
+  String get countDialogTitle => 'STOCK_DETAILS_COUNT_DIALOG_TITLE';
+  String get countContent => 'STOCK_DETAILS_COUNT_DIALOG_CONTENT';
+  String get countContentValidation =>
+      'STOCK_DETAILS_COUNT_VALIDATION_DIALOG_CONTENT';
+  String get countDialogSuccess =>
+      'STOCK_DETAILS_COUNT_DIALOG_SUCCESS_ACTION_LABEL';
+
+  String get countDialogCancel =>
+      'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';
+}
+
 class BeneficiaryDetails {
   const BeneficiaryDetails();
+
+  String get numberOfNets => 'NUMBER_OF_NETS';
+  String get dustributionSiteName => 'DISTRIBUTION_SITE_NAME';
 
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
   String get beneficiarysDetailsEditIconLabelText =>
@@ -1158,4 +1262,5 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+  String get reasonLabelText => 'REASON_LABEL_TEXT';
 }

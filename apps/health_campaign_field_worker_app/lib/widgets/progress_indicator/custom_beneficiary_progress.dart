@@ -12,6 +12,7 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import '../../data/repositories/local/custom_project_beneficiary.dart';
 import '../../data/repositories/local/custom_task.dart';
 import '../../utils/extensions/extensions.dart';
 import '../progress_indicator/progress_indicator.dart';
@@ -44,7 +45,7 @@ class CustomBeneficiaryProgressBarState
     final projectBeneficiaryRepository = context.read<
             LocalRepository<ProjectBeneficiaryModel,
                 ProjectBeneficiarySearchModel>>()
-        as ProjectBeneficiaryLocalRepository;
+        as CustomProjectBeneficiaryLocalRepository;
 
     final projectId = RegistrationDeliverySingleton().projectId;
     final loggedInUserUuid = RegistrationDeliverySingleton().loggedInUserUuid;
@@ -142,12 +143,17 @@ class CustomBeneficiaryProgressBarState
             projectId: [projectId],
           );
           List<ProjectBeneficiaryModel> results =
-              await projectBeneficiaryRepository.search(
+              await projectBeneficiaryRepository.progressBarSearch(
                   projectBeneficiarySearchQuery, loggedInUserUuid);
+
+          // Info filtering beneficiaries who do not have tag or are null
+          //(closed and ones where duplicate tags were used to create will be filtered here)
+          List<ProjectBeneficiaryModel> filteredResults =
+              results.where((element) => element.tag != null).toList();
 
           if (mounted) {
             setState(() {
-              current = results.length;
+              current = filteredResults.length;
             });
           }
         },
@@ -159,7 +165,6 @@ class CustomBeneficiaryProgressBarState
 
   @override
   Widget build(BuildContext context) {
-    // Todo : verify this once as discussion going on
     final target = context.isDistributor ? 325.0 : 50.0;
 
     return DigitCard(

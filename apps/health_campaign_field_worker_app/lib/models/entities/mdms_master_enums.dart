@@ -45,4 +45,6 @@ enum MasterEnums {
   searchCLFFilters,
   @MappableValue("PrivacyPolicy")
   privacyPolicy,
+  @MappableValue("REFUGEE_CAMPS")
+  refugeeCamps,
 }

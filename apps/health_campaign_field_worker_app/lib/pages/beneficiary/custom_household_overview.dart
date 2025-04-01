@@ -29,6 +29,7 @@ import 'package:registration_delivery/models/entities/registration_delivery_enum
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
@@ -61,6 +62,10 @@ class _HouseholdOverviewPageState
   void initState() {
     callReloadEvent(offset: offset, limit: limit);
     super.initState();
+  }
+
+  getBednetCount(int members) {
+    return (members / 2).round().toString();
   }
 
   @override
@@ -247,14 +252,15 @@ class _HouseholdOverviewPageState
                                             children: [
                                               DigitTableCard(element: {
                                                 localizations.translate(i18
-                                                    .householdOverView
-                                                    .instituteNameLabel): state
-                                                        .householdMemberWrapper
-                                                        .household
-                                                        ?.address
-                                                        ?.buildingName ??
-                                                    localizations.translate(i18
-                                                        .common.coreCommonNA),
+                                                        .householdOverView
+                                                        .instituteNameLabel):
+                                                    localizations.translate(state
+                                                            .householdMemberWrapper
+                                                            .household
+                                                            ?.address
+                                                            ?.buildingName ??
+                                                        i18.common
+                                                            .coreCommonNA),
                                                 localizations.translate(
                                                   i18.deliverIntervention
                                                       .memberCountText,
@@ -263,13 +269,14 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(
                                                   i18.householdLocation
                                                       .administrationAreaFormLabel,
-                                                ): state
-                                                    .householdMemberWrapper
-                                                    .headOfHousehold
-                                                    ?.address
-                                                    ?.first
-                                                    .locality
-                                                    ?.code,
+                                                ): localizations.translate(state
+                                                        .householdMemberWrapper
+                                                        .headOfHousehold
+                                                        ?.address
+                                                        ?.first
+                                                        .locality
+                                                        ?.code ??
+                                                    i18.common.coreCommonNA),
                                               }),
                                             ],
                                           );
@@ -291,18 +298,32 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(
                                                   i18.householdLocation
                                                       .administrationAreaFormLabel,
-                                                ): state
-                                                    .householdMemberWrapper
-                                                    .headOfHousehold
-                                                    ?.address
-                                                    ?.first
-                                                    .locality
-                                                    ?.code,
+                                                ): localizations.translate(state
+                                                        .householdMemberWrapper
+                                                        .headOfHousehold
+                                                        ?.address
+                                                        ?.first
+                                                        .locality
+                                                        ?.code ??
+                                                    i18.common.coreCommonNA),
                                                 localizations.translate(
                                                   i18.deliverIntervention
                                                       .memberCountText,
                                                 ): state.householdMemberWrapper
                                                     .household?.memberCount,
+                                                localizations.translate(i18Local
+                                                        .beneficiaryDetails
+                                                        .numberOfNets):
+                                                    getBednetCount(state
+                                                            .householdMemberWrapper
+                                                            .household
+                                                            ?.memberCount ??
+                                                        0),
+                                                localizations.translate(i18Local
+                                                        .beneficiaryDetails
+                                                        .dustributionSiteName):
+                                                    localizations.translate(
+                                                        "${state.householdMemberWrapper.headOfHousehold?.address!.first.locality!.code}_DP"),
                                                 if (shouldShowStatus)
                                                   localizations.translate(i18
                                                           .beneficiaryDetails
@@ -372,7 +393,8 @@ class _HouseholdOverviewPageState
       textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
           ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue() ==
                   Status.administeredSuccess.toValue()
-              ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()}'
+              ? getTaskStatus(state.householdMemberWrapper.tasks ?? [])
+                  .toValue()
               : getTaskStatus(state.householdMemberWrapper.tasks ?? [])
                   .toValue()
           : Status.registered.toValue();

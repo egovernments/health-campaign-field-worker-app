@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:complaints/complaints.dart';
 
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_components/blocs/location/location.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
@@ -18,6 +20,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:complaints/utils/i18_key_constants.dart' as i18;
 import 'package:complaints/widgets/header/back_navigation_help_header.dart';
 import 'package:complaints/widgets/localized.dart';
+
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class CustomComplaintsDetailsPage extends LocalizedStatefulWidget {
@@ -42,6 +46,8 @@ class CustomComplaintsDetailsPageState
   static const _supervisorContactNumber = 'supervisorContactNumber';
   static const _complaintDescription = 'complaintDescription';
   static const _complaintDetailsForm = 'complaintDetailsForm';
+  static const _latKey = 'latKey';
+  static const _lngKey = 'lngKey';
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +60,12 @@ class CustomComplaintsDetailsPageState
     ];
     final textTheme = theme.digitTextTheme(context);
 
+    final locationBloc = context.read<LocationBloc>();
+    final locationInitialState = locationBloc.state;
+
+    final initialLat = locationInitialState.latitude;
+    final initialLng = locationInitialState.longitude;
+
     return Scaffold(
       body: ReactiveFormBuilder(
         form: () => bloc.state.map(
@@ -62,440 +74,503 @@ class CustomComplaintsDetailsPageState
               throw const InvalidComplaintsRegistrationStateException(),
           view: (value) => buildForm(value),
         ),
-        builder: (_, form, __) => BlocListener<BoundaryBloc, BoundaryState>(
-          listener: (context, state) {
-            context.navigateTo(const ComplaintsInboxWrapperRoute());
+        builder: (_, form, __) => BlocListener<LocationBloc, LocationState>(
+          listener: (context, locationState) {
+            final lat = locationState.latitude;
+            final lng = locationState.longitude;
+
+            if (lat != null) {
+              form.control(_latKey).value = lat;
+            }
+            if (lng != null) {
+              form.control(_lngKey).value = lng;
+            }
           },
-          child: BlocConsumer<ComplaintsRegistrationBloc,
-              ComplaintsRegistrationState>(
-            listener: (context, complaintState) {
-              complaintState.mapOrNull(
-                persisted: (value) {
-                  router.replace(ComplaintsAcknowledgementRoute());
-                },
-              );
+          listenWhen: (previous, current) {
+            final lat = form.control(_latKey).value;
+            final lng = form.control(_lngKey).value;
+
+            return lat != null || lng != null ? false : true;
+          },
+          child: BlocListener<BoundaryBloc, BoundaryState>(
+            listener: (context, state) {
+              context.navigateTo(const ComplaintsInboxWrapperRoute());
             },
-            builder: (context, state) {
-              final isRaisedForSelf = form.control(_complaintRaisedFor).value ==
-                  i18.complaints.raisedForMyself;
+            child: BlocConsumer<ComplaintsRegistrationBloc,
+                ComplaintsRegistrationState>(
+              listener: (context, complaintState) {
+                complaintState.mapOrNull(
+                  persisted: (value) {
+                    router.replace(ComplaintsAcknowledgementRoute());
+                  },
+                );
+              },
+              builder: (context, state) {
+                final isRaisedForSelf =
+                    form.control(_complaintRaisedFor).value ==
+                        i18.complaints.raisedForMyself;
 
-              return ScrollableContent(
-                enableFixedDigitButton: true,
-                header: const Column(
-                  children: [
-                    BackNavigationHelpHeaderWidget(),
-                  ],
-                ),
-                footer: DigitCard(
-                    cardType: CardType.primary,
-                    margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                return ScrollableContent(
+                  enableFixedDigitButton: true,
+                  header: const Column(
                     children: [
-                      DigitButton(
-                        label: form.control(_complaintDetailsForm).disabled
-                            ? localizations
-                                .translate(i18.complaints.backToInbox)
-                            : localizations
-                                .translate(i18.common.coreCommonSubmit),
-                        type: DigitButtonType.primary,
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () async {
-                          setState(() {
-                            form.markAllAsTouched();
-                          });
+                      BackNavigationHelpHeaderWidget(),
+                    ],
+                  ),
+                  footer: DigitCard(
+                      cardType: CardType.primary,
+                      margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                      children: [
+                        DigitButton(
+                          label: form.control(_complaintDetailsForm).disabled
+                              ? localizations
+                                  .translate(i18.complaints.backToInbox)
+                              : localizations
+                                  .translate(i18.common.coreCommonSubmit),
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
+                          mainAxisSize: MainAxisSize.max,
+                          onPressed: () async {
+                            setState(() {
+                              form.markAllAsTouched();
+                            });
 
-                          if (form.control(_complaintDetailsForm).disabled) {
-                            router.parent()?.maybePop();
-                          }
+                            if (form.control(_complaintDetailsForm).disabled) {
+                              router.parent()?.maybePop();
+                            }
 
-                          if (!form.valid) {
-                            return;
-                          }
+                            if (!form.valid) {
+                              return;
+                            }
 
-                          FocusManager.instance.primaryFocus?.unfocus();
+                            FocusManager.instance.primaryFocus?.unfocus();
 
-                          final dateOfComplaint =
-                              form.control(_dateOfComplaint).value as DateTime;
+                            final dateOfComplaint = form
+                                .control(_dateOfComplaint)
+                                .value as DateTime;
 
-                          final complaintRaisedFor =
-                              form.control(_complaintRaisedFor).value as String;
+                            final complaintRaisedFor = form
+                                .control(_complaintRaisedFor)
+                                .value as String;
 
-                          final administrativeArea =
-                              form.control(_administrativeArea).value as String;
+                            final administrativeArea = form
+                                .control(_administrativeArea)
+                                .value as String;
 
-                          final complainantName =
-                              form.control(_complainantName).value as String;
+                            final complainantName =
+                                form.control(_complainantName).value as String;
 
-                          final complainantContactNumber = form
-                              .control(_complainantContactNumber)
-                              .value as String;
+                            final complainantContactNumber = form
+                                .control(_complainantContactNumber)
+                                .value as String;
 
-                          final supervisorName =
-                              form.control(_supervisorName).value as String?;
+                            final supervisorName =
+                                form.control(_supervisorName).value as String?;
 
-                          final supervisorContactNumber = form
-                              .control(_supervisorContactNumber)
-                              .value as String?;
+                            final supervisorContactNumber = form
+                                .control(_supervisorContactNumber)
+                                .value as String?;
 
-                          final complaintDescription = form
-                              .control(_complaintDescription)
-                              .value as String;
-
-                          state.whenOrNull(
-                            create: (
-                              loading,
-                              complaintType,
-                              _,
-                              addressModel,
-                              complaintsDetailsModel,
-                            ) {
-                              bloc.add(
-                                ComplaintsRegistrationEvent
-                                    .saveComplaintDetails(
-                                  boundaryModel: ComplaintsSingleton().boundary,
-                                  complaintsDetailsModel:
-                                      ComplaintsDetailsModel(
-                                    administrativeArea: ComplaintsSingleton()
-                                        .boundary
-                                        .code
-                                        .toString(),
-                                    dateOfComplaint: dateOfComplaint,
-                                    complaintRaisedFor: complaintRaisedFor,
-                                    complainantName: complainantName,
-                                    complainantContactNumber:
-                                        complainantContactNumber,
-                                    supervisorName: supervisorName,
-                                    supervisorContactNumber:
-                                        supervisorContactNumber,
-                                    complaintDescription: complaintDescription,
-                                  ),
+                            if (supervisorContactNumber != null &&
+                                supervisorContactNumber.isNotEmpty &&
+                                supervisorContactNumber.length < 8) {
+                              await DigitToast.show(
+                                context,
+                                options: DigitToastOptions(
+                                  localizations.translate(i18_local.complaints
+                                      .supervisorContactNumberMinLength),
+                                  true,
+                                  theme,
                                 ),
                               );
-                            },
-                          );
+                              return;
+                            }
 
-                          final userId = ComplaintsSingleton().loggedInUserUuid;
+                            final complaintDescription = form
+                                .control(_complaintDescription)
+                                .value as String;
 
-                          showCustomPopup(
-                            context: context,
-                            builder: (popupContext) => Popup(
-                                title: localizations.translate(
-                                  i18.complaints.dialogTitle,
-                                ),
-                                type: PopUpType.simple,
-                                description: localizations.translate(
-                                  i18.complaints.dialogContent,
-                                ),
-                                actions: [
-                                  DigitButton(
-                                    label: localizations.translate(
-                                      i18.common.coreCommonSubmit,
+                            state.whenOrNull(
+                              create: (
+                                loading,
+                                complaintType,
+                                _,
+                                addressModel,
+                                complaintsDetailsModel,
+                              ) {
+                                bloc.add(
+                                  ComplaintsRegistrationEvent.saveAddress(
+                                    addressModel: PgrAddressModel(
+                                      geoLocation: GeoLocation(
+                                        latitude: form.control(_latKey).value ??
+                                            initialLat,
+                                        longitude:
+                                            form.control(_lngKey).value ??
+                                                initialLng,
+                                      ),
                                     ),
-                                    onPressed: () {
-                                      bloc.add(
-                                        ComplaintsRegistrationSubmitComplaintEvent(
-                                          userId: userId,
-                                        ),
-                                      );
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop();
-                                    },
-                                    type: DigitButtonType.primary,
-                                    size: DigitButtonSize.large,
                                   ),
-                                  DigitButton(
+                                );
+                                bloc.add(
+                                  ComplaintsRegistrationEvent
+                                      .saveComplaintDetails(
+                                    boundaryModel:
+                                        ComplaintsSingleton().boundary,
+                                    complaintsDetailsModel:
+                                        ComplaintsDetailsModel(
+                                      administrativeArea: ComplaintsSingleton()
+                                          .boundary
+                                          .code
+                                          .toString(),
+                                      dateOfComplaint: dateOfComplaint,
+                                      complaintRaisedFor: complaintRaisedFor,
+                                      complainantName: complainantName,
+                                      complainantContactNumber:
+                                          complainantContactNumber,
+                                      supervisorName: supervisorName,
+                                      supervisorContactNumber:
+                                          supervisorContactNumber,
+                                      complaintDescription:
+                                          complaintDescription,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+
+                            final userId =
+                                ComplaintsSingleton().loggedInUserUuid;
+
+                            showCustomPopup(
+                              context: context,
+                              builder: (popupContext) => Popup(
+                                  title: localizations.translate(
+                                    i18.complaints.dialogTitle,
+                                  ),
+                                  type: PopUpType.simple,
+                                  description: localizations.translate(
+                                    i18.complaints.dialogContent,
+                                  ),
+                                  actions: [
+                                    DigitButton(
                                       label: localizations.translate(
-                                        i18.common.coreCommonCancel,
+                                        i18.common.coreCommonSubmit,
                                       ),
                                       onPressed: () {
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop();
+                                        bloc.add(
+                                          ComplaintsRegistrationSubmitComplaintEvent(
+                                            userId: userId,
+                                          ),
+                                        );
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
                                       },
-                                      type: DigitButtonType.secondary,
-                                      size: DigitButtonSize.large),
-                                ]),
-                          );
-                        },
-                      ),
-                    ]),
-                children: [
-                  DigitCard(
-                      margin: const EdgeInsets.all(spacer2),
-                      cardType: CardType.primary,
-                      children: [
-                        Text(
-                          localizations.translate(
-                            i18.complaints.complaintsDetailsLabel,
-                          ),
-                          style: textTheme.headingXl,
+                                      type: DigitButtonType.primary,
+                                      size: DigitButtonSize.large,
+                                    ),
+                                    DigitButton(
+                                        label: localizations.translate(
+                                          i18.common.coreCommonCancel,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+                                        },
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large),
+                                  ]),
+                            );
+                          },
                         ),
-                        LabeledField(
-                          label: localizations.translate(
-                            i18.complaints.dateOfComplaint,
-                          ),
-                          child: DigitDateFormInput(
-                            isRequired: true,
-                            readOnly: true,
-                            initialValue: DateFormat('yyyy-MM-dd')
-                                .format(form.control(_dateOfComplaint).value),
-                            initialDate: DateTime.now(),
-                            confirmText: localizations.translate(
-                              i18.common.coreCommonOk,
+                      ]),
+                  children: [
+                    DigitCard(
+                        margin: const EdgeInsets.all(spacer2),
+                        cardType: CardType.primary,
+                        children: [
+                          Text(
+                            localizations.translate(
+                              i18.complaints.complaintsDetailsLabel,
                             ),
-                            cancelText: localizations.translate(
-                              i18.common.coreCommonCancel,
+                            style: textTheme.headingXl,
+                          ),
+                          LabeledField(
+                            label: localizations.translate(
+                              i18.complaints.dateOfComplaint,
+                            ),
+                            child: DigitDateFormInput(
+                              isRequired: true,
+                              readOnly: true,
+                              initialValue: DateFormat('yyyy-MM-dd')
+                                  .format(form.control(_dateOfComplaint).value),
+                              initialDate: DateTime.now(),
+                              confirmText: localizations.translate(
+                                i18.common.coreCommonOk,
+                              ),
+                              cancelText: localizations.translate(
+                                i18.common.coreCommonCancel,
+                              ),
                             ),
                           ),
-                        ),
-                        LabeledField(
-                          label: localizations.translate(
-                            i18.householdLocation.administrationAreaFormLabel,
+                          LabeledField(
+                            label: localizations.translate(
+                              i18.householdLocation.administrationAreaFormLabel,
+                            ),
+                            child: DigitTextFormInput(
+                              isRequired: true,
+                              readOnly: true,
+                              initialValue:
+                                  form.control(_administrativeArea).value,
+                            ),
                           ),
-                          child: DigitTextFormInput(
+                          LabeledField(
+                            label: localizations.translate(
+                              i18.complaints.complainantTypeQuestion,
+                            ),
                             isRequired: true,
-                            readOnly: true,
-                            initialValue:
-                                form.control(_administrativeArea).value,
-                          ),
-                        ),
-                        LabeledField(
-                          label: localizations.translate(
-                            i18.complaints.complainantTypeQuestion,
-                          ),
-                          isRequired: true,
-                          child: Column(
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional.topStart,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: spacer2),
-                                  child: RadioList(
-                                    containerPadding:
-                                        const EdgeInsets.only(bottom: spacer3),
-                                    radioDigitButtons: complainantRaisedFor
-                                        .map((item) => RadioButtonModel(
-                                              code: item,
-                                              name: localizations
-                                                  .translate(item.trim()),
-                                            ))
-                                        .toList(),
-                                    groupValue: form
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: AlignmentDirectional.topStart,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.only(top: spacer2),
+                                    child: RadioList(
+                                      containerPadding: const EdgeInsets.only(
+                                          bottom: spacer3),
+                                      radioDigitButtons: complainantRaisedFor
+                                          .map((item) => RadioButtonModel(
+                                                code: item,
+                                                name: localizations
+                                                    .translate(item.trim()),
+                                              ))
+                                          .toList(),
+                                      groupValue: form
+                                              .control(_complaintRaisedFor)
+                                              .value ??
+                                          "",
+                                      onChanged: (changedValue) {
+                                        if (form
                                             .control(_complaintRaisedFor)
-                                            .value ??
-                                        "",
-                                    onChanged: (changedValue) {
-                                      if (form
-                                          .control(_complaintRaisedFor)
-                                          .disabled) return;
+                                            .disabled) return;
 
-                                      if (changedValue.code ==
-                                          i18.complaints.raisedForAnotherUser) {
-                                        form.control(_complainantName).value =
-                                            "";
-                                        form
-                                            .control(_complainantContactNumber)
-                                            .value = "";
-                                      } else {
-                                        form.control(_complainantName).value =
-                                            ComplaintsSingleton().userName;
-                                        form
-                                                .control(_complainantContactNumber)
-                                                .value =
-                                            ComplaintsSingleton()
-                                                .userMobileNumber;
-                                      }
+                                        if (changedValue.code ==
+                                            i18.complaints
+                                                .raisedForAnotherUser) {
+                                          form.control(_complainantName).value =
+                                              "";
+                                          form
+                                              .control(
+                                                  _complainantContactNumber)
+                                              .value = "";
+                                        } else {
+                                          form.control(_complainantName).value =
+                                              ComplaintsSingleton().userName;
+                                          form
+                                                  .control(
+                                                      _complainantContactNumber)
+                                                  .value =
+                                              ComplaintsSingleton()
+                                                  .userMobileNumber;
+                                        }
 
-                                      setState(() {
-                                        form
-                                            .control(_complaintRaisedFor)
-                                            .value = changedValue.code;
-                                      });
-                                    },
+                                        setState(() {
+                                          form
+                                              .control(_complaintRaisedFor)
+                                              .value = changedValue.code;
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                              if (form.touched &&
-                                  form
-                                      .control(_complaintRaisedFor)
-                                      .invalid) ...[
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: spacer1,
-                                      bottom: spacer1,
-                                    ),
-                                    child: Text(
-                                      localizations.translate(i18.complaints
-                                          .validationRadioRequiredError),
-                                      style: TextStyle(
-                                        color: theme.colorTheme.alert.error,
+                                if (form.touched &&
+                                    form
+                                        .control(_complaintRaisedFor)
+                                        .invalid) ...[
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: spacer1,
+                                        bottom: spacer1,
+                                      ),
+                                      child: Text(
+                                        localizations.translate(i18.complaints
+                                            .validationRadioRequiredError),
+                                        style: TextStyle(
+                                          color: theme.colorTheme.alert.error,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ],
-                            ],
+                            ),
                           ),
-                        ),
-                        ReactiveWrapperField<String>(
-                            formControlName: _complainantName,
-                            validationMessages: {
-                              'required': (object) => localizations.translate(
-                                  i18.complaints.validationRequiredError),
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', '64'),
-                            },
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.complaints.complainantName,
-                                ),
-                                isRequired: true,
-                                child: DigitTextFormInput(
-                                  readOnly: (isRaisedForSelf)
-                                      ? (field.value == null ||
-                                              field.value.isEmpty)
-                                          ? false
-                                          : true
-                                      : false,
-                                  initialValue: field.value,
-                                  isRequired: true,
-                                  errorMessage: field.errorText,
-                                  onChange: (value) => form
-                                      .control(_complainantName)
-                                      .value = value,
-                                ),
-                              );
-                            }),
-                        ReactiveWrapperField<String>(
-                            formControlName: _complainantContactNumber,
-                            validationMessages: {
-                              'mobileNumber': (object) =>
-                                  localizations.translate(i18.individualDetails
-                                      .mobileNumberInvalidFormatValidationMessage),
-                              'required': (object) => localizations.translate(
-                                  i18.complaints.validationRequiredError),
-                              'minLength': (object) => localizations.translate(
-                                  i18.complaints.validationMinLengthError),
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', '10'),
-                            },
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.complaints.complainantContactNumber,
-                                ),
-                                isRequired: true,
-                                child: DigitTextFormInput(
-                                  readOnly: (isRaisedForSelf)
-                                      ? (field.value == null ||
-                                              field.value.isEmpty)
-                                          ? false
-                                          : true
-                                      : false,
-                                  initialValue: field.value,
-                                  isRequired: true,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  errorMessage: field.errorText,
-                                  onChange: (value) => form
-                                      .control(_complainantContactNumber)
-                                      .value = value,
-                                ),
-                              );
-                            }),
-                        ReactiveWrapperField<String>(
-                            formControlName: _supervisorName,
-                            validationMessages: {
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', '64'),
-                            },
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.complaints.supervisorName,
-                                ),
-                                child: DigitTextFormInput(
-                                  errorMessage: field.errorText,
-                                  initialValue: field.value,
-                                  onChange: (value) => form
-                                      .control(_supervisorName)
-                                      .value = value,
-                                ),
-                              );
-                            }),
-                        ReactiveWrapperField<String>(
-                            formControlName: _supervisorContactNumber,
-                            showErrors: (control) => control.touched,
-                            validationMessages: {
-                              'mobileNumber': (object) =>
-                                  localizations.translate(
-                                    i18.individualDetails
-                                        .mobileNumberInvalidFormatValidationMessage,
+                          ReactiveWrapperField<String>(
+                              formControlName: _complainantName,
+                              validationMessages: {
+                                'required': (object) => localizations.translate(
+                                    i18.complaints.validationRequiredError),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', '49'),
+                              },
+                              builder: (field) {
+                                return LabeledField(
+                                  label: localizations.translate(
+                                    i18.complaints.complainantName,
                                   ),
-                              'minLength': (object) => localizations.translate(
-                                  i18.complaints.validationMinLengthError),
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', '10'),
-                            },
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.complaints.supervisorContactNumber,
-                                ),
-                                child: DigitTextFormInput(
-                                  keyboardType: TextInputType.number,
-                                  initialValue: field.value,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  errorMessage: field.errorText,
-                                  onChange: (value) => form
-                                      .control(_supervisorContactNumber)
-                                      .value = value,
-                                ),
-                              );
-                            }),
-                        ReactiveWrapperField<String>(
-                            formControlName: _complaintDescription,
-                            validationMessages: {
-                              'required': (object) => localizations.translate(
-                                    i18.complaints.validationRequiredError,
-                                  ),
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', '1000'),
-                            },
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.complaints.complaintDescription,
-                                ),
-                                isRequired: true,
-                                child: DigitTextAreaFormInput(
-                                  initialValue: field.value,
-                                  maxLine: 3,
-                                  errorMessage: field.errorText,
                                   isRequired: true,
-                                  onChange: (value) => form
-                                      .control(_complaintDescription)
-                                      .value = value,
-                                ),
-                              );
-                            }),
-                      ]),
-                ],
-              );
-            },
+                                  child: DigitTextFormInput(
+                                    readOnly: (isRaisedForSelf)
+                                        ? (field.value == null ||
+                                                field.value.isEmpty)
+                                            ? false
+                                            : true
+                                        : false,
+                                    initialValue: field.value,
+                                    isRequired: true,
+                                    errorMessage: field.errorText,
+                                    onChange: (value) => form
+                                        .control(_complainantName)
+                                        .value = value,
+                                  ),
+                                );
+                              }),
+                          ReactiveWrapperField<String>(
+                              formControlName: _complainantContactNumber,
+                              validationMessages: {
+                                'mobileNumber': (object) =>
+                                    localizations.translate(i18
+                                        .individualDetails
+                                        .mobileNumberInvalidFormatValidationMessage),
+                                'required': (object) => localizations.translate(
+                                    i18.complaints.validationRequiredError),
+                                'minLength': (object) =>
+                                    localizations.translate(i18
+                                        .complaints.validationMinLengthError),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', '8'),
+                              },
+                              builder: (field) {
+                                return LabeledField(
+                                  label: localizations.translate(
+                                    i18.complaints.complainantContactNumber,
+                                  ),
+                                  isRequired: true,
+                                  child: DigitTextFormInput(
+                                    readOnly: (isRaisedForSelf)
+                                        ? (field.value == null ||
+                                                field.value.isEmpty)
+                                            ? false
+                                            : true
+                                        : false,
+                                    initialValue: field.value,
+                                    isRequired: true,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                    errorMessage: field.errorText,
+                                    onChange: (value) => form
+                                        .control(_complainantContactNumber)
+                                        .value = value,
+                                  ),
+                                );
+                              }),
+                          ReactiveWrapperField<String>(
+                              formControlName: _supervisorName,
+                              validationMessages: {
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', '49'),
+                              },
+                              builder: (field) {
+                                return LabeledField(
+                                  label: localizations.translate(
+                                    i18.complaints.supervisorName,
+                                  ),
+                                  child: DigitTextFormInput(
+                                      errorMessage: field.errorText,
+                                      initialValue: field.value,
+                                      onChange: (value) {
+                                        form.control(_supervisorName).value =
+                                            value;
+                                        setState(() {});
+                                      }),
+                                );
+                              }),
+                          ReactiveWrapperField<String>(
+                              formControlName: _supervisorContactNumber,
+                              showErrors: (control) => control.touched,
+                              validationMessages: {
+                                'mobileNumber': (object) =>
+                                    localizations.translate(
+                                      i18.individualDetails
+                                          .mobileNumberInvalidFormatValidationMessage,
+                                    ),
+                                'minLength': (object) =>
+                                    localizations.translate(i18
+                                        .complaints.validationMinLengthError),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', '8'),
+                              },
+                              builder: (field) {
+                                return LabeledField(
+                                  label: localizations.translate(
+                                    i18.complaints.supervisorContactNumber,
+                                  ),
+                                  child: DigitTextFormInput(
+                                    keyboardType: TextInputType.number,
+                                    initialValue: field.value,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                    errorMessage: field.errorText,
+                                    onChange: (value) => form
+                                        .control(_supervisorContactNumber)
+                                        .value = value,
+                                  ),
+                                );
+                              }),
+                          ReactiveWrapperField<String>(
+                              formControlName: _complaintDescription,
+                              validationMessages: {
+                                'required': (object) => localizations.translate(
+                                      i18.complaints.validationRequiredError,
+                                    ),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', '1000'),
+                              },
+                              builder: (field) {
+                                return LabeledField(
+                                  label: localizations.translate(
+                                    i18.complaints.complaintDescription,
+                                  ),
+                                  isRequired: true,
+                                  child: DigitTextAreaFormInput(
+                                    initialValue: field.value,
+                                    maxLine: 3,
+                                    errorMessage: field.errorText,
+                                    isRequired: true,
+                                    onChange: (value) => form
+                                        .control(_complaintDescription)
+                                        .value = value,
+                                  ),
+                                );
+                              }),
+                        ]),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -517,7 +592,9 @@ class CustomComplaintsDetailsPageState
       ),
       _administrativeArea: FormControl<String>(
         value: localizations.translate((complaintDetails?.administrativeArea ??
-                ComplaintsSingleton().boundary.name)
+                ComplaintsSingleton().boundary?.code.toString() ??
+                ComplaintsSingleton().boundary?.name.toString() ??
+                "")
             .toString()),
         disabled: shouldDisableForm,
         validators: [Validators.required],
@@ -530,7 +607,10 @@ class CustomComplaintsDetailsPageState
       _complainantName: FormControl<String>(
         value: complaintDetails?.complainantName,
         disabled: shouldDisableForm,
-        validators: [Validators.required, Validators.maxLength(64)],
+        validators: [
+          Validators.required,
+          Validators.maxLength(49)
+        ], // Max length changed to 49 as per backend validation
       ),
       _complainantContactNumber: FormControl<String>(
         value: complaintDetails?.complainantContactNumber,
@@ -539,13 +619,16 @@ class CustomComplaintsDetailsPageState
           Validators.required,
           Validators.delegate(
               (validator) => CustomValidator.validMobileNumber(validator)),
+          Validators.minLength(8),
           Validators.maxLength(8)
         ],
       ),
       _supervisorName: FormControl<String>(
         value: complaintDetails?.supervisorName,
         disabled: shouldDisableForm,
-        validators: [Validators.maxLength(64)],
+        validators: [
+          Validators.maxLength(49)
+        ], // Max length changed to 49 as per backend validation
       ),
       _supervisorContactNumber: FormControl<String>(
         value: complaintDetails?.supervisorContactNumber,
@@ -553,7 +636,7 @@ class CustomComplaintsDetailsPageState
         validators: [
           Validators.delegate(
               (validator) => CustomValidator.validMobileNumber(validator)),
-          Validators.minLength(8),
+          Validators.maxLength(8),
         ],
       ),
       _complaintDescription: FormControl<String>(
@@ -564,6 +647,12 @@ class CustomComplaintsDetailsPageState
       _complaintDetailsForm: FormControl<String>(
         disabled: shouldDisableForm,
       ),
+      _latKey: FormControl<double>(
+        validators: [],
+      ),
+      _lngKey: FormControl<double>(
+        validators: [],
+      )
     });
   }
 }

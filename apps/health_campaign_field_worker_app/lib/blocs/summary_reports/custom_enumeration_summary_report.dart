@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/utils/typedefs.dart'
     hide ProductVariantDataRepository;
@@ -8,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import '../../data/repositories/local/custom_task.dart';
+import '../../utils/app_enums.dart';
 import '../../utils/constants.dart';
 import '../../utils/environment_config.dart';
 
@@ -29,6 +31,28 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
   }) : super(const CustomEnumerationSummaryReportEmptyState()) {
     on(_handleLoadDataEvent);
     on(_handleLoadingEvent);
+  }
+
+  Map<String, Map<String, int>> sortMapByDateKey(
+      Map<String, Map<String, int>> map) {
+    List<String> sortedKeys = map.keys.sorted((a, b) => _compareAB(a, b));
+    Map<String, Map<String, int>> newMap = {};
+
+    for (var key in sortedKeys) {
+      if (map[key] != null) newMap[key] = map[key]!;
+    }
+    return newMap;
+  }
+
+  int _compareAB(String a, String b) {
+    try {
+      int aTimestamp = DigitDateUtils.dateToTimeStamp(a);
+      int bTimestamp = DigitDateUtils.dateToTimeStamp(b);
+
+      if (aTimestamp > bTimestamp) return 1;
+      if (aTimestamp < bTimestamp) return -1;
+    } catch (e) {}
+    return 0;
   }
 
   Future<void> _handleLoadDataEvent(
@@ -67,27 +91,41 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
           .where((element) => element.isNotEmpty)
           .toSet();
 
-      // closed household beneficiairy
+      // closedhousehold projectbeneficiairy beneficiaryClientRefIds
       Set<String?> filteredBeneficiariesClientRefId = {};
       getClosedHouseholdProjectBeneficiary(projectBeneficiaryClientReferenceIds,
           projectBeneficiaryList, filteredBeneficiariesClientRefId);
 
-      // filteredHouseholds list
+      // filteredHouseholds list (remove closed ones)
       List<HouseholdModel> filteredHouseholdsList = [];
 
-      // filter closed households from householdList
+      // filteredProjectBeneficiaryList list (remove closed ones)
+      List<ProjectBeneficiaryModel> filteredProjectBeneficiaryList = [];
 
+      // filter closed households from householdList
       filteredHouseholds(householdList, filteredBeneficiariesClientRefId,
           filteredHouseholdsList);
+
+      // filter closedhousehold projectBeneficairy from list
+      filterProjectBeneficiaryList(projectBeneficiaryList,
+          filteredBeneficiariesClientRefId, filteredProjectBeneficiaryList);
 
       Map<String, List<HouseholdModel>> dateVsHousehold = {};
       Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary = {};
       Map<String, List<TaskModel>> dateVsClosedHouseholdTask = {};
+      Map<String, List<TaskModel>> dateVsClosedHouseholdRefusedTask = {};
+      Map<String, List<TaskModel>> dateVsClosedHouseholdAbsentTask = {};
+
       Set<String> uniqueDates = {};
 
       Map<String, int> dateVsHouseholdCount = {};
+      // info this captures total project beneficiary created / registered
       Map<String, int> dateVsProjectBeneficiaryCount = {};
+      // info this captures total members in the households registered
+      Map<String, int> dateVsTotalMemberCount = {};
       Map<String, int> dateVsClosedHouseholdTaskCount = {};
+      Map<String, int> dateVsClosedHouseholdAbsentTaskCount = {};
+      Map<String, int> dateVsClosedHouseholdRefusedTaskCount = {};
 
       for (var element in filteredHouseholdsList) {
         var dateKey = DigitDateUtils.getDateFromTimestamp(
@@ -96,7 +134,7 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
 
         dateVsHousehold.putIfAbsent(dateKey, () => []).add(element);
       }
-      for (var element in projectBeneficiaryList) {
+      for (var element in filteredProjectBeneficiaryList) {
         var dateKey = DigitDateUtils.getDateFromTimestamp(
           element.clientAuditDetails!.createdTime,
         );
@@ -108,6 +146,17 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
           element.clientAuditDetails!.createdTime,
         );
 
+        String reason = getClosedReason(element);
+        if (reason == ClosedHouseholdReasonsEnum.closed.name.toUpperCase()) {
+          dateVsClosedHouseholdAbsentTask
+              .putIfAbsent(dateKey, () => [])
+              .add(element);
+        } else if (reason ==
+            ClosedHouseholdReasonsEnum.refusal.name.toUpperCase()) {
+          dateVsClosedHouseholdRefusedTask
+              .putIfAbsent(dateKey, () => [])
+              .add(element);
+        }
         dateVsClosedHouseholdTask.putIfAbsent(dateKey, () => []).add(element);
       }
 
@@ -123,16 +172,34 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       populateDateVsCountMap(dateVsHousehold, dateVsHouseholdCount);
       populateDateVsCountMap(
           dateVsProjectBeneficiary, dateVsProjectBeneficiaryCount);
+
+      // total closed household count day wise
       populateDateVsCountMap(
           dateVsClosedHouseholdTask, dateVsClosedHouseholdTaskCount);
+
+      // closed household absent count day wise
+
+      populateDateVsCountMap(dateVsClosedHouseholdAbsentTask,
+          dateVsClosedHouseholdAbsentTaskCount);
+
+      // closed household refused count day wise
+
+      populateDateVsCountMap(dateVsClosedHouseholdRefusedTask,
+          dateVsClosedHouseholdRefusedTaskCount);
+
+      // populate the day vs total members impacted (sum of members of each household registered)
+      populateDateVsBeneficiaryImpactedMap(
+          dateVsHousehold, dateVsTotalMemberCount);
 
       Map<String, Map<String, int>> dateVsEntityVsCountMap = {};
 
       popoulateDateVsEntityCountMap(
         dateVsEntityVsCountMap,
         dateVsHouseholdCount,
-        dateVsProjectBeneficiaryCount,
+        dateVsTotalMemberCount,
         dateVsClosedHouseholdTaskCount,
+        dateVsClosedHouseholdAbsentTaskCount,
+        dateVsClosedHouseholdRefusedTaskCount,
         uniqueDates,
       );
 
@@ -149,6 +216,8 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     Map<String, int> dateVsHouseholdCount,
     Map<String, int> dateVsProjectBeneficiaryCount,
     Map<String, int> dateVsClosedHouseholdTaskCount,
+    Map<String, int> dateVsClosedHouseholdAbsentTaskCount,
+    Map<String, int> dateVsClosedHouseholdRefusedTaskCount,
     Set<String> uniqueDates,
   ) {
     for (var date in uniqueDates) {
@@ -168,8 +237,19 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
         var count = dateVsClosedHouseholdTaskCount[date];
         elementVsCount[Constants.closedHousehold] = count ?? 0;
       }
+      if (dateVsClosedHouseholdAbsentTaskCount.containsKey(date) &&
+          dateVsClosedHouseholdAbsentTaskCount[date] != null) {
+        var count = dateVsClosedHouseholdAbsentTaskCount[date];
+        elementVsCount[Constants.closedHouseholdAbsent] = count ?? 0;
+      }
+      if (dateVsClosedHouseholdRefusedTaskCount.containsKey(date) &&
+          dateVsClosedHouseholdRefusedTaskCount[date] != null) {
+        var count = dateVsClosedHouseholdRefusedTaskCount[date];
+        elementVsCount[Constants.closedHouseholdRefused] = count ?? 0;
+      }
       dateVsEntityVsCountMap[date] = elementVsCount;
     }
+    dateVsEntityVsCountMap = sortMapByDateKey(dateVsEntityVsCountMap);
   }
 
   void populateDateVsCountMap(
@@ -216,6 +296,61 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       if (!filteredBeneficiariesClientRefId
           .contains(household.clientReferenceId)) {
         filteredHouseholdsList.add(household);
+      }
+    }
+  }
+
+  // todo optimize this
+  void filterProjectBeneficiaryList(
+      List<ProjectBeneficiaryModel> projectBeneficiaryList,
+      Set<String?> filteredBeneficiariesClientRefId,
+      List<ProjectBeneficiaryModel> filteredProjectBeneficiaryList) {
+    for (var projectBeneficiary in projectBeneficiaryList) {
+      if (!filteredBeneficiariesClientRefId
+          .contains(projectBeneficiary.beneficiaryClientReferenceId)) {
+        filteredProjectBeneficiaryList.add(projectBeneficiary);
+      }
+    }
+  }
+
+  void populateDateVsBeneficiaryImpactedMap(
+      Map<String, List<HouseholdModel>> dateVsHousehold,
+      Map<String, int> dateVsBeneficiaryImpactedCount) {
+    dateVsHousehold.forEach((key, value) {
+      int memberCount = 0;
+      memberCount = getMembersCount(value);
+
+      dateVsBeneficiaryImpactedCount[key] = memberCount;
+    });
+  }
+
+  int getMembersCount(List<HouseholdModel> households) {
+    int memberCount = 0;
+
+    for (var household in households) {
+      memberCount = memberCount + (household.memberCount ?? 0);
+    }
+
+    return memberCount;
+  }
+
+  String getClosedReason(TaskModel task) {
+    var reason = "";
+    var reasonKey = "Reason";
+
+    if (task.additionalFields == null ||
+        (task.additionalFields?.fields ?? []).isEmpty) {
+      return reason;
+    } else {
+      var reasonField = task.additionalFields?.fields
+          .where((element) => element.key == reasonKey)
+          .firstOrNull;
+
+      if (reasonField == null) {
+        return reason;
+      } else {
+        reason = reasonField.value;
+        return reason;
       }
     }
   }

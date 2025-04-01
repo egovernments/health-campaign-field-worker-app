@@ -2,14 +2,734 @@
   "project_info": {
     "project_number": "397617237644",
     "project_id": "digit-health-75ed0",
-    "storage_bucket": "digit-health-75ed0.appspot.com"
+    "storage_bucket": "digit-health-75ed0.firebasestorage.app"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:ef1103344485f51af6b5a9",
+        "android_client_info": {
+          "package_name": "com.digit.hcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:68fc441605038da0f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.bi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:335a4cda3f50b48ef6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.health_campaign_field_worker_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:2e2a22d803df790ff6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.kebbi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:8c394a00adf4d7b9f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.lb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:c07e9af3e599533ff6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.ng"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:1da0c71bc4f2317af6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.qa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:2efde986bec30f99f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.qa.bi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:5b57c06ff4fb2290f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.qa.lb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:3faa1b851b138a75f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.qa.ng"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:7b211b726b058468f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.qa.smc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:aacf71214137e84df6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.qa.sn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:397617237644:android:65f82dc21b1ad4d0f6b5a9",
         "android_client_info": {
           "package_name": "org.egov.salama"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:d6ec5fc060703191f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.salama.bednet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:816d126813b37b48f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.salama.smc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:218fd9fdab1228faf6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.sn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:24a55cfc41157a79f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.training"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:73b6339840d754d0f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.training.lb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:0eed182f5d966127f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.training.ng"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:6aedcd1aef3d8565f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.training.smc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:ac527d75cfe61fbcf6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.training.sn"
         }
       },
       "oauth_client": [

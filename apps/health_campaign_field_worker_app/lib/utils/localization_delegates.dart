@@ -19,6 +19,8 @@ import 'package:survey_form/blocs/app_localization.dart'
     as survey_form_localization;
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../localization_delegates/cupertino_localization_delegate_ki.dart';
+import '../localization_delegates/material_localization_delegate_ki.dart';
 
 getAppLocalizationDelegates({
   required LocalSqlDataStore sql,
@@ -33,6 +35,8 @@ getAppLocalizationDelegates({
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
+    MaterialLocalizationDelegateKi(),
+    CupertinoLocalizationDelegateKi(),
     scanner_localization.ScannerLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,

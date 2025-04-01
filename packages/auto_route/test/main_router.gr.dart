@@ -15,6 +15,34 @@ abstract class _$MainRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    DeclarativeRouterHostRoute.name: (routeData) {
+      final args = routeData.argsAs<DeclarativeRouterHostRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DeclarativeRouterHostScreen(
+          key: args.key,
+          pageNotifier: args.pageNotifier,
+        ),
+      );
+    },
+    FirstRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const FirstPage(),
+      );
+    },
+    FourthRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const FourthPage(),
+      );
+    },
+    NotFoundRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NotFoundPage(),
+      );
+    },
     SecondHostRoute.name: (routeData) {
       final args = routeData.argsAs<SecondHostRouteArgs>(
           orElse: () => const SecondHostRouteArgs());
@@ -45,52 +73,16 @@ abstract class _$MainRouter extends RootStackRouter {
         child: const SecondNested3Page(),
       );
     },
-    NotFoundRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const NotFoundPage(),
-      );
-    },
-    FirstRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const FirstPage(),
-      );
-    },
     SecondRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const SecondPage(),
       );
     },
-    ThirdRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ThirdPage(),
-      );
-    },
-    FourthRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const FourthPage(),
-      );
-    },
     Tab1Route.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const Tab1Page(),
-      );
-    },
-    Tab2Route.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const Tab2Page(),
-      );
-    },
-    Tab3Route.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const Tab3Page(),
       );
     },
     Tab2Nested1Route.name: (routeData) {
@@ -105,6 +97,12 @@ abstract class _$MainRouter extends RootStackRouter {
         child: const Tab2Nested2Page(),
       );
     },
+    Tab2Route.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const Tab2Page(),
+      );
+    },
     Tab3Nested1Route.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -115,6 +113,12 @@ abstract class _$MainRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const Tab3Nested2Page(),
+      );
+    },
+    Tab3Route.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const Tab3Page(),
       );
     },
     TabsHostRoute.name: (routeData) {
@@ -133,17 +137,94 @@ abstract class _$MainRouter extends RootStackRouter {
         ),
       );
     },
-    DeclarativeRouterHostRoute.name: (routeData) {
-      final args = routeData.argsAs<DeclarativeRouterHostRouteArgs>();
+    ThirdRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: DeclarativeRouterHostScreen(
-          key: args.key,
-          pageNotifier: args.pageNotifier,
-        ),
+        child: const ThirdPage(),
       );
     },
   };
+}
+
+/// generated route for
+/// [DeclarativeRouterHostScreen]
+class DeclarativeRouterHostRoute
+    extends PageRouteInfo<DeclarativeRouterHostRouteArgs> {
+  DeclarativeRouterHostRoute({
+    Key? key,
+    required ValueNotifier<int> pageNotifier,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DeclarativeRouterHostRoute.name,
+          args: DeclarativeRouterHostRouteArgs(
+            key: key,
+            pageNotifier: pageNotifier,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DeclarativeRouterHostRoute';
+
+  static const PageInfo<DeclarativeRouterHostRouteArgs> page =
+      PageInfo<DeclarativeRouterHostRouteArgs>(name);
+}
+
+class DeclarativeRouterHostRouteArgs {
+  const DeclarativeRouterHostRouteArgs({
+    this.key,
+    required this.pageNotifier,
+  });
+
+  final Key? key;
+
+  final ValueNotifier<int> pageNotifier;
+
+  @override
+  String toString() {
+    return 'DeclarativeRouterHostRouteArgs{key: $key, pageNotifier: $pageNotifier}';
+  }
+}
+
+/// generated route for
+/// [FirstPage]
+class FirstRoute extends PageRouteInfo<void> {
+  const FirstRoute({List<PageRouteInfo>? children})
+      : super(
+          FirstRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'FirstRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [FourthPage]
+class FourthRoute extends PageRouteInfo<void> {
+  const FourthRoute({List<PageRouteInfo>? children})
+      : super(
+          FourthRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'FourthRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [NotFoundPage]
+class NotFoundRoute extends PageRouteInfo<void> {
+  const NotFoundRoute({List<PageRouteInfo>? children})
+      : super(
+          NotFoundRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NotFoundRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -232,34 +313,6 @@ class SecondNested3Route extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [NotFoundPage]
-class NotFoundRoute extends PageRouteInfo<void> {
-  const NotFoundRoute({List<PageRouteInfo>? children})
-      : super(
-          NotFoundRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'NotFoundRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [FirstPage]
-class FirstRoute extends PageRouteInfo<void> {
-  const FirstRoute({List<PageRouteInfo>? children})
-      : super(
-          FirstRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'FirstRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [SecondPage]
 class SecondRoute extends PageRouteInfo<void> {
   const SecondRoute({List<PageRouteInfo>? children})
@@ -274,34 +327,6 @@ class SecondRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ThirdPage]
-class ThirdRoute extends PageRouteInfo<void> {
-  const ThirdRoute({List<PageRouteInfo>? children})
-      : super(
-          ThirdRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ThirdRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [FourthPage]
-class FourthRoute extends PageRouteInfo<void> {
-  const FourthRoute({List<PageRouteInfo>? children})
-      : super(
-          FourthRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'FourthRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [Tab1Page]
 class Tab1Route extends PageRouteInfo<void> {
   const Tab1Route({List<PageRouteInfo>? children})
@@ -311,34 +336,6 @@ class Tab1Route extends PageRouteInfo<void> {
         );
 
   static const String name = 'Tab1Route';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [Tab2Page]
-class Tab2Route extends PageRouteInfo<void> {
-  const Tab2Route({List<PageRouteInfo>? children})
-      : super(
-          Tab2Route.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'Tab2Route';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [Tab3Page]
-class Tab3Route extends PageRouteInfo<void> {
-  const Tab3Route({List<PageRouteInfo>? children})
-      : super(
-          Tab3Route.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'Tab3Route';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -372,6 +369,20 @@ class Tab2Nested2Route extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [Tab2Page]
+class Tab2Route extends PageRouteInfo<void> {
+  const Tab2Route({List<PageRouteInfo>? children})
+      : super(
+          Tab2Route.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'Tab2Route';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [Tab3Nested1Page]
 class Tab3Nested1Route extends PageRouteInfo<void> {
   const Tab3Nested1Route({List<PageRouteInfo>? children})
@@ -395,6 +406,20 @@ class Tab3Nested2Route extends PageRouteInfo<void> {
         );
 
   static const String name = 'Tab3Nested2Route';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [Tab3Page]
+class Tab3Route extends PageRouteInfo<void> {
+  const Tab3Route({List<PageRouteInfo>? children})
+      : super(
+          Tab3Route.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'Tab3Route';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -439,40 +464,15 @@ class TabsHostRouteArgs {
 }
 
 /// generated route for
-/// [DeclarativeRouterHostScreen]
-class DeclarativeRouterHostRoute
-    extends PageRouteInfo<DeclarativeRouterHostRouteArgs> {
-  DeclarativeRouterHostRoute({
-    Key? key,
-    required ValueNotifier<int> pageNotifier,
-    List<PageRouteInfo>? children,
-  }) : super(
-          DeclarativeRouterHostRoute.name,
-          args: DeclarativeRouterHostRouteArgs(
-            key: key,
-            pageNotifier: pageNotifier,
-          ),
+/// [ThirdPage]
+class ThirdRoute extends PageRouteInfo<void> {
+  const ThirdRoute({List<PageRouteInfo>? children})
+      : super(
+          ThirdRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'DeclarativeRouterHostRoute';
+  static const String name = 'ThirdRoute';
 
-  static const PageInfo<DeclarativeRouterHostRouteArgs> page =
-      PageInfo<DeclarativeRouterHostRouteArgs>(name);
-}
-
-class DeclarativeRouterHostRouteArgs {
-  const DeclarativeRouterHostRouteArgs({
-    this.key,
-    required this.pageNotifier,
-  });
-
-  final Key? key;
-
-  final ValueNotifier<int> pageNotifier;
-
-  @override
-  String toString() {
-    return 'DeclarativeRouterHostRouteArgs{key: $key, pageNotifier: $pageNotifier}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

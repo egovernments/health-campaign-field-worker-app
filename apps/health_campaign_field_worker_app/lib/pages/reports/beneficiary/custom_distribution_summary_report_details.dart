@@ -53,7 +53,6 @@ class _CustomDistributionSummaryReportDetailsState
   static const _bednetDistributedKey = 'bednetDistributedKey';
   static const _dateKey = 'dateKey';
 
-  static const _title = "Summary Report";
 
   FormGroup _form() {
     return fb.group({});
@@ -90,7 +89,9 @@ class _CustomDistributionSummaryReportDetailsState
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    _title,
+                    localizations.translate(
+                                i18Local.inventoryReportDetails.summaryReport,
+                              ),
                     maxLines: 1,
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
@@ -104,7 +105,9 @@ class _CustomDistributionSummaryReportDetailsState
                     return SizedBox(
                       height: 400,
                       child: _ReportDetailsContent(
-                        title: _title,
+                        title: localizations.translate(
+                                i18Local.inventoryReportDetails.summaryReport,
+                              ),
                         data: DigitGridData(
                           columns: [
                             DigitGridColumn(
@@ -120,21 +123,39 @@ class _CustomDistributionSummaryReportDetailsState
                                     .householdDistributedLabel,
                               ),
                               key: _householdKey,
-                              width: 130,
+                              width: localizations
+                                      .translate(
+                                        i18Local.inventoryReportDetails
+                                            .householdDistributedLabel,
+                                      )
+                                      .length *
+                                  8,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
                                   .projectBeneficiaryImpactedLabel),
                               key: _projectBeneficiaryKey,
-                              width: 120,
+                              width: localizations
+                                      .translate(
+                                        i18Local.inventoryReportDetails
+                                            .projectBeneficiaryImpactedLabel,
+                                      )
+                                      .length *
+                                  8,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
                                   .bednetDistributedLabel),
                               key: _bednetDistributedKey,
-                              width: 130,
+                              width: localizations
+                                      .translate(
+                                        i18Local.inventoryReportDetails
+                                            .bednetDistributedLabel,
+                                      )
+                                      .length *
+                                  8,
                             ),
                           ],
                           rows: [

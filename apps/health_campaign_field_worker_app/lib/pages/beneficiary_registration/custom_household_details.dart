@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
@@ -21,12 +22,16 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
+import '../../models/entities/community_types.dart';
 import '../../router/app_router.dart';
+import '../../utils/constants.dart';
 
 @RoutePage()
 class CustomHouseHoldDetailsPage extends LocalizedStatefulWidget {
+  final String? refugeeCamp;
   const CustomHouseHoldDetailsPage({
     super.key,
+    required this.refugeeCamp,
     super.appLocalizations,
   });
 
@@ -45,6 +50,25 @@ class CustomHouseHoldDetailsPageState
     final theme = Theme.of(context);
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
+
+    List<AdditionalField> addAdditionalField(HouseholdModel? householdModel) {
+      AdditionalField? field;
+      List<AdditionalField>? additionalFields =
+          householdModel?.additionalFields?.fields;
+      if (additionalFields != null) {
+        field = additionalFields.firstWhereOrNull((e) =>
+            (e.key == Constants.refugeeCamp ||
+                e.key == Constants.communityKey));
+      }
+      if (field == null && widget.refugeeCamp != null) {
+        return [
+          AdditionalField(Constants.refugeeCamp, widget.refugeeCamp),
+          AdditionalField(
+              Constants.communityKey, CommunityTypes.refugeeCamps.toValue())
+        ];
+      }
+      return [];
+    }
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -181,6 +205,7 @@ class CustomHouseHoldDetailsPageState
                                   version: 1,
                                   fields: [
                                     //[TODO: Use pregnant women form value based on project config
+
                                     ...?householdModel?.additionalFields?.fields
                                         .where((e) =>
                                             e.key !=
@@ -190,6 +215,7 @@ class CustomHouseHoldDetailsPageState
                                             e.key !=
                                                 AdditionalFieldsType.children
                                                     .toValue()),
+                                    ...addAdditionalField(householdModel),
                                   ]));
 
                           bloc.add(

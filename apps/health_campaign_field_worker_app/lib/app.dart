@@ -1,3 +1,5 @@
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -7,6 +9,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaign_field_worker_app/data/repositories/remote/bandwidth_check.dart';
+import 'package:inventory_management/blocs/stock_reconciliation.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
@@ -20,6 +24,7 @@ import 'blocs/project/project.dart';
 import 'blocs/summary_reports/custom_distribution_summary_report.dart';
 import 'blocs/summary_reports/custom_enumeration_summary_report.dart';
 import 'data/local_store/app_shared_preferences.dart';
+import 'data/local_store/no_sql/schema/app_configuration.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
 import 'data/repositories/remote/localization.dart';
@@ -30,6 +35,7 @@ import 'utils/environment_config.dart';
 import 'utils/localization_delegates.dart';
 import 'utils/utils.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
+import 'blocs/custom_blocs/closed_household.dart' as custombloc;
 
 class MainApplication extends StatefulWidget {
   final Dio client;
@@ -53,6 +59,16 @@ class MainApplication extends StatefulWidget {
 
 class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
+  String defaultLanguageCode = "fr_BI";
+  Locale getLocale(String? languageCode) {
+    languageCode ??= defaultLanguageCode;
+    List<String> results = languageCode.split("_");
+    return Locale(
+      results.first,
+      results.last,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
@@ -87,10 +103,11 @@ class MainApplicationState extends State<MainApplication>
           child: MultiBlocProvider(
             providers: [
               // INFO : Need to add bloc of package Here
+
               BlocProvider(
                 create: (_) {
-                  return DigitScannerBloc(
-                    const DigitScannerState(),
+                  return CustomDigitScannerBloc(
+                    const CustomDigitScannerState(),
                   );
                 },
                 lazy: false,
@@ -171,15 +188,16 @@ class MainApplicationState extends State<MainApplication>
                     final appConfig = appConfigState.appConfiguration;
 
                     final localizationModulesList = appConfig.backendInterface;
-                    var firstLanguage;
-                    firstLanguage = appConfig.languages?.last.value;
-                    final languages = appConfig.languages;
+                    List<Languages>? languages = appConfig.languages;
+                    String firstLanguage =
+                        languages?.last.value ?? defaultLanguageCode;
+                    String? selectedLocale =
+                        AppSharedPreferences().getSelectedLocale;
 
                     return MultiBlocProvider(
                       providers: [
                         BlocProvider(
-                          create: (localizationModulesList != null &&
-                                  firstLanguage != null)
+                          create: (localizationModulesList != null)
                               ? (context) => LocalizationBloc(
                                     const LocalizationState(),
                                     LocalizationRepository(
@@ -192,7 +210,7 @@ class MainApplicationState extends State<MainApplication>
                                         module:
                                             "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                         tenantId: appConfig.tenantId.toString(),
-                                        locale: firstLanguage,
+                                        locale: selectedLocale ?? firstLanguage,
                                         path: Constants.localizationApiPath,
                                       ),
                                     )
@@ -207,6 +225,13 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            serviceDefinitionRemoteRepository: ctx.read<
+                                RemoteRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
+                            serviceDefinitionLocalRepository: ctx.read<
+                                LocalRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
+
                             bandwidthCheckRepository: BandwidthCheckRepository(
                               DioClient().dio,
                               bandwidthPath:
@@ -307,13 +332,44 @@ class MainApplicationState extends State<MainApplication>
                                 ProjectFacilitySearchModel>(),
                           ),
                         ),
+                        BlocProvider(
+                          create: (context) => StockReconciliationBloc(
+                            StockReconciliationState(
+                              projectId: InventorySingleton().projectId,
+                              dateOfReconciliation: DateTime.now(),
+                            ),
+                            stockReconciliationRepository: context.repository<
+                                StockReconciliationModel,
+                                StockReconciliationSearchModel>(),
+                            stockRepository: context
+                                .repository<StockModel, StockSearchModel>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (_) {
+                            return custombloc.ClosedHouseholdBloc(
+                              const custombloc.ClosedHouseholdState(),
+                              householdMemberRepository: context.repository<
+                                  HouseholdMemberModel,
+                                  HouseholdMemberSearchModel>(),
+                              householdRepository: context.repository<
+                                  HouseholdModel, HouseholdSearchModel>(),
+                              individualRepository: context.repository<
+                                  IndividualModel, IndividualSearchModel>(),
+                              projectBeneficiaryRepository: context.repository<
+                                  ProjectBeneficiaryModel,
+                                  ProjectBeneficiarySearchModel>(),
+                              taskRepository: context
+                                  .repository<TaskModel, TaskSearchModel>(),
+                            );
+                          },
+                          lazy: false,
+                        )
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
-                          final selectedLocale =
-                              AppSharedPreferences().getSelectedLocale ??
-                                  firstLanguage;
-
+                          String? selectedLocale =
+                              AppSharedPreferences().getSelectedLocale;
                           return MaterialApp.router(
                             debugShowCheckedModeBanner: false,
                             builder: (context, child) {
@@ -321,7 +377,6 @@ class MainApplicationState extends State<MainApplication>
                               if (env == EnvType.prod) {
                                 return child ?? const SizedBox.shrink();
                               }
-
                               return Banner(
                                 message: envConfig.variables.envType.name,
                                 location: BannerLocation.topEnd,
@@ -339,25 +394,16 @@ class MainApplicationState extends State<MainApplication>
                               );
                             },
                             supportedLocales: languages != null
-                                ? languages.map((e) {
-                                    final results = e.value.split('_');
-
-                                    return results.isNotEmpty
-                                        ? Locale(results.first, results.last)
-                                        : firstLanguage;
-                                  })
-                                : [firstLanguage],
+                                ? languages.map((e) => getLocale(e.value))
+                                : [getLocale(firstLanguage)],
                             localizationsDelegates: getAppLocalizationDelegates(
                               sql: widget.sql,
                               appConfig: appConfig,
-                              selectedLocale: selectedLocale,
+                              selectedLocale: selectedLocale ?? firstLanguage,
                             ),
                             locale: languages != null
-                                ? Locale(
-                                    selectedLocale!.split("_").first,
-                                    selectedLocale.split("_").last,
-                                  )
-                                : firstLanguage,
+                                ? getLocale(selectedLocale)
+                                : getLocale(firstLanguage),
                             theme: DigitTheme.instance.mobileTheme,
                             routeInformationParser:
                                 widget.appRouter.defaultRouteParser(),

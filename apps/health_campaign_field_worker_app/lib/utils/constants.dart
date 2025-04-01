@@ -1,3 +1,4 @@
+import 'package:survey_form/survey_form.dart';
 import 'package:complaints/complaints.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/closed_household.dart';
@@ -81,15 +82,35 @@ class Constants {
   static const String smallBraces = '()';
   static const String intTwo = '2';
   static const String comma = ',';
+  static const String pipeSeparator = ' || ';
   static const String bednetDistributed = 'BednetDistributed';
   static const String projectBeneficiary = 'ProjectBeneficiary';
   static const String household = 'Household';
   static const String closedHousehold = 'ClosedHousehold';
+  static const String closedHouseholdAbsent = 'ClosedHouseholdAbsent';
+  static const String closedHouseholdRefused = 'ClosedHouseholdRefused';
+
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
   // same key would be used to set community type like refugee or special groups etc
+  static const String refugeeCamp = "refugeeCamp";
   static const String communityKey = 'communityKey';
   static const String householdTypeKey = 'householdTypeKey';
+
+  static const String warehouse = "Warehouse";
+  static const String healthFacility = "Health Facility";
+  static const String storingResource = "Storing Resource";
+  static const String distributionPoint = "Distribution Point";
+  static const String nationalWarehouse = "National Warehouse";
+  static const String provincialWarehouse = "Provincial Warehouse";
+  static const String districtWarehouse = "District Warehouse";
+  static const String deliveryTeam = "DeliveryTeam";
+
+  static const String closedHouseholdReason = 'Reason';
+  static const String closedHouseholdReasonComment = 'RefuseReasonComment';
+  static const String status = "status";
+
+  static const int maxCount = 10000;
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -141,6 +162,14 @@ class Constants {
         sql,
         PgrServiceOpLogManager(isar),
       ),
+      ServiceDefinitionLocalRepository(
+        sql,
+        ServiceDefinitionOpLogManager(isar),
+      ),
+      ServiceLocalRepository(
+        sql,
+        ServiceOpLogManager(isar),
+      ),
     ];
   }
 
@@ -154,12 +183,21 @@ class Constants {
     final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ?? true;
 
     if (enableCrashlytics) {
-      firebase_services.initialize(
-        options: DefaultFirebaseOptions.currentPlatform,
-        onErrorMessage: (value) {
-          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
-        },
-      );
+      if (envConfig.variables.envType == EnvType.prod) {
+        firebase_services.initialize(
+          options: ProdFirebaseOptions.currentPlatform,
+          onErrorMessage: (value) {
+            AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+          },
+        );
+      } else {
+        firebase_services.initialize(
+          options: DefaultFirebaseOptions.currentPlatform,
+          onErrorMessage: (value) {
+            AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+          },
+        );
+      }
     }
 
     _version = version;
@@ -218,26 +256,16 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.complaints)
           PgrServiceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.serviceDefinition)
+          ServiceDefinitionRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.service)
+          ServiceRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
     return remoteRepositories;
   }
 
-  // static String getEndPoint({
-  //   required AppInitialized state,
-  //   required String service,
-  //   required String action,
-  //   required String entityName,
-  // }) {
-  //   final actionResult = state.serviceRegistryList
-  //       .firstWhereOrNull((element) => element.service == service)
-  //       ?.actions
-  //       .firstWhereOrNull((element) => element.entityName == entityName)
-  //       ?.path;
-
-  //   return actionResult ?? '';
-  // }
   static String getEndPoint({
     required List<ServiceRegistry> serviceRegistry,
     required String service,
@@ -273,6 +301,8 @@ class Constants {
 
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
+
+    SurveyFormSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 
@@ -308,7 +338,8 @@ class Modules {
 }
 
 const String noResultSvg = 'assets/icons/svg/no_result.svg';
-const String myChecklistSvg = 'assets/icons/svg/mychecklist.svg';
+const String mySurveyFormSvg = 'assets/icons/svg/mychecklist.svg';
+const String closedHouseholdSvg = 'assets/icons/svg/closed_household.svg';
 
 enum DigitProgressDialogType {
   inProgress,

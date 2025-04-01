@@ -5,16 +5,18 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../utils/app_enums.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:closed_household/utils/i18_key_constants.dart' as i18;
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18Local;
+import '../../blocs/custom_blocs/closed_household.dart' as custombloc;
 import '../../utils/utils.dart' as utilsLocal;
 
-import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:closed_household/utils/utils.dart';
 import 'package:closed_household/widgets/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+
+
 
 @RoutePage()
 class CustomClosedHouseholdDetailsPage extends LocalizedStatefulWidget {
@@ -32,8 +34,10 @@ class CustomClosedHouseholdDetailsPageState
     extends LocalizedState<CustomClosedHouseholdDetailsPage> {
   static const _administrationAreaKey = 'administrationArea';
   static const _householdHeadNameKey = 'householdHeadName';
+  static const _refusalCommentKey = 'refusalComment';
   static const _latKey = 'lat';
   static const _lngKey = 'lng';
+  static const _reasonKey = 'reason';
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
 
@@ -55,6 +59,27 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
+    const reasonOptions = ClosedHouseholdReasonsEnum.values;
+
+    refuseCommentValidator(FormGroup form) {
+      if (form.control(_reasonKey).value ==
+          ClosedHouseholdReasonsEnum.refusal.name) {
+        form.control(_refusalCommentKey).setValidators(
+          [
+            Validators.required,
+            Validators.delegate((validator) =>
+                utilsLocal.CustomValidator.requiredMin3(validator)),
+            Validators.maxLength(200)
+          ],
+          autoValidate: true,
+        );
+      } else {
+        form.control(_refusalCommentKey).setValidators(
+          [],
+          autoValidate: true,
+        );
+      }
+    }
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -107,8 +132,8 @@ class CustomClosedHouseholdDetailsPageState
                             .control(_householdHeadNameKey)
                             .value as String?;
 
-                        context.read<ClosedHouseholdBloc>().add(
-                              ClosedHouseholdEvent.handleSummary(
+                        context.read<custombloc.ClosedHouseholdBloc>().add(
+                              custombloc.ClosedHouseholdEvent.handleSummary(
                                 latitude: locationState.latitude!,
                                 longitude: locationState.longitude!,
                                 locationAccuracy:
@@ -120,8 +145,26 @@ class CustomClosedHouseholdDetailsPageState
                               ),
                             );
 
-                        context.router
-                            .push(CustomClosedHouseholdSummaryRoute());
+                        final reason =
+                            form.control(_reasonKey).value as String?;
+                        final String? refuseReasonComment =
+                            form.control(_refusalCommentKey).value as String?;
+                        if (reason == null || reason.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                localizations
+                                    .translate(i18.common.corecommonRequired),
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+
+                        context.router.push(CustomClosedHouseholdSummaryRoute(
+                            reason: reason,
+                            refuseReasonComment: refuseReasonComment));
                       },
                       child: Center(
                         child: Text(
@@ -165,6 +208,69 @@ class CustomClosedHouseholdDetailsPageState
                               i18.closeHousehold.accuracyLabel,
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding, 0, kPadding, 0),
+                            child: SelectionBox<String>(
+                              isRequired: true,
+                              title: localizations.translate(
+                                  i18Local.beneficiaryDetails.reasonLabelText),
+                              allowMultipleSelection: false,
+                              width: 148,
+                              initialSelection:
+                                  form.control(_reasonKey).value != null
+                                      ? [form.control(_reasonKey).value]
+                                      : [],
+                              options:
+                                  reasonOptions.map((e) => e.name).toList(),
+                              onSelectionChanged: (value) {
+                                setState(() {
+                                  if (value.isNotEmpty) {
+                                    form.control(_reasonKey).value =
+                                        value.first;
+                                    refuseCommentValidator(form);
+                                  } else if (true) {
+                                    form.control(_reasonKey).value = null;
+                                    setState(() {
+                                      form
+                                          .control(_reasonKey)
+                                          .setErrors({'': true});
+                                    });
+                                  }
+                                });
+                              },
+                              valueMapper: (value) {
+                                return localizations
+                                    .translate(value.toUpperCase());
+                              },
+                              errorMessage: form.control(_reasonKey).hasErrors
+                                  ? localizations
+                                      .translate(i18.common.corecommonRequired)
+                                  : null,
+                            ),
+                          ),
+                          Visibility(
+                            visible: form.control(_reasonKey).value ==
+                                ClosedHouseholdReasonsEnum.refusal.name,
+                            child: DigitTextFormField(
+                              formControlName: _refusalCommentKey,
+                              isRequired: true,
+                              label: localizations.translate(
+                                i18Local.common.refuseReasonComment,
+                              ),
+                              validationMessages: {
+                                'required': (object) => localizations
+                                    .translate(i18.common.corecommonRequired),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', maxLength.toString()),
+                                'min3': (object) => localizations
+                                    .translate(
+                                        i18Local.common.min3CharsRequired)
+                                    .replaceAll('{}', ''),
+                              },
+                            ),
+                          ),
                           DigitTextFormField(
                             formControlName: _householdHeadNameKey,
                             label: localizations.translate(
@@ -195,17 +301,22 @@ class CustomClosedHouseholdDetailsPageState
   FormGroup buildForm(ClosedHouseholdState state) {
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: localizations
-            .translate(ClosedHouseholdSingleton().boundary!.name.toString()),
+        value: localizations.translate(
+            ClosedHouseholdSingleton().boundary?.code.toString() ??
+                ClosedHouseholdSingleton().boundary?.name.toString() ??
+                ""),
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(
         value: null,
         validators: [
-          // utilsLocal.CustomValidator.requiredMin3,
+          Validators.delegate((validator) =>
+              utilsLocal.CustomValidator.requiredMin3(validator)),
           Validators.maxLength(200),
         ],
       ),
+      _reasonKey: FormControl<String>(validators: []),
+      _refusalCommentKey: FormControl<String>(),
       _latKey: FormControl<double>(validators: []),
       _lngKey: FormControl<double>(),
       _accuracyKey: FormControl<double>(),

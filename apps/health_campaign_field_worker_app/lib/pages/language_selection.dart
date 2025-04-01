@@ -61,10 +61,15 @@ class LanguageSelectionPage extends StatelessWidget {
                                     value.value.toString(),
                               );
 
+                              // Info : add the boundary module when changing locale
+                              var localizationModules = localizationModulesList
+                                  .map((e) => e.name.toString())
+                                  .toList();
+                              localizationModules.add("hcm-boundary-admin");
+
                               context.read<LocalizationBloc>().add(
                                     LocalizationEvent.onLoadLocalization(
-                                      module: localizationModulesList
-                                          .map((e) => e.name.toString())
+                                      module: localizationModules
                                           .join(',')
                                           .toString(),
                                       tenantId: appConfig.tenantId ?? "default",
@@ -80,7 +85,7 @@ class LanguageSelectionPage extends StatelessWidget {
                                     ),
                                   );
                             },
-                            onLanguageSubmit: () => context.router.push(
+                            onLanguageSubmit: () => context.router.replace(
                               LoginRoute(),
                             ),
                             languageSubmitLabel: AppLocalizations.of(context)

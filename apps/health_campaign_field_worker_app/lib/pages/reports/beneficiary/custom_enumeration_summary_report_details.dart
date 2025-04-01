@@ -50,9 +50,10 @@ class _CustomEumerationSummaryReportDetailsState
   static const _householdKey = 'householdKey';
   static const _projectBeneficiaryKey = 'projectBeneficiaryKey';
   static const _closedHouseholdKey = 'closedHouseholdKey';
-  static const _dateKey = 'dateKey';
+  static const _closedHouseholdAbsentKey = 'closedHouseholdAbsentKey';
+  static const _closedHouseholdRefusedKey = 'closedHouseholdRefusedKey';
 
-  static const _title = "Summary Report";
+  static const _dateKey = 'dateKey';
 
   FormGroup _form() {
     return fb.group({});
@@ -63,8 +64,8 @@ class _CustomEumerationSummaryReportDetailsState
     return Scaffold(
       body: BlocBuilder<CustomEnumerationSummaryReportBloc,
           CustomEnumerationSummaryReportState>(
-        builder: (context, customEnumerationSumamryReportState) {
-          if (customEnumerationSumamryReportState
+        builder: (context, customEnumerationSummaryReportState) {
+          if (customEnumerationSummaryReportState
               is CustomEnumerationSummaryReportLoadingState) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -89,13 +90,15 @@ class _CustomEumerationSummaryReportDetailsState
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    _title,
+                    localizations.translate(
+                      i18Local.inventoryReportDetails.summaryReport,
+                    ),
                     maxLines: 1,
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
                 ),
               ),
-              if (customEnumerationSumamryReportState
+              if (customEnumerationSummaryReportState
                   is CustomEnumerationSummaryReportSummaryDataState)
                 ReactiveFormBuilder(
                   form: _form,
@@ -103,7 +106,9 @@ class _CustomEumerationSummaryReportDetailsState
                     return SizedBox(
                       height: 400,
                       child: _ReportDetailsContent(
-                        title: _title,
+                        title: localizations.translate(
+                          i18Local.inventoryReportDetails.summaryReport,
+                        ),
                         data: DigitGridData(
                           columns: [
                             DigitGridColumn(
@@ -119,26 +124,62 @@ class _CustomEumerationSummaryReportDetailsState
                                     .householdRegisteredLabel,
                               ),
                               key: _householdKey,
-                              width: 170,
+                              width: localizations
+                                      .translate(
+                                        i18Local.inventoryReportDetails
+                                            .householdRegisteredLabel,
+                                      )
+                                      .length *
+                                  8,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
                                   .projectBeneficiaryRegisteredLabel),
                               key: _projectBeneficiaryKey,
-                              width: 120,
+                              width: localizations
+                                      .translate(i18Local.inventoryReportDetails
+                                          .projectBeneficiaryRegisteredLabel)
+                                      .length *
+                                  8,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
                                   .closedHouseholdRegisteredLabel),
                               key: _closedHouseholdKey,
-                              width: 130,
+                              width: localizations
+                                      .translate(i18Local.inventoryReportDetails
+                                          .closedHouseholdRegisteredLabel)
+                                      .length *
+                                  9,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate(i18Local
+                                  .inventoryReportDetails
+                                  .closedHouseholdRegisteredAbsentLabel),
+                              key: _closedHouseholdAbsentKey,
+                              width: localizations
+                                      .translate(i18Local.inventoryReportDetails
+                                          .closedHouseholdRegisteredAbsentLabel)
+                                      .length *
+                                  10,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate(i18Local
+                                  .inventoryReportDetails
+                                  .closedHouseholdRegisteredRefusedLabel),
+                              key: _closedHouseholdRefusedKey,
+                              width: localizations
+                                      .translate(i18Local.inventoryReportDetails
+                                          .closedHouseholdRegisteredRefusedLabel)
+                                      .length *
+                                  10,
                             ),
                           ],
                           rows: [
                             for (final entry
-                                in customEnumerationSumamryReportState
+                                in customEnumerationSummaryReportState
                                     .summaryData.entries) ...[
                               DigitGridRow(
                                 [
@@ -163,6 +204,22 @@ class _CustomEumerationSummaryReportDetailsState
                                     key: _closedHouseholdKey,
                                     value: (entry.value[Constants
                                                     .closedHousehold] ??
+                                                0)
+                                            .toString() ??
+                                        "0",
+                                  ),
+                                  DigitGridCell(
+                                    key: _closedHouseholdAbsentKey,
+                                    value: (entry.value[Constants
+                                                    .closedHouseholdAbsent] ??
+                                                0)
+                                            .toString() ??
+                                        "0",
+                                  ),
+                                  DigitGridCell(
+                                    key: _closedHouseholdRefusedKey,
+                                    value: (entry.value[Constants
+                                                    .closedHouseholdRefused] ??
                                                 0)
                                             .toString() ??
                                         "0",

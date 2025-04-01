@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.egov.salama">
+    package="org.egov.qa.bi">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -32,8 +32,8 @@
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:fullBackupOnly="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="HCM">
+        android:icon="@mipmap/burundi_logo_tsinda_malaria"
+        android:label="Tsinda Malaria">
         <service
             android:name=".LocationService"
             android:enabled="true"

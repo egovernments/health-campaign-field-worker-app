@@ -16,6 +16,7 @@ import 'package:survey_form/survey_form.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/custom_project_beneficiary.dart';
 import '../data/repositories/local/custom_task.dart';
 import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
@@ -25,6 +26,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:complaints/complaints.dart';
+import 'package:survey_form/survey_form.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -188,6 +190,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ProjectBeneficiaryOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<ProjectBeneficiaryModel,
+              ProjectBeneficiarySearchModel>>(
+        create: (_) => CustomProjectBeneficiaryLocalRepository(
+          sql,
+          ProjectBeneficiaryOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
         create: (_) => CustomTaskLocalRepository(
           sql,
@@ -263,6 +273,22 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           AttendanceLogOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<ServiceDefinitionModel,
+              ServiceDefinitionSearchModel>>(
+        create: (_) => ServiceDefinitionLocalRepository(
+          sql,
+          ServiceDefinitionOpLogManager(
+            isar,
+          ),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
+        create: (_) => ServiceLocalRepository(
+          sql,
+          ServiceOpLogManager(isar),
+        ),
+      )
     ];
   }
 

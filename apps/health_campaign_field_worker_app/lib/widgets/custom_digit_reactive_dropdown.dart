@@ -69,7 +69,11 @@ class CustomDigitReactiveDropdown<T> extends StatelessWidget {
                   .map(
                     (e) => DropdownMenuItem<T>(
                       value: e,
-                      child: Text(valueMapper(e)),
+                      child: Text(
+                        valueMapper(e),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   )
                   .toList(),

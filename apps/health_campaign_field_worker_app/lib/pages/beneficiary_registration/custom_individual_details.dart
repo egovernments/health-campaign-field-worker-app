@@ -11,6 +11,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/blocs/scanner/custom_digit_scanner_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -49,8 +50,10 @@ class CustomIndividualDetailsPage extends LocalizedStatefulWidget {
 class CustomIndividualDetailsPageState
     extends LocalizedState<CustomIndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
+  static const _nationalIdCardNumberKey = 'nationalIdCardNumberKey';
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
+  static const _phoneNumberKey = 'phoneNumber';
   bool isDuplicateTag = false;
   bool isHeadAgeValid = true;
   static const maxLength = 200;
@@ -144,7 +147,8 @@ class CustomIndividualDetailsPageState
                             form.control(_genderKey).setErrors({'': true});
                           });
                         }
-                        final scannerBloc = context.read<DigitScannerBloc>();
+                        final scannerBloc =
+                            context.read<CustomDigitScannerBloc>();
                         if (scannerBloc.state.qrCodes.isEmpty) {
                           await DigitToast.show(
                             context,
@@ -157,6 +161,7 @@ class CustomIndividualDetailsPageState
                               theme,
                             ),
                           );
+                          return;
                         }
                         final userId =
                             RegistrationDeliverySingleton().loggedInUserUuid;
@@ -201,7 +206,7 @@ class CustomIndividualDetailsPageState
                                         ProjectBeneficiarySearchModel>>()
                                 as ProjectBeneficiaryLocalRepository;
                             final scannerBloc =
-                                context.read<DigitScannerBloc>();
+                                context.read<CustomDigitScannerBloc>();
                             final projectBeneficiary = await repository.search(
                                 ProjectBeneficiarySearchModel(
                                     tag: [scannerBloc.state.qrCodes.first]));
@@ -223,7 +228,7 @@ class CustomIndividualDetailsPageState
                             } else {
                               clickedStatus.value = true;
                               final scannerBloc =
-                                  context.read<DigitScannerBloc>();
+                                  context.read<CustomDigitScannerBloc>();
                               bloc.add(
                                 BeneficiaryRegistrationSummaryEvent(
                                   projectId: projectId!,
@@ -245,7 +250,7 @@ class CustomIndividualDetailsPageState
                             loading,
                           ) {
                             final scannerBloc =
-                                context.read<DigitScannerBloc>();
+                                context.read<CustomDigitScannerBloc>();
                             final individual = _getIndividualModel(
                               context,
                               form: form,
@@ -315,7 +320,7 @@ class CustomIndividualDetailsPageState
 
                             if (context.mounted) {
                               final scannerBloc =
-                                  context.read<DigitScannerBloc>();
+                                  context.read<CustomDigitScannerBloc>();
 
                               if (scannerBloc.state.duplicate) {
                                 DigitToast.show(
@@ -403,6 +408,14 @@ class CustomIndividualDetailsPageState
                                     ),
                               },
                             ),
+                          ),
+                          DigitTextFormField(
+                            formControlName: _nationalIdCardNumberKey,
+                            label: localizations.translate(
+                              i18Local.individualDetails
+                                  .nationalIdCardNumberLabelText,
+                            ),
+                            isRequired: false,
                           ),
                           Offstage(
                             offstage: !widget.isHeadOfHousehold,
@@ -504,6 +517,35 @@ class CustomIndividualDetailsPageState
                                     .translate(i18.common.corecommonRequired)
                                 : null,
                           ),
+                          DigitTextFormField(
+                            formControlName: _phoneNumberKey,
+                            label: localizations.translate(
+                              i18.individualDetails.mobileNumberLabelText,
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            maxLength: 8,
+                            validationMessages: {
+                              'minLength': (object) => localizations
+                                  .translate(i18.individualDetails
+                                      .mobileNumberLengthValidationMessage)
+                                  .replaceAll('10', "8")
+                            },
+                            onChanged: (value) {
+                              String? numberText = value.value;
+                              if (numberText != null && numberText.isNotEmpty) {
+                                form.control(_phoneNumberKey).setValidators([
+                                  Validators.minLength(8),
+                                ], autoValidate: true);
+                              } else {
+                                form
+                                    .control(_phoneNumberKey)
+                                    .setValidators([], autoValidate: true);
+                              }
+                            },
+                          ),
                         ]),
                         const SizedBox(height: 16),
                         if ((RegistrationDeliverySingleton().beneficiaryType ==
@@ -511,7 +553,8 @@ class CustomIndividualDetailsPageState
                                 widget.isHeadOfHousehold) ||
                             (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
-                          BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                          BlocBuilder<CustomDigitScannerBloc,
+                              CustomDigitScannerState>(
                             buildWhen: (p, c) {
                               return true;
                             },
@@ -556,6 +599,7 @@ class CustomIndividualDetailsPageState
                                                   isGS1code: false,
                                                   singleValue: true,
                                                   isEditEnabled: true,
+                                                  manualEnabled: false,
                                                 ),
                                                 settings: const RouteSettings(
                                                     name: '/qr-scanner'),
@@ -583,6 +627,7 @@ class CustomIndividualDetailsPageState
                                             quantity: 1,
                                             isGS1code: false,
                                             singleValue: true,
+                                            manualEnabled: false,
                                           ),
                                           settings: const RouteSettings(
                                               name: '/qr-scanner'),
@@ -680,6 +725,9 @@ class CustomIndividualDetailsPageState
     );
 
     String? individualName = form.control(_individualNameKey).value as String?;
+    String? mobileNumber = form.control(_phoneNumberKey).value as String?;
+    String? nationalIdCardNumber =
+        form.control(_nationalIdCardNumberKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
         givenName: individualName?.trim(),
@@ -688,10 +736,11 @@ class CustomIndividualDetailsPageState
           ? null
           : Gender.values
               .byName(form.control(_genderKey).value.toString().toLowerCase()),
+      mobileNumber: mobileNumber,
       dateOfBirth: dobString,
       identifiers: [
         identifier.copyWith(
-          identifierId: "DEFAULT",
+          identifierId: nationalIdCardNumber ?? "DEFAULT",
           identifierType: "DEFAULT",
         ),
       ],
@@ -704,8 +753,9 @@ class CustomIndividualDetailsPageState
     final individual = state.mapOrNull<IndividualModel>(
       editIndividual: (value) {
         if (value.projectBeneficiaryModel?.tag != null) {
-          context.read<DigitScannerBloc>().add(DigitScannerScanEvent(
-              barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
+          context.read<CustomDigitScannerBloc>().add(
+              CustomDigitScannerScanEvent(
+                  barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
         }
 
         return value.individualModel;
@@ -738,6 +788,7 @@ class CustomIndividualDetailsPageState
                 ? null
                 : searchQuery?.trim()),
       ),
+      _nationalIdCardNumberKey: FormControl<String>(),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
             ? DateFormat(Constants().dateFormat).parse(
@@ -746,6 +797,7 @@ class CustomIndividualDetailsPageState
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
+      _phoneNumberKey: FormControl<String>(),
     });
   }
 

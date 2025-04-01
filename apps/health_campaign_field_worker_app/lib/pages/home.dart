@@ -1,3 +1,6 @@
+import 'package:survey_form/survey_form.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
+
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 
@@ -26,6 +29,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:recase/recase.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -342,6 +346,16 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
+      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
+        child: HomeItemCard(
+          enableCustomIcon: true,
+          customIcon: mySurveyFormSvg,
+          icon: Icons.checklist,
+          label: i18.home.mySurveyForm,
+          onPressed: () => context.router.push(CustomSurveyFormWrapperRoute()),
+        ),
+      ),
+
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
@@ -381,7 +395,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
           icon: Icons.all_inbox,
-          label: i18.home.beneficiaryLabel,
+          label: context.isRegistrar
+              ? i18.home.beneficiaryLabel
+              : i18.home.beneficiaryDistributionLabel,
           onPressed: () async {
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
@@ -406,8 +422,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.home,
           enableCustomIcon: true,
-          customIcon:
-              'assets/icons/svg/mychecklist.svg', //add in constants foe closed households
+          customIcon: closedHouseholdSvg,
+          customIconSize: 48, //add in constants foe closed households
           label: i18.home.closedHouseHoldLabel,
           onPressed: () async {
             await context.router.push(const ClosedHouseholdWrapperRoute());
@@ -423,7 +439,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                if (snapshot.data?['enablesManualSync'] == true) {
+                if (snapshot.data == null ||
+                    snapshot.data?['enablesManualSync'] == true) {
                   if (context.mounted) _attemptSyncUp(context);
                 } else {
                   if (context.mounted) {
@@ -492,6 +509,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
+      i18.home.mySurveyForm:
+          homeShowcaseData.supervisorMySurveyForm.showcaseKey,
 
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
@@ -507,6 +526,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
+      i18.home.beneficiaryLabel,
+      i18.home.clfLabel,
       i18.home.fileComplaint,
 
       i18.home.manageAttendanceLabel,
@@ -514,23 +535,19 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
+      i18.home.mySurveyForm,
 
-      i18.home.beneficiaryLabel,
-
-      i18.home.syncDataLabel,
-      i18.home.db,
       i18.home.closedHouseHoldLabel,
       i18.home.viewSummaryReportsLabel,
-      i18.home.clfLabel,
+      i18.home.syncDataLabel,
+      i18.home.db,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
-        .where((element) =>
-            state.actionsWrapper.actions
-                .map((e) => e.displayName)
-                .toList()
-                .contains(element) ||
-            element == i18.home.db)
+        .where((element) => state.actionsWrapper.actions
+            .map((e) => e.displayName)
+            .toList()
+            .contains(element))
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -556,6 +573,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               userId: context.loggedInUserUuid,
               localRepositories: [
                 // INFO : Need to add local repo of package Here
+                context
+                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
 
@@ -587,6 +607,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
+                context
+                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
 
@@ -628,6 +651,26 @@ void setPackagesSingleton(BuildContext context) {
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
         // INFO : Need to add singleton of package Here
+        SurveyFormSingleton().setInitialData(
+          projectId: context.projectId,
+          projectName: context.selectedProject.name,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+          isHealthFacilityWorker: context.loggedInUserRoles
+              .where((role) =>
+                  role.code == RolesType.healthFacilityWorker.toValue())
+              .toList()
+              .isNotEmpty,
+          roles: context.read<AuthBloc>().state.maybeMap(
+              orElse: () => const Offstage(),
+              authenticated: (res) {
+                return res.userModel.roles
+                    .map((e) => e.code.snakeCase.toUpperCase())
+                    .toList();
+              }),
+        );
+
         ComplaintsSingleton().setInitialData(
           tenantId: envConfig.variables.tenantId,
           loggedInUserUuid: context.loggedInUserUuid,
@@ -656,6 +699,7 @@ void setPackagesSingleton(BuildContext context) {
               )
               .toList()
               .isNotEmpty,
+          loggedInUser: context.loggedInUserModel,
           projectId: context.projectId,
           loggedInUserUuid: context.loggedInUserUuid,
           transportTypes: appConfiguration.transportTypes

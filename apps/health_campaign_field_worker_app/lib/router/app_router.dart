@@ -1,9 +1,28 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/models/entities/attendee.dart';
+import 'package:health_campaign_field_worker_app/pages/attendance/custom_manage_attendance.dart';
+import 'package:health_campaign_field_worker_app/pages/attendance/custom_mark_attendance.dart';
+import 'package:health_campaign_field_worker_app/pages/attendance/custom_session_select.dart';
+import 'package:health_campaign_field_worker_app/pages/checklist/custom_survery_form_boundary.dart';
+import 'package:health_campaign_field_worker_app/pages/checklist/custom_survery_form_wrapper.dart';
+import 'package:health_campaign_field_worker_app/pages/checklist/custom_survey_form.dart';
+import 'package:health_campaign_field_worker_app/pages/checklist/custom_survey_form_view.dart';
+import 'package:survey_form/blocs/app_localization.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.dart';
 import 'package:complaints/router/complaints_router.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:digit_scanner/blocs/app_localization.dart';
+import 'package:health_campaign_field_worker_app/pages/custom_qr_scanner.dart';
+import 'package:health_campaign_field_worker_app/pages/household_acknowlegment/custom_household_acknowlegment.dart';
+import 'package:health_campaign_field_worker_app/pages/inventory/custom_report_details.dart';
+import 'package:health_campaign_field_worker_app/pages/inventory/custom_report_selection.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
@@ -12,8 +31,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:complaints/complaints.dart';
+import 'package:survey_form/router/survey_form_router.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
+import '../blocs/scanner/custom_digit_scanner_bloc.dart';
 import '../blocs/summary_reports/custom_enumeration_summary_report.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
@@ -48,6 +70,11 @@ import '../pages/reports/beneficiary/custom_enumeration_summary_report_details.d
 import '../pages/reports/beneficiary/custom_distribution_summary_report_details.dart';
 import '../pages/complaints/custom_complaints_details.dart';
 import 'package:complaints/blocs/localization/app_localization.dart';
+import '../pages/complaints/custom_complaint_type.dart';
+import '../pages/inventory/custom_stock_reconciliation.dart';
+import '../pages/inventory/custom_inventory_facility_selection.dart';
+import '../pages/complaints/custom_complaints_details_view.dart';
+import '../pages/complaints/custom_complaints_inbox.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -61,6 +88,7 @@ part 'app_router.gr.dart';
     AttendanceRoute,
     ClosedHouseholdPackageRoute,
     ComplaintsRoute,
+    SurveyFormRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -94,6 +122,31 @@ class AppRouter extends _$AppRouter {
         ),
 
         // INFO : Need to add Router of package Here
+        // SurveyForm Route
+        AutoRoute(
+            page: CustomSurveyFormWrapperRoute.page,
+            path: 'survey-form',
+            children: [
+              AutoRoute(
+                page: CustomSurveyformRoute.page,
+                path: '',
+              ),
+              AutoRoute(
+                  page: SurveyFormBoundaryViewRoute.page,
+                  path: 'view-boundary'),
+              AutoRoute(
+                  page: CustomSurveyFormBoundaryViewRoute.page,
+                  path: 'custom-view-boundary'),
+              AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+              AutoRoute(
+                  page: CustomSurveyFormViewRoute.page, path: 'custom-view'),
+              RedirectRoute(path: 'view', redirectTo: 'custom-view'),
+              AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+              AutoRoute(
+                  page: SurveyFormAcknowledgementRoute.page,
+                  path: 'surveyForm-acknowledgement'),
+            ]),
+
         AutoRoute(
           page: ComplaintsInboxWrapperRoute.page,
           path: 'complaints-inbox',
@@ -101,6 +154,11 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ComplaintsInboxRoute.page,
               path: 'complaints-inbox-items',
+              // initial: true,
+            ),
+            AutoRoute(
+              page: CustomComplaintsInboxRoute.page,
+              path: 'custom-complaints-inbox-items',
               initial: true,
             ),
             AutoRoute(
@@ -119,6 +177,14 @@ class AppRouter extends _$AppRouter {
               page: ComplaintsDetailsViewRoute.page,
               path: 'complaints-inbox-view-details',
             ),
+            AutoRoute(
+              page: CustomComplaintsDetailsViewRoute.page,
+              path: 'custom-complaints-inbox-view-details',
+            ),
+            RedirectRoute(
+              path: 'complaints-inbox-view-details',
+              redirectTo: 'custom-complaints-inbox-view-details',
+            ),
           ],
         ),
 
@@ -130,7 +196,15 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ComplaintTypeRoute.page,
               path: 'complaints-type',
+            ),
+            AutoRoute(
+              page: CustomComplaintTypeRoute.page,
+              path: 'custom-complaints-type',
               initial: true,
+            ),
+            RedirectRoute(
+              path: 'complaints-type',
+              redirectTo: 'custom-complaints-details',
             ),
             AutoRoute(
               page: ComplaintsLocationRoute.page,
@@ -191,12 +265,33 @@ class AppRouter extends _$AppRouter {
           path: 'manage-attendance',
         ),
         AutoRoute(
+          page: CustomManageAttendanceRoute.page,
+          path: 'custom-manage-attendance',
+        ),
+        RedirectRoute(
+            path: "manage-attendance", redirectTo: "custom-manage-attendance"),
+        AutoRoute(
           page: AttendanceDateSessionSelectionRoute.page,
           path: 'attendance-date-session-selection',
         ),
         AutoRoute(
+          page: CustomAttendanceDateSessionSelectionRoute.page,
+          path: 'custom-attendance-date-session-selection',
+        ),
+        RedirectRoute(
+            path: "attendance-date-session-selection",
+            redirectTo: "custom-attendance-date-session-selection"),
+        AutoRoute(
           page: MarkAttendanceRoute.page,
           path: 'mark-attendance',
+        ),
+        AutoRoute(
+          page: CustomMarkAttendanceRoute.page,
+          path: 'custom-mark-attendance',
+        ),
+        RedirectRoute(
+          path: 'mark-attendance',
+          redirectTo: 'custom-mark-attendance',
         ),
         AutoRoute(
           page: AttendanceAcknowledgementRoute.page,
@@ -239,18 +334,47 @@ class AppRouter extends _$AppRouter {
           page: InventoryFacilitySelectionRoute.page,
           path: 'inventory-select-facilities',
         ),
+
+        AutoRoute(
+          page: CustomInventoryFacilitySelectionRoute.page,
+          path: 'custom-inventory-select-facilities',
+        ),
+        RedirectRoute(
+            path: 'inventory-select-facilities',
+            redirectTo: 'custom-inventory-select-facilities'),
         AutoRoute(
           page: StockReconciliationRoute.page,
           path: 'stock-reconciliation',
         ),
         AutoRoute(
+          page: CustomStockReconciliationRoute.page,
+          path: 'custom-stock-reconciliation',
+        ),
+        RedirectRoute(
+            path: 'stock-reconciliation',
+            redirectTo: 'custom-stock-reconciliation'),
+        AutoRoute(
           page: InventoryReportSelectionRoute.page,
           path: 'inventory-report-selection',
         ),
         AutoRoute(
+          page: CustomInventoryReportSelectionRoute.page,
+          path: 'custom-inventory-report-selection',
+        ),
+        RedirectRoute(
+            path: 'inventory-report-selection',
+            redirectTo: 'custom-inventory-report-selection'),
+        AutoRoute(
           page: InventoryReportDetailsRoute.page,
           path: 'inventory-report-details',
         ),
+        AutoRoute(
+          page: CustomInventoryReportDetailsRoute.page,
+          path: 'custom-inventory-report-details',
+        ),
+        RedirectRoute(
+            path: 'inventory-report-details',
+            redirectTo: 'custom-inventory-report-details'),
         AutoRoute(
           page: InventoryAcknowledgementRoute.page,
           path: 'inventory-acknowledgement',
@@ -408,10 +532,16 @@ class AppRouter extends _$AppRouter {
                     page: HouseholdAcknowledgementRoute.page,
                     path: 'household-acknowledgement',
                   ),
+                  AutoRoute(
+                    page: CustomHouseholdAcknowledgementRoute.page,
+                    path: 'custom-household-acknowledgement',
+                  ),
+                  RedirectRoute(
+                      path: 'household-acknowledgement',
+                      redirectTo: 'custom-household-acknowledgement')
                 ],
               ),
             ]),
-
         //Enumeration and distribution Summary reports
         AutoRoute(
           page: CustomEumerationSummaryReportDetailsRoute.page,

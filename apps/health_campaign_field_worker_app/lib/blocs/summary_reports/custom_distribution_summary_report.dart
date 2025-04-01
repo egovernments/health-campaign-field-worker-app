@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/utils/typedefs.dart'
     hide ProductVariantDataRepository;
@@ -30,6 +31,28 @@ class CustomDistributionSummaryReportBloc extends Bloc<
   }) : super(const CustomDistributionSummaryReportEmptyState()) {
     on(_handleLoadDataEvent);
     on(_handleLoadingEvent);
+  }
+
+  Map<String, Map<String, int>> sortMapByDateKey(
+      Map<String, Map<String, int>> map) {
+    List<String> sortedKeys = map.keys.sorted((a, b) => _compareAB(a, b));
+    Map<String, Map<String, int>> newMap = {};
+
+    for (var key in sortedKeys) {
+      if (map[key] != null) newMap[key] = map[key]!;
+    }
+    return newMap;
+  }
+
+  int _compareAB(String a, String b) {
+    try {
+      int aTimestamp = DigitDateUtils.dateToTimeStamp(a);
+      int bTimestamp = DigitDateUtils.dateToTimeStamp(b);
+
+      if (aTimestamp > bTimestamp) return 1;
+      if (aTimestamp < bTimestamp) return -1;
+    } catch (e) {}
+    return 0;
   }
 
   Future<void> _handleLoadDataEvent(
@@ -87,14 +110,7 @@ class CustomDistributionSummaryReportBloc extends Bloc<
       Map<String, int> dateVsHouseholdCount = {};
       Map<String, int> dateVsBeneficiaryImpactedCount = {};
       Map<String, int> dateVsBedNetDistributedCount = {};
-
-      for (var element in householdList) {
-        var dateKey = DigitDateUtils.getDateFromTimestamp(
-          element.clientAuditDetails!.createdTime,
-        );
-
-        dateVsHouseholds.putIfAbsent(dateKey, () => []).add(element);
-      }
+      Map<String, String> dateVsProjectBeneficiaryClientRefId = {};
 
       for (var element in successfulTaskList) {
         var dateKey = DigitDateUtils.getDateFromTimestamp(
@@ -102,6 +118,24 @@ class CustomDistributionSummaryReportBloc extends Bloc<
         );
 
         dateVsSuccessfulTasks.putIfAbsent(dateKey, () => []).add(element);
+      }
+
+      for (var element in householdList) {
+        final correspondingTask = getTheCorrespondingTask(
+            element, successfulTaskList, projectBeneficiaryList);
+        // info use the task date to put in map , so that all are mapped to distribution dates
+        // as task is created during distribution , all other entities like household ,pb were created at registration phase
+        if (correspondingTask == null) {
+          continue;
+        } else {
+          if (correspondingTask is TaskModel) {
+            var dateKey = DigitDateUtils.getDateFromTimestamp(
+              correspondingTask.clientAuditDetails!.createdTime,
+            );
+
+            dateVsHouseholds.putIfAbsent(dateKey, () => []).add(element);
+          }
+        }
       }
 
       // get a set of unique dates
@@ -114,8 +148,7 @@ class CustomDistributionSummaryReportBloc extends Bloc<
 
       // populate the day vs count for that day map
       populateDateVsCountMap(dateVsHouseholds, dateVsHouseholdCount);
-      // populateDateVsCountMap(
-      //     dateVsProjectBeneficiaries, dateVsProjectBeneficiaryCount);
+
       populateDateVsBednetDistributedMap(
           dateVsSuccessfulTasks, dateVsBedNetDistributedCount);
 
@@ -138,6 +171,28 @@ class CustomDistributionSummaryReportBloc extends Bloc<
     } catch (e) {
       emit(const CustomDistributionSummaryReportLoadingState());
     }
+  }
+
+  dynamic getTheCorrespondingTask(
+      HouseholdModel household,
+      List<TaskModel> taskList,
+      List<ProjectBeneficiaryModel> projectBeneficiaries) {
+    final projectBeneficiary = projectBeneficiaries
+        .where((element) =>
+            element.beneficiaryClientReferenceId == household.clientReferenceId)
+        .firstOrNull;
+    if (projectBeneficiary == null) {
+      return null;
+    }
+    final task = taskList
+        .where((element) =>
+            element.projectBeneficiaryClientReferenceId ==
+            projectBeneficiary.clientReferenceId)
+        .firstOrNull;
+    if (task == null) {
+      return null;
+    }
+    return task;
   }
 
   void populateDateVsBeneficiaryImpactedMap(
@@ -187,6 +242,7 @@ class CustomDistributionSummaryReportBloc extends Bloc<
       }
       dateVsEntityVsCountMap[date] = elementVsCount;
     }
+    dateVsEntityVsCountMap = sortMapByDateKey(dateVsEntityVsCountMap);
   }
 
   void populateDateVsCountMap(
