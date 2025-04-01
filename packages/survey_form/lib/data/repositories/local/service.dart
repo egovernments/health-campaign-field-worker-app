@@ -165,19 +165,14 @@ class ServiceLocalRepository
     return retryLocalCallOperation<List<ServiceModel>>(() async {
       final selectQuery = sql.select(sql.service).join([]);
       final results = await (selectQuery
-            ..where(buildAnd([
-              if (query.id != null)
-                sql.service.serviceDefId.equals(
-                  query.id!,
-                ),
-              if (query.clientId != null)
-                sql.service.clientId.equals(
-                  query.clientId!,
-                ),
-              if (query.referenceId != null)
-                sql.service.referenceId
-                    .equals(query.referenceId!),
-            ])))
+        ..where(buildAnd([
+          if (query.id != null)
+            sql.service.serviceDefId.equals(query.id!),
+          if (query.clientId != null)
+            sql.service.clientId.equals(query.clientId!),
+          if (query.referenceId != null && query.referenceId!.isNotEmpty)
+            sql.service.referenceId.isIn(query.referenceId!),
+        ])))
           .get();
 
       final List<ServiceModel> serviceList = [];

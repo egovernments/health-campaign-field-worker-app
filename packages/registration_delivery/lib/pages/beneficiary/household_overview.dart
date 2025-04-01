@@ -537,7 +537,12 @@ class _HouseholdOverviewPageState
                                                     getStatusAttributes(state,
                                                             deliverInterventionState)[
                                                         'textLabel'],
-                                                  )
+                                                  ),
+                                                if(state.householdMemberWrapper.householdChecklists?.isNotEmpty ?? false)
+                                                  for (var attribute in state.householdMemberWrapper.householdChecklists?.first.attributes ?? [])
+                                                    localizations.translate('${RegistrationDeliverySingleton().selectedProject?.name}.HOUSEHOLD.DISTRIBUTOR.${attribute?.attributeCode}'  //TODO:
+                                            ): localizations
+                                                        .translate(attribute?.value)
                                               },
                                             ),
                                           ],
@@ -647,9 +652,10 @@ class _HouseholdOverviewPageState
                                           )
                                         : const Offstage(),
                                     Column(
-                                      children: (state.householdMemberWrapper
-                                                  .members ??
-                                              [])
+                                      children: (state.householdMemberWrapper.members
+                                          ?.where((m) => m.additionalFields == null ||
+                                          !m.additionalFields!.fields.any((field) => field.key == 'parentClientReferenceId'))
+                                          ?? [])
                                           .map(
                                         (e) {
                                           final isHead = state
@@ -657,6 +663,10 @@ class _HouseholdOverviewPageState
                                                   .headOfHousehold
                                                   ?.clientReferenceId ==
                                               e.clientReferenceId;
+
+                                          final household = state
+                                              .householdMemberWrapper.household;
+
                                           final projectBeneficiaryId = state
                                               .householdMemberWrapper
                                               .projectBeneficiaries
@@ -721,6 +731,12 @@ class _HouseholdOverviewPageState
                                                           ?.clientReferenceId)
                                                   .toList()
                                               : null;
+
+                                          final childBeneficiaries = state.householdMemberWrapper.members
+                                              ?.where((m) => m.additionalFields != null &&
+                                                  m.additionalFields!.fields.any((field) => field.key == 'parentClientReferenceId' && field.value == e.clientReferenceId))
+                                              .toList();
+
                                           final ageInYears =
                                               e.dateOfBirth != null
                                                   ? DigitDateUtils.calculateAge(
@@ -768,6 +784,8 @@ class _HouseholdOverviewPageState
                                           return MemberCard(
                                             isHead: isHead,
                                             individual: e,
+                                            household: household,
+                                            children: childBeneficiaries,
                                             projectBeneficiaries:
                                                 projectBeneficiary ?? [],
                                             tasks: taskData,

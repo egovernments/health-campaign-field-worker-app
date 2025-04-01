@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/global_search_parameters.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../data/repositories/local/individual_global_search.dart';
 import '../../models/entities/household.dart';
@@ -35,6 +36,7 @@ class HouseholdOverviewBloc
   final SideEffectDataRepository sideEffectDataRepository;
   final ReferralDataRepository referralDataRepository;
   final IndividualGlobalSearchRepository individualGlobalSearchRepository;
+  final ServiceDataRepository serviceDataRepository;
 
   HouseholdOverviewBloc(
     super.initialState, {
@@ -47,6 +49,7 @@ class HouseholdOverviewBloc
     required this.referralDataRepository,
     required this.beneficiaryType,
     required this.individualGlobalSearchRepository,
+        required this.serviceDataRepository,
   }) {
     on(_handleDeleteHousehold);
     on(_handleDeleteIndividual);
@@ -205,6 +208,17 @@ class HouseholdOverviewBloc
             .toList(),
       ));
 
+      final householdChecklist = await serviceDataRepository.search(ServiceSearchModel(
+        referenceId: [resultHousehold.clientReferenceId],
+      ));
+
+      final memberChecklist = await serviceDataRepository.search(ServiceSearchModel(
+        referenceId: members
+            .map((e) => e.individualClientReferenceId)
+            .whereNotNull()
+            .toList(),
+      ));
+
       individuals.sort((a, b) => (a.clientAuditDetails?.createdTime ?? 0)
           .compareTo(b.clientAuditDetails?.createdTime ?? 0));
 
@@ -248,6 +262,15 @@ class HouseholdOverviewBloc
               ...?state.householdMemberWrapper.referrals,
               ...referrals,
             ],
+
+            householdChecklists: [
+              ...?state.householdMemberWrapper.householdChecklists,
+              ...householdChecklist,
+            ],
+            individualChecklists: [
+              ...?state.householdMemberWrapper.individualChecklists,
+              ...memberChecklist,
+            ],
           ),
         ));
 
@@ -267,6 +290,8 @@ class HouseholdOverviewBloc
             projectBeneficiaries: projectBeneficiaries,
             sideEffects: sideEffects,
             referrals: referrals,
+            householdChecklists: householdChecklist,
+            individualChecklists: memberChecklist,
           ),
           loading: false,
           offset: members.isNotEmpty

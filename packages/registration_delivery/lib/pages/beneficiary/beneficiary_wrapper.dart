@@ -105,6 +105,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               referralDataRepository: referral,
               individualGlobalSearchRepository:
                   individualGlobalSearchRepository,
+              serviceDataRepository: service,
               beneficiaryType:
                   RegistrationDeliverySingleton().beneficiaryType!),
         ),

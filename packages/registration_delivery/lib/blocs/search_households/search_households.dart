@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:stream_transform/stream_transform.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../data/repositories/local/household_global_search.dart';
 import '../../data/repositories/local/individual_global_search.dart';
@@ -45,6 +46,7 @@ class SearchHouseholdsBloc
   final ReferralDataRepository referralDataRepository;
   final IndividualGlobalSearchRepository individualGlobalSearchRepository;
   final HouseHoldGlobalSearchRepository houseHoldGlobalSearchRepository;
+  final ServiceDataRepository serviceDataRepository;
 
   SearchHouseholdsBloc(
       {required this.userUid,
@@ -59,7 +61,9 @@ class SearchHouseholdsBloc
       required this.addressRepository,
       required this.referralDataRepository,
       required this.individualGlobalSearchRepository,
-      required this.houseHoldGlobalSearchRepository})
+      required this.houseHoldGlobalSearchRepository,
+        required this.serviceDataRepository,
+      })
       : super(const SearchHouseholdsState()) {
     on(_handleClear);
     on(_handleSearchByHousehold);
@@ -114,6 +118,17 @@ class SearchHouseholdsBloc
             projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
       ));
 
+      final householdChecklist = await serviceDataRepository.search(ServiceSearchModel(
+        referenceId: [event.householdModel.clientReferenceId],
+      ));
+
+      final memberChecklist = await serviceDataRepository.search(ServiceSearchModel(
+        referenceId: householdMembers
+            .map((e) => e.individualClientReferenceId)
+            .whereNotNull()
+            .toList(),
+      ));
+
       if (headOfHousehold == null) {
         emit(state.copyWith(
           loading: false,
@@ -128,6 +143,8 @@ class SearchHouseholdsBloc
           tasks: tasks.isNotEmpty ? tasks : null,
           sideEffects: sideEffects.isNotEmpty ? sideEffects : null,
           referrals: referrals.isNotEmpty ? referrals : null,
+          householdChecklists: householdChecklist,
+          individualChecklists: memberChecklist,
         );
 
         emit(
@@ -314,5 +331,7 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     List<TaskModel>? tasks,
     List<SideEffectModel>? sideEffects,
     List<ReferralModel>? referrals,
+    List<ServiceModel>? householdChecklists,
+List<ServiceModel>? individualChecklists,
   }) = _HouseholdMemberWrapper;
 }

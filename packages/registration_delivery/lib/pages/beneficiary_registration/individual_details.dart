@@ -34,11 +34,13 @@ import '../../widgets/showcase/showcase_button.dart';
 @RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
+  final String? parentClientReferenceId;
 
   const IndividualDetailsPage({
     super.key,
     super.appLocalizations,
     this.isHeadOfHousehold = false,
+    this.parentClientReferenceId,
   });
 
   @override
@@ -794,6 +796,16 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       ),
     );
 
+
+    IndividualAdditionalFields additionalFields =
+    IndividualAdditionalFields(version: 1, fields: [
+      if (widget.parentClientReferenceId != null) ...[
+        AdditionalField(
+            'parentClientReferenceId', widget.parentClientReferenceId),
+      ],
+    ]);
+
+
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
@@ -811,6 +823,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           identifierType: form.control(_idTypeKey).value,
         ),
       ],
+      additionalFields: additionalFields,
     );
 
     return individual;

@@ -13,8 +13,10 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:survey_form/blocs/service_definition.dart';
 
 import '../../blocs/app_localization.dart';
+import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../models/entities/household.dart';
 import '../../models/entities/registration_delivery_enums.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
@@ -29,10 +31,12 @@ class MemberCard extends StatelessWidget {
   final int? years;
   final int? months;
   final bool isHead;
+  final HouseholdModel? household;
   final IndividualModel individual;
+  final List<IndividualModel>? children;
   final List<ProjectBeneficiaryModel>? projectBeneficiaries;
   final bool isDelivered;
-
+  final bool showAddChildAction;
   final VoidCallback setAsHeadAction;
   final VoidCallback editMemberAction;
   final VoidCallback deleteMemberAction;
@@ -47,11 +51,14 @@ class MemberCard extends StatelessWidget {
   const MemberCard({
     super.key,
     required this.individual,
+    this.children,
     required this.name,
     this.gender,
     this.years,
     this.isHead = false,
     this.months,
+    this.household,
+    this.showAddChildAction = true,
     required this.localizations,
     required this.isDelivered,
     required this.setAsHeadAction,
@@ -100,7 +107,14 @@ class MemberCard extends StatelessWidget {
                 Positioned(
                   child: Align(
                     alignment: Alignment.topRight,
-                    child: DigitButton(
+                    child: (children ?? []).isNotEmpty
+                        ? DigitButton(label: '${localizations.translate(i18.memberCard.noOfChildren)} ${children?.length}', onPressed: () {
+                      context.read<HouseholdOverviewBloc>().add(
+                          HouseholdOverviewEvent.selectedIndividual(
+                              individualModel: individual));
+                      context.router.push(ParentOverviewRoute());
+                    }, type: DigitButtonType.tertiary, size: DigitButtonSize.large)
+                        :DigitButton(
                       isDisabled: (projectBeneficiaries ?? []).isEmpty,
                       onPressed: () => showDialog(
                         context: context,
@@ -512,6 +526,47 @@ class MemberCard extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: spacer2,),
+            if(showAddChildAction)
+            Align(
+              alignment: Alignment.bottomRight,
+              child: DigitButton(
+                label: localizations.translate(i18.memberCard.addChildLabel),
+                type: DigitButtonType.tertiary,
+                prefixIcon: Icons.add_circle_outline,
+                size: DigitButtonSize.medium,
+                onPressed: () async {
+                  if (household != null) {
+                    final bloc = context.read<HouseholdOverviewBloc>();
+
+                    final address = household?.address;
+
+                    if (address == null) return;
+                    bloc.add(
+                      HouseholdOverviewReloadEvent(
+                        projectId: RegistrationDeliverySingleton().projectId!,
+                        projectBeneficiaryType:
+                        RegistrationDeliverySingleton().beneficiaryType!,
+                      ),
+                    );
+                    await context.router.root.push(
+                      BeneficiaryRegistrationWrapperRoute(
+                        initialState: BeneficiaryRegistrationAddMemberState(
+                          addressModel: address,
+                          householdModel: household!,
+                        ),
+                        children: [
+                          IndividualDetailsRoute(
+                              parentClientReferenceId:
+                              individual.clientReferenceId
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
+            )
           ])
     ]);
   }

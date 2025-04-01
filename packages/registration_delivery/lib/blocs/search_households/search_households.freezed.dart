@@ -2683,6 +2683,10 @@ mixin _$HouseholdMemberWrapper {
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
   List<SideEffectModel>? get sideEffects => throw _privateConstructorUsedError;
   List<ReferralModel>? get referrals => throw _privateConstructorUsedError;
+  List<ServiceModel>? get householdChecklists =>
+      throw _privateConstructorUsedError;
+  List<ServiceModel>? get individualChecklists =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HouseholdMemberWrapperCopyWith<HouseholdMemberWrapper> get copyWith =>
@@ -2703,7 +2707,9 @@ abstract class $HouseholdMemberWrapperCopyWith<$Res> {
       double? distance,
       List<TaskModel>? tasks,
       List<SideEffectModel>? sideEffects,
-      List<ReferralModel>? referrals});
+      List<ReferralModel>? referrals,
+      List<ServiceModel>? householdChecklists,
+      List<ServiceModel>? individualChecklists});
 }
 
 /// @nodoc
@@ -2728,6 +2734,8 @@ class _$HouseholdMemberWrapperCopyWithImpl<$Res,
     Object? tasks = freezed,
     Object? sideEffects = freezed,
     Object? referrals = freezed,
+    Object? householdChecklists = freezed,
+    Object? individualChecklists = freezed,
   }) {
     return _then(_value.copyWith(
       household: freezed == household
@@ -2762,6 +2770,14 @@ class _$HouseholdMemberWrapperCopyWithImpl<$Res,
           ? _value.referrals
           : referrals // ignore: cast_nullable_to_non_nullable
               as List<ReferralModel>?,
+      householdChecklists: freezed == householdChecklists
+          ? _value.householdChecklists
+          : householdChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
+      individualChecklists: freezed == individualChecklists
+          ? _value.individualChecklists
+          : individualChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
     ) as $Val);
   }
 }
@@ -2783,7 +2799,9 @@ abstract class _$$HouseholdMemberWrapperImplCopyWith<$Res>
       double? distance,
       List<TaskModel>? tasks,
       List<SideEffectModel>? sideEffects,
-      List<ReferralModel>? referrals});
+      List<ReferralModel>? referrals,
+      List<ServiceModel>? householdChecklists,
+      List<ServiceModel>? individualChecklists});
 }
 
 /// @nodoc
@@ -2807,6 +2825,8 @@ class __$$HouseholdMemberWrapperImplCopyWithImpl<$Res>
     Object? tasks = freezed,
     Object? sideEffects = freezed,
     Object? referrals = freezed,
+    Object? householdChecklists = freezed,
+    Object? individualChecklists = freezed,
   }) {
     return _then(_$HouseholdMemberWrapperImpl(
       household: freezed == household
@@ -2841,6 +2861,14 @@ class __$$HouseholdMemberWrapperImplCopyWithImpl<$Res>
           ? _value._referrals
           : referrals // ignore: cast_nullable_to_non_nullable
               as List<ReferralModel>?,
+      householdChecklists: freezed == householdChecklists
+          ? _value._householdChecklists
+          : householdChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
+      individualChecklists: freezed == individualChecklists
+          ? _value._individualChecklists
+          : individualChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
     ));
   }
 }
@@ -2856,12 +2884,16 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
       this.distance,
       final List<TaskModel>? tasks,
       final List<SideEffectModel>? sideEffects,
-      final List<ReferralModel>? referrals})
+      final List<ReferralModel>? referrals,
+      final List<ServiceModel>? householdChecklists,
+      final List<ServiceModel>? individualChecklists})
       : _members = members,
         _projectBeneficiaries = projectBeneficiaries,
         _tasks = tasks,
         _sideEffects = sideEffects,
-        _referrals = referrals;
+        _referrals = referrals,
+        _householdChecklists = householdChecklists,
+        _individualChecklists = individualChecklists;
 
   @override
   final HouseholdModel? household;
@@ -2920,9 +2952,31 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<ServiceModel>? _householdChecklists;
+  @override
+  List<ServiceModel>? get householdChecklists {
+    final value = _householdChecklists;
+    if (value == null) return null;
+    if (_householdChecklists is EqualUnmodifiableListView)
+      return _householdChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<ServiceModel>? _individualChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists {
+    final value = _individualChecklists;
+    if (value == null) return null;
+    if (_individualChecklists is EqualUnmodifiableListView)
+      return _individualChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'HouseholdMemberWrapper(household: $household, headOfHousehold: $headOfHousehold, members: $members, projectBeneficiaries: $projectBeneficiaries, distance: $distance, tasks: $tasks, sideEffects: $sideEffects, referrals: $referrals)';
+    return 'HouseholdMemberWrapper(household: $household, headOfHousehold: $headOfHousehold, members: $members, projectBeneficiaries: $projectBeneficiaries, distance: $distance, tasks: $tasks, sideEffects: $sideEffects, referrals: $referrals, householdChecklists: $householdChecklists, individualChecklists: $individualChecklists)';
   }
 
   @override
@@ -2943,7 +2997,11 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
             const DeepCollectionEquality()
                 .equals(other._sideEffects, _sideEffects) &&
             const DeepCollectionEquality()
-                .equals(other._referrals, _referrals));
+                .equals(other._referrals, _referrals) &&
+            const DeepCollectionEquality()
+                .equals(other._householdChecklists, _householdChecklists) &&
+            const DeepCollectionEquality()
+                .equals(other._individualChecklists, _individualChecklists));
   }
 
   @override
@@ -2956,7 +3014,9 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
       distance,
       const DeepCollectionEquality().hash(_tasks),
       const DeepCollectionEquality().hash(_sideEffects),
-      const DeepCollectionEquality().hash(_referrals));
+      const DeepCollectionEquality().hash(_referrals),
+      const DeepCollectionEquality().hash(_householdChecklists),
+      const DeepCollectionEquality().hash(_individualChecklists));
 
   @JsonKey(ignore: true)
   @override
@@ -2968,14 +3028,17 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
 
 abstract class _HouseholdMemberWrapper implements HouseholdMemberWrapper {
   const factory _HouseholdMemberWrapper(
-      {final HouseholdModel? household,
-      final IndividualModel? headOfHousehold,
-      final List<IndividualModel>? members,
-      final List<ProjectBeneficiaryModel>? projectBeneficiaries,
-      final double? distance,
-      final List<TaskModel>? tasks,
-      final List<SideEffectModel>? sideEffects,
-      final List<ReferralModel>? referrals}) = _$HouseholdMemberWrapperImpl;
+          {final HouseholdModel? household,
+          final IndividualModel? headOfHousehold,
+          final List<IndividualModel>? members,
+          final List<ProjectBeneficiaryModel>? projectBeneficiaries,
+          final double? distance,
+          final List<TaskModel>? tasks,
+          final List<SideEffectModel>? sideEffects,
+          final List<ReferralModel>? referrals,
+          final List<ServiceModel>? householdChecklists,
+          final List<ServiceModel>? individualChecklists}) =
+      _$HouseholdMemberWrapperImpl;
 
   @override
   HouseholdModel? get household;
@@ -2993,6 +3056,10 @@ abstract class _HouseholdMemberWrapper implements HouseholdMemberWrapper {
   List<SideEffectModel>? get sideEffects;
   @override
   List<ReferralModel>? get referrals;
+  @override
+  List<ServiceModel>? get householdChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists;
   @override
   @JsonKey(ignore: true)
   _$$HouseholdMemberWrapperImplCopyWith<_$HouseholdMemberWrapperImpl>
