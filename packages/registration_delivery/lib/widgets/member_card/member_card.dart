@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:survey_form/blocs/service_definition.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../blocs/app_localization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -48,6 +49,7 @@ class MemberCard extends StatelessWidget {
   final bool isBeneficiaryRefused;
   final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
+  final ServiceModel? individualChecklist;
 
   const MemberCard({
     super.key,
@@ -72,6 +74,7 @@ class MemberCard extends StatelessWidget {
     this.isBeneficiaryRefused = false,
     this.isBeneficiaryReferred = false,
     this.sideEffects,
+    this.individualChecklist,
   });
 
   @override
@@ -195,26 +198,22 @@ class MemberCard extends StatelessWidget {
                 ],
               ),
             ),
-            // DigitTableCard(
-            //   element: {
-            //       for (var attribute in state
-            //           .householdMemberWrapper
-            //           .individualChecklists!
-            //           .where((e) =>
-            //       e.referenceId ==
-            //           state
-            //               .selectedIndividual
-            //               ?.clientReferenceId)
-            //           .first
-            //           .attributes ??
-            //           [])
-            //         localizations.translate(
-            //             '${RegistrationDeliverySingleton().selectedProject?.name}.INDIVIDUAL.DISTRIBUTOR.${attribute?.attributeCode}' //TODO:
-            //         ):
-            //         localizations
-            //             .translate(attribute?.value)
-            //   },
-            // ),
+            if(individualChecklist != null)
+            Padding(
+              padding: const EdgeInsets.all(spacer2),
+              child: DigitTableCard(
+                element: {
+                    for (var attribute in individualChecklist
+                        ?.attributes ??
+                        [])
+                      localizations.translate(
+                          '${RegistrationDeliverySingleton().selectedProject?.name}.INDIVIDUAL.DISTRIBUTOR.${attribute?.attributeCode}' //TODO:
+                      ):
+                      localizations
+                          .translate(attribute?.value)
+                },
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(left: spacer1, bottom: spacer2),
               child: Offstage(

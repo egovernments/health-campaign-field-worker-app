@@ -737,6 +737,8 @@ class _HouseholdOverviewPageState
                                                   m.additionalFields!.fields.any((field) => field.key == 'parentClientReferenceId' && field.value == e.clientReferenceId))
                                               .toList();
 
+                                          final individualChecklist = state.householdMemberWrapper.individualChecklists?.firstWhereOrNull((element) => element.referenceId == e.clientReferenceId);
+
                                           final ageInYears =
                                               e.dateOfBirth != null
                                                   ? DigitDateUtils.calculateAge(
@@ -785,6 +787,7 @@ class _HouseholdOverviewPageState
                                             isHead: isHead,
                                             individual: e,
                                             household: household,
+                                            individualChecklist: individualChecklist,
                                             children: childBeneficiaries,
                                             projectBeneficiaries:
                                                 projectBeneficiary ?? [],

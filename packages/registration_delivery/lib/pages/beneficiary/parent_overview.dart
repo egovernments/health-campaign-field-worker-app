@@ -302,6 +302,8 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                     DateTime.now(),
                                               ).years
                                             : 0;
+
+                                        final individualChecklist = state.householdMemberWrapper.individualChecklists?.firstWhereOrNull((element) => element.referenceId == e.clientReferenceId);
                                         final ageInMonths =
                                             e.dateOfBirth != null
                                                 ? DigitDateUtils.calculateAge(
@@ -340,6 +342,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                           individual: e,
                                           projectBeneficiaries:projectBeneficiary,
                                           projectBeneficiaryClientReferenceId:projectBeneficiaryId,
+                                          individualChecklist: individualChecklist,
                                           name: e.name?.givenName ?? ' - - ',
                                           localizations: localizations,
                                           years: (e.dateOfBirth == null
