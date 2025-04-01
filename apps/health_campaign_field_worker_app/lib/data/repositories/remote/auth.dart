@@ -18,9 +18,15 @@ class AuthRepository {
     };
 
     final formData = FormData.fromMap(loginModel.toJson());
+    final encodedFormData = loginModel
+        .toJson()
+        .entries
+        .map((e) =>
+            '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value.toString())}')
+        .join('&');
     final response = await _client.post(
       loginPath,
-      data: formData,
+      data: encodedFormData,
       options: Options(headers: headers),
     );
 
