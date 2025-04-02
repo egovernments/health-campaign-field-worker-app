@@ -1327,10 +1327,9 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      name: inventory_management
-      sha256: "68271fd2f99fae4b3f826403b16b6b3568bb74ba96dc92c45c1eff457fdbcd49"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/inventory_management"
+      relative: true
+    source: path
     version: "1.0.5+1"
   io:
     dependency: transitive
@@ -1799,10 +1798,9 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      name: referral_reconciliation
-      sha256: "5d3ea365246978776c0d247d9dbe35ebc04b7df1b85d7f38db20ec7e4021b977"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
     version: "1.0.4+2"
   registration_delivery:
     dependency: "direct main"

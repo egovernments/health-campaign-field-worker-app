@@ -15,6 +15,7 @@ import 'models/entities/side_effect.dart' as p8;
 import 'models/entities/status.dart' as p9;
 import 'models/entities/task.dart' as p10;
 import 'models/entities/task_resource.dart' as p11;
+import 'models/entities/unique_id_pool.dart' as p12;
 
 void initializeMappers() {
   p0.AdditionalFieldsTypeMapper.ensureInitialized();
@@ -43,4 +44,7 @@ void initializeMappers() {
   p11.TaskResourceSearchModelMapper.ensureInitialized();
   p11.TaskResourceModelMapper.ensureInitialized();
   p11.TaskResourceAdditionalFieldsMapper.ensureInitialized();
+  p12.UniqueIdPoolSearchModelMapper.ensureInitialized();
+  p12.UniqueIdPoolModelMapper.ensureInitialized();
+  p12.UniqueIdPoolAdditionalFieldsMapper.ensureInitialized();
 }

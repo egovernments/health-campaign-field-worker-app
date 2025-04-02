@@ -108,5 +108,6 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                 ],
               ),
             ]),
+        AutoRoute(page: BeneficiaryIdDownSyncRoute.page)
       ];
 }

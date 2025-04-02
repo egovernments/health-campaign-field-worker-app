@@ -39345,6 +39345,268 @@ class LocalizationCompanion extends UpdateCompanion<LocalizationData> {
   }
 }
 
+class $UniqueIdPoolTable extends UniqueIdPool
+    with TableInfo<$UniqueIdPoolTable, UniqueIdPoolData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UniqueIdPoolTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _userUUIDMeta =
+      const VerificationMeta('userUUID');
+  @override
+  late final GeneratedColumn<String> userUUID = GeneratedColumn<String>(
+      'user_u_u_i_d', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, clientReferenceId, userUUID, status];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'unique_id_pool';
+  @override
+  VerificationContext validateIntegrity(Insertable<UniqueIdPoolData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('user_u_u_i_d')) {
+      context.handle(_userUUIDMeta,
+          userUUID.isAcceptableOrUnknown(data['user_u_u_i_d']!, _userUUIDMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  UniqueIdPoolData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UniqueIdPoolData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      userUUID: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_u_u_i_d']),
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+    );
+  }
+
+  @override
+  $UniqueIdPoolTable createAlias(String alias) {
+    return $UniqueIdPoolTable(attachedDatabase, alias);
+  }
+}
+
+class UniqueIdPoolData extends DataClass
+    implements Insertable<UniqueIdPoolData> {
+  final String? id;
+  final String clientReferenceId;
+  final String? userUUID;
+  final String? status;
+  const UniqueIdPoolData(
+      {this.id, required this.clientReferenceId, this.userUUID, this.status});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || userUUID != null) {
+      map['user_u_u_i_d'] = Variable<String>(userUUID);
+    }
+    if (!nullToAbsent || status != null) {
+      map['status'] = Variable<String>(status);
+    }
+    return map;
+  }
+
+  UniqueIdPoolCompanion toCompanion(bool nullToAbsent) {
+    return UniqueIdPoolCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      clientReferenceId: Value(clientReferenceId),
+      userUUID: userUUID == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userUUID),
+      status:
+          status == null && nullToAbsent ? const Value.absent() : Value(status),
+    );
+  }
+
+  factory UniqueIdPoolData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UniqueIdPoolData(
+      id: serializer.fromJson<String?>(json['id']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      userUUID: serializer.fromJson<String?>(json['userUUID']),
+      status: serializer.fromJson<String?>(json['status']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'userUUID': serializer.toJson<String?>(userUUID),
+      'status': serializer.toJson<String?>(status),
+    };
+  }
+
+  UniqueIdPoolData copyWith(
+          {Value<String?> id = const Value.absent(),
+          String? clientReferenceId,
+          Value<String?> userUUID = const Value.absent(),
+          Value<String?> status = const Value.absent()}) =>
+      UniqueIdPoolData(
+        id: id.present ? id.value : this.id,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        userUUID: userUUID.present ? userUUID.value : this.userUUID,
+        status: status.present ? status.value : this.status,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UniqueIdPoolData(')
+          ..write('id: $id, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('userUUID: $userUUID, ')
+          ..write('status: $status')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, clientReferenceId, userUUID, status);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UniqueIdPoolData &&
+          other.id == this.id &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.userUUID == this.userUUID &&
+          other.status == this.status);
+}
+
+class UniqueIdPoolCompanion extends UpdateCompanion<UniqueIdPoolData> {
+  final Value<String?> id;
+  final Value<String> clientReferenceId;
+  final Value<String?> userUUID;
+  final Value<String?> status;
+  final Value<int> rowid;
+  const UniqueIdPoolCompanion({
+    this.id = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.userUUID = const Value.absent(),
+    this.status = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UniqueIdPoolCompanion.insert({
+    this.id = const Value.absent(),
+    required String clientReferenceId,
+    this.userUUID = const Value.absent(),
+    this.status = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<UniqueIdPoolData> custom({
+    Expression<String>? id,
+    Expression<String>? clientReferenceId,
+    Expression<String>? userUUID,
+    Expression<String>? status,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (userUUID != null) 'user_u_u_i_d': userUUID,
+      if (status != null) 'status': status,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UniqueIdPoolCompanion copyWith(
+      {Value<String?>? id,
+      Value<String>? clientReferenceId,
+      Value<String?>? userUUID,
+      Value<String?>? status,
+      Value<int>? rowid}) {
+    return UniqueIdPoolCompanion(
+      id: id ?? this.id,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      userUUID: userUUID ?? this.userUUID,
+      status: status ?? this.status,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (userUUID.present) {
+      map['user_u_u_i_d'] = Variable<String>(userUUID.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UniqueIdPoolCompanion(')
+          ..write('id: $id, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('userUUID: $userUUID, ')
+          ..write('status: $status, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e) : super(e);
   _$LocalSqlDataStoreManager get managers => _$LocalSqlDataStoreManager(this);
@@ -39399,6 +39661,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $SideEffectTable sideEffect = $SideEffectTable(this);
   late final $ReferralTable referral = $ReferralTable(this);
   late final $LocalizationTable localization = $LocalizationTable(this);
+  late final $UniqueIdPoolTable uniqueIdPool = $UniqueIdPoolTable(this);
   late final Index attendanceClientref = Index('attendance_clientref',
       'CREATE INDEX attendance_clientref ON attendance (client_reference_id)');
   late final Index attendanceIndividualid = Index('attendance_individualid',
@@ -39512,6 +39775,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         sideEffect,
         referral,
         localization,
+        uniqueIdPool,
         attendanceClientref,
         attendanceIndividualid,
         projectClinetref,
@@ -55281,6 +55545,134 @@ class $$LocalizationTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$UniqueIdPoolTableInsertCompanionBuilder = UniqueIdPoolCompanion
+    Function({
+  Value<String?> id,
+  required String clientReferenceId,
+  Value<String?> userUUID,
+  Value<String?> status,
+  Value<int> rowid,
+});
+typedef $$UniqueIdPoolTableUpdateCompanionBuilder = UniqueIdPoolCompanion
+    Function({
+  Value<String?> id,
+  Value<String> clientReferenceId,
+  Value<String?> userUUID,
+  Value<String?> status,
+  Value<int> rowid,
+});
+
+class $$UniqueIdPoolTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $UniqueIdPoolTable,
+    UniqueIdPoolData,
+    $$UniqueIdPoolTableFilterComposer,
+    $$UniqueIdPoolTableOrderingComposer,
+    $$UniqueIdPoolTableProcessedTableManager,
+    $$UniqueIdPoolTableInsertCompanionBuilder,
+    $$UniqueIdPoolTableUpdateCompanionBuilder> {
+  $$UniqueIdPoolTableTableManager(
+      _$LocalSqlDataStore db, $UniqueIdPoolTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$UniqueIdPoolTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$UniqueIdPoolTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$UniqueIdPoolTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> userUUID = const Value.absent(),
+            Value<String?> status = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UniqueIdPoolCompanion(
+            id: id,
+            clientReferenceId: clientReferenceId,
+            userUUID: userUUID,
+            status: status,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> userUUID = const Value.absent(),
+            Value<String?> status = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UniqueIdPoolCompanion.insert(
+            id: id,
+            clientReferenceId: clientReferenceId,
+            userUUID: userUUID,
+            status: status,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$UniqueIdPoolTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $UniqueIdPoolTable,
+    UniqueIdPoolData,
+    $$UniqueIdPoolTableFilterComposer,
+    $$UniqueIdPoolTableOrderingComposer,
+    $$UniqueIdPoolTableProcessedTableManager,
+    $$UniqueIdPoolTableInsertCompanionBuilder,
+    $$UniqueIdPoolTableUpdateCompanionBuilder> {
+  $$UniqueIdPoolTableProcessedTableManager(super.$state);
+}
+
+class $$UniqueIdPoolTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $UniqueIdPoolTable> {
+  $$UniqueIdPoolTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userUUID => $state.composableBuilder(
+      column: $state.table.userUUID,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$UniqueIdPoolTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $UniqueIdPoolTable> {
+  $$UniqueIdPoolTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userUUID => $state.composableBuilder(
+      column: $state.table.userUUID,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$LocalSqlDataStoreManager {
   final _$LocalSqlDataStore _db;
   _$LocalSqlDataStoreManager(this._db);
@@ -55363,4 +55755,6 @@ class _$LocalSqlDataStoreManager {
       $$ReferralTableTableManager(_db, _db.referral);
   $$LocalizationTableTableManager get localization =>
       $$LocalizationTableTableManager(_db, _db.localization);
+  $$UniqueIdPoolTableTableManager get uniqueIdPool =>
+      $$UniqueIdPoolTableTableManager(_db, _db.uniqueIdPool);
 }

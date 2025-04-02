@@ -18,9 +18,16 @@ class AuthRepository {
     };
 
     final formData = FormData.fromMap(loginModel.toJson());
+    // Manually encode data as URL-encoded string // TODO: Fix dio form data issue
+    final encodedFormData = loginModel
+        .toJson()
+        .entries
+        .map((e) =>
+            '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value.toString())}')
+        .join('&');
     final response = await _client.post(
       loginPath,
-      data: formData,
+      data: encodedFormData,
       options: Options(headers: headers),
     );
 

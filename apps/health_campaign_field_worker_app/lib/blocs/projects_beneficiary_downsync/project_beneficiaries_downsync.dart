@@ -29,16 +29,17 @@ class BeneficiaryDownSyncBloc
       downSyncLocalRepository;
   final BandwidthCheckRepository bandwidthCheckRepository;
   final LocalRepository<HouseholdModel, HouseholdSearchModel>
-  householdLocalRepository;
+      householdLocalRepository;
   final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-  householdMemberLocalRepository;
+      householdMemberLocalRepository;
   final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-  projectBeneficiaryLocalRepository;
+      projectBeneficiaryLocalRepository;
   final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
   final LocalRepository<SideEffectModel, SideEffectSearchModel>
-  sideEffectLocalRepository;
+      sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
       referralLocalRepository;
+
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
@@ -308,9 +309,11 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int syncedCount,
     int totalCount,
   ) = _DownSyncInProgressState;
+
   const factory BeneficiaryDownSyncState.success(
     DownsyncModel downSyncResult,
   ) = _DownSyncSuccessState;
+
   const factory BeneficiaryDownSyncState.getBatchSize(
     int batchSize,
     String projectId,
@@ -318,21 +321,29 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int pendingSyncCount,
     String boundaryName,
   ) = _DownSyncGetBatchSizeState;
+
   const factory BeneficiaryDownSyncState.loading(bool isPop) =
       _DownSyncLoadingState;
+
   const factory BeneficiaryDownSyncState.insufficientStorage() =
       _DownSyncInsufficientStorageState;
+
   const factory BeneficiaryDownSyncState.dataFound(
     int initialServerCount,
     int batchSize,
   ) = _DownSyncDataFoundState;
+
   const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;
+
   const factory BeneficiaryDownSyncState.totalCountCheckFailed() =
       _DownSynnCountCheckFailedState;
+
   const factory BeneficiaryDownSyncState.failed() = _DownSyncFailureState;
+
   const factory BeneficiaryDownSyncState.report(
     List<DownsyncModel> downsyncCriteriaList,
   ) = _DownSyncReportState;
+
   const factory BeneficiaryDownSyncState.pendingSync() =
       _DownSyncPendingSyncState;
 }
