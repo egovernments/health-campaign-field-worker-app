@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
@@ -50,6 +51,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
+  static const _heightKey = 'height';
+  static const _weightKey = 'weight';
   bool isDuplicateTag = false;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
@@ -336,7 +339,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           localizations.translate(
                             i18.individualDetails.individualsDetailsLabelText,
                           ),
-                          style: textTheme.headingXl.copyWith(color: theme.colorTheme.primary.primary2),
+                          style: textTheme.headingXl.copyWith(
+                              color: theme.colorTheme.primary.primary2),
                         ),
                         Column(
                           children: [
@@ -345,9 +349,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               child: ReactiveWrapperField(
                                 formControlName: _individualNameKey,
                                 validationMessages: {
-                                  'required': (object) => localizations.translate(
-                                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                                  ),
+                                  'required': (object) =>
+                                      localizations.translate(
+                                        '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                      ),
                                   'maxLength': (object) => localizations
                                       .translate(i18.common.maxCharsRequired)
                                       .replaceAll('{}', maxLength.toString()),
@@ -359,7 +364,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   isRequired: true,
                                   child: DigitTextFormInput(
                                     initialValue:
-                                    form.control(_individualNameKey).value,
+                                        form.control(_individualNameKey).value,
                                     onChange: (value) {
                                       form.control(_individualNameKey).value =
                                           value;
@@ -369,20 +374,22 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 ),
                               ),
                             ),
-                            if(widget.isHeadOfHousehold)
-                              const SizedBox(height: spacer2,),
+                            if (widget.isHeadOfHousehold)
+                              const SizedBox(
+                                height: spacer2,
+                              ),
                             Offstage(
                               offstage: !widget.isHeadOfHousehold,
                               child: DigitCheckbox(
                                 capitalizeFirstLetter: false,
                                 label: (RegistrationDeliverySingleton()
-                                    .householdType ==
-                                    HouseholdType.community)
-                                    ? localizations.translate(
-                                    i18.individualDetails.clfCheckboxLabelText)
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? localizations.translate(i18
+                                        .individualDetails.clfCheckboxLabelText)
                                     : localizations.translate(
-                                  i18.individualDetails.checkboxLabelText,
-                                ),
+                                        i18.individualDetails.checkboxLabelText,
+                                      ),
                                 value: widget.isHeadOfHousehold,
                                 readOnly: widget.isHeadOfHousehold,
                                 onChanged: (_) {},
@@ -508,7 +515,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             yearsAndMonthsErrMsg: localizations.translate(
                               i18.individualDetails.yearsAndMonthsErrorText,
                             ),
-                            errorMessage: _getDobErrorMessage(form.control(_dobKey)),
+                            errorMessage:
+                                _getDobErrorMessage(form.control(_dobKey)),
                             initialDate: before150Years,
                             initialValue: getInitialDateValue(form),
                             onChangeOfFormControl: (value) {
@@ -608,6 +616,57 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             ),
                           ),
                         ),
+
+                        individualDetailsShowcaseData.height.buildWith(
+                          child: ReactiveWrapperField(
+                            formControlName: _heightKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.heightLabelText,
+                              ),
+                              child: DigitTextFormInput(
+                                keyboardType: TextInputType.number,
+                                maxLength: 6,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d*\.?\d{0,2}'),
+                                  ),
+                                ],
+                                initialValue: form.control(_heightKey).value,
+                                onChange: (value) {
+                                  form.control(_heightKey).value = value;
+                                },
+                                errorMessage: field.errorText,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        individualDetailsShowcaseData.weight.buildWith(
+                          child: ReactiveWrapperField(
+                            formControlName: _weightKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.weightLabelText,
+                              ),
+                              child: DigitTextFormInput(
+                                keyboardType: TextInputType.number,
+                                maxLength: 6,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d*\.?\d{0,2}'),
+                                  ),
+                                ],
+                                initialValue: form.control(_weightKey).value,
+                                onChange: (value) {
+                                  form.control(_weightKey).value = value;
+                                },
+                                errorMessage: field.errorText,
+                              ),
+                            ),
+                          ),
+                        ),
+
                         // const SizedBox(height: spacer4),
                         if ((RegistrationDeliverySingleton().beneficiaryType ==
                                     BeneficiaryType.household &&
@@ -797,7 +856,92 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         ),
       ],
     );
+    // individual = individual.copyWith(
+    //   additionalFields: individual.additionalFields == null
+    //       ? IndividualAdditionalFields(
+    //           version: 1,
+    //           fields: [
 
+    //             AdditionalField(
+    //               AdditionalFieldsType.height.toValue(),
+    //               (form.control(_heightKey).value).toString().length == 1
+    //                   ? '0${(form.control(_heightKey).value)}'
+    //                   : (form.control(_heightKey).value),
+    //             ),
+    //             AdditionalField(
+    //               AdditionalFieldsType.weight.toValue(),
+    //               (form.control(_weightKey).value).toString().length == 1
+    //                   ? '0${(form.control(_weightKey).value)}'
+    //                   : (form.control(_weightKey).value),
+    //             ),
+    //           ],
+    //         )
+    //       : individual.additionalFields!.copyWith(
+    //           fields: [
+    //             // Filter out any existing `Constants.weight` or `Constants.height` fields
+    //             ...individual.additionalFields!.fields.where(
+    //               (field) =>
+    //                   field.key != AdditionalFieldsType.weight.toValue() &&
+    //                   field.key != AdditionalFieldsType.height.toValue(),
+    //             ),
+    //             // Add new `Constants.height` field if the condition matches
+
+    //             AdditionalField(
+    //               AdditionalFieldsType.height.toValue(),
+    //               (form.control(_heightKey).value).toString().length == 1
+    //                   ? '0${(form.control(_heightKey).value)}'
+    //                   : (form.control(_heightKey).value),
+    //             ),
+
+    //             AdditionalField(
+    //               AdditionalFieldsType.weight.toValue(),
+    //               (form.control(_weightKey).value).toString().length == 1
+    //                   ? '0${(form.control(_weightKey).value)}'
+    //                   : (form.control(_weightKey).value),
+    //             ),
+    //           ],
+    //         ),
+    // );
+
+    individual = individual.copyWith(
+      additionalFields: (() {
+        final heightValue = form.control(_heightKey).value?.toString().trim();
+        final weightValue = form.control(_weightKey).value?.toString().trim();
+
+        if ((heightValue == null || heightValue.isEmpty) &&
+            (weightValue == null || weightValue.isEmpty)) {
+          return null; // Remove additionalFields if both are empty
+        }
+
+        List<AdditionalField> updatedFields = [
+          if (heightValue != null && heightValue.isNotEmpty)
+            AdditionalField(
+              AdditionalFieldsType.height.toValue(),
+              heightValue.length == 1 ? '0$heightValue' : heightValue,
+            ),
+          if (weightValue != null && weightValue.isNotEmpty)
+            AdditionalField(
+              AdditionalFieldsType.weight.toValue(),
+              weightValue.length == 1 ? '0$weightValue' : weightValue,
+            ),
+        ];
+
+        if (individual?.additionalFields == null) {
+          return IndividualAdditionalFields(version: 1, fields: updatedFields);
+        }
+
+        return individual?.additionalFields!.copyWith(
+          fields: [
+            ...individual.additionalFields!.fields.where(
+              (field) =>
+                  field.key != AdditionalFieldsType.weight.toValue() &&
+                  field.key != AdditionalFieldsType.height.toValue(),
+            ),
+            ...updatedFields,
+          ],
+        );
+      })(),
+    );
     return individual;
   }
 
@@ -805,9 +949,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     if (!control.hasErrors) return null;
 
     final dobValue = control.value;
-    final age = dobValue != null
-        ? DigitDateUtils.calculateAge(dobValue)
-        : null;
+    final age = dobValue != null ? DigitDateUtils.calculateAge(dobValue) : null;
 
     if (dobValue == null) {
       return localizations.translate(i18.common.corecommonRequired);
@@ -889,6 +1031,32 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 localizations.translate(i18.common.coreCommonMobileNumber)),
         Validators.maxLength(10)
       ]),
+      _heightKey: FormControl<String>(
+        value: (individual != null && individual.additionalFields != null)
+            ? individual.additionalFields?.fields
+                    .firstWhere(
+                      (element) =>
+                          element.key == AdditionalFieldsType.height.toValue(),
+                      orElse: () => AdditionalField(
+                          AdditionalFieldsType.height.toValue(), ''),
+                    )
+                    .value ??
+                ''
+            : '',
+      ),
+      _weightKey: FormControl<String>(
+        value: (individual != null && individual.additionalFields != null)
+            ? individual.additionalFields?.fields
+                    .firstWhere(
+                      (element) =>
+                          element.key == AdditionalFieldsType.weight.toValue(),
+                      orElse: () => AdditionalField(
+                          AdditionalFieldsType.weight.toValue(), ''),
+                    )
+                    .value ??
+                ''
+            : '',
+      ),
     });
   }
 

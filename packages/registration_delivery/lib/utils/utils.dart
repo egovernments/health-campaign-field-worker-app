@@ -201,6 +201,8 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     var roomCount;
     var memberCount;
     String? structureType;
+    var weight = 0.0;
+    var height = 0.0;
 
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
@@ -212,6 +214,22 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
 
       gender = individualModel.gender?.index;
+
+      weight = double.parse(individualModel.additionalFields != null
+          ? individualModel.additionalFields?.fields
+              .where((element) =>
+                  element.key == AdditionalFieldsType.weight.toValue())
+              .firstOrNull!
+              .value
+          : '0.0');
+
+      height = double.parse(individualModel.additionalFields != null
+          ? individualModel.additionalFields?.fields
+              .where((element) =>
+                  element.key == AdditionalFieldsType.height.toValue())
+              .firstOrNull!
+              .value
+          : '0.0');
     }
     if (householdModel != null && householdModel.additionalFields != null) {
       memberCount = householdModel.memberCount;
@@ -243,7 +261,9 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
                 'age': individualAgeInMonths,
                 if (gender != null) 'gender': gender,
                 if (memberCount != null) 'memberCount': memberCount,
-                if (roomCount != null) 'roomCount': roomCount
+                if (roomCount != null) 'roomCount': roomCount,
+                'weight': weight,
+                'height': height,
               },
             );
             final error = expression.parse;

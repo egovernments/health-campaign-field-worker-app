@@ -17,6 +17,8 @@ class _IndividualDetailsShowcaseData {
       dateOfBirth,
       gender,
       mobile,
+      height,
+      weight
     ];
 
     // if (!hidedata) {
@@ -56,5 +58,11 @@ class _IndividualDetailsShowcaseData {
 
   final idType = ShowcaseItemBuilder(
     messageLocalizationKey: i18.individualDetailsShowcase.idType,
+  );
+  final height = ShowcaseItemBuilder(
+    messageLocalizationKey: "height",
+  );
+  final weight = ShowcaseItemBuilder(
+    messageLocalizationKey: "weight",
   );
 }

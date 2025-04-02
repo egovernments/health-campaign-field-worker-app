@@ -315,6 +315,9 @@ class BeneficiaryDetails {
 class IndividualDetails {
   const IndividualDetails();
 
+  
+  String get weightLabelText => 'WEIGHT_LABEL_TEXT';
+
   String get clfCheckboxLabelText => 'INDIVIDUAL_CLF_CHECKBOX_LABEL_TEXT';
 
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
