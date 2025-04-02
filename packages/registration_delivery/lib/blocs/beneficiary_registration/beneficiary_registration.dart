@@ -7,6 +7,7 @@ import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/id_status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../models/entities/household.dart';
@@ -169,7 +170,7 @@ class BeneficiaryRegistrationBloc
         if (uniqueId != null) {
           uniqueIdPoolLocalRepository.update(UniqueIdPoolModel(
               id: uniqueId.identifierId!,
-              status: 'ASSIGNED',
+              status: IdStatus.assigned.toValue(),
               clientReferenceId:
                   RegistrationDeliverySingleton().loggedInUserUuid!,
               userUUID: RegistrationDeliverySingleton().loggedInUserUuid!));

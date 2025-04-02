@@ -656,6 +656,6 @@ class UniqueIdGeneration {
     required String loggedInUserId,
     required bool returnCombinedIds,
   }) async {
-    return Random().nextInt(9999999);
+    return Random().nextInt(9999999); // TODO: Integrate with api
   }
 }

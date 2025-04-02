@@ -338,7 +338,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      fetchUniqueIdCount(theme),
+                      fetchUniqueIdCount(theme, form),
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
@@ -982,8 +982,16 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         });
   }
 
-  fetchUniqueIdCount(ThemeData theme) {
+  fetchUniqueIdCount(ThemeData theme, FormGroup form) {
     return BlocBuilder<UniqueIdBloc, UniqueIdState>(builder: (context, state) {
+      if (state is FetchedUniqueIdState) {
+        state.maybeWhen(
+            orElse: () {},
+            aUniqueId: (uniqueId) {
+              form.control(_idNumberKey).value = uniqueId.id;
+            });
+      }
+
       if (state is UniqueIdCountState) {
         return Container(
             decoration: BoxDecoration(
@@ -1005,7 +1013,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                         .digitTextTheme(context)
                         .bodyXS
                         .copyWith(color: theme.colorTheme.text.secondary)),
-                Text(" " + state.count.toString(),
+                Text(" ${state.count}",
                     style: theme.digitTextTheme(context).headingS.copyWith(
                         color: state.count < 10
                             ? theme.colorTheme.alert.error
