@@ -1,6 +1,7 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:registration_delivery/models/entities/task.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/status.dart';
+import '../../models/entities/unique_id_pool.dart';
 import '../../utils/typedefs.dart';
 import '../../utils/utils.dart';
 
@@ -33,6 +35,9 @@ class BeneficiaryRegistrationBloc
 
   final BeneficiaryType beneficiaryType;
 
+  final LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>
+      uniqueIdPoolLocalRepository;
+
   BeneficiaryRegistrationBloc(
     super.initialState, {
     required this.individualRepository,
@@ -41,6 +46,7 @@ class BeneficiaryRegistrationBloc
     required this.projectBeneficiaryRepository,
     required this.taskDataRepository,
     required this.beneficiaryType,
+    required this.uniqueIdPoolLocalRepository,
   }) {
     on(_handleSaveAddress);
     on(_handleSaveHouseDetails);
@@ -156,6 +162,19 @@ class BeneficiaryRegistrationBloc
         final locality = code == null || name == null
             ? null
             : LocalityModel(code: code, name: name);
+
+        final uniqueId = individual!.identifiers!.firstWhereOrNull((id) =>
+            id.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue());
+
+        if (uniqueId != null) {
+          uniqueIdPoolLocalRepository.update(UniqueIdPoolModel(
+              id: uniqueId.identifierId!,
+              status: 'ASSIGNED',
+              clientReferenceId:
+                  RegistrationDeliverySingleton().loggedInUserUuid!,
+              userUUID: RegistrationDeliverySingleton().loggedInUserUuid!));
+        }
+
         emit(BeneficiaryRegistrationSummaryState(
             navigateToRoot: false,
             householdModel: household?.copyWith(

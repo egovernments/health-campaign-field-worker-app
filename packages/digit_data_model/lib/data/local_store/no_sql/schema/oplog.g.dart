@@ -291,6 +291,7 @@ const _OpLogentityTypeEnumValueMap = {
   r'attendanceRegister': r'attendanceRegister',
   r'attendance': r'attendance',
   r'userLocation': r'userLocation',
+  r'uniqueId': r'uniqueId',
 };
 const _OpLogentityTypeValueEnumMap = {
   r'user': DataModelType.user,
@@ -326,6 +327,7 @@ const _OpLogentityTypeValueEnumMap = {
   r'attendanceRegister': DataModelType.attendanceRegister,
   r'attendance': DataModelType.attendance,
   r'userLocation': DataModelType.userLocation,
+  r'uniqueId': DataModelType.uniqueId,
 };
 const _OpLogoperationEnumValueMap = {
   r'create': r'create',

@@ -26,6 +26,8 @@ class Common {
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
 
+  String get coreCommonSkipContinue => 'CORE_COMMON_SKIP_CONTINUE';
+
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
   String get coreCommonName => 'CORE_COMMON_NAME';
@@ -291,6 +293,24 @@ class BeneficiaryDetails {
   String get status => 'STATUS';
 
   String get downloadedon => 'DOWNLOADED_ON';
+
+  String get beneficiaryIdsLabel => 'BENEFICIARY_IDS_LABEL';
+
+  String get downloadBeneficiaryIds => 'DOWNLOAD_BENEFICIARY_IDS';
+
+  String get availableBeneficiaryIdsLabel => 'AVAILABLE_BENEFICIARY_IDS_LABEL';
+
+  String get availableBeneficiaryIdsText => 'AVAILABLE_BENEFICIARY_IDS_TEXT';
+
+  String get lowBeneficiaryIdsLabel => 'LOW_BENEFICIARY_IDS_LABEL';
+
+  String get lowBeneficiaryIdsText => 'LOW_BENEFICIARY_IDS_TEXT';
+
+  String get noBeneficiaryIdsLabel => 'NO_BENEFICIARY_IDS_LABEL';
+
+  String get noBeneficiaryIdsText => 'NO_BENEFICIARY_IDS_TEXT';
+
+  String get totalBeneficiaryIds => 'TOTAL_BENEFICIARY_IDS';
 
   String get recordsdownload => 'RECORDS_DOWNLOAD';
 

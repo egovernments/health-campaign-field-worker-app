@@ -1,10 +1,13 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
+import '../../blocs/unique_id/unique_id.dart';
+import '../../models/entities/unique_id_pool.dart';
 import '../../utils/extensions/extensions.dart';
 
 @RoutePage()
@@ -27,6 +30,9 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
     final individual =
         context.repository<IndividualModel, IndividualSearchModel>(context);
+
+    final uniqueIdRepo = context
+        .read<LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>();
 
     final household =
         context.repository<HouseholdModel, HouseholdSearchModel>(context);
@@ -99,16 +105,24 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
             projectId: RegistrationDeliverySingleton().selectedProject!.id,
             projectBeneficiaryType:
                 RegistrationDeliverySingleton().beneficiaryType!)),
-      child: BlocProvider(
-        create: (context) => BeneficiaryRegistrationBloc(
-          initialState,
-          individualRepository: individual,
-          householdRepository: household,
-          householdMemberRepository: householdMember,
-          projectBeneficiaryRepository: projectBeneficiary,
-          taskDataRepository: task,
-          beneficiaryType: beneficiaryType!,
-        ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                UniqueIdBloc(uniqueIdPoolLocalRepository: uniqueIdRepo),
+          ),
+          BlocProvider(
+            create: (context) => BeneficiaryRegistrationBloc(initialState,
+                individualRepository: individual,
+                householdRepository: household,
+                householdMemberRepository: householdMember,
+                projectBeneficiaryRepository: projectBeneficiary,
+                taskDataRepository: task,
+                beneficiaryType: beneficiaryType!,
+                uniqueIdPoolLocalRepository: uniqueIdRepo),
+            child: this,
+          ),
+        ],
         child: this,
       ),
     );

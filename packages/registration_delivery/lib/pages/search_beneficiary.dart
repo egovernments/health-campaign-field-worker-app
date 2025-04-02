@@ -11,6 +11,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -451,19 +452,7 @@ class _SearchBeneficiaryPageState
                       ? false
                       : true,
                   onPressed: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    context.read<DigitScannerBloc>().add(
-                          const DigitScannerEvent.handleScanner(),
-                        );
-                    context.router.push(BeneficiaryRegistrationWrapperRoute(
-                      initialState: BeneficiaryRegistrationCreateState(
-                        searchQuery: searchHouseholdsState.searchQuery,
-                      ),
-                    ));
-                    searchController.clear();
-                    searchBeneficiaryController.clear();
-                    selectedFilters = [];
-                    blocWrapper.clearEvent();
+                    fetchBeneficiaryIdCount();
                   },
                 ),
                 DigitButton(
@@ -611,6 +600,107 @@ class _SearchBeneficiaryPageState
                         : blocWrapper
                             .searchHouseholdsBloc.state.beneficiaryIdQuery)));
       }
+    }
+  }
+
+  void fetchBeneficiaryIdCount() {
+    var count = 9;
+
+    if (count > 0) {
+      if (count < 10) {
+        showCustomPopup(
+            context: context,
+            builder: (context) {
+              return Popup(
+                type: PopUpType.alert,
+                actions: [
+                  DigitButton(
+                    capitalizeLetters: false,
+                    type: DigitButtonType.primary,
+                    size: DigitButtonSize.large,
+                    mainAxisSize: MainAxisSize.max,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    prefixIcon: Icons.download,
+                    label: localizations.translate(
+                      i18.beneficiaryDetails.downloadBeneficiaryIds,
+                    ),
+                  ),
+                  DigitButton(
+                    capitalizeLetters: false,
+                    type: DigitButtonType.tertiary,
+                    size: DigitButtonSize.large,
+                    mainAxisSize: MainAxisSize.max,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      context.read<DigitScannerBloc>().add(
+                            const DigitScannerEvent.handleScanner(),
+                          );
+                      context.router.push(BeneficiaryRegistrationWrapperRoute(
+                        initialState: BeneficiaryRegistrationCreateState(
+                          searchQuery: searchHouseholdsState.searchQuery,
+                        ),
+                      ));
+                      searchController.clear();
+                      searchBeneficiaryController.clear();
+                      selectedFilters = [];
+                      blocWrapper.clearEvent();
+                    },
+                    label: localizations.translate(
+                      i18.common.coreCommonSkipContinue,
+                    ),
+                  ),
+                ],
+                title: localizations
+                    .translate(i18.beneficiaryDetails.lowBeneficiaryIdsLabel),
+                description: localizations
+                    .translate(i18.beneficiaryDetails.lowBeneficiaryIdsText),
+              );
+            });
+      } else {
+        FocusManager.instance.primaryFocus?.unfocus();
+        context.read<DigitScannerBloc>().add(
+              const DigitScannerEvent.handleScanner(),
+            );
+        context.router.push(BeneficiaryRegistrationWrapperRoute(
+          initialState: BeneficiaryRegistrationCreateState(
+            searchQuery: searchHouseholdsState.searchQuery,
+          ),
+        ));
+        searchController.clear();
+        searchBeneficiaryController.clear();
+        selectedFilters = [];
+        blocWrapper.clearEvent();
+      }
+    } else {
+      showCustomPopup(
+          context: context,
+          builder: (context) {
+            return Popup(
+              type: PopUpType.alert,
+              actions: [
+                DigitButton(
+                  capitalizeLetters: false,
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.large,
+                  mainAxisSize: MainAxisSize.max,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  prefixIcon: Icons.download,
+                  label: localizations.translate(
+                    i18.beneficiaryDetails.downloadBeneficiaryIds,
+                  ),
+                ),
+              ],
+              title: localizations
+                  .translate(i18.beneficiaryDetails.noBeneficiaryIdsLabel),
+              description: localizations
+                  .translate(i18.beneficiaryDetails.noBeneficiaryIdsText),
+            );
+          });
     }
   }
 }

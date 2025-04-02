@@ -53,6 +53,7 @@ import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
 import 'tables/target.dart';
 import 'tables/user.dart';
+import 'tables/unique_id_pool.dart';
 
 // Part directive for the generated code.
 part 'sql_store.g.dart';
@@ -101,7 +102,8 @@ part 'sql_store.g.dart';
   TaskResource,
   SideEffect,
   Referral,
-  Localization
+  Localization,
+  UniqueIdPool
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   /// The constructor for `LocalSqlDataStore`.
