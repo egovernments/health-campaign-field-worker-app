@@ -49,4 +49,8 @@ enum AdditionalFieldsType {
   houseStructureTypes,
   @MappableValue("reasonOfRefusal")
   reasonOfRefusal,
+  @MappableValue("height")
+  height,
+  @MappableValue("weight")
+  weight,
 }
