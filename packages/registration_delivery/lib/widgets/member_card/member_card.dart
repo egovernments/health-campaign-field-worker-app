@@ -206,11 +206,14 @@ class MemberCard extends StatelessWidget {
                     for (var attribute in individualChecklist
                         ?.attributes ??
                         [])
+                      if(attribute.value != null && attribute.value != "" && attribute.value != "NOT_SELECTED")
                       localizations.translate(
                           '${RegistrationDeliverySingleton().selectedProject?.name}.INDIVIDUAL.DISTRIBUTOR.${attribute?.attributeCode}' //TODO:
                       ):
-                      localizations
-                          .translate(attribute?.value)
+                      attribute.value
+                          .split('.') // Split on `.`
+                          .map((part) => localizations.translate(part.trim())) // Localize each part
+                          .join(", ") // Join with `, `
                 },
               ),
             ),
