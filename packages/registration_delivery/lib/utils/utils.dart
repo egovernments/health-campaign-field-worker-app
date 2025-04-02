@@ -215,21 +215,27 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
 
       gender = individualModel.gender?.index;
 
-      weight = double.parse(individualModel.additionalFields != null
-          ? individualModel.additionalFields?.fields
-              .where((element) =>
-                  element.key == AdditionalFieldsType.weight.toValue())
-              .firstOrNull!
-              .value
-          : '0.0');
+      weight = double.tryParse(individualModel.additionalFields?.fields
+                  .firstWhere(
+                    (element) =>
+                        element.key == AdditionalFieldsType.weight.toValue(),
+                    orElse: () => AdditionalField(
+                        AdditionalFieldsType.weight.toValue(), '0.0'),
+                  )
+                  .value ??
+              '0.0') ??
+          0.0;
 
-      height = double.parse(individualModel.additionalFields != null
-          ? individualModel.additionalFields?.fields
-              .where((element) =>
-                  element.key == AdditionalFieldsType.height.toValue())
-              .firstOrNull!
-              .value
-          : '0.0');
+      height = double.tryParse(individualModel.additionalFields?.fields
+                  .firstWhere(
+                    (element) =>
+                        element.key == AdditionalFieldsType.height.toValue(),
+                    orElse: () => AdditionalField(
+                        AdditionalFieldsType.height.toValue(), '0.0'),
+                  )
+                  .value ??
+              '0.0') ??
+          0.0;
     }
     if (householdModel != null && householdModel.additionalFields != null) {
       memberCount = householdModel.memberCount;
