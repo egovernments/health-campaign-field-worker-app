@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:registration_delivery/models/entities/id_status.dart';
 import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 
 import '../../utils/utils.dart';
@@ -29,7 +30,7 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
     emit(const UniqueIdState.loading());
 
     final count = await uniqueIdPoolLocalRepository.search(
-      UniqueIdPoolSearchModel(status: 'UN_ASSIGNED'),
+      UniqueIdPoolSearchModel(status: IdStatus.unAssigned.toValue()),
     );
 
     emit(UniqueIdState.idCount(count.length, 100));
@@ -43,14 +44,15 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
       var id = await UniqueIdGeneration().generateUniqueId(
           localityCode: RegistrationDeliverySingleton().boundary!.code!,
           loggedInUserId: RegistrationDeliverySingleton().loggedInUserUuid!,
-          returnCombinedIds: false);
+          returnCombinedIds:
+              false); // TODO: Integrate with backend to fetch id's
 
       idsList.add(id);
     }
 
     await uniqueIdPoolLocalRepository.create(UniqueIdPoolModel(
       id: idsList.first.toString(),
-      status: 'UN_ASSIGNED',
+      status: IdStatus.unAssigned.toValue(),
       userUUID: RegistrationDeliverySingleton().loggedInUserUuid!,
       clientReferenceId: RegistrationDeliverySingleton().loggedInUserUuid!,
     ));
@@ -58,7 +60,7 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
     emit(UniqueIdState.ids(idsList
         .map((id) => UniqueIdPoolModel(
               id: id.toString(),
-              status: 'UN_ASSIGNED',
+              status: IdStatus.unAssigned.toValue(),
               userUUID: RegistrationDeliverySingleton().loggedInUserUuid!,
               clientReferenceId:
                   RegistrationDeliverySingleton().loggedInUserUuid!,
@@ -71,7 +73,7 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
     emit(const UniqueIdState.loading());
 
     final count = await uniqueIdPoolLocalRepository.search(
-      UniqueIdPoolSearchModel(status: 'UN_ASSIGNED'),
+      UniqueIdPoolSearchModel(status: IdStatus.unAssigned.toValue()),
     );
 
     emit(UniqueIdState.aUniqueId(count.first));
