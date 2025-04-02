@@ -19,10 +19,32 @@ class ServiceLocalRepository
 
       // Collect all attribute companions from all entities
       final List<Insertable<ServiceAttribute>> attributesCompanions = [];
+
       for (final entity in entities) {
         if (entity.attributes != null) {
           for (final attr in entity.attributes!) {
-            attributesCompanions.add(attr.companion);
+            final transformedAttr = attr.dataType == 'Number'
+                ? attr.copyWith(
+              value: attr.value.toString(), // Convert int back to string
+            )
+                : attr.dataType == 'MultiValueList'
+                ? attr.copyWith(
+              value: (attr.value is List)
+                  ? (attr.value as List).join('.')
+                  : attr.value, // Convert list back to dot-separated string
+              additionalDetails: attr.additionalDetails != null
+                  ? {"value": attr.additionalDetails}
+                  : attr.additionalDetails, // Keep original if null
+            )
+                : attr.dataType == 'SingleValueList'
+                ? attr.copyWith(
+              additionalDetails: attr.additionalDetails != null
+                  ? {"value": attr.additionalDetails}
+                  : attr.additionalDetails, // Keep original if null
+            )
+                : attr;
+
+            attributesCompanions.add(transformedAttr.companion);
           }
         }
       }
@@ -47,43 +69,6 @@ class ServiceLocalRepository
         }
       });
 
-      // final newEntity = ServiceModel(
-      //   id: entity.id,
-      //   clientId: entity.clientId,
-      //   serviceDefId: entity.serviceDefId,
-      //   isActive: entity.isActive,
-      //   accountId: entity.accountId,
-      //   tenantId: entity.tenantId,
-      //   isDeleted: entity.isDeleted,
-      //   rowVersion: entity.rowVersion,
-      //   additionalFields: entity.additionalFields,
-      //   auditDetails: entity.auditDetails,
-      //   clientAuditDetails: entity.clientAuditDetails,
-      //   attributes: entity.attributes?.map((e) {
-      //     return e.dataType == 'Number'
-      //         ? e.copyWith(value: int.tryParse(e.value))
-      //         : e.dataType == 'MultiValueList'
-      //         ? e.copyWith(
-      //       value: e.value.toString().split('.'),
-      //       additionalDetails: e.additionalDetails != null
-      //           ? {"value": e.additionalDetails}
-      //           : null,
-      //     )
-      //         : e.dataType == 'SingleValueList'
-      //         ? e.copyWith(
-      //       additionalDetails: e.additionalDetails != null
-      //           ? {"value": e.additionalDetails}
-      //           : null,
-      //     )
-      //         : e;
-      //   }).toList(),
-      // );
-      //
-      // await super.create(
-      //   newEntity,
-      //   dataOperation: DataOperation.singleCreate,
-      //   createOpLog: true,
-      // );
     });
   }
 
