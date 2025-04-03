@@ -280,7 +280,7 @@ class DeliverInterventionPageState
                                                       label: localizations
                                                           .translate(
                                                         i18.common
-                                                            .coreCommonSubmit,
+                                                            .coreCommonNext,
                                                       ),
                                                       type: DigitButtonType
                                                           .primary,

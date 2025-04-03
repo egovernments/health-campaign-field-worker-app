@@ -25,11 +25,8 @@ import '../widgets/localized.dart';
 
 @RoutePage()
 class SurveyFormViewPage extends LocalizedStatefulWidget {
-  final String? referralClientRefId;
-
   const SurveyFormViewPage({
     Key? key,
-    this.referralClientRefId,
     super.appLocalizations,
   }) : super(key: key);
 
@@ -77,6 +74,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 if (!isControllersInitialized) {
                   initialAttributes?.forEach((e) {
                     controller.add(TextEditingController());
+                    additionalController.add(TextEditingController());
                   });
 
                   // Set the flag to true after initializing controllers

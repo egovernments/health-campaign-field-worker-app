@@ -1,3 +1,9 @@
+## 1.0.4+2
+
+* BugFix:
+    * Modified Search to include relatedClientReference instead of clientId
+    * Sending relatedClientReferenceId in service model during create
+
 ## 1.0.4+1
 
 * Updated to latest package versions
