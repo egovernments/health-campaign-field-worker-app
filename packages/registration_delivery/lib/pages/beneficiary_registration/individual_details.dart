@@ -293,7 +293,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   form: form,
                                 );
 
-                                checklistKey.currentState?.submitSurvey(latitude: 876765, longitude: 89798, relatedReferenceId: individual.clientReferenceId);
+                                checklistKey.currentState?.submitSurvey(latitude: addressModel.latitude, longitude: addressModel.longitude, relatedReferenceId: individual.clientReferenceId);
 
                                 if (context.mounted) {
                                   final scannerBloc =
