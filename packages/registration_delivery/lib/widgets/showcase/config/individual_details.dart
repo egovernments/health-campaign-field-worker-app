@@ -60,9 +60,9 @@ class _IndividualDetailsShowcaseData {
     messageLocalizationKey: i18.individualDetailsShowcase.idType,
   );
   final height = ShowcaseItemBuilder(
-    messageLocalizationKey: "height",
+    messageLocalizationKey: i18.individualDetailsShowcase.height,
   );
   final weight = ShowcaseItemBuilder(
-    messageLocalizationKey: "weight",
+    messageLocalizationKey: i18.individualDetailsShowcase.weight,
   );
 }

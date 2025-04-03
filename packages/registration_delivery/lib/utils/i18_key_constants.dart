@@ -978,6 +978,12 @@ class IndividualDetailsShowcase {
   String get idType {
     return 'INDIVIDUAL_DETAILS_SHOWCASE_ID_TYPE';
   }
+  String get height {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_HEIGHT';
+  }
+  String get weight {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_WEIGHT';
+  }
 }
 
 class HouseholdOverviewShowcase {
