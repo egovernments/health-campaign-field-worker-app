@@ -226,10 +226,10 @@ class ServiceAttributesModelMapper
   static const Field<ServiceAttributesModel, bool> _f$nonRecoverableError =
       Field('nonRecoverableError', _$nonRecoverableError,
           opt: true, def: false);
-  static String _$clientReferenceId(ServiceAttributesModel v) =>
+  static String? _$clientReferenceId(ServiceAttributesModel v) =>
       v.clientReferenceId;
   static const Field<ServiceAttributesModel, String> _f$clientReferenceId =
-      Field('clientReferenceId', _$clientReferenceId);
+      Field('clientReferenceId', _$clientReferenceId, opt: true);
   static String? _$tenantId(ServiceAttributesModel v) => v.tenantId;
   static const Field<ServiceAttributesModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
@@ -408,7 +408,7 @@ class _ServiceAttributesModelCopyWithImpl<$R, $Out>
           Object? referenceId = $none,
           Object? additionalDetails = $none,
           Object? nonRecoverableError = $none,
-          String? clientReferenceId,
+          Object? clientReferenceId = $none,
           Object? tenantId = $none,
           Object? rowVersion = $none,
           Object? auditDetails = $none,
@@ -423,7 +423,7 @@ class _ServiceAttributesModelCopyWithImpl<$R, $Out>
         if (additionalDetails != $none) #additionalDetails: additionalDetails,
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
-        if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (auditDetails != $none) #auditDetails: auditDetails,
