@@ -37,7 +37,7 @@ class ServiceAttributesModel extends EntityModel
   final String? referenceId;
   final dynamic additionalDetails;
   final bool? nonRecoverableError;
-  final String clientReferenceId;
+  final String? clientReferenceId;  ///TODO:
   final String? tenantId;
   final int? rowVersion;
   final ServiceAttributesAdditionalFields? additionalFields;
@@ -50,7 +50,7 @@ class ServiceAttributesModel extends EntityModel
     this.referenceId,
     this.additionalDetails,
     this.nonRecoverableError = false,
-    required this.clientReferenceId,
+    this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
     super.auditDetails,

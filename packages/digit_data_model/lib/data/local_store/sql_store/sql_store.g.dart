@@ -22534,8 +22534,8 @@ class $ServiceAttributesTable extends ServiceAttributes
       const VerificationMeta('clientReferenceId');
   @override
   late final GeneratedColumn<String> clientReferenceId =
-      GeneratedColumn<String>('client_reference_id', aliasedName, false,
-          type: DriftSqlType.string, requiredDuringInsert: true);
+      GeneratedColumn<String>('client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _tenantIdMeta =
       const VerificationMeta('tenantId');
   @override
@@ -22681,8 +22681,6 @@ class $ServiceAttributesTable extends ServiceAttributes
           _clientReferenceIdMeta,
           clientReferenceId.isAcceptableOrUnknown(
               data['client_reference_id']!, _clientReferenceIdMeta));
-    } else if (isInserting) {
-      context.missing(_clientReferenceIdMeta);
     }
     if (data.containsKey('tenant_id')) {
       context.handle(_tenantIdMeta,
@@ -22742,7 +22740,7 @@ class $ServiceAttributesTable extends ServiceAttributes
       auditModifiedTime: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
       clientReferenceId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id']),
       tenantId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
       isDeleted: attachedDatabase.typeMapping
@@ -22776,7 +22774,7 @@ class ServiceAttribute extends DataClass
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
-  final String clientReferenceId;
+  final String? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
@@ -22796,7 +22794,7 @@ class ServiceAttribute extends DataClass
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
-      required this.clientReferenceId,
+      this.clientReferenceId,
       this.tenantId,
       this.isDeleted,
       this.rowVersion,
@@ -22846,7 +22844,9 @@ class ServiceAttribute extends DataClass
     if (!nullToAbsent || auditModifiedTime != null) {
       map['audit_modified_time'] = Variable<int>(auditModifiedTime);
     }
-    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || clientReferenceId != null) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId);
+    }
     if (!nullToAbsent || tenantId != null) {
       map['tenant_id'] = Variable<String>(tenantId);
     }
@@ -22905,7 +22905,9 @@ class ServiceAttribute extends DataClass
       auditModifiedTime: auditModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(auditModifiedTime),
-      clientReferenceId: Value(clientReferenceId),
+      clientReferenceId: clientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientReferenceId),
       tenantId: tenantId == null && nullToAbsent
           ? const Value.absent()
           : Value(tenantId),
@@ -22941,7 +22943,8 @@ class ServiceAttribute extends DataClass
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
-      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      clientReferenceId:
+          serializer.fromJson<String?>(json['clientReferenceId']),
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
@@ -22966,7 +22969,7 @@ class ServiceAttribute extends DataClass
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
-      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'clientReferenceId': serializer.toJson<String?>(clientReferenceId),
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
@@ -22989,7 +22992,7 @@ class ServiceAttribute extends DataClass
           Value<int?> clientModifiedTime = const Value.absent(),
           Value<String?> auditModifiedBy = const Value.absent(),
           Value<int?> auditModifiedTime = const Value.absent(),
-          String? clientReferenceId,
+          Value<String?> clientReferenceId = const Value.absent(),
           Value<String?> tenantId = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
@@ -23029,7 +23032,9 @@ class ServiceAttribute extends DataClass
         auditModifiedTime: auditModifiedTime.present
             ? auditModifiedTime.value
             : this.auditModifiedTime,
-        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        clientReferenceId: clientReferenceId.present
+            ? clientReferenceId.value
+            : this.clientReferenceId,
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
@@ -23124,7 +23129,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
-  final Value<String> clientReferenceId;
+  final Value<String?> clientReferenceId;
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
@@ -23167,13 +23172,13 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
-    required String clientReferenceId,
+    this.clientReferenceId = const Value.absent(),
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : clientReferenceId = Value(clientReferenceId);
+  });
   static Insertable<ServiceAttribute> custom({
     Expression<String>? attributeCode,
     Expression<String>? value,
@@ -23237,7 +23242,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
-      Value<String>? clientReferenceId,
+      Value<String?>? clientReferenceId,
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
@@ -48519,7 +48524,7 @@ typedef $$ServiceAttributesTableInsertCompanionBuilder
   Value<int?> clientModifiedTime,
   Value<String?> auditModifiedBy,
   Value<int?> auditModifiedTime,
-  required String clientReferenceId,
+  Value<String?> clientReferenceId,
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
@@ -48542,7 +48547,7 @@ typedef $$ServiceAttributesTableUpdateCompanionBuilder
   Value<int?> clientModifiedTime,
   Value<String?> auditModifiedBy,
   Value<int?> auditModifiedTime,
-  Value<String> clientReferenceId,
+  Value<String?> clientReferenceId,
   Value<String?> tenantId,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
@@ -48585,7 +48590,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             Value<int?> clientModifiedTime = const Value.absent(),
             Value<String?> auditModifiedBy = const Value.absent(),
             Value<int?> auditModifiedTime = const Value.absent(),
-            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> clientReferenceId = const Value.absent(),
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
@@ -48629,7 +48634,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             Value<int?> clientModifiedTime = const Value.absent(),
             Value<String?> auditModifiedBy = const Value.absent(),
             Value<int?> auditModifiedTime = const Value.absent(),
-            required String clientReferenceId,
+            Value<String?> clientReferenceId = const Value.absent(),
             Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),

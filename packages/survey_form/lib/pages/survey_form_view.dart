@@ -100,6 +100,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
     required double? longitude,
     String? relatedReferenceId,
   }) {
+
+    if(initialAttributes == null || initialAttributes!.isEmpty) return;
     final referenceId = IdGen.i.identifier;
     List<ServiceAttributesModel> attributes = [];
 
