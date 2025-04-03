@@ -274,7 +274,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                           )
                                         ]));
 
-                                checklistKey.currentState?.submitSurvey(latitude: 876765, longitude: 89798, relatedReferenceId: householdModel?.clientReferenceId ??
+                                checklistKey.currentState?.submitSurvey(latitude: addressModel?.latitude, longitude: addressModel?.longitude, relatedReferenceId: householdModel?.clientReferenceId ??
                                     IdGen.i.identifier);
 
 
