@@ -327,7 +327,7 @@ class MemberCard extends StatelessWidget {
                                                     .toList()
                                                     .isEmpty) {
                                                   context.router.push(
-                                                    DeliverInterventionRoute(),
+                                                    BeneficiaryDetailsRoute(),
                                                   );
                                                 } else {
                                                   navigateToChecklist(context,

@@ -408,8 +408,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 : localizations.translate(
                                     i18.householdDetails.householdDetailsLabel,
                                   ),
-                            headingStyle: textTheme.headingXl.copyWith(color:
-                            theme.colorTheme.primary.primary2),
+                            headingStyle: textTheme.headingXl.copyWith(
+                                color: theme.colorTheme.primary.primary2),
                             description: localizations.translate(
                               i18.householdDetails.householdDetailsDescription,
                             ),
@@ -477,6 +477,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                           .value
                                           .toString(),
                                   onChange: (value) {
+                                    setState(() {});
                                     if (value.isEmpty) {
                                       _pregnantWomenController.text = '0';
                                       form
@@ -562,6 +563,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                       form.control(_childrenCountKey).value = 0;
                                       return;
                                     }
+                                    setState(() {});
                                     // Remove leading zeros
                                     String newValue = value;
 
@@ -620,8 +622,18 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
                                   ],
-                                  minValue: children + pregnantWomen != 0
-                                      ? children + pregnantWomen
+                                  minValue: form
+                                                  .control(_childrenCountKey)
+                                                  .value +
+                                              form
+                                                  .control(
+                                                      _pregnantWomenCountKey)
+                                                  .value !=
+                                          0
+                                      ? form.control(_childrenCountKey).value +
+                                          form
+                                              .control(_pregnantWomenCountKey)
+                                              .value
                                       : 1,
                                   maxValue: !isCommunity ? 30 : 1000000,
                                   maxLength: 5,
