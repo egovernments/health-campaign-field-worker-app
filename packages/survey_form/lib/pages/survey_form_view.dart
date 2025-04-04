@@ -115,7 +115,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
           ),
           attributeCode: '${attribute?[i].code}',
           dataType: attribute?[i].dataType,
-          clientReferenceId: IdGen.i.identifier,
+          clientReferenceId: referenceId,
           referenceId: referenceId,
           value: attribute?[i].dataType != 'SingleValueList'
               ? controller[i].text.trim().isNotEmpty

@@ -399,6 +399,7 @@ class _HouseholdOverviewPageState
                                           size: DigitButtonSize.medium,
                                           prefixIcon: Icons.edit,
                                           capitalizeLetters: false,
+                                          isDisabled: true,  // TODO: need to check later
                                         ),
                                       ),
 
