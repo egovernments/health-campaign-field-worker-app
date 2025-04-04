@@ -21,6 +21,7 @@ import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
+import '../../utils/constants.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/component_wrapper/facility_bloc_wrapper.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
@@ -319,64 +320,86 @@ class StockReconciliationPageState
                                                 (facilities, allFacilities) {
                                               return Column(
                                                 children: [
-                                                  InkWell(
-                                                    onTap: () async {
-                                                      final stockReconciliationBloc =
-                                                          context.read<
-                                                              StockReconciliationBloc>();
-                                                      final facility = await context
-                                                              .router
-                                                              .push(InventoryFacilitySelectionRoute(
-                                                                  facilities:
-                                                                      facilities))
-                                                          as FacilityModel?;
-
-                                                      if (facility == null)
-                                                        return;
-                                                      form
-                                                              .control(_facilityKey)
-                                                              .value =
-                                                          localizations
-                                                              .translate(
-                                                        'FAC_${facility.id}',
-                                                      );
-                                                      controller1.text =
-                                                          localizations
-                                                              .translate(
-                                                        'FAC_${facility.id}',
-                                                      );
-                                                      setState(() {
-                                                        selectedFacilityId =
-                                                            facility.id;
-                                                      });
-                                                      stockReconciliationBloc
-                                                          .add(
-                                                        StockReconciliationSelectFacilityEvent(
-                                                          facility,
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: IgnorePointer(
-                                                      child:
-                                                          ReactiveWrapperField(
-                                                        formControlName:
-                                                            _facilityKey,
-                                                        builder: (field) {
-                                                          return InputField(
-                                                            type: InputType
-                                                                .search,
-                                                            isRequired: true,
-                                                            controller:
-                                                                controller1,
+                                                  ReactiveWrapperField(
+                                                    formControlName:
+                                                        _facilityKey,
+                                                    builder: (field) =>
+                                                        LabeledField(
                                                             label: localizations
                                                                 .translate(
                                                               i18.stockReconciliationDetails
                                                                   .facilityLabel,
                                                             ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    ),
+                                                            isRequired: true,
+                                                            child:
+                                                                DigitDropdown(
+                                                              sentenceCaseEnabled:
+                                                                  false,
+                                                              selectedOption: DropdownItem(
+                                                                  name: form
+                                                                          .control(
+                                                                              _facilityKey)
+                                                                          .value ??
+                                                                      '',
+                                                                  code: form
+                                                                          .control(
+                                                                              _facilityKey)
+                                                                          .value ??
+                                                                      ''),
+                                                              isSearchable:
+                                                                  true,
+                                                              emptyItemText:
+                                                                  localizations
+                                                                      .translate(i18
+                                                                          .common
+                                                                          .noMatchFound),
+                                                              errorMessage: field
+                                                                  .errorText,
+                                                              onSelect:
+                                                                  (value) {
+                                                                form
+                                                                        .control(
+                                                                            _facilityKey)
+                                                                        .value =
+                                                                    localizations
+                                                                        .translate(
+                                                                  'FAC_${value.code}',
+                                                                );
+                                                                controller1
+                                                                        .text =
+                                                                    localizations
+                                                                        .translate(
+                                                                  'FAC_${value.code}',
+                                                                );
+                                                                setState(() {
+                                                                  selectedFacilityId =
+                                                                      value
+                                                                          .code;
+                                                                });
+                                                                final stockReconciliationBloc =
+                                                                    context.read<
+                                                                        StockReconciliationBloc>();
+                                                                final facility =
+                                                                    facilities.firstWhere((e) =>
+                                                                        e.id ==
+                                                                        value
+                                                                            .code);
+                                                                stockReconciliationBloc
+                                                                    .add(
+                                                                  StockReconciliationSelectFacilityEvent(
+                                                                    facility,
+                                                                  ),
+                                                                );
+                                                              },
+                                                              items: facilities
+                                                                  .map((e) {
+                                                                return DropdownItem(
+                                                                    name: localizations
+                                                                        .translate(
+                                                                            '$facilityPrefix${e.id}'),
+                                                                    code: e.id);
+                                                              }).toList(),
+                                                            )),
                                                   ),
                                                 ],
                                               );

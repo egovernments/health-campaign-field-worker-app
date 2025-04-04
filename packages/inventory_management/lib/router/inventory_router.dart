@@ -22,9 +22,6 @@ class InventoryRoute extends $InventoryRoute {
           AutoRoute(page: StockDetailsRoute.page, path: 'details'),
         ]),
     AutoRoute(
-        page: InventoryFacilitySelectionRoute.page,
-        path: 'inventory-select-facilities'),
-    AutoRoute(
         page: StockReconciliationRoute.page, path: 'stock-reconciliation'),
     AutoRoute(
         page: InventoryReportSelectionRoute.page,

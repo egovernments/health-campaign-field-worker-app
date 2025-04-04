@@ -233,90 +233,73 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
               slivers: [
                 SliverToBoxAdapter(
                   child: DigitCard(
-                    margin: const EdgeInsets.symmetric(horizontal: spacer2),
+                      margin: const EdgeInsets.symmetric(horizontal: spacer2),
                       children: [
-                    Text(
-                      localizations.translate(
-                        i18.referBeneficiary.referralDetails,
-                      ),
-                      style: textTheme.headingXl.copyWith(
-                        color: theme.colorTheme.primary.primary2
-                      ),
-                    ),
-                    ReactiveWrapperField(
-                      formControlName: _dateOfReferralKey,
-                      builder: (field) => LabeledField(
-                        label: localizations.translate(
-                          i18.referBeneficiary.dateOfReferralLabel,
-                        ),
-                        child: DigitDateFormInput(
-                          readOnly: true,
-                          isRequired: false,
-                          initialValue: DateFormat('dd MMM yyyy')
-                              .format(form.control(_dateOfReferralKey).value)
-                              .toString(),
-                          initialDate: DateTime.now(),
-                          cancelText: localizations
-                              .translate(i18.common.coreCommonCancel),
-                          confirmText:
-                              localizations.translate(i18.common.coreCommonOk),
-                        ),
-                      ),
-                    ),
-                    ReactiveWrapperField(
-                      formControlName: _administrativeUnitKey,
-                      builder: (field) => LabeledField(
-                        label: localizations.translate(
-                          i18.referBeneficiary.administrationUnitFormLabel,
-                        ),
-                        isRequired: true,
-                        child: DigitTextFormInput(
-                          readOnly: true,
-                          initialValue:
-                              form.control(_administrativeUnitKey).value,
-                        ),
-                      ),
-                    ),
-                    ReactiveWrapperField(
-                      formControlName: _referredByKey,
-                      validationMessages: {
-                        'required': (_) => localizations.translate(
-                              i18.common.corecommonRequired,
-                            ),
-                      },
-                      builder: (field) => LabeledField(
-                        label: localizations.translate(
-                          i18.referBeneficiary.referredByLabel,
-                        ),
-                        isRequired: true,
-                        child: DigitTextFormInput(
-                          errorMessage: field.errorText,
-                          readOnly: true,
-                          onChange: (value) {
-                            form.control(_referredByKey).value = value;
-                          },
-                          initialValue: form.control(_referredByKey).value,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        final parent = context.router.parent() as StackRouter;
-                        final facility = await parent.push(
-                          FacilitySelectionRoute(
-                            facilities: facilities,
+                        Text(
+                          localizations.translate(
+                            i18.referBeneficiary.referralDetails,
                           ),
-                        ) as FacilityModel?;
-
-                        if (facility == null) return;
-                        form.control(_referredToKey).value =
-                            localizations.translate('FAC_${facility.id}');
-                        setState(() {
-                          selectedProjectFacilityId = facility.id;
-                        });
-                      },
-                      child: IgnorePointer(
-                        child: ReactiveWrapperField(
+                          style: textTheme.headingXl.copyWith(
+                              color: theme.colorTheme.primary.primary2),
+                        ),
+                        ReactiveWrapperField(
+                          formControlName: _dateOfReferralKey,
+                          builder: (field) => LabeledField(
+                            label: localizations.translate(
+                              i18.referBeneficiary.dateOfReferralLabel,
+                            ),
+                            child: DigitDateFormInput(
+                              readOnly: true,
+                              isRequired: false,
+                              initialValue: DateFormat('dd MMM yyyy')
+                                  .format(
+                                      form.control(_dateOfReferralKey).value)
+                                  .toString(),
+                              initialDate: DateTime.now(),
+                              cancelText: localizations
+                                  .translate(i18.common.coreCommonCancel),
+                              confirmText: localizations
+                                  .translate(i18.common.coreCommonOk),
+                            ),
+                          ),
+                        ),
+                        ReactiveWrapperField(
+                          formControlName: _administrativeUnitKey,
+                          builder: (field) => LabeledField(
+                            label: localizations.translate(
+                              i18.referBeneficiary.administrationUnitFormLabel,
+                            ),
+                            isRequired: true,
+                            child: DigitTextFormInput(
+                              readOnly: true,
+                              initialValue:
+                                  form.control(_administrativeUnitKey).value,
+                            ),
+                          ),
+                        ),
+                        ReactiveWrapperField(
+                          formControlName: _referredByKey,
+                          validationMessages: {
+                            'required': (_) => localizations.translate(
+                                  i18.common.corecommonRequired,
+                                ),
+                          },
+                          builder: (field) => LabeledField(
+                            label: localizations.translate(
+                              i18.referBeneficiary.referredByLabel,
+                            ),
+                            isRequired: true,
+                            child: DigitTextFormInput(
+                              errorMessage: field.errorText,
+                              readOnly: true,
+                              onChange: (value) {
+                                form.control(_referredByKey).value = value;
+                              },
+                              initialValue: form.control(_referredByKey).value,
+                            ),
+                          ),
+                        ),
+                        ReactiveWrapperField(
                           formControlName: _referredToKey,
                           validationMessages: {
                             'required': (_) => localizations.translate(
@@ -329,79 +312,84 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                               i18.referBeneficiary.referredToLabel,
                             ),
                             isRequired: true,
-                            child: DigitSearchFormInput(
+                            child: DigitDropdown(
+                              sentenceCaseEnabled: false,
+                              selectedOption: DropdownItem(
+                                  name:
+                                      form.control(_referredToKey).value ?? '',
+                                  code:
+                                      form.control(_referredToKey).value ?? ''),
+                              isSearchable: true,
+                              emptyItemText: localizations
+                                  .translate(i18.common.noMatchFound),
                               errorMessage: field.errorText,
-                              initialValue: form.control(_referredToKey).value,
-                              onSuffixTap: (value) async {
-                                final parent =
-                                    context.router.parent() as StackRouter;
-                                final facility = await parent.push(
-                                  FacilitySelectionRoute(
-                                    facilities: facilities,
-                                  ),
-                                ) as FacilityModel?;
-
-                                if (facility == null) return;
+                              items: facilities.map((e) {
+                                return DropdownItem(
+                                    name:
+                                        localizations.translate('FAC_${e.id}'),
+                                    code: e.id);
+                              }).toList(),
+                              onSelect: (value) {
                                 form.control(_referredToKey).value =
                                     localizations
-                                        .translate('FAC_${facility.id}');
+                                        .translate('FAC_${value.code}');
 
                                 setState(() {
-                                  selectedProjectFacilityId = facility.id;
+                                  selectedProjectFacilityId = value.code;
                                 });
                               },
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    ReactiveWrapperField(
-                      formControlName: _referralReason,
-                      validationMessages: {
-                        'required': (_) => localizations.translate(
-                              i18.common.corecommonRequired,
+                        ReactiveWrapperField(
+                          formControlName: _referralReason,
+                          validationMessages: {
+                            'required': (_) => localizations.translate(
+                                  i18.common.corecommonRequired,
+                                ),
+                          },
+                          builder: (field) => LabeledField(
+                            label: localizations.translate(
+                              i18.referBeneficiary.reasonForReferral,
                             ),
-                      },
-                      builder: (field) => LabeledField(
-                        label: localizations.translate(
-                          i18.referBeneficiary.reasonForReferral,
-                        ),
-                        isRequired: true,
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: RadioList(
-                            containerPadding: const EdgeInsets.all(spacer2),
-                            radioDigitButtons: reasons
-                                .map((e) => RadioButtonModel(
-                                    code: e.key.toString(),
-                                    name: localizations.translate(e.label)))
-                                .toList(),
-                            errorMessage: field.errorText,
-                            groupValue:
-                                form.control(_referralReason).value ?? '',
-                            onChanged: (val) {
-                              form.control(_referralReason).value = val.code;
-                            },
+                            isRequired: true,
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: RadioList(
+                                containerPadding: const EdgeInsets.all(spacer2),
+                                radioDigitButtons: reasons
+                                    .map((e) => RadioButtonModel(
+                                        code: e.key.toString(),
+                                        name: localizations.translate(e.label)))
+                                    .toList(),
+                                errorMessage: field.errorText,
+                                groupValue:
+                                    form.control(_referralReason).value ?? '',
+                                onChanged: (val) {
+                                  form.control(_referralReason).value =
+                                      val.code;
+                                },
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    ReactiveWrapperField(
-                      formControlName: _referralComments,
-                      builder: (field) => LabeledField(
-                        label: localizations.translate(
-                          i18.referBeneficiary.referralComments,
+                        ReactiveWrapperField(
+                          formControlName: _referralComments,
+                          builder: (field) => LabeledField(
+                            label: localizations.translate(
+                              i18.referBeneficiary.referralComments,
+                            ),
+                            child: DigitTextAreaFormInput(
+                              maxLine: 3,
+                              initialValue:
+                                  form.control(_referralComments).value,
+                              onChange: (value) {
+                                form.control(_referralComments).value = value;
+                              },
+                            ),
+                          ),
                         ),
-                        child: DigitTextAreaFormInput(
-                          maxLine: 3,
-                          initialValue: form.control(_referralComments).value,
-                          onChange: (value) {
-                            form.control(_referralComments).value = value;
-                          },
-                        ),
-                      ),
-                    ),
-                  ]),
+                      ]),
                 ),
               ],
             ),

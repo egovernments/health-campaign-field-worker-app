@@ -15,10 +15,10 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/record_stock.dart';
+import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/inventory/no_facilities_assigned_dialog.dart';
-import '../facility_selection.dart';
 
 @RoutePage()
 class WarehouseDetailsPage extends LocalizedStatefulWidget {
@@ -292,69 +292,65 @@ class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                             readOnly: true,
                                           );
                                         }),
-                                    InkWell(
-                                      onTap: () async {
-                                        clearQRCodes();
-                                        form.control(_teamCodeKey).value = '';
-
-                                        final facility =
-                                            await Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                InventoryFacilitySelectionPage(
-                                              facilities: facilities,
-                                            ),
+                                    ReactiveWrapperField(
+                                      formControlName: _warehouseKey,
+                                      builder: (field) => LabeledField(
+                                          label: localizations.translate(
+                                            i18.stockReconciliationDetails
+                                                .facilityLabel,
                                           ),
-                                        );
+                                          isRequired: true,
+                                          child: DigitDropdown(
+                                            sentenceCaseEnabled: false,
+                                            selectedOption: DropdownItem(
+                                              name: form
+                                                      .control(_warehouseKey)
+                                                      .value ??
+                                                  '',
+                                              code: selectedFacilityId ?? '',
+                                            ),
+                                            isSearchable: true,
+                                            emptyItemText:
+                                                localizations.translate(
+                                                    i18.common.noMatchFound),
+                                            errorMessage: field.errorText,
+                                            onSelect: (value) {
+                                              clearQRCodes();
+                                              form.control(_teamCodeKey).value =
+                                                  '';
 
-                                        if (facility == null) return;
-                                        form.control(_warehouseKey).value =
-                                            localizations.translate(
-                                                'FAC_${facility.id}');
-                                        controller1.text = localizations
-                                            .translate('FAC_${facility.id}');
-
-                                        setState(() {
-                                          selectedFacilityId = facility.id;
-                                        });
-                                        if (facility.id == 'Delivery Team') {
-                                          setState(() {
-                                            deliveryTeamSelected = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            deliveryTeamSelected = false;
-                                          });
-                                        }
-                                      },
-                                      child: IgnorePointer(
-                                        child: ReactiveWrapperField(
-                                            formControlName: _warehouseKey,
-                                            validationMessages: {
-                                              'required': (object) =>
+                                              form
+                                                      .control(_warehouseKey)
+                                                      .value =
                                                   localizations.translate(
-                                                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                                                  ),
+                                                      'FAC_${value.code}');
+                                              controller1.text =
+                                                  localizations.translate(
+                                                      'FAC_${value.code}');
+
+                                              setState(() {
+                                                selectedFacilityId = value.code;
+                                              });
+
+                                              if (value.code ==
+                                                  'Delivery Team') {
+                                                setState(() {
+                                                  deliveryTeamSelected = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  deliveryTeamSelected = false;
+                                                });
+                                              }
                                             },
-                                            showErrors: (control) =>
-                                                control.invalid &&
-                                                control.touched,
-                                            builder: (field) {
-                                              return InputField(
-                                                type: InputType.search,
-                                                label: localizations.translate(
-                                                  i18.stockReconciliationDetails
-                                                      .facilityLabel,
-                                                ),
-                                                controller: controller1,
-                                                isRequired: true,
-                                                errorMessage: field.errorText,
-                                                onChange: (value) {
-                                                  field.control.markAsTouched();
-                                                },
+                                            items: facilities.map((e) {
+                                              return DropdownItem(
+                                                name: localizations.translate(
+                                                    '$facilityPrefix${e.id}'),
+                                                code: e.id,
                                               );
-                                            }),
-                                      ),
+                                            }).toList(),
+                                          )),
                                     ),
                                     if (deliveryTeamSelected)
                                       ReactiveWrapperField(

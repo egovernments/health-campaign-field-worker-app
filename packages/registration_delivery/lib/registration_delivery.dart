@@ -46,7 +46,6 @@ export 'pages/beneficiary/beneficiary_details.dart';
 export 'pages/beneficiary/beneficiary_wrapper.dart';
 export 'pages/beneficiary/deliver_intervention.dart';
 export 'pages/beneficiary/dose_administered.dart';
-export 'pages/beneficiary/facility_selection.dart';
 export 'pages/beneficiary/household_overview.dart';
 export 'pages/beneficiary/record_past_delivery_details.dart';
 export 'pages/beneficiary/refer_beneficiary.dart';

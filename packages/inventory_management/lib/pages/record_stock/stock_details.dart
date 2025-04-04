@@ -22,6 +22,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
+import '../../utils/constants.dart';
 import '../../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
@@ -746,77 +747,82 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             const SizedBox(
                                               height: spacer4,
                                             ),
-                                            InkWell(
-                                              onTap: () async {
-                                                clearQRCodes();
-                                                form
-                                                    .control(_deliveryTeamKey)
-                                                    .value = '';
-
-                                                final facility =
-                                                    await context.router.push(
-                                                            InventoryFacilitySelectionRoute(
-                                                                facilities:
-                                                                    facilities))
-                                                        as FacilityModel?;
-
-                                                if (facility == null) return;
-                                                form
-                                                        .control(_secondaryPartyKey)
-                                                        .value =
+                                            ReactiveWrapperField(
+                                              formControlName:
+                                                  _secondaryPartyKey,
+                                              validationMessages: {
+                                                'required': (object) =>
                                                     localizations.translate(
-                                                  'FAC_${facility.id}',
-                                                );
-                                                controller1.text =
-                                                    localizations.translate(
-                                                        'FAC_${facility.id}');
-                                                setState(() {
-                                                  selectedFacilityId =
-                                                      facility.id;
-                                                });
-                                                if (facility.id ==
-                                                    'Delivery Team') {
-                                                  setState(() {
-                                                    deliveryTeamSelected = true;
-                                                  });
-                                                } else {
-                                                  setState(() {
-                                                    deliveryTeamSelected =
-                                                        false;
-                                                  });
-                                                }
+                                                      '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                                    ),
                                               },
-                                              child: IgnorePointer(
-                                                child: ReactiveWrapperField(
-                                                    formControlName:
-                                                        _secondaryPartyKey,
-                                                    validationMessages: {
-                                                      'required': (object) =>
-                                                          localizations
-                                                              .translate(
-                                                            '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                                                          ),
-                                                    },
-                                                    showErrors: (control) =>
-                                                        control.invalid &&
-                                                        control.touched,
-                                                    builder: (field) {
-                                                      return InputField(
-                                                        type: InputType.search,
-                                                        isRequired: true,
-                                                        label: localizations
+                                              showErrors: (control) =>
+                                                  control.invalid &&
+                                                  control.touched,
+                                              builder: (field) => LabeledField(
+                                                label: localizations.translate(
+                                                  '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
+                                                ),
+                                                isRequired: true,
+                                                child: DigitDropdown(
+                                                  sentenceCaseEnabled: false,
+                                                  selectedOption: DropdownItem(
+                                                    name: form
+                                                            .control(
+                                                                _secondaryPartyKey)
+                                                            .value ??
+                                                        '',
+                                                    code: selectedFacilityId ??
+                                                        '',
+                                                  ),
+                                                  isSearchable: true,
+                                                  emptyItemText: localizations
+                                                      .translate(i18
+                                                          .common.noMatchFound),
+                                                  errorMessage: field.errorText,
+                                                  onSelect: (value) {
+                                                    clearQRCodes();
+                                                    form
+                                                        .control(
+                                                            _deliveryTeamKey)
+                                                        .value = '';
+
+                                                    form
+                                                            .control(
+                                                                _secondaryPartyKey)
+                                                            .value =
+                                                        localizations.translate(
+                                                      'FAC_${value.code}',
+                                                    );
+                                                    controller1.text =
+                                                        localizations.translate(
+                                                            'FAC_${value.code}');
+                                                    setState(() {
+                                                      selectedFacilityId =
+                                                          value.code;
+                                                    });
+
+                                                    if (value.code ==
+                                                        'Delivery Team') {
+                                                      setState(() {
+                                                        deliveryTeamSelected =
+                                                            true;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        deliveryTeamSelected =
+                                                            false;
+                                                      });
+                                                    }
+                                                  },
+                                                  items: facilities.map((e) {
+                                                    return DropdownItem(
+                                                        name: localizations
                                                             .translate(
-                                                          '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
-                                                        ),
-                                                        onChange: (value) {
-                                                          field.control
-                                                              .markAsTouched();
-                                                        },
-                                                        controller: controller1,
-                                                        errorMessage:
-                                                            field.errorText,
-                                                      );
-                                                    }),
+                                                                '$facilityPrefix${e.id}'),
+                                                        code: e.id);
+                                                  }).toList(),
+                                                ),
                                               ),
                                             ),
                                           ],

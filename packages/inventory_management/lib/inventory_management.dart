@@ -20,7 +20,6 @@ export 'models/entities/stock_reconciliation.dart';
 export 'models/entities/transaction_reason.dart';
 export 'models/entities/transaction_type.dart';
 export 'pages/acknowledgement.dart';
-export 'pages/facility_selection.dart';
 export 'pages/manage_stocks.dart';
 export 'pages/record_stock/record_stock_wrapper.dart';
 export 'pages/record_stock/stock_details.dart';
