@@ -227,8 +227,8 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                           },
                                           showErrors: (control) =>
                                               control.invalid &&
-                                              control
-                                                  .touched, // Ensures error is shown if invalid and touched
+                                              control.touched,
+                                          // Ensures error is shown if invalid and touched
                                           builder: (field) {
                                             return LabeledField(
                                               isRequired: true,
@@ -279,9 +279,8 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                               ),
                                         },
                                         showErrors: (control) =>
-                                            control.invalid &&
-                                            control
-                                                .touched, // Ensures error is shown if invalid and touched
+                                            control.invalid && control.touched,
+                                        // Ensures error is shown if invalid and touched
                                         builder: (field) => LabeledField(
                                           isRequired: true,
                                           label: localizations.translate(
@@ -291,6 +290,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                           child: DigitDropdown(
                                             errorMessage: field.errorText,
                                             sentenceCaseEnabled: false,
+                                            isDisabled: viewOnly,
                                             selectedOption: DropdownItem(
                                               name: form
                                                       .control(
@@ -311,6 +311,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                                 code: e.id,
                                               );
                                             }).toList(),
+                                            readOnly: viewOnly,
                                             onSelect: (value) {
                                               form
                                                       .control(
