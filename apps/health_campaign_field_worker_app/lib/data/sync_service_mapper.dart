@@ -107,6 +107,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.referral:
           case DataModelType.hFReferral:
           case DataModelType.attendance:
+          case DataModelType.service:
             return true;
           default:
             return false;
@@ -718,6 +719,52 @@ class SyncServiceMapper extends SyncEntityMapperListener {
 
         break;
 
+      case DataModelType.service:
+        responseEntities = await remote.search(ServiceSearchModel(
+          referenceId: entities
+              .whereType<ServiceModel>()
+              .map((e) => e.referenceId)
+              .whereNotNull()
+              .toList(),
+        ));
+
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as ServiceModel;
+          final responseEntity = responseEntities
+              .whereType<ServiceModel>()
+              .firstWhereOrNull(
+                (e) => e.referenceId == entity.referenceId,
+          );
+
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+
+          if (serverGeneratedId != null) {
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: entity.clientId,
+                serverGeneratedId: serverGeneratedId,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+              ),
+            );
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(entity.clientId);
+
+            if (markAsNonRecoverable) {
+              await local.update(
+                entity.copyWith(
+                  nonRecoverableError: true,
+                ),
+                createOpLog: false,
+              );
+            }
+          }
+        }
+
+        break;
       // Note: Uncomment the following code block to enable complaints sync down
 
       // case DataModelType.complaints:

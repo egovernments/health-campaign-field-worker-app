@@ -167,7 +167,7 @@ class ServiceLocalRepository
 
         final val = await (selectattributeQuery
               ..where(buildAnd([
-                sql.serviceAttributes.referenceId.equals(
+                sql.serviceAttributes.clientReferenceId.equals(
                   data.clientId,
                 ),
               ])))

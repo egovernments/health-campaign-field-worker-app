@@ -119,7 +119,7 @@ class MemberCard extends StatelessWidget {
                       context.router.push(ParentOverviewRoute());
                     }, type: DigitButtonType.tertiary, size: DigitButtonSize.large)
                         :DigitButton(
-                      isDisabled: (projectBeneficiaries ?? []).isEmpty,
+                      isDisabled: (projectBeneficiaries ?? []).isEmpty || true,  // todo: need to check the logic again
                       onPressed: () => showDialog(
                         context: context,
                         builder: (ctx) => DigitActionCard(

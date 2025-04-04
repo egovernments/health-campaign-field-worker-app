@@ -146,6 +146,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                         label: localizations.translate(
                                           i18.memberCard.editIndividualDetails,
                                         ),
+                                        isDisabled: true,  // TODO: need to check again
                                         type: DigitButtonType.tertiary,
                                         size: DigitButtonSize.medium,
                                         prefixIcon: Icons.edit,
