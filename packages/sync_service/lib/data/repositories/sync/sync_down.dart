@@ -34,8 +34,6 @@ class PerformSyncDown {
     pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final groupedEntries = pendingSyncEntries
-        .where((element) => element.type != DataModelType.service)
-        .toList()
         .groupListsBy(
           (element) => element.type,
         );
