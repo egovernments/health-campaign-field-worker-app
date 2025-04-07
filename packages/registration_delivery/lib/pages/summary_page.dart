@@ -345,7 +345,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                     labelFlex: 5,
                                     padding: const EdgeInsets.only(top: spacer2),
                                   ),
-                                 ...attributeItems,
+                                 ...attributeItems, //added service values
                                 ],
                               ),
                             ],
