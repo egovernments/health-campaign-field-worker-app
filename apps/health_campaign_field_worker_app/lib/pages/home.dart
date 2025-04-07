@@ -459,6 +459,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
+                // if (context.mounted) _attemptSyncUp(context);
                 if (snapshot.data?['enablesManualSync'] == true) {
                   if (context.mounted) _attemptSyncUp(context);
                 } else {
@@ -660,7 +661,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
                 context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>()
+                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
+                context.read<LocalRepository<ServiceModel,
+                        ServiceSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -694,6 +697,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         AttendanceLogSearchModel>>(),
                 context.read<
                     RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+                context.read<
+                    RemoteRepository<ServiceModel, ServiceSearchModel>>(),
               ],
             ),
           );

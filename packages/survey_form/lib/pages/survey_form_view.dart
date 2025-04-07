@@ -615,6 +615,8 @@ return [
                     surveyFormKey.currentState
                         ?.validate();
                   },
+                  step: 1,
+                  minValue: 0,
                   initialValue: '0',
                   errorMessage: field.errorText,
                   keyboardType: TextInputType.number,
@@ -667,6 +669,7 @@ return [
                     surveyFormKey.currentState
                         ?.validate();
                   },
+
                   errorMessage: field.errorText,
                   keyboardType: TextInputType.number,
                   inputFormatters: [
@@ -1137,6 +1140,8 @@ return [
                   field.didChange(value);
                   controller[index].text = value;
                 },
+                step: 1,
+                minValue: 0,
                 initialValue: '0',
                 keyboardType: TextInputType.number,
                 errorMessage: field.errorText,
