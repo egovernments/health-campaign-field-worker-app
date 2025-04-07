@@ -459,19 +459,19 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                // if (context.mounted) _attemptSyncUp(context);
-                if (snapshot.data?['enablesManualSync'] == true) {
-                  if (context.mounted) _attemptSyncUp(context);
-                } else {
-                  if (context.mounted) {
-                    Toast.showToast(
-                      context,
-                      message: localizations
-                          .translate(i18.common.coreCommonSyncInProgress),
-                      type: ToastType.success,
-                    );
-                  }
-                }
+                if (context.mounted) _attemptSyncUp(context);
+                // if (snapshot.data?['enablesManualSync'] == true) {
+                //   if (context.mounted) _attemptSyncUp(context);
+                // } else {
+                //   if (context.mounted) {
+                //     Toast.showToast(
+                //       context,
+                //       message: localizations
+                //           .translate(i18.common.coreCommonSyncInProgress),
+                //       type: ToastType.success,
+                //     );
+                //   }
+                // }
               },
             );
           },
