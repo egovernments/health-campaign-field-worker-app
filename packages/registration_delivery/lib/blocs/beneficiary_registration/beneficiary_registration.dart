@@ -164,18 +164,6 @@ class BeneficiaryRegistrationBloc
             ? null
             : LocalityModel(code: code, name: name);
 
-        final uniqueId = individual!.identifiers!.firstWhereOrNull((id) =>
-            id.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue());
-
-        if (uniqueId != null) {
-          uniqueIdPoolLocalRepository.update(UniqueIdPoolModel(
-              id: uniqueId.identifierId!,
-              status: IdStatus.assigned.toValue(),
-              clientReferenceId:
-                  RegistrationDeliverySingleton().loggedInUserUuid!,
-              userUUID: RegistrationDeliverySingleton().loggedInUserUuid!));
-        }
-
         emit(BeneficiaryRegistrationSummaryState(
             navigateToRoot: false,
             householdModel: household?.copyWith(
@@ -278,6 +266,19 @@ class BeneficiaryRegistrationBloc
                 ],
               ),
             );
+
+            final uniqueId = individual.identifiers!.firstWhereOrNull((id) =>
+                id.identifierType ==
+                IdentifierTypes.uniqueBeneficiaryID.toValue());
+
+            if (uniqueId != null) {
+              uniqueIdPoolLocalRepository.update(UniqueIdPoolModel(
+                  id: uniqueId.identifierId!,
+                  status: IdStatus.assigned.toValue(),
+                  clientReferenceId:
+                      RegistrationDeliverySingleton().loggedInUserUuid!,
+                  userUUID: RegistrationDeliverySingleton().loggedInUserUuid!));
+            }
 
             await projectBeneficiaryRepository.create(
               value.projectBeneficiaryModel!,

@@ -138,6 +138,10 @@ class Common {
   String get minAge => 'MINIMUM_AGE_SHOULD_BE_GREATER_THAN_0';
 
   String get maxAge => 'MAXIMUM_AGE_CAN_NOT_EXCEED_150_YEARS';
+
+  String get coreCommonNoInternet => 'CORE_COMMON_NO_INTERNET';
+
+  String get coreCommonDownloading => 'CORE_COMMON_DOWNLOADING';
 }
 
 class SearchBeneficiary {
@@ -310,6 +314,8 @@ class BeneficiaryDetails {
 
   String get noBeneficiaryIdsText => 'NO_BENEFICIARY_IDS_TEXT';
 
+  String get noInternetBeneficiaryIdsText => 'NO_INTERNET_BENEFICIARY_IDS_TEXT';
+
   String get totalBeneficiaryIds => 'TOTAL_BENEFICIARY_IDS';
 
   String get recordsdownload => 'RECORDS_DOWNLOAD';
@@ -336,6 +342,8 @@ class BeneficiaryDetails {
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
 
   String get totalMembers => 'TOTAL_HOUSEHOLD_MEMBERS';
+
+  String get totalCLFMembers => 'TOTAL_CLF_MEMBERS';
 }
 
 class IndividualDetails {

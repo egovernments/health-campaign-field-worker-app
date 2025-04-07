@@ -338,7 +338,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      fetchUniqueIdCount(theme, form),
+                      displayUniqueIdCount(theme, form),
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
@@ -453,7 +453,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       } else if (value.code ==
                                           IdentifierTypes.uniqueBeneficiaryID
                                               .toValue()) {
-                                        setUniqueBeneficiaryId(form);
+                                        setUniqueBeneficiaryId(
+                                            form, bloc.state);
                                       } else {
                                         form.control(_idNumberKey).value = null;
                                       }
@@ -972,56 +973,102 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     return date;
   }
 
-  void setUniqueBeneficiaryId(FormGroup form) async {
-    context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchAUniqueId());
-    final uniqueId = context.read<UniqueIdBloc>().state;
-    uniqueId.maybeWhen(
-        orElse: () {},
-        aUniqueId: (uniqueId) {
-          form.control(_idNumberKey).value = uniqueId.id;
-        });
+  void setUniqueBeneficiaryId(
+      FormGroup form, BeneficiaryRegistrationState state) async {
+    final individual = state.mapOrNull<IndividualModel>(
+      editIndividual: (value) {
+        if (value.projectBeneficiaryModel?.tag != null) {
+          context.read<DigitScannerBloc>().add(DigitScannerScanEvent(
+              barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
+        }
+        return value.individualModel;
+      },
+      create: (value) {
+        return value.individualModel;
+      },
+      summary: (value) {
+        return value.individualModel;
+      },
+    );
+
+    if (individual == null) {
+      context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchAUniqueId());
+      final uniqueId = context.read<UniqueIdBloc>().state;
+      uniqueId.maybeWhen(
+          orElse: () {},
+          aUniqueId: (uniqueId) {
+            form.control(_idNumberKey).value = uniqueId.id;
+          });
+      context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
+    } else {
+      form.control(_idTypeKey).value =
+          individual.identifiers?.firstOrNull?.identifierType;
+      form.control(_idNumberKey).value =
+          individual.identifiers?.firstOrNull?.identifierId;
+    }
   }
 
-  fetchUniqueIdCount(ThemeData theme, FormGroup form) {
-    return BlocBuilder<UniqueIdBloc, UniqueIdState>(builder: (context, state) {
-      if (state is FetchedUniqueIdState) {
+  displayUniqueIdCount(ThemeData theme, FormGroup form) {
+    int? idCount;
+    return BlocListener<UniqueIdBloc, UniqueIdState>(
+      listener: (context, state) {
         state.maybeWhen(
             orElse: () {},
+            idCount: (availableIdCount, totalCount) {
+              idCount = availableIdCount;
+            },
             aUniqueId: (uniqueId) {
               form.control(_idNumberKey).value = uniqueId.id;
             });
-      }
-
-      if (state is UniqueIdCountState) {
-        return Container(
-            decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: theme.colorTheme.text.disabled,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(spacer2)),
-                color: theme.colorTheme.primary.primaryBg),
-            margin: const EdgeInsets.only(left: spacer2),
-            padding: const EdgeInsets.all(spacer2),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                    localizations.translate(
-                        i18.beneficiaryDetails.availableBeneficiaryIdsText),
-                    style: theme
-                        .digitTextTheme(context)
-                        .bodyXS
-                        .copyWith(color: theme.colorTheme.text.secondary)),
-                Text(" ${state.count}",
-                    style: theme.digitTextTheme(context).headingS.copyWith(
-                        color: state.count < 10
-                            ? theme.colorTheme.alert.error
-                            : theme.colorTheme.primary.primary2)),
-              ],
-            ));
-      }
-      return const Offstage();
-    });
+      },
+      child: BlocBuilder<UniqueIdBloc, UniqueIdState>(
+        builder: (context, state) {
+          if (state is! LoadingState && state is FetchedIdCountState ||
+              idCount != null) {
+            state.maybeWhen(
+              orElse: () {},
+              idCount: (availableIdCount, totalCount) {
+                idCount = availableIdCount;
+              },
+            );
+          }
+          return idCount != null
+              ? Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: theme.colorTheme.text.disabled,
+                    ),
+                    borderRadius:
+                        const BorderRadius.all(Radius.circular(spacer2)),
+                    color: theme.colorTheme.primary.primaryBg,
+                  ),
+                  margin: const EdgeInsets.only(left: spacer2),
+                  padding: const EdgeInsets.all(spacer2),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        localizations.translate(
+                            i18.beneficiaryDetails.availableBeneficiaryIdsText),
+                        style: theme
+                            .digitTextTheme(context)
+                            .bodyXS
+                            .copyWith(color: theme.colorTheme.text.secondary),
+                      ),
+                      Text(
+                        " $idCount",
+                        style: theme.digitTextTheme(context).headingS.copyWith(
+                            color: idCount! < 10
+                                ? theme.colorTheme.alert.error
+                                : theme.colorTheme.primary.primary2),
+                      ),
+                    ],
+                  ),
+                )
+              : const Offstage();
+        },
+      ),
+    );
   }
 }

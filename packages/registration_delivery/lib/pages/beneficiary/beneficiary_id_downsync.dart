@@ -4,13 +4,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:registration_delivery/blocs/unique_id/unique_id.dart';
 import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 
 import '../../blocs/app_localization.dart';
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -30,10 +34,114 @@ class BeneficiaryIdDownSyncPage extends LocalizedStatefulWidget {
 class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
   int beneficiaryIdCount = 0;
   int beneficiaryIdTotalCount = 100;
+  bool _isProgressDialogVisible = false;
+  BuildContext? _progressDialogContext;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  /// Shows the progress popup
+  Future<void> _showProgressDialog(
+      {required BuildContext context,
+      required RegistrationDeliveryLocalization localizations,
+      required int currentCount,
+      required int totalCount,
+      required ThemeData theme}) async {
+    _isProgressDialogVisible = true;
+
+    // Calculate the progress value (0.0 to 1.0)
+    double progressValue = (currentCount + 1) / totalCount;
+
+    // Ensure progressValue is within the range [0.0, 1.0]
+    progressValue = progressValue.clamp(0.0, 1.0);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        _progressDialogContext = ctx;
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Popup(
+              type: PopUpType.simple,
+              title: localizations
+                  .translate(i18.beneficiaryDetails.downloadBeneficiaryIds),
+              additionalWidgets: [
+                Center(
+                  child: Lottie.asset(Constants.downloadAnimation,
+                      height: MediaQuery.of(context).size.height * 0.1),
+                ),
+                Column(
+                  children: [
+                    LinearProgressIndicator(
+                      value: progressValue,
+                      minHeight: spacer1,
+                      color: theme.colorTheme.alert.success,
+                      // Initial value, will be updated dynamically
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(spacer2)),
+                    ),
+                    const SizedBox(height: spacer2 * 2),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          localizations
+                              .translate(i18.common.coreCommonDownloading),
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: theme.colorTheme.text.primary,
+                          ),
+                        ),
+                        Text(
+                          '$currentCount/$totalCount',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorTheme.text.primary,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  /// Updates the progress in the existing popup
+  void _updateProgressDialog(
+      int currentCount, int totalCount, ThemeData theme) {
+    if (_progressDialogContext != null) {
+      Navigator.of(_progressDialogContext!).pop(); // Close existing
+      _showProgressDialog(
+          context: context,
+          localizations: RegistrationDeliveryLocalization.of(context),
+          currentCount: currentCount,
+          totalCount: totalCount,
+          theme: theme); // Reopen with new progress
+    }
+  }
+
+  /// Closes the progress popup
+  void _closeProgressDialog() {
+    if (_isProgressDialogVisible && _progressDialogContext != null) {
+      Navigator.of(_progressDialogContext!).pop();
+      _isProgressDialogVisible = false;
+      _progressDialogContext = null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final localizations = RegistrationDeliveryLocalization.of(context);
+    final theme = Theme.of(context);
 
     return BlocProvider<UniqueIdBloc>(
       create: (context) {
@@ -44,7 +152,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
       },
       child: BlocListener<UniqueIdBloc, UniqueIdState>(
         listener: (context, state) {
-          if (state is UniqueIdCountState) {
+          if (state is FetchedIdCountState) {
             beneficiaryIdCount = state.count;
             beneficiaryIdTotalCount = state.totalCount;
           }
@@ -52,6 +160,68 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
             context
                 .read<UniqueIdBloc>()
                 .add(const UniqueIdEvent.fetchIdCount());
+            _closeProgressDialog(); // Close popup when fetching is done
+          }
+          if (state is FetchingState) {
+            state.maybeWhen(
+              orElse: () {},
+              fetching: (currentCount, totalCount) {
+                if (!_isProgressDialogVisible) {
+                  _showProgressDialog(
+                      context: context,
+                      localizations: localizations,
+                      currentCount: currentCount,
+                      totalCount: totalCount,
+                      theme: theme);
+                }
+                // Update the existing dialog
+                _updateProgressDialog(currentCount, totalCount, theme);
+              },
+            );
+          }
+          if (state is NoInternetState) {
+            _closeProgressDialog(); // Close popup when fetching is done
+            showCustomPopup(
+                context: context,
+                builder: (ctx) {
+                  return Popup(
+                    type: PopUpType.alert,
+                    actions: [
+                      DigitButton(
+                        capitalizeLetters: false,
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+
+                          context.read<UniqueIdBloc>().add(
+                                const UniqueIdEvent.fetchUniqueIdsFromServer(),
+                              );
+                        },
+                        label: localizations.translate(
+                          i18.common.coreCommonDataSyncRetry,
+                        ),
+                      ),
+                      DigitButton(
+                        capitalizeLetters: false,
+                        type: DigitButtonType.secondary,
+                        size: DigitButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                        },
+                        label: localizations.translate(
+                          i18.common.corecommonclose,
+                        ),
+                      ),
+                    ],
+                    title: localizations
+                        .translate(i18.common.coreCommonNoInternet),
+                    description: localizations.translate(
+                        i18.beneficiaryDetails.noInternetBeneficiaryIdsText),
+                  );
+                });
           }
         },
         child:
@@ -75,7 +245,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                       capitalizeLetters: false,
                       onPressed: () async {
                         context.read<UniqueIdBloc>().add(
-                              const UniqueIdEvent.fetchUniqueIds(),
+                              const UniqueIdEvent.fetchUniqueIdsFromServer(),
                             );
                       },
                     ),
@@ -170,14 +340,15 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
               animation: _animation,
               builder: (context, child) {
                 return CustomPaint(
-                  painter: GaugePainter(_animation.value, theme),
+                  painter:
+                      GaugePainter(widget.idCount, widget.totalCount, theme),
                   child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         SizedBox(height: gaugeSize * 0.2),
                         Text(_animation.value.toInt().toString(),
-                            style: textTheme.captionL.copyWith(
+                            style: textTheme.headingL.copyWith(
                                 fontSize: 50,
                                 color: widget.idCount < 10
                                     ? theme.colorTheme.alert.error
@@ -185,9 +356,11 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                         Text(
                             localizations.translate(i18.beneficiaryDetails
                                 .availableBeneficiaryIdsLabel),
-                            style: textTheme.headingS.copyWith(
+                            style: textTheme.bodyS.copyWith(
                                 fontSize: 14,
-                                color: theme.colorTheme.primary.primary1)),
+                                color: widget.idCount < 10
+                                    ? theme.colorTheme.alert.error
+                                    : theme.colorTheme.primary.primary2)),
                       ],
                     ),
                   ),
@@ -215,7 +388,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                     animation: _animation,
                     builder: (context, child) {
                       return Text(_animation.value.toInt().toString(),
-                          style: textTheme.captionL.copyWith(
+                          style: textTheme.headingL.copyWith(
                               color: theme.colorTheme.primary.primary2));
                     })
               ],
@@ -232,7 +405,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                     style: textTheme.bodyS
                         .copyWith(color: theme.colorTheme.primary.primary2)),
                 Text(widget.totalCount.toString(),
-                    style: textTheme.captionL
+                    style: textTheme.headingL
                         .copyWith(color: theme.colorTheme.primary.primary2)),
               ],
             ),
@@ -244,16 +417,17 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
 }
 
 class GaugePainter extends CustomPainter {
-  final double value;
+  final int currentValue, totalCount;
   final ThemeData theme;
 
-  GaugePainter(this.value, this.theme);
+  GaugePainter(this.currentValue, this.totalCount, this.theme);
 
   @override
   void paint(Canvas canvas, Size size) {
     double strokeWidth = 20;
     double radius = size.width / 2;
-    Offset center = Offset(size.width / 2, size.height); // Move arc downward
+    Offset center =
+        Offset(size.width / 2, size.height * 0.8); // Lower arc position
 
     Paint backgroundPaint = Paint()
       ..color = theme.colorTheme.text.disabled
@@ -262,7 +436,7 @@ class GaugePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     Paint progressPaint = Paint()
-      ..color = value < 10
+      ..color = currentValue < 10
           ? theme.colorTheme.alert.error
           : theme.colorTheme.alert.success
       ..strokeWidth = strokeWidth
@@ -270,9 +444,10 @@ class GaugePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     double startAngle = pi; // 180° (left side)
-    double sweepAngle = pi * (value / 100); // Moves from left → center → right
+    double sweepAngle =
+        pi * (currentValue / totalCount); // Moves from left → center → right
 
-    // Background arc (full 180-degree arc)
+    // Full background arc
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       startAngle,
@@ -281,7 +456,7 @@ class GaugePainter extends CustomPainter {
       backgroundPaint,
     );
 
-    // Progress arc (dynamic based on value)
+    // Progress arc
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       startAngle,
@@ -296,7 +471,7 @@ class GaugePainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     Paint borderPaint = Paint()
-      ..color = value < 10
+      ..color = currentValue < 10
           ? theme.colorTheme.alert.error
           : theme.colorTheme.alert.success
       ..strokeWidth = 4
@@ -316,6 +491,6 @@ class GaugePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(GaugePainter oldDelegate) {
-    return oldDelegate.value != value;
+    return oldDelegate.currentValue != currentValue;
   }
 }

@@ -19,21 +19,21 @@ mixin _$UniqueIdEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() fetchIdCount,
-    required TResult Function() fetchUniqueIds,
+    required TResult Function() fetchUniqueIdsFromServer,
     required TResult Function() fetchAUniqueId,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchIdCount,
-    TResult? Function()? fetchUniqueIds,
+    TResult? Function()? fetchUniqueIdsFromServer,
     TResult? Function()? fetchAUniqueId,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchIdCount,
-    TResult Function()? fetchUniqueIds,
+    TResult Function()? fetchUniqueIdsFromServer,
     TResult Function()? fetchAUniqueId,
     required TResult orElse(),
   }) =>
@@ -41,21 +41,22 @@ mixin _$UniqueIdEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(UniqueIdCountEvent value) fetchIdCount,
-    required TResult Function(FetchUniqueIdsEvent value) fetchUniqueIds,
+    required TResult Function(FetchUniqueIdsEvent value)
+        fetchUniqueIdsFromServer,
     required TResult Function(FetchAUniqueIdEvent value) fetchAUniqueId,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(UniqueIdCountEvent value)? fetchIdCount,
-    TResult? Function(FetchUniqueIdsEvent value)? fetchUniqueIds,
+    TResult? Function(FetchUniqueIdsEvent value)? fetchUniqueIdsFromServer,
     TResult? Function(FetchAUniqueIdEvent value)? fetchAUniqueId,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(UniqueIdCountEvent value)? fetchIdCount,
-    TResult Function(FetchUniqueIdsEvent value)? fetchUniqueIds,
+    TResult Function(FetchUniqueIdsEvent value)? fetchUniqueIdsFromServer,
     TResult Function(FetchAUniqueIdEvent value)? fetchAUniqueId,
     required TResult orElse(),
   }) =>
@@ -119,7 +120,7 @@ class _$UniqueIdCountEventImpl implements UniqueIdCountEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() fetchIdCount,
-    required TResult Function() fetchUniqueIds,
+    required TResult Function() fetchUniqueIdsFromServer,
     required TResult Function() fetchAUniqueId,
   }) {
     return fetchIdCount();
@@ -129,7 +130,7 @@ class _$UniqueIdCountEventImpl implements UniqueIdCountEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchIdCount,
-    TResult? Function()? fetchUniqueIds,
+    TResult? Function()? fetchUniqueIdsFromServer,
     TResult? Function()? fetchAUniqueId,
   }) {
     return fetchIdCount?.call();
@@ -139,7 +140,7 @@ class _$UniqueIdCountEventImpl implements UniqueIdCountEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchIdCount,
-    TResult Function()? fetchUniqueIds,
+    TResult Function()? fetchUniqueIdsFromServer,
     TResult Function()? fetchAUniqueId,
     required TResult orElse(),
   }) {
@@ -153,7 +154,8 @@ class _$UniqueIdCountEventImpl implements UniqueIdCountEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(UniqueIdCountEvent value) fetchIdCount,
-    required TResult Function(FetchUniqueIdsEvent value) fetchUniqueIds,
+    required TResult Function(FetchUniqueIdsEvent value)
+        fetchUniqueIdsFromServer,
     required TResult Function(FetchAUniqueIdEvent value) fetchAUniqueId,
   }) {
     return fetchIdCount(this);
@@ -163,7 +165,7 @@ class _$UniqueIdCountEventImpl implements UniqueIdCountEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(UniqueIdCountEvent value)? fetchIdCount,
-    TResult? Function(FetchUniqueIdsEvent value)? fetchUniqueIds,
+    TResult? Function(FetchUniqueIdsEvent value)? fetchUniqueIdsFromServer,
     TResult? Function(FetchAUniqueIdEvent value)? fetchAUniqueId,
   }) {
     return fetchIdCount?.call(this);
@@ -173,7 +175,7 @@ class _$UniqueIdCountEventImpl implements UniqueIdCountEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(UniqueIdCountEvent value)? fetchIdCount,
-    TResult Function(FetchUniqueIdsEvent value)? fetchUniqueIds,
+    TResult Function(FetchUniqueIdsEvent value)? fetchUniqueIdsFromServer,
     TResult Function(FetchAUniqueIdEvent value)? fetchAUniqueId,
     required TResult orElse(),
   }) {
@@ -211,7 +213,7 @@ class _$FetchUniqueIdsEventImpl implements FetchUniqueIdsEvent {
 
   @override
   String toString() {
-    return 'UniqueIdEvent.fetchUniqueIds()';
+    return 'UniqueIdEvent.fetchUniqueIdsFromServer()';
   }
 
   @override
@@ -228,32 +230,32 @@ class _$FetchUniqueIdsEventImpl implements FetchUniqueIdsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() fetchIdCount,
-    required TResult Function() fetchUniqueIds,
+    required TResult Function() fetchUniqueIdsFromServer,
     required TResult Function() fetchAUniqueId,
   }) {
-    return fetchUniqueIds();
+    return fetchUniqueIdsFromServer();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchIdCount,
-    TResult? Function()? fetchUniqueIds,
+    TResult? Function()? fetchUniqueIdsFromServer,
     TResult? Function()? fetchAUniqueId,
   }) {
-    return fetchUniqueIds?.call();
+    return fetchUniqueIdsFromServer?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchIdCount,
-    TResult Function()? fetchUniqueIds,
+    TResult Function()? fetchUniqueIdsFromServer,
     TResult Function()? fetchAUniqueId,
     required TResult orElse(),
   }) {
-    if (fetchUniqueIds != null) {
-      return fetchUniqueIds();
+    if (fetchUniqueIdsFromServer != null) {
+      return fetchUniqueIdsFromServer();
     }
     return orElse();
   }
@@ -262,32 +264,33 @@ class _$FetchUniqueIdsEventImpl implements FetchUniqueIdsEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(UniqueIdCountEvent value) fetchIdCount,
-    required TResult Function(FetchUniqueIdsEvent value) fetchUniqueIds,
+    required TResult Function(FetchUniqueIdsEvent value)
+        fetchUniqueIdsFromServer,
     required TResult Function(FetchAUniqueIdEvent value) fetchAUniqueId,
   }) {
-    return fetchUniqueIds(this);
+    return fetchUniqueIdsFromServer(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(UniqueIdCountEvent value)? fetchIdCount,
-    TResult? Function(FetchUniqueIdsEvent value)? fetchUniqueIds,
+    TResult? Function(FetchUniqueIdsEvent value)? fetchUniqueIdsFromServer,
     TResult? Function(FetchAUniqueIdEvent value)? fetchAUniqueId,
   }) {
-    return fetchUniqueIds?.call(this);
+    return fetchUniqueIdsFromServer?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(UniqueIdCountEvent value)? fetchIdCount,
-    TResult Function(FetchUniqueIdsEvent value)? fetchUniqueIds,
+    TResult Function(FetchUniqueIdsEvent value)? fetchUniqueIdsFromServer,
     TResult Function(FetchAUniqueIdEvent value)? fetchAUniqueId,
     required TResult orElse(),
   }) {
-    if (fetchUniqueIds != null) {
-      return fetchUniqueIds(this);
+    if (fetchUniqueIdsFromServer != null) {
+      return fetchUniqueIdsFromServer(this);
     }
     return orElse();
   }
@@ -337,7 +340,7 @@ class _$FetchAUniqueIdEventImpl implements FetchAUniqueIdEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() fetchIdCount,
-    required TResult Function() fetchUniqueIds,
+    required TResult Function() fetchUniqueIdsFromServer,
     required TResult Function() fetchAUniqueId,
   }) {
     return fetchAUniqueId();
@@ -347,7 +350,7 @@ class _$FetchAUniqueIdEventImpl implements FetchAUniqueIdEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchIdCount,
-    TResult? Function()? fetchUniqueIds,
+    TResult? Function()? fetchUniqueIdsFromServer,
     TResult? Function()? fetchAUniqueId,
   }) {
     return fetchAUniqueId?.call();
@@ -357,7 +360,7 @@ class _$FetchAUniqueIdEventImpl implements FetchAUniqueIdEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchIdCount,
-    TResult Function()? fetchUniqueIds,
+    TResult Function()? fetchUniqueIdsFromServer,
     TResult Function()? fetchAUniqueId,
     required TResult orElse(),
   }) {
@@ -371,7 +374,8 @@ class _$FetchAUniqueIdEventImpl implements FetchAUniqueIdEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(UniqueIdCountEvent value) fetchIdCount,
-    required TResult Function(FetchUniqueIdsEvent value) fetchUniqueIds,
+    required TResult Function(FetchUniqueIdsEvent value)
+        fetchUniqueIdsFromServer,
     required TResult Function(FetchAUniqueIdEvent value) fetchAUniqueId,
   }) {
     return fetchAUniqueId(this);
@@ -381,7 +385,7 @@ class _$FetchAUniqueIdEventImpl implements FetchAUniqueIdEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(UniqueIdCountEvent value)? fetchIdCount,
-    TResult? Function(FetchUniqueIdsEvent value)? fetchUniqueIds,
+    TResult? Function(FetchUniqueIdsEvent value)? fetchUniqueIdsFromServer,
     TResult? Function(FetchAUniqueIdEvent value)? fetchAUniqueId,
   }) {
     return fetchAUniqueId?.call(this);
@@ -391,7 +395,7 @@ class _$FetchAUniqueIdEventImpl implements FetchAUniqueIdEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(UniqueIdCountEvent value)? fetchIdCount,
-    TResult Function(FetchUniqueIdsEvent value)? fetchUniqueIds,
+    TResult Function(FetchUniqueIdsEvent value)? fetchUniqueIdsFromServer,
     TResult Function(FetchAUniqueIdEvent value)? fetchAUniqueId,
     required TResult orElse(),
   }) {
@@ -411,50 +415,68 @@ mixin _$UniqueIdState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
+    required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
+    required TResult Function() failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
+    required TResult Function() noInternet,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
+    TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult? Function()? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult? Function()? noInternet,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
+    TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult Function()? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult Function()? noInternet,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadingState value) loading,
-    required TResult Function(UniqueIdCountState value) idCount,
+    required TResult Function(FetchingState value) fetching,
+    required TResult Function(FetchedIdCountState value) idCount,
     required TResult Function(FetchedUniqueIdsState value) ids,
+    required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
+    required TResult Function(NoInternetState value) noInternet,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadingState value)? loading,
-    TResult? Function(UniqueIdCountState value)? idCount,
+    TResult? Function(FetchingState value)? fetching,
+    TResult? Function(FetchedIdCountState value)? idCount,
     TResult? Function(FetchedUniqueIdsState value)? ids,
+    TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult? Function(NoInternetState value)? noInternet,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadingState value)? loading,
-    TResult Function(UniqueIdCountState value)? idCount,
+    TResult Function(FetchingState value)? fetching,
+    TResult Function(FetchedIdCountState value)? idCount,
     TResult Function(FetchedUniqueIdsState value)? ids,
+    TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult Function(NoInternetState value)? noInternet,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -517,9 +539,12 @@ class _$LoadingStateImpl implements LoadingState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
+    required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
+    required TResult Function() failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
+    required TResult Function() noInternet,
   }) {
     return loading();
   }
@@ -528,9 +553,12 @@ class _$LoadingStateImpl implements LoadingState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
+    TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult? Function()? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult? Function()? noInternet,
   }) {
     return loading?.call();
   }
@@ -539,9 +567,12 @@ class _$LoadingStateImpl implements LoadingState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
+    TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult Function()? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult Function()? noInternet,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -554,9 +585,12 @@ class _$LoadingStateImpl implements LoadingState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadingState value) loading,
-    required TResult Function(UniqueIdCountState value) idCount,
+    required TResult Function(FetchingState value) fetching,
+    required TResult Function(FetchedIdCountState value) idCount,
     required TResult Function(FetchedUniqueIdsState value) ids,
+    required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
+    required TResult Function(NoInternetState value) noInternet,
   }) {
     return loading(this);
   }
@@ -565,9 +599,12 @@ class _$LoadingStateImpl implements LoadingState {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadingState value)? loading,
-    TResult? Function(UniqueIdCountState value)? idCount,
+    TResult? Function(FetchingState value)? fetching,
+    TResult? Function(FetchedIdCountState value)? idCount,
     TResult? Function(FetchedUniqueIdsState value)? ids,
+    TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult? Function(NoInternetState value)? noInternet,
   }) {
     return loading?.call(this);
   }
@@ -576,9 +613,12 @@ class _$LoadingStateImpl implements LoadingState {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadingState value)? loading,
-    TResult Function(UniqueIdCountState value)? idCount,
+    TResult Function(FetchingState value)? fetching,
+    TResult Function(FetchedIdCountState value)? idCount,
     TResult Function(FetchedUniqueIdsState value)? ids,
+    TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult Function(NoInternetState value)? noInternet,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -593,20 +633,195 @@ abstract class LoadingState implements UniqueIdState {
 }
 
 /// @nodoc
-abstract class _$$UniqueIdCountStateImplCopyWith<$Res> {
-  factory _$$UniqueIdCountStateImplCopyWith(_$UniqueIdCountStateImpl value,
-          $Res Function(_$UniqueIdCountStateImpl) then) =
-      __$$UniqueIdCountStateImplCopyWithImpl<$Res>;
+abstract class _$$FetchingStateImplCopyWith<$Res> {
+  factory _$$FetchingStateImplCopyWith(
+          _$FetchingStateImpl value, $Res Function(_$FetchingStateImpl) then) =
+      __$$FetchingStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int progress, int totalCount});
+}
+
+/// @nodoc
+class __$$FetchingStateImplCopyWithImpl<$Res>
+    extends _$UniqueIdStateCopyWithImpl<$Res, _$FetchingStateImpl>
+    implements _$$FetchingStateImplCopyWith<$Res> {
+  __$$FetchingStateImplCopyWithImpl(
+      _$FetchingStateImpl _value, $Res Function(_$FetchingStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? progress = null,
+    Object? totalCount = null,
+  }) {
+    return _then(_$FetchingStateImpl(
+      null == progress
+          ? _value.progress
+          : progress // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FetchingStateImpl implements FetchingState {
+  const _$FetchingStateImpl(this.progress, this.totalCount);
+
+  @override
+  final int progress;
+  @override
+  final int totalCount;
+
+  @override
+  String toString() {
+    return 'UniqueIdState.fetching(progress: $progress, totalCount: $totalCount)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FetchingStateImpl &&
+            (identical(other.progress, progress) ||
+                other.progress == progress) &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, progress, totalCount);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FetchingStateImplCopyWith<_$FetchingStateImpl> get copyWith =>
+      __$$FetchingStateImplCopyWithImpl<_$FetchingStateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function(int progress, int totalCount) fetching,
+    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(List<UniqueIdPoolModel> ids) ids,
+    required TResult Function() failed,
+    required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
+    required TResult Function() noInternet,
+  }) {
+    return fetching(progress, totalCount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function(int progress, int totalCount)? fetching,
+    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult? Function()? failed,
+    TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult? Function()? noInternet,
+  }) {
+    return fetching?.call(progress, totalCount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function(int progress, int totalCount)? fetching,
+    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult Function()? failed,
+    TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult Function()? noInternet,
+    required TResult orElse(),
+  }) {
+    if (fetching != null) {
+      return fetching(progress, totalCount);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadingState value) loading,
+    required TResult Function(FetchingState value) fetching,
+    required TResult Function(FetchedIdCountState value) idCount,
+    required TResult Function(FetchedUniqueIdsState value) ids,
+    required TResult Function(FailedState value) failed,
+    required TResult Function(FetchedUniqueIdState value) aUniqueId,
+    required TResult Function(NoInternetState value) noInternet,
+  }) {
+    return fetching(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadingState value)? loading,
+    TResult? Function(FetchingState value)? fetching,
+    TResult? Function(FetchedIdCountState value)? idCount,
+    TResult? Function(FetchedUniqueIdsState value)? ids,
+    TResult? Function(FailedState value)? failed,
+    TResult? Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult? Function(NoInternetState value)? noInternet,
+  }) {
+    return fetching?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadingState value)? loading,
+    TResult Function(FetchingState value)? fetching,
+    TResult Function(FetchedIdCountState value)? idCount,
+    TResult Function(FetchedUniqueIdsState value)? ids,
+    TResult Function(FailedState value)? failed,
+    TResult Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult Function(NoInternetState value)? noInternet,
+    required TResult orElse(),
+  }) {
+    if (fetching != null) {
+      return fetching(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FetchingState implements UniqueIdState {
+  const factory FetchingState(final int progress, final int totalCount) =
+      _$FetchingStateImpl;
+
+  int get progress;
+  int get totalCount;
+  @JsonKey(ignore: true)
+  _$$FetchingStateImplCopyWith<_$FetchingStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FetchedIdCountStateImplCopyWith<$Res> {
+  factory _$$FetchedIdCountStateImplCopyWith(_$FetchedIdCountStateImpl value,
+          $Res Function(_$FetchedIdCountStateImpl) then) =
+      __$$FetchedIdCountStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int count, int totalCount});
 }
 
 /// @nodoc
-class __$$UniqueIdCountStateImplCopyWithImpl<$Res>
-    extends _$UniqueIdStateCopyWithImpl<$Res, _$UniqueIdCountStateImpl>
-    implements _$$UniqueIdCountStateImplCopyWith<$Res> {
-  __$$UniqueIdCountStateImplCopyWithImpl(_$UniqueIdCountStateImpl _value,
-      $Res Function(_$UniqueIdCountStateImpl) _then)
+class __$$FetchedIdCountStateImplCopyWithImpl<$Res>
+    extends _$UniqueIdStateCopyWithImpl<$Res, _$FetchedIdCountStateImpl>
+    implements _$$FetchedIdCountStateImplCopyWith<$Res> {
+  __$$FetchedIdCountStateImplCopyWithImpl(_$FetchedIdCountStateImpl _value,
+      $Res Function(_$FetchedIdCountStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -615,7 +830,7 @@ class __$$UniqueIdCountStateImplCopyWithImpl<$Res>
     Object? count = null,
     Object? totalCount = null,
   }) {
-    return _then(_$UniqueIdCountStateImpl(
+    return _then(_$FetchedIdCountStateImpl(
       null == count
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
@@ -630,8 +845,8 @@ class __$$UniqueIdCountStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$UniqueIdCountStateImpl implements UniqueIdCountState {
-  const _$UniqueIdCountStateImpl(this.count, this.totalCount);
+class _$FetchedIdCountStateImpl implements FetchedIdCountState {
+  const _$FetchedIdCountStateImpl(this.count, this.totalCount);
 
   @override
   final int count;
@@ -647,7 +862,7 @@ class _$UniqueIdCountStateImpl implements UniqueIdCountState {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UniqueIdCountStateImpl &&
+            other is _$FetchedIdCountStateImpl &&
             (identical(other.count, count) || other.count == count) &&
             (identical(other.totalCount, totalCount) ||
                 other.totalCount == totalCount));
@@ -659,17 +874,20 @@ class _$UniqueIdCountStateImpl implements UniqueIdCountState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$UniqueIdCountStateImplCopyWith<_$UniqueIdCountStateImpl> get copyWith =>
-      __$$UniqueIdCountStateImplCopyWithImpl<_$UniqueIdCountStateImpl>(
+  _$$FetchedIdCountStateImplCopyWith<_$FetchedIdCountStateImpl> get copyWith =>
+      __$$FetchedIdCountStateImplCopyWithImpl<_$FetchedIdCountStateImpl>(
           this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
+    required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
+    required TResult Function() failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
+    required TResult Function() noInternet,
   }) {
     return idCount(count, totalCount);
   }
@@ -678,9 +896,12 @@ class _$UniqueIdCountStateImpl implements UniqueIdCountState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
+    TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult? Function()? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult? Function()? noInternet,
   }) {
     return idCount?.call(count, totalCount);
   }
@@ -689,9 +910,12 @@ class _$UniqueIdCountStateImpl implements UniqueIdCountState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
+    TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult Function()? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult Function()? noInternet,
     required TResult orElse(),
   }) {
     if (idCount != null) {
@@ -704,9 +928,12 @@ class _$UniqueIdCountStateImpl implements UniqueIdCountState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadingState value) loading,
-    required TResult Function(UniqueIdCountState value) idCount,
+    required TResult Function(FetchingState value) fetching,
+    required TResult Function(FetchedIdCountState value) idCount,
     required TResult Function(FetchedUniqueIdsState value) ids,
+    required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
+    required TResult Function(NoInternetState value) noInternet,
   }) {
     return idCount(this);
   }
@@ -715,9 +942,12 @@ class _$UniqueIdCountStateImpl implements UniqueIdCountState {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadingState value)? loading,
-    TResult? Function(UniqueIdCountState value)? idCount,
+    TResult? Function(FetchingState value)? fetching,
+    TResult? Function(FetchedIdCountState value)? idCount,
     TResult? Function(FetchedUniqueIdsState value)? ids,
+    TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult? Function(NoInternetState value)? noInternet,
   }) {
     return idCount?.call(this);
   }
@@ -726,9 +956,12 @@ class _$UniqueIdCountStateImpl implements UniqueIdCountState {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadingState value)? loading,
-    TResult Function(UniqueIdCountState value)? idCount,
+    TResult Function(FetchingState value)? fetching,
+    TResult Function(FetchedIdCountState value)? idCount,
     TResult Function(FetchedUniqueIdsState value)? ids,
+    TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult Function(NoInternetState value)? noInternet,
     required TResult orElse(),
   }) {
     if (idCount != null) {
@@ -738,14 +971,14 @@ class _$UniqueIdCountStateImpl implements UniqueIdCountState {
   }
 }
 
-abstract class UniqueIdCountState implements UniqueIdState {
-  const factory UniqueIdCountState(final int count, final int totalCount) =
-      _$UniqueIdCountStateImpl;
+abstract class FetchedIdCountState implements UniqueIdState {
+  const factory FetchedIdCountState(final int count, final int totalCount) =
+      _$FetchedIdCountStateImpl;
 
   int get count;
   int get totalCount;
   @JsonKey(ignore: true)
-  _$$UniqueIdCountStateImplCopyWith<_$UniqueIdCountStateImpl> get copyWith =>
+  _$$FetchedIdCountStateImplCopyWith<_$FetchedIdCountStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -823,9 +1056,12 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
+    required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
+    required TResult Function() failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
+    required TResult Function() noInternet,
   }) {
     return ids(this.ids);
   }
@@ -834,9 +1070,12 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
+    TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult? Function()? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult? Function()? noInternet,
   }) {
     return ids?.call(this.ids);
   }
@@ -845,9 +1084,12 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
+    TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult Function()? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult Function()? noInternet,
     required TResult orElse(),
   }) {
     if (ids != null) {
@@ -860,9 +1102,12 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadingState value) loading,
-    required TResult Function(UniqueIdCountState value) idCount,
+    required TResult Function(FetchingState value) fetching,
+    required TResult Function(FetchedIdCountState value) idCount,
     required TResult Function(FetchedUniqueIdsState value) ids,
+    required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
+    required TResult Function(NoInternetState value) noInternet,
   }) {
     return ids(this);
   }
@@ -871,9 +1116,12 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadingState value)? loading,
-    TResult? Function(UniqueIdCountState value)? idCount,
+    TResult? Function(FetchingState value)? fetching,
+    TResult? Function(FetchedIdCountState value)? idCount,
     TResult? Function(FetchedUniqueIdsState value)? ids,
+    TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult? Function(NoInternetState value)? noInternet,
   }) {
     return ids?.call(this);
   }
@@ -882,9 +1130,12 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadingState value)? loading,
-    TResult Function(UniqueIdCountState value)? idCount,
+    TResult Function(FetchingState value)? fetching,
+    TResult Function(FetchedIdCountState value)? idCount,
     TResult Function(FetchedUniqueIdsState value)? ids,
+    TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult Function(NoInternetState value)? noInternet,
     required TResult orElse(),
   }) {
     if (ids != null) {
@@ -902,6 +1153,138 @@ abstract class FetchedUniqueIdsState implements UniqueIdState {
   @JsonKey(ignore: true)
   _$$FetchedUniqueIdsStateImplCopyWith<_$FetchedUniqueIdsStateImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FailedStateImplCopyWith<$Res> {
+  factory _$$FailedStateImplCopyWith(
+          _$FailedStateImpl value, $Res Function(_$FailedStateImpl) then) =
+      __$$FailedStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$FailedStateImplCopyWithImpl<$Res>
+    extends _$UniqueIdStateCopyWithImpl<$Res, _$FailedStateImpl>
+    implements _$$FailedStateImplCopyWith<$Res> {
+  __$$FailedStateImplCopyWithImpl(
+      _$FailedStateImpl _value, $Res Function(_$FailedStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$FailedStateImpl implements FailedState {
+  const _$FailedStateImpl();
+
+  @override
+  String toString() {
+    return 'UniqueIdState.failed()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$FailedStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function(int progress, int totalCount) fetching,
+    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(List<UniqueIdPoolModel> ids) ids,
+    required TResult Function() failed,
+    required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
+    required TResult Function() noInternet,
+  }) {
+    return failed();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function(int progress, int totalCount)? fetching,
+    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult? Function()? failed,
+    TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult? Function()? noInternet,
+  }) {
+    return failed?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function(int progress, int totalCount)? fetching,
+    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult Function()? failed,
+    TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult Function()? noInternet,
+    required TResult orElse(),
+  }) {
+    if (failed != null) {
+      return failed();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadingState value) loading,
+    required TResult Function(FetchingState value) fetching,
+    required TResult Function(FetchedIdCountState value) idCount,
+    required TResult Function(FetchedUniqueIdsState value) ids,
+    required TResult Function(FailedState value) failed,
+    required TResult Function(FetchedUniqueIdState value) aUniqueId,
+    required TResult Function(NoInternetState value) noInternet,
+  }) {
+    return failed(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadingState value)? loading,
+    TResult? Function(FetchingState value)? fetching,
+    TResult? Function(FetchedIdCountState value)? idCount,
+    TResult? Function(FetchedUniqueIdsState value)? ids,
+    TResult? Function(FailedState value)? failed,
+    TResult? Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult? Function(NoInternetState value)? noInternet,
+  }) {
+    return failed?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadingState value)? loading,
+    TResult Function(FetchingState value)? fetching,
+    TResult Function(FetchedIdCountState value)? idCount,
+    TResult Function(FetchedUniqueIdsState value)? ids,
+    TResult Function(FailedState value)? failed,
+    TResult Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult Function(NoInternetState value)? noInternet,
+    required TResult orElse(),
+  }) {
+    if (failed != null) {
+      return failed(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FailedState implements UniqueIdState {
+  const factory FailedState() = _$FailedStateImpl;
 }
 
 /// @nodoc
@@ -972,9 +1355,12 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
+    required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
+    required TResult Function() failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
+    required TResult Function() noInternet,
   }) {
     return aUniqueId(this.aUniqueId);
   }
@@ -983,9 +1369,12 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
+    TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult? Function()? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult? Function()? noInternet,
   }) {
     return aUniqueId?.call(this.aUniqueId);
   }
@@ -994,9 +1383,12 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
+    TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult Function()? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult Function()? noInternet,
     required TResult orElse(),
   }) {
     if (aUniqueId != null) {
@@ -1009,9 +1401,12 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadingState value) loading,
-    required TResult Function(UniqueIdCountState value) idCount,
+    required TResult Function(FetchingState value) fetching,
+    required TResult Function(FetchedIdCountState value) idCount,
     required TResult Function(FetchedUniqueIdsState value) ids,
+    required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
+    required TResult Function(NoInternetState value) noInternet,
   }) {
     return aUniqueId(this);
   }
@@ -1020,9 +1415,12 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadingState value)? loading,
-    TResult? Function(UniqueIdCountState value)? idCount,
+    TResult? Function(FetchingState value)? fetching,
+    TResult? Function(FetchedIdCountState value)? idCount,
     TResult? Function(FetchedUniqueIdsState value)? ids,
+    TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult? Function(NoInternetState value)? noInternet,
   }) {
     return aUniqueId?.call(this);
   }
@@ -1031,9 +1429,12 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadingState value)? loading,
-    TResult Function(UniqueIdCountState value)? idCount,
+    TResult Function(FetchingState value)? fetching,
+    TResult Function(FetchedIdCountState value)? idCount,
     TResult Function(FetchedUniqueIdsState value)? ids,
+    TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult Function(NoInternetState value)? noInternet,
     required TResult orElse(),
   }) {
     if (aUniqueId != null) {
@@ -1051,4 +1452,136 @@ abstract class FetchedUniqueIdState implements UniqueIdState {
   @JsonKey(ignore: true)
   _$$FetchedUniqueIdStateImplCopyWith<_$FetchedUniqueIdStateImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$NoInternetStateImplCopyWith<$Res> {
+  factory _$$NoInternetStateImplCopyWith(_$NoInternetStateImpl value,
+          $Res Function(_$NoInternetStateImpl) then) =
+      __$$NoInternetStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$NoInternetStateImplCopyWithImpl<$Res>
+    extends _$UniqueIdStateCopyWithImpl<$Res, _$NoInternetStateImpl>
+    implements _$$NoInternetStateImplCopyWith<$Res> {
+  __$$NoInternetStateImplCopyWithImpl(
+      _$NoInternetStateImpl _value, $Res Function(_$NoInternetStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$NoInternetStateImpl implements NoInternetState {
+  const _$NoInternetStateImpl();
+
+  @override
+  String toString() {
+    return 'UniqueIdState.noInternet()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$NoInternetStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function(int progress, int totalCount) fetching,
+    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(List<UniqueIdPoolModel> ids) ids,
+    required TResult Function() failed,
+    required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
+    required TResult Function() noInternet,
+  }) {
+    return noInternet();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function(int progress, int totalCount)? fetching,
+    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult? Function()? failed,
+    TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult? Function()? noInternet,
+  }) {
+    return noInternet?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function(int progress, int totalCount)? fetching,
+    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult Function()? failed,
+    TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult Function()? noInternet,
+    required TResult orElse(),
+  }) {
+    if (noInternet != null) {
+      return noInternet();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadingState value) loading,
+    required TResult Function(FetchingState value) fetching,
+    required TResult Function(FetchedIdCountState value) idCount,
+    required TResult Function(FetchedUniqueIdsState value) ids,
+    required TResult Function(FailedState value) failed,
+    required TResult Function(FetchedUniqueIdState value) aUniqueId,
+    required TResult Function(NoInternetState value) noInternet,
+  }) {
+    return noInternet(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadingState value)? loading,
+    TResult? Function(FetchingState value)? fetching,
+    TResult? Function(FetchedIdCountState value)? idCount,
+    TResult? Function(FetchedUniqueIdsState value)? ids,
+    TResult? Function(FailedState value)? failed,
+    TResult? Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult? Function(NoInternetState value)? noInternet,
+  }) {
+    return noInternet?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadingState value)? loading,
+    TResult Function(FetchingState value)? fetching,
+    TResult Function(FetchedIdCountState value)? idCount,
+    TResult Function(FetchedUniqueIdsState value)? ids,
+    TResult Function(FailedState value)? failed,
+    TResult Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult Function(NoInternetState value)? noInternet,
+    required TResult orElse(),
+  }) {
+    if (noInternet != null) {
+      return noInternet(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class NoInternetState implements UniqueIdState {
+  const factory NoInternetState() = _$NoInternetStateImpl;
 }

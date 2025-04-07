@@ -11,18 +11,19 @@ import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
+import '../blocs/unique_id/unique_id.dart';
 import '../models/entities/status.dart';
 import '../router/registration_delivery_router.gm.dart';
 import '../utils/global_search_parameters.dart';
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
+import '../widgets/beneficiary/id_count_alert.dart';
 import '../widgets/beneficiary/view_beneficiary_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/status_filter/status_filter.dart';
@@ -71,7 +72,7 @@ class _SearchBeneficiaryPageState
         });
       }
     });
-
+    context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
     super.initState();
   }
 
@@ -604,35 +605,15 @@ class _SearchBeneficiaryPageState
   }
 
   void fetchBeneficiaryIdCount() {
-    var count = 9;
-
-    if (count > 0) {
-      if (count < 10) {
-        showCustomPopup(
-            context: context,
-            builder: (context) {
-              return Popup(
-                type: PopUpType.alert,
-                actions: [
-                  DigitButton(
-                    capitalizeLetters: false,
-                    type: DigitButtonType.primary,
-                    size: DigitButtonSize.large,
-                    mainAxisSize: MainAxisSize.max,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    prefixIcon: Icons.download,
-                    label: localizations.translate(
-                      i18.beneficiaryDetails.downloadBeneficiaryIds,
-                    ),
-                  ),
-                  DigitButton(
-                    capitalizeLetters: false,
-                    type: DigitButtonType.tertiary,
-                    size: DigitButtonSize.large,
-                    mainAxisSize: MainAxisSize.max,
-                    onPressed: () {
+    context.read<UniqueIdBloc>().state.maybeWhen(
+          orElse: () {},
+          idCount: (availableIdCount, totalCount) {
+            if (availableIdCount < 10) {
+              showLowIdsAlert(
+                  context: context,
+                  localizations: localizations,
+                  shouldProceedFurther: (bool proceed) {
+                    if (proceed) {
                       Navigator.of(context).pop();
                       FocusManager.instance.primaryFocus?.unfocus();
                       context.read<DigitScannerBloc>().add(
@@ -647,60 +628,31 @@ class _SearchBeneficiaryPageState
                       searchBeneficiaryController.clear();
                       selectedFilters = [];
                       blocWrapper.clearEvent();
-                    },
-                    label: localizations.translate(
-                      i18.common.coreCommonSkipContinue,
-                    ),
-                  ),
-                ],
-                title: localizations
-                    .translate(i18.beneficiaryDetails.lowBeneficiaryIdsLabel),
-                description: localizations
-                    .translate(i18.beneficiaryDetails.lowBeneficiaryIdsText),
-              );
-            });
-      } else {
-        FocusManager.instance.primaryFocus?.unfocus();
-        context.read<DigitScannerBloc>().add(
-              const DigitScannerEvent.handleScanner(),
-            );
-        context.router.push(BeneficiaryRegistrationWrapperRoute(
-          initialState: BeneficiaryRegistrationCreateState(
-            searchQuery: searchHouseholdsState.searchQuery,
-          ),
-        ));
-        searchController.clear();
-        searchBeneficiaryController.clear();
-        selectedFilters = [];
-        blocWrapper.clearEvent();
-      }
-    } else {
-      showCustomPopup(
-          context: context,
-          builder: (context) {
-            return Popup(
-              type: PopUpType.alert,
-              actions: [
-                DigitButton(
-                  capitalizeLetters: false,
-                  type: DigitButtonType.secondary,
-                  size: DigitButtonSize.large,
-                  mainAxisSize: MainAxisSize.max,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  prefixIcon: Icons.download,
-                  label: localizations.translate(
-                    i18.beneficiaryDetails.downloadBeneficiaryIds,
-                  ),
+                    }
+                  });
+            } else if (availableIdCount > 10) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              context.read<DigitScannerBloc>().add(
+                    const DigitScannerEvent.handleScanner(),
+                  );
+              context.router.push(BeneficiaryRegistrationWrapperRoute(
+                initialState: BeneficiaryRegistrationCreateState(
+                  searchQuery: searchHouseholdsState.searchQuery,
                 ),
-              ],
-              title: localizations
-                  .translate(i18.beneficiaryDetails.noBeneficiaryIdsLabel),
-              description: localizations
-                  .translate(i18.beneficiaryDetails.noBeneficiaryIdsText),
-            );
-          });
-    }
+              ));
+              searchController.clear();
+              searchBeneficiaryController.clear();
+              selectedFilters = [];
+              blocWrapper.clearEvent();
+            } else if (availableIdCount <= 0) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                showNoIdsAlert(
+                  context: context,
+                  localizations: localizations,
+                );
+              });
+            }
+          },
+        );
   }
 }
