@@ -193,8 +193,10 @@ bool checkIfBeneficiaryReferred(
   }
 }
 
-List<DeliveryDoseCriteria>? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
-    IndividualModel? individualModel, HouseholdModel? householdModel) {
+List<DeliveryDoseCriteria>? fetchProductVariant(
+    ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel,
+    HouseholdModel? householdModel) {
   if (currentDelivery != null) {
     var individualAgeInMonths = 0;
     var gender;
@@ -289,7 +291,9 @@ List<DeliveryDoseCriteria>? fetchProductVariant(ProjectCycleDelivery? currentDel
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
+              if (structureType != null) 'type_of_structure': structureType,
+              'weight': weight,
+              'height': height,
             }, stringKeys: [
               'type_of_structure'
             ]);
@@ -301,8 +305,9 @@ List<DeliveryDoseCriteria>? fetchProductVariant(ProjectCycleDelivery? currentDel
               ? true
               : false;
         } else {
-          final conditions = condition.split(
-              'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
+          final conditions = [
+            condition
+          ]; // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
 
           List expressionParser = [];
           for (var element in conditions) {
@@ -312,7 +317,9 @@ List<DeliveryDoseCriteria>? fetchProductVariant(ProjectCycleDelivery? currentDel
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
+              if (structureType != null) 'type_of_structure': structureType,
+              'weight': weight,
+              'height': height,
             }, stringKeys: [
               'type_of_structure'
             ]);
