@@ -15,6 +15,8 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/beneficiary_checklist_enums.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:survey_form/blocs/service.dart';
+import 'package:survey_form/models/entities/service.dart';
 import 'package:survey_form/pages/survey_form_view.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -284,6 +286,18 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                     registrationDate: dateOfRegistration,
                                   ),
                                 );
+
+                                context
+                                    .read<ServiceBloc>()
+                                    .add(
+                                  ServiceSearchEvent(
+                                    serviceSearchModel:
+                                    ServiceSearchModel(
+                                      referenceId:[householdModel?.clientReferenceId ?? ""],
+                                    ),
+                                  ),
+                                );
+
                                 context.router.push(
                                   IndividualDetailsRoute(
                                       isHeadOfHousehold: true),
