@@ -190,6 +190,8 @@ class SearchBeneficiary {
 class BeneficiaryDetails {
   const BeneficiaryDetails();
 
+  String get  addValueText => "HCM_ADD";
+
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
 
   String get beneficiarysDetailsEditIconLabelText =>
