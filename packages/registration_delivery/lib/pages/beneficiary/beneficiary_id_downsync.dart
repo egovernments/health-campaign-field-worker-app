@@ -32,8 +32,9 @@ class BeneficiaryIdDownSyncPage extends LocalizedStatefulWidget {
 }
 
 class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
-  int beneficiaryIdCount = 0;
-  int beneficiaryIdTotalCount = 100;
+  int beneficiaryIdCount = 0,
+      beneficiaryIdTotalCount = 100,
+      beneficiaryMinCount = 10;
   bool _isProgressDialogVisible = false;
   BuildContext? _progressDialogContext;
 
@@ -52,7 +53,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
     _isProgressDialogVisible = true;
 
     // Calculate the progress value (0.0 to 1.0)
-    double progressValue = (currentCount + 1) / totalCount;
+    double progressValue = (currentCount) / totalCount;
 
     // Ensure progressValue is within the range [0.0, 1.0]
     progressValue = progressValue.clamp(0.0, 1.0);
@@ -236,7 +237,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                   margin: const EdgeInsets.only(top: spacer2),
                   children: [
                     DigitButton(
-                      isDisabled: beneficiaryIdCount > 10,
+                      isDisabled: beneficiaryIdCount > beneficiaryMinCount,
                       label: localizations.translate(
                           i18.beneficiaryDetails.downloadBeneficiaryIds),
                       type: DigitButtonType.primary,
@@ -255,6 +256,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                   child: BeneficiaryIDGauge(
                     idCount: beneficiaryIdCount,
                     totalCount: beneficiaryIdTotalCount,
+                    beneficiaryMinCount: beneficiaryMinCount,
                   ),
                 )
               ],
@@ -267,10 +269,13 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
 }
 
 class BeneficiaryIDGauge extends LocalizedStatefulWidget {
-  final int idCount, totalCount; // Value between 0 to 100
+  final int idCount, totalCount, beneficiaryMinCount; // Value between 0 to 100
 
   const BeneficiaryIDGauge(
-      {super.key, required this.idCount, required this.totalCount});
+      {super.key,
+      required this.idCount,
+      required this.totalCount,
+      required this.beneficiaryMinCount});
 
   @override
   State<BeneficiaryIDGauge> createState() => _BeneficiaryIDGaugeState();
@@ -340,8 +345,11 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
               animation: _animation,
               builder: (context, child) {
                 return CustomPaint(
-                  painter:
-                      GaugePainter(widget.idCount, widget.totalCount, theme),
+                  painter: GaugePainter(
+                      currentValue: widget.idCount,
+                      maxValue: widget.totalCount,
+                      minValue: widget.beneficiaryMinCount,
+                      theme: theme),
                   child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -350,17 +358,19 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                         Text(_animation.value.toInt().toString(),
                             style: textTheme.headingL.copyWith(
                                 fontSize: 50,
-                                color: widget.idCount < 10
-                                    ? theme.colorTheme.alert.error
-                                    : theme.colorTheme.primary.primary2)),
+                                color:
+                                    widget.idCount < widget.beneficiaryMinCount
+                                        ? theme.colorTheme.alert.error
+                                        : theme.colorTheme.primary.primary2)),
                         Text(
                             localizations.translate(i18.beneficiaryDetails
                                 .availableBeneficiaryIdsLabel),
                             style: textTheme.bodyS.copyWith(
                                 fontSize: 14,
-                                color: widget.idCount < 10
-                                    ? theme.colorTheme.alert.error
-                                    : theme.colorTheme.primary.primary2)),
+                                color:
+                                    widget.idCount < widget.beneficiaryMinCount
+                                        ? theme.colorTheme.alert.error
+                                        : theme.colorTheme.primary.primary2)),
                       ],
                     ),
                   ),
@@ -368,7 +378,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
               },
             ),
           ),
-          widget.idCount < 10
+          widget.idCount < widget.beneficiaryMinCount
               ? InfoCard(
                   title: localizations
                       .translate(i18.beneficiaryDetails.lowBeneficiaryIdsLabel),
@@ -417,10 +427,14 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
 }
 
 class GaugePainter extends CustomPainter {
-  final int currentValue, totalCount;
+  final int currentValue, maxValue, minValue;
   final ThemeData theme;
 
-  GaugePainter(this.currentValue, this.totalCount, this.theme);
+  GaugePainter(
+      {required this.currentValue,
+      required this.maxValue,
+      required this.theme,
+      required this.minValue});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -436,7 +450,7 @@ class GaugePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     Paint progressPaint = Paint()
-      ..color = currentValue < 10
+      ..color = currentValue < minValue
           ? theme.colorTheme.alert.error
           : theme.colorTheme.alert.success
       ..strokeWidth = strokeWidth
@@ -445,7 +459,7 @@ class GaugePainter extends CustomPainter {
 
     double startAngle = pi; // 180° (left side)
     double sweepAngle =
-        pi * (currentValue / totalCount); // Moves from left → center → right
+        pi * (currentValue / maxValue); // Moves from left → center → right
 
     // Full background arc
     canvas.drawArc(
@@ -471,7 +485,7 @@ class GaugePainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     Paint borderPaint = Paint()
-      ..color = currentValue < 10
+      ..color = currentValue < minValue
           ? theme.colorTheme.alert.error
           : theme.colorTheme.alert.success
       ..strokeWidth = 4
