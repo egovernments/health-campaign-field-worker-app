@@ -171,15 +171,19 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                             createdTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
-                                          resources: fetchProductVariant(
-                                                  e,
-                                                  overViewBloc
-                                                      .selectedIndividual,
-                                                  overViewBloc
-                                                      .householdMemberWrapper
-                                                      .household)
-                                              ?.productVariants
-                                              ?.map((variant) =>
+                                          resources: (fetchProductVariant(
+                                                          e,
+                                                          overViewBloc
+                                                              .selectedIndividual,
+                                                          overViewBloc
+                                                              .householdMemberWrapper
+                                                              .household)
+                                                      ?.expand((e) =>
+                                                          e.productVariants ??
+                                                          [])
+                                                      .toList() ??
+                                                  [])
+                                              .map((variant) =>
                                                   TaskResourceModel(
                                                     clientReferenceId:
                                                         IdGen.i.identifier,
@@ -373,7 +377,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                 overViewBloc.selectedIndividual,
                                                 overViewBloc
                                                     .householdMemberWrapper
-                                                    .household)!
+                                                    .household)![0]
                                             .productVariants!
                                             .map((ele) {
                                           final pv = variant!.firstWhere(
@@ -428,7 +432,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                               .selectedIndividual,
                                                           overViewBloc
                                                               .householdMemberWrapper
-                                                              .household)!
+                                                              .household)![0]
                                                       .condition!),
                                             },
                                           ),

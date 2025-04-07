@@ -193,8 +193,8 @@ class DeliverInterventionPageState
                                               .deliveries?[
                                           deliveryInterventionState.dose - 1],
                                       state.selectedIndividual,
-                                      state.householdMemberWrapper.household)
-                                  ?.productVariants)
+                                      state.householdMemberWrapper.household)?.expand((e) => e.productVariants!).toList()
+                                  )
                               : RegistrationDeliverySingleton()
                                   .selectedProject
                                   ?.additionalDetails
@@ -465,6 +465,7 @@ class DeliverInterventionPageState
                                                   ),
                                                 ),
                                               ]),
+                                              //TODO
                                           DigitCard(
                                               margin:
                                                   const EdgeInsets.all(spacer2),
@@ -543,6 +544,8 @@ class DeliverInterventionPageState
                                                   ),
                                                 ),
                                               ]),
+
+                                              // end TODO
                                           DigitCard(
                                               margin:
                                                   const EdgeInsets.all(spacer2),
@@ -828,7 +831,7 @@ class DeliverInterventionPageState
                           .deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
                       overViewbloc.householdMemberWrapper.household)
-                  ?.productVariants
+                  ?.expand((e) => e.productVariants ?? []).toList()
                   ?.length ??
               0;
 

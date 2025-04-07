@@ -193,7 +193,7 @@ bool checkIfBeneficiaryReferred(
   }
 }
 
-DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
+List<DeliveryDoseCriteria>? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     IndividualModel? individualModel, HouseholdModel? householdModel) {
   if (currentDelivery != null) {
     var individualAgeInMonths = 0;
@@ -328,7 +328,7 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       return false;
     }).toList();
 
-    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria : null;
   }
 
   return null;
