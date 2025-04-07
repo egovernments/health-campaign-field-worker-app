@@ -13,6 +13,7 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/parent_overview/parent_overview.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
 
@@ -40,9 +41,9 @@ class ParentOverviewPage extends LocalizedStatefulWidget {
 class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
   @override
   void initState() {
-    final bloc = context.read<HouseholdOverviewBloc>();
+    final bloc = context.read<ParentOverviewBloc>();
     bloc.add(
-      HouseholdOverviewReloadEvent(
+      ParentOverviewReloadEvent(
         projectId: RegistrationDeliverySingleton().projectId!,
         projectBeneficiaryType:
             RegistrationDeliverySingleton().beneficiaryType!,
@@ -61,7 +62,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
       onPopInvoked: (didPop) async {
         context.router.maybePop();
       },
-      child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+      child: BlocBuilder<ParentOverviewBloc, ParentOverviewState>(
         builder: (ctx, state) {
           return Scaffold(
             body: state.loading

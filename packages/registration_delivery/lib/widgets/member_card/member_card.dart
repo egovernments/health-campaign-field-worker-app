@@ -8,6 +8,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/parent_overview/parent_overview.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:survey_form/blocs/service_definition.dart';
@@ -113,8 +114,8 @@ class MemberCard extends StatelessWidget {
                     alignment: Alignment.topRight,
                     child: (children ?? []).isNotEmpty
                         ? DigitButton(label: '${localizations.translate(i18.memberCard.noOfChildren)} ${children?.length}', onPressed: () {
-                      context.read<HouseholdOverviewBloc>().add(
-                          HouseholdOverviewEvent.selectedIndividual(
+                      context.read<ParentOverviewBloc>().add(
+                          ParentOverviewEvent.selectedIndividual(
                               individualModel: individual));
                       context.router.push(ParentOverviewRoute());
                     }, type: DigitButtonType.tertiary, size: DigitButtonSize.large)
