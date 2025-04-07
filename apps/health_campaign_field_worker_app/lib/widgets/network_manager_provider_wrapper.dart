@@ -17,6 +17,7 @@ import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/data/repositories/local/unique_id_pool.dart';
+import 'package:registration_delivery/data/repositories/remote/unique_id_pool.dart';
 import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
@@ -464,6 +465,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<SideEffectModel, SideEffectSearchModel>>(
             create: (_) => SideEffectRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.uniqueId)
+          RepositoryProvider<
+              RemoteRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>(
+            create: (_) => UniqueIdPoolRemoteRepository(
               dio,
               actionMap: actions,
             ),
