@@ -209,11 +209,11 @@ class HouseholdOverviewBloc
       ));
 
       final householdChecklist = await serviceDataRepository.search(ServiceSearchModel(
-        referenceId: [resultHousehold.clientReferenceId],
+        referenceIds: [resultHousehold.clientReferenceId],
       ));
 
       final memberChecklist = await serviceDataRepository.search(ServiceSearchModel(
-        referenceId: members
+        referenceIds: members
             .map((e) => e.individualClientReferenceId)
             .whereNotNull()
             .toList(),

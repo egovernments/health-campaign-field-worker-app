@@ -155,8 +155,8 @@ class ServiceLocalRepository
             sql.service.serviceDefId.equals(query.id!),
           if (query.clientId != null)
             sql.service.clientId.equals(query.clientId!),
-          if (query.referenceId != null && query.referenceId!.isNotEmpty)
-            sql.service.referenceId.isIn(query.referenceId!),
+          if (query.referenceIds != null && query.referenceIds!.isNotEmpty)
+            sql.service.referenceId.isIn(query.referenceIds!),
         ])))
           .get();
 
@@ -206,6 +206,29 @@ class ServiceLocalRepository
       }
 
       return serviceList;
+    });
+  }
+
+
+  @override
+  FutureOr<void> update(
+      ServiceModel entity, {
+        bool createOpLog = true,
+      }) async {
+    return retryLocalCallOperation(() async {
+      final serviceCompanion = entity.companion;
+
+      await sql.batch((batch) async {
+        batch.update(
+          sql.service,
+          serviceCompanion,
+          where: (table) => table.referenceId.equals(
+            entity.referenceId ?? '',
+          ),
+        );
+      });
+
+      await super.update(entity, createOpLog: createOpLog);
     });
   }
 

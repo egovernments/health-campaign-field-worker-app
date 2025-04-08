@@ -293,7 +293,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   ServiceSearchEvent(
                                     serviceSearchModel:
                                     ServiceSearchModel(
-                                      referenceId:[householdModel?.clientReferenceId ?? ""],
+                                      referenceIds:[householdModel?.clientReferenceId ?? ""],
                                     ),
                                   ),
                                 );
