@@ -48,7 +48,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
       ServiceSearchEvent(
         serviceSearchModel:
         ServiceSearchModel(
-          referenceId:[householdState.householdModel?.clientReferenceId ?? ""],
+          referenceIds:[householdState.householdModel?.clientReferenceId ?? ""],
         ),
       ),
     );

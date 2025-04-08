@@ -721,10 +721,11 @@ class SyncServiceMapper extends SyncEntityMapperListener {
 
       case DataModelType.service:
         responseEntities = await remote.search(ServiceSearchModel(
-          clientId: entities
+          referenceIds: entities
               .whereType<ServiceModel>()
-              .map((e) => e.clientId)
-              .whereNotNull().first,
+              .map((e) => e.referenceId)
+              .whereNotNull()
+              .toList(),
         ));
 
         for (var element in operationGroupedEntity.value) {

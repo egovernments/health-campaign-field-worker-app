@@ -175,7 +175,7 @@ class _SearchReferralReconciliationsPageState
                                                 ServiceSearchEvent(
                                                   serviceSearchModel:
                                                       ServiceSearchModel(
-                                                    referenceId: [i.clientReferenceId],
+                                                    referenceIds: [i.clientReferenceId],
                                                   ),
                                                 ),
                                               );

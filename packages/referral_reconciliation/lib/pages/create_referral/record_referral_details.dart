@@ -179,7 +179,7 @@ class _RecordReferralDetailsPageState
                                                           ServiceSearchEvent(
                                                             serviceSearchModel:
                                                                 ServiceSearchModel(
-                                                              referenceId:
+                                                              referenceIds:
                                                                   recordState
                                                                       .mapOrNull(
                                                                 create: (value) => value
@@ -503,7 +503,7 @@ class _RecordReferralDetailsPageState
                                                               ServiceSearchEvent(
                                                                 serviceSearchModel:
                                                                     ServiceSearchModel(
-                                                                  referenceId:
+                                                                  referenceIds:
                                                                       recordState
                                                                           .mapOrNull(
                                                                     create: (value) => value

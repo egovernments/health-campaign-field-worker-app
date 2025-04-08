@@ -14,7 +14,7 @@ class ServiceSearchModel extends EntitySearchModel
     with ServiceSearchModelMappable {
   final String? id;
   final String? clientId;
-  final List<String>? referenceId;
+  final List<String>? referenceIds;
   final String? serviceDefId;
   final String? accountId;
   final String? createdAt;
@@ -23,7 +23,7 @@ class ServiceSearchModel extends EntitySearchModel
   ServiceSearchModel({
     this.id,
     this.clientId,
-    this.referenceId,
+    this.referenceIds,
     this.serviceDefId,
     this.accountId,
     this.createdAt,
@@ -36,7 +36,7 @@ class ServiceSearchModel extends EntitySearchModel
   ServiceSearchModel.ignoreDeleted({
     this.id,
     this.clientId,
-    this.referenceId,
+    this.referenceIds,
     this.serviceDefId,
     this.accountId,
     this.createdAt,
