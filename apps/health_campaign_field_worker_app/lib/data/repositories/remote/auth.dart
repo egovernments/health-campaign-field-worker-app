@@ -17,10 +17,7 @@ class AuthRepository {
       "authorization": "Basic ZWdvdi11c2VyLWNsaWVudDo=",
     };
 
-    // final formData = FormData.fromMap(loginModel.toJson());
-    ////  TODO:currently not working in qa so adding a different logic here to get the form data
-    final formData = loginModel.toJson().entries.map((e) =>
-    '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value.toString())}').join('&');
+    final formData = FormData.fromMap(loginModel.toJson());
 
     final response = await _client.post(
       loginPath,

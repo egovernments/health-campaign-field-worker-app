@@ -325,6 +325,8 @@ class IndividualDetails {
 
   String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
 
+  String get relationShipTypeLabelText => 'RELATIONSHIP_TYPE_LABEL_TEXT';
+
   String get idNumberLabelText => 'ID_NUMBER_LABEL_TEXT';
 
   String get idNumberSuggestionText => 'ID_NUMBER_SUGGESTION_TEXT';

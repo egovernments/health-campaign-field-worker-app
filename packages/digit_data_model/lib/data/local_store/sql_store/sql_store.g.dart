@@ -34867,6 +34867,430 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
   }
 }
 
+class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
+    with
+        TableInfo<$HouseholdMemberRelationShipTable,
+            HouseholdMemberRelationShipData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HouseholdMemberRelationShipTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _selfIdMeta = const VerificationMeta('selfId');
+  @override
+  late final GeneratedColumn<String> selfId = GeneratedColumn<String>(
+      'self_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _selfIdClientReferenceIdMeta =
+      const VerificationMeta('selfIdClientReferenceId');
+  @override
+  late final GeneratedColumn<String> selfIdClientReferenceId =
+      GeneratedColumn<String>('self_id_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _relativeIdMeta =
+      const VerificationMeta('relativeId');
+  @override
+  late final GeneratedColumn<String> relativeId = GeneratedColumn<String>(
+      'relative_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _relativeClientReferenceIdMeta =
+      const VerificationMeta('relativeClientReferenceId');
+  @override
+  late final GeneratedColumn<String> relativeClientReferenceId =
+      GeneratedColumn<String>('relative_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _relationshipTypeMeta =
+      const VerificationMeta('relationshipType');
+  @override
+  late final GeneratedColumn<String> relationshipType = GeneratedColumn<String>(
+      'relationship_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        selfId,
+        selfIdClientReferenceId,
+        relativeId,
+        relativeClientReferenceId,
+        relationshipType,
+        isDeleted
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'household_member_relation_ship';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<HouseholdMemberRelationShipData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('self_id')) {
+      context.handle(_selfIdMeta,
+          selfId.isAcceptableOrUnknown(data['self_id']!, _selfIdMeta));
+    }
+    if (data.containsKey('self_id_client_reference_id')) {
+      context.handle(
+          _selfIdClientReferenceIdMeta,
+          selfIdClientReferenceId.isAcceptableOrUnknown(
+              data['self_id_client_reference_id']!,
+              _selfIdClientReferenceIdMeta));
+    }
+    if (data.containsKey('relative_id')) {
+      context.handle(
+          _relativeIdMeta,
+          relativeId.isAcceptableOrUnknown(
+              data['relative_id']!, _relativeIdMeta));
+    }
+    if (data.containsKey('relative_client_reference_id')) {
+      context.handle(
+          _relativeClientReferenceIdMeta,
+          relativeClientReferenceId.isAcceptableOrUnknown(
+              data['relative_client_reference_id']!,
+              _relativeClientReferenceIdMeta));
+    }
+    if (data.containsKey('relationship_type')) {
+      context.handle(
+          _relationshipTypeMeta,
+          relationshipType.isAcceptableOrUnknown(
+              data['relationship_type']!, _relationshipTypeMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  HouseholdMemberRelationShipData map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return HouseholdMemberRelationShipData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      selfId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}self_id']),
+      selfIdClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}self_id_client_reference_id']),
+      relativeId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}relative_id']),
+      relativeClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}relative_client_reference_id']),
+      relationshipType: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}relationship_type']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+    );
+  }
+
+  @override
+  $HouseholdMemberRelationShipTable createAlias(String alias) {
+    return $HouseholdMemberRelationShipTable(attachedDatabase, alias);
+  }
+}
+
+class HouseholdMemberRelationShipData extends DataClass
+    implements Insertable<HouseholdMemberRelationShipData> {
+  final String? id;
+  final String? selfId;
+  final String? selfIdClientReferenceId;
+  final String? relativeId;
+  final String? relativeClientReferenceId;
+  final String? relationshipType;
+  final bool? isDeleted;
+  const HouseholdMemberRelationShipData(
+      {this.id,
+      this.selfId,
+      this.selfIdClientReferenceId,
+      this.relativeId,
+      this.relativeClientReferenceId,
+      this.relationshipType,
+      this.isDeleted});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || selfId != null) {
+      map['self_id'] = Variable<String>(selfId);
+    }
+    if (!nullToAbsent || selfIdClientReferenceId != null) {
+      map['self_id_client_reference_id'] =
+          Variable<String>(selfIdClientReferenceId);
+    }
+    if (!nullToAbsent || relativeId != null) {
+      map['relative_id'] = Variable<String>(relativeId);
+    }
+    if (!nullToAbsent || relativeClientReferenceId != null) {
+      map['relative_client_reference_id'] =
+          Variable<String>(relativeClientReferenceId);
+    }
+    if (!nullToAbsent || relationshipType != null) {
+      map['relationship_type'] = Variable<String>(relationshipType);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    return map;
+  }
+
+  HouseholdMemberRelationShipCompanion toCompanion(bool nullToAbsent) {
+    return HouseholdMemberRelationShipCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      selfId:
+          selfId == null && nullToAbsent ? const Value.absent() : Value(selfId),
+      selfIdClientReferenceId: selfIdClientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(selfIdClientReferenceId),
+      relativeId: relativeId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relativeId),
+      relativeClientReferenceId:
+          relativeClientReferenceId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(relativeClientReferenceId),
+      relationshipType: relationshipType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relationshipType),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+    );
+  }
+
+  factory HouseholdMemberRelationShipData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HouseholdMemberRelationShipData(
+      id: serializer.fromJson<String?>(json['id']),
+      selfId: serializer.fromJson<String?>(json['selfId']),
+      selfIdClientReferenceId:
+          serializer.fromJson<String?>(json['selfIdClientReferenceId']),
+      relativeId: serializer.fromJson<String?>(json['relativeId']),
+      relativeClientReferenceId:
+          serializer.fromJson<String?>(json['relativeClientReferenceId']),
+      relationshipType: serializer.fromJson<String?>(json['relationshipType']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'selfId': serializer.toJson<String?>(selfId),
+      'selfIdClientReferenceId':
+          serializer.toJson<String?>(selfIdClientReferenceId),
+      'relativeId': serializer.toJson<String?>(relativeId),
+      'relativeClientReferenceId':
+          serializer.toJson<String?>(relativeClientReferenceId),
+      'relationshipType': serializer.toJson<String?>(relationshipType),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+    };
+  }
+
+  HouseholdMemberRelationShipData copyWith(
+          {Value<String?> id = const Value.absent(),
+          Value<String?> selfId = const Value.absent(),
+          Value<String?> selfIdClientReferenceId = const Value.absent(),
+          Value<String?> relativeId = const Value.absent(),
+          Value<String?> relativeClientReferenceId = const Value.absent(),
+          Value<String?> relationshipType = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent()}) =>
+      HouseholdMemberRelationShipData(
+        id: id.present ? id.value : this.id,
+        selfId: selfId.present ? selfId.value : this.selfId,
+        selfIdClientReferenceId: selfIdClientReferenceId.present
+            ? selfIdClientReferenceId.value
+            : this.selfIdClientReferenceId,
+        relativeId: relativeId.present ? relativeId.value : this.relativeId,
+        relativeClientReferenceId: relativeClientReferenceId.present
+            ? relativeClientReferenceId.value
+            : this.relativeClientReferenceId,
+        relationshipType: relationshipType.present
+            ? relationshipType.value
+            : this.relationshipType,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('HouseholdMemberRelationShipData(')
+          ..write('id: $id, ')
+          ..write('selfId: $selfId, ')
+          ..write('selfIdClientReferenceId: $selfIdClientReferenceId, ')
+          ..write('relativeId: $relativeId, ')
+          ..write('relativeClientReferenceId: $relativeClientReferenceId, ')
+          ..write('relationshipType: $relationshipType, ')
+          ..write('isDeleted: $isDeleted')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, selfId, selfIdClientReferenceId,
+      relativeId, relativeClientReferenceId, relationshipType, isDeleted);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HouseholdMemberRelationShipData &&
+          other.id == this.id &&
+          other.selfId == this.selfId &&
+          other.selfIdClientReferenceId == this.selfIdClientReferenceId &&
+          other.relativeId == this.relativeId &&
+          other.relativeClientReferenceId == this.relativeClientReferenceId &&
+          other.relationshipType == this.relationshipType &&
+          other.isDeleted == this.isDeleted);
+}
+
+class HouseholdMemberRelationShipCompanion
+    extends UpdateCompanion<HouseholdMemberRelationShipData> {
+  final Value<String?> id;
+  final Value<String?> selfId;
+  final Value<String?> selfIdClientReferenceId;
+  final Value<String?> relativeId;
+  final Value<String?> relativeClientReferenceId;
+  final Value<String?> relationshipType;
+  final Value<bool?> isDeleted;
+  final Value<int> rowid;
+  const HouseholdMemberRelationShipCompanion({
+    this.id = const Value.absent(),
+    this.selfId = const Value.absent(),
+    this.selfIdClientReferenceId = const Value.absent(),
+    this.relativeId = const Value.absent(),
+    this.relativeClientReferenceId = const Value.absent(),
+    this.relationshipType = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  HouseholdMemberRelationShipCompanion.insert({
+    this.id = const Value.absent(),
+    this.selfId = const Value.absent(),
+    this.selfIdClientReferenceId = const Value.absent(),
+    this.relativeId = const Value.absent(),
+    this.relativeClientReferenceId = const Value.absent(),
+    this.relationshipType = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  static Insertable<HouseholdMemberRelationShipData> custom({
+    Expression<String>? id,
+    Expression<String>? selfId,
+    Expression<String>? selfIdClientReferenceId,
+    Expression<String>? relativeId,
+    Expression<String>? relativeClientReferenceId,
+    Expression<String>? relationshipType,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (selfId != null) 'self_id': selfId,
+      if (selfIdClientReferenceId != null)
+        'self_id_client_reference_id': selfIdClientReferenceId,
+      if (relativeId != null) 'relative_id': relativeId,
+      if (relativeClientReferenceId != null)
+        'relative_client_reference_id': relativeClientReferenceId,
+      if (relationshipType != null) 'relationship_type': relationshipType,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  HouseholdMemberRelationShipCompanion copyWith(
+      {Value<String?>? id,
+      Value<String?>? selfId,
+      Value<String?>? selfIdClientReferenceId,
+      Value<String?>? relativeId,
+      Value<String?>? relativeClientReferenceId,
+      Value<String?>? relationshipType,
+      Value<bool?>? isDeleted,
+      Value<int>? rowid}) {
+    return HouseholdMemberRelationShipCompanion(
+      id: id ?? this.id,
+      selfId: selfId ?? this.selfId,
+      selfIdClientReferenceId:
+          selfIdClientReferenceId ?? this.selfIdClientReferenceId,
+      relativeId: relativeId ?? this.relativeId,
+      relativeClientReferenceId:
+          relativeClientReferenceId ?? this.relativeClientReferenceId,
+      relationshipType: relationshipType ?? this.relationshipType,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (selfId.present) {
+      map['self_id'] = Variable<String>(selfId.value);
+    }
+    if (selfIdClientReferenceId.present) {
+      map['self_id_client_reference_id'] =
+          Variable<String>(selfIdClientReferenceId.value);
+    }
+    if (relativeId.present) {
+      map['relative_id'] = Variable<String>(relativeId.value);
+    }
+    if (relativeClientReferenceId.present) {
+      map['relative_client_reference_id'] =
+          Variable<String>(relativeClientReferenceId.value);
+    }
+    if (relationshipType.present) {
+      map['relationship_type'] = Variable<String>(relationshipType.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HouseholdMemberRelationShipCompanion(')
+          ..write('id: $id, ')
+          ..write('selfId: $selfId, ')
+          ..write('selfIdClientReferenceId: $selfIdClientReferenceId, ')
+          ..write('relativeId: $relativeId, ')
+          ..write('relativeClientReferenceId: $relativeClientReferenceId, ')
+          ..write('relationshipType: $relationshipType, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TaskTable extends Task with TableInfo<$TaskTable, TaskData> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -39388,6 +39812,8 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $HouseholdTable household = $HouseholdTable(this);
   late final $HouseholdMemberTable householdMember =
       $HouseholdMemberTable(this);
+  late final $HouseholdMemberRelationShipTable householdMemberRelationShip =
+      $HouseholdMemberRelationShipTable(this);
   late final $TaskTable task = $TaskTable(this);
   late final $TaskResourceTable taskResource = $TaskResourceTable(this);
   late final $SideEffectTable sideEffect = $SideEffectTable(this);
@@ -39501,6 +39927,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         hFReferral,
         household,
         householdMember,
+        householdMemberRelationShip,
         task,
         taskResource,
         sideEffect,
@@ -53489,6 +53916,187 @@ class $$HouseholdMemberTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$HouseholdMemberRelationShipTableInsertCompanionBuilder
+    = HouseholdMemberRelationShipCompanion Function({
+  Value<String?> id,
+  Value<String?> selfId,
+  Value<String?> selfIdClientReferenceId,
+  Value<String?> relativeId,
+  Value<String?> relativeClientReferenceId,
+  Value<String?> relationshipType,
+  Value<bool?> isDeleted,
+  Value<int> rowid,
+});
+typedef $$HouseholdMemberRelationShipTableUpdateCompanionBuilder
+    = HouseholdMemberRelationShipCompanion Function({
+  Value<String?> id,
+  Value<String?> selfId,
+  Value<String?> selfIdClientReferenceId,
+  Value<String?> relativeId,
+  Value<String?> relativeClientReferenceId,
+  Value<String?> relationshipType,
+  Value<bool?> isDeleted,
+  Value<int> rowid,
+});
+
+class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $HouseholdMemberRelationShipTable,
+    HouseholdMemberRelationShipData,
+    $$HouseholdMemberRelationShipTableFilterComposer,
+    $$HouseholdMemberRelationShipTableOrderingComposer,
+    $$HouseholdMemberRelationShipTableProcessedTableManager,
+    $$HouseholdMemberRelationShipTableInsertCompanionBuilder,
+    $$HouseholdMemberRelationShipTableUpdateCompanionBuilder> {
+  $$HouseholdMemberRelationShipTableTableManager(
+      _$LocalSqlDataStore db, $HouseholdMemberRelationShipTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer: $$HouseholdMemberRelationShipTableFilterComposer(
+              ComposerState(db, table)),
+          orderingComposer: $$HouseholdMemberRelationShipTableOrderingComposer(
+              ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$HouseholdMemberRelationShipTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> selfId = const Value.absent(),
+            Value<String?> selfIdClientReferenceId = const Value.absent(),
+            Value<String?> relativeId = const Value.absent(),
+            Value<String?> relativeClientReferenceId = const Value.absent(),
+            Value<String?> relationshipType = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HouseholdMemberRelationShipCompanion(
+            id: id,
+            selfId: selfId,
+            selfIdClientReferenceId: selfIdClientReferenceId,
+            relativeId: relativeId,
+            relativeClientReferenceId: relativeClientReferenceId,
+            relationshipType: relationshipType,
+            isDeleted: isDeleted,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
+            Value<String?> selfId = const Value.absent(),
+            Value<String?> selfIdClientReferenceId = const Value.absent(),
+            Value<String?> relativeId = const Value.absent(),
+            Value<String?> relativeClientReferenceId = const Value.absent(),
+            Value<String?> relationshipType = const Value.absent(),
+            Value<bool?> isDeleted = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              HouseholdMemberRelationShipCompanion.insert(
+            id: id,
+            selfId: selfId,
+            selfIdClientReferenceId: selfIdClientReferenceId,
+            relativeId: relativeId,
+            relativeClientReferenceId: relativeClientReferenceId,
+            relationshipType: relationshipType,
+            isDeleted: isDeleted,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$HouseholdMemberRelationShipTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$LocalSqlDataStore,
+        $HouseholdMemberRelationShipTable,
+        HouseholdMemberRelationShipData,
+        $$HouseholdMemberRelationShipTableFilterComposer,
+        $$HouseholdMemberRelationShipTableOrderingComposer,
+        $$HouseholdMemberRelationShipTableProcessedTableManager,
+        $$HouseholdMemberRelationShipTableInsertCompanionBuilder,
+        $$HouseholdMemberRelationShipTableUpdateCompanionBuilder> {
+  $$HouseholdMemberRelationShipTableProcessedTableManager(super.$state);
+}
+
+class $$HouseholdMemberRelationShipTableFilterComposer extends FilterComposer<
+    _$LocalSqlDataStore, $HouseholdMemberRelationShipTable> {
+  $$HouseholdMemberRelationShipTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get selfId => $state.composableBuilder(
+      column: $state.table.selfId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get selfIdClientReferenceId => $state.composableBuilder(
+      column: $state.table.selfIdClientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get relativeId => $state.composableBuilder(
+      column: $state.table.relativeId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get relativeClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.relativeClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get relationshipType => $state.composableBuilder(
+      column: $state.table.relationshipType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$HouseholdMemberRelationShipTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore,
+        $HouseholdMemberRelationShipTable> {
+  $$HouseholdMemberRelationShipTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get selfId => $state.composableBuilder(
+      column: $state.table.selfId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get selfIdClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.selfIdClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get relativeId => $state.composableBuilder(
+      column: $state.table.relativeId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get relativeClientReferenceId => $state
+      .composableBuilder(
+          column: $state.table.relativeClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get relationshipType => $state.composableBuilder(
+      column: $state.table.relationshipType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
+      column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 typedef $$TaskTableInsertCompanionBuilder = TaskCompanion Function({
   Value<String?> id,
   Value<String?> projectId,
@@ -55346,6 +55954,10 @@ class _$LocalSqlDataStoreManager {
       $$HouseholdTableTableManager(_db, _db.household);
   $$HouseholdMemberTableTableManager get householdMember =>
       $$HouseholdMemberTableTableManager(_db, _db.householdMember);
+  $$HouseholdMemberRelationShipTableTableManager
+      get householdMemberRelationShip =>
+          $$HouseholdMemberRelationShipTableTableManager(
+              _db, _db.householdMemberRelationShip);
   $$TaskTableTableManager get task => $$TaskTableTableManager(_db, _db.task);
   $$TaskResourceTableTableManager get taskResource =>
       $$TaskResourceTableTableManager(_db, _db.taskResource);

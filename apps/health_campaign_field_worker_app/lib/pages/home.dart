@@ -606,11 +606,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-
-      if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
-        filteredLabels.remove(i18.home.db);
-      }
-
+    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
+      filteredLabels.remove(i18.home.db);
+    }
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -662,8 +660,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         AttendanceLogSearchModel>>(),
                 context.read<
                     LocalRepository<UserActionModel, UserActionSearchModel>>(),
-                context.read<LocalRepository<ServiceModel,
-                        ServiceSearchModel>>(),
+                context
+                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -697,8 +695,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         AttendanceLogSearchModel>>(),
                 context.read<
                     RemoteRepository<UserActionModel, UserActionSearchModel>>(),
-                context.read<
-                    RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+                context
+                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
               ],
             ),
           );
@@ -767,6 +765,9 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.genderOptions!.map((e) => e.code).toList(),
           idTypeOptions:
               appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          memberRelationTypeOptions: appConfiguration.relationShipTypeOptions!
+              .map((e) => e.code)
+              .toList(),
           householdDeletionReasonOptions: appConfiguration
               .householdDeletionReasonOptions!
               .map((e) => e.code)

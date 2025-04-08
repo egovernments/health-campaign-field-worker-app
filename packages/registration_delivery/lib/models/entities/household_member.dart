@@ -3,6 +3,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
+import 'household_member_relationship.dart';
+
 part 'household_member.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
@@ -69,6 +71,7 @@ class HouseholdMemberModel extends EntityModel
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
+  final List<HouseholdMemberRelationShipModel>? relationships;
   final HouseholdMemberAdditionalFields? additionalFields;
 
   HouseholdMemberModel({
@@ -78,6 +81,7 @@ class HouseholdMemberModel extends EntityModel
     this.householdClientReferenceId,
     this.individualId,
     this.individualClientReferenceId,
+    this.relationships,
     required this.isHeadOfHousehold,
     this.nonRecoverableError = false,
     required this.clientReferenceId,
