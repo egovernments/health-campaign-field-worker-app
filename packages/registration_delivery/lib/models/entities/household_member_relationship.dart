@@ -1,0 +1,91 @@
+// Generated using mason. Do not modify by hand
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
+
+part 'household_member_relationship.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class HouseholdMemberRelationShipSearchModel extends EntitySearchModel
+    with HouseholdMemberRelationShipSearchModelMappable {
+  final String? id;
+  final String? selfId;
+  final String? selfIdClientReferenceId;
+  final String? relativeId;
+  final String? relativeClientReferenceId;
+  final String? relationshipType;
+
+  HouseholdMemberRelationShipSearchModel({
+    this.id,
+    this.selfId,
+    this.selfIdClientReferenceId,
+    this.relativeId,
+    this.relativeClientReferenceId,
+    this.relationshipType,
+    super.boundaryCode,
+    super.isDeleted,
+  }) : super();
+
+  @MappableConstructor()
+  HouseholdMemberRelationShipSearchModel.ignoreDeleted({
+    this.id,
+    this.selfId,
+    this.selfIdClientReferenceId,
+    this.relativeId,
+    this.relativeClientReferenceId,
+    this.relationshipType,
+    super.boundaryCode,
+  }) : super(isDeleted: false);
+}
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class HouseholdMemberRelationShipModel extends EntityModel
+    with HouseholdMemberRelationShipModelMappable {
+  static const schemaName = 'HouseholdMemberRelationShip';
+
+  final String? id;
+  final String? selfId;
+  final String? selfIdClientReferenceId;
+  final String? relativeId;
+  final String? relativeClientReferenceId;
+  final String? relationshipType;
+  final int? rowVersion;
+  final HouseholdMemberRelationShipAdditionalFields? additionalFields;
+
+  HouseholdMemberRelationShipModel({
+    this.additionalFields,
+    this.id,
+    this.selfId,
+    this.selfIdClientReferenceId,
+    this.relativeId,
+    this.relativeClientReferenceId,
+    this.relationshipType,
+    this.rowVersion,
+    super.auditDetails,
+    super.clientAuditDetails,
+    super.isDeleted = false,
+  }) : super();
+
+  HouseholdMemberRelationShipCompanion get companion {
+    return HouseholdMemberRelationShipCompanion(
+      isDeleted: Value(isDeleted),
+      id: Value(id),
+      rowid: Value(rowVersion!),
+      selfId: Value(selfId),
+      selfIdClientReferenceId: Value(selfIdClientReferenceId),
+      relativeId: Value(relativeId),
+      relativeClientReferenceId: Value(relativeClientReferenceId),
+      relationshipType: Value(relationshipType),
+    );
+  }
+}
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class HouseholdMemberRelationShipAdditionalFields extends AdditionalFields
+    with HouseholdMemberRelationShipAdditionalFieldsMappable {
+  HouseholdMemberRelationShipAdditionalFields({
+    super.schema = 'HouseholdMemberRelationShip',
+    required super.version,
+    super.fields,
+  });
+}

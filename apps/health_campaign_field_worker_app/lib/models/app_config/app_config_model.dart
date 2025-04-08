@@ -5,6 +5,7 @@ import '../referral_reasons/referral_reasons_model.dart';
 import '../symptoms_types/symptoms_types_model.dart';
 
 part 'app_config_model.freezed.dart';
+
 part 'app_config_model.g.dart';
 
 @freezed
@@ -79,6 +80,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<CheckListTypes> checklistTypes,
     @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
     required List<IdTypeOptions> idTypeOptions,
+    @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+    required List<RelationShipTypeOptions> relationShipTypeOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
@@ -198,6 +201,18 @@ class IdTypeOptions with _$IdTypeOptions {
 
   factory IdTypeOptions.fromJson(Map<String, dynamic> json) =>
       _$IdTypeOptionsFromJson(json);
+}
+
+@freezed
+class RelationShipTypeOptions with _$RelationShipTypeOptions {
+  factory RelationShipTypeOptions({
+    required String name,
+    required String code,
+    required bool active,
+  }) = _RelationShipTypeOptions;
+
+  factory RelationShipTypeOptions.fromJson(Map<String, dynamic> json) =>
+      _$RelationShipTypeOptionsFromJson(json);
 }
 
 @freezed

@@ -52,6 +52,9 @@ class AppConfiguration {
   @Name('ID_TYPE_OPTIONS_POPULATOR')
   late List<IdTypeOptions>? idTypeOptions;
 
+  @Name('HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+  late List<RelationShipTypeOptions>? relationShipTypeOptions;
+
   @Name('DELIVERY_COMMENT_OPTIONS_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptions;
 
@@ -106,6 +109,13 @@ class GenderOptions {
 class IdTypeOptions {
   late String name;
   late String code;
+}
+
+@embedded
+class RelationShipTypeOptions {
+  late String name;
+  late String code;
+  late bool active;
 }
 
 @embedded
