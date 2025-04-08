@@ -394,6 +394,12 @@ class HouseholdMemberModelMapper
       _f$individualClientReferenceId = Field(
           'individualClientReferenceId', _$individualClientReferenceId,
           opt: true);
+  static List<HouseholdMemberRelationShipModel>? _$relationships(
+          HouseholdMemberModel v) =>
+      v.relationships;
+  static const Field<HouseholdMemberModel,
+          List<HouseholdMemberRelationShipModel>> _f$relationships =
+      Field('relationships', _$relationships, opt: true);
   static bool _$isHeadOfHousehold(HouseholdMemberModel v) =>
       v.isHeadOfHousehold;
   static const Field<HouseholdMemberModel, bool> _f$isHeadOfHousehold =
@@ -433,6 +439,7 @@ class HouseholdMemberModelMapper
     #householdClientReferenceId: _f$householdClientReferenceId,
     #individualId: _f$individualId,
     #individualClientReferenceId: _f$individualClientReferenceId,
+    #relationships: _f$relationships,
     #isHeadOfHousehold: _f$isHeadOfHousehold,
     #nonRecoverableError: _f$nonRecoverableError,
     #clientReferenceId: _f$clientReferenceId,
@@ -461,6 +468,7 @@ class HouseholdMemberModelMapper
         householdClientReferenceId: data.dec(_f$householdClientReferenceId),
         individualId: data.dec(_f$individualId),
         individualClientReferenceId: data.dec(_f$individualClientReferenceId),
+        relationships: data.dec(_f$relationships),
         isHeadOfHousehold: data.dec(_f$isHeadOfHousehold),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         clientReferenceId: data.dec(_f$clientReferenceId),
@@ -530,6 +538,13 @@ abstract class HouseholdMemberModelCopyWith<
     $Out> implements EntityModelCopyWith<$R, $In, $Out> {
   HouseholdMemberAdditionalFieldsCopyWith<$R, HouseholdMemberAdditionalFields,
       HouseholdMemberAdditionalFields>? get additionalFields;
+  ListCopyWith<
+      $R,
+      HouseholdMemberRelationShipModel,
+      HouseholdMemberRelationShipModelCopyWith<
+          $R,
+          HouseholdMemberRelationShipModel,
+          HouseholdMemberRelationShipModel>>? get relationships;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -543,6 +558,7 @@ abstract class HouseholdMemberModelCopyWith<
       String? householdClientReferenceId,
       String? individualId,
       String? individualClientReferenceId,
+      List<HouseholdMemberRelationShipModel>? relationships,
       bool? isHeadOfHousehold,
       bool? nonRecoverableError,
       String? clientReferenceId,
@@ -569,6 +585,18 @@ class _HouseholdMemberModelCopyWithImpl<$R, $Out>
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
   @override
+  ListCopyWith<
+      $R,
+      HouseholdMemberRelationShipModel,
+      HouseholdMemberRelationShipModelCopyWith<
+          $R,
+          HouseholdMemberRelationShipModel,
+          HouseholdMemberRelationShipModel>>? get relationships =>
+      $value.relationships != null
+          ? ListCopyWith($value.relationships!, (v, t) => v.copyWith.$chain(t),
+              (v) => call(relationships: v))
+          : null;
+  @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
@@ -583,6 +611,7 @@ class _HouseholdMemberModelCopyWithImpl<$R, $Out>
           Object? householdClientReferenceId = $none,
           Object? individualId = $none,
           Object? individualClientReferenceId = $none,
+          Object? relationships = $none,
           bool? isHeadOfHousehold,
           Object? nonRecoverableError = $none,
           String? clientReferenceId,
@@ -600,6 +629,7 @@ class _HouseholdMemberModelCopyWithImpl<$R, $Out>
         if (individualId != $none) #individualId: individualId,
         if (individualClientReferenceId != $none)
           #individualClientReferenceId: individualClientReferenceId,
+        if (relationships != $none) #relationships: relationships,
         if (isHeadOfHousehold != null) #isHeadOfHousehold: isHeadOfHousehold,
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
@@ -622,6 +652,7 @@ class _HouseholdMemberModelCopyWithImpl<$R, $Out>
       individualId: data.get(#individualId, or: $value.individualId),
       individualClientReferenceId: data.get(#individualClientReferenceId,
           or: $value.individualClientReferenceId),
+      relationships: data.get(#relationships, or: $value.relationships),
       isHeadOfHousehold:
           data.get(#isHeadOfHousehold, or: $value.isHeadOfHousehold),
       nonRecoverableError:

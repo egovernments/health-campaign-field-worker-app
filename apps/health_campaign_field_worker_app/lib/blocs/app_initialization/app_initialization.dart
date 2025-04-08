@@ -100,6 +100,7 @@ class AppInitializationBloc
                     MasterEnums.backgroundServiceConfig.toValue(),
                     MasterEnums.checklistTypes.toValue(),
                     MasterEnums.idTypes.toValue(),
+                    MasterEnums.relationShipTypeOptions.toValue(),
                     MasterEnums.deliveryComments.toValue(),
                     MasterEnums.backendInterface.toValue(),
                     MasterEnums.callSupport.toValue(),
@@ -315,7 +316,6 @@ class MdmsConfig {
   final List<AppConfiguration> appConfigs;
   final List<ServiceRegistry> serviceRegistryList;
   final List<DashboardConfigSchema?>? dashboardConfigSchema;
-
 
   const MdmsConfig(
       {required this.appConfigs,
