@@ -82,6 +82,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
     // Step 2: Attribute-based validation
     for (int i = 0; i < controller.length; i++) {
+
+
       if (initialAttributes?[i].required == true &&
           ((initialAttributes?[i].dataType == 'SingleValueList' &&
               visibleSurveyFormIndexes.contains(i) &&
@@ -90,6 +92,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   (controller[i].text == '')))) {
         return false;
       }
+
     }
 
     return true;
@@ -120,9 +123,10 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
           value: attribute?[i].dataType != 'SingleValueList'
               ? controller[i].text.trim().isNotEmpty
               ? controller[i].text
-              : ''
+              : "NOT_SELECTED"
               : visibleSurveyFormIndexes.contains(i)
-              ? controller[i].text
+              ? controller[i].text.trim().isNotEmpty
+              ? controller[i].text : "NOT_SELECTED"
               : i18.surveyForm.notSelectedKey,
           rowVersion: 1,
           tenantId: attribute?[i].tenantId,
@@ -884,6 +888,7 @@ return [
       // Determine excluded indexes
       for (int i = 0; i < (initialAttributes ?? []).length; i++) {
         if (!visibleSurveyFormIndexes.contains(i)) {
+          controller[i].text = 'NOT_SELECTED';
           excludedIndexes.add(i);
         }
       }
