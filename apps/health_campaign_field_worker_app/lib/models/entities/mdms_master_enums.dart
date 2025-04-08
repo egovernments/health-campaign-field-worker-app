@@ -29,6 +29,8 @@ enum MasterEnums {
   checklistTypes,
   @MappableValue("ID_TYPE_OPTIONS_POPULATOR")
   idTypes,
+  @MappableValue("HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES")
+  relationShipTypeOptions,
   @MappableValue("DELIVERY_COMMENT_OPTIONS_POPULATOR")
   deliveryComments,
   @MappableValue("BACKEND_INTERFACE")

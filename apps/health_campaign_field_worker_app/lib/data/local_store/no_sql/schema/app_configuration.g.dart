@@ -89,92 +89,98 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'HouseholdMemberDeletionReasonOptions',
     ),
-    r'ID_TYPE_OPTIONS_POPULATOR': PropertySchema(
+    r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES': PropertySchema(
       id: 12,
+      name: r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
+      type: IsarType.objectList,
+      target: r'RelationShipTypeOptions',
+    ),
+    r'ID_TYPE_OPTIONS_POPULATOR': PropertySchema(
+      id: 13,
       name: r'ID_TYPE_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'IdTypeOptions',
     ),
     r'LANGUAGES': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'LANGUAGES',
       type: IsarType.objectList,
       target: r'Languages',
     ),
     r'NETWORK_DETECTION': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'NETWORK_DETECTION',
       type: IsarType.string,
     ),
     r'PERSISTENCE_MODE': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'PERSISTENCE_MODE',
       type: IsarType.string,
     ),
     r'PROXIMITY_SEARCH_RANGE': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'PROXIMITY_SEARCH_RANGE',
       type: IsarType.double,
     ),
     r'SEARCH_CLF_FILTERS': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'SEARCH_CLF_FILTERS',
       type: IsarType.objectList,
       target: r'SearchCLFFilters',
     ),
     r'SEARCH_HOUSEHOLD_FILTERS': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'SEARCH_HOUSEHOLD_FILTERS',
       type: IsarType.objectList,
       target: r'SearchHouseHoldFilters',
     ),
     r'SYNC_METHOD': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -200,6 +206,7 @@ const AppConfigurationSchema = CollectionSchema(
     r'BackgroundServiceConfig': BackgroundServiceConfigSchema,
     r'BandwidthBatchSize': BandwidthBatchSizeSchema,
     r'IdTypeOptions': IdTypeOptionsSchema,
+    r'RelationShipTypeOptions': RelationShipTypeOptionsSchema,
     r'DeliveryCommentOptions': DeliveryCommentOptionsSchema,
     r'TransportTypes': TransportTypesSchema,
     r'ComplaintTypes': ComplaintTypesSchema,
@@ -373,6 +380,20 @@ int _appConfigurationEstimateSize(
         for (var i = 0; i < list.length; i++) {
           final value = list[i];
           bytesCount += HouseholdMemberDeletionReasonOptionsSchema.estimateSize(
+              value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
+    final list = object.relationShipTypeOptions;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[RelationShipTypeOptions]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += RelationShipTypeOptionsSchema.estimateSize(
               value, offsets, allOffsets);
         }
       }
@@ -623,68 +644,74 @@ void _appConfigurationSerialize(
     HouseholdMemberDeletionReasonOptionsSchema.serialize,
     object.householdMemberDeletionReasonOptions,
   );
-  writer.writeObjectList<IdTypeOptions>(
+  writer.writeObjectList<RelationShipTypeOptions>(
     offsets[12],
+    allOffsets,
+    RelationShipTypeOptionsSchema.serialize,
+    object.relationShipTypeOptions,
+  );
+  writer.writeObjectList<IdTypeOptions>(
+    offsets[13],
     allOffsets,
     IdTypeOptionsSchema.serialize,
     object.idTypeOptions,
   );
   writer.writeObjectList<Languages>(
-    offsets[13],
+    offsets[14],
     allOffsets,
     LanguagesSchema.serialize,
     object.languages,
   );
-  writer.writeString(offsets[14], object.networkDetection);
-  writer.writeString(offsets[15], object.persistenceMode);
-  writer.writeDouble(offsets[16], object.maxRadius);
+  writer.writeString(offsets[15], object.networkDetection);
+  writer.writeString(offsets[16], object.persistenceMode);
+  writer.writeDouble(offsets[17], object.maxRadius);
   writer.writeObjectList<SearchCLFFilters>(
-    offsets[17],
+    offsets[18],
     allOffsets,
     SearchCLFFiltersSchema.serialize,
     object.searchCLFFilters,
   );
   writer.writeObjectList<SearchHouseHoldFilters>(
-    offsets[18],
+    offsets[19],
     allOffsets,
     SearchHouseHoldFiltersSchema.serialize,
     object.searchHouseHoldFilters,
   );
-  writer.writeString(offsets[19], object.syncMethod);
-  writer.writeString(offsets[20], object.syncTrigger);
-  writer.writeString(offsets[21], object.tenantId);
+  writer.writeString(offsets[20], object.syncMethod);
+  writer.writeString(offsets[21], object.syncTrigger);
+  writer.writeString(offsets[22], object.tenantId);
   writer.writeObjectList<TransportTypes>(
-    offsets[22],
+    offsets[23],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[23],
+    offsets[24],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[24],
+    offsets[25],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[25],
+    offsets[26],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[26],
+    offsets[27],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[27],
+    offsets[28],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -770,68 +797,75 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     HouseholdMemberDeletionReasonOptions(),
   );
-  object.idTypeOptions = reader.readObjectList<IdTypeOptions>(
+  object.relationShipTypeOptions =
+      reader.readObjectList<RelationShipTypeOptions>(
     offsets[12],
+    RelationShipTypeOptionsSchema.deserialize,
+    allOffsets,
+    RelationShipTypeOptions(),
+  );
+  object.idTypeOptions = reader.readObjectList<IdTypeOptions>(
+    offsets[13],
     IdTypeOptionsSchema.deserialize,
     allOffsets,
     IdTypeOptions(),
   );
   object.languages = reader.readObjectList<Languages>(
-    offsets[13],
+    offsets[14],
     LanguagesSchema.deserialize,
     allOffsets,
     Languages(),
   );
-  object.networkDetection = reader.readStringOrNull(offsets[14]);
-  object.persistenceMode = reader.readStringOrNull(offsets[15]);
-  object.maxRadius = reader.readDoubleOrNull(offsets[16]);
+  object.networkDetection = reader.readStringOrNull(offsets[15]);
+  object.persistenceMode = reader.readStringOrNull(offsets[16]);
+  object.maxRadius = reader.readDoubleOrNull(offsets[17]);
   object.searchCLFFilters = reader.readObjectList<SearchCLFFilters>(
-    offsets[17],
+    offsets[18],
     SearchCLFFiltersSchema.deserialize,
     allOffsets,
     SearchCLFFilters(),
   );
   object.searchHouseHoldFilters = reader.readObjectList<SearchHouseHoldFilters>(
-    offsets[18],
+    offsets[19],
     SearchHouseHoldFiltersSchema.deserialize,
     allOffsets,
     SearchHouseHoldFilters(),
   );
-  object.syncMethod = reader.readStringOrNull(offsets[19]);
-  object.syncTrigger = reader.readStringOrNull(offsets[20]);
-  object.tenantId = reader.readStringOrNull(offsets[21]);
+  object.syncMethod = reader.readStringOrNull(offsets[20]);
+  object.syncTrigger = reader.readStringOrNull(offsets[21]);
+  object.tenantId = reader.readStringOrNull(offsets[22]);
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[22],
+    offsets[23],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[23],
+    offsets[24],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[24],
+    offsets[25],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[25],
+    offsets[26],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[26],
+    offsets[27],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[27],
+    offsets[28],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -928,80 +962,87 @@ P _appConfigurationDeserializeProp<P>(
         HouseholdMemberDeletionReasonOptions(),
       )) as P;
     case 12:
+      return (reader.readObjectList<RelationShipTypeOptions>(
+        offset,
+        RelationShipTypeOptionsSchema.deserialize,
+        allOffsets,
+        RelationShipTypeOptions(),
+      )) as P;
+    case 13:
       return (reader.readObjectList<IdTypeOptions>(
         offset,
         IdTypeOptionsSchema.deserialize,
         allOffsets,
         IdTypeOptions(),
       )) as P;
-    case 13:
+    case 14:
       return (reader.readObjectList<Languages>(
         offset,
         LanguagesSchema.deserialize,
         allOffsets,
         Languages(),
       )) as P;
-    case 14:
-      return (reader.readStringOrNull(offset)) as P;
     case 15:
       return (reader.readStringOrNull(offset)) as P;
     case 16:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 17:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 18:
       return (reader.readObjectList<SearchCLFFilters>(
         offset,
         SearchCLFFiltersSchema.deserialize,
         allOffsets,
         SearchCLFFilters(),
       )) as P;
-    case 18:
+    case 19:
       return (reader.readObjectList<SearchHouseHoldFilters>(
         offset,
         SearchHouseHoldFiltersSchema.deserialize,
         allOffsets,
         SearchHouseHoldFilters(),
       )) as P;
-    case 19:
-      return (reader.readStringOrNull(offset)) as P;
     case 20:
       return (reader.readStringOrNull(offset)) as P;
     case 21:
       return (reader.readStringOrNull(offset)) as P;
     case 22:
+      return (reader.readStringOrNull(offset)) as P;
+    case 23:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 23:
+    case 24:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 24:
+    case 25:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 25:
+    case 26:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 26:
+    case 27:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 27:
+    case 28:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -2116,6 +2157,113 @@ extension AppConfigurationQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      relationShipTypeOptionsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      relationShipTypeOptionsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      relationShipTypeOptionsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      relationShipTypeOptionsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      relationShipTypeOptionsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      relationShipTypeOptionsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      relationShipTypeOptionsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      relationShipTypeOptionsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
         lower,
         includeLower,
         upper,
@@ -4105,6 +4253,13 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      relationShipTypeOptionsElement(FilterQuery<RelationShipTypeOptions> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       idTypeOptionsElement(FilterQuery<IdTypeOptions> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'ID_TYPE_OPTIONS_POPULATOR');
@@ -4501,6 +4656,13 @@ extension AppConfigurationQueryProperty
       QQueryOperations> householdMemberDeletionReasonOptionsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<RelationShipTypeOptions>?,
+      QQueryOperations> relationShipTypeOptionsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES');
     });
   }
 
@@ -5846,6 +6008,380 @@ extension IdTypeOptionsQueryFilter
 
 extension IdTypeOptionsQueryObject
     on QueryBuilder<IdTypeOptions, IdTypeOptions, QFilterCondition> {}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const RelationShipTypeOptionsSchema = Schema(
+  name: r'RelationShipTypeOptions',
+  id: 8402199533987303215,
+  properties: {
+    r'active': PropertySchema(
+      id: 0,
+      name: r'active',
+      type: IsarType.bool,
+    ),
+    r'code': PropertySchema(
+      id: 1,
+      name: r'code',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 2,
+      name: r'name',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _relationShipTypeOptionsEstimateSize,
+  serialize: _relationShipTypeOptionsSerialize,
+  deserialize: _relationShipTypeOptionsDeserialize,
+  deserializeProp: _relationShipTypeOptionsDeserializeProp,
+);
+
+int _relationShipTypeOptionsEstimateSize(
+  RelationShipTypeOptions object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.code.length * 3;
+  bytesCount += 3 + object.name.length * 3;
+  return bytesCount;
+}
+
+void _relationShipTypeOptionsSerialize(
+  RelationShipTypeOptions object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeBool(offsets[0], object.active);
+  writer.writeString(offsets[1], object.code);
+  writer.writeString(offsets[2], object.name);
+}
+
+RelationShipTypeOptions _relationShipTypeOptionsDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = RelationShipTypeOptions();
+  object.active = reader.readBool(offsets[0]);
+  object.code = reader.readString(offsets[1]);
+  object.name = reader.readString(offsets[2]);
+  return object;
+}
+
+P _relationShipTypeOptionsDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readBool(offset)) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension RelationShipTypeOptionsQueryFilter on QueryBuilder<
+    RelationShipTypeOptions, RelationShipTypeOptions, QFilterCondition> {
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> activeEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'active',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> codeEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> codeGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> codeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> codeBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'code',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> codeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> codeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+          QAfterFilterCondition>
+      codeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+          QAfterFilterCondition>
+      codeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'code',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> codeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'code',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> codeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'code',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> nameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> nameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> nameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> nameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+          QAfterFilterCondition>
+      nameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+          QAfterFilterCondition>
+      nameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<RelationShipTypeOptions, RelationShipTypeOptions,
+      QAfterFilterCondition> nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+}
+
+extension RelationShipTypeOptionsQueryObject on QueryBuilder<
+    RelationShipTypeOptions, RelationShipTypeOptions, QFilterCondition> {}
 
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types

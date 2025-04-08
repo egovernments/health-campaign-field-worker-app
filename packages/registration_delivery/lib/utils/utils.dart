@@ -18,26 +18,32 @@ import '../models/entities/task.dart';
 /// This class contains custom validators for form controls.
 class CustomValidator {
   /// Validates that control's value must be `true`
-  static Map<String, dynamic>? requiredMin(
-    AbstractControl<dynamic> control,
-  ) {
+  static Map<String, dynamic>? requiredMin(AbstractControl<dynamic> control,) {
     return control.value == null ||
-            control.value.toString().length >= 2 ||
-            control.value.toString().trim().isEmpty
+        control.value
+            .toString()
+            .length >= 2 ||
+        control.value
+            .toString()
+            .trim()
+            .isEmpty
         ? null
         : {'required': true};
   }
 
   static Map<String, dynamic>? sizeLessThan2(AbstractControl<dynamic> control) {
-    return control.value != null && control.value.toString().length <= 2
+    return control.value != null && control.value
+        .toString()
+        .length <= 2
         ? {'sizeLessThan2': true}
         : null;
   }
 
   static Map<String, dynamic>? validMobileNumber(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value == null || control.value.toString().isEmpty) {
+      AbstractControl<dynamic> control,) {
+    if (control.value == null || control.value
+        .toString()
+        .isEmpty) {
       return null;
     }
 
@@ -45,17 +51,22 @@ class CustomValidator {
 
     if (RegExp(pattern).hasMatch(control.value.toString())) return null;
 
-    if (control.value.toString().length < 10) return {'mobileNumber': true};
+    if (control.value
+        .toString()
+        .length < 10) return {'mobileNumber': true};
 
     return {'mobileNumber': true};
   }
 
   static Map<String, dynamic>? minPhoneNumValidation(
-    AbstractControl<dynamic> control,
-  ) {
+      AbstractControl<dynamic> control,) {
     if (control.value != null &&
-        control.value.toString().isNotEmpty &&
-        control.value.toString().length < 9) {
+        control.value
+            .toString()
+            .isNotEmpty &&
+        control.value
+            .toString()
+            .length < 9) {
       return {'minLength': true};
     }
   }
@@ -92,9 +103,7 @@ bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   return true;
 }
 
-bool checkIfBeneficiaryRefused(
-  List<TaskModel>? tasks,
-) {
+bool checkIfBeneficiaryRefused(List<TaskModel>? tasks,) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
       tasks.last.status == Status.beneficiaryRefused.toValue());
@@ -103,17 +112,19 @@ bool checkIfBeneficiaryRefused(
 }
 
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
-bool checkEligibilityForAgeAndSideEffect(
-  DigitDOBAgeConvertor age,
-  ProjectTypeModel? projectType,
-  TaskModel? tasks,
-  List<SideEffectModel>? sideEffects,
-) {
+bool checkEligibilityForAgeAndSideEffect(DigitDOBAgeConvertor age,
+    ProjectTypeModel? projectType,
+    TaskModel? tasks,
+    List<SideEffectModel>? sideEffects,) {
   int totalAgeMonths = age.years * 12 + age.months;
   final currentCycle = projectType?.cycles?.firstWhereOrNull(
-    (e) =>
-        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+        (e) =>
+    (e.startDate!) < DateTime
+        .now()
+        .millisecondsSinceEpoch &&
+        (e.endDate!) > DateTime
+            .now()
+            .millisecondsSinceEpoch,
     // Return null when no matching cycle is found
   );
   if (currentCycle != null &&
@@ -122,27 +133,27 @@ bool checkEligibilityForAgeAndSideEffect(
     bool recordedSideEffect = false;
     if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
       final lastTaskTime =
-          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
-              ? tasks.clientAuditDetails?.createdTime
-              : null;
+      tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
+          ? tasks.clientAuditDetails?.createdTime
+          : null;
       recordedSideEffect = lastTaskTime != null &&
           (lastTaskTime >= currentCycle.startDate! &&
               lastTaskTime <= currentCycle.endDate!);
 
       return projectType?.validMinAge != null &&
-              projectType?.validMaxAge != null
+          projectType?.validMaxAge != null
           ? totalAgeMonths >= projectType!.validMinAge! &&
-                  totalAgeMonths <= projectType.validMaxAge!
-              ? recordedSideEffect && !checkStatus([tasks], currentCycle)
-                  ? false
-                  : true
-              : false
+          totalAgeMonths <= projectType.validMaxAge!
+          ? recordedSideEffect && !checkStatus([tasks], currentCycle)
+          ? false
+          : true
+          : false
           : false;
     } else {
       if (projectType?.validMaxAge != null &&
           projectType?.validMinAge != null) {
         return totalAgeMonths >= projectType!.validMinAge! &&
-                totalAgeMonths <= projectType.validMaxAge!
+            totalAgeMonths <= projectType.validMaxAge!
             ? true
             : false;
       }
@@ -153,19 +164,17 @@ bool checkEligibilityForAgeAndSideEffect(
   return false;
 }
 
-bool recordedSideEffect(
-  ProjectCycle? selectedCycle,
-  TaskModel? task,
-  List<SideEffectModel>? sideEffects,
-) {
+bool recordedSideEffect(ProjectCycle? selectedCycle,
+    TaskModel? task,
+    List<SideEffectModel>? sideEffects,) {
   if (selectedCycle != null &&
       selectedCycle.startDate != null &&
       selectedCycle.endDate != null) {
     if ((task != null) && (sideEffects ?? []).isNotEmpty) {
       final lastTaskCreatedTime =
-          task.clientReferenceId == sideEffects?.last.taskClientReferenceId
-              ? task.clientAuditDetails?.createdTime
-              : null;
+      task.clientReferenceId == sideEffects?.last.taskClientReferenceId
+          ? task.clientAuditDetails?.createdTime
+          : null;
 
       return lastTaskCreatedTime != null &&
           lastTaskCreatedTime >= selectedCycle.startDate &&
@@ -176,10 +185,8 @@ bool recordedSideEffect(
   return false;
 }
 
-bool checkIfBeneficiaryReferred(
-  List<ReferralModel>? referrals,
-  ProjectCycle? currentCycle,
-) {
+bool checkIfBeneficiaryReferred(List<ReferralModel>? referrals,
+    ProjectCycle? currentCycle,) {
   if (currentCycle?.startDate != null && currentCycle?.endDate != null) {
     final isBeneficiaryReferred = (referrals != null &&
         (referrals ?? []).isNotEmpty &&
@@ -205,8 +212,8 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
         DigitDateUtils.getFormattedDateToDateTime(
-              individualModel.dateOfBirth!,
-            ) ??
+          individualModel.dateOfBirth!,
+        ) ??
             DateTime.now(),
       );
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
@@ -216,14 +223,14 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     if (householdModel != null && householdModel.additionalFields != null) {
       memberCount = householdModel.memberCount;
       roomCount = int.tryParse(householdModel.additionalFields?.fields
-              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
-              .firstOrNull
-              ?.value
-              .toString() ??
+          .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
+          .firstOrNull
+          ?.value
+          .toString() ??
           '1')!;
       structureType = householdModel.additionalFields?.fields
           .where((h) =>
-              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+      h.key == AdditionalFieldsType.houseStructureTypes.toValue())
           .firstOrNull
           ?.value
           .toString();
@@ -250,7 +257,9 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
             expressionParser.add(error["value"]);
           }
 
-          return expressionParser.where((element) => element == true).length ==
+          return expressionParser
+              .where((element) => element == true)
+              .length ==
               conditions.length;
         } else if (condition.contains('or')) {
           final conditions = condition.split('or');
@@ -271,7 +280,9 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
             expressionParser.add(error["value"]);
           }
 
-          return expressionParser.where((element) => element == true).isNotEmpty
+          return expressionParser
+              .where((element) => element == true)
+              .isNotEmpty
               ? true
               : false;
         } else {
@@ -294,7 +305,9 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
             expressionParser.add(error["value"]);
           }
 
-          return expressionParser.where((element) => element == true).length ==
+          return expressionParser
+              .where((element) => element == true)
+              .length ==
               conditions.length;
         }
       }
@@ -314,18 +327,17 @@ String maskString(String input) {
 
   // Create a new string with the same length as the input string
   final maskedString =
-      List<String>.generate(input.length, (index) => maskingChar).join();
+  List<String>.generate(input.length, (index) => maskingChar).join();
 
   return maskedString;
 }
 
 class CustomFormulaParser {
   // Modify the function to accept stringKeys as nullable
-  static Map<String, dynamic> parseCondition(
-    String condition,
-    Map<String, dynamic> variables, {
-    List<String>? stringKeys,
-  } // Accept stringKeys as nullable
+  static Map<String, dynamic> parseCondition(String condition,
+      Map<String, dynamic> variables, {
+        List<String>? stringKeys,
+      } // Accept stringKeys as nullable
       ) {
     // If stringKeys is null or empty, default to FormulaParser for all conditions
     if (stringKeys == null || stringKeys.isEmpty) {
@@ -348,16 +360,16 @@ class CustomFormulaParser {
   }
 
   // Handle string comparison
-  static Map<String, dynamic> _compareString(
-      String condition, String expectedValue, String actualValue) {
+  static Map<String, dynamic> _compareString(String condition,
+      String expectedValue, String actualValue) {
     // Compare string values directly
     bool comparisonResult = actualValue == expectedValue;
     return {'value': comparisonResult};
   }
 
   // Handle numeric evaluation using FormulaParser
-  static Map<String, dynamic> _parseAsFormula(
-      String condition, Map<String, dynamic> variables) {
+  static Map<String, dynamic> _parseAsFormula(String condition,
+      Map<String, dynamic> variables) {
     final expression = FormulaParser(
       condition,
       variables,
@@ -408,7 +420,7 @@ double? calculateDistance(Coordinate? start, Coordinate? end) {
 
 class RegistrationDeliverySingleton {
   static final RegistrationDeliverySingleton _singleton =
-      RegistrationDeliverySingleton._internal();
+  RegistrationDeliverySingleton._internal();
 
   factory RegistrationDeliverySingleton() {
     return _singleton;
@@ -429,6 +441,7 @@ class RegistrationDeliverySingleton {
       .offlineFirst; // Default to offline first persistence configuration
   List<String>? _genderOptions;
   List<String>? _idTypeOptions;
+  List<String>? _memberRelationTypeOptions;
   List<String>? _householdDeletionReasonOptions;
   List<String>? _householdMemberDeletionReasonOptions;
   List<String>? _deliveryCommentOptions;
@@ -457,6 +470,7 @@ class RegistrationDeliverySingleton {
     required ProjectModel selectedProject,
     required List<String>? genderOptions,
     required List<String>? idTypeOptions,
+    List<String>? memberRelationTypeOptions,
     required List<String>? householdDeletionReasonOptions,
     required List<String>? householdMemberDeletionReasonOptions,
     required List<String>? deliveryCommentOptions,
@@ -476,6 +490,7 @@ class RegistrationDeliverySingleton {
     _selectedProject = selectedProject;
     _genderOptions = genderOptions;
     _idTypeOptions = idTypeOptions;
+    _memberRelationTypeOptions = memberRelationTypeOptions;
     _householdDeletionReasonOptions = householdDeletionReasonOptions;
     _householdMemberDeletionReasonOptions =
         householdMemberDeletionReasonOptions;
@@ -520,6 +535,8 @@ class RegistrationDeliverySingleton {
 
   List<String>? get idTypeOptions => _idTypeOptions;
 
+  List<String>? get memberRelationTypeOptions => _memberRelationTypeOptions;
+
   List<String>? get householdDeletionReasonOptions =>
       _householdDeletionReasonOptions;
 
@@ -545,12 +562,10 @@ class RegistrationDeliverySingleton {
   HouseholdType? get householdType => _householdType;
 }
 
-bool allDosesDelivered(
-  List<TaskModel>? tasks,
-  ProjectCycle? selectedCycle,
-  List<SideEffectModel>? sideEffects,
-  IndividualModel? individualModel,
-) {
+bool allDosesDelivered(List<TaskModel>? tasks,
+    ProjectCycle? selectedCycle,
+    List<SideEffectModel>? sideEffects,
+    IndividualModel? individualModel,) {
   if (selectedCycle == null ||
       selectedCycle.id == 0 ||
       (selectedCycle.deliveries ?? []).isEmpty) {
@@ -558,18 +573,18 @@ bool allDosesDelivered(
   } else {
     if ((tasks ?? []).isNotEmpty) {
       final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
-              .where(
-                (e) => e.key == AdditionalFieldsType.cycleIndex.name,
-              )
-              .firstOrNull
-              ?.value ??
+          .where(
+            (e) => e.key == AdditionalFieldsType.cycleIndex.name,
+      )
+          .firstOrNull
+          ?.value ??
           '');
       final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
-              .where(
-                (e) => e.key == AdditionalFieldsType.doseIndex.name,
-              )
-              .firstOrNull
-              ?.value ??
+          .where(
+            (e) => e.key == AdditionalFieldsType.doseIndex.name,
+      )
+          .firstOrNull
+          ?.value ??
           '');
       if (lastDose != null &&
           lastDose == selectedCycle.deliveries?.length &&
@@ -610,7 +625,7 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
     return Status.registered.toValue();
   } else {
     final mappedStatus =
-        statusMap[tasks.lastOrNull!.status ?? Status.registered];
+    statusMap[tasks.lastOrNull!.status ?? Status.registered];
     if (mappedStatus != null) {
       return mappedStatus;
     }

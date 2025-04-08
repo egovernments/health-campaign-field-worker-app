@@ -938,6 +938,9 @@ mixin _$HCMWrapperModel {
   List<CheckListTypes> get checklistTypes => throw _privateConstructorUsedError;
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions => throw _privateConstructorUsedError;
+  @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+  List<RelationShipTypeOptions> get relationShipTypeOptions =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions =>
       throw _privateConstructorUsedError;
@@ -998,6 +1001,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+      List<RelationShipTypeOptions> relationShipTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1038,6 +1043,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? backgroundServiceConfig = freezed,
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
+    Object? relationShipTypeOptions = null,
     Object? deliveryCommentOptions = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
@@ -1084,6 +1090,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.idTypeOptions
           : idTypeOptions // ignore: cast_nullable_to_non_nullable
               as List<IdTypeOptions>,
+      relationShipTypeOptions: null == relationShipTypeOptions
+          ? _value.relationShipTypeOptions
+          : relationShipTypeOptions // ignore: cast_nullable_to_non_nullable
+              as List<RelationShipTypeOptions>,
       deliveryCommentOptions: null == deliveryCommentOptions
           ? _value.deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
@@ -1155,6 +1165,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+      List<RelationShipTypeOptions> relationShipTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1193,6 +1205,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? backgroundServiceConfig = freezed,
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
+    Object? relationShipTypeOptions = null,
     Object? deliveryCommentOptions = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
@@ -1239,6 +1252,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._idTypeOptions
           : idTypeOptions // ignore: cast_nullable_to_non_nullable
               as List<IdTypeOptions>,
+      relationShipTypeOptions: null == relationShipTypeOptions
+          ? _value._relationShipTypeOptions
+          : relationShipTypeOptions // ignore: cast_nullable_to_non_nullable
+              as List<RelationShipTypeOptions>,
       deliveryCommentOptions: null == deliveryCommentOptions
           ? _value._deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
@@ -1307,6 +1324,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       required final List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+      required final List<RelationShipTypeOptions> relationShipTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1338,6 +1357,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _backgroundServiceConfig = backgroundServiceConfig,
         _checklistTypes = checklistTypes,
         _idTypeOptions = idTypeOptions,
+        _relationShipTypeOptions = relationShipTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
         _backendInterface = backendInterface,
         _callSupportOptions = callSupportOptions,
@@ -1430,6 +1450,16 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     if (_idTypeOptions is EqualUnmodifiableListView) return _idTypeOptions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_idTypeOptions);
+  }
+
+  final List<RelationShipTypeOptions> _relationShipTypeOptions;
+  @override
+  @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+  List<RelationShipTypeOptions> get relationShipTypeOptions {
+    if (_relationShipTypeOptions is EqualUnmodifiableListView)
+      return _relationShipTypeOptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_relationShipTypeOptions);
   }
 
   final List<DeliveryCommentOptions> _deliveryCommentOptions;
@@ -1557,7 +1587,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, relationShipTypeOptions: $relationShipTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, searchCLFFilters: $searchCLFFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1584,6 +1614,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
                 .equals(other._checklistTypes, _checklistTypes) &&
             const DeepCollectionEquality()
                 .equals(other._idTypeOptions, _idTypeOptions) &&
+            const DeepCollectionEquality().equals(
+                other._relationShipTypeOptions, _relationShipTypeOptions) &&
             const DeepCollectionEquality().equals(
                 other._deliveryCommentOptions, _deliveryCommentOptions) &&
             const DeepCollectionEquality()
@@ -1621,6 +1653,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_backgroundServiceConfig),
         const DeepCollectionEquality().hash(_checklistTypes),
         const DeepCollectionEquality().hash(_idTypeOptions),
+        const DeepCollectionEquality().hash(_relationShipTypeOptions),
         const DeepCollectionEquality().hash(_deliveryCommentOptions),
         const DeepCollectionEquality().hash(_backendInterface),
         const DeepCollectionEquality().hash(_callSupportOptions),
@@ -1667,6 +1700,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+      required final List<RelationShipTypeOptions> relationShipTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
@@ -1718,6 +1753,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions;
+  @override
+  @JsonKey(name: 'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES')
+  List<RelationShipTypeOptions> get relationShipTypeOptions;
   @override
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions;
@@ -3141,6 +3179,184 @@ abstract class _IdTypeOptions implements IdTypeOptions {
   @JsonKey(ignore: true)
   _$$IdTypeOptionsImplCopyWith<_$IdTypeOptionsImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+RelationShipTypeOptions _$RelationShipTypeOptionsFromJson(
+    Map<String, dynamic> json) {
+  return _RelationShipTypeOptions.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RelationShipTypeOptions {
+  String get name => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
+  bool get active => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RelationShipTypeOptionsCopyWith<RelationShipTypeOptions> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RelationShipTypeOptionsCopyWith<$Res> {
+  factory $RelationShipTypeOptionsCopyWith(RelationShipTypeOptions value,
+          $Res Function(RelationShipTypeOptions) then) =
+      _$RelationShipTypeOptionsCopyWithImpl<$Res, RelationShipTypeOptions>;
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class _$RelationShipTypeOptionsCopyWithImpl<$Res,
+        $Val extends RelationShipTypeOptions>
+    implements $RelationShipTypeOptionsCopyWith<$Res> {
+  _$RelationShipTypeOptionsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$RelationShipTypeOptionsImplCopyWith<$Res>
+    implements $RelationShipTypeOptionsCopyWith<$Res> {
+  factory _$$RelationShipTypeOptionsImplCopyWith(
+          _$RelationShipTypeOptionsImpl value,
+          $Res Function(_$RelationShipTypeOptionsImpl) then) =
+      __$$RelationShipTypeOptionsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, String code, bool active});
+}
+
+/// @nodoc
+class __$$RelationShipTypeOptionsImplCopyWithImpl<$Res>
+    extends _$RelationShipTypeOptionsCopyWithImpl<$Res,
+        _$RelationShipTypeOptionsImpl>
+    implements _$$RelationShipTypeOptionsImplCopyWith<$Res> {
+  __$$RelationShipTypeOptionsImplCopyWithImpl(
+      _$RelationShipTypeOptionsImpl _value,
+      $Res Function(_$RelationShipTypeOptionsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? code = null,
+    Object? active = null,
+  }) {
+    return _then(_$RelationShipTypeOptionsImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RelationShipTypeOptionsImpl implements _RelationShipTypeOptions {
+  _$RelationShipTypeOptionsImpl(
+      {required this.name, required this.code, required this.active});
+
+  factory _$RelationShipTypeOptionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RelationShipTypeOptionsImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String code;
+  @override
+  final bool active;
+
+  @override
+  String toString() {
+    return 'RelationShipTypeOptions(name: $name, code: $code, active: $active)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RelationShipTypeOptionsImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.active, active) || other.active == active));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, code, active);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RelationShipTypeOptionsImplCopyWith<_$RelationShipTypeOptionsImpl>
+      get copyWith => __$$RelationShipTypeOptionsImplCopyWithImpl<
+          _$RelationShipTypeOptionsImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RelationShipTypeOptionsImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RelationShipTypeOptions implements RelationShipTypeOptions {
+  factory _RelationShipTypeOptions(
+      {required final String name,
+      required final String code,
+      required final bool active}) = _$RelationShipTypeOptionsImpl;
+
+  factory _RelationShipTypeOptions.fromJson(Map<String, dynamic> json) =
+      _$RelationShipTypeOptionsImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get code;
+  @override
+  bool get active;
+  @override
+  @JsonKey(ignore: true)
+  _$$RelationShipTypeOptionsImplCopyWith<_$RelationShipTypeOptionsImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 BandWidthBatchSize _$BandWidthBatchSizeFromJson(Map<String, dynamic> json) {
