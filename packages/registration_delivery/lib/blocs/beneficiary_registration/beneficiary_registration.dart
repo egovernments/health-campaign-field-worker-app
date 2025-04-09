@@ -9,6 +9,7 @@ import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../models/entities/household.dart';
+import '../../models/entities/household_member_relationship.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/status.dart';
 import '../../utils/typedefs.dart';
@@ -208,7 +209,8 @@ class BeneficiaryRegistrationBloc
               addressModel: value.householdModel?.address,
               householdModel: value.householdModel,
               individualModel: value.individualModel,
-              projectBeneficiaryModel: value.projectBeneficiaryModel));
+              projectBeneficiaryModel: value.projectBeneficiaryModel,
+              parentClientReferenceId: event.parentClientReferenceId));
         } else {
           final individual = value.individualModel;
           final household = value.householdModel;
@@ -263,25 +265,36 @@ class BeneficiaryRegistrationBloc
               value.projectBeneficiaryModel!,
             );
 
+            HouseholdMemberRelationShipModel? relationship;
+            if (event.parentClientReferenceId != null) {
+              relationship = HouseholdMemberRelationShipModel(
+                relationshipType: RegistrationDeliverySingleton()
+                    .memberRelationTypeOptions
+                    ?.first,
+                relativeClientReferenceId: event.parentClientReferenceId,
+                selfIdClientReferenceId: individual.clientReferenceId,
+              );
+            }
+
             await householdMemberRepository.create(
               HouseholdMemberModel(
-                householdClientReferenceId: household.clientReferenceId,
-                individualClientReferenceId: individual.clientReferenceId,
-                isHeadOfHousehold: value.isHeadOfHousehold,
-                tenantId: RegistrationDeliverySingleton().tenantId,
-                rowVersion: 1,
-                clientReferenceId: IdGen.i.identifier,
-                clientAuditDetails: ClientAuditDetails(
-                  createdTime: createdAt,
-                  lastModifiedTime: initialModifiedAt,
-                  lastModifiedBy: event.userUuid,
-                  createdBy: event.userUuid,
-                ),
-                auditDetails: AuditDetails(
-                  createdBy: event.userUuid,
-                  createdTime: createdAt,
-                ),
-              ),
+                  householdClientReferenceId: household.clientReferenceId,
+                  individualClientReferenceId: individual.clientReferenceId,
+                  isHeadOfHousehold: value.isHeadOfHousehold,
+                  tenantId: RegistrationDeliverySingleton().tenantId,
+                  rowVersion: 1,
+                  clientReferenceId: IdGen.i.identifier,
+                  clientAuditDetails: ClientAuditDetails(
+                    createdTime: createdAt,
+                    lastModifiedTime: initialModifiedAt,
+                    lastModifiedBy: event.userUuid,
+                    createdBy: event.userUuid,
+                  ),
+                  auditDetails: AuditDetails(
+                    createdBy: event.userUuid,
+                    createdTime: createdAt,
+                  ),
+                  relationships: relationship != null ? [relationship] : null),
             );
           } catch (error) {
             rethrow;
@@ -328,6 +341,17 @@ class BeneficiaryRegistrationBloc
 
           final code = event.boundary.code;
           final name = event.boundary.name;
+
+          HouseholdMemberRelationShipModel? relationship;
+          if (event.parentClientReferenceId != null) {
+            relationship = HouseholdMemberRelationShipModel(
+              relationshipType: RegistrationDeliverySingleton()
+                  .memberRelationTypeOptions
+                  ?.first,
+              relativeClientReferenceId: event.parentClientReferenceId,
+              selfIdClientReferenceId: individual.clientReferenceId,
+            );
+          }
 
           final locality = code == null || name == null
               ? null
@@ -378,6 +402,7 @@ class BeneficiaryRegistrationBloc
                 createdBy: event.userUuid,
                 createdTime: createdAt,
               ),
+                relationships: relationship != null ? [relationship] : null
             ),
           );
         } catch (error) {
@@ -667,6 +692,18 @@ class BeneficiaryRegistrationBloc
             );
           }
 
+          HouseholdMemberRelationShipModel? relationship;
+          if (event.parentClientReferenceId != null) {
+            relationship = HouseholdMemberRelationShipModel(
+              relationshipType: RegistrationDeliverySingleton()
+                  .memberRelationTypeOptions
+                  ?.first,
+              relativeClientReferenceId: event.parentClientReferenceId,
+              selfIdClientReferenceId: event.individualModel.clientReferenceId,
+              // tenantId: RegistrationDeliverySingleton().tenantId,
+            );
+          }
+
           await householdMemberRepository.create(
             HouseholdMemberModel(
               householdClientReferenceId:
@@ -687,6 +724,7 @@ class BeneficiaryRegistrationBloc
                 lastModifiedBy: event.userUuid,
                 createdBy: event.userUuid,
               ),
+                relationships: relationship != null ? [relationship] : null
             ),
           );
         } catch (error) {
@@ -724,6 +762,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
 
   const factory BeneficiaryRegistrationEvent.saveIndividualDetails({
     required IndividualModel model,
+    final String? parentClientReferenceId,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationSaveIndividualDetailsEvent;
 
@@ -731,6 +770,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required HouseholdModel householdModel,
     required IndividualModel individualModel,
     required AddressModel addressModel,
+    final String? parentClientReferenceId,
     required String userUuid,
     required String projectId,
     String? tag,
@@ -748,12 +788,14 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     String? tag,
     required HouseholdModel householdModel,
     required AddressModel addressModel,
+    final String? parentClientReferenceId,
   }) = BeneficiaryRegistrationUpdateIndividualDetailsEvent;
 
   const factory BeneficiaryRegistrationEvent.create(
           {required String userUuid,
           required String projectId,
           required BoundaryModel boundary,
+          final String? parentClientReferenceId,
           String? tag,
           @Default(true) bool navigateToSummary}) =
       BeneficiaryRegistrationCreateEvent;
@@ -762,6 +804,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
           {required String userUuid,
           required String projectId,
           required BoundaryModel boundary,
+          final String? parentClientReferenceId,
           String? tag,
           @Default(true) bool navigateToSummary}) =
       BeneficiaryRegistrationSummaryEvent;
@@ -778,6 +821,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     HouseholdModel? householdModel,
     IndividualModel? individualModel,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
+    final String? parentClientReferenceId,
     DateTime? registrationDate,
     String? searchQuery,
     @Default(false) bool loading,
@@ -788,6 +832,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required AddressModel addressModel,
     required HouseholdModel householdModel,
     required List<IndividualModel> individualModel,
+    final String? parentClientReferenceId,
     required DateTime registrationDate,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     @Default(false) bool loading,
@@ -798,6 +843,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required HouseholdModel householdModel,
     required IndividualModel individualModel,
     required AddressModel addressModel,
+    final String? parentClientReferenceId,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     @Default(false) bool loading,
   }) = BeneficiaryRegistrationEditIndividualState;
@@ -805,6 +851,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
   const factory BeneficiaryRegistrationState.addMember({
     required AddressModel addressModel,
     required HouseholdModel householdModel,
+    final String? parentClientReferenceId,
     @Default(false) bool loading,
   }) = BeneficiaryRegistrationAddMemberState;
 
@@ -813,6 +860,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required HouseholdModel householdModel,
     IndividualModel? individualModel,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
+    final String? parentClientReferenceId,
     DateTime? registrationDate,
     AddressModel? addressModel,
     @Default(false) bool loading,
@@ -825,6 +873,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     HouseholdModel? householdModel,
     IndividualModel? individualModel,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
+    final String? parentClientReferenceId,
     DateTime? registrationDate,
     AddressModel? addressModel,
     @Default(false) bool loading,
