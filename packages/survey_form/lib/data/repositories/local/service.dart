@@ -27,7 +27,7 @@ class ServiceLocalRepository
                 ? attr.copyWith(
               value: attr.value.toString(), // Convert int back to string
             )
-                : attr.dataType == 'MultiValueList'
+                : attr.dataType == 'MultiValueList' || attr.value is List // Convert list back to dot-separated string
                 ? attr.copyWith(
               value: (attr.value is List)
                   ? (attr.value as List).join('.')
