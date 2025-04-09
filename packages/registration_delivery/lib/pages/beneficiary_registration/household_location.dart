@@ -159,7 +159,6 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                 householdModel,
                                 individualModel,
                                 projectBeneficiaryModel,
-                                parentClientReferenceId,
                                 registrationDate,
                                 searchQuery,
                                 loading,
@@ -237,7 +236,6 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                 householdModel,
                                 individuals,
                                 registrationDate,
-                                parentClientReferenceId,
                                 projectBeneficiaryModel,
                                 loading,
                                 headOfHousehold,
@@ -301,7 +299,8 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                         .householdLocationLabelText,
                                   ),
                             headingStyle: textTheme.headingXl.copyWith(
-                                color: theme.colorTheme.primary.primary2),
+                              color: theme.colorTheme.primary.primary2
+                            ),
                             description: (RegistrationDeliverySingleton()
                                         .householdType ==
                                     HouseholdType.community)

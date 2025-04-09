@@ -80,7 +80,6 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
                           individualModel,
                           registrationDate,
                           projectBeneficiaryModel,
-                          parentClientReferenceId,
                           loading,
                           headOfHousehold) =>
                       headOfHousehold),
@@ -91,7 +90,6 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
                         individualModel,
                         registrationDate,
                         projectBeneficiaryModel,
-                        parentClientReferenceId,
                         loading,
                         headOfHousehold) =>
                     individualModel,
@@ -99,7 +97,6 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
                   projectBeneficiaries: initialState.maybeWhen(
                     orElse: () => null,
                     editHousehold: (addressModel,
-                        parentClientReferenceId,
                         householdModel,
                         individualModel,
                         registrationDate,
