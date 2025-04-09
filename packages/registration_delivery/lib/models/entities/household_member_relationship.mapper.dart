@@ -285,6 +285,9 @@ class HouseholdMemberRelationShipModelMapper
   static int? _$rowVersion(HouseholdMemberRelationShipModel v) => v.rowVersion;
   static const Field<HouseholdMemberRelationShipModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
+  static String? _$tenantId(HouseholdMemberRelationShipModel v) => v.tenantId;
+  static const Field<HouseholdMemberRelationShipModel, String> _f$tenantId =
+      Field('tenantId', _$tenantId, opt: true);
   static AuditDetails? _$auditDetails(HouseholdMemberRelationShipModel v) =>
       v.auditDetails;
   static const Field<HouseholdMemberRelationShipModel, AuditDetails>
@@ -309,6 +312,7 @@ class HouseholdMemberRelationShipModelMapper
     #relativeClientReferenceId: _f$relativeClientReferenceId,
     #relationshipType: _f$relationshipType,
     #rowVersion: _f$rowVersion,
+    #tenantId: _f$tenantId,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -334,6 +338,7 @@ class HouseholdMemberRelationShipModelMapper
         relativeClientReferenceId: data.dec(_f$relativeClientReferenceId),
         relationshipType: data.dec(_f$relationshipType),
         rowVersion: data.dec(_f$rowVersion),
+        tenantId: data.dec(_f$tenantId),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -419,6 +424,7 @@ abstract class HouseholdMemberRelationShipModelCopyWith<
       String? relativeClientReferenceId,
       String? relationshipType,
       int? rowVersion,
+      String? tenantId,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -461,6 +467,7 @@ class _HouseholdMemberRelationShipModelCopyWithImpl<$R, $Out>
           Object? relativeClientReferenceId = $none,
           Object? relationshipType = $none,
           Object? rowVersion = $none,
+          Object? tenantId = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -475,6 +482,7 @@ class _HouseholdMemberRelationShipModelCopyWithImpl<$R, $Out>
           #relativeClientReferenceId: relativeClientReferenceId,
         if (relationshipType != $none) #relationshipType: relationshipType,
         if (rowVersion != $none) #rowVersion: rowVersion,
+        if (tenantId != $none) #tenantId: tenantId,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -496,6 +504,7 @@ class _HouseholdMemberRelationShipModelCopyWithImpl<$R, $Out>
           relationshipType:
               data.get(#relationshipType, or: $value.relationshipType),
           rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+          tenantId: data.get(#tenantId, or: $value.tenantId),
           auditDetails: data.get(#auditDetails, or: $value.auditDetails),
           clientAuditDetails:
               data.get(#clientAuditDetails, or: $value.clientAuditDetails),
