@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:digit_data_model/data/local_store/sql_store/tables/package_tables/household_member_relationship.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
@@ -129,12 +130,31 @@ class HouseholdMemberLocalRepository
       final householdMemberCompanions =
           entities.map((e) => e.companion).toList();
 
+      // Collect all relationship companions from all entities
+      final List<HouseholdMemberRelationShipCompanion> relationshipCompanions = [];
+
+      for (final entity in entities) {
+        if (entity.relationships != null) {
+          for (final relationship in entity.relationships!) {
+            relationshipCompanions.add(relationship.companion);
+          }
+        }
+      }
+
       await sql.batch((batch) async {
         batch.insertAll(
           sql.householdMember,
           householdMemberCompanions,
           mode: InsertMode.insertOrReplace,
         );
+
+        if (relationshipCompanions.isNotEmpty) {
+          batch.insertAll(
+            sql.householdMemberRelationShip,
+            relationshipCompanions,
+            mode: InsertMode.insertOrReplace,
+          );
+        }
       });
     });
   }
@@ -146,6 +166,8 @@ class HouseholdMemberLocalRepository
   }) async {
     return retryLocalCallOperation(() async {
       final householdMemberCompanion = entity.companion;
+      final relationshipCompanions =
+      entity.relationships?.map((e) => e.companion).toList();
 
       await sql.batch((batch) {
         batch.update(
@@ -155,6 +177,7 @@ class HouseholdMemberLocalRepository
             entity.clientReferenceId,
           ),
         );
+        // TODO:  relationship update not require now
       });
 
       await super.update(entity, createOpLog: createOpLog);
