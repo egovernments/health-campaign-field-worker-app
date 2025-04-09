@@ -120,7 +120,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
           dataType: attribute?[i].dataType,
           clientReferenceId: referenceId,
           referenceId: referenceId,
-          value: attribute?[i].dataType != 'SingleValueList'
+          value: attribute?[i].dataType != 'SingleValueList' && attribute?[i].dataType != 'MultiValueList'
               ? controller[i].text.trim().isNotEmpty
               ? controller[i].text
               : i18.surveyForm.notSelectedKey

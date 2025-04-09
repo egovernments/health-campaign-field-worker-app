@@ -317,6 +317,9 @@ abstract class RemoteRepository<D extends EntityModel,
           options: Options(headers: {
             "content-type": 'application/json',
           }),
+          queryParameters: {
+            "tenantId": DigitDataModelSingleton().tenantId,
+          },
           data: {
             'errorDetail': {
               "apiDetails": {
