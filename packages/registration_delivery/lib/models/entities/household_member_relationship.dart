@@ -50,7 +50,6 @@ class HouseholdMemberRelationShipModel extends EntityModel
   final String? relativeClientReferenceId;
   final String? relationshipType;
   final int? rowVersion;
-  final String? tenantId;
   final HouseholdMemberRelationShipAdditionalFields? additionalFields;
 
   HouseholdMemberRelationShipModel({
@@ -62,7 +61,6 @@ class HouseholdMemberRelationShipModel extends EntityModel
     this.relativeClientReferenceId,
     this.relationshipType,
     this.rowVersion,
-    this.tenantId,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
