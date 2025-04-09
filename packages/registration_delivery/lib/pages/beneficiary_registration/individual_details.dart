@@ -163,7 +163,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 householdModel,
                                 individualModel,
                                 projectBeneficiaryModel,
-                                parentClientReferenceId,
                                 registrationDate,
                                 searchQuery,
                                 loading,
@@ -187,7 +186,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 bloc.add(
                                   BeneficiaryRegistrationSaveIndividualDetailsEvent(
                                     model: individual,
-                                    parentClientReferenceId: widget.parentClientReferenceId,
                                     isHeadOfHousehold: widget.isHeadOfHousehold,
                                   ),
                                 );
@@ -216,7 +214,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       projectId: projectId!,
                                       userUuid: userId!,
                                       boundary: boundary!,
-                                      parentClientReferenceId: widget.parentClientReferenceId,
                                       tag: scannerBloc.state.qrCodes.isNotEmpty
                                           ? scannerBloc.state.qrCodes.first
                                           : null,
@@ -229,7 +226,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 householdModel,
                                 individualModel,
                                 addressModel,
-                                parentClientReferenceId,
                                 projectBeneficiaryModel,
                                 loading,
                               ) {
@@ -289,7 +285,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                               )
                                             : null,
                                       ),
-                                      parentClientReferenceId: widget.parentClientReferenceId,
                                       tag: scannerBloc.state.qrCodes.isNotEmpty
                                           ? scannerBloc.state.qrCodes.first
                                           : null,
@@ -300,7 +295,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               addMember: (
                                 addressModel,
                                 householdModel,
-                                parentClientReferenceId,
                                 loading,
                               ) {
                                 final individual = _getIndividualModel(
@@ -338,7 +332,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                         householdModel: householdModel,
                                         individualModel: individual,
                                         addressModel: addressModel,
-                                        parentClientReferenceId: widget.parentClientReferenceId,
                                         userUuid:
                                             RegistrationDeliverySingleton()
                                                 .loggedInUserUuid!,
@@ -829,13 +822,13 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       ),
     );
 
-    // IndividualAdditionalFields additionalFields =
-    //     IndividualAdditionalFields(version: 1, fields: [
-    //   if (widget.parentClientReferenceId != null) ...[
-    //     AdditionalField(
-    //         'parentClientReferenceId', widget.parentClientReferenceId),
-    //   ],
-    // ]);
+    IndividualAdditionalFields additionalFields =
+        IndividualAdditionalFields(version: 1, fields: [
+      if (widget.parentClientReferenceId != null) ...[
+        AdditionalField(
+            'parentClientReferenceId', widget.parentClientReferenceId),
+      ],
+    ]);
 
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
@@ -854,7 +847,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           identifierType: form.control(_idTypeKey).value,
         ),
       ],
-      // additionalFields: additionalFields,
+      additionalFields: additionalFields,
     );
 
     return individual;
