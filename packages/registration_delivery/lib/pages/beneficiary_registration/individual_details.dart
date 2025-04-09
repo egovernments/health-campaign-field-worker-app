@@ -646,17 +646,18 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             ),
                           ),
                         ),
-
-                        SurveyFormViewPage(
-                          key: checklistKey,
-                          hideFooter: true,
-                          hideHeader: true,
-                          checklistType:
-                              BeneficiaryChecklistEnums.individual.toValue(),
-                          hideBackAlert: true,
-                          useScaffold: false,
-                          isChild: widget.parentClientReferenceId != null,
-                        ),
+                        if (RegistrationDeliverySingleton().householdType ==
+                            HouseholdType.family)
+                          SurveyFormViewPage(
+                            key: checklistKey,
+                            hideFooter: true,
+                            hideHeader: true,
+                            checklistType:
+                                BeneficiaryChecklistEnums.individual.toValue(),
+                            hideBackAlert: true,
+                            useScaffold: false,
+                            isChild: widget.parentClientReferenceId != null,
+                          ),
                         // const SizedBox(height: spacer4),
                         if ((RegistrationDeliverySingleton().beneficiaryType ==
                                     BeneficiaryType.household &&

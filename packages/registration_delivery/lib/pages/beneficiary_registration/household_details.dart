@@ -720,15 +720,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               ),
                             ),
                           ),
-                          SurveyFormViewPage(
-                            key: checklistKey,
-                            hideFooter: true,
-                            hideHeader: true,
-                            checklistType:
-                                BeneficiaryChecklistEnums.household.toValue(),
-                            hideBackAlert: true,
-                            useScaffold: false,
-                          )
+                          if(RegistrationDeliverySingleton().householdType == HouseholdType.family)
+                          SurveyFormViewPage(key: checklistKey, hideFooter: true, hideHeader: true, checklistType: BeneficiaryChecklistEnums.household.toValue(), hideBackAlert: true, useScaffold: false,)
                         ]),
                   ),
                 ],

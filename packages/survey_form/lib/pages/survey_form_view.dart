@@ -82,6 +82,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
     // Step 2: Attribute-based validation
     for (int i = 0; i < controller.length; i++) {
+
+
       if (initialAttributes?[i].required == true &&
           ((initialAttributes?[i].dataType == 'SingleValueList' &&
               visibleSurveyFormIndexes.contains(i) &&
@@ -90,6 +92,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   (controller[i].text == '')))) {
         return false;
       }
+
     }
 
     return true;
@@ -117,12 +120,13 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
           dataType: attribute?[i].dataType,
           clientReferenceId: referenceId,
           referenceId: referenceId,
-          value: attribute?[i].dataType != 'SingleValueList'
+          value: attribute?[i].dataType != 'SingleValueList' && attribute?[i].dataType != 'MultiValueList'
               ? controller[i].text.trim().isNotEmpty
               ? controller[i].text
-              : ''
+              : i18.surveyForm.notSelectedKey
               : visibleSurveyFormIndexes.contains(i)
-              ? controller[i].text
+              ? controller[i].text.trim().isNotEmpty
+              ? controller[i].text : i18.surveyForm.notSelectedKey
               : i18.surveyForm.notSelectedKey,
           rowVersion: 1,
           tenantId: attribute?[i].tenantId,
@@ -827,19 +831,10 @@ return [
                                       value
                                     );
                                   },
-                                  initialSelection: controller[index].text.isNotEmpty
-                                      ? controller[index].text.split('.')
-                                      : [],
                                   options: getOptionLabels(e),
                                   onSelectionChanged: (curValue) {
                                     field.didChange(curValue.join('.')); // Join list values with '.'
                                     if (curValue.isNotEmpty) {
-                                      context.read<ServiceBloc>().add(
-                                        ServiceSurveyFormEvent(
-                                          value: curValue.join('.'), // Send joined string as value
-                                          submitTriggered: submitTriggered,
-                                        ),
-                                      );
                                       controller[index].value = TextEditingValue(
                                         text: curValue.join('.'), // Store as a single string
                                       );
@@ -884,6 +879,7 @@ return [
       // Determine excluded indexes
       for (int i = 0; i < (initialAttributes ?? []).length; i++) {
         if (!visibleSurveyFormIndexes.contains(i)) {
+          // controller[i].text = '';
           excludedIndexes.add(i);
         }
       }
@@ -1296,19 +1292,10 @@ return [
                           value
                       );
                     },
-                    initialSelection: controller[index].text.isNotEmpty
-                        ? controller[index].text.split('.')
-                        : [],
                     options: getOptionLabels(item),
                     onSelectionChanged: (curValue) {
                       field.didChange(curValue.join('.')); // Join list values with '.'
                       if (curValue.isNotEmpty) {
-                        context.read<ServiceBloc>().add(
-                          ServiceSurveyFormEvent(
-                            value: curValue.join('.'), // Send joined string as value
-                            submitTriggered: submitTriggered,
-                          ),
-                        );
                         controller[index].value = TextEditingValue(
                           text: curValue.join('.'), // Store as a single string
                         );
