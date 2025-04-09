@@ -210,8 +210,7 @@ class BeneficiaryRegistrationBloc
               householdModel: value.householdModel,
               individualModel: value.individualModel,
               projectBeneficiaryModel: value.projectBeneficiaryModel,
-            parentClientReferenceId: event.parentClientReferenceId
-          ));
+              parentClientReferenceId: event.parentClientReferenceId));
         } else {
           final individual = value.individualModel;
           final household = value.householdModel;
@@ -267,34 +266,35 @@ class BeneficiaryRegistrationBloc
             );
 
             HouseholdMemberRelationShipModel? relationship;
-            if(event.parentClientReferenceId != null) {
+            if (event.parentClientReferenceId != null) {
               relationship = HouseholdMemberRelationShipModel(
-              relationshipType: RegistrationDeliverySingleton().memberRelationTypeOptions?.first,
-              relativeClientReferenceId: event.parentClientReferenceId,
-              selfIdClientReferenceId: individual.clientReferenceId,
-            );
+                relationshipType: RegistrationDeliverySingleton()
+                    .memberRelationTypeOptions
+                    ?.first,
+                relativeClientReferenceId: event.parentClientReferenceId,
+                selfIdClientReferenceId: individual.clientReferenceId,
+              );
             }
 
             await householdMemberRepository.create(
               HouseholdMemberModel(
-                householdClientReferenceId: household.clientReferenceId,
-                individualClientReferenceId: individual.clientReferenceId,
-                isHeadOfHousehold: value.isHeadOfHousehold,
-                tenantId: RegistrationDeliverySingleton().tenantId,
-                rowVersion: 1,
-                clientReferenceId: IdGen.i.identifier,
-                clientAuditDetails: ClientAuditDetails(
-                  createdTime: createdAt,
-                  lastModifiedTime: initialModifiedAt,
-                  lastModifiedBy: event.userUuid,
-                  createdBy: event.userUuid,
-                ),
-                auditDetails: AuditDetails(
-                  createdBy: event.userUuid,
-                  createdTime: createdAt,
-                ),
-                relationships: relationship != null ? [relationship] : null
-              ),
+                  householdClientReferenceId: household.clientReferenceId,
+                  individualClientReferenceId: individual.clientReferenceId,
+                  isHeadOfHousehold: value.isHeadOfHousehold,
+                  tenantId: RegistrationDeliverySingleton().tenantId,
+                  rowVersion: 1,
+                  clientReferenceId: IdGen.i.identifier,
+                  clientAuditDetails: ClientAuditDetails(
+                    createdTime: createdAt,
+                    lastModifiedTime: initialModifiedAt,
+                    lastModifiedBy: event.userUuid,
+                    createdBy: event.userUuid,
+                  ),
+                  auditDetails: AuditDetails(
+                    createdBy: event.userUuid,
+                    createdTime: createdAt,
+                  ),
+                  relationships: relationship != null ? [relationship] : null),
             );
           } catch (error) {
             rethrow;
@@ -341,6 +341,17 @@ class BeneficiaryRegistrationBloc
 
           final code = event.boundary.code;
           final name = event.boundary.name;
+
+          HouseholdMemberRelationShipModel? relationship;
+          if (event.parentClientReferenceId != null) {
+            relationship = HouseholdMemberRelationShipModel(
+              relationshipType: RegistrationDeliverySingleton()
+                  .memberRelationTypeOptions
+                  ?.first,
+              relativeClientReferenceId: event.parentClientReferenceId,
+              selfIdClientReferenceId: individual.clientReferenceId,
+            );
+          }
 
           final locality = code == null || name == null
               ? null
@@ -391,6 +402,7 @@ class BeneficiaryRegistrationBloc
                 createdBy: event.userUuid,
                 createdTime: createdAt,
               ),
+                relationships: relationship != null ? [relationship] : null
             ),
           );
         } catch (error) {
@@ -680,6 +692,18 @@ class BeneficiaryRegistrationBloc
             );
           }
 
+          HouseholdMemberRelationShipModel? relationship;
+          if (event.parentClientReferenceId != null) {
+            relationship = HouseholdMemberRelationShipModel(
+              relationshipType: RegistrationDeliverySingleton()
+                  .memberRelationTypeOptions
+                  ?.first,
+              relativeClientReferenceId: event.parentClientReferenceId,
+              selfIdClientReferenceId: event.individualModel.clientReferenceId,
+              // tenantId: RegistrationDeliverySingleton().tenantId,
+            );
+          }
+
           await householdMemberRepository.create(
             HouseholdMemberModel(
               householdClientReferenceId:
@@ -700,6 +724,7 @@ class BeneficiaryRegistrationBloc
                 lastModifiedBy: event.userUuid,
                 createdBy: event.userUuid,
               ),
+                relationships: relationship != null ? [relationship] : null
             ),
           );
         } catch (error) {
@@ -770,7 +795,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
           {required String userUuid,
           required String projectId,
           required BoundaryModel boundary,
-            final String? parentClientReferenceId,
+          final String? parentClientReferenceId,
           String? tag,
           @Default(true) bool navigateToSummary}) =
       BeneficiaryRegistrationCreateEvent;
@@ -779,7 +804,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
           {required String userUuid,
           required String projectId,
           required BoundaryModel boundary,
-            final String? parentClientReferenceId,
+          final String? parentClientReferenceId,
           String? tag,
           @Default(true) bool navigateToSummary}) =
       BeneficiaryRegistrationSummaryEvent;
