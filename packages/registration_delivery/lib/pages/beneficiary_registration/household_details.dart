@@ -157,9 +157,11 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           final children =
                               form.control(_childrenCountKey).value as int;
 
-                          bool validForm = checklistKey.currentState?.validateSurveyForm() ?? false;
+                          bool validForm =
+                              checklistKey.currentState?.validateSurveyForm() ??
+                                  false;
 
-                          if(validForm == false) return;
+                          if (validForm == false) return;
 
                           if (memberCount < (pregnantWomen + children)) {
                             Toast.showToast(context,
@@ -167,7 +169,6 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                     i18.householdDetails.memberCountError),
                                 type: ToastType.error);
                           } else {
-
                             registrationState.maybeWhen(
                               orElse: () {
                                 return;
@@ -177,6 +178,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 householdModel,
                                 individualModel,
                                 projectBeneficiaryModel,
+                                parentClientReferenceId,
                                 registrationDate,
                                 searchQuery,
                                 loading,
@@ -276,9 +278,12 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                           )
                                         ]));
 
-                                checklistKey.currentState?.submitSurvey(latitude: addressModel?.latitude, longitude: addressModel?.longitude, relatedReferenceId: householdModel?.clientReferenceId ??
-                                    IdGen.i.identifier);
-
+                                checklistKey.currentState?.submitSurvey(
+                                    latitude: addressModel?.latitude,
+                                    longitude: addressModel?.longitude,
+                                    relatedReferenceId:
+                                        householdModel?.clientReferenceId ??
+                                            IdGen.i.identifier);
 
                                 bloc.add(
                                   BeneficiaryRegistrationSaveHouseholdDetailsEvent(
@@ -287,16 +292,16 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   ),
                                 );
 
-                                context
-                                    .read<ServiceBloc>()
-                                    .add(
-                                  ServiceSearchEvent(
-                                    serviceSearchModel:
-                                    ServiceSearchModel(
-                                      referenceIds:[householdModel?.clientReferenceId ?? ""],
-                                    ),
-                                  ),
-                                );
+                                context.read<ServiceBloc>().add(
+                                      ServiceSearchEvent(
+                                        serviceSearchModel: ServiceSearchModel(
+                                          referenceIds: [
+                                            householdModel?.clientReferenceId ??
+                                                ""
+                                          ],
+                                        ),
+                                      ),
+                                    );
 
                                 context.router.push(
                                   IndividualDetailsRoute(
@@ -308,6 +313,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 householdModel,
                                 individuals,
                                 registrationDate,
+                                parentClientReferenceId,
                                 projectBeneficiaryModel,
                                 loading,
                                 isHeadOfHousehold,
@@ -365,7 +371,11 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                           )
                                         ]));
 
-                                checklistKey.currentState?.submitSurvey(latitude: 876765, longitude: 89798, relatedReferenceId: householdModel.clientReferenceId);
+                                checklistKey.currentState?.submitSurvey(
+                                    latitude: 876765,
+                                    longitude: 89798,
+                                    relatedReferenceId:
+                                        householdModel.clientReferenceId);
 
                                 bloc.add(
                                   BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
