@@ -210,7 +210,7 @@ class BeneficiaryRegistrationBloc
               householdModel: value.householdModel,
               individualModel: value.individualModel,
               projectBeneficiaryModel: value.projectBeneficiaryModel,
-            parentClientReferenceId: event.parentClientReferenceId
+            // parentClientReferenceId: event.parentClientReferenceId
           ));
         } else {
           final individual = value.individualModel;
@@ -266,14 +266,14 @@ class BeneficiaryRegistrationBloc
               value.projectBeneficiaryModel!,
             );
 
-            HouseholdMemberRelationShipModel? relationship;
-            if(event.parentClientReferenceId != null) {
-              relationship = HouseholdMemberRelationShipModel(
-              relationshipType: RegistrationDeliverySingleton().memberRelationTypeOptions?.first,
-              relativeClientReferenceId: event.parentClientReferenceId,
-              selfIdClientReferenceId: individual.clientReferenceId,
-            );
-            }
+            // HouseholdMemberRelationShipModel? relationship;
+            // if(event.parentClientReferenceId != null) {
+            //   relationship = HouseholdMemberRelationShipModel(
+            //   relationshipType: RegistrationDeliverySingleton().memberRelationTypeOptions?.first,
+            //   relativeClientReferenceId: event.parentClientReferenceId,
+            //   selfIdClientReferenceId: individual.clientReferenceId,
+            // );
+            // }
 
             await householdMemberRepository.create(
               HouseholdMemberModel(
@@ -293,7 +293,7 @@ class BeneficiaryRegistrationBloc
                   createdBy: event.userUuid,
                   createdTime: createdAt,
                 ),
-                relationships: relationship != null ? [relationship] : null
+                // relationships: relationship != null ? [relationship] : null
               ),
             );
           } catch (error) {
@@ -737,7 +737,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
 
   const factory BeneficiaryRegistrationEvent.saveIndividualDetails({
     required IndividualModel model,
-    final String? parentClientReferenceId,
+    // final String? parentClientReferenceId,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationSaveIndividualDetailsEvent;
 
@@ -745,7 +745,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required HouseholdModel householdModel,
     required IndividualModel individualModel,
     required AddressModel addressModel,
-    final String? parentClientReferenceId,
+    // final String? parentClientReferenceId,
     required String userUuid,
     required String projectId,
     String? tag,
@@ -763,14 +763,14 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     String? tag,
     required HouseholdModel householdModel,
     required AddressModel addressModel,
-    final String? parentClientReferenceId,
+    // final String? parentClientReferenceId,
   }) = BeneficiaryRegistrationUpdateIndividualDetailsEvent;
 
   const factory BeneficiaryRegistrationEvent.create(
           {required String userUuid,
           required String projectId,
           required BoundaryModel boundary,
-            final String? parentClientReferenceId,
+            // final String? parentClientReferenceId,
           String? tag,
           @Default(true) bool navigateToSummary}) =
       BeneficiaryRegistrationCreateEvent;
@@ -779,7 +779,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
           {required String userUuid,
           required String projectId,
           required BoundaryModel boundary,
-            final String? parentClientReferenceId,
+            // final String? parentClientReferenceId,
           String? tag,
           @Default(true) bool navigateToSummary}) =
       BeneficiaryRegistrationSummaryEvent;
@@ -796,7 +796,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     HouseholdModel? householdModel,
     IndividualModel? individualModel,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
-    final String? parentClientReferenceId,
+    // final String? parentClientReferenceId,
     DateTime? registrationDate,
     String? searchQuery,
     @Default(false) bool loading,
@@ -807,7 +807,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required AddressModel addressModel,
     required HouseholdModel householdModel,
     required List<IndividualModel> individualModel,
-    final String? parentClientReferenceId,
+    // final String? parentClientReferenceId,
     required DateTime registrationDate,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     @Default(false) bool loading,
@@ -818,7 +818,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required HouseholdModel householdModel,
     required IndividualModel individualModel,
     required AddressModel addressModel,
-    final String? parentClientReferenceId,
+    // final String? parentClientReferenceId,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     @Default(false) bool loading,
   }) = BeneficiaryRegistrationEditIndividualState;
@@ -826,7 +826,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
   const factory BeneficiaryRegistrationState.addMember({
     required AddressModel addressModel,
     required HouseholdModel householdModel,
-    final String? parentClientReferenceId,
+    // final String? parentClientReferenceId,
     @Default(false) bool loading,
   }) = BeneficiaryRegistrationAddMemberState;
 
@@ -835,7 +835,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required HouseholdModel householdModel,
     IndividualModel? individualModel,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
-    final String? parentClientReferenceId,
+    // final String? parentClientReferenceId,
     DateTime? registrationDate,
     AddressModel? addressModel,
     @Default(false) bool loading,
@@ -848,7 +848,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     HouseholdModel? householdModel,
     IndividualModel? individualModel,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
-    final String? parentClientReferenceId,
+    // final String? parentClientReferenceId,
     DateTime? registrationDate,
     AddressModel? addressModel,
     @Default(false) bool loading,

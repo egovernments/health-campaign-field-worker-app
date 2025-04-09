@@ -862,6 +862,7 @@ return [
       String? description) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
+    // Ensure the current index is added to visible indexes and not excluded
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
       final childItems = getNextQuestions(
@@ -1252,6 +1253,25 @@ return [
         ),
       );
     } else if (item.dataType == 'MultiValueList' && isSelectionCard(item)) {
+      final childItems = getNextQuestions(
+        item.code.toString(),
+        initialAttributes ?? [],
+      );
+      List<int> excludedIndexes = [];
+
+      // Ensure the current index is added to visible indexes and not excluded
+      if (!visibleSurveyFormIndexes.contains(index) &&
+          !excludedIndexes.contains(index)) {
+        visibleSurveyFormIndexes.add(index);
+      }
+
+      // Determine excluded indexes
+      for (int i = 0; i < (initialAttributes ?? []).length; i++) {
+        if (!visibleSurveyFormIndexes.contains(i)) {
+          // controller[i].text = '';
+          excludedIndexes.add(i);
+        }
+      }
       return Align(
         alignment: Alignment.topLeft,
         child: Padding(
