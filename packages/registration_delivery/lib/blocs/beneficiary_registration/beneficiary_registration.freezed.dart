@@ -23,12 +23,14 @@ mixin _$BeneficiaryRegistrationEvent {
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -37,14 +39,28 @@ mixin _$BeneficiaryRegistrationEvent {
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) =>
@@ -55,12 +71,14 @@ mixin _$BeneficiaryRegistrationEvent {
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -69,14 +87,28 @@ mixin _$BeneficiaryRegistrationEvent {
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) =>
@@ -87,12 +119,14 @@ mixin _$BeneficiaryRegistrationEvent {
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -101,14 +135,28 @@ mixin _$BeneficiaryRegistrationEvent {
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
@@ -282,12 +330,14 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -296,14 +346,28 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) {
@@ -317,12 +381,14 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -331,14 +397,28 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) {
@@ -352,12 +432,14 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -366,14 +448,28 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
@@ -559,12 +655,14 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -573,14 +671,28 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) {
@@ -594,12 +706,14 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -608,14 +722,28 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) {
@@ -629,12 +757,14 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -643,14 +773,28 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
@@ -849,12 +993,14 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -863,14 +1009,28 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) {
@@ -884,12 +1044,14 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -898,14 +1060,28 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) {
@@ -919,12 +1095,14 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -933,14 +1111,28 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
@@ -1058,7 +1250,10 @@ abstract class _$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWith<
       __$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWithImpl<
           $Res>;
   @useResult
-  $Res call({IndividualModel model, bool isHeadOfHousehold});
+  $Res call(
+      {IndividualModel model,
+      String? parentClientReferenceId,
+      bool isHeadOfHousehold});
 }
 
 /// @nodoc
@@ -1078,6 +1273,7 @@ class __$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWithImpl<
   @override
   $Res call({
     Object? model = null,
+    Object? parentClientReferenceId = freezed,
     Object? isHeadOfHousehold = null,
   }) {
     return _then(_$BeneficiaryRegistrationSaveIndividualDetailsEventImpl(
@@ -1085,6 +1281,10 @@ class __$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWithImpl<
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
               as IndividualModel,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       isHeadOfHousehold: null == isHeadOfHousehold
           ? _value.isHeadOfHousehold
           : isHeadOfHousehold // ignore: cast_nullable_to_non_nullable
@@ -1098,17 +1298,21 @@ class __$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWithImpl<
 class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
     implements BeneficiaryRegistrationSaveIndividualDetailsEvent {
   const _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl(
-      {required this.model, this.isHeadOfHousehold = false});
+      {required this.model,
+      this.parentClientReferenceId,
+      this.isHeadOfHousehold = false});
 
   @override
   final IndividualModel model;
+  @override
+  final String? parentClientReferenceId;
   @override
   @JsonKey()
   final bool isHeadOfHousehold;
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationEvent.saveIndividualDetails(model: $model, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationEvent.saveIndividualDetails(model: $model, parentClientReferenceId: $parentClientReferenceId, isHeadOfHousehold: $isHeadOfHousehold)';
   }
 
   @override
@@ -1117,12 +1321,16 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
         (other.runtimeType == runtimeType &&
             other is _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl &&
             (identical(other.model, model) || other.model == model) &&
+            (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId) &&
             (identical(other.isHeadOfHousehold, isHeadOfHousehold) ||
                 other.isHeadOfHousehold == isHeadOfHousehold));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, model, isHeadOfHousehold);
+  int get hashCode => Object.hash(
+      runtimeType, model, parentClientReferenceId, isHeadOfHousehold);
 
   @JsonKey(ignore: true)
   @override
@@ -1142,12 +1350,14 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -1156,18 +1366,33 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) {
-    return saveIndividualDetails(model, isHeadOfHousehold);
+    return saveIndividualDetails(
+        model, parentClientReferenceId, isHeadOfHousehold);
   }
 
   @override
@@ -1177,12 +1402,14 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -1191,18 +1418,33 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) {
-    return saveIndividualDetails?.call(model, isHeadOfHousehold);
+    return saveIndividualDetails?.call(
+        model, parentClientReferenceId, isHeadOfHousehold);
   }
 
   @override
@@ -1212,12 +1454,14 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -1226,20 +1470,35 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
     if (saveIndividualDetails != null) {
-      return saveIndividualDetails(model, isHeadOfHousehold);
+      return saveIndividualDetails(
+          model, parentClientReferenceId, isHeadOfHousehold);
     }
     return orElse();
   }
@@ -1330,10 +1589,12 @@ abstract class BeneficiaryRegistrationSaveIndividualDetailsEvent
     implements BeneficiaryRegistrationEvent {
   const factory BeneficiaryRegistrationSaveIndividualDetailsEvent(
           {required final IndividualModel model,
+          final String? parentClientReferenceId,
           final bool isHeadOfHousehold}) =
       _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl;
 
   IndividualModel get model;
+  String? get parentClientReferenceId;
   bool get isHeadOfHousehold;
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWith<
@@ -1352,6 +1613,7 @@ abstract class _$$BeneficiaryRegistrationAddMemberEventImplCopyWith<$Res> {
       {HouseholdModel householdModel,
       IndividualModel individualModel,
       AddressModel addressModel,
+      String? parentClientReferenceId,
       String userUuid,
       String projectId,
       String? tag,
@@ -1374,6 +1636,7 @@ class __$$BeneficiaryRegistrationAddMemberEventImplCopyWithImpl<$Res>
     Object? householdModel = null,
     Object? individualModel = null,
     Object? addressModel = null,
+    Object? parentClientReferenceId = freezed,
     Object? userUuid = null,
     Object? projectId = null,
     Object? tag = freezed,
@@ -1392,6 +1655,10 @@ class __$$BeneficiaryRegistrationAddMemberEventImplCopyWithImpl<$Res>
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
               as AddressModel,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       userUuid: null == userUuid
           ? _value.userUuid
           : userUuid // ignore: cast_nullable_to_non_nullable
@@ -1420,6 +1687,7 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
       {required this.householdModel,
       required this.individualModel,
       required this.addressModel,
+      this.parentClientReferenceId,
       required this.userUuid,
       required this.projectId,
       this.tag,
@@ -1432,6 +1700,8 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
   @override
   final AddressModel addressModel;
   @override
+  final String? parentClientReferenceId;
+  @override
   final String userUuid;
   @override
   final String projectId;
@@ -1442,7 +1712,7 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationEvent.addMember(householdModel: $householdModel, individualModel: $individualModel, addressModel: $addressModel, userUuid: $userUuid, projectId: $projectId, tag: $tag, beneficiaryType: $beneficiaryType)';
+    return 'BeneficiaryRegistrationEvent.addMember(householdModel: $householdModel, individualModel: $individualModel, addressModel: $addressModel, parentClientReferenceId: $parentClientReferenceId, userUuid: $userUuid, projectId: $projectId, tag: $tag, beneficiaryType: $beneficiaryType)';
   }
 
   @override
@@ -1456,6 +1726,9 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
                 other.individualModel == individualModel) &&
             (identical(other.addressModel, addressModel) ||
                 other.addressModel == addressModel) &&
+            (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId) &&
             (identical(other.userUuid, userUuid) ||
                 other.userUuid == userUuid) &&
             (identical(other.projectId, projectId) ||
@@ -1466,8 +1739,16 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, householdModel, individualModel,
-      addressModel, userUuid, projectId, tag, beneficiaryType);
+  int get hashCode => Object.hash(
+      runtimeType,
+      householdModel,
+      individualModel,
+      addressModel,
+      parentClientReferenceId,
+      userUuid,
+      projectId,
+      tag,
+      beneficiaryType);
 
   @JsonKey(ignore: true)
   @override
@@ -1485,12 +1766,14 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -1499,19 +1782,33 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) {
-    return addMember(householdModel, individualModel, addressModel, userUuid,
-        projectId, tag, beneficiaryType);
+    return addMember(householdModel, individualModel, addressModel,
+        parentClientReferenceId, userUuid, projectId, tag, beneficiaryType);
   }
 
   @override
@@ -1521,12 +1818,14 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -1535,19 +1834,33 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) {
     return addMember?.call(householdModel, individualModel, addressModel,
-        userUuid, projectId, tag, beneficiaryType);
+        parentClientReferenceId, userUuid, projectId, tag, beneficiaryType);
   }
 
   @override
@@ -1557,12 +1870,14 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -1571,21 +1886,35 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
     if (addMember != null) {
-      return addMember(householdModel, individualModel, addressModel, userUuid,
-          projectId, tag, beneficiaryType);
+      return addMember(householdModel, individualModel, addressModel,
+          parentClientReferenceId, userUuid, projectId, tag, beneficiaryType);
     }
     return orElse();
   }
@@ -1678,6 +2007,7 @@ abstract class BeneficiaryRegistrationAddMemberEvent
           {required final HouseholdModel householdModel,
           required final IndividualModel individualModel,
           required final AddressModel addressModel,
+          final String? parentClientReferenceId,
           required final String userUuid,
           required final String projectId,
           final String? tag,
@@ -1687,6 +2017,7 @@ abstract class BeneficiaryRegistrationAddMemberEvent
   HouseholdModel get householdModel;
   IndividualModel get individualModel;
   AddressModel get addressModel;
+  String? get parentClientReferenceId;
   String get userUuid;
   String get projectId;
   String? get tag;
@@ -1802,12 +2133,14 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -1816,14 +2149,28 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) {
@@ -1837,12 +2184,14 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -1851,14 +2200,28 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) {
@@ -1872,12 +2235,14 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -1886,14 +2251,28 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
@@ -2018,7 +2397,8 @@ abstract class _$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWit
       {IndividualModel model,
       String? tag,
       HouseholdModel householdModel,
-      AddressModel addressModel});
+      AddressModel addressModel,
+      String? parentClientReferenceId});
 }
 
 /// @nodoc
@@ -2042,6 +2422,7 @@ class __$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWithImpl<
     Object? tag = freezed,
     Object? householdModel = null,
     Object? addressModel = null,
+    Object? parentClientReferenceId = freezed,
   }) {
     return _then(_$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl(
       model: null == model
@@ -2060,6 +2441,10 @@ class __$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWithImpl<
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
               as AddressModel,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -2072,7 +2457,8 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
       {required this.model,
       this.tag,
       required this.householdModel,
-      required this.addressModel});
+      required this.addressModel,
+      this.parentClientReferenceId});
 
   @override
   final IndividualModel model;
@@ -2082,10 +2468,12 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
   final HouseholdModel householdModel;
   @override
   final AddressModel addressModel;
+  @override
+  final String? parentClientReferenceId;
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationEvent.updateIndividualDetails(model: $model, tag: $tag, householdModel: $householdModel, addressModel: $addressModel)';
+    return 'BeneficiaryRegistrationEvent.updateIndividualDetails(model: $model, tag: $tag, householdModel: $householdModel, addressModel: $addressModel, parentClientReferenceId: $parentClientReferenceId)';
   }
 
   @override
@@ -2099,12 +2487,15 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
             (identical(other.householdModel, householdModel) ||
                 other.householdModel == householdModel) &&
             (identical(other.addressModel, addressModel) ||
-                other.addressModel == addressModel));
+                other.addressModel == addressModel) &&
+            (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, model, tag, householdModel, addressModel);
+  int get hashCode => Object.hash(runtimeType, model, tag, householdModel,
+      addressModel, parentClientReferenceId);
 
   @JsonKey(ignore: true)
   @override
@@ -2124,12 +2515,14 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -2138,18 +2531,33 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) {
-    return updateIndividualDetails(model, tag, householdModel, addressModel);
+    return updateIndividualDetails(
+        model, tag, householdModel, addressModel, parentClientReferenceId);
   }
 
   @override
@@ -2159,12 +2567,14 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -2173,19 +2583,33 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) {
     return updateIndividualDetails?.call(
-        model, tag, householdModel, addressModel);
+        model, tag, householdModel, addressModel, parentClientReferenceId);
   }
 
   @override
@@ -2195,12 +2619,14 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -2209,20 +2635,35 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
     if (updateIndividualDetails != null) {
-      return updateIndividualDetails(model, tag, householdModel, addressModel);
+      return updateIndividualDetails(
+          model, tag, householdModel, addressModel, parentClientReferenceId);
     }
     return orElse();
   }
@@ -2315,13 +2756,15 @@ abstract class BeneficiaryRegistrationUpdateIndividualDetailsEvent
           {required final IndividualModel model,
           final String? tag,
           required final HouseholdModel householdModel,
-          required final AddressModel addressModel}) =
+          required final AddressModel addressModel,
+          final String? parentClientReferenceId}) =
       _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl;
 
   IndividualModel get model;
   String? get tag;
   HouseholdModel get householdModel;
   AddressModel get addressModel;
+  String? get parentClientReferenceId;
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWith<
           _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl>
@@ -2339,6 +2782,7 @@ abstract class _$$BeneficiaryRegistrationCreateEventImplCopyWith<$Res> {
       {String userUuid,
       String projectId,
       BoundaryModel boundary,
+      String? parentClientReferenceId,
       String? tag,
       bool navigateToSummary});
 }
@@ -2359,6 +2803,7 @@ class __$$BeneficiaryRegistrationCreateEventImplCopyWithImpl<$Res>
     Object? userUuid = null,
     Object? projectId = null,
     Object? boundary = null,
+    Object? parentClientReferenceId = freezed,
     Object? tag = freezed,
     Object? navigateToSummary = null,
   }) {
@@ -2375,6 +2820,10 @@ class __$$BeneficiaryRegistrationCreateEventImplCopyWithImpl<$Res>
           ? _value.boundary
           : boundary // ignore: cast_nullable_to_non_nullable
               as BoundaryModel,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       tag: freezed == tag
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
@@ -2395,6 +2844,7 @@ class _$BeneficiaryRegistrationCreateEventImpl
       {required this.userUuid,
       required this.projectId,
       required this.boundary,
+      this.parentClientReferenceId,
       this.tag,
       this.navigateToSummary = true});
 
@@ -2405,6 +2855,8 @@ class _$BeneficiaryRegistrationCreateEventImpl
   @override
   final BoundaryModel boundary;
   @override
+  final String? parentClientReferenceId;
+  @override
   final String? tag;
   @override
   @JsonKey()
@@ -2412,7 +2864,7 @@ class _$BeneficiaryRegistrationCreateEventImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationEvent.create(userUuid: $userUuid, projectId: $projectId, boundary: $boundary, tag: $tag, navigateToSummary: $navigateToSummary)';
+    return 'BeneficiaryRegistrationEvent.create(userUuid: $userUuid, projectId: $projectId, boundary: $boundary, parentClientReferenceId: $parentClientReferenceId, tag: $tag, navigateToSummary: $navigateToSummary)';
   }
 
   @override
@@ -2426,14 +2878,17 @@ class _$BeneficiaryRegistrationCreateEventImpl
                 other.projectId == projectId) &&
             (identical(other.boundary, boundary) ||
                 other.boundary == boundary) &&
+            (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId) &&
             (identical(other.tag, tag) || other.tag == tag) &&
             (identical(other.navigateToSummary, navigateToSummary) ||
                 other.navigateToSummary == navigateToSummary));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, userUuid, projectId, boundary, tag, navigateToSummary);
+  int get hashCode => Object.hash(runtimeType, userUuid, projectId, boundary,
+      parentClientReferenceId, tag, navigateToSummary);
 
   @JsonKey(ignore: true)
   @override
@@ -2451,12 +2906,14 @@ class _$BeneficiaryRegistrationCreateEventImpl
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -2465,18 +2922,33 @@ class _$BeneficiaryRegistrationCreateEventImpl
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) {
-    return create(userUuid, projectId, boundary, tag, navigateToSummary);
+    return create(userUuid, projectId, boundary, parentClientReferenceId, tag,
+        navigateToSummary);
   }
 
   @override
@@ -2486,12 +2958,14 @@ class _$BeneficiaryRegistrationCreateEventImpl
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -2500,18 +2974,33 @@ class _$BeneficiaryRegistrationCreateEventImpl
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) {
-    return create?.call(userUuid, projectId, boundary, tag, navigateToSummary);
+    return create?.call(userUuid, projectId, boundary, parentClientReferenceId,
+        tag, navigateToSummary);
   }
 
   @override
@@ -2521,12 +3010,14 @@ class _$BeneficiaryRegistrationCreateEventImpl
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -2535,20 +3026,35 @@ class _$BeneficiaryRegistrationCreateEventImpl
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
     if (create != null) {
-      return create(userUuid, projectId, boundary, tag, navigateToSummary);
+      return create(userUuid, projectId, boundary, parentClientReferenceId, tag,
+          navigateToSummary);
     }
     return orElse();
   }
@@ -2641,12 +3147,14 @@ abstract class BeneficiaryRegistrationCreateEvent
       {required final String userUuid,
       required final String projectId,
       required final BoundaryModel boundary,
+      final String? parentClientReferenceId,
       final String? tag,
       final bool navigateToSummary}) = _$BeneficiaryRegistrationCreateEventImpl;
 
   String get userUuid;
   String get projectId;
   BoundaryModel get boundary;
+  String? get parentClientReferenceId;
   String? get tag;
   bool get navigateToSummary;
   @JsonKey(ignore: true)
@@ -2666,6 +3174,7 @@ abstract class _$$BeneficiaryRegistrationSummaryEventImplCopyWith<$Res> {
       {String userUuid,
       String projectId,
       BoundaryModel boundary,
+      String? parentClientReferenceId,
       String? tag,
       bool navigateToSummary});
 }
@@ -2686,6 +3195,7 @@ class __$$BeneficiaryRegistrationSummaryEventImplCopyWithImpl<$Res>
     Object? userUuid = null,
     Object? projectId = null,
     Object? boundary = null,
+    Object? parentClientReferenceId = freezed,
     Object? tag = freezed,
     Object? navigateToSummary = null,
   }) {
@@ -2702,6 +3212,10 @@ class __$$BeneficiaryRegistrationSummaryEventImplCopyWithImpl<$Res>
           ? _value.boundary
           : boundary // ignore: cast_nullable_to_non_nullable
               as BoundaryModel,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       tag: freezed == tag
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
@@ -2722,6 +3236,7 @@ class _$BeneficiaryRegistrationSummaryEventImpl
       {required this.userUuid,
       required this.projectId,
       required this.boundary,
+      this.parentClientReferenceId,
       this.tag,
       this.navigateToSummary = true});
 
@@ -2732,6 +3247,8 @@ class _$BeneficiaryRegistrationSummaryEventImpl
   @override
   final BoundaryModel boundary;
   @override
+  final String? parentClientReferenceId;
+  @override
   final String? tag;
   @override
   @JsonKey()
@@ -2739,7 +3256,7 @@ class _$BeneficiaryRegistrationSummaryEventImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationEvent.summary(userUuid: $userUuid, projectId: $projectId, boundary: $boundary, tag: $tag, navigateToSummary: $navigateToSummary)';
+    return 'BeneficiaryRegistrationEvent.summary(userUuid: $userUuid, projectId: $projectId, boundary: $boundary, parentClientReferenceId: $parentClientReferenceId, tag: $tag, navigateToSummary: $navigateToSummary)';
   }
 
   @override
@@ -2753,14 +3270,17 @@ class _$BeneficiaryRegistrationSummaryEventImpl
                 other.projectId == projectId) &&
             (identical(other.boundary, boundary) ||
                 other.boundary == boundary) &&
+            (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId) &&
             (identical(other.tag, tag) || other.tag == tag) &&
             (identical(other.navigateToSummary, navigateToSummary) ||
                 other.navigateToSummary == navigateToSummary));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, userUuid, projectId, boundary, tag, navigateToSummary);
+  int get hashCode => Object.hash(runtimeType, userUuid, projectId, boundary,
+      parentClientReferenceId, tag, navigateToSummary);
 
   @JsonKey(ignore: true)
   @override
@@ -2778,12 +3298,14 @@ class _$BeneficiaryRegistrationSummaryEventImpl
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -2792,18 +3314,33 @@ class _$BeneficiaryRegistrationSummaryEventImpl
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) {
-    return summary(userUuid, projectId, boundary, tag, navigateToSummary);
+    return summary(userUuid, projectId, boundary, parentClientReferenceId, tag,
+        navigateToSummary);
   }
 
   @override
@@ -2813,12 +3350,14 @@ class _$BeneficiaryRegistrationSummaryEventImpl
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -2827,18 +3366,33 @@ class _$BeneficiaryRegistrationSummaryEventImpl
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) {
-    return summary?.call(userUuid, projectId, boundary, tag, navigateToSummary);
+    return summary?.call(userUuid, projectId, boundary, parentClientReferenceId,
+        tag, navigateToSummary);
   }
 
   @override
@@ -2848,12 +3402,14 @@ class _$BeneficiaryRegistrationSummaryEventImpl
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -2862,20 +3418,35 @@ class _$BeneficiaryRegistrationSummaryEventImpl
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
     if (summary != null) {
-      return summary(userUuid, projectId, boundary, tag, navigateToSummary);
+      return summary(userUuid, projectId, boundary, parentClientReferenceId,
+          tag, navigateToSummary);
     }
     return orElse();
   }
@@ -2968,6 +3539,7 @@ abstract class BeneficiaryRegistrationSummaryEvent
           {required final String userUuid,
           required final String projectId,
           required final BoundaryModel boundary,
+          final String? parentClientReferenceId,
           final String? tag,
           final bool navigateToSummary}) =
       _$BeneficiaryRegistrationSummaryEventImpl;
@@ -2975,6 +3547,7 @@ abstract class BeneficiaryRegistrationSummaryEvent
   String get userUuid;
   String get projectId;
   BoundaryModel get boundary;
+  String? get parentClientReferenceId;
   String? get tag;
   bool get navigateToSummary;
   @JsonKey(ignore: true)
@@ -3058,12 +3631,14 @@ class _$BeneficiaryRegistrationTagEventImpl
     required TResult Function(
             HouseholdModel household, DateTime registrationDate)
         saveHouseholdDetails,
-    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+    required TResult Function(IndividualModel model,
+            String? parentClientReferenceId, bool isHeadOfHousehold)
         saveIndividualDetails,
     required TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -3072,14 +3647,28 @@ class _$BeneficiaryRegistrationTagEventImpl
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)
+    required TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)
         updateIndividualDetails,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         create,
-    required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag, bool navigateToSummary)
+    required TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)
         summary,
     required TResult Function(String tag) validate,
   }) {
@@ -3093,12 +3682,14 @@ class _$BeneficiaryRegistrationTagEventImpl
     TResult? Function(HouseholdModel model)? saveHouseDetails,
     TResult? Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult? Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult? Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -3107,14 +3698,28 @@ class _$BeneficiaryRegistrationTagEventImpl
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult? Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult? Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult? Function(String tag)? validate,
   }) {
@@ -3128,12 +3733,14 @@ class _$BeneficiaryRegistrationTagEventImpl
     TResult Function(HouseholdModel model)? saveHouseDetails,
     TResult Function(HouseholdModel household, DateTime registrationDate)?
         saveHouseholdDetails,
-    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+    TResult Function(IndividualModel model, String? parentClientReferenceId,
+            bool isHeadOfHousehold)?
         saveIndividualDetails,
     TResult Function(
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             String userUuid,
             String projectId,
             String? tag,
@@ -3142,14 +3749,28 @@ class _$BeneficiaryRegistrationTagEventImpl
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(IndividualModel model, String? tag,
-            HouseholdModel householdModel, AddressModel addressModel)?
+    TResult Function(
+            IndividualModel model,
+            String? tag,
+            HouseholdModel householdModel,
+            AddressModel addressModel,
+            String? parentClientReferenceId)?
         updateIndividualDetails,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         create,
-    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag, bool navigateToSummary)?
+    TResult Function(
+            String userUuid,
+            String projectId,
+            BoundaryModel boundary,
+            String? parentClientReferenceId,
+            String? tag,
+            bool navigateToSummary)?
         summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
@@ -3258,6 +3879,7 @@ abstract class BeneficiaryRegistrationTagEvent
 mixin _$BeneficiaryRegistrationState {
   AddressModel? get addressModel => throw _privateConstructorUsedError;
   HouseholdModel? get householdModel => throw _privateConstructorUsedError;
+  String? get parentClientReferenceId => throw _privateConstructorUsedError;
   bool get loading => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
@@ -3266,6 +3888,7 @@ mixin _$BeneficiaryRegistrationState {
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3275,6 +3898,7 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -3284,17 +3908,22 @@ mixin _$BeneficiaryRegistrationState {
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)
         editIndividual,
-    required TResult Function(AddressModel addressModel,
-            HouseholdModel householdModel, bool loading)
+    required TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading)
         addMember,
     required TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3306,6 +3935,7 @@ mixin _$BeneficiaryRegistrationState {
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3320,6 +3950,7 @@ mixin _$BeneficiaryRegistrationState {
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3329,6 +3960,7 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -3338,17 +3970,19 @@ mixin _$BeneficiaryRegistrationState {
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3360,6 +3994,7 @@ mixin _$BeneficiaryRegistrationState {
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3374,6 +4009,7 @@ mixin _$BeneficiaryRegistrationState {
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3383,6 +4019,7 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -3392,17 +4029,19 @@ mixin _$BeneficiaryRegistrationState {
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3414,6 +4053,7 @@ mixin _$BeneficiaryRegistrationState {
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3477,7 +4117,10 @@ abstract class $BeneficiaryRegistrationStateCopyWith<$Res> {
           BeneficiaryRegistrationState>;
   @useResult
   $Res call(
-      {AddressModel addressModel, HouseholdModel householdModel, bool loading});
+      {AddressModel addressModel,
+      HouseholdModel householdModel,
+      String? parentClientReferenceId,
+      bool loading});
 }
 
 /// @nodoc
@@ -3496,6 +4139,7 @@ class _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
   $Res call({
     Object? addressModel = null,
     Object? householdModel = null,
+    Object? parentClientReferenceId = freezed,
     Object? loading = null,
   }) {
     return _then(_value.copyWith(
@@ -3507,6 +4151,10 @@ class _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
           ? _value.householdModel!
           : householdModel // ignore: cast_nullable_to_non_nullable
               as HouseholdModel,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -3529,6 +4177,7 @@ abstract class _$$BeneficiaryRegistrationCreateStateImplCopyWith<$Res>
       HouseholdModel? householdModel,
       IndividualModel? individualModel,
       ProjectBeneficiaryModel? projectBeneficiaryModel,
+      String? parentClientReferenceId,
       DateTime? registrationDate,
       String? searchQuery,
       bool loading,
@@ -3552,6 +4201,7 @@ class __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<$Res>
     Object? householdModel = freezed,
     Object? individualModel = freezed,
     Object? projectBeneficiaryModel = freezed,
+    Object? parentClientReferenceId = freezed,
     Object? registrationDate = freezed,
     Object? searchQuery = freezed,
     Object? loading = null,
@@ -3574,6 +4224,10 @@ class __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<$Res>
           ? _value.projectBeneficiaryModel
           : projectBeneficiaryModel // ignore: cast_nullable_to_non_nullable
               as ProjectBeneficiaryModel?,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       registrationDate: freezed == registrationDate
           ? _value.registrationDate
           : registrationDate // ignore: cast_nullable_to_non_nullable
@@ -3603,6 +4257,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
       this.householdModel,
       this.individualModel,
       this.projectBeneficiaryModel,
+      this.parentClientReferenceId,
       this.registrationDate,
       this.searchQuery,
       this.loading = false,
@@ -3617,6 +4272,8 @@ class _$BeneficiaryRegistrationCreateStateImpl
   @override
   final ProjectBeneficiaryModel? projectBeneficiaryModel;
   @override
+  final String? parentClientReferenceId;
+  @override
   final DateTime? registrationDate;
   @override
   final String? searchQuery;
@@ -3629,7 +4286,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.create(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, searchQuery: $searchQuery, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationState.create(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, searchQuery: $searchQuery, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
   }
 
   @override
@@ -3646,6 +4303,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             (identical(
                     other.projectBeneficiaryModel, projectBeneficiaryModel) ||
                 other.projectBeneficiaryModel == projectBeneficiaryModel) &&
+            (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId) &&
             (identical(other.registrationDate, registrationDate) ||
                 other.registrationDate == registrationDate) &&
             (identical(other.searchQuery, searchQuery) ||
@@ -3662,6 +4322,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
       householdModel,
       individualModel,
       projectBeneficiaryModel,
+      parentClientReferenceId,
       registrationDate,
       searchQuery,
       loading,
@@ -3683,6 +4344,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3692,6 +4354,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -3701,17 +4364,22 @@ class _$BeneficiaryRegistrationCreateStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)
         editIndividual,
-    required TResult Function(AddressModel addressModel,
-            HouseholdModel householdModel, bool loading)
+    required TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading)
         addMember,
     required TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3723,6 +4391,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3734,6 +4403,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
         householdModel,
         individualModel,
         projectBeneficiaryModel,
+        parentClientReferenceId,
         registrationDate,
         searchQuery,
         loading,
@@ -3748,6 +4418,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3757,6 +4428,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -3766,17 +4438,19 @@ class _$BeneficiaryRegistrationCreateStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3788,6 +4462,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3799,6 +4474,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
         householdModel,
         individualModel,
         projectBeneficiaryModel,
+        parentClientReferenceId,
         registrationDate,
         searchQuery,
         loading,
@@ -3813,6 +4489,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3822,6 +4499,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -3831,17 +4509,19 @@ class _$BeneficiaryRegistrationCreateStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3853,6 +4533,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -3866,6 +4547,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
           householdModel,
           individualModel,
           projectBeneficiaryModel,
+          parentClientReferenceId,
           registrationDate,
           searchQuery,
           loading,
@@ -3934,6 +4616,7 @@ abstract class BeneficiaryRegistrationCreateState
       final HouseholdModel? householdModel,
       final IndividualModel? individualModel,
       final ProjectBeneficiaryModel? projectBeneficiaryModel,
+      final String? parentClientReferenceId,
       final DateTime? registrationDate,
       final String? searchQuery,
       final bool loading,
@@ -3945,6 +4628,8 @@ abstract class BeneficiaryRegistrationCreateState
   HouseholdModel? get householdModel;
   IndividualModel? get individualModel;
   ProjectBeneficiaryModel? get projectBeneficiaryModel;
+  @override
+  String? get parentClientReferenceId;
   DateTime? get registrationDate;
   String? get searchQuery;
   @override
@@ -3970,6 +4655,7 @@ abstract class _$$BeneficiaryRegistrationEditHouseholdStateImplCopyWith<$Res>
       {AddressModel addressModel,
       HouseholdModel householdModel,
       List<IndividualModel> individualModel,
+      String? parentClientReferenceId,
       DateTime registrationDate,
       ProjectBeneficiaryModel? projectBeneficiaryModel,
       bool loading,
@@ -3992,6 +4678,7 @@ class __$$BeneficiaryRegistrationEditHouseholdStateImplCopyWithImpl<$Res>
     Object? addressModel = null,
     Object? householdModel = null,
     Object? individualModel = null,
+    Object? parentClientReferenceId = freezed,
     Object? registrationDate = null,
     Object? projectBeneficiaryModel = freezed,
     Object? loading = null,
@@ -4010,6 +4697,10 @@ class __$$BeneficiaryRegistrationEditHouseholdStateImplCopyWithImpl<$Res>
           ? _value._individualModel
           : individualModel // ignore: cast_nullable_to_non_nullable
               as List<IndividualModel>,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       registrationDate: null == registrationDate
           ? _value.registrationDate
           : registrationDate // ignore: cast_nullable_to_non_nullable
@@ -4038,6 +4729,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
       {required this.addressModel,
       required this.householdModel,
       required final List<IndividualModel> individualModel,
+      this.parentClientReferenceId,
       required this.registrationDate,
       this.projectBeneficiaryModel,
       this.loading = false,
@@ -4057,6 +4749,8 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
   }
 
   @override
+  final String? parentClientReferenceId;
+  @override
   final DateTime registrationDate;
   @override
   final ProjectBeneficiaryModel? projectBeneficiaryModel;
@@ -4068,7 +4762,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.editHousehold(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, registrationDate: $registrationDate, projectBeneficiaryModel: $projectBeneficiaryModel, loading: $loading, headOfHousehold: $headOfHousehold)';
+    return 'BeneficiaryRegistrationState.editHousehold(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, projectBeneficiaryModel: $projectBeneficiaryModel, loading: $loading, headOfHousehold: $headOfHousehold)';
   }
 
   @override
@@ -4082,6 +4776,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
                 other.householdModel == householdModel) &&
             const DeepCollectionEquality()
                 .equals(other._individualModel, _individualModel) &&
+            (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId) &&
             (identical(other.registrationDate, registrationDate) ||
                 other.registrationDate == registrationDate) &&
             (identical(
@@ -4098,6 +4795,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
       addressModel,
       householdModel,
       const DeepCollectionEquality().hash(_individualModel),
+      parentClientReferenceId,
       registrationDate,
       projectBeneficiaryModel,
       loading,
@@ -4121,6 +4819,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4130,6 +4829,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -4139,17 +4839,22 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)
         editIndividual,
-    required TResult Function(AddressModel addressModel,
-            HouseholdModel householdModel, bool loading)
+    required TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading)
         addMember,
     required TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4161,14 +4866,22 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
             bool isHeadOfHousehold)
         summary,
   }) {
-    return editHousehold(addressModel, householdModel, individualModel,
-        registrationDate, projectBeneficiaryModel, loading, headOfHousehold);
+    return editHousehold(
+        addressModel,
+        householdModel,
+        individualModel,
+        parentClientReferenceId,
+        registrationDate,
+        projectBeneficiaryModel,
+        loading,
+        headOfHousehold);
   }
 
   @override
@@ -4179,6 +4892,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4188,6 +4902,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -4197,17 +4912,19 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4219,14 +4936,22 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
   }) {
-    return editHousehold?.call(addressModel, householdModel, individualModel,
-        registrationDate, projectBeneficiaryModel, loading, headOfHousehold);
+    return editHousehold?.call(
+        addressModel,
+        householdModel,
+        individualModel,
+        parentClientReferenceId,
+        registrationDate,
+        projectBeneficiaryModel,
+        loading,
+        headOfHousehold);
   }
 
   @override
@@ -4237,6 +4962,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4246,6 +4972,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -4255,17 +4982,19 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4277,6 +5006,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4285,8 +5015,15 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
     required TResult orElse(),
   }) {
     if (editHousehold != null) {
-      return editHousehold(addressModel, householdModel, individualModel,
-          registrationDate, projectBeneficiaryModel, loading, headOfHousehold);
+      return editHousehold(
+          addressModel,
+          householdModel,
+          individualModel,
+          parentClientReferenceId,
+          registrationDate,
+          projectBeneficiaryModel,
+          loading,
+          headOfHousehold);
     }
     return orElse();
   }
@@ -4350,6 +5087,7 @@ abstract class BeneficiaryRegistrationEditHouseholdState
           {required final AddressModel addressModel,
           required final HouseholdModel householdModel,
           required final List<IndividualModel> individualModel,
+          final String? parentClientReferenceId,
           required final DateTime registrationDate,
           final ProjectBeneficiaryModel? projectBeneficiaryModel,
           final bool loading,
@@ -4361,6 +5099,8 @@ abstract class BeneficiaryRegistrationEditHouseholdState
   @override
   HouseholdModel get householdModel;
   List<IndividualModel> get individualModel;
+  @override
+  String? get parentClientReferenceId;
   DateTime get registrationDate;
   ProjectBeneficiaryModel? get projectBeneficiaryModel;
   @override
@@ -4387,6 +5127,7 @@ abstract class _$$BeneficiaryRegistrationEditIndividualStateImplCopyWith<$Res>
       {HouseholdModel householdModel,
       IndividualModel individualModel,
       AddressModel addressModel,
+      String? parentClientReferenceId,
       ProjectBeneficiaryModel? projectBeneficiaryModel,
       bool loading});
 }
@@ -4407,6 +5148,7 @@ class __$$BeneficiaryRegistrationEditIndividualStateImplCopyWithImpl<$Res>
     Object? householdModel = null,
     Object? individualModel = null,
     Object? addressModel = null,
+    Object? parentClientReferenceId = freezed,
     Object? projectBeneficiaryModel = freezed,
     Object? loading = null,
   }) {
@@ -4423,6 +5165,10 @@ class __$$BeneficiaryRegistrationEditIndividualStateImplCopyWithImpl<$Res>
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
               as AddressModel,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       projectBeneficiaryModel: freezed == projectBeneficiaryModel
           ? _value.projectBeneficiaryModel
           : projectBeneficiaryModel // ignore: cast_nullable_to_non_nullable
@@ -4443,6 +5189,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
       {required this.householdModel,
       required this.individualModel,
       required this.addressModel,
+      this.parentClientReferenceId,
       this.projectBeneficiaryModel,
       this.loading = false});
 
@@ -4453,6 +5200,8 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
   @override
   final AddressModel addressModel;
   @override
+  final String? parentClientReferenceId;
+  @override
   final ProjectBeneficiaryModel? projectBeneficiaryModel;
   @override
   @JsonKey()
@@ -4460,7 +5209,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.editIndividual(householdModel: $householdModel, individualModel: $individualModel, addressModel: $addressModel, projectBeneficiaryModel: $projectBeneficiaryModel, loading: $loading)';
+    return 'BeneficiaryRegistrationState.editIndividual(householdModel: $householdModel, individualModel: $individualModel, addressModel: $addressModel, parentClientReferenceId: $parentClientReferenceId, projectBeneficiaryModel: $projectBeneficiaryModel, loading: $loading)';
   }
 
   @override
@@ -4475,6 +5224,9 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             (identical(other.addressModel, addressModel) ||
                 other.addressModel == addressModel) &&
             (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId) &&
+            (identical(
                     other.projectBeneficiaryModel, projectBeneficiaryModel) ||
                 other.projectBeneficiaryModel == projectBeneficiaryModel) &&
             (identical(other.loading, loading) || other.loading == loading));
@@ -4482,7 +5234,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
 
   @override
   int get hashCode => Object.hash(runtimeType, householdModel, individualModel,
-      addressModel, projectBeneficiaryModel, loading);
+      addressModel, parentClientReferenceId, projectBeneficiaryModel, loading);
 
   @JsonKey(ignore: true)
   @override
@@ -4502,6 +5254,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4511,6 +5264,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -4520,17 +5274,22 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)
         editIndividual,
-    required TResult Function(AddressModel addressModel,
-            HouseholdModel householdModel, bool loading)
+    required TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading)
         addMember,
     required TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4542,6 +5301,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4549,7 +5309,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
         summary,
   }) {
     return editIndividual(householdModel, individualModel, addressModel,
-        projectBeneficiaryModel, loading);
+        parentClientReferenceId, projectBeneficiaryModel, loading);
   }
 
   @override
@@ -4560,6 +5320,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4569,6 +5330,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -4578,17 +5340,19 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4600,6 +5364,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4607,7 +5372,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
         summary,
   }) {
     return editIndividual?.call(householdModel, individualModel, addressModel,
-        projectBeneficiaryModel, loading);
+        parentClientReferenceId, projectBeneficiaryModel, loading);
   }
 
   @override
@@ -4618,6 +5383,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4627,6 +5393,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -4636,17 +5403,19 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4658,6 +5427,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4667,7 +5437,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
   }) {
     if (editIndividual != null) {
       return editIndividual(householdModel, individualModel, addressModel,
-          projectBeneficiaryModel, loading);
+          parentClientReferenceId, projectBeneficiaryModel, loading);
     }
     return orElse();
   }
@@ -4731,6 +5501,7 @@ abstract class BeneficiaryRegistrationEditIndividualState
       {required final HouseholdModel householdModel,
       required final IndividualModel individualModel,
       required final AddressModel addressModel,
+      final String? parentClientReferenceId,
       final ProjectBeneficiaryModel? projectBeneficiaryModel,
       final bool loading}) = _$BeneficiaryRegistrationEditIndividualStateImpl;
 
@@ -4739,6 +5510,8 @@ abstract class BeneficiaryRegistrationEditIndividualState
   IndividualModel get individualModel;
   @override
   AddressModel get addressModel;
+  @override
+  String? get parentClientReferenceId;
   ProjectBeneficiaryModel? get projectBeneficiaryModel;
   @override
   bool get loading;
@@ -4759,7 +5532,10 @@ abstract class _$$BeneficiaryRegistrationAddMemberStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {AddressModel addressModel, HouseholdModel householdModel, bool loading});
+      {AddressModel addressModel,
+      HouseholdModel householdModel,
+      String? parentClientReferenceId,
+      bool loading});
 }
 
 /// @nodoc
@@ -4777,6 +5553,7 @@ class __$$BeneficiaryRegistrationAddMemberStateImplCopyWithImpl<$Res>
   $Res call({
     Object? addressModel = null,
     Object? householdModel = null,
+    Object? parentClientReferenceId = freezed,
     Object? loading = null,
   }) {
     return _then(_$BeneficiaryRegistrationAddMemberStateImpl(
@@ -4788,6 +5565,10 @@ class __$$BeneficiaryRegistrationAddMemberStateImplCopyWithImpl<$Res>
           ? _value.householdModel
           : householdModel // ignore: cast_nullable_to_non_nullable
               as HouseholdModel,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -4803,6 +5584,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
   const _$BeneficiaryRegistrationAddMemberStateImpl(
       {required this.addressModel,
       required this.householdModel,
+      this.parentClientReferenceId,
       this.loading = false});
 
   @override
@@ -4810,12 +5592,14 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
   @override
   final HouseholdModel householdModel;
   @override
+  final String? parentClientReferenceId;
+  @override
   @JsonKey()
   final bool loading;
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.addMember(addressModel: $addressModel, householdModel: $householdModel, loading: $loading)';
+    return 'BeneficiaryRegistrationState.addMember(addressModel: $addressModel, householdModel: $householdModel, parentClientReferenceId: $parentClientReferenceId, loading: $loading)';
   }
 
   @override
@@ -4827,12 +5611,15 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
                 other.addressModel == addressModel) &&
             (identical(other.householdModel, householdModel) ||
                 other.householdModel == householdModel) &&
+            (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId) &&
             (identical(other.loading, loading) || other.loading == loading));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, addressModel, householdModel, loading);
+  int get hashCode => Object.hash(runtimeType, addressModel, householdModel,
+      parentClientReferenceId, loading);
 
   @JsonKey(ignore: true)
   @override
@@ -4850,6 +5637,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4859,6 +5647,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -4868,17 +5657,22 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)
         editIndividual,
-    required TResult Function(AddressModel addressModel,
-            HouseholdModel householdModel, bool loading)
+    required TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading)
         addMember,
     required TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4890,13 +5684,15 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
             bool isHeadOfHousehold)
         summary,
   }) {
-    return addMember(addressModel, householdModel, loading);
+    return addMember(
+        addressModel, householdModel, parentClientReferenceId, loading);
   }
 
   @override
@@ -4907,6 +5703,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4916,6 +5713,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -4925,17 +5723,19 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -4947,13 +5747,15 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
   }) {
-    return addMember?.call(addressModel, householdModel, loading);
+    return addMember?.call(
+        addressModel, householdModel, parentClientReferenceId, loading);
   }
 
   @override
@@ -4964,6 +5766,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4973,6 +5776,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -4982,17 +5786,19 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5004,6 +5810,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5012,7 +5819,8 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
     required TResult orElse(),
   }) {
     if (addMember != null) {
-      return addMember(addressModel, householdModel, loading);
+      return addMember(
+          addressModel, householdModel, parentClientReferenceId, loading);
     }
     return orElse();
   }
@@ -5075,12 +5883,15 @@ abstract class BeneficiaryRegistrationAddMemberState
   const factory BeneficiaryRegistrationAddMemberState(
       {required final AddressModel addressModel,
       required final HouseholdModel householdModel,
+      final String? parentClientReferenceId,
       final bool loading}) = _$BeneficiaryRegistrationAddMemberStateImpl;
 
   @override
   AddressModel get addressModel;
   @override
   HouseholdModel get householdModel;
+  @override
+  String? get parentClientReferenceId;
   @override
   bool get loading;
   @override
@@ -5104,6 +5915,7 @@ abstract class _$$BeneficiaryRegistrationPersistedStateImplCopyWith<$Res>
       HouseholdModel householdModel,
       IndividualModel? individualModel,
       ProjectBeneficiaryModel? projectBeneficiaryModel,
+      String? parentClientReferenceId,
       DateTime? registrationDate,
       AddressModel? addressModel,
       bool loading,
@@ -5128,6 +5940,7 @@ class __$$BeneficiaryRegistrationPersistedStateImplCopyWithImpl<$Res>
     Object? householdModel = null,
     Object? individualModel = freezed,
     Object? projectBeneficiaryModel = freezed,
+    Object? parentClientReferenceId = freezed,
     Object? registrationDate = freezed,
     Object? addressModel = freezed,
     Object? loading = null,
@@ -5151,6 +5964,10 @@ class __$$BeneficiaryRegistrationPersistedStateImplCopyWithImpl<$Res>
           ? _value.projectBeneficiaryModel
           : projectBeneficiaryModel // ignore: cast_nullable_to_non_nullable
               as ProjectBeneficiaryModel?,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       registrationDate: freezed == registrationDate
           ? _value.registrationDate
           : registrationDate // ignore: cast_nullable_to_non_nullable
@@ -5184,6 +6001,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
       required this.householdModel,
       this.individualModel,
       this.projectBeneficiaryModel,
+      this.parentClientReferenceId,
       this.registrationDate,
       this.addressModel,
       this.loading = false,
@@ -5200,6 +6018,8 @@ class _$BeneficiaryRegistrationPersistedStateImpl
   @override
   final ProjectBeneficiaryModel? projectBeneficiaryModel;
   @override
+  final String? parentClientReferenceId;
+  @override
   final DateTime? registrationDate;
   @override
   final AddressModel? addressModel;
@@ -5215,7 +6035,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.persisted(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isEdit: $isEdit, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationState.persisted(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isEdit: $isEdit, isHeadOfHousehold: $isHeadOfHousehold)';
   }
 
   @override
@@ -5232,6 +6052,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             (identical(
                     other.projectBeneficiaryModel, projectBeneficiaryModel) ||
                 other.projectBeneficiaryModel == projectBeneficiaryModel) &&
+            (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId) &&
             (identical(other.registrationDate, registrationDate) ||
                 other.registrationDate == registrationDate) &&
             (identical(other.addressModel, addressModel) ||
@@ -5249,6 +6072,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
       householdModel,
       individualModel,
       projectBeneficiaryModel,
+      parentClientReferenceId,
       registrationDate,
       addressModel,
       loading,
@@ -5271,6 +6095,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -5280,6 +6105,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -5289,17 +6115,22 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)
         editIndividual,
-    required TResult Function(AddressModel addressModel,
-            HouseholdModel householdModel, bool loading)
+    required TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading)
         addMember,
     required TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5311,6 +6142,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5322,6 +6154,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         householdModel,
         individualModel,
         projectBeneficiaryModel,
+        parentClientReferenceId,
         registrationDate,
         addressModel,
         loading,
@@ -5337,6 +6170,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -5346,6 +6180,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -5355,17 +6190,19 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5377,6 +6214,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5388,6 +6226,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         householdModel,
         individualModel,
         projectBeneficiaryModel,
+        parentClientReferenceId,
         registrationDate,
         addressModel,
         loading,
@@ -5403,6 +6242,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -5412,6 +6252,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -5421,17 +6262,19 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5443,6 +6286,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5456,6 +6300,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
           householdModel,
           individualModel,
           projectBeneficiaryModel,
+          parentClientReferenceId,
           registrationDate,
           addressModel,
           loading,
@@ -5525,6 +6370,7 @@ abstract class BeneficiaryRegistrationPersistedState
           required final HouseholdModel householdModel,
           final IndividualModel? individualModel,
           final ProjectBeneficiaryModel? projectBeneficiaryModel,
+          final String? parentClientReferenceId,
           final DateTime? registrationDate,
           final AddressModel? addressModel,
           final bool loading,
@@ -5537,6 +6383,8 @@ abstract class BeneficiaryRegistrationPersistedState
   HouseholdModel get householdModel;
   IndividualModel? get individualModel;
   ProjectBeneficiaryModel? get projectBeneficiaryModel;
+  @override
+  String? get parentClientReferenceId;
   DateTime? get registrationDate;
   @override
   AddressModel? get addressModel;
@@ -5565,6 +6413,7 @@ abstract class _$$BeneficiaryRegistrationSummaryStateImplCopyWith<$Res>
       HouseholdModel? householdModel,
       IndividualModel? individualModel,
       ProjectBeneficiaryModel? projectBeneficiaryModel,
+      String? parentClientReferenceId,
       DateTime? registrationDate,
       AddressModel? addressModel,
       bool loading,
@@ -5588,6 +6437,7 @@ class __$$BeneficiaryRegistrationSummaryStateImplCopyWithImpl<$Res>
     Object? householdModel = freezed,
     Object? individualModel = freezed,
     Object? projectBeneficiaryModel = freezed,
+    Object? parentClientReferenceId = freezed,
     Object? registrationDate = freezed,
     Object? addressModel = freezed,
     Object? loading = null,
@@ -5610,6 +6460,10 @@ class __$$BeneficiaryRegistrationSummaryStateImplCopyWithImpl<$Res>
           ? _value.projectBeneficiaryModel
           : projectBeneficiaryModel // ignore: cast_nullable_to_non_nullable
               as ProjectBeneficiaryModel?,
+      parentClientReferenceId: freezed == parentClientReferenceId
+          ? _value.parentClientReferenceId
+          : parentClientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       registrationDate: freezed == registrationDate
           ? _value.registrationDate
           : registrationDate // ignore: cast_nullable_to_non_nullable
@@ -5639,6 +6493,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
       this.householdModel,
       this.individualModel,
       this.projectBeneficiaryModel,
+      this.parentClientReferenceId,
       this.registrationDate,
       this.addressModel,
       this.loading = false,
@@ -5654,6 +6509,8 @@ class _$BeneficiaryRegistrationSummaryStateImpl
   @override
   final ProjectBeneficiaryModel? projectBeneficiaryModel;
   @override
+  final String? parentClientReferenceId;
+  @override
   final DateTime? registrationDate;
   @override
   final AddressModel? addressModel;
@@ -5666,7 +6523,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.summary(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationState.summary(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
   }
 
   @override
@@ -5683,6 +6540,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             (identical(
                     other.projectBeneficiaryModel, projectBeneficiaryModel) ||
                 other.projectBeneficiaryModel == projectBeneficiaryModel) &&
+            (identical(
+                    other.parentClientReferenceId, parentClientReferenceId) ||
+                other.parentClientReferenceId == parentClientReferenceId) &&
             (identical(other.registrationDate, registrationDate) ||
                 other.registrationDate == registrationDate) &&
             (identical(other.addressModel, addressModel) ||
@@ -5699,6 +6559,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
       householdModel,
       individualModel,
       projectBeneficiaryModel,
+      parentClientReferenceId,
       registrationDate,
       addressModel,
       loading,
@@ -5720,6 +6581,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -5729,6 +6591,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -5738,17 +6601,22 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)
         editIndividual,
-    required TResult Function(AddressModel addressModel,
-            HouseholdModel householdModel, bool loading)
+    required TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading)
         addMember,
     required TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5760,6 +6628,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5771,6 +6640,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
         householdModel,
         individualModel,
         projectBeneficiaryModel,
+        parentClientReferenceId,
         registrationDate,
         addressModel,
         loading,
@@ -5785,6 +6655,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -5794,6 +6665,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -5803,17 +6675,19 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5825,6 +6699,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5836,6 +6711,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
         householdModel,
         individualModel,
         projectBeneficiaryModel,
+        parentClientReferenceId,
         registrationDate,
         addressModel,
         loading,
@@ -5850,6 +6726,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -5859,6 +6736,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             AddressModel addressModel,
             HouseholdModel householdModel,
             List<IndividualModel> individualModel,
+            String? parentClientReferenceId,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
@@ -5868,17 +6746,19 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             HouseholdModel householdModel,
             IndividualModel individualModel,
             AddressModel addressModel,
+            String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading)?
         editIndividual,
     TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            bool loading)?
+            String? parentClientReferenceId, bool loading)?
         addMember,
     TResult Function(
             bool navigateToRoot,
             HouseholdModel householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5890,6 +6770,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
+            String? parentClientReferenceId,
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
@@ -5903,6 +6784,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
           householdModel,
           individualModel,
           projectBeneficiaryModel,
+          parentClientReferenceId,
           registrationDate,
           addressModel,
           loading,
@@ -5971,6 +6853,7 @@ abstract class BeneficiaryRegistrationSummaryState
           final HouseholdModel? householdModel,
           final IndividualModel? individualModel,
           final ProjectBeneficiaryModel? projectBeneficiaryModel,
+          final String? parentClientReferenceId,
           final DateTime? registrationDate,
           final AddressModel? addressModel,
           final bool loading,
@@ -5982,6 +6865,8 @@ abstract class BeneficiaryRegistrationSummaryState
   HouseholdModel? get householdModel;
   IndividualModel? get individualModel;
   ProjectBeneficiaryModel? get projectBeneficiaryModel;
+  @override
+  String? get parentClientReferenceId;
   DateTime? get registrationDate;
   @override
   AddressModel? get addressModel;
