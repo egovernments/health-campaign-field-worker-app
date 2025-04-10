@@ -742,16 +742,18 @@ class _HouseholdOverviewPageState
                                               : null;
 
                                           final childBeneficiaries = (state.householdMemberWrapper.members
-                                              ?.where((m) {
+                                              ?.where((childMem) {
 
-                                                final parentBeneficiary = state.householdMemberWrapper.householdMembers?.where((element) => element.individualClientReferenceId == m.clientReferenceId).firstOrNull;
+                                                final parentBeneficiary = state.householdMemberWrapper.householdMembers?.where((element) => element.individualClientReferenceId == e.clientReferenceId).firstOrNull;
 
-                                            final isChild = state.householdMemberWrapper.householdMembers
-                                                ?.any((member) =>
-                                            (member.relationships?.any((rel) =>
-                                            rel.relativeClientReferenceId == parentBeneficiary?.clientReferenceId
-                                            )) ?? false);
-                                            return (isChild ?? false); // Only include if not a child
+                                                final isChild = state.householdMemberWrapper.householdMembers
+                                                    ?.any((member) =>
+                                                member.individualClientReferenceId == childMem.clientReferenceId &&
+                                                    (member.relationships?.any(
+                                                          (rel) => rel.relativeClientReferenceId == parentBeneficiary?.clientReferenceId,
+                                                    ) ??
+                                                        false));
+                                            return (isChild ?? false); // Only include if it is a child
                                           }).toList() ?? []);
 
                                           final individualChecklist = state.householdMemberWrapper.individualChecklists?.firstWhereOrNull((element) => element.referenceId == e.clientReferenceId);
