@@ -227,9 +227,14 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                       final parentBeneficiary = state.householdMemberWrapper.householdMembers?.where((element) => element.individualClientReferenceId == state.selectedIndividual?.clientReferenceId).firstOrNull;
                                       // Check if any other member has this member as parent
                                       final hasChild = state.householdMemberWrapper.householdMembers
-                                          ?.any((member) => member.relationships?.any(
-                                            (relation) => relation.relativeClientReferenceId == parentBeneficiary?.clientReferenceId,
-                                      ) ?? false);
+                                          ?.any((member) =>
+                                      member.individualClientReferenceId == m.clientReferenceId &&
+                                          (member.relationships?.any(
+                                                (relation) =>
+                                            relation.relativeClientReferenceId ==
+                                                parentBeneficiary?.clientReferenceId,
+                                          ) ??
+                                              false));
                                       return (hasChild ?? false);
                                     }) ??
                                         [])
@@ -535,15 +540,24 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
               RegistrationDeliverySingleton().beneficiaryType!,
         ),
       );
+      final parentClientReferenceId = bloc
+          .state.householdMemberWrapper.householdMembers
+          ?.where((e) =>
+      e.individualClientReferenceId ==
+          individual.clientReferenceId)
+          .firstOrNull
+          ?.clientReferenceId;
+
       await context.router.root.push(
         BeneficiaryRegistrationWrapperRoute(
           initialState: BeneficiaryRegistrationAddMemberState(
             addressModel: address,
             householdModel: household,
+            parentClientReferenceId: parentClientReferenceId
           ),
           children: [
             IndividualDetailsRoute(
-                parentClientReferenceId: individual.clientReferenceId),
+                parentClientReferenceId: parentClientReferenceId),
           ],
         ),
       );
