@@ -1,5 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:math';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
@@ -189,7 +190,7 @@ class BeneficiaryRegistrationBloc
                 createdTime: DateTime.now().millisecondsSinceEpoch,
               ),
             ),
-            isHeadOfHousehold: value.isHeadOfHousehold));
+            isHeadOfHousehold: value.isHeadOfHousehold, parentClientReferenceId: event.parentClientReferenceId));
       },
     );
   }
@@ -271,8 +272,10 @@ class BeneficiaryRegistrationBloc
                 relationshipType: RegistrationDeliverySingleton()
                     .memberRelationTypeOptions
                     ?.first,
+                clientReferenceId: IdGen.i.identifier,
                 relativeClientReferenceId: event.parentClientReferenceId,
                 selfIdClientReferenceId: individual.clientReferenceId,
+                tenantId: RegistrationDeliverySingleton().tenantId,
               );
             }
 
@@ -305,6 +308,7 @@ class BeneficiaryRegistrationBloc
                 householdModel: household,
                 addressModel: address,
                 individualModel: individual,
+                parentClientReferenceId: event.parentClientReferenceId,
               ),
             );
           }
@@ -342,14 +346,17 @@ class BeneficiaryRegistrationBloc
           final code = event.boundary.code;
           final name = event.boundary.name;
 
+          final memberClientReferenceId = IdGen.i.identifier;
           HouseholdMemberRelationShipModel? relationship;
           if (event.parentClientReferenceId != null) {
             relationship = HouseholdMemberRelationShipModel(
               relationshipType: RegistrationDeliverySingleton()
                   .memberRelationTypeOptions
                   ?.first,
+              clientReferenceId: IdGen.i.identifier,
               relativeClientReferenceId: event.parentClientReferenceId,
-              selfIdClientReferenceId: individual.clientReferenceId,
+              selfIdClientReferenceId: memberClientReferenceId,
+              tenantId: RegistrationDeliverySingleton().tenantId,
             );
           }
 
@@ -391,7 +398,7 @@ class BeneficiaryRegistrationBloc
               isHeadOfHousehold: value.isHeadOfHousehold,
               tenantId: RegistrationDeliverySingleton().tenantId,
               rowVersion: 1,
-              clientReferenceId: IdGen.i.identifier,
+              clientReferenceId: memberClientReferenceId,
               clientAuditDetails: ClientAuditDetails(
                 createdTime: createdAt,
                 lastModifiedTime: initialModifiedAt,
@@ -415,6 +422,7 @@ class BeneficiaryRegistrationBloc
               householdModel: household,
               addressModel: address,
               individualModel: individual,
+              parentClientReferenceId: event.parentClientReferenceId
             ),
           );
         }
@@ -692,15 +700,18 @@ class BeneficiaryRegistrationBloc
             );
           }
 
+          final memberClientReferenceId = IdGen.i.identifier;
+
           HouseholdMemberRelationShipModel? relationship;
           if (event.parentClientReferenceId != null) {
             relationship = HouseholdMemberRelationShipModel(
               relationshipType: RegistrationDeliverySingleton()
                   .memberRelationTypeOptions
                   ?.first,
+              clientReferenceId: IdGen.i.identifier,
               relativeClientReferenceId: event.parentClientReferenceId,
-              selfIdClientReferenceId: event.individualModel.clientReferenceId,
-              // tenantId: RegistrationDeliverySingleton().tenantId,
+              selfIdClientReferenceId: memberClientReferenceId,
+              tenantId: RegistrationDeliverySingleton().tenantId,
             );
           }
 
@@ -713,7 +724,7 @@ class BeneficiaryRegistrationBloc
               isHeadOfHousehold: false,
               tenantId: RegistrationDeliverySingleton().tenantId,
               rowVersion: 1,
-              clientReferenceId: IdGen.i.identifier,
+              clientReferenceId: memberClientReferenceId,
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
                 createdTime: createdAt,
@@ -733,6 +744,7 @@ class BeneficiaryRegistrationBloc
           emit(value.copyWith(loading: false));
           emit(BeneficiaryRegistrationPersistedState(
             householdModel: value.householdModel,
+            parentClientReferenceId: event.parentClientReferenceId,
           ));
         }
       },

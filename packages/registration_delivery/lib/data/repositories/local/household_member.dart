@@ -4,6 +4,7 @@ import 'package:digit_data_model/data/local_store/sql_store/tables/package_table
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/household_member_relationship.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 class HouseholdMemberLocalRepository
@@ -64,45 +65,81 @@ class HouseholdMemberLocalRepository
             ))
           .get();
 
-      return results
-          .map((e) {
-            final householdMember = e.readTable(sql.householdMember);
+      final List<HouseholdMemberModel> householdMembers = [];
 
-            return HouseholdMemberModel(
-              id: householdMember.id,
-              householdId: householdMember.householdId,
-              householdClientReferenceId:
-                  householdMember.householdClientReferenceId,
-              individualId: householdMember.individualId,
-              individualClientReferenceId:
-                  householdMember.individualClientReferenceId,
-              isHeadOfHousehold: householdMember.isHeadOfHousehold,
-              isDeleted: householdMember.isDeleted,
-              tenantId: householdMember.tenantId,
-              rowVersion: householdMember.rowVersion,
-              auditDetails: (householdMember.auditCreatedBy != null &&
-                      householdMember.auditCreatedTime != null)
-                  ? AuditDetails(
-                      createdBy: householdMember.auditCreatedBy!,
-                      createdTime: householdMember.auditCreatedTime!,
-                      lastModifiedBy: householdMember.auditModifiedBy,
-                      lastModifiedTime: householdMember.auditModifiedTime,
-                    )
-                  : null,
-              clientAuditDetails: (householdMember.clientCreatedBy != null &&
-                      householdMember.clientCreatedTime != null)
-                  ? ClientAuditDetails(
-                      createdBy: householdMember.clientCreatedBy!,
-                      createdTime: householdMember.clientCreatedTime!,
-                      lastModifiedBy: householdMember.clientModifiedBy,
-                      lastModifiedTime: householdMember.clientModifiedTime,
-                    )
-                  : null,
-              clientReferenceId: householdMember.clientReferenceId,
-            );
-          })
-          .where((element) => element.isDeleted != true)
-          .toList();
+      for (final e in results) {
+        final householdMember = e.readTable(sql.householdMember);
+
+        // Fetch relationships based on individualClientReferenceId
+        final selectRelationshipQuery = sql.select(sql.householdMemberRelationShip).join([]);
+        final all = await sql.select(sql.householdMemberRelationShip).get();
+        for (final row in all) {
+          print("In table: |${row.selfIdClientReferenceId}|");
+        }
+
+        final val = await (sql.select(sql.householdMemberRelationShip)
+          ..where(
+                (tbl) => tbl.selfIdClientReferenceId.equals(
+              householdMember.clientReferenceId ?? '',
+            ),
+          ))
+            .get();
+
+        final res = val
+            .map((relation) {
+
+          return HouseholdMemberRelationShipModel(
+            selfIdClientReferenceId: relation.selfIdClientReferenceId,
+            relationshipType: relation.relationshipType,
+            relativeClientReferenceId: relation.relativeClientReferenceId,
+            tenantId: relation.tenantId,
+            isDeleted: relation.isDeleted,
+            rowVersion: relation.rowVersion,
+            clientReferenceId: relation.clientReferenceId,
+            additionalFields: relation.additionalFields != null
+                ? HouseholdMemberRelationShipAdditionalFieldsMapper.fromJson(
+                relation.additionalFields!)
+                : null,
+          );
+                  return null;
+        }).whereType<HouseholdMemberRelationShipModel>().toList();
+
+        householdMembers.add(
+          HouseholdMemberModel(
+            id: householdMember.id,
+            householdId: householdMember.householdId,
+            householdClientReferenceId: householdMember.householdClientReferenceId,
+            individualId: householdMember.individualId,
+            individualClientReferenceId: householdMember.individualClientReferenceId,
+            isHeadOfHousehold: householdMember.isHeadOfHousehold,
+            isDeleted: householdMember.isDeleted,
+            tenantId: householdMember.tenantId,
+            rowVersion: householdMember.rowVersion,
+            auditDetails: (householdMember.auditCreatedBy != null &&
+                householdMember.auditCreatedTime != null)
+                ? AuditDetails(
+              createdBy: householdMember.auditCreatedBy!,
+              createdTime: householdMember.auditCreatedTime!,
+              lastModifiedBy: householdMember.auditModifiedBy,
+              lastModifiedTime: householdMember.auditModifiedTime,
+            )
+                : null,
+            clientAuditDetails: (householdMember.clientCreatedBy != null &&
+                householdMember.clientCreatedTime != null)
+                ? ClientAuditDetails(
+              createdBy: householdMember.clientCreatedBy!,
+              createdTime: householdMember.clientCreatedTime!,
+              lastModifiedBy: householdMember.clientModifiedBy,
+              lastModifiedTime: householdMember.clientModifiedTime,
+            )
+                : null,
+            clientReferenceId: householdMember.clientReferenceId,
+            relationships: res,
+          ),
+        );
+      }
+
+      return householdMembers.where((element) => element.isDeleted != true).toList();
     });
   }
 
@@ -114,8 +151,18 @@ class HouseholdMemberLocalRepository
   }) async {
     return retryLocalCallOperation(() async {
       final householdMemberCompanion = entity.companion;
+      final relationshipCompanions =
+      entity.relationships?.map((e) => e.companion).toList();
+
       await sql.batch((batch) {
         batch.insert(sql.householdMember, householdMemberCompanion);
+        if (relationshipCompanions != null && relationshipCompanions.isNotEmpty) {
+          batch.insertAll(
+            sql.householdMemberRelationShip,
+            relationshipCompanions,
+            mode: InsertMode.insertOrReplace,
+          );
+        }
       });
 
       await super.create(entity);

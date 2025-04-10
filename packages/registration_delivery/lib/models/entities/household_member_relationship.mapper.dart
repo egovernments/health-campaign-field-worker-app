@@ -50,6 +50,12 @@ class HouseholdMemberRelationShipSearchModelMapper
   static const Field<HouseholdMemberRelationShipSearchModel, String>
       _f$relationshipType =
       Field('relationshipType', _$relationshipType, opt: true);
+  static List<String>? _$clientReferenceIds(
+          HouseholdMemberRelationShipSearchModel v) =>
+      v.clientReferenceIds;
+  static const Field<HouseholdMemberRelationShipSearchModel, List<String>>
+      _f$clientReferenceIds =
+      Field('clientReferenceIds', _$clientReferenceIds, opt: true);
   static String? _$boundaryCode(HouseholdMemberRelationShipSearchModel v) =>
       v.boundaryCode;
   static const Field<HouseholdMemberRelationShipSearchModel, String>
@@ -75,6 +81,7 @@ class HouseholdMemberRelationShipSearchModelMapper
     #relativeId: _f$relativeId,
     #relativeClientReferenceId: _f$relativeClientReferenceId,
     #relationshipType: _f$relationshipType,
+    #clientReferenceIds: _f$clientReferenceIds,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -99,6 +106,7 @@ class HouseholdMemberRelationShipSearchModelMapper
         relativeId: data.dec(_f$relativeId),
         relativeClientReferenceId: data.dec(_f$relativeClientReferenceId),
         relationshipType: data.dec(_f$relationshipType),
+        clientReferenceIds: data.dec(_f$clientReferenceIds),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -167,6 +175,8 @@ abstract class HouseholdMemberRelationShipSearchModelCopyWith<
     $R,
     $In extends HouseholdMemberRelationShipSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceIds;
   @override
   $R call(
       {String? id,
@@ -175,6 +185,7 @@ abstract class HouseholdMemberRelationShipSearchModelCopyWith<
       String? relativeId,
       String? relativeClientReferenceId,
       String? relationshipType,
+      List<String>? clientReferenceIds,
       String? boundaryCode});
   HouseholdMemberRelationShipSearchModelCopyWith<$R2, $In, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -192,6 +203,14 @@ class _HouseholdMemberRelationShipSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<HouseholdMemberRelationShipSearchModel> $mapper =
       HouseholdMemberRelationShipSearchModelMapper.ensureInitialized();
   @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceIds => $value.clientReferenceIds != null
+          ? ListCopyWith(
+              $value.clientReferenceIds!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(clientReferenceIds: v))
+          : null;
+  @override
   $R call(
           {Object? id = $none,
           Object? selfId = $none,
@@ -199,6 +218,7 @@ class _HouseholdMemberRelationShipSearchModelCopyWithImpl<$R, $Out>
           Object? relativeId = $none,
           Object? relativeClientReferenceId = $none,
           Object? relationshipType = $none,
+          Object? clientReferenceIds = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
@@ -209,6 +229,8 @@ class _HouseholdMemberRelationShipSearchModelCopyWithImpl<$R, $Out>
         if (relativeClientReferenceId != $none)
           #relativeClientReferenceId: relativeClientReferenceId,
         if (relationshipType != $none) #relationshipType: relationshipType,
+        if (clientReferenceIds != $none)
+          #clientReferenceIds: clientReferenceIds,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -223,6 +245,8 @@ class _HouseholdMemberRelationShipSearchModelCopyWithImpl<$R, $Out>
               or: $value.relativeClientReferenceId),
           relationshipType:
               data.get(#relationshipType, or: $value.relationshipType),
+          clientReferenceIds:
+              data.get(#clientReferenceIds, or: $value.clientReferenceIds),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -266,6 +290,10 @@ class HouseholdMemberRelationShipModelMapper
   static const Field<HouseholdMemberRelationShipModel, String>
       _f$selfIdClientReferenceId =
       Field('selfIdClientReferenceId', _$selfIdClientReferenceId, opt: true);
+  static String _$clientReferenceId(HouseholdMemberRelationShipModel v) =>
+      v.clientReferenceId;
+  static const Field<HouseholdMemberRelationShipModel, String>
+      _f$clientReferenceId = Field('clientReferenceId', _$clientReferenceId);
   static String? _$relativeId(HouseholdMemberRelationShipModel v) =>
       v.relativeId;
   static const Field<HouseholdMemberRelationShipModel, String> _f$relativeId =
@@ -308,6 +336,7 @@ class HouseholdMemberRelationShipModelMapper
     #id: _f$id,
     #selfId: _f$selfId,
     #selfIdClientReferenceId: _f$selfIdClientReferenceId,
+    #clientReferenceId: _f$clientReferenceId,
     #relativeId: _f$relativeId,
     #relativeClientReferenceId: _f$relativeClientReferenceId,
     #relationshipType: _f$relationshipType,
@@ -334,6 +363,7 @@ class HouseholdMemberRelationShipModelMapper
         id: data.dec(_f$id),
         selfId: data.dec(_f$selfId),
         selfIdClientReferenceId: data.dec(_f$selfIdClientReferenceId),
+        clientReferenceId: data.dec(_f$clientReferenceId),
         relativeId: data.dec(_f$relativeId),
         relativeClientReferenceId: data.dec(_f$relativeClientReferenceId),
         relationshipType: data.dec(_f$relationshipType),
@@ -420,6 +450,7 @@ abstract class HouseholdMemberRelationShipModelCopyWith<
       String? id,
       String? selfId,
       String? selfIdClientReferenceId,
+      String? clientReferenceId,
       String? relativeId,
       String? relativeClientReferenceId,
       String? relationshipType,
@@ -463,6 +494,7 @@ class _HouseholdMemberRelationShipModelCopyWithImpl<$R, $Out>
           Object? id = $none,
           Object? selfId = $none,
           Object? selfIdClientReferenceId = $none,
+          String? clientReferenceId,
           Object? relativeId = $none,
           Object? relativeClientReferenceId = $none,
           Object? relationshipType = $none,
@@ -477,6 +509,7 @@ class _HouseholdMemberRelationShipModelCopyWithImpl<$R, $Out>
         if (selfId != $none) #selfId: selfId,
         if (selfIdClientReferenceId != $none)
           #selfIdClientReferenceId: selfIdClientReferenceId,
+        if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
         if (relativeId != $none) #relativeId: relativeId,
         if (relativeClientReferenceId != $none)
           #relativeClientReferenceId: relativeClientReferenceId,
@@ -492,12 +525,17 @@ class _HouseholdMemberRelationShipModelCopyWithImpl<$R, $Out>
   HouseholdMemberRelationShipModel $make(
           CopyWithData data) =>
       HouseholdMemberRelationShipModel(
-          additionalFields:
-              data.get(#additionalFields, or: $value.additionalFields),
+          additionalFields: data.get(
+              #additionalFields,
+              or: $value.additionalFields),
           id: data.get(#id, or: $value.id),
           selfId: data.get(#selfId, or: $value.selfId),
-          selfIdClientReferenceId: data.get(#selfIdClientReferenceId,
-              or: $value.selfIdClientReferenceId),
+          selfIdClientReferenceId:
+              data
+                  .get(#selfIdClientReferenceId,
+                      or: $value.selfIdClientReferenceId),
+          clientReferenceId:
+              data.get(#clientReferenceId, or: $value.clientReferenceId),
           relativeId: data.get(#relativeId, or: $value.relativeId),
           relativeClientReferenceId: data.get(#relativeClientReferenceId,
               or: $value.relativeClientReferenceId),

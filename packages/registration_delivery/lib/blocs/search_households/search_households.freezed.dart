@@ -2677,6 +2677,8 @@ mixin _$HouseholdMemberWrapper {
   HouseholdModel? get household => throw _privateConstructorUsedError;
   IndividualModel? get headOfHousehold => throw _privateConstructorUsedError;
   List<IndividualModel>? get members => throw _privateConstructorUsedError;
+  List<HouseholdMemberModel>? get householdMembers =>
+      throw _privateConstructorUsedError; //household members>
   List<ProjectBeneficiaryModel>? get projectBeneficiaries =>
       throw _privateConstructorUsedError;
   double? get distance => throw _privateConstructorUsedError;
@@ -2703,6 +2705,7 @@ abstract class $HouseholdMemberWrapperCopyWith<$Res> {
       {HouseholdModel? household,
       IndividualModel? headOfHousehold,
       List<IndividualModel>? members,
+      List<HouseholdMemberModel>? householdMembers,
       List<ProjectBeneficiaryModel>? projectBeneficiaries,
       double? distance,
       List<TaskModel>? tasks,
@@ -2729,6 +2732,7 @@ class _$HouseholdMemberWrapperCopyWithImpl<$Res,
     Object? household = freezed,
     Object? headOfHousehold = freezed,
     Object? members = freezed,
+    Object? householdMembers = freezed,
     Object? projectBeneficiaries = freezed,
     Object? distance = freezed,
     Object? tasks = freezed,
@@ -2750,6 +2754,10 @@ class _$HouseholdMemberWrapperCopyWithImpl<$Res,
           ? _value.members
           : members // ignore: cast_nullable_to_non_nullable
               as List<IndividualModel>?,
+      householdMembers: freezed == householdMembers
+          ? _value.householdMembers
+          : householdMembers // ignore: cast_nullable_to_non_nullable
+              as List<HouseholdMemberModel>?,
       projectBeneficiaries: freezed == projectBeneficiaries
           ? _value.projectBeneficiaries
           : projectBeneficiaries // ignore: cast_nullable_to_non_nullable
@@ -2795,6 +2803,7 @@ abstract class _$$HouseholdMemberWrapperImplCopyWith<$Res>
       {HouseholdModel? household,
       IndividualModel? headOfHousehold,
       List<IndividualModel>? members,
+      List<HouseholdMemberModel>? householdMembers,
       List<ProjectBeneficiaryModel>? projectBeneficiaries,
       double? distance,
       List<TaskModel>? tasks,
@@ -2820,6 +2829,7 @@ class __$$HouseholdMemberWrapperImplCopyWithImpl<$Res>
     Object? household = freezed,
     Object? headOfHousehold = freezed,
     Object? members = freezed,
+    Object? householdMembers = freezed,
     Object? projectBeneficiaries = freezed,
     Object? distance = freezed,
     Object? tasks = freezed,
@@ -2841,6 +2851,10 @@ class __$$HouseholdMemberWrapperImplCopyWithImpl<$Res>
           ? _value._members
           : members // ignore: cast_nullable_to_non_nullable
               as List<IndividualModel>?,
+      householdMembers: freezed == householdMembers
+          ? _value._householdMembers
+          : householdMembers // ignore: cast_nullable_to_non_nullable
+              as List<HouseholdMemberModel>?,
       projectBeneficiaries: freezed == projectBeneficiaries
           ? _value._projectBeneficiaries
           : projectBeneficiaries // ignore: cast_nullable_to_non_nullable
@@ -2880,6 +2894,7 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
       {this.household,
       this.headOfHousehold,
       final List<IndividualModel>? members,
+      final List<HouseholdMemberModel>? householdMembers,
       final List<ProjectBeneficiaryModel>? projectBeneficiaries,
       this.distance,
       final List<TaskModel>? tasks,
@@ -2888,6 +2903,7 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
       final List<ServiceModel>? householdChecklists,
       final List<ServiceModel>? individualChecklists})
       : _members = members,
+        _householdMembers = householdMembers,
         _projectBeneficiaries = projectBeneficiaries,
         _tasks = tasks,
         _sideEffects = sideEffects,
@@ -2909,7 +2925,20 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<HouseholdMemberModel>? _householdMembers;
+  @override
+  List<HouseholdMemberModel>? get householdMembers {
+    final value = _householdMembers;
+    if (value == null) return null;
+    if (_householdMembers is EqualUnmodifiableListView)
+      return _householdMembers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+//household members>
   final List<ProjectBeneficiaryModel>? _projectBeneficiaries;
+//household members>
   @override
   List<ProjectBeneficiaryModel>? get projectBeneficiaries {
     final value = _projectBeneficiaries;
@@ -2976,7 +3005,7 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
 
   @override
   String toString() {
-    return 'HouseholdMemberWrapper(household: $household, headOfHousehold: $headOfHousehold, members: $members, projectBeneficiaries: $projectBeneficiaries, distance: $distance, tasks: $tasks, sideEffects: $sideEffects, referrals: $referrals, householdChecklists: $householdChecklists, individualChecklists: $individualChecklists)';
+    return 'HouseholdMemberWrapper(household: $household, headOfHousehold: $headOfHousehold, members: $members, householdMembers: $householdMembers, projectBeneficiaries: $projectBeneficiaries, distance: $distance, tasks: $tasks, sideEffects: $sideEffects, referrals: $referrals, householdChecklists: $householdChecklists, individualChecklists: $individualChecklists)';
   }
 
   @override
@@ -2989,6 +3018,8 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
             (identical(other.headOfHousehold, headOfHousehold) ||
                 other.headOfHousehold == headOfHousehold) &&
             const DeepCollectionEquality().equals(other._members, _members) &&
+            const DeepCollectionEquality()
+                .equals(other._householdMembers, _householdMembers) &&
             const DeepCollectionEquality()
                 .equals(other._projectBeneficiaries, _projectBeneficiaries) &&
             (identical(other.distance, distance) ||
@@ -3010,6 +3041,7 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
       household,
       headOfHousehold,
       const DeepCollectionEquality().hash(_members),
+      const DeepCollectionEquality().hash(_householdMembers),
       const DeepCollectionEquality().hash(_projectBeneficiaries),
       distance,
       const DeepCollectionEquality().hash(_tasks),
@@ -3031,6 +3063,7 @@ abstract class _HouseholdMemberWrapper implements HouseholdMemberWrapper {
           {final HouseholdModel? household,
           final IndividualModel? headOfHousehold,
           final List<IndividualModel>? members,
+          final List<HouseholdMemberModel>? householdMembers,
           final List<ProjectBeneficiaryModel>? projectBeneficiaries,
           final double? distance,
           final List<TaskModel>? tasks,
@@ -3047,6 +3080,8 @@ abstract class _HouseholdMemberWrapper implements HouseholdMemberWrapper {
   @override
   List<IndividualModel>? get members;
   @override
+  List<HouseholdMemberModel>? get householdMembers;
+  @override //household members>
   List<ProjectBeneficiaryModel>? get projectBeneficiaries;
   @override
   double? get distance;

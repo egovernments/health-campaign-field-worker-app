@@ -657,9 +657,14 @@ class _HouseholdOverviewPageState
                                         : const Offstage(),
                                     Column(
                                       children: (state.householdMemberWrapper.members
-                                          ?.where((m) => m.additionalFields == null ||
-                                          !m.additionalFields!.fields.any((field) => field.key == 'parentClientReferenceId'))
-                                          ?? [])
+                                          ?.where((m) {
+                                        // Identify if this member is a "child" in any other member's relationships
+                                        final isChild = state.householdMemberWrapper.householdMembers
+                                            ?.any((member) =>
+                                        member.relationships != null && member.relationships!.isNotEmpty && member.individualClientReferenceId == m.clientReferenceId);
+
+                                        return !(isChild ?? false); // Only show if not a child
+                                      }).toList() ?? [])
                                           .map(
                                         (e) {
                                           final isHead = state
@@ -736,10 +741,18 @@ class _HouseholdOverviewPageState
                                                   .toList()
                                               : null;
 
-                                          final childBeneficiaries = state.householdMemberWrapper.members
-                                              ?.where((m) => m.additionalFields != null &&
-                                                  m.additionalFields!.fields.any((field) => field.key == 'parentClientReferenceId' && field.value == e.clientReferenceId))
-                                              .toList();
+                                          final childBeneficiaries = (state.householdMemberWrapper.members
+                                              ?.where((m) {
+
+                                                final parentBeneficiary = state.householdMemberWrapper.householdMembers?.where((element) => element.individualClientReferenceId == m.clientReferenceId).firstOrNull;
+
+                                            final isChild = state.householdMemberWrapper.householdMembers
+                                                ?.any((member) =>
+                                            (member.relationships?.any((rel) =>
+                                            rel.relativeClientReferenceId == parentBeneficiary?.clientReferenceId
+                                            )) ?? false);
+                                            return (isChild ?? false); // Only include if not a child
+                                          }).toList() ?? []);
 
                                           final individualChecklist = state.householdMemberWrapper.individualChecklists?.firstWhereOrNull((element) => element.referenceId == e.clientReferenceId);
 

@@ -1,3 +1,8 @@
+## 1.0.6+3
+
+  * Added Checklist for household and individual page
+  * added member relationship model and db
+  
 ## 1.0.6+2
 
 * BugFix:

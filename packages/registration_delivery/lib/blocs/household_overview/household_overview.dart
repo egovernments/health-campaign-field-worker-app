@@ -49,7 +49,7 @@ class HouseholdOverviewBloc
     required this.referralDataRepository,
     required this.beneficiaryType,
     required this.individualGlobalSearchRepository,
-        required this.serviceDataRepository,
+    required this.serviceDataRepository,
   }) {
     on(_handleDeleteHousehold);
     on(_handleDeleteIndividual);
@@ -208,11 +208,13 @@ class HouseholdOverviewBloc
             .toList(),
       ));
 
-      final householdChecklist = await serviceDataRepository.search(ServiceSearchModel(
+      final householdChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
         referenceIds: [resultHousehold.clientReferenceId],
       ));
 
-      final memberChecklist = await serviceDataRepository.search(ServiceSearchModel(
+      final memberChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
         referenceIds: members
             .map((e) => e.individualClientReferenceId)
             .whereNotNull()
@@ -262,7 +264,10 @@ class HouseholdOverviewBloc
               ...?state.householdMemberWrapper.referrals,
               ...referrals,
             ],
-
+            householdMembers: [
+              ...?state.householdMemberWrapper.householdMembers,
+              ...householdMemberList
+            ],
             householdChecklists: [
               ...?state.householdMemberWrapper.householdChecklists,
               ...householdChecklist,
@@ -290,6 +295,7 @@ class HouseholdOverviewBloc
             projectBeneficiaries: projectBeneficiaries,
             sideEffects: sideEffects,
             referrals: referrals,
+            householdMembers: householdMemberList,
             householdChecklists: householdChecklist,
             individualChecklists: memberChecklist,
           ),
@@ -561,6 +567,14 @@ class HouseholdOverviewBloc
                       ...sideEffects,
                     },
                   ],
+            householdMembers: event.offset == 0
+                ? householdMemberList
+                : [
+              ...{
+                ...?state.householdMemberWrapper.householdMembers,
+                ...householdMemberList,
+              },
+            ],
             referrals: event.offset == 0
                 ? referrals
                 : [
