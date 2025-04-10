@@ -139,6 +139,7 @@ class SearchHouseholdsBloc
           household: event.householdModel,
           headOfHousehold: headOfHousehold,
           members: individuals,
+          householdMembers: householdMembers,
           projectBeneficiaries: projectBeneficiaries,
           tasks: tasks.isNotEmpty ? tasks : null,
           sideEffects: sideEffects.isNotEmpty ? sideEffects : null,
@@ -326,6 +327,7 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     HouseholdModel? household,
     IndividualModel? headOfHousehold,
     List<IndividualModel>? members,
+    List<HouseholdMemberModel>? householdMembers, //household members>
     List<ProjectBeneficiaryModel>? projectBeneficiaries,
     double? distance,
     List<TaskModel>? tasks,

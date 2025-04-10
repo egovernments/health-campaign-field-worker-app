@@ -34909,6 +34909,18 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
   late final GeneratedColumn<String> relationshipType = GeneratedColumn<String>(
       'relationship_type', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _isDeletedMeta =
       const VerificationMeta('isDeleted');
   @override
@@ -34919,6 +34931,18 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
       defaultValue: const Constant(false));
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -34927,7 +34951,11 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
         relativeId,
         relativeClientReferenceId,
         relationshipType,
-        isDeleted
+        clientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -34973,15 +35001,39 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
           relationshipType.isAcceptableOrUnknown(
               data['relationship_type']!, _relationshipTypeMeta));
     }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
     if (data.containsKey('is_deleted')) {
       context.handle(_isDeletedMeta,
           isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {id, clientReferenceId};
   @override
   HouseholdMemberRelationShipData map(Map<String, dynamic> data,
       {String? tablePrefix}) {
@@ -35001,8 +35053,16 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
           data['${effectivePrefix}relative_client_reference_id']),
       relationshipType: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}relationship_type']),
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
       isDeleted: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
   }
 
@@ -35020,7 +35080,11 @@ class HouseholdMemberRelationShipData extends DataClass
   final String? relativeId;
   final String? relativeClientReferenceId;
   final String? relationshipType;
+  final String clientReferenceId;
+  final String? tenantId;
   final bool? isDeleted;
+  final int? rowVersion;
+  final String? additionalFields;
   const HouseholdMemberRelationShipData(
       {this.id,
       this.selfId,
@@ -35028,7 +35092,11 @@ class HouseholdMemberRelationShipData extends DataClass
       this.relativeId,
       this.relativeClientReferenceId,
       this.relationshipType,
-      this.isDeleted});
+      required this.clientReferenceId,
+      this.tenantId,
+      this.isDeleted,
+      this.rowVersion,
+      this.additionalFields});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -35052,8 +35120,18 @@ class HouseholdMemberRelationShipData extends DataClass
     if (!nullToAbsent || relationshipType != null) {
       map['relationship_type'] = Variable<String>(relationshipType);
     }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
     if (!nullToAbsent || isDeleted != null) {
       map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
     }
     return map;
   }
@@ -35076,9 +35154,19 @@ class HouseholdMemberRelationShipData extends DataClass
       relationshipType: relationshipType == null && nullToAbsent
           ? const Value.absent()
           : Value(relationshipType),
+      clientReferenceId: Value(clientReferenceId),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
       isDeleted: isDeleted == null && nullToAbsent
           ? const Value.absent()
           : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
     );
   }
 
@@ -35094,7 +35182,11 @@ class HouseholdMemberRelationShipData extends DataClass
       relativeClientReferenceId:
           serializer.fromJson<String?>(json['relativeClientReferenceId']),
       relationshipType: serializer.fromJson<String?>(json['relationshipType']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
   @override
@@ -35109,7 +35201,11 @@ class HouseholdMemberRelationShipData extends DataClass
       'relativeClientReferenceId':
           serializer.toJson<String?>(relativeClientReferenceId),
       'relationshipType': serializer.toJson<String?>(relationshipType),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
 
@@ -35120,7 +35216,11 @@ class HouseholdMemberRelationShipData extends DataClass
           Value<String?> relativeId = const Value.absent(),
           Value<String?> relativeClientReferenceId = const Value.absent(),
           Value<String?> relationshipType = const Value.absent(),
-          Value<bool?> isDeleted = const Value.absent()}) =>
+          String? clientReferenceId,
+          Value<String?> tenantId = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
       HouseholdMemberRelationShipData(
         id: id.present ? id.value : this.id,
         selfId: selfId.present ? selfId.value : this.selfId,
@@ -35134,7 +35234,13 @@ class HouseholdMemberRelationShipData extends DataClass
         relationshipType: relationshipType.present
             ? relationshipType.value
             : this.relationshipType,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
       );
   @override
   String toString() {
@@ -35145,14 +35251,28 @@ class HouseholdMemberRelationShipData extends DataClass
           ..write('relativeId: $relativeId, ')
           ..write('relativeClientReferenceId: $relativeClientReferenceId, ')
           ..write('relationshipType: $relationshipType, ')
-          ..write('isDeleted: $isDeleted')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, selfId, selfIdClientReferenceId,
-      relativeId, relativeClientReferenceId, relationshipType, isDeleted);
+  int get hashCode => Object.hash(
+      id,
+      selfId,
+      selfIdClientReferenceId,
+      relativeId,
+      relativeClientReferenceId,
+      relationshipType,
+      clientReferenceId,
+      tenantId,
+      isDeleted,
+      rowVersion,
+      additionalFields);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -35163,7 +35283,11 @@ class HouseholdMemberRelationShipData extends DataClass
           other.relativeId == this.relativeId &&
           other.relativeClientReferenceId == this.relativeClientReferenceId &&
           other.relationshipType == this.relationshipType &&
-          other.isDeleted == this.isDeleted);
+          other.clientReferenceId == this.clientReferenceId &&
+          other.tenantId == this.tenantId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
 }
 
 class HouseholdMemberRelationShipCompanion
@@ -35174,7 +35298,11 @@ class HouseholdMemberRelationShipCompanion
   final Value<String?> relativeId;
   final Value<String?> relativeClientReferenceId;
   final Value<String?> relationshipType;
+  final Value<String> clientReferenceId;
+  final Value<String?> tenantId;
   final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
   final Value<int> rowid;
   const HouseholdMemberRelationShipCompanion({
     this.id = const Value.absent(),
@@ -35183,7 +35311,11 @@ class HouseholdMemberRelationShipCompanion
     this.relativeId = const Value.absent(),
     this.relativeClientReferenceId = const Value.absent(),
     this.relationshipType = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   HouseholdMemberRelationShipCompanion.insert({
@@ -35193,9 +35325,13 @@ class HouseholdMemberRelationShipCompanion
     this.relativeId = const Value.absent(),
     this.relativeClientReferenceId = const Value.absent(),
     this.relationshipType = const Value.absent(),
+    required String clientReferenceId,
+    this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
-  });
+  }) : clientReferenceId = Value(clientReferenceId);
   static Insertable<HouseholdMemberRelationShipData> custom({
     Expression<String>? id,
     Expression<String>? selfId,
@@ -35203,7 +35339,11 @@ class HouseholdMemberRelationShipCompanion
     Expression<String>? relativeId,
     Expression<String>? relativeClientReferenceId,
     Expression<String>? relationshipType,
+    Expression<String>? clientReferenceId,
+    Expression<String>? tenantId,
     Expression<bool>? isDeleted,
+    Expression<int>? rowVersion,
+    Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -35215,7 +35355,11 @@ class HouseholdMemberRelationShipCompanion
       if (relativeClientReferenceId != null)
         'relative_client_reference_id': relativeClientReferenceId,
       if (relationshipType != null) 'relationship_type': relationshipType,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (tenantId != null) 'tenant_id': tenantId,
       if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -35227,7 +35371,11 @@ class HouseholdMemberRelationShipCompanion
       Value<String?>? relativeId,
       Value<String?>? relativeClientReferenceId,
       Value<String?>? relationshipType,
+      Value<String>? clientReferenceId,
+      Value<String?>? tenantId,
       Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return HouseholdMemberRelationShipCompanion(
       id: id ?? this.id,
@@ -35238,7 +35386,11 @@ class HouseholdMemberRelationShipCompanion
       relativeClientReferenceId:
           relativeClientReferenceId ?? this.relativeClientReferenceId,
       relationshipType: relationshipType ?? this.relationshipType,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      tenantId: tenantId ?? this.tenantId,
       isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -35266,8 +35418,20 @@ class HouseholdMemberRelationShipCompanion
     if (relationshipType.present) {
       map['relationship_type'] = Variable<String>(relationshipType.value);
     }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
     if (isDeleted.present) {
       map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -35284,7 +35448,11 @@ class HouseholdMemberRelationShipCompanion
           ..write('relativeId: $relativeId, ')
           ..write('relativeClientReferenceId: $relativeClientReferenceId, ')
           ..write('relationshipType: $relationshipType, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -53924,7 +54092,11 @@ typedef $$HouseholdMemberRelationShipTableInsertCompanionBuilder
   Value<String?> relativeId,
   Value<String?> relativeClientReferenceId,
   Value<String?> relationshipType,
+  required String clientReferenceId,
+  Value<String?> tenantId,
   Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
   Value<int> rowid,
 });
 typedef $$HouseholdMemberRelationShipTableUpdateCompanionBuilder
@@ -53935,7 +54107,11 @@ typedef $$HouseholdMemberRelationShipTableUpdateCompanionBuilder
   Value<String?> relativeId,
   Value<String?> relativeClientReferenceId,
   Value<String?> relationshipType,
+  Value<String> clientReferenceId,
+  Value<String?> tenantId,
   Value<bool?> isDeleted,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
   Value<int> rowid,
 });
 
@@ -53966,7 +54142,11 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
             Value<String?> relativeId = const Value.absent(),
             Value<String?> relativeClientReferenceId = const Value.absent(),
             Value<String?> relationshipType = const Value.absent(),
+            Value<String> clientReferenceId = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               HouseholdMemberRelationShipCompanion(
@@ -53976,7 +54156,11 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
             relativeId: relativeId,
             relativeClientReferenceId: relativeClientReferenceId,
             relationshipType: relationshipType,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
             isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
@@ -53986,7 +54170,11 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
             Value<String?> relativeId = const Value.absent(),
             Value<String?> relativeClientReferenceId = const Value.absent(),
             Value<String?> relationshipType = const Value.absent(),
+            required String clientReferenceId,
+            Value<String?> tenantId = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               HouseholdMemberRelationShipCompanion.insert(
@@ -53996,7 +54184,11 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
             relativeId: relativeId,
             relativeClientReferenceId: relativeClientReferenceId,
             relationshipType: relationshipType,
+            clientReferenceId: clientReferenceId,
+            tenantId: tenantId,
             isDeleted: isDeleted,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
             rowid: rowid,
           ),
         ));
@@ -54049,8 +54241,28 @@ class $$HouseholdMemberRelationShipTableFilterComposer extends FilterComposer<
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<bool> get isDeleted => $state.composableBuilder(
       column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 }
@@ -54091,8 +54303,28 @@ class $$HouseholdMemberRelationShipTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
+  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
+      column: $state.table.clientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
   ColumnOrderings<bool> get isDeleted => $state.composableBuilder(
       column: $state.table.isDeleted,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }

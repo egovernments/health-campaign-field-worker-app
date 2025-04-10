@@ -14,6 +14,7 @@ class HouseholdMemberRelationShipSearchModel extends EntitySearchModel
   final String? relativeId;
   final String? relativeClientReferenceId;
   final String? relationshipType;
+  final List<String>? clientReferenceIds;
 
   HouseholdMemberRelationShipSearchModel({
     this.id,
@@ -22,6 +23,7 @@ class HouseholdMemberRelationShipSearchModel extends EntitySearchModel
     this.relativeId,
     this.relativeClientReferenceId,
     this.relationshipType,
+    this.clientReferenceIds,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -34,6 +36,7 @@ class HouseholdMemberRelationShipSearchModel extends EntitySearchModel
     this.relativeId,
     this.relativeClientReferenceId,
     this.relationshipType,
+    this.clientReferenceIds,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
@@ -50,6 +53,7 @@ class HouseholdMemberRelationShipModel extends EntityModel
   final String? relativeClientReferenceId;
   final String? relationshipType;
   final int? rowVersion;
+  final String clientReferenceId;
   final String? tenantId;
   final HouseholdMemberRelationShipAdditionalFields? additionalFields;
 
@@ -58,6 +62,7 @@ class HouseholdMemberRelationShipModel extends EntityModel
     this.id,
     this.selfId,
     this.selfIdClientReferenceId,
+    required this.clientReferenceId,
     this.relativeId,
     this.relativeClientReferenceId,
     this.relationshipType,
@@ -72,12 +77,15 @@ class HouseholdMemberRelationShipModel extends EntityModel
     return HouseholdMemberRelationShipCompanion(
       isDeleted: Value(isDeleted),
       id: Value(id),
-      rowid: Value(rowVersion!),
       selfId: Value(selfId),
+      clientReferenceId: Value(clientReferenceId),
       selfIdClientReferenceId: Value(selfIdClientReferenceId),
       relativeId: Value(relativeId),
       relativeClientReferenceId: Value(relativeClientReferenceId),
       relationshipType: Value(relationshipType),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
+      additionalFields: Value(additionalFields?.toJson()),
     );
   }
 }

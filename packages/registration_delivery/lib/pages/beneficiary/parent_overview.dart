@@ -221,11 +221,18 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                   ),
 
                                   Column(
-                                    children: (state
-                                                .householdMemberWrapper.members
-                                                ?.where((m) =>
-                                    m.additionalFields != null && m.additionalFields!.fields.any((field) => field.key == 'parentClientReferenceId' && field.value == state.selectedIndividual?.clientReferenceId)) ??
-                                            [])
+                                    children: (state.householdMemberWrapper.members
+                                        ?.where((m) {
+
+                                      final parentBeneficiary = state.householdMemberWrapper.householdMembers?.where((element) => element.individualClientReferenceId == state.selectedIndividual?.clientReferenceId).firstOrNull;
+                                      // Check if any other member has this member as parent
+                                      final hasChild = state.householdMemberWrapper.householdMembers
+                                          ?.any((member) => member.relationships?.any(
+                                            (relation) => relation.relativeClientReferenceId == parentBeneficiary?.clientReferenceId,
+                                      ) ?? false);
+                                      return (hasChild ?? false);
+                                    }) ??
+                                        [])
                                         .map(
                                       (e) {
                                         final isHead = state

@@ -259,7 +259,10 @@ class ParentOverviewBloc
               ...?state.householdMemberWrapper.referrals,
               ...referrals,
             ],
-
+            householdMembers: [
+              ...?state.householdMemberWrapper.householdMembers,
+              ...householdMemberList,
+            ],
             householdChecklists: [
               ...?state.householdMemberWrapper.householdChecklists,
               ...householdChecklist,
@@ -287,6 +290,7 @@ class ParentOverviewBloc
             projectBeneficiaries: projectBeneficiaries,
             sideEffects: sideEffects,
             referrals: referrals,
+            householdMembers: householdMemberList,
             householdChecklists: householdChecklist,
             individualChecklists: memberChecklist,
           ),
