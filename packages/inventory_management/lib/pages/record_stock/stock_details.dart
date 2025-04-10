@@ -1081,8 +1081,12 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const DigitScannerPage(
-                                              quantity: 5,
+                                                DigitScannerPage(
+                                              quantity: int.parse((form
+                                                      .control(
+                                                          _transactionQuantityKey)
+                                                      .value)
+                                                  .toString()),
                                               isGS1code: true,
                                               singleValue: false,
                                             ),
