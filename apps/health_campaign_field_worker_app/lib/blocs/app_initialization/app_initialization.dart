@@ -316,7 +316,6 @@ class MdmsConfig {
   final List<ServiceRegistry> serviceRegistryList;
   final List<DashboardConfigSchema?>? dashboardConfigSchema;
 
-
   const MdmsConfig(
       {required this.appConfigs,
       required this.serviceRegistryList,

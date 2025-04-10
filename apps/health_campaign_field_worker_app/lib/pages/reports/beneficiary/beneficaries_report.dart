@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../../../models/downsync/downsync.dart';
+import '../../../models/entities/roles_type.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
@@ -68,6 +69,18 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
+    bool isDistributor = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.distributor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+    bool isCommunityCreator = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.communityCreator.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
 
     return Scaffold(
       body: BlocBuilder<AppInitializationBloc, AppInitializationState>(
@@ -128,6 +141,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                   pendingSyncCount: pendingSyncCount,
                                   boundaryName: boundaryName,
                                   batchSize: batchSize,
+                                  isDistributor: isDistributor,
+                                  isCommunityCreator: isCommunityCreator,
                                 ),
                               ),
                       report: (downSyncCriteriaList) {
@@ -156,8 +171,11 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         ),
                         dialogType: DigitProgressDialogType.pendingSync,
                         isPop: true,
+                        isCommunityCreator: isCommunityCreator,
+                        isDistributor: isDistributor,
                       ),
-                      dataFound: (initialServerCount, batchSize) =>
+                      dataFound: (initialServerCount, initialClfServerCount,
+                              batchSize) =>
                           showDownloadDialog(
                         context,
                         model: DownloadBeneficiary(
@@ -171,6 +189,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           boundary: selectedBoundary!.code.toString(),
                           batchSize: 5,
                           totalCount: initialServerCount,
+                          clfTotalCount: initialClfServerCount,
                           content: localizations.translate(
                             initialServerCount > 0
                                 ? i18.beneficiaryDetails.dataFoundContent
@@ -191,8 +210,10 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         ),
                         dialogType: DigitProgressDialogType.dataFound,
                         isPop: true,
+                        isCommunityCreator: isCommunityCreator,
+                        isDistributor: isDistributor,
                       ),
-                      inProgress: (syncCount, totalCount) {
+                      inProgress: (syncCount, totalCount, clfCount) {
                         downloadProgress.add(
                           min(
                             (syncCount) / (totalCount),
@@ -200,25 +221,26 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           ),
                         );
                         if (syncCount < 1) {
-                          showDownloadDialog(
-                            context,
-                            model: DownloadBeneficiary(
-                              title: localizations.translate(
-                                i18.beneficiaryDetails.dataDownloadInProgress,
+                          showDownloadDialog(context,
+                              model: DownloadBeneficiary(
+                                title: localizations.translate(
+                                  i18.beneficiaryDetails.dataDownloadInProgress,
+                                ),
+                                projectId: context.projectId,
+                                boundary: selectedBoundary!.code.toString(),
+                                appConfiguartion: appConfiguration,
+                                syncCount: syncCount,
+                                totalCount: totalCount,
+                                clfTotalCount: clfCount,
+                                prefixLabel: syncCount.toString(),
+                                suffixLabel: totalCount.toString(),
+                                boundaryName: selectedBoundary!.name.toString(),
                               ),
-                              projectId: context.projectId,
-                              boundary: selectedBoundary!.code.toString(),
-                              appConfiguartion: appConfiguration,
-                              syncCount: syncCount,
-                              totalCount: totalCount,
-                              prefixLabel: syncCount.toString(),
-                              suffixLabel: totalCount.toString(),
-                              boundaryName: selectedBoundary!.name.toString(),
-                            ),
-                            dialogType: DigitProgressDialogType.inProgress,
-                            isPop: true,
-                            downloadProgressController: downloadProgress,
-                          );
+                              dialogType: DigitProgressDialogType.inProgress,
+                              isPop: true,
+                              downloadProgressController: downloadProgress,
+                              isDistributor: isDistributor,
+                              isCommunityCreator: isCommunityCreator);
                         }
                       },
                       success: (result) {
@@ -287,6 +309,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         ),
                         dialogType: DigitProgressDialogType.failed,
                         isPop: true,
+                        isCommunityCreator: isCommunityCreator,
+                        isDistributor: isDistributor,
                       ),
                       totalCountCheckFailed: () => showDownloadDialog(
                         context,
@@ -308,26 +332,29 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         ),
                         dialogType: DigitProgressDialogType.checkFailed,
                         isPop: true,
+                        isDistributor: isDistributor,
+                        isCommunityCreator: isCommunityCreator,
                       ),
-                      insufficientStorage: () => showDownloadDialog(
-                        context,
-                        model: DownloadBeneficiary(
-                          title: localizations.translate(
-                            i18.beneficiaryDetails.insufficientStorage,
+                      insufficientStorage: () => showDownloadDialog(context,
+                          model: DownloadBeneficiary(
+                            title: localizations.translate(
+                              i18.beneficiaryDetails.insufficientStorage,
+                            ),
+                            content: localizations.translate(i18
+                                .beneficiaryDetails.insufficientStorageContent),
+                            projectId: context.projectId,
+                            appConfiguartion: appConfiguration,
+                            boundary: selectedBoundary!.code.toString(),
+                            primaryButtonLabel: localizations.translate(
+                              i18.common.coreCommonOk,
+                            ),
+                            boundaryName: selectedBoundary!.name.toString(),
                           ),
-                          content: localizations.translate(i18
-                              .beneficiaryDetails.insufficientStorageContent),
-                          projectId: context.projectId,
-                          appConfiguartion: appConfiguration,
-                          boundary: selectedBoundary!.code.toString(),
-                          primaryButtonLabel: localizations.translate(
-                            i18.common.coreCommonOk,
-                          ),
-                          boundaryName: selectedBoundary!.name.toString(),
-                        ),
-                        dialogType: DigitProgressDialogType.insufficientStorage,
-                        isPop: true,
-                      ),
+                          dialogType:
+                              DigitProgressDialogType.insufficientStorage,
+                          isPop: true,
+                          isDistributor: isDistributor,
+                          isCommunityCreator: isCommunityCreator),
                     );
                   },
                   child: Column(children: [

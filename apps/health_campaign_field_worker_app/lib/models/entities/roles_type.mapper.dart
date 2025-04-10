@@ -39,6 +39,8 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return RolesType.superuser;
       case "REGISTRAR":
         return RolesType.registrar;
+      case "COMMUNITY_CREATOR":
+        return RolesType.communityCreator;
       case "TEAM_SUPERVISOR":
         return RolesType.teamSupervisor;
       default:
@@ -63,6 +65,8 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return "SUPERUSER";
       case RolesType.registrar:
         return "REGISTRAR";
+      case RolesType.communityCreator:
+        return "COMMUNITY_CREATOR";
       case RolesType.teamSupervisor:
         return "TEAM_SUPERVISOR";
     }

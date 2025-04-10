@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../router/registration_delivery_router.gm.dart';
+import '../../utils/utils.dart';
 
 @RoutePage()
 class BeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {
@@ -37,8 +39,12 @@ class BeneficiaryAcknowledgementPageState
               .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
           actions: [
             DigitButton(
+                capitalizeLetters: false,
                 label: localizations.translate(
-                  i18.householdDetails.viewHouseHoldDetailsAction,
+                  RegistrationDeliverySingleton().householdType ==
+                          HouseholdType.community
+                      ? i18.householdDetails.viewInstitutionDetailsAction
+                      : i18.householdDetails.viewHouseHoldDetailsAction,
                 ),
                 onPressed: () {
                   final bloc = context.read<SearchBlocWrapper>();

@@ -152,6 +152,10 @@ class _HouseholdOverviewPageState
                                                               element.code
                                                                   .toString()
                                                                   .contains(
+                                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}') ||
+                                                              element.code
+                                                                  .toString()
+                                                                  .contains(
                                                                       '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                           .toList()
                                                           .isEmpty) {
@@ -445,8 +449,8 @@ class _HouseholdOverviewPageState
                                                   .householdOverView
                                                   .householdOverViewLabel),
                                           style: textTheme.headingXl.copyWith(
-                                            color: theme.colorTheme.primary.primary2
-                                          ),
+                                              color: theme
+                                                  .colorTheme.primary.primary2),
                                         ),
                                       ),
                                     ),

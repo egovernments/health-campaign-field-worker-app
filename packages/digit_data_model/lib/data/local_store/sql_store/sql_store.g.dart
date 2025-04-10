@@ -29987,6 +29987,18 @@ class $DownsyncTable extends Downsync
   late final GeneratedColumn<int> limit = GeneratedColumn<int>(
       'limit', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clfOffsetMeta =
+      const VerificationMeta('clfOffset');
+  @override
+  late final GeneratedColumn<int> clfOffset = GeneratedColumn<int>(
+      'clf_offset', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clfTotalCountMeta =
+      const VerificationMeta('clfTotalCount');
+  @override
+  late final GeneratedColumn<int> clfTotalCount = GeneratedColumn<int>(
+      'clf_total_count', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _lastSyncedTimeMeta =
       const VerificationMeta('lastSyncedTime');
   @override
@@ -30097,6 +30109,8 @@ class $DownsyncTable extends Downsync
         projectId,
         offset,
         limit,
+        clfOffset,
+        clfTotalCount,
         lastSyncedTime,
         totalCount,
         boundaryName,
@@ -30139,6 +30153,16 @@ class $DownsyncTable extends Downsync
     if (data.containsKey('limit')) {
       context.handle(
           _limitMeta, limit.isAcceptableOrUnknown(data['limit']!, _limitMeta));
+    }
+    if (data.containsKey('clf_offset')) {
+      context.handle(_clfOffsetMeta,
+          clfOffset.isAcceptableOrUnknown(data['clf_offset']!, _clfOffsetMeta));
+    }
+    if (data.containsKey('clf_total_count')) {
+      context.handle(
+          _clfTotalCountMeta,
+          clfTotalCount.isAcceptableOrUnknown(
+              data['clf_total_count']!, _clfTotalCountMeta));
     }
     if (data.containsKey('last_synced_time')) {
       context.handle(
@@ -30249,6 +30273,10 @@ class $DownsyncTable extends Downsync
           .read(DriftSqlType.int, data['${effectivePrefix}offset']),
       limit: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}limit']),
+      clfOffset: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}clf_offset']),
+      clfTotalCount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}clf_total_count']),
       lastSyncedTime: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}last_synced_time']),
       totalCount: attachedDatabase.typeMapping
@@ -30295,6 +30323,8 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
   final String? projectId;
   final int? offset;
   final int? limit;
+  final int? clfOffset;
+  final int? clfTotalCount;
   final int? lastSyncedTime;
   final int? totalCount;
   final String? boundaryName;
@@ -30316,6 +30346,8 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
       this.projectId,
       this.offset,
       this.limit,
+      this.clfOffset,
+      this.clfTotalCount,
       this.lastSyncedTime,
       this.totalCount,
       this.boundaryName,
@@ -30346,6 +30378,12 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
     }
     if (!nullToAbsent || limit != null) {
       map['limit'] = Variable<int>(limit);
+    }
+    if (!nullToAbsent || clfOffset != null) {
+      map['clf_offset'] = Variable<int>(clfOffset);
+    }
+    if (!nullToAbsent || clfTotalCount != null) {
+      map['clf_total_count'] = Variable<int>(clfTotalCount);
     }
     if (!nullToAbsent || lastSyncedTime != null) {
       map['last_synced_time'] = Variable<int>(lastSyncedTime);
@@ -30410,6 +30448,12 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
           offset == null && nullToAbsent ? const Value.absent() : Value(offset),
       limit:
           limit == null && nullToAbsent ? const Value.absent() : Value(limit),
+      clfOffset: clfOffset == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clfOffset),
+      clfTotalCount: clfTotalCount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clfTotalCount),
       lastSyncedTime: lastSyncedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(lastSyncedTime),
@@ -30469,6 +30513,8 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
       projectId: serializer.fromJson<String?>(json['projectId']),
       offset: serializer.fromJson<int?>(json['offset']),
       limit: serializer.fromJson<int?>(json['limit']),
+      clfOffset: serializer.fromJson<int?>(json['clfOffset']),
+      clfTotalCount: serializer.fromJson<int?>(json['clfTotalCount']),
       lastSyncedTime: serializer.fromJson<int?>(json['lastSyncedTime']),
       totalCount: serializer.fromJson<int?>(json['totalCount']),
       boundaryName: serializer.fromJson<String?>(json['boundaryName']),
@@ -30496,6 +30542,8 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
       'projectId': serializer.toJson<String?>(projectId),
       'offset': serializer.toJson<int?>(offset),
       'limit': serializer.toJson<int?>(limit),
+      'clfOffset': serializer.toJson<int?>(clfOffset),
+      'clfTotalCount': serializer.toJson<int?>(clfTotalCount),
       'lastSyncedTime': serializer.toJson<int?>(lastSyncedTime),
       'totalCount': serializer.toJson<int?>(totalCount),
       'boundaryName': serializer.toJson<String?>(boundaryName),
@@ -30520,6 +30568,8 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
           Value<String?> projectId = const Value.absent(),
           Value<int?> offset = const Value.absent(),
           Value<int?> limit = const Value.absent(),
+          Value<int?> clfOffset = const Value.absent(),
+          Value<int?> clfTotalCount = const Value.absent(),
           Value<int?> lastSyncedTime = const Value.absent(),
           Value<int?> totalCount = const Value.absent(),
           Value<String?> boundaryName = const Value.absent(),
@@ -30541,6 +30591,9 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
         projectId: projectId.present ? projectId.value : this.projectId,
         offset: offset.present ? offset.value : this.offset,
         limit: limit.present ? limit.value : this.limit,
+        clfOffset: clfOffset.present ? clfOffset.value : this.clfOffset,
+        clfTotalCount:
+            clfTotalCount.present ? clfTotalCount.value : this.clfTotalCount,
         lastSyncedTime:
             lastSyncedTime.present ? lastSyncedTime.value : this.lastSyncedTime,
         totalCount: totalCount.present ? totalCount.value : this.totalCount,
@@ -30586,6 +30639,8 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
           ..write('projectId: $projectId, ')
           ..write('offset: $offset, ')
           ..write('limit: $limit, ')
+          ..write('clfOffset: $clfOffset, ')
+          ..write('clfTotalCount: $clfTotalCount, ')
           ..write('lastSyncedTime: $lastSyncedTime, ')
           ..write('totalCount: $totalCount, ')
           ..write('boundaryName: $boundaryName, ')
@@ -30607,27 +30662,30 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      locality,
-      projectId,
-      offset,
-      limit,
-      lastSyncedTime,
-      totalCount,
-      boundaryName,
-      auditCreatedBy,
-      nonRecoverableError,
-      auditCreatedTime,
-      clientCreatedTime,
-      clientModifiedBy,
-      clientCreatedBy,
-      clientModifiedTime,
-      auditModifiedBy,
-      auditModifiedTime,
-      tenantId,
-      isDeleted,
-      rowVersion,
-      additionalFields);
+  int get hashCode => Object.hashAll([
+        locality,
+        projectId,
+        offset,
+        limit,
+        clfOffset,
+        clfTotalCount,
+        lastSyncedTime,
+        totalCount,
+        boundaryName,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -30636,6 +30694,8 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
           other.projectId == this.projectId &&
           other.offset == this.offset &&
           other.limit == this.limit &&
+          other.clfOffset == this.clfOffset &&
+          other.clfTotalCount == this.clfTotalCount &&
           other.lastSyncedTime == this.lastSyncedTime &&
           other.totalCount == this.totalCount &&
           other.boundaryName == this.boundaryName &&
@@ -30659,6 +30719,8 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
   final Value<String?> projectId;
   final Value<int?> offset;
   final Value<int?> limit;
+  final Value<int?> clfOffset;
+  final Value<int?> clfTotalCount;
   final Value<int?> lastSyncedTime;
   final Value<int?> totalCount;
   final Value<String?> boundaryName;
@@ -30681,6 +30743,8 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
     this.projectId = const Value.absent(),
     this.offset = const Value.absent(),
     this.limit = const Value.absent(),
+    this.clfOffset = const Value.absent(),
+    this.clfTotalCount = const Value.absent(),
     this.lastSyncedTime = const Value.absent(),
     this.totalCount = const Value.absent(),
     this.boundaryName = const Value.absent(),
@@ -30704,6 +30768,8 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
     this.projectId = const Value.absent(),
     this.offset = const Value.absent(),
     this.limit = const Value.absent(),
+    this.clfOffset = const Value.absent(),
+    this.clfTotalCount = const Value.absent(),
     this.lastSyncedTime = const Value.absent(),
     this.totalCount = const Value.absent(),
     this.boundaryName = const Value.absent(),
@@ -30727,6 +30793,8 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
     Expression<String>? projectId,
     Expression<int>? offset,
     Expression<int>? limit,
+    Expression<int>? clfOffset,
+    Expression<int>? clfTotalCount,
     Expression<int>? lastSyncedTime,
     Expression<int>? totalCount,
     Expression<String>? boundaryName,
@@ -30750,6 +30818,8 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
       if (projectId != null) 'project_id': projectId,
       if (offset != null) 'offset': offset,
       if (limit != null) 'limit': limit,
+      if (clfOffset != null) 'clf_offset': clfOffset,
+      if (clfTotalCount != null) 'clf_total_count': clfTotalCount,
       if (lastSyncedTime != null) 'last_synced_time': lastSyncedTime,
       if (totalCount != null) 'total_count': totalCount,
       if (boundaryName != null) 'boundary_name': boundaryName,
@@ -30777,6 +30847,8 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
       Value<String?>? projectId,
       Value<int?>? offset,
       Value<int?>? limit,
+      Value<int?>? clfOffset,
+      Value<int?>? clfTotalCount,
       Value<int?>? lastSyncedTime,
       Value<int?>? totalCount,
       Value<String?>? boundaryName,
@@ -30799,6 +30871,8 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
       projectId: projectId ?? this.projectId,
       offset: offset ?? this.offset,
       limit: limit ?? this.limit,
+      clfOffset: clfOffset ?? this.clfOffset,
+      clfTotalCount: clfTotalCount ?? this.clfTotalCount,
       lastSyncedTime: lastSyncedTime ?? this.lastSyncedTime,
       totalCount: totalCount ?? this.totalCount,
       boundaryName: boundaryName ?? this.boundaryName,
@@ -30833,6 +30907,12 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
     }
     if (limit.present) {
       map['limit'] = Variable<int>(limit.value);
+    }
+    if (clfOffset.present) {
+      map['clf_offset'] = Variable<int>(clfOffset.value);
+    }
+    if (clfTotalCount.present) {
+      map['clf_total_count'] = Variable<int>(clfTotalCount.value);
     }
     if (lastSyncedTime.present) {
       map['last_synced_time'] = Variable<int>(lastSyncedTime.value);
@@ -30895,6 +30975,8 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
           ..write('projectId: $projectId, ')
           ..write('offset: $offset, ')
           ..write('limit: $limit, ')
+          ..write('clfOffset: $clfOffset, ')
+          ..write('clfTotalCount: $clfTotalCount, ')
           ..write('lastSyncedTime: $lastSyncedTime, ')
           ..write('totalCount: $totalCount, ')
           ..write('boundaryName: $boundaryName, ')
@@ -51551,6 +51633,8 @@ typedef $$DownsyncTableInsertCompanionBuilder = DownsyncCompanion Function({
   Value<String?> projectId,
   Value<int?> offset,
   Value<int?> limit,
+  Value<int?> clfOffset,
+  Value<int?> clfTotalCount,
   Value<int?> lastSyncedTime,
   Value<int?> totalCount,
   Value<String?> boundaryName,
@@ -51574,6 +51658,8 @@ typedef $$DownsyncTableUpdateCompanionBuilder = DownsyncCompanion Function({
   Value<String?> projectId,
   Value<int?> offset,
   Value<int?> limit,
+  Value<int?> clfOffset,
+  Value<int?> clfTotalCount,
   Value<int?> lastSyncedTime,
   Value<int?> totalCount,
   Value<String?> boundaryName,
@@ -51617,6 +51703,8 @@ class $$DownsyncTableTableManager extends RootTableManager<
             Value<String?> projectId = const Value.absent(),
             Value<int?> offset = const Value.absent(),
             Value<int?> limit = const Value.absent(),
+            Value<int?> clfOffset = const Value.absent(),
+            Value<int?> clfTotalCount = const Value.absent(),
             Value<int?> lastSyncedTime = const Value.absent(),
             Value<int?> totalCount = const Value.absent(),
             Value<String?> boundaryName = const Value.absent(),
@@ -51640,6 +51728,8 @@ class $$DownsyncTableTableManager extends RootTableManager<
             projectId: projectId,
             offset: offset,
             limit: limit,
+            clfOffset: clfOffset,
+            clfTotalCount: clfTotalCount,
             lastSyncedTime: lastSyncedTime,
             totalCount: totalCount,
             boundaryName: boundaryName,
@@ -51663,6 +51753,8 @@ class $$DownsyncTableTableManager extends RootTableManager<
             Value<String?> projectId = const Value.absent(),
             Value<int?> offset = const Value.absent(),
             Value<int?> limit = const Value.absent(),
+            Value<int?> clfOffset = const Value.absent(),
+            Value<int?> clfTotalCount = const Value.absent(),
             Value<int?> lastSyncedTime = const Value.absent(),
             Value<int?> totalCount = const Value.absent(),
             Value<String?> boundaryName = const Value.absent(),
@@ -51686,6 +51778,8 @@ class $$DownsyncTableTableManager extends RootTableManager<
             projectId: projectId,
             offset: offset,
             limit: limit,
+            clfOffset: clfOffset,
+            clfTotalCount: clfTotalCount,
             lastSyncedTime: lastSyncedTime,
             totalCount: totalCount,
             boundaryName: boundaryName,
@@ -51739,6 +51833,16 @@ class $$DownsyncTableFilterComposer
 
   ColumnFilters<int> get limit => $state.composableBuilder(
       column: $state.table.limit,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clfOffset => $state.composableBuilder(
+      column: $state.table.clfOffset,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clfTotalCount => $state.composableBuilder(
+      column: $state.table.clfTotalCount,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -51843,6 +51947,16 @@ class $$DownsyncTableOrderingComposer
 
   ColumnOrderings<int> get limit => $state.composableBuilder(
       column: $state.table.limit,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clfOffset => $state.composableBuilder(
+      column: $state.table.clfOffset,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clfTotalCount => $state.composableBuilder(
+      column: $state.table.clfTotalCount,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

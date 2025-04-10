@@ -28,6 +28,7 @@ import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.da
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
+import '../data/repositories/remote/downsync.dart';
 import '../models/downsync/downsync.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
@@ -186,9 +187,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           individualLocalRepository: ctx.read<
                               LocalRepository<IndividualModel,
                                   IndividualSearchModel>>(),
-                          downSyncRemoteRepository: ctx.read<
-                              RemoteRepository<DownsyncModel,
-                                  DownsyncSearchModel>>(),
+                          downSyncRemoteRepository:
+                              ctx.read<DownsyncRemoteRepository>(),
                           downSyncLocalRepository: ctx.read<
                               LocalRepository<DownsyncModel,
                                   DownsyncSearchModel>>(),

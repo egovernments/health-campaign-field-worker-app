@@ -124,6 +124,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                 enableFixedDigitButton: true,
                 footer: DigitCard(
                     margin: const EdgeInsets.only(top: spacer2),
+                    padding: const EdgeInsets.all(spacer2),
                     children: [
                       DigitButton(
                         label: registrationState.mapOrNull(
