@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
@@ -37,6 +38,9 @@ class SummaryPage extends LocalizedStatefulWidget {
 class SummaryPageState extends LocalizedState<SummaryPage> {
   final clickedStatus = ValueNotifier<bool>(false);
 
+  final bool isCommunity =
+      RegistrationDeliverySingleton().householdType == HouseholdType.community;
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +55,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
           ),
         );
   }
+
 
   String getLocalizedMessage(String code) {
     return localizations.translate(code);
@@ -229,9 +234,13 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                           children: [
                             LabelValueSummary(
                                 padding: EdgeInsets.zero,
-                                heading: localizations.translate(i18
-                                    .householdLocation
-                                    .householdLocationLabelText),
+                                heading: (isCommunity)
+                                    ? localizations.translate(i18
+                                        .householdLocation.clfLocationLabelText)
+                                    : localizations.translate(
+                                        i18.householdLocation
+                                            .householdLocationLabelText,
+                                      ),
                                 headingStyle: textTheme.headingL.copyWith(
                                   color: theme.colorTheme.primary.primary2,
                                 ),
@@ -301,31 +310,41 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                             children: [
                               LabelValueSummary(
                                 padding: EdgeInsets.zero,
-                                heading: localizations.translate(
-                                  i18.householdDetails.householdDetailsLabel,
-                                ),
+                                heading: (isCommunity)
+                                    ? localizations.translate(
+                                        i18.householdDetails.clfDetailsLabel)
+                                    : localizations.translate(
+                                        i18.householdDetails
+                                            .householdDetailsLabel,
+                                      ),
                                 headingStyle: textTheme.headingL.copyWith(
                                   color: theme.colorTheme.primary.primary2,
                                 ),
                                 items: [
                                   LabelValueItem(
-                                    label: localizations.translate(
-                                      i18.beneficiaryDetails.totalMembers,
-                                    ),
-                                    value: householdState
-                                            .householdModel?.memberCount
-                                            ?.toString() ??
-                                        '0',
-                                    isInline: true,
-                                    labelFlex: 5,
-                                    padding:
-                                        const EdgeInsets.only(bottom: spacer2),
-                                  ),
+                                      label: (isCommunity)
+                                          ? localizations.translate(i18
+                                              .beneficiaryDetails
+                                              .totalCLFMembers)
+                                          : localizations.translate(i18
+                                              .beneficiaryDetails.totalMembers),
+                                      value: householdState
+                                              .householdModel?.memberCount
+                                              .toString() ??
+                                          '0',
+                                      isInline: true,
+                                      labelFlex: 5,
+                                      padding: const EdgeInsets.only(
+                                          bottom: spacer2)),
                                   LabelValueItem(
-                                    label: localizations.translate(
-                                      i18.householdDetails
-                                          .noOfPregnantWomenCountLabel,
-                                    ),
+                                    label: (isCommunity)
+                                        ? localizations.translate(i18
+                                            .householdDetails
+                                            .noOfPregnantWomenCountCLFLabel)
+                                        : localizations.translate(i18
+                                            .householdDetails
+                                            .noOfPregnantWomenCountLabel),
+
                                     value: householdState.householdModel
                                             ?.additionalFields?.fields
                                             .where((h) =>
@@ -341,46 +360,52 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                     labelFlex: 5,
                                   ),
                                   LabelValueItem(
-                                    label: localizations.translate(
-                                      i18.householdDetails
-                                          .noOfChildrenBelow5YearsLabel,
-                                    ),
-                                    value: householdState.householdModel
-                                            ?.additionalFields?.fields
-                                            .where((h) =>
-                                                h.key ==
-                                                AdditionalFieldsType.children
-                                                    .toValue())
-                                            .firstOrNull
-                                            ?.value
-                                            .toString() ??
-                                        '0',
-                                    isInline: true,
-                                    labelFlex: 5,
-                                    padding:
-                                        const EdgeInsets.only(top: spacer2),
-                                  ),
-                                  ...attributeItems, //added service values
-                                ],
-                              ),
-                            ],
-                          );
-                        },
-                      ),
+                                      label: (isCommunity)
+                                          ? localizations.translate(i18
+                                              .householdDetails
+                                              .noOfChildrenBelow5YearsCLFLabel)
+                                          : localizations.translate(i18
+                                              .householdDetails
+                                              .noOfChildrenBelow5YearsLabel),
+                                      value: householdState.householdModel
+                                              ?.additionalFields?.fields
+                                              .where((h) =>
+                                                  h.key ==
+                                                  AdditionalFieldsType.children
+                                                      .toValue())
+                                              .firstOrNull
+                                              ?.value
+                                              .toString() ??
+                                          '0',
+                                      isInline: true,
+                                      labelFlex: 5,
+                                      padding:
+                                          const EdgeInsets.only(top: spacer2)),
+                                ]),
+                          ]),
+
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
                             LabelValueSummary(
                                 padding: EdgeInsets.zero,
-                                heading: localizations.translate(
-                                    i18.householdDetails.houseDetailsLabel),
+                                heading: (isCommunity)
+                                    ? localizations.translate(i18
+                                        .householdDetails
+                                        .clfStructureDetailsLabel)
+                                    : localizations.translate(
+                                        i18.householdDetails.houseDetailsLabel),
                                 headingStyle: textTheme.headingL.copyWith(
                                   color: theme.colorTheme.primary.primary2,
                                 ),
                                 items: [
                                   LabelValueItem(
-                                      label: localizations.translate(
-                                          i18.householdDetails.noOfRoomsLabel),
+                                      label: (isCommunity)
+                                          ? localizations.translate(i18
+                                              .householdDetails
+                                              .noOfRoomsCLFLabel)
+                                          : localizations.translate(i18
+                                              .householdDetails.noOfRoomsLabel),
                                       value: householdState.householdModel
                                               ?.additionalFields?.fields
                                               .where((h) =>
