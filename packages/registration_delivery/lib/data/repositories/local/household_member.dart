@@ -70,13 +70,7 @@ class HouseholdMemberLocalRepository
       for (final e in results) {
         final householdMember = e.readTable(sql.householdMember);
 
-        // Fetch relationships based on individualClientReferenceId
-        final selectRelationshipQuery = sql.select(sql.householdMemberRelationShip).join([]);
-        final all = await sql.select(sql.householdMemberRelationShip).get();
-        for (final row in all) {
-          print("In table: |${row.selfIdClientReferenceId}|");
-        }
-
+        // Fetch relationships based on clientReferenceId
         final val = await (sql.select(sql.householdMemberRelationShip)
           ..where(
                 (tbl) => tbl.selfIdClientReferenceId.equals(
