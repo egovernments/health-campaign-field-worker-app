@@ -265,37 +265,33 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                         builder: (context, state) {
                           final List<LabelValueItem> attributeItems = [];
                           if (state is ServiceSearchState) {
-                            final serviceList = state.serviceList.first;
+                            final serviceList = ( state.serviceList.isNotEmpty)
+                                ? state.serviceList.first
+                                : null;
 
-                            for (final attribute
-                                in serviceList.attributes ?? []) {
-                              final value = attribute.value;
-
-                              if (value != null &&
-                                  value.isNotEmpty &&
-                                  value != "NOT_SELECTED") {
-                                final localizedLabel = localizations.translate(
-                                  '${RegistrationDeliverySingleton().selectedProject?.name}.HOUSEHOLD.DISTRIBUTOR.${attribute.attributeCode}',
-                                );
-
-                                final localizedValue = value.contains('.')
-                                    ? value
-                                        .split('.')
-                                        .map((part) => localizations
-                                            .translate(part.trim()))
-                                        .join(', ')
-                                    : localizations.translate(value);
-
-                                attributeItems.add(
-                                  LabelValueItem(
-                                    label: localizedLabel,
-                                    value: localizedValue,
-                                    isInline: true,
-                                    labelFlex: 5,
-                                    padding:
-                                        const EdgeInsets.only(top: spacer2),
-                                  ),
-                                );
+                            if (serviceList != null) {
+                              for (final attribute in serviceList.attributes ?? []) {
+                                final value = attribute.value;
+                                if (value != null && value.isNotEmpty && value != "NOT_SELECTED") {
+                                  final localizedLabel = localizations.translate(
+                                    '${RegistrationDeliverySingleton().selectedProject?.name}.HOUSEHOLD.DISTRIBUTOR.${attribute.attributeCode}',
+                                  );
+                                  final localizedValue = value.contains('.')
+                                      ? value
+                                      .split('.')
+                                      .map((part) => localizations.translate(part.trim()))
+                                      .join(', ')
+                                      : localizations.translate(value);
+                                  attributeItems.add(
+                                    LabelValueItem(
+                                      label: localizedLabel,
+                                      value: localizedValue,
+                                      isInline: true,
+                                      labelFlex: 5,
+                                      padding: const EdgeInsets.only(top: spacer2),
+                                    ),
+                                  );
+                                }
                               }
                             }
                           }

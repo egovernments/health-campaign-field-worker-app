@@ -151,6 +151,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const individualIdentifierIdKey = 'individualIdentifierId';
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
+    const memberRelationshipIdKey = 'memberRelationshipId';
 
     switch (typeGroupedEntity.key) {
       case DataModelType.individual:
@@ -311,9 +312,19 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
+            final relationshipAdditionalId = responseEntity?.relationships?.first.id == null  //TODO: need to check logic after, will work for now as we have only single relationship
+                ? null
+                : AdditionalId(
+              idType: memberRelationshipIdKey,
+              id: responseEntity!.relationships!.first.id!,
+            );
+
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
+                additionalIds: [
+                  if (relationshipAdditionalId != null) relationshipAdditionalId,
+                ],
                 serverGeneratedId: serverGeneratedId,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
@@ -849,6 +860,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const individualIdentifierIdKey = 'individualIdentifierId';
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
+    const memberRelationshipIdKey = 'memberRelationshipId';
 
     if (updatedEntity is HouseholdModel) {
       final addressId = e.additionalIds.firstWhereOrNull(
@@ -908,6 +920,26 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           }
 
           return e.copyWith(taskId: serverGeneratedId);
+        }).toList(),
+      );
+    }
+    if (updatedEntity is HouseholdMemberModel) {
+      final relationshipId = e.additionalIds
+          .firstWhereOrNull(
+            (element) => element.idType == memberRelationshipIdKey,
+      )
+          ?.id;
+
+      updatedEntity = updatedEntity.copyWith(
+        relationships: updatedEntity.relationships?.map((e) {
+          if (relationshipId != null) {
+            return e.copyWith(
+              relativeId: serverGeneratedId,
+              id: e.id ?? relationshipId,
+            );
+          }
+
+          return e.copyWith(relativeId: serverGeneratedId);
         }).toList(),
       );
     }
