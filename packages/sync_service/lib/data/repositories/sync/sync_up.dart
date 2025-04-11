@@ -193,9 +193,6 @@ class PerformSyncUp {
                     operationGroupedEntity: operationGroupedEntity,
                     typeGroupedEntity: typeGroupedEntity);
               } else {
-                // for(final entity in entities){
-                //   if(entity.enti)
-                // }
                 remote.bulkCreate(entities);
               }
             } else if (operationGroupedEntity.key == DataOperation.update) {
