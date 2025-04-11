@@ -1,3 +1,9 @@
+## 1.0.6+2
+
+* updated new memberRelationship column in member
+* added new member relationship table
+* added tenant id in dump error call
+
 ## 1.0.6+1
 
 * Added PRODUCT as enum in beneficiaryType
