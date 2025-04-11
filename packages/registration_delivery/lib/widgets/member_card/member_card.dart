@@ -113,6 +113,65 @@ class MemberCard extends StatelessWidget {
                     Positioned(
                       child: Align(
                         alignment: Alignment.topRight,
+                        child: DigitButton(
+                          isDisabled: (projectBeneficiaries ?? []).isEmpty,
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (ctx) => DigitActionCard(
+                              onOutsideTap: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                              },
+                              actions: [
+                                DigitButton(
+                                  prefixIcon: Icons.person,
+                                  label: (RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community)
+                                      ? localizations.translate(
+                                          i18.memberCard.assignAsClfhead)
+                                      : localizations.translate(
+                                          i18.memberCard.assignAsHouseholdhead,
+                                        ),
+                                  isDisabled: isHead ? true : false,
+                                  onPressed: setAsHeadAction,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
+                                ),
+                                DigitButton(
+                                  prefixIcon: Icons.edit,
+                                  label: localizations.translate(
+                                    i18.memberCard.editIndividualDetails,
+                                  ),
+                                  onPressed: editMemberAction,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
+                                ),
+                                DigitButton(
+                                  prefixIcon: Icons.delete,
+                                  label: localizations.translate(
+                                    i18.memberCard.deleteIndividualActionText,
+                                  ),
+                                  isDisabled: isHead ? true : false,
+                                  onPressed: deleteMemberAction,
+                                  type: DigitButtonType.secondary,
+                                  size: DigitButtonSize.large,
+                                ),
+                              ],
+                            ),
+                          ),
+                          label: localizations.translate(
+                            i18.memberCard.editDetails,
+                          ),
+                          prefixIcon: Icons.edit,
+                          type: DigitButtonType.tertiary,
+                          size: DigitButtonSize.medium,
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      child: Align(
+                        alignment: Alignment.topRight,
                         child: (children ?? []).isNotEmpty
                             ? DigitButton(
                                 label:
@@ -377,7 +436,7 @@ class MemberCard extends StatelessWidget {
                                                     .toList()
                                                     .isEmpty) {
                                                   context.router.push(
-                                                    DeliverInterventionRoute(),
+                                                    BeneficiaryDetailsRoute(),
                                                   );
                                                 } else {
                                                   navigateToChecklist(context,

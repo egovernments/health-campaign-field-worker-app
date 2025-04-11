@@ -5,7 +5,7 @@
   * Added new type in checklist view
   * Added service update in repository
   * added parser to support checklist configuration
-  
+
 ## 1.0.1+3
 
 * Bug fix:
