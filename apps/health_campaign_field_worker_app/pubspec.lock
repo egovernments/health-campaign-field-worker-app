@@ -433,6 +433,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  curl_logger_dio_interceptor:
+    dependency: "direct main"
+    description:
+      name: curl_logger_dio_interceptor
+      sha256: f20d89187a321d2150e1412bca30ebf4d89130bafc648ce21bd4f1ef4062b214
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -2017,10 +2025,9 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      name: survey_form
-      sha256: e81e71beff6c4982ff6944ad34da056ea5b4adba860d9552a5eb554356dd816d
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/survey_form"
+      relative: true
+    source: path
     version: "1.0.1+3"
   sync_http:
     dependency: transitive
@@ -2033,10 +2040,9 @@ packages:
   sync_service:
     dependency: "direct main"
     description:
-      name: sync_service
-      sha256: eb214ed7351f1f4ab63c90a23d2ad9f554ac92d73dbbe0dd7ce167776b941de9
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/sync_service"
+      relative: true
+    source: path
     version: "1.0.0"
   synchronized:
     dependency: transitive
@@ -2359,5 +2365,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.1 <3.9.0"
+  dart: ">=3.4.0 <3.9.0"
   flutter: ">=3.22.0"

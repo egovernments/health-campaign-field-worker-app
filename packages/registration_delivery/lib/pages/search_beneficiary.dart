@@ -630,7 +630,7 @@ class _SearchBeneficiaryPageState
                       blocWrapper.clearEvent();
                     }
                   });
-            } else if (availableIdCount > 10) {
+            } else if (availableIdCount >= 10) {
               FocusManager.instance.primaryFocus?.unfocus();
               context.read<DigitScannerBloc>().add(
                     const DigitScannerEvent.handleScanner(),

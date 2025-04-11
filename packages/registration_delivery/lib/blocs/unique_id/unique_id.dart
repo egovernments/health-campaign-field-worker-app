@@ -19,8 +19,12 @@ typedef UniqueIdEmitter = Emitter<UniqueIdState>;
 class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
   final LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>
       uniqueIdPoolLocalRepository;
+  final RemoteRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>
+      uniqueIdPoolRemoteRepository;
 
-  UniqueIdBloc({required this.uniqueIdPoolLocalRepository})
+  UniqueIdBloc(
+      {required this.uniqueIdPoolLocalRepository,
+      required this.uniqueIdPoolRemoteRepository})
       : super(const LoadingState()) {
     on(_fetchIdCount);
     on(_fetchUniqueIdsFromServer);
@@ -40,13 +44,13 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
       );
       emit(UniqueIdState.idCount(count.length, totalCount.length));
     } catch (e) {
-      emit(const UniqueIdState.failed());
+      emit(UniqueIdState.failed(e.toString()));
     }
   }
 
   FutureOr<void> _fetchUniqueIdsFromServer(
       FetchUniqueIdsEvent event, Emitter<UniqueIdState> emit) async {
-    emit(const UniqueIdState.fetching(0, 0));
+    emit(const UniqueIdState.fetching(0, 10));
     try {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -54,38 +58,30 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
       List<UniqueIdPoolModel> idsList = [];
       final List<ConnectivityResult> connectivityResult =
           await (Connectivity().checkConnectivity());
+      emit(const UniqueIdState.fetching(1, 10));
 
       if (connectivityResult.contains(ConnectivityResult.none)) {
         emit(const NoInternetState());
       } else {
-        int totalCount = 10;
-        for (int i = 0; i <= totalCount; i++) {
-          // Emit the fetching state with the calculated progress
-          emit(UniqueIdState.fetching(
-              i, totalCount)); // Pass progressValue and 1.0 as total progress
+        int totalCount = 5;
+        emit(const UniqueIdState.fetching(4, 10));
 
-          await Future.delayed(const Duration(seconds: 1));
-          var id = await UniqueIdGeneration().generateUniqueId(
-              localityCode: RegistrationDeliverySingleton().boundary!.code!,
-              loggedInUserId: RegistrationDeliverySingleton().loggedInUserUuid!,
-              returnCombinedIds:
-                  false); // TODO: Integrate with backend to fetch id's
+        var ids = await uniqueIdPoolRemoteRepository.search(
+            limit: 5,
+            offSet: 0,
+            UniqueIdPoolSearchModel(
+                deviceInfo: androidInfo.toString(),
+                userUuid: RegistrationDeliverySingleton().loggedInUserUuid,
+                deviceUuid: androidInfo.id,
+                count: totalCount));
 
-          idsList.add(UniqueIdPoolModel(
-            id: id.toString(),
-            status: IdStatus.unAssigned.toValue(),
-            userUUID: RegistrationDeliverySingleton().loggedInUserUuid!,
-            clientReferenceId:
-                RegistrationDeliverySingleton().loggedInUserUuid!,
-          ));
-        }
+        await uniqueIdPoolLocalRepository.bulkCreate(ids);
 
-        await uniqueIdPoolLocalRepository.bulkCreate(idsList);
-
-        emit(UniqueIdState.ids(idsList));
+        emit(const UniqueIdState.fetching(8, 10));
+        emit(UniqueIdState.ids([]));
       }
     } catch (e) {
-      emit(const UniqueIdState.failed());
+      emit(UniqueIdState.failed(e.toString()));
     }
   }
 
@@ -100,7 +96,7 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
 
       emit(UniqueIdState.aUniqueId(count.first));
     } catch (e) {
-      emit(const UniqueIdState.failed());
+      emit(UniqueIdState.failed(e.toString()));
     }
   }
 }
@@ -127,7 +123,7 @@ class UniqueIdState with _$UniqueIdState {
   const factory UniqueIdState.ids(List<UniqueIdPoolModel> ids) =
       FetchedUniqueIdsState;
 
-  const factory UniqueIdState.failed() = FailedState;
+  const factory UniqueIdState.failed(String? error) = FailedState;
 
   const factory UniqueIdState.aUniqueId(UniqueIdPoolModel aUniqueId) =
       FetchedUniqueIdState;

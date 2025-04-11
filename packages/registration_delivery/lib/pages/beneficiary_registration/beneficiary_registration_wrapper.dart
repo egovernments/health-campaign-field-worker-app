@@ -108,8 +108,11 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) =>
-                UniqueIdBloc(uniqueIdPoolLocalRepository: uniqueIdRepo),
+            create: (context) => UniqueIdBloc(
+                uniqueIdPoolLocalRepository: uniqueIdRepo,
+                uniqueIdPoolRemoteRepository: context.read<
+                    RemoteRepository<UniqueIdPoolModel,
+                        UniqueIdPoolSearchModel>>()),
           ),
           BlocProvider(
             create: (context) => BeneficiaryRegistrationBloc(initialState,

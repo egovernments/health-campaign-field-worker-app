@@ -418,7 +418,7 @@ mixin _$UniqueIdState {
     required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
-    required TResult Function() failed,
+    required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
   }) =>
@@ -429,7 +429,7 @@ mixin _$UniqueIdState {
     TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult? Function()? failed,
+    TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
   }) =>
@@ -440,7 +440,7 @@ mixin _$UniqueIdState {
     TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult Function()? failed,
+    TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -542,7 +542,7 @@ class _$LoadingStateImpl implements LoadingState {
     required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
-    required TResult Function() failed,
+    required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
   }) {
@@ -556,7 +556,7 @@ class _$LoadingStateImpl implements LoadingState {
     TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult? Function()? failed,
+    TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
   }) {
@@ -570,7 +570,7 @@ class _$LoadingStateImpl implements LoadingState {
     TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult Function()? failed,
+    TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -710,7 +710,7 @@ class _$FetchingStateImpl implements FetchingState {
     required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
-    required TResult Function() failed,
+    required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
   }) {
@@ -724,7 +724,7 @@ class _$FetchingStateImpl implements FetchingState {
     TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult? Function()? failed,
+    TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
   }) {
@@ -738,7 +738,7 @@ class _$FetchingStateImpl implements FetchingState {
     TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult Function()? failed,
+    TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -885,7 +885,7 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
     required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
-    required TResult Function() failed,
+    required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
   }) {
@@ -899,7 +899,7 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
     TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult? Function()? failed,
+    TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
   }) {
@@ -913,7 +913,7 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
     TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult Function()? failed,
+    TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -1059,7 +1059,7 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
     required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
-    required TResult Function() failed,
+    required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
   }) {
@@ -1073,7 +1073,7 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
     TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult? Function()? failed,
+    TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
   }) {
@@ -1087,7 +1087,7 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
     TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult Function()? failed,
+    TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -1160,6 +1160,8 @@ abstract class _$$FailedStateImplCopyWith<$Res> {
   factory _$$FailedStateImplCopyWith(
           _$FailedStateImpl value, $Res Function(_$FailedStateImpl) then) =
       __$$FailedStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String? error});
 }
 
 /// @nodoc
@@ -1169,26 +1171,50 @@ class __$$FailedStateImplCopyWithImpl<$Res>
   __$$FailedStateImplCopyWithImpl(
       _$FailedStateImpl _value, $Res Function(_$FailedStateImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? error = freezed,
+  }) {
+    return _then(_$FailedStateImpl(
+      freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$FailedStateImpl implements FailedState {
-  const _$FailedStateImpl();
+  const _$FailedStateImpl(this.error);
+
+  @override
+  final String? error;
 
   @override
   String toString() {
-    return 'UniqueIdState.failed()';
+    return 'UniqueIdState.failed(error: $error)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$FailedStateImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$FailedStateImpl &&
+            (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, error);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FailedStateImplCopyWith<_$FailedStateImpl> get copyWith =>
+      __$$FailedStateImplCopyWithImpl<_$FailedStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1197,11 +1223,11 @@ class _$FailedStateImpl implements FailedState {
     required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
-    required TResult Function() failed,
+    required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
   }) {
-    return failed();
+    return failed(error);
   }
 
   @override
@@ -1211,11 +1237,11 @@ class _$FailedStateImpl implements FailedState {
     TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult? Function()? failed,
+    TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
   }) {
-    return failed?.call();
+    return failed?.call(error);
   }
 
   @override
@@ -1225,13 +1251,13 @@ class _$FailedStateImpl implements FailedState {
     TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult Function()? failed,
+    TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
     if (failed != null) {
-      return failed();
+      return failed(error);
     }
     return orElse();
   }
@@ -1284,7 +1310,12 @@ class _$FailedStateImpl implements FailedState {
 }
 
 abstract class FailedState implements UniqueIdState {
-  const factory FailedState() = _$FailedStateImpl;
+  const factory FailedState(final String? error) = _$FailedStateImpl;
+
+  String? get error;
+  @JsonKey(ignore: true)
+  _$$FailedStateImplCopyWith<_$FailedStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1358,7 +1389,7 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
     required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
-    required TResult Function() failed,
+    required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
   }) {
@@ -1372,7 +1403,7 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
     TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult? Function()? failed,
+    TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
   }) {
@@ -1386,7 +1417,7 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
     TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult Function()? failed,
+    TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -1496,7 +1527,7 @@ class _$NoInternetStateImpl implements NoInternetState {
     required TResult Function(int progress, int totalCount) fetching,
     required TResult Function(int count, int totalCount) idCount,
     required TResult Function(List<UniqueIdPoolModel> ids) ids,
-    required TResult Function() failed,
+    required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
   }) {
@@ -1510,7 +1541,7 @@ class _$NoInternetStateImpl implements NoInternetState {
     TResult? Function(int progress, int totalCount)? fetching,
     TResult? Function(int count, int totalCount)? idCount,
     TResult? Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult? Function()? failed,
+    TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
   }) {
@@ -1524,7 +1555,7 @@ class _$NoInternetStateImpl implements NoInternetState {
     TResult Function(int progress, int totalCount)? fetching,
     TResult Function(int count, int totalCount)? idCount,
     TResult Function(List<UniqueIdPoolModel> ids)? ids,
-    TResult Function()? failed,
+    TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
     required TResult orElse(),

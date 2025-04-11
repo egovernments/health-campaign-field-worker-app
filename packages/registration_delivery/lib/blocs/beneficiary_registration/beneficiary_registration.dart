@@ -272,12 +272,12 @@ class BeneficiaryRegistrationBloc
                 IdentifierTypes.uniqueBeneficiaryID.toValue());
 
             if (uniqueId != null) {
-              uniqueIdPoolLocalRepository.update(UniqueIdPoolModel(
-                  id: uniqueId.identifierId!,
-                  status: IdStatus.assigned.toValue(),
-                  clientReferenceId:
-                      RegistrationDeliverySingleton().loggedInUserUuid!,
-                  userUUID: RegistrationDeliverySingleton().loggedInUserUuid!));
+              var id = await uniqueIdPoolLocalRepository
+                  .search(UniqueIdPoolSearchModel(id: uniqueId.identifierId!));
+
+              uniqueIdPoolLocalRepository.update(id.firstOrNull!.copyWith(
+                status: IdStatus.assigned.toValue(),
+              ));
             }
 
             await projectBeneficiaryRepository.create(

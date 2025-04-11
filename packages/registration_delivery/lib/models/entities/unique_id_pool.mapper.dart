@@ -28,13 +28,21 @@ class UniqueIdPoolSearchModelMapper
   static String? _$status(UniqueIdPoolSearchModel v) => v.status;
   static const Field<UniqueIdPoolSearchModel, String> _f$status =
       Field('status', _$status, opt: true);
-  static String? _$clientReferenceId(UniqueIdPoolSearchModel v) =>
-      v.clientReferenceId;
-  static const Field<UniqueIdPoolSearchModel, String> _f$clientReferenceId =
-      Field('clientReferenceId', _$clientReferenceId, opt: true);
-  static String? _$userUUID(UniqueIdPoolSearchModel v) => v.userUUID;
-  static const Field<UniqueIdPoolSearchModel, String> _f$userUUID =
-      Field('userUUID', _$userUUID, opt: true);
+  static String? _$deviceUuid(UniqueIdPoolSearchModel v) => v.deviceUuid;
+  static const Field<UniqueIdPoolSearchModel, String> _f$deviceUuid =
+      Field('deviceUuid', _$deviceUuid, opt: true);
+  static String? _$deviceInfo(UniqueIdPoolSearchModel v) => v.deviceInfo;
+  static const Field<UniqueIdPoolSearchModel, String> _f$deviceInfo =
+      Field('deviceInfo', _$deviceInfo, opt: true);
+  static int? _$count(UniqueIdPoolSearchModel v) => v.count;
+  static const Field<UniqueIdPoolSearchModel, int> _f$count =
+      Field('count', _$count, opt: true);
+  static String? _$userUuid(UniqueIdPoolSearchModel v) => v.userUuid;
+  static const Field<UniqueIdPoolSearchModel, String> _f$userUuid =
+      Field('userUuid', _$userUuid, opt: true);
+  static String? _$tenantId(UniqueIdPoolSearchModel v) => v.tenantId;
+  static const Field<UniqueIdPoolSearchModel, String> _f$tenantId =
+      Field('tenantId', _$tenantId, opt: true);
   static String? _$boundaryCode(UniqueIdPoolSearchModel v) => v.boundaryCode;
   static const Field<UniqueIdPoolSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -52,8 +60,11 @@ class UniqueIdPoolSearchModelMapper
   final MappableFields<UniqueIdPoolSearchModel> fields = const {
     #id: _f$id,
     #status: _f$status,
-    #clientReferenceId: _f$clientReferenceId,
-    #userUUID: _f$userUUID,
+    #deviceUuid: _f$deviceUuid,
+    #deviceInfo: _f$deviceInfo,
+    #count: _f$count,
+    #userUuid: _f$userUuid,
+    #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -73,8 +84,11 @@ class UniqueIdPoolSearchModelMapper
     return UniqueIdPoolSearchModel.ignoreDeleted(
         id: data.dec(_f$id),
         status: data.dec(_f$status),
-        clientReferenceId: data.dec(_f$clientReferenceId),
-        userUUID: data.dec(_f$userUUID),
+        deviceUuid: data.dec(_f$deviceUuid),
+        deviceInfo: data.dec(_f$deviceInfo),
+        count: data.dec(_f$count),
+        userUuid: data.dec(_f$userUuid),
+        tenantId: data.dec(_f$tenantId),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -139,8 +153,11 @@ abstract class UniqueIdPoolSearchModelCopyWith<
   $R call(
       {String? id,
       String? status,
-      String? clientReferenceId,
-      String? userUUID,
+      String? deviceUuid,
+      String? deviceInfo,
+      int? count,
+      String? userUuid,
+      String? tenantId,
       String? boundaryCode});
   UniqueIdPoolSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -159,14 +176,20 @@ class _UniqueIdPoolSearchModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? id = $none,
           Object? status = $none,
-          Object? clientReferenceId = $none,
-          Object? userUUID = $none,
+          Object? deviceUuid = $none,
+          Object? deviceInfo = $none,
+          Object? count = $none,
+          Object? userUuid = $none,
+          Object? tenantId = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (status != $none) #status: status,
-        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
-        if (userUUID != $none) #userUUID: userUUID,
+        if (deviceUuid != $none) #deviceUuid: deviceUuid,
+        if (deviceInfo != $none) #deviceInfo: deviceInfo,
+        if (count != $none) #count: count,
+        if (userUuid != $none) #userUuid: userUuid,
+        if (tenantId != $none) #tenantId: tenantId,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -174,9 +197,11 @@ class _UniqueIdPoolSearchModelCopyWithImpl<$R, $Out>
       UniqueIdPoolSearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
           status: data.get(#status, or: $value.status),
-          clientReferenceId:
-              data.get(#clientReferenceId, or: $value.clientReferenceId),
-          userUUID: data.get(#userUUID, or: $value.userUUID),
+          deviceUuid: data.get(#deviceUuid, or: $value.deviceUuid),
+          deviceInfo: data.get(#deviceInfo, or: $value.deviceInfo),
+          count: data.get(#count, or: $value.count),
+          userUuid: data.get(#userUuid, or: $value.userUuid),
+          tenantId: data.get(#tenantId, or: $value.tenantId),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -204,12 +229,24 @@ class UniqueIdPoolModelMapper extends SubClassMapperBase<UniqueIdPoolModel> {
   static String _$status(UniqueIdPoolModel v) => v.status;
   static const Field<UniqueIdPoolModel, String> _f$status =
       Field('status', _$status);
-  static String _$clientReferenceId(UniqueIdPoolModel v) => v.clientReferenceId;
-  static const Field<UniqueIdPoolModel, String> _f$clientReferenceId =
-      Field('clientReferenceId', _$clientReferenceId);
-  static String _$userUUID(UniqueIdPoolModel v) => v.userUUID;
-  static const Field<UniqueIdPoolModel, String> _f$userUUID =
-      Field('userUUID', _$userUUID);
+  static String? _$deviceUuid(UniqueIdPoolModel v) => v.deviceUuid;
+  static const Field<UniqueIdPoolModel, String> _f$deviceUuid =
+      Field('deviceUuid', _$deviceUuid);
+  static String? _$userUuid(UniqueIdPoolModel v) => v.userUuid;
+  static const Field<UniqueIdPoolModel, String> _f$userUuid =
+      Field('userUuid', _$userUuid);
+  static int? _$rowVersion(UniqueIdPoolModel v) => v.rowVersion;
+  static const Field<UniqueIdPoolModel, int> _f$rowVersion =
+      Field('rowVersion', _$rowVersion, opt: true);
+  static String? _$tenantId(UniqueIdPoolModel v) => v.tenantId;
+  static const Field<UniqueIdPoolModel, String> _f$tenantId =
+      Field('tenantId', _$tenantId, opt: true);
+  static UniqueIdPoolAdditionalFields? _$additionalFields(
+          UniqueIdPoolModel v) =>
+      v.additionalFields;
+  static const Field<UniqueIdPoolModel, UniqueIdPoolAdditionalFields>
+      _f$additionalFields =
+      Field('additionalFields', _$additionalFields, opt: true);
   static AuditDetails? _$auditDetails(UniqueIdPoolModel v) => v.auditDetails;
   static const Field<UniqueIdPoolModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -226,8 +263,11 @@ class UniqueIdPoolModelMapper extends SubClassMapperBase<UniqueIdPoolModel> {
   final MappableFields<UniqueIdPoolModel> fields = const {
     #id: _f$id,
     #status: _f$status,
-    #clientReferenceId: _f$clientReferenceId,
-    #userUUID: _f$userUUID,
+    #deviceUuid: _f$deviceUuid,
+    #userUuid: _f$userUuid,
+    #rowVersion: _f$rowVersion,
+    #tenantId: _f$tenantId,
+    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -247,8 +287,11 @@ class UniqueIdPoolModelMapper extends SubClassMapperBase<UniqueIdPoolModel> {
     return UniqueIdPoolModel(
         id: data.dec(_f$id),
         status: data.dec(_f$status),
-        clientReferenceId: data.dec(_f$clientReferenceId),
-        userUUID: data.dec(_f$userUUID),
+        deviceUuid: data.dec(_f$deviceUuid),
+        userUuid: data.dec(_f$userUuid),
+        rowVersion: data.dec(_f$rowVersion),
+        tenantId: data.dec(_f$tenantId),
+        additionalFields: data.dec(_f$additionalFields),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -309,6 +352,8 @@ extension UniqueIdPoolModelValueCopy<$R, $Out>
 
 abstract class UniqueIdPoolModelCopyWith<$R, $In extends UniqueIdPoolModel,
     $Out> implements EntityModelCopyWith<$R, $In, $Out> {
+  UniqueIdPoolAdditionalFieldsCopyWith<$R, UniqueIdPoolAdditionalFields,
+      UniqueIdPoolAdditionalFields>? get additionalFields;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -318,8 +363,11 @@ abstract class UniqueIdPoolModelCopyWith<$R, $In extends UniqueIdPoolModel,
   $R call(
       {String? id,
       String? status,
-      String? clientReferenceId,
-      String? userUUID,
+      String? deviceUuid,
+      String? userUuid,
+      int? rowVersion,
+      String? tenantId,
+      UniqueIdPoolAdditionalFields? additionalFields,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -336,6 +384,11 @@ class _UniqueIdPoolModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<UniqueIdPoolModel> $mapper =
       UniqueIdPoolModelMapper.ensureInitialized();
   @override
+  UniqueIdPoolAdditionalFieldsCopyWith<$R, UniqueIdPoolAdditionalFields,
+          UniqueIdPoolAdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
@@ -346,16 +399,22 @@ class _UniqueIdPoolModelCopyWithImpl<$R, $Out>
   $R call(
           {String? id,
           String? status,
-          String? clientReferenceId,
-          String? userUUID,
+          Object? deviceUuid = $none,
+          Object? userUuid = $none,
+          Object? rowVersion = $none,
+          Object? tenantId = $none,
+          Object? additionalFields = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
         if (id != null) #id: id,
         if (status != null) #status: status,
-        if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
-        if (userUUID != null) #userUUID: userUUID,
+        if (deviceUuid != $none) #deviceUuid: deviceUuid,
+        if (userUuid != $none) #userUuid: userUuid,
+        if (rowVersion != $none) #rowVersion: rowVersion,
+        if (tenantId != $none) #tenantId: tenantId,
+        if (additionalFields != $none) #additionalFields: additionalFields,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -365,9 +424,12 @@ class _UniqueIdPoolModelCopyWithImpl<$R, $Out>
   UniqueIdPoolModel $make(CopyWithData data) => UniqueIdPoolModel(
       id: data.get(#id, or: $value.id),
       status: data.get(#status, or: $value.status),
-      clientReferenceId:
-          data.get(#clientReferenceId, or: $value.clientReferenceId),
-      userUUID: data.get(#userUUID, or: $value.userUUID),
+      deviceUuid: data.get(#deviceUuid, or: $value.deviceUuid),
+      userUuid: data.get(#userUuid, or: $value.userUuid),
+      rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+      tenantId: data.get(#tenantId, or: $value.tenantId),
+      additionalFields:
+          data.get(#additionalFields, or: $value.additionalFields),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),
@@ -400,7 +462,7 @@ class UniqueIdPoolAdditionalFieldsMapper
       Field('schema', _$schema, opt: true, def: 'UniqueIds');
   static int _$version(UniqueIdPoolAdditionalFields v) => v.version;
   static const Field<UniqueIdPoolAdditionalFields, int> _f$version =
-      Field('version', _$version);
+      Field('version', _$version, opt: true, def: 1);
   static List<AdditionalField> _$fields(UniqueIdPoolAdditionalFields v) =>
       v.fields;
   static const Field<UniqueIdPoolAdditionalFields, List<AdditionalField>>
