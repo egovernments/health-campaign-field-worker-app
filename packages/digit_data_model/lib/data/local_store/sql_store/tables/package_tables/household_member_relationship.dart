@@ -7,7 +7,7 @@ class HouseholdMemberRelationShip extends Table {
 
   TextColumn get selfId => text().nullable()();
 
-  TextColumn get selfIdClientReferenceId => text().nullable()();
+  TextColumn get selfClientReferenceId => text().nullable()();
 
   TextColumn get relativeId => text().nullable()();
 

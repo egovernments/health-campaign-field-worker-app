@@ -229,7 +229,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                       final hasChild = state.householdMemberWrapper.householdMembers
                                           ?.any((member) =>
                                       member.individualClientReferenceId == m.clientReferenceId &&
-                                          (member.relationships?.any(
+                                          (member.memberRelationships?.any(
                                                 (relation) =>
                                             relation.relativeClientReferenceId ==
                                                 parentBeneficiary?.clientReferenceId,
@@ -369,6 +369,26 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                             ) ??
                                                 DateTime.now(),
                                           ).years),
+                                          isNotEligible:
+                                          RegistrationDeliverySingleton()
+                                              .projectType
+                                              ?.cycles !=
+                                              null
+                                              ? !checkEligibilityForAgeAndSideEffect(
+                                            DigitDOBAgeConvertor(
+                                              years: ageInYears,
+                                              months: ageInMonths,
+                                            ),
+                                            RegistrationDeliverySingleton()
+                                                .projectType,
+                                            (taskData ?? [])
+                                                .isNotEmpty
+                                                ? taskData
+                                                ?.lastOrNull
+                                                : null,
+                                            sideEffectData,
+                                          )
+                                              : false,
                                           months: (e.dateOfBirth == null
                                               ? null
                                               : DigitDateUtils.calculateAge(

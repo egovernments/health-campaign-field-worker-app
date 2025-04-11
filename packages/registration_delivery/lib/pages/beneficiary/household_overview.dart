@@ -661,7 +661,7 @@ class _HouseholdOverviewPageState
                                         // Identify if this member is a "child" in any other member's relationships
                                         final isChild = state.householdMemberWrapper.householdMembers
                                             ?.any((member) =>
-                                        member.relationships != null && member.relationships!.isNotEmpty && member.individualClientReferenceId == m.clientReferenceId);
+                                        member.memberRelationships != null && member.memberRelationships!.isNotEmpty && member.individualClientReferenceId == m.clientReferenceId);
 
                                         return !(isChild ?? false); // Only show if not a child
                                       }).toList() ?? [])
@@ -749,7 +749,7 @@ class _HouseholdOverviewPageState
                                                 final isChild = state.householdMemberWrapper.householdMembers
                                                     ?.any((member) =>
                                                 member.individualClientReferenceId == childMem.clientReferenceId &&
-                                                    (member.relationships?.any(
+                                                    (member.memberRelationships?.any(
                                                           (rel) => rel.relativeClientReferenceId == parentBeneficiary?.clientReferenceId,
                                                     ) ??
                                                         false));

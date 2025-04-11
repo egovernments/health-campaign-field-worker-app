@@ -284,12 +284,11 @@ class HouseholdMemberRelationShipModelMapper
   static String? _$selfId(HouseholdMemberRelationShipModel v) => v.selfId;
   static const Field<HouseholdMemberRelationShipModel, String> _f$selfId =
       Field('selfId', _$selfId, opt: true);
-  static String? _$selfIdClientReferenceId(
-          HouseholdMemberRelationShipModel v) =>
-      v.selfIdClientReferenceId;
+  static String? _$selfClientReferenceId(HouseholdMemberRelationShipModel v) =>
+      v.selfClientReferenceId;
   static const Field<HouseholdMemberRelationShipModel, String>
-      _f$selfIdClientReferenceId =
-      Field('selfIdClientReferenceId', _$selfIdClientReferenceId, opt: true);
+      _f$selfClientReferenceId =
+      Field('selfClientReferenceId', _$selfClientReferenceId, opt: true);
   static String _$clientReferenceId(HouseholdMemberRelationShipModel v) =>
       v.clientReferenceId;
   static const Field<HouseholdMemberRelationShipModel, String>
@@ -335,7 +334,7 @@ class HouseholdMemberRelationShipModelMapper
     #additionalFields: _f$additionalFields,
     #id: _f$id,
     #selfId: _f$selfId,
-    #selfIdClientReferenceId: _f$selfIdClientReferenceId,
+    #selfClientReferenceId: _f$selfClientReferenceId,
     #clientReferenceId: _f$clientReferenceId,
     #relativeId: _f$relativeId,
     #relativeClientReferenceId: _f$relativeClientReferenceId,
@@ -362,7 +361,7 @@ class HouseholdMemberRelationShipModelMapper
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
         selfId: data.dec(_f$selfId),
-        selfIdClientReferenceId: data.dec(_f$selfIdClientReferenceId),
+        selfClientReferenceId: data.dec(_f$selfClientReferenceId),
         clientReferenceId: data.dec(_f$clientReferenceId),
         relativeId: data.dec(_f$relativeId),
         relativeClientReferenceId: data.dec(_f$relativeClientReferenceId),
@@ -449,7 +448,7 @@ abstract class HouseholdMemberRelationShipModelCopyWith<
       {HouseholdMemberRelationShipAdditionalFields? additionalFields,
       String? id,
       String? selfId,
-      String? selfIdClientReferenceId,
+      String? selfClientReferenceId,
       String? clientReferenceId,
       String? relativeId,
       String? relativeClientReferenceId,
@@ -493,7 +492,7 @@ class _HouseholdMemberRelationShipModelCopyWithImpl<$R, $Out>
           {Object? additionalFields = $none,
           Object? id = $none,
           Object? selfId = $none,
-          Object? selfIdClientReferenceId = $none,
+          Object? selfClientReferenceId = $none,
           String? clientReferenceId,
           Object? relativeId = $none,
           Object? relativeClientReferenceId = $none,
@@ -507,8 +506,8 @@ class _HouseholdMemberRelationShipModelCopyWithImpl<$R, $Out>
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
         if (selfId != $none) #selfId: selfId,
-        if (selfIdClientReferenceId != $none)
-          #selfIdClientReferenceId: selfIdClientReferenceId,
+        if (selfClientReferenceId != $none)
+          #selfClientReferenceId: selfClientReferenceId,
         if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
         if (relativeId != $none) #relativeId: relativeId,
         if (relativeClientReferenceId != $none)
@@ -522,18 +521,16 @@ class _HouseholdMemberRelationShipModelCopyWithImpl<$R, $Out>
         if (isDeleted != $none) #isDeleted: isDeleted
       }));
   @override
-  HouseholdMemberRelationShipModel $make(
-          CopyWithData data) =>
+  HouseholdMemberRelationShipModel $make(CopyWithData data) =>
       HouseholdMemberRelationShipModel(
           additionalFields: data.get(
               #additionalFields,
               or: $value.additionalFields),
           id: data.get(#id, or: $value.id),
           selfId: data.get(#selfId, or: $value.selfId),
-          selfIdClientReferenceId:
-              data
-                  .get(#selfIdClientReferenceId,
-                      or: $value.selfIdClientReferenceId),
+          selfClientReferenceId:
+              data.get(#selfClientReferenceId,
+                  or: $value.selfClientReferenceId),
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           relativeId: data.get(#relativeId, or: $value.relativeId),
