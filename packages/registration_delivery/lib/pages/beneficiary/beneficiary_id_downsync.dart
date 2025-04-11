@@ -9,14 +9,13 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:registration_delivery/blocs/unique_id/unique_id.dart';
 import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 
 import '../../blocs/app_localization.dart';
-import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
+import '../../widgets/beneficiary/id_count_alert.dart';
 import '../../widgets/localized.dart';
 
 @RoutePage()
@@ -33,110 +32,20 @@ class BeneficiaryIdDownSyncPage extends LocalizedStatefulWidget {
 
 class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
   int beneficiaryIdCount = 0,
-      beneficiaryIdTotalCount = 100,
-      beneficiaryMinCount = 10;
+      beneficiaryIdTotalCount = 0,
+      beneficiaryMinCount = 120; // TODO: configure in MDMS
   bool _isProgressDialogVisible = false;
-  BuildContext? _progressDialogContext;
+  final ProgressDialog _progressDialog = ProgressDialog();
 
   @override
   void initState() {
     super.initState();
   }
 
-  /// Shows the progress popup
-  Future<void> _showProgressDialog(
-      {required BuildContext context,
-      required RegistrationDeliveryLocalization localizations,
-      required int currentCount,
-      required int totalCount,
-      required ThemeData theme}) async {
-    _isProgressDialogVisible = true;
-
-    // Calculate the progress value (0.0 to 1.0)
-    double progressValue = (currentCount) / totalCount;
-
-    // Ensure progressValue is within the range [0.0, 1.0]
-    progressValue = progressValue.clamp(0.0, 1.0);
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) {
-        _progressDialogContext = ctx;
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Popup(
-              type: PopUpType.simple,
-              title: localizations
-                  .translate(i18.beneficiaryDetails.downloadBeneficiaryIds),
-              additionalWidgets: [
-                Center(
-                  child: Lottie.asset(Constants.downloadAnimation,
-                      height: MediaQuery.of(context).size.height * 0.1),
-                ),
-                Column(
-                  children: [
-                    LinearProgressIndicator(
-                      value: progressValue,
-                      minHeight: spacer1,
-                      color: theme.colorTheme.alert.success,
-                      // Initial value, will be updated dynamically
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(spacer2)),
-                    ),
-                    const SizedBox(height: spacer2 * 2),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          localizations
-                              .translate(i18.common.coreCommonDownloading),
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: theme.colorTheme.text.primary,
-                          ),
-                        ),
-                        Text(
-                          '$currentCount/$totalCount',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorTheme.text.primary,
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  /// Updates the progress in the existing popup
-  void _updateProgressDialog(
-      int currentCount, int totalCount, ThemeData theme) {
-    if (_progressDialogContext != null) {
-      Navigator.of(_progressDialogContext!).pop(); // Close existing
-      _showProgressDialog(
-          context: context,
-          localizations: RegistrationDeliveryLocalization.of(context),
-          currentCount: currentCount,
-          totalCount: totalCount,
-          theme: theme); // Reopen with new progress
-    }
-  }
-
-  /// Closes the progress popup
-  void _closeProgressDialog() {
-    if (_isProgressDialogVisible && _progressDialogContext != null) {
-      Navigator.of(_progressDialogContext!).pop();
-      _isProgressDialogVisible = false;
-      _progressDialogContext = null;
-    }
+  @override
+  void dispose() {
+    _progressDialog.dispose();
+    super.dispose();
   }
 
   @override
@@ -148,82 +57,103 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
       create: (context) {
         return UniqueIdBloc(
             uniqueIdPoolLocalRepository: context.read<
-                LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>())
+                LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>(),
+            uniqueIdPoolRemoteRepository: context.read<
+                RemoteRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>())
           ..add(const UniqueIdEvent.fetchIdCount());
       },
       child: BlocListener<UniqueIdBloc, UniqueIdState>(
         listener: (context, state) {
-          if (state is FetchedIdCountState) {
-            beneficiaryIdCount = state.count;
-            beneficiaryIdTotalCount = state.totalCount;
-          }
-          if (state is FetchedUniqueIdsState) {
-            context
-                .read<UniqueIdBloc>()
-                .add(const UniqueIdEvent.fetchIdCount());
-            _closeProgressDialog(); // Close popup when fetching is done
-          }
-          if (state is FetchingState) {
-            state.maybeWhen(
+          state.maybeWhen(
               orElse: () {},
-              fetching: (currentCount, totalCount) {
-                if (!_isProgressDialogVisible) {
-                  _showProgressDialog(
-                      context: context,
-                      localizations: localizations,
-                      currentCount: currentCount,
-                      totalCount: totalCount,
-                      theme: theme);
-                }
-                // Update the existing dialog
-                _updateProgressDialog(currentCount, totalCount, theme);
+              idCount: (availableCount, totalCount) {
+                _progressDialog.closeProgressDialog();
+                _isProgressDialogVisible = false;
+                beneficiaryIdCount = availableCount;
+                beneficiaryIdTotalCount = totalCount;
               },
-            );
-          }
-          if (state is NoInternetState) {
-            _closeProgressDialog(); // Close popup when fetching is done
-            showCustomPopup(
-                context: context,
-                builder: (ctx) {
-                  return Popup(
-                    type: PopUpType.alert,
-                    actions: [
-                      DigitButton(
-                        capitalizeLetters: false,
-                        type: DigitButtonType.primary,
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () {
-                          Navigator.of(ctx).pop();
-
-                          context.read<UniqueIdBloc>().add(
-                                const UniqueIdEvent.fetchUniqueIdsFromServer(),
-                              );
-                        },
-                        label: localizations.translate(
-                          i18.common.coreCommonDataSyncRetry,
-                        ),
-                      ),
-                      DigitButton(
-                        capitalizeLetters: false,
-                        type: DigitButtonType.secondary,
-                        size: DigitButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () {
-                          Navigator.of(ctx).pop();
-                        },
-                        label: localizations.translate(
-                          i18.common.corecommonclose,
-                        ),
-                      ),
-                    ],
-                    title: localizations
-                        .translate(i18.common.coreCommonNoInternet),
-                    description: localizations.translate(
-                        i18.beneficiaryDetails.noInternetBeneficiaryIdsText),
+              ids: (ids) {
+                context
+                    .read<UniqueIdBloc>()
+                    .add(const UniqueIdEvent.fetchIdCount());
+                _progressDialog.closeProgressDialog();
+                _isProgressDialogVisible = false;
+              },
+              fetching: (currentCount, totalCount) {
+                if (_isProgressDialogVisible == false) {
+                  _progressDialog.showProgressDialog(
+                    context: context,
+                    localizations: RegistrationDeliveryLocalization.of(context),
+                    currentCount: currentCount,
+                    totalCount: totalCount,
+                    theme: Theme.of(context),
                   );
-                });
-          }
+                  _isProgressDialogVisible = true;
+                } else {
+                  // To update progress:
+                  _progressDialog.updateProgressDialog(
+                    currentCount: currentCount,
+                    totalCount: totalCount,
+                  );
+                }
+              },
+              failed: (String? error) {
+                _progressDialog.closeProgressDialog();
+                _isProgressDialogVisible = false;
+                if (error != null) {
+                  Toast.showToast(context,
+                      message: localizations.translate(
+                        i18.beneficiaryDetails.failedBeneficiaryIds,
+                      ),
+                      type: ToastType.error);
+                }
+              },
+              noInternet: () {
+                _progressDialog.closeProgressDialog();
+                _isProgressDialogVisible = false;
+                showCustomPopup(
+                    context: context,
+                    builder: (ctx) {
+                      return Popup(
+                        type: PopUpType.alert,
+                        actions: [
+                          DigitButton(
+                            capitalizeLetters: false,
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+
+                              context.read<UniqueIdBloc>().add(
+                                    const UniqueIdEvent
+                                        .fetchUniqueIdsFromServer(),
+                                  );
+                            },
+                            label: localizations.translate(
+                              i18.common.coreCommonDataSyncRetry,
+                            ),
+                          ),
+                          DigitButton(
+                            capitalizeLetters: false,
+                            type: DigitButtonType.secondary,
+                            size: DigitButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                            },
+                            label: localizations.translate(
+                              i18.common.corecommonclose,
+                            ),
+                          ),
+                        ],
+                        title: localizations
+                            .translate(i18.common.coreCommonNoInternet),
+                        description: localizations.translate(i18
+                            .beneficiaryDetails.noInternetBeneficiaryIdsText),
+                      );
+                    });
+              });
         },
         child:
             BlocBuilder<UniqueIdBloc, UniqueIdState>(builder: (context, state) {
@@ -237,7 +167,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                   margin: const EdgeInsets.only(top: spacer2),
                   children: [
                     DigitButton(
-                      isDisabled: beneficiaryIdCount > beneficiaryMinCount,
+                      isDisabled: beneficiaryIdCount >= beneficiaryMinCount,
                       label: localizations.translate(
                           i18.beneficiaryDetails.downloadBeneficiaryIds),
                       type: DigitButtonType.primary,
@@ -458,8 +388,11 @@ class GaugePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     double startAngle = pi; // 180° (left side)
-    double sweepAngle =
-        pi * (currentValue / maxValue); // Moves from left → center → right
+    double sweepAngle = pi *
+        (currentValue /
+            (maxValue == 0
+                ? 100
+                : maxValue)); // Moves from left → center → right
 
     // Full background arc
     canvas.drawArc(

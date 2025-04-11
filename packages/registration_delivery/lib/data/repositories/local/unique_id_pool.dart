@@ -36,12 +36,12 @@ class UniqueIdPoolLocalRepository
     List<UniqueIdPoolModel> entities,
   ) async {
     return retryLocalCallOperation(() async {
-      final uniqueIdCompanion = entities.map((e) => e.companion).toList();
+      final uniqueIdCompanions = entities.map((e) => e.companion).toList();
 
       await sql.batch((batch) async {
         batch.insertAll(
           sql.uniqueIdPool,
-          uniqueIdCompanion,
+          uniqueIdCompanions,
           mode: InsertMode.insertOrReplace,
         );
       });
@@ -74,8 +74,23 @@ class UniqueIdPoolLocalRepository
             return UniqueIdPoolModel(
               id: uniqueIdPool.id!,
               status: uniqueIdPool.status!,
-              userUUID: uniqueIdPool.userUUID!,
-              clientReferenceId: uniqueIdPool.clientReferenceId,
+              userUuid: uniqueIdPool.userUuid,
+              deviceUuid: uniqueIdPool.deviceUuid,
+              tenantId: uniqueIdPool.tenantId,
+              rowVersion: uniqueIdPool.rowVersion,
+              additionalFields: uniqueIdPool.additionalFields != null
+                  ? UniqueIdPoolAdditionalFieldsMapper.fromJson(
+                      uniqueIdPool.additionalFields.toString())
+                  : null,
+              auditDetails: (uniqueIdPool.auditCreatedBy != null &&
+                      uniqueIdPool.auditCreatedBy != null)
+                  ? AuditDetails(
+                      createdBy: uniqueIdPool.auditCreatedBy!,
+                      createdTime: uniqueIdPool.auditCreatedTime!,
+                      lastModifiedBy: uniqueIdPool.auditModifiedBy,
+                      lastModifiedTime: uniqueIdPool.auditModifiedTime,
+                    )
+                  : null,
             );
           })
           .whereNotNull()

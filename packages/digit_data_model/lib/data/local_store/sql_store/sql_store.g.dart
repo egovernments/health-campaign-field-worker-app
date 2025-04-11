@@ -39354,28 +39354,81 @@ class $UniqueIdPoolTable extends UniqueIdPool
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, true,
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _deviceUuidMeta =
+      const VerificationMeta('deviceUuid');
+  @override
+  late final GeneratedColumn<String> deviceUuid = GeneratedColumn<String>(
+      'device_uuid', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _clientReferenceIdMeta =
-      const VerificationMeta('clientReferenceId');
+  static const VerificationMeta _userUuidMeta =
+      const VerificationMeta('userUuid');
   @override
-  late final GeneratedColumn<String> clientReferenceId =
-      GeneratedColumn<String>('client_reference_id', aliasedName, false,
-          type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _userUUIDMeta =
-      const VerificationMeta('userUUID');
-  @override
-  late final GeneratedColumn<String> userUUID = GeneratedColumn<String>(
-      'user_u_u_i_d', aliasedName, true,
+  late final GeneratedColumn<String> userUuid = GeneratedColumn<String>(
+      'user_uuid', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
       'status', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, clientReferenceId, userUUID, status];
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        deviceUuid,
+        userUuid,
+        status,
+        auditCreatedTime,
+        auditModifiedBy,
+        auditCreatedBy,
+        auditModifiedTime,
+        tenantId,
+        rowVersion,
+        additionalFields
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -39388,22 +39441,62 @@ class $UniqueIdPoolTable extends UniqueIdPool
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('client_reference_id')) {
-      context.handle(
-          _clientReferenceIdMeta,
-          clientReferenceId.isAcceptableOrUnknown(
-              data['client_reference_id']!, _clientReferenceIdMeta));
     } else if (isInserting) {
-      context.missing(_clientReferenceIdMeta);
+      context.missing(_idMeta);
     }
-    if (data.containsKey('user_u_u_i_d')) {
-      context.handle(_userUUIDMeta,
-          userUUID.isAcceptableOrUnknown(data['user_u_u_i_d']!, _userUUIDMeta));
+    if (data.containsKey('device_uuid')) {
+      context.handle(
+          _deviceUuidMeta,
+          deviceUuid.isAcceptableOrUnknown(
+              data['device_uuid']!, _deviceUuidMeta));
+    }
+    if (data.containsKey('user_uuid')) {
+      context.handle(_userUuidMeta,
+          userUuid.isAcceptableOrUnknown(data['user_uuid']!, _userUuidMeta));
     }
     if (data.containsKey('status')) {
       context.handle(_statusMeta,
           status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
     }
     return context;
   }
@@ -39415,13 +39508,27 @@ class $UniqueIdPoolTable extends UniqueIdPool
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return UniqueIdPoolData(
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id']),
-      clientReferenceId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
-      userUUID: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}user_u_u_i_d']),
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      deviceUuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}device_uuid']),
+      userUuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_uuid']),
       status: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}status']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
   }
 
@@ -39433,37 +39540,98 @@ class $UniqueIdPoolTable extends UniqueIdPool
 
 class UniqueIdPoolData extends DataClass
     implements Insertable<UniqueIdPoolData> {
-  final String? id;
-  final String clientReferenceId;
-  final String? userUUID;
+  final String id;
+  final String? deviceUuid;
+  final String? userUuid;
   final String? status;
+  final int? auditCreatedTime;
+  final String? auditModifiedBy;
+  final String? auditCreatedBy;
+  final int? auditModifiedTime;
+  final String? tenantId;
+  final int? rowVersion;
+  final String? additionalFields;
   const UniqueIdPoolData(
-      {this.id, required this.clientReferenceId, this.userUUID, this.status});
+      {required this.id,
+      this.deviceUuid,
+      this.userUuid,
+      this.status,
+      this.auditCreatedTime,
+      this.auditModifiedBy,
+      this.auditCreatedBy,
+      this.auditModifiedTime,
+      this.tenantId,
+      this.rowVersion,
+      this.additionalFields});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String>(id);
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || deviceUuid != null) {
+      map['device_uuid'] = Variable<String>(deviceUuid);
     }
-    map['client_reference_id'] = Variable<String>(clientReferenceId);
-    if (!nullToAbsent || userUUID != null) {
-      map['user_u_u_i_d'] = Variable<String>(userUUID);
+    if (!nullToAbsent || userUuid != null) {
+      map['user_uuid'] = Variable<String>(userUuid);
     }
     if (!nullToAbsent || status != null) {
       map['status'] = Variable<String>(status);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
     }
     return map;
   }
 
   UniqueIdPoolCompanion toCompanion(bool nullToAbsent) {
     return UniqueIdPoolCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      clientReferenceId: Value(clientReferenceId),
-      userUUID: userUUID == null && nullToAbsent
+      id: Value(id),
+      deviceUuid: deviceUuid == null && nullToAbsent
           ? const Value.absent()
-          : Value(userUUID),
+          : Value(deviceUuid),
+      userUuid: userUuid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userUuid),
       status:
           status == null && nullToAbsent ? const Value.absent() : Value(status),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
     );
   }
 
@@ -39471,104 +39639,215 @@ class UniqueIdPoolData extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return UniqueIdPoolData(
-      id: serializer.fromJson<String?>(json['id']),
-      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
-      userUUID: serializer.fromJson<String?>(json['userUUID']),
+      id: serializer.fromJson<String>(json['id']),
+      deviceUuid: serializer.fromJson<String?>(json['deviceUuid']),
+      userUuid: serializer.fromJson<String?>(json['userUuid']),
       status: serializer.fromJson<String?>(json['status']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String?>(id),
-      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
-      'userUUID': serializer.toJson<String?>(userUUID),
+      'id': serializer.toJson<String>(id),
+      'deviceUuid': serializer.toJson<String?>(deviceUuid),
+      'userUuid': serializer.toJson<String?>(userUuid),
       'status': serializer.toJson<String?>(status),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
 
   UniqueIdPoolData copyWith(
-          {Value<String?> id = const Value.absent(),
-          String? clientReferenceId,
-          Value<String?> userUUID = const Value.absent(),
-          Value<String?> status = const Value.absent()}) =>
+          {String? id,
+          Value<String?> deviceUuid = const Value.absent(),
+          Value<String?> userUuid = const Value.absent(),
+          Value<String?> status = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          Value<String?> tenantId = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
       UniqueIdPoolData(
-        id: id.present ? id.value : this.id,
-        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
-        userUUID: userUUID.present ? userUUID.value : this.userUUID,
+        id: id ?? this.id,
+        deviceUuid: deviceUuid.present ? deviceUuid.value : this.deviceUuid,
+        userUuid: userUuid.present ? userUuid.value : this.userUuid,
         status: status.present ? status.value : this.status,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
       );
   @override
   String toString() {
     return (StringBuffer('UniqueIdPoolData(')
           ..write('id: $id, ')
-          ..write('clientReferenceId: $clientReferenceId, ')
-          ..write('userUUID: $userUUID, ')
-          ..write('status: $status')
+          ..write('deviceUuid: $deviceUuid, ')
+          ..write('userUuid: $userUuid, ')
+          ..write('status: $status, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, clientReferenceId, userUUID, status);
+  int get hashCode => Object.hash(
+      id,
+      deviceUuid,
+      userUuid,
+      status,
+      auditCreatedTime,
+      auditModifiedBy,
+      auditCreatedBy,
+      auditModifiedTime,
+      tenantId,
+      rowVersion,
+      additionalFields);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is UniqueIdPoolData &&
           other.id == this.id &&
-          other.clientReferenceId == this.clientReferenceId &&
-          other.userUUID == this.userUUID &&
-          other.status == this.status);
+          other.deviceUuid == this.deviceUuid &&
+          other.userUuid == this.userUuid &&
+          other.status == this.status &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.tenantId == this.tenantId &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
 }
 
 class UniqueIdPoolCompanion extends UpdateCompanion<UniqueIdPoolData> {
-  final Value<String?> id;
-  final Value<String> clientReferenceId;
-  final Value<String?> userUUID;
+  final Value<String> id;
+  final Value<String?> deviceUuid;
+  final Value<String?> userUuid;
   final Value<String?> status;
+  final Value<int?> auditCreatedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<String?> auditCreatedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String?> tenantId;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
   final Value<int> rowid;
   const UniqueIdPoolCompanion({
     this.id = const Value.absent(),
-    this.clientReferenceId = const Value.absent(),
-    this.userUUID = const Value.absent(),
+    this.deviceUuid = const Value.absent(),
+    this.userUuid = const Value.absent(),
     this.status = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UniqueIdPoolCompanion.insert({
-    this.id = const Value.absent(),
-    required String clientReferenceId,
-    this.userUUID = const Value.absent(),
+    required String id,
+    this.deviceUuid = const Value.absent(),
+    this.userUuid = const Value.absent(),
     this.status = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : clientReferenceId = Value(clientReferenceId);
+  }) : id = Value(id);
   static Insertable<UniqueIdPoolData> custom({
     Expression<String>? id,
-    Expression<String>? clientReferenceId,
-    Expression<String>? userUUID,
+    Expression<String>? deviceUuid,
+    Expression<String>? userUuid,
     Expression<String>? status,
+    Expression<int>? auditCreatedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<String>? auditCreatedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? tenantId,
+    Expression<int>? rowVersion,
+    Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
-      if (userUUID != null) 'user_u_u_i_d': userUUID,
+      if (deviceUuid != null) 'device_uuid': deviceUuid,
+      if (userUuid != null) 'user_uuid': userUuid,
       if (status != null) 'status': status,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   UniqueIdPoolCompanion copyWith(
-      {Value<String?>? id,
-      Value<String>? clientReferenceId,
-      Value<String?>? userUUID,
+      {Value<String>? id,
+      Value<String?>? deviceUuid,
+      Value<String?>? userUuid,
       Value<String?>? status,
+      Value<int?>? auditCreatedTime,
+      Value<String?>? auditModifiedBy,
+      Value<String?>? auditCreatedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String?>? tenantId,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return UniqueIdPoolCompanion(
       id: id ?? this.id,
-      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
-      userUUID: userUUID ?? this.userUUID,
+      deviceUuid: deviceUuid ?? this.deviceUuid,
+      userUuid: userUuid ?? this.userUuid,
       status: status ?? this.status,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      tenantId: tenantId ?? this.tenantId,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -39579,14 +39858,35 @@ class UniqueIdPoolCompanion extends UpdateCompanion<UniqueIdPoolData> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (clientReferenceId.present) {
-      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    if (deviceUuid.present) {
+      map['device_uuid'] = Variable<String>(deviceUuid.value);
     }
-    if (userUUID.present) {
-      map['user_u_u_i_d'] = Variable<String>(userUUID.value);
+    if (userUuid.present) {
+      map['user_uuid'] = Variable<String>(userUuid.value);
     }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -39598,9 +39898,16 @@ class UniqueIdPoolCompanion extends UpdateCompanion<UniqueIdPoolData> {
   String toString() {
     return (StringBuffer('UniqueIdPoolCompanion(')
           ..write('id: $id, ')
-          ..write('clientReferenceId: $clientReferenceId, ')
-          ..write('userUUID: $userUUID, ')
+          ..write('deviceUuid: $deviceUuid, ')
+          ..write('userUuid: $userUuid, ')
           ..write('status: $status, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -55547,18 +55854,32 @@ class $$LocalizationTableOrderingComposer
 
 typedef $$UniqueIdPoolTableInsertCompanionBuilder = UniqueIdPoolCompanion
     Function({
-  Value<String?> id,
-  required String clientReferenceId,
-  Value<String?> userUUID,
+  required String id,
+  Value<String?> deviceUuid,
+  Value<String?> userUuid,
   Value<String?> status,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<String?> auditCreatedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
   Value<int> rowid,
 });
 typedef $$UniqueIdPoolTableUpdateCompanionBuilder = UniqueIdPoolCompanion
     Function({
-  Value<String?> id,
-  Value<String> clientReferenceId,
-  Value<String?> userUUID,
+  Value<String> id,
+  Value<String?> deviceUuid,
+  Value<String?> userUuid,
   Value<String?> status,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<String?> auditCreatedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
   Value<int> rowid,
 });
 
@@ -55583,31 +55904,59 @@ class $$UniqueIdPoolTableTableManager extends RootTableManager<
           getChildManagerBuilder: (p) =>
               $$UniqueIdPoolTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
-            Value<String?> id = const Value.absent(),
-            Value<String> clientReferenceId = const Value.absent(),
-            Value<String?> userUUID = const Value.absent(),
+            Value<String> id = const Value.absent(),
+            Value<String?> deviceUuid = const Value.absent(),
+            Value<String?> userUuid = const Value.absent(),
             Value<String?> status = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               UniqueIdPoolCompanion(
             id: id,
-            clientReferenceId: clientReferenceId,
-            userUUID: userUUID,
+            deviceUuid: deviceUuid,
+            userUuid: userUuid,
             status: status,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditCreatedBy: auditCreatedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
-            Value<String?> id = const Value.absent(),
-            required String clientReferenceId,
-            Value<String?> userUUID = const Value.absent(),
+            required String id,
+            Value<String?> deviceUuid = const Value.absent(),
+            Value<String?> userUuid = const Value.absent(),
             Value<String?> status = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               UniqueIdPoolCompanion.insert(
             id: id,
-            clientReferenceId: clientReferenceId,
-            userUUID: userUUID,
+            deviceUuid: deviceUuid,
+            userUuid: userUuid,
             status: status,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditCreatedBy: auditCreatedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
             rowid: rowid,
           ),
         ));
@@ -55633,18 +55982,53 @@ class $$UniqueIdPoolTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get clientReferenceId => $state.composableBuilder(
-      column: $state.table.clientReferenceId,
+  ColumnFilters<String> get deviceUuid => $state.composableBuilder(
+      column: $state.table.deviceUuid,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get userUUID => $state.composableBuilder(
-      column: $state.table.userUUID,
+  ColumnFilters<String> get userUuid => $state.composableBuilder(
+      column: $state.table.userUuid,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<String> get status => $state.composableBuilder(
       column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 }
@@ -55657,18 +56041,53 @@ class $$UniqueIdPoolTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get clientReferenceId => $state.composableBuilder(
-      column: $state.table.clientReferenceId,
+  ColumnOrderings<String> get deviceUuid => $state.composableBuilder(
+      column: $state.table.deviceUuid,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get userUUID => $state.composableBuilder(
-      column: $state.table.userUUID,
+  ColumnOrderings<String> get userUuid => $state.composableBuilder(
+      column: $state.table.userUuid,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<String> get status => $state.composableBuilder(
       column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }

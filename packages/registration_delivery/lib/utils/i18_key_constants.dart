@@ -316,6 +316,8 @@ class BeneficiaryDetails {
 
   String get noInternetBeneficiaryIdsText => 'NO_INTERNET_BENEFICIARY_IDS_TEXT';
 
+  String get failedBeneficiaryIds => 'FAILED_BENEFICIARY_IDS';
+
   String get totalBeneficiaryIds => 'TOTAL_BENEFICIARY_IDS';
 
   String get recordsdownload => 'RECORDS_DOWNLOAD';

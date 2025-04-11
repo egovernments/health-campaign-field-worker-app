@@ -1,5 +1,7 @@
 // Importing necessary packages and files
+import 'package:curl_logger_dio_interceptor/curl_logger_dio_interceptor.dart';
 import "package:dio/dio.dart"; // Dio package for HTTP requests
+
 import '../utils/environment_config.dart'; // Custom utility file for environment configurations
 import 'repositories/api_interceptors.dart'; // Custom API interceptors for Dio
 
@@ -27,8 +29,11 @@ class DioClient {
   void init() {
     _dio = Dio()
       ..interceptors.addAll([
-        AuthTokenInterceptor(), // Custom interceptor for handling authentication tokens
-        ApiLoggerInterceptor(), // Custom interceptor for logging API requests and responses
+        CurlLoggerDioInterceptor(),
+        AuthTokenInterceptor(),
+        // Custom interceptor for handling authentication tokens
+        ApiLoggerInterceptor(),
+        // Custom interceptor for logging API requests and responses
       ])
       ..options = BaseOptions(
         connectTimeout: Duration(

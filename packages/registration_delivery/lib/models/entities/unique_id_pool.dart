@@ -9,15 +9,21 @@ part 'unique_id_pool.mapper.dart';
 class UniqueIdPoolSearchModel extends EntitySearchModel
     with UniqueIdPoolSearchModelMappable {
   final String? id;
-  final String? userUUID;
-  final String? clientReferenceId;
+  final String? userUuid;
+  final String? deviceUuid;
+  final String? deviceInfo;
+  final int? count;
   final String? status;
+  final String? tenantId;
 
   UniqueIdPoolSearchModel({
     this.id,
     this.status,
-    this.clientReferenceId,
-    this.userUUID,
+    this.deviceUuid,
+    this.userUuid,
+    this.count,
+    this.deviceInfo,
+    this.tenantId,
     super.isDeleted,
     super.boundaryCode,
   }) : super();
@@ -26,8 +32,11 @@ class UniqueIdPoolSearchModel extends EntitySearchModel
   UniqueIdPoolSearchModel.ignoreDeleted({
     this.id,
     this.status,
-    this.clientReferenceId,
-    this.userUUID,
+    this.deviceUuid,
+    this.deviceInfo,
+    this.count,
+    this.userUuid,
+    this.tenantId,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
@@ -37,15 +46,21 @@ class UniqueIdPoolModel extends EntityModel with UniqueIdPoolModelMappable {
   static const schemaName = 'UniqueIds';
 
   final String id;
-  final String userUUID;
-  final String clientReferenceId;
+  final String? userUuid;
+  final String? deviceUuid;
   final String status;
+  final int? rowVersion;
+  final String? tenantId;
+  final UniqueIdPoolAdditionalFields? additionalFields;
 
   UniqueIdPoolModel({
     required this.id,
     required this.status,
-    required this.clientReferenceId,
-    required this.userUUID,
+    required this.deviceUuid,
+    required this.userUuid,
+    this.rowVersion,
+    this.tenantId,
+    this.additionalFields,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
@@ -54,9 +69,15 @@ class UniqueIdPoolModel extends EntityModel with UniqueIdPoolModelMappable {
   UniqueIdPoolCompanion get companion {
     return UniqueIdPoolCompanion(
       id: Value(id),
-      userUUID: Value(userUUID),
-      clientReferenceId: Value(clientReferenceId),
+      userUuid: Value(userUuid!),
+      deviceUuid: Value(deviceUuid!),
       status: Value(status),
+      tenantId: Value(tenantId),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      additionalFields: Value(additionalFields?.toJson()),
     );
   }
 }
@@ -66,7 +87,7 @@ class UniqueIdPoolAdditionalFields extends AdditionalFields
     with UniqueIdPoolAdditionalFieldsMappable {
   UniqueIdPoolAdditionalFields({
     super.schema = 'UniqueIds',
-    required super.version,
+    super.version = 1, // TODO: revert once backend handles null
     super.fields,
   });
 }

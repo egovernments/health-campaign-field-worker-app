@@ -32,10 +32,6 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uniqueIdRepo = context
-        .read<LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>();
-
-
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
@@ -194,7 +190,13 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) =>
-                UniqueIdBloc(uniqueIdPoolLocalRepository: uniqueIdRepo),
+                UniqueIdBloc(uniqueIdPoolLocalRepository: context
+                    .read<LocalRepository<UniqueIdPoolModel,
+                    UniqueIdPoolSearchModel>>(),
+                    uniqueIdPoolRemoteRepository: context.read<
+                        RemoteRepository<
+                            UniqueIdPoolModel,
+                            UniqueIdPoolSearchModel>>()),
           ),
         ],
         child: const AutoRouter(),

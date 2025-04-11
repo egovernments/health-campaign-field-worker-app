@@ -246,9 +246,13 @@ abstract class SyncUpOperation {
           operationGroupedEntity,
       required MapEntry<DataModelType, List<OpLogEntry<EntityModel>>>
           typeGroupedEntity});
+
   Future<void> update(List<EntityModel> entities, LocalRepository local);
+
   Future<void> delete(List<EntityModel> entities, LocalRepository local);
+
   Future<void> singleCreate(EntityModel entity, LocalRepository local);
+
   Future<void> localMarkSyncUp(
       List<OpLogEntry<EntityModel>> entity, LocalRepository local);
 }
