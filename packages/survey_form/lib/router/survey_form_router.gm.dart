@@ -315,6 +315,7 @@ class SurveyFormViewRouteArgs {
   @override
   String toString() {
     return 'SurveyFormViewRouteArgs{key: $key, appLocalizations: $appLocalizations, hideFooter: $hideFooter, hideHeader: $hideHeader, hideBackAlert: $hideBackAlert, checklistType: $checklistType, useScaffold: $useScaffold, age: $age, gender: $gender, isChild: $isChild}';
+
   }
 }
 

@@ -34,6 +34,7 @@ class SurveyFormViewPage extends LocalizedStatefulWidget {
   final String? gender;
   final bool isChild;
 
+
   const SurveyFormViewPage({
     Key? key,
     super.appLocalizations,
@@ -200,6 +201,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       ),
     ) :  _buildSurveyPage(context);
   }
+
 
   Widget _buildSurveyPage(BuildContext context){
     final theme = Theme.of(context);
