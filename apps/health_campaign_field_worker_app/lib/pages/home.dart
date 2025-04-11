@@ -459,18 +459,19 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                if (snapshot.data?['enablesManualSync'] == true) {
-                  if (context.mounted) _attemptSyncUp(context);
-                } else {
-                  if (context.mounted) {
-                    Toast.showToast(
-                      context,
-                      message: localizations
-                          .translate(i18.common.coreCommonSyncInProgress),
-                      type: ToastType.success,
-                    );
-                  }
-                }
+                if (context.mounted) _attemptSyncUp(context);
+                // if (snapshot.data?['enablesManualSync'] == true) {
+                //   if (context.mounted) _attemptSyncUp(context);
+                // } else {
+                //   if (context.mounted) {
+                //     Toast.showToast(
+                //       context,
+                //       message: localizations
+                //           .translate(i18.common.coreCommonSyncInProgress),
+                //       type: ToastType.success,
+                //     );
+                //   }
+                // }
               },
             );
           },
@@ -605,11 +606,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-
-      if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
-        filteredLabels.remove(i18.home.db);
-      }
-
+    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
+      filteredLabels.remove(i18.home.db);
+    }
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -660,7 +659,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
                 context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>()
+                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
+                context
+                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -694,6 +695,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         AttendanceLogSearchModel>>(),
                 context.read<
                     RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+                context
+                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
               ],
             ),
           );
@@ -762,6 +765,9 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.genderOptions!.map((e) => e.code).toList(),
           idTypeOptions:
               appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          memberRelationTypeOptions: appConfiguration.relationShipTypeOptions!
+              .map((e) => e.code)
+              .toList(),
           householdDeletionReasonOptions: appConfiguration
               .householdDeletionReasonOptions!
               .map((e) => e.code)

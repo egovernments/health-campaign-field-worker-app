@@ -18,7 +18,7 @@ class ServiceAttributes extends Table {
   IntColumn get clientModifiedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
-  TextColumn get clientReferenceId => text()();
+  TextColumn get clientReferenceId => text().nullable()();   // TODO: making this nullable for now as old downsync service attributes may not have it
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
@@ -26,5 +26,5 @@ class ServiceAttributes extends Table {
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
+  Set<Column> get primaryKey => {  };
 }

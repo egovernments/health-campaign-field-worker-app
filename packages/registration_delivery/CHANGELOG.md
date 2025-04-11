@@ -1,8 +1,14 @@
+## 1.0.6+4
+
+  * Added Checklist for household and individual page
+  * added member relationship model and db
+
 ## 1.0.6+3
 
 * BugFix:
     * If there is no checklist redirect to BeneficiaryDetailsRoute instead of
       DeliverInterventionRoute
+
 
 ## 1.0.6+2
 

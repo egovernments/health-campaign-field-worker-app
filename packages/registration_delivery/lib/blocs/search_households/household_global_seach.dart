@@ -29,6 +29,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     required super.referralDataRepository,
     required super.individualGlobalSearchRepository,
     required super.houseHoldGlobalSearchRepository,
+    required super.serviceDataRepository,
   }) {
     on<HouseHoldGlobalSearchEvent>(_houseHoldGlobalSearch);
   }

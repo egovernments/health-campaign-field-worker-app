@@ -1,3 +1,11 @@
+## 1.0.1+4
+
+  * Added referenceIds to search model
+  * Added downsync of service and service attributes
+  * Added new type in checklist view
+  * Added service update in repository
+  * added parser to support checklist configuration
+
 ## 1.0.1+3
 
 * Bug fix:

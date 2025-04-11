@@ -31,6 +31,7 @@ import 'tables/package_tables/attendee.dart';
 import 'tables/package_tables/hf_referral.dart';
 import 'tables/package_tables/household.dart';
 import 'tables/package_tables/household_member.dart';
+import 'tables/package_tables/household_member_relationship.dart';
 import 'tables/package_tables/referral.dart';
 import 'tables/package_tables/side_effect.dart';
 import 'tables/package_tables/staff.dart';
@@ -97,6 +98,7 @@ part 'sql_store.g.dart';
   HFReferral,
   Household,
   HouseholdMember,
+  HouseholdMemberRelationShip,
   Task,
   TaskResource,
   SideEffect,
@@ -185,8 +187,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               await migrator.addColumn(household, household.householdType);
               await migrator.addColumn(
                   attendanceRegister, attendanceRegister.localityCode);
-              await migrator.addColumn(
-                  service, service.relatedClientReferenceId);
+              await migrator.addColumn(service, service.referenceId);
             } catch (e) {
               if (kDebugMode) {
                 print(

@@ -90,15 +90,31 @@ abstract class RemoteRepository<D extends EntityModel,
             data: entityName == 'User'
                 ? query.toMap()
                 : {
-                    isPlural
-                            ? entityNamePlural
-                            : entityName == 'ServiceDefinition'
-                                ? 'ServiceDefinitionCriteria'
-                                : entityName == 'Downsync'
-                                    ? 'DownsyncCriteria'
-                                    : entityName:
-                        isPlural ? [query.toMap()] : query.toMap(),
-                  },
+              entityName == 'ServiceDefinition'
+                  ? 'ServiceDefinitionCriteria'
+                  : entityName == 'Downsync'
+                  ? 'DownsyncCriteria'
+                  : entityName == 'Service'
+                  ? 'ServiceCriteria'
+                  : isPlural
+                  ? entityNamePlural
+                  : entityName:
+              isPlural
+                  ? (entityName == 'Service'
+                  ? [
+                {
+                  ...query.toMap(),
+                  'tenantId': DigitDataModelSingleton().tenantId,
+                }
+              ]
+                  : [query.toMap()])
+                  : (entityName == 'Service'
+                  ? {
+                ...query.toMap(),
+                'tenantId': DigitDataModelSingleton().tenantId,
+              }
+                  : query.toMap()),
+            }
           );
         },
       );
@@ -117,7 +133,7 @@ abstract class RemoteRepository<D extends EntityModel,
     }
 
     if (!responseMap.containsKey(
-      (isSearchResponsePlural || entityName == 'ServiceDefinition')
+      (isSearchResponsePlural || entityName == 'ServiceDefinition' || entityName == 'Service')
           ? entityNamePlural
           : entityName,
     )) {
@@ -129,7 +145,7 @@ abstract class RemoteRepository<D extends EntityModel,
     }
 
     final entityResponse = await responseMap[
-        (isSearchResponsePlural || entityName == 'ServiceDefinition')
+        (isSearchResponsePlural || entityName == 'ServiceDefinition' || entityName == 'Service')
             ? entityNamePlural
             : entityName];
 
@@ -301,6 +317,9 @@ abstract class RemoteRepository<D extends EntityModel,
           options: Options(headers: {
             "content-type": 'application/json',
           }),
+          queryParameters: {
+            "tenantId": DigitDataModelSingleton().tenantId,
+          },
           data: {
             'errorDetail': {
               "apiDetails": {

@@ -399,6 +399,7 @@ class _HouseholdOverviewPageState
                                           size: DigitButtonSize.medium,
                                           prefixIcon: Icons.edit,
                                           capitalizeLetters: false,
+                                          isDisabled: true,  // TODO: need to check later
                                         ),
                                       ),
 
@@ -537,7 +538,15 @@ class _HouseholdOverviewPageState
                                                     getStatusAttributes(state,
                                                             deliverInterventionState)[
                                                         'textLabel'],
-                                                  )
+                                                  ),
+                                                if(state.householdMemberWrapper.householdChecklists?.isNotEmpty ?? false)
+                                                  for (var attribute in state.householdMemberWrapper.householdChecklists?.first.attributes ?? [])
+                                                    if(attribute.value != null && attribute.value != "" && attribute.value != "NOT_SELECTED")
+                                                    localizations.translate('${RegistrationDeliverySingleton().selectedProject?.name}.HOUSEHOLD.DISTRIBUTOR.${attribute?.attributeCode}'  //TODO:
+                                            ): attribute.value
+                                                        .split('.') // Split on `.`
+                                                        .map((part) => localizations.translate(part.trim())) // Localize each part
+                                                        .join(", ") // Join with `, `
                                               },
                                             ),
                                           ],
@@ -647,9 +656,15 @@ class _HouseholdOverviewPageState
                                           )
                                         : const Offstage(),
                                     Column(
-                                      children: (state.householdMemberWrapper
-                                                  .members ??
-                                              [])
+                                      children: (state.householdMemberWrapper.members
+                                          ?.where((m) {
+                                        // Identify if this member is a "child" in any other member's relationships
+                                        final isChild = state.householdMemberWrapper.householdMembers
+                                            ?.any((member) =>
+                                        member.memberRelationships != null && member.memberRelationships!.isNotEmpty && member.individualClientReferenceId == m.clientReferenceId);
+
+                                        return !(isChild ?? false); // Only show if not a child
+                                      }).toList() ?? [])
                                           .map(
                                         (e) {
                                           final isHead = state
@@ -657,6 +672,10 @@ class _HouseholdOverviewPageState
                                                   .headOfHousehold
                                                   ?.clientReferenceId ==
                                               e.clientReferenceId;
+
+                                          final household = state
+                                              .householdMemberWrapper.household;
+
                                           final projectBeneficiaryId = state
                                               .householdMemberWrapper
                                               .projectBeneficiaries
@@ -721,6 +740,24 @@ class _HouseholdOverviewPageState
                                                           ?.clientReferenceId)
                                                   .toList()
                                               : null;
+
+                                          final childBeneficiaries = (state.householdMemberWrapper.members
+                                              ?.where((childMem) {
+
+                                                final parentBeneficiary = state.householdMemberWrapper.householdMembers?.where((element) => element.individualClientReferenceId == e.clientReferenceId).firstOrNull;
+
+                                                final isChild = state.householdMemberWrapper.householdMembers
+                                                    ?.any((member) =>
+                                                member.individualClientReferenceId == childMem.clientReferenceId &&
+                                                    (member.memberRelationships?.any(
+                                                          (rel) => rel.relativeClientReferenceId == parentBeneficiary?.clientReferenceId,
+                                                    ) ??
+                                                        false));
+                                            return (isChild ?? false); // Only include if it is a child
+                                          }).toList() ?? []);
+
+                                          final individualChecklist = state.householdMemberWrapper.individualChecklists?.firstWhereOrNull((element) => element.referenceId == e.clientReferenceId);
+
                                           final ageInYears =
                                               e.dateOfBirth != null
                                                   ? DigitDateUtils.calculateAge(
@@ -768,6 +805,9 @@ class _HouseholdOverviewPageState
                                           return MemberCard(
                                             isHead: isHead,
                                             individual: e,
+                                            household: household,
+                                            individualChecklist: individualChecklist,
+                                            children: childBeneficiaries,
                                             projectBeneficiaries:
                                                 projectBeneficiary ?? [],
                                             tasks: taskData,

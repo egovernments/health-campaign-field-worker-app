@@ -252,6 +252,16 @@ class MdmsRepository {
       return idOption;
     }).toList();
 
+    final List<RelationShipTypeOptions>? relationShipTypes =
+        element?.relationShipTypeOptions.map((element) {
+      final relationShipOption = RelationShipTypeOptions()
+        ..name = element.name
+        ..code = element.code
+        ..active = element.active;
+
+      return relationShipOption;
+    }).toList();
+
     final List<ChecklistTypes>? checklistTypes =
         element?.checklistTypes.map((e) {
       final surveyForm = ChecklistTypes()
@@ -304,6 +314,7 @@ class MdmsRepository {
       ..interfaces = interfaceList ?? [];
     appConfiguration.genderOptions = genderOptions;
     appConfiguration.idTypeOptions = idTypeOptions;
+    appConfiguration.relationShipTypeOptions = relationShipTypes;
     appConfiguration.privacyPolicyConfig = privacyPolicy;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
     appConfiguration.householdDeletionReasonOptions =

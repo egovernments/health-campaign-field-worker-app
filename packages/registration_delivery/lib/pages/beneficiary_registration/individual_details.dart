@@ -18,25 +18,28 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:survey_form/pages/survey_form_view.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../models/entities/beneficiary_checklist_enums.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
-import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
+  final String? parentClientReferenceId;
 
   const IndividualDetailsPage({
     super.key,
     super.appLocalizations,
     this.isHeadOfHousehold = false,
+    this.parentClientReferenceId,
   });
 
   @override
@@ -54,6 +57,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
+  final checklistKey = GlobalKey<SurveyFormViewPageState>();
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +141,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 form.control(_genderKey).setErrors({'': true});
                               });
                             }
+                            bool validForm = checklistKey.currentState
+                                    ?.validateSurveyForm() ??
+                                false;
+
+                            if (validForm == false) return;
                             final userId = RegistrationDeliverySingleton()
                                 .loggedInUserUuid;
                             final projectId =
@@ -154,6 +163,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 householdModel,
                                 individualModel,
                                 projectBeneficiaryModel,
+                                parentClientReferenceId,
                                 registrationDate,
                                 searchQuery,
                                 loading,
@@ -165,12 +175,19 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   oldIndividual: null,
                                 );
 
+                                checklistKey.currentState?.submitSurvey(
+                                    latitude: 876765,
+                                    longitude: 89798,
+                                    relatedReferenceId:
+                                        individual.clientReferenceId);
+
                                 final boundary =
                                     RegistrationDeliverySingleton().boundary;
 
                                 bloc.add(
                                   BeneficiaryRegistrationSaveIndividualDetailsEvent(
                                     model: individual,
+                                    parentClientReferenceId: widget.parentClientReferenceId,
                                     isHeadOfHousehold: widget.isHeadOfHousehold,
                                   ),
                                 );
@@ -199,6 +216,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       projectId: projectId!,
                                       userUuid: userId!,
                                       boundary: boundary!,
+                                      parentClientReferenceId: widget.parentClientReferenceId,
                                       tag: scannerBloc.state.qrCodes.isNotEmpty
                                           ? scannerBloc.state.qrCodes.first
                                           : null,
@@ -211,6 +229,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 householdModel,
                                 individualModel,
                                 addressModel,
+                                parentClientReferenceId,
                                 projectBeneficiaryModel,
                                 loading,
                               ) {
@@ -224,6 +243,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   form: form,
                                   oldIndividual: individualModel,
                                 );
+                                checklistKey.currentState?.submitSurvey(
+                                    latitude: 876765,
+                                    longitude: 89798,
+                                    relatedReferenceId:
+                                        individual.clientReferenceId);
                                 final tag = scannerBloc.state.qrCodes.isNotEmpty
                                     ? scannerBloc.state.qrCodes.first
                                     : null;
@@ -265,6 +289,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                               )
                                             : null,
                                       ),
+                                      parentClientReferenceId: widget.parentClientReferenceId,
                                       tag: scannerBloc.state.qrCodes.isNotEmpty
                                           ? scannerBloc.state.qrCodes.first
                                           : null,
@@ -275,12 +300,19 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               addMember: (
                                 addressModel,
                                 householdModel,
+                                parentClientReferenceId,
                                 loading,
                               ) {
                                 final individual = _getIndividualModel(
                                   context,
                                   form: form,
                                 );
+
+                                checklistKey.currentState?.submitSurvey(
+                                    latitude: addressModel.latitude,
+                                    longitude: addressModel.longitude,
+                                    relatedReferenceId:
+                                        individual.clientReferenceId);
 
                                 if (context.mounted) {
                                   final scannerBloc =
@@ -306,6 +338,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                         householdModel: householdModel,
                                         individualModel: individual,
                                         addressModel: addressModel,
+                                        parentClientReferenceId: widget.parentClientReferenceId,
                                         userUuid:
                                             RegistrationDeliverySingleton()
                                                 .loggedInUserUuid!,
@@ -336,7 +369,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           localizations.translate(
                             i18.individualDetails.individualsDetailsLabelText,
                           ),
-                          style: textTheme.headingXl.copyWith(color: theme.colorTheme.primary.primary2),
+                          style: textTheme.headingXl.copyWith(
+                              color: theme.colorTheme.primary.primary2),
                         ),
                         Column(
                           children: [
@@ -345,9 +379,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               child: ReactiveWrapperField(
                                 formControlName: _individualNameKey,
                                 validationMessages: {
-                                  'required': (object) => localizations.translate(
-                                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                                  ),
+                                  'required': (object) =>
+                                      localizations.translate(
+                                        '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                      ),
                                   'maxLength': (object) => localizations
                                       .translate(i18.common.maxCharsRequired)
                                       .replaceAll('{}', maxLength.toString()),
@@ -359,7 +394,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   isRequired: true,
                                   child: DigitTextFormInput(
                                     initialValue:
-                                    form.control(_individualNameKey).value,
+                                        form.control(_individualNameKey).value,
                                     onChange: (value) {
                                       form.control(_individualNameKey).value =
                                           value;
@@ -369,20 +404,22 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 ),
                               ),
                             ),
-                            if(widget.isHeadOfHousehold)
-                              const SizedBox(height: spacer2,),
+                            if (widget.isHeadOfHousehold)
+                              const SizedBox(
+                                height: spacer2,
+                              ),
                             Offstage(
                               offstage: !widget.isHeadOfHousehold,
                               child: DigitCheckbox(
                                 capitalizeFirstLetter: false,
                                 label: (RegistrationDeliverySingleton()
-                                    .householdType ==
-                                    HouseholdType.community)
-                                    ? localizations.translate(
-                                    i18.individualDetails.clfCheckboxLabelText)
+                                            .householdType ==
+                                        HouseholdType.community)
+                                    ? localizations.translate(i18
+                                        .individualDetails.clfCheckboxLabelText)
                                     : localizations.translate(
-                                  i18.individualDetails.checkboxLabelText,
-                                ),
+                                        i18.individualDetails.checkboxLabelText,
+                                      ),
                                 value: widget.isHeadOfHousehold,
                                 readOnly: widget.isHeadOfHousehold,
                                 onChanged: (_) {},
@@ -508,7 +545,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             yearsAndMonthsErrMsg: localizations.translate(
                               i18.individualDetails.yearsAndMonthsErrorText,
                             ),
-                            errorMessage: _getDobErrorMessage(form.control(_dobKey)),
+                            errorMessage:
+                                _getDobErrorMessage(form.control(_dobKey)),
                             initialDate: before150Years,
                             initialValue: getInitialDateValue(form),
                             onChangeOfFormControl: (value) {
@@ -608,6 +646,18 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             ),
                           ),
                         ),
+                        if (RegistrationDeliverySingleton().householdType ==
+                            HouseholdType.family)
+                          SurveyFormViewPage(
+                            key: checklistKey,
+                            hideFooter: true,
+                            hideHeader: true,
+                            checklistType:
+                                BeneficiaryChecklistEnums.individual.toValue(),
+                            hideBackAlert: true,
+                            useScaffold: false,
+                            isChild: widget.parentClientReferenceId != null,
+                          ),
                         // const SizedBox(height: spacer4),
                         if ((RegistrationDeliverySingleton().beneficiaryType ==
                                     BeneficiaryType.household &&
@@ -779,6 +829,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       ),
     );
 
+    // IndividualAdditionalFields additionalFields =
+    //     IndividualAdditionalFields(version: 1, fields: [
+    //   if (widget.parentClientReferenceId != null) ...[
+    //     AdditionalField(
+    //         'parentClientReferenceId', widget.parentClientReferenceId),
+    //   ],
+    // ]);
+
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
@@ -796,6 +854,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           identifierType: form.control(_idTypeKey).value,
         ),
       ],
+      // additionalFields: additionalFields,
     );
 
     return individual;
@@ -805,9 +864,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     if (!control.hasErrors) return null;
 
     final dobValue = control.value;
-    final age = dobValue != null
-        ? DigitDateUtils.calculateAge(dobValue)
-        : null;
+    final age = dobValue != null ? DigitDateUtils.calculateAge(dobValue) : null;
 
     if (dobValue == null) {
       return localizations.translate(i18.common.corecommonRequired);

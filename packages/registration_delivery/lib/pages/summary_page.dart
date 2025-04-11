@@ -12,6 +12,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
+import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
+import 'package:survey_form/blocs/service.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -37,6 +40,22 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
 
   final bool isCommunity =
       RegistrationDeliverySingleton().householdType == HouseholdType.community;
+
+  @override
+  void initState() {
+    super.initState();
+    final householdState = context.read<BeneficiaryRegistrationBloc>().state;
+    context.read<ServiceBloc>().add(
+          ServiceSearchEvent(
+            serviceSearchModel: ServiceSearchModel(
+              referenceIds: [
+                householdState.householdModel?.clientReferenceId ?? ""
+              ],
+            ),
+          ),
+        );
+  }
+
 
   String getLocalizedMessage(String code) {
     return localizations.translate(code);
@@ -143,6 +162,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                 individualModel,
                                 projectBeneficiaryModel,
                                 registrationDate,
+                                parentClientReferenceId,
                                 addressModel,
                                 loading,
                                 isHeadOfHousehold,
@@ -250,10 +270,45 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   ),
                                 ]),
                           ]),
-                      DigitCard(
-                          margin: const EdgeInsets.all(spacer2),
-                          children: [
-                            LabelValueSummary(
+                      BlocBuilder<ServiceBloc, ServiceState>(
+                        builder: (context, state) {
+                          final List<LabelValueItem> attributeItems = [];
+                          if (state is ServiceSearchState) {
+                            final serviceList = ( state.serviceList.isNotEmpty)
+                                ? state.serviceList.first
+                                : null;
+
+                            if (serviceList != null) {
+                              for (final attribute in serviceList.attributes ?? []) {
+                                final value = attribute.value;
+                                if (value != null && value.isNotEmpty && value != "NOT_SELECTED") {
+                                  final localizedLabel = localizations.translate(
+                                    '${RegistrationDeliverySingleton().selectedProject?.name}.HOUSEHOLD.DISTRIBUTOR.${attribute.attributeCode}',
+                                  );
+                                  final localizedValue = value.contains('.')
+                                      ? value
+                                      .split('.')
+                                      .map((part) => localizations.translate(part.trim()))
+                                      .join(', ')
+                                      : localizations.translate(value);
+                                  attributeItems.add(
+                                    LabelValueItem(
+                                      label: localizedLabel,
+                                      value: localizedValue,
+                                      isInline: true,
+                                      labelFlex: 5,
+                                      padding: const EdgeInsets.only(top: spacer2),
+                                    ),
+                                  );
+                                }
+                              }
+                            }
+                          }
+
+                          return DigitCard(
+                            margin: const EdgeInsets.all(spacer2),
+                            children: [
+                              LabelValueSummary(
                                 padding: EdgeInsets.zero,
                                 heading: (isCommunity)
                                     ? localizations.translate(
@@ -289,6 +344,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                         : localizations.translate(i18
                                             .householdDetails
                                             .noOfPregnantWomenCountLabel),
+
                                     value: householdState.householdModel
                                             ?.additionalFields?.fields
                                             .where((h) =>
@@ -327,6 +383,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                           const EdgeInsets.only(top: spacer2)),
                                 ]),
                           ]),
+
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
@@ -412,6 +469,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             individualModel,
                                             projectBeneficiaryModel,
                                             registrationDate,
+                                            parentClientReferenceId,
                                             addressModel,
                                             loading,
                                             isHeadOfHousehold,
@@ -435,6 +493,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                           individualModel,
                                           projectBeneficiaryModel,
                                           registrationDate,
+                                          parentClientReferenceId,
                                           addressModel,
                                           loading,
                                           isHeadOfHousehold,
@@ -465,6 +524,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             individualModel,
                                             projectBeneficiaryModel,
                                             registrationDate,
+                                            parentClientReferenceId,
                                             addressModel,
                                             loading,
                                             isHeadOfHousehold,
