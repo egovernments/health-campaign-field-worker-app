@@ -31,6 +31,14 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
         return BeneficiaryType.household;
       case "PRODUCT":
         return BeneficiaryType.product;
+      case "SPECIAL_GROUPS":
+        return BeneficiaryType.specialGroups;
+      case "REFUGEE_CAMPS":
+        return BeneficiaryType.refugeeCamps;
+      case "SG_PRODUCT":
+        return BeneficiaryType.sgProduct;
+      case "RC_PRODUCT":
+        return BeneficiaryType.rcProduct;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -45,6 +53,14 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
         return "HOUSEHOLD";
       case BeneficiaryType.product:
         return "PRODUCT";
+      case BeneficiaryType.specialGroups:
+        return "SPECIAL_GROUPS";
+      case BeneficiaryType.refugeeCamps:
+        return "REFUGEE_CAMPS";
+      case BeneficiaryType.sgProduct:
+        return "SG_PRODUCT";
+      case BeneficiaryType.rcProduct:
+        return "RC_PRODUCT";
     }
   }
 }
