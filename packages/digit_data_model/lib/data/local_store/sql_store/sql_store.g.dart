@@ -34885,11 +34885,11 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
   late final GeneratedColumn<String> selfId = GeneratedColumn<String>(
       'self_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _selfIdClientReferenceIdMeta =
-      const VerificationMeta('selfIdClientReferenceId');
+  static const VerificationMeta _selfClientReferenceIdMeta =
+      const VerificationMeta('selfClientReferenceId');
   @override
-  late final GeneratedColumn<String> selfIdClientReferenceId =
-      GeneratedColumn<String>('self_id_client_reference_id', aliasedName, true,
+  late final GeneratedColumn<String> selfClientReferenceId =
+      GeneratedColumn<String>('self_client_reference_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _relativeIdMeta =
       const VerificationMeta('relativeId');
@@ -34947,7 +34947,7 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
   List<GeneratedColumn> get $columns => [
         id,
         selfId,
-        selfIdClientReferenceId,
+        selfClientReferenceId,
         relativeId,
         relativeClientReferenceId,
         relationshipType,
@@ -34975,12 +34975,11 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
       context.handle(_selfIdMeta,
           selfId.isAcceptableOrUnknown(data['self_id']!, _selfIdMeta));
     }
-    if (data.containsKey('self_id_client_reference_id')) {
+    if (data.containsKey('self_client_reference_id')) {
       context.handle(
-          _selfIdClientReferenceIdMeta,
-          selfIdClientReferenceId.isAcceptableOrUnknown(
-              data['self_id_client_reference_id']!,
-              _selfIdClientReferenceIdMeta));
+          _selfClientReferenceIdMeta,
+          selfClientReferenceId.isAcceptableOrUnknown(
+              data['self_client_reference_id']!, _selfClientReferenceIdMeta));
     }
     if (data.containsKey('relative_id')) {
       context.handle(
@@ -35043,9 +35042,9 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
           .read(DriftSqlType.string, data['${effectivePrefix}id']),
       selfId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}self_id']),
-      selfIdClientReferenceId: attachedDatabase.typeMapping.read(
+      selfClientReferenceId: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
-          data['${effectivePrefix}self_id_client_reference_id']),
+          data['${effectivePrefix}self_client_reference_id']),
       relativeId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}relative_id']),
       relativeClientReferenceId: attachedDatabase.typeMapping.read(
@@ -35076,7 +35075,7 @@ class HouseholdMemberRelationShipData extends DataClass
     implements Insertable<HouseholdMemberRelationShipData> {
   final String? id;
   final String? selfId;
-  final String? selfIdClientReferenceId;
+  final String? selfClientReferenceId;
   final String? relativeId;
   final String? relativeClientReferenceId;
   final String? relationshipType;
@@ -35088,7 +35087,7 @@ class HouseholdMemberRelationShipData extends DataClass
   const HouseholdMemberRelationShipData(
       {this.id,
       this.selfId,
-      this.selfIdClientReferenceId,
+      this.selfClientReferenceId,
       this.relativeId,
       this.relativeClientReferenceId,
       this.relationshipType,
@@ -35106,9 +35105,8 @@ class HouseholdMemberRelationShipData extends DataClass
     if (!nullToAbsent || selfId != null) {
       map['self_id'] = Variable<String>(selfId);
     }
-    if (!nullToAbsent || selfIdClientReferenceId != null) {
-      map['self_id_client_reference_id'] =
-          Variable<String>(selfIdClientReferenceId);
+    if (!nullToAbsent || selfClientReferenceId != null) {
+      map['self_client_reference_id'] = Variable<String>(selfClientReferenceId);
     }
     if (!nullToAbsent || relativeId != null) {
       map['relative_id'] = Variable<String>(relativeId);
@@ -35141,9 +35139,9 @@ class HouseholdMemberRelationShipData extends DataClass
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       selfId:
           selfId == null && nullToAbsent ? const Value.absent() : Value(selfId),
-      selfIdClientReferenceId: selfIdClientReferenceId == null && nullToAbsent
+      selfClientReferenceId: selfClientReferenceId == null && nullToAbsent
           ? const Value.absent()
-          : Value(selfIdClientReferenceId),
+          : Value(selfClientReferenceId),
       relativeId: relativeId == null && nullToAbsent
           ? const Value.absent()
           : Value(relativeId),
@@ -35176,8 +35174,8 @@ class HouseholdMemberRelationShipData extends DataClass
     return HouseholdMemberRelationShipData(
       id: serializer.fromJson<String?>(json['id']),
       selfId: serializer.fromJson<String?>(json['selfId']),
-      selfIdClientReferenceId:
-          serializer.fromJson<String?>(json['selfIdClientReferenceId']),
+      selfClientReferenceId:
+          serializer.fromJson<String?>(json['selfClientReferenceId']),
       relativeId: serializer.fromJson<String?>(json['relativeId']),
       relativeClientReferenceId:
           serializer.fromJson<String?>(json['relativeClientReferenceId']),
@@ -35195,8 +35193,8 @@ class HouseholdMemberRelationShipData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<String?>(id),
       'selfId': serializer.toJson<String?>(selfId),
-      'selfIdClientReferenceId':
-          serializer.toJson<String?>(selfIdClientReferenceId),
+      'selfClientReferenceId':
+          serializer.toJson<String?>(selfClientReferenceId),
       'relativeId': serializer.toJson<String?>(relativeId),
       'relativeClientReferenceId':
           serializer.toJson<String?>(relativeClientReferenceId),
@@ -35212,7 +35210,7 @@ class HouseholdMemberRelationShipData extends DataClass
   HouseholdMemberRelationShipData copyWith(
           {Value<String?> id = const Value.absent(),
           Value<String?> selfId = const Value.absent(),
-          Value<String?> selfIdClientReferenceId = const Value.absent(),
+          Value<String?> selfClientReferenceId = const Value.absent(),
           Value<String?> relativeId = const Value.absent(),
           Value<String?> relativeClientReferenceId = const Value.absent(),
           Value<String?> relationshipType = const Value.absent(),
@@ -35224,9 +35222,9 @@ class HouseholdMemberRelationShipData extends DataClass
       HouseholdMemberRelationShipData(
         id: id.present ? id.value : this.id,
         selfId: selfId.present ? selfId.value : this.selfId,
-        selfIdClientReferenceId: selfIdClientReferenceId.present
-            ? selfIdClientReferenceId.value
-            : this.selfIdClientReferenceId,
+        selfClientReferenceId: selfClientReferenceId.present
+            ? selfClientReferenceId.value
+            : this.selfClientReferenceId,
         relativeId: relativeId.present ? relativeId.value : this.relativeId,
         relativeClientReferenceId: relativeClientReferenceId.present
             ? relativeClientReferenceId.value
@@ -35247,7 +35245,7 @@ class HouseholdMemberRelationShipData extends DataClass
     return (StringBuffer('HouseholdMemberRelationShipData(')
           ..write('id: $id, ')
           ..write('selfId: $selfId, ')
-          ..write('selfIdClientReferenceId: $selfIdClientReferenceId, ')
+          ..write('selfClientReferenceId: $selfClientReferenceId, ')
           ..write('relativeId: $relativeId, ')
           ..write('relativeClientReferenceId: $relativeClientReferenceId, ')
           ..write('relationshipType: $relationshipType, ')
@@ -35264,7 +35262,7 @@ class HouseholdMemberRelationShipData extends DataClass
   int get hashCode => Object.hash(
       id,
       selfId,
-      selfIdClientReferenceId,
+      selfClientReferenceId,
       relativeId,
       relativeClientReferenceId,
       relationshipType,
@@ -35279,7 +35277,7 @@ class HouseholdMemberRelationShipData extends DataClass
       (other is HouseholdMemberRelationShipData &&
           other.id == this.id &&
           other.selfId == this.selfId &&
-          other.selfIdClientReferenceId == this.selfIdClientReferenceId &&
+          other.selfClientReferenceId == this.selfClientReferenceId &&
           other.relativeId == this.relativeId &&
           other.relativeClientReferenceId == this.relativeClientReferenceId &&
           other.relationshipType == this.relationshipType &&
@@ -35294,7 +35292,7 @@ class HouseholdMemberRelationShipCompanion
     extends UpdateCompanion<HouseholdMemberRelationShipData> {
   final Value<String?> id;
   final Value<String?> selfId;
-  final Value<String?> selfIdClientReferenceId;
+  final Value<String?> selfClientReferenceId;
   final Value<String?> relativeId;
   final Value<String?> relativeClientReferenceId;
   final Value<String?> relationshipType;
@@ -35307,7 +35305,7 @@ class HouseholdMemberRelationShipCompanion
   const HouseholdMemberRelationShipCompanion({
     this.id = const Value.absent(),
     this.selfId = const Value.absent(),
-    this.selfIdClientReferenceId = const Value.absent(),
+    this.selfClientReferenceId = const Value.absent(),
     this.relativeId = const Value.absent(),
     this.relativeClientReferenceId = const Value.absent(),
     this.relationshipType = const Value.absent(),
@@ -35321,7 +35319,7 @@ class HouseholdMemberRelationShipCompanion
   HouseholdMemberRelationShipCompanion.insert({
     this.id = const Value.absent(),
     this.selfId = const Value.absent(),
-    this.selfIdClientReferenceId = const Value.absent(),
+    this.selfClientReferenceId = const Value.absent(),
     this.relativeId = const Value.absent(),
     this.relativeClientReferenceId = const Value.absent(),
     this.relationshipType = const Value.absent(),
@@ -35335,7 +35333,7 @@ class HouseholdMemberRelationShipCompanion
   static Insertable<HouseholdMemberRelationShipData> custom({
     Expression<String>? id,
     Expression<String>? selfId,
-    Expression<String>? selfIdClientReferenceId,
+    Expression<String>? selfClientReferenceId,
     Expression<String>? relativeId,
     Expression<String>? relativeClientReferenceId,
     Expression<String>? relationshipType,
@@ -35349,8 +35347,8 @@ class HouseholdMemberRelationShipCompanion
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (selfId != null) 'self_id': selfId,
-      if (selfIdClientReferenceId != null)
-        'self_id_client_reference_id': selfIdClientReferenceId,
+      if (selfClientReferenceId != null)
+        'self_client_reference_id': selfClientReferenceId,
       if (relativeId != null) 'relative_id': relativeId,
       if (relativeClientReferenceId != null)
         'relative_client_reference_id': relativeClientReferenceId,
@@ -35367,7 +35365,7 @@ class HouseholdMemberRelationShipCompanion
   HouseholdMemberRelationShipCompanion copyWith(
       {Value<String?>? id,
       Value<String?>? selfId,
-      Value<String?>? selfIdClientReferenceId,
+      Value<String?>? selfClientReferenceId,
       Value<String?>? relativeId,
       Value<String?>? relativeClientReferenceId,
       Value<String?>? relationshipType,
@@ -35380,8 +35378,8 @@ class HouseholdMemberRelationShipCompanion
     return HouseholdMemberRelationShipCompanion(
       id: id ?? this.id,
       selfId: selfId ?? this.selfId,
-      selfIdClientReferenceId:
-          selfIdClientReferenceId ?? this.selfIdClientReferenceId,
+      selfClientReferenceId:
+          selfClientReferenceId ?? this.selfClientReferenceId,
       relativeId: relativeId ?? this.relativeId,
       relativeClientReferenceId:
           relativeClientReferenceId ?? this.relativeClientReferenceId,
@@ -35404,9 +35402,9 @@ class HouseholdMemberRelationShipCompanion
     if (selfId.present) {
       map['self_id'] = Variable<String>(selfId.value);
     }
-    if (selfIdClientReferenceId.present) {
-      map['self_id_client_reference_id'] =
-          Variable<String>(selfIdClientReferenceId.value);
+    if (selfClientReferenceId.present) {
+      map['self_client_reference_id'] =
+          Variable<String>(selfClientReferenceId.value);
     }
     if (relativeId.present) {
       map['relative_id'] = Variable<String>(relativeId.value);
@@ -35444,7 +35442,7 @@ class HouseholdMemberRelationShipCompanion
     return (StringBuffer('HouseholdMemberRelationShipCompanion(')
           ..write('id: $id, ')
           ..write('selfId: $selfId, ')
-          ..write('selfIdClientReferenceId: $selfIdClientReferenceId, ')
+          ..write('selfClientReferenceId: $selfClientReferenceId, ')
           ..write('relativeId: $relativeId, ')
           ..write('relativeClientReferenceId: $relativeClientReferenceId, ')
           ..write('relationshipType: $relationshipType, ')
@@ -54088,7 +54086,7 @@ typedef $$HouseholdMemberRelationShipTableInsertCompanionBuilder
     = HouseholdMemberRelationShipCompanion Function({
   Value<String?> id,
   Value<String?> selfId,
-  Value<String?> selfIdClientReferenceId,
+  Value<String?> selfClientReferenceId,
   Value<String?> relativeId,
   Value<String?> relativeClientReferenceId,
   Value<String?> relationshipType,
@@ -54103,7 +54101,7 @@ typedef $$HouseholdMemberRelationShipTableUpdateCompanionBuilder
     = HouseholdMemberRelationShipCompanion Function({
   Value<String?> id,
   Value<String?> selfId,
-  Value<String?> selfIdClientReferenceId,
+  Value<String?> selfClientReferenceId,
   Value<String?> relativeId,
   Value<String?> relativeClientReferenceId,
   Value<String?> relationshipType,
@@ -54138,7 +54136,7 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
           getUpdateCompanionBuilder: ({
             Value<String?> id = const Value.absent(),
             Value<String?> selfId = const Value.absent(),
-            Value<String?> selfIdClientReferenceId = const Value.absent(),
+            Value<String?> selfClientReferenceId = const Value.absent(),
             Value<String?> relativeId = const Value.absent(),
             Value<String?> relativeClientReferenceId = const Value.absent(),
             Value<String?> relationshipType = const Value.absent(),
@@ -54152,7 +54150,7 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
               HouseholdMemberRelationShipCompanion(
             id: id,
             selfId: selfId,
-            selfIdClientReferenceId: selfIdClientReferenceId,
+            selfClientReferenceId: selfClientReferenceId,
             relativeId: relativeId,
             relativeClientReferenceId: relativeClientReferenceId,
             relationshipType: relationshipType,
@@ -54166,7 +54164,7 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
           getInsertCompanionBuilder: ({
             Value<String?> id = const Value.absent(),
             Value<String?> selfId = const Value.absent(),
-            Value<String?> selfIdClientReferenceId = const Value.absent(),
+            Value<String?> selfClientReferenceId = const Value.absent(),
             Value<String?> relativeId = const Value.absent(),
             Value<String?> relativeClientReferenceId = const Value.absent(),
             Value<String?> relationshipType = const Value.absent(),
@@ -54180,7 +54178,7 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
               HouseholdMemberRelationShipCompanion.insert(
             id: id,
             selfId: selfId,
-            selfIdClientReferenceId: selfIdClientReferenceId,
+            selfClientReferenceId: selfClientReferenceId,
             relativeId: relativeId,
             relativeClientReferenceId: relativeClientReferenceId,
             relationshipType: relationshipType,
@@ -54220,8 +54218,8 @@ class $$HouseholdMemberRelationShipTableFilterComposer extends FilterComposer<
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get selfIdClientReferenceId => $state.composableBuilder(
-      column: $state.table.selfIdClientReferenceId,
+  ColumnFilters<String> get selfClientReferenceId => $state.composableBuilder(
+      column: $state.table.selfClientReferenceId,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -54281,11 +54279,10 @@ class $$HouseholdMemberRelationShipTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get selfIdClientReferenceId =>
-      $state.composableBuilder(
-          column: $state.table.selfIdClientReferenceId,
-          builder: (column, joinBuilders) =>
-              ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<String> get selfClientReferenceId => $state.composableBuilder(
+      column: $state.table.selfClientReferenceId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<String> get relativeId => $state.composableBuilder(
       column: $state.table.relativeId,

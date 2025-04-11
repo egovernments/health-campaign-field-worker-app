@@ -274,7 +274,7 @@ class BeneficiaryRegistrationBloc
                     ?.first,
                 clientReferenceId: IdGen.i.identifier,
                 relativeClientReferenceId: event.parentClientReferenceId,
-                selfIdClientReferenceId: individual.clientReferenceId,
+                selfClientReferenceId: individual.clientReferenceId,
                 tenantId: RegistrationDeliverySingleton().tenantId,
               );
             }
@@ -297,7 +297,7 @@ class BeneficiaryRegistrationBloc
                     createdBy: event.userUuid,
                     createdTime: createdAt,
                   ),
-                  relationships: relationship != null ? [relationship] : null),
+                  memberRelationships: relationship != null ? [relationship] : null),
             );
           } catch (error) {
             rethrow;
@@ -355,7 +355,7 @@ class BeneficiaryRegistrationBloc
                   ?.first,
               clientReferenceId: IdGen.i.identifier,
               relativeClientReferenceId: event.parentClientReferenceId,
-              selfIdClientReferenceId: memberClientReferenceId,
+              selfClientReferenceId: memberClientReferenceId,
               tenantId: RegistrationDeliverySingleton().tenantId,
             );
           }
@@ -409,7 +409,7 @@ class BeneficiaryRegistrationBloc
                 createdBy: event.userUuid,
                 createdTime: createdAt,
               ),
-                relationships: relationship != null ? [relationship] : null
+                memberRelationships: relationship != null ? [relationship] : null
             ),
           );
         } catch (error) {
@@ -710,7 +710,7 @@ class BeneficiaryRegistrationBloc
                   ?.first,
               clientReferenceId: IdGen.i.identifier,
               relativeClientReferenceId: event.parentClientReferenceId,
-              selfIdClientReferenceId: memberClientReferenceId,
+              selfClientReferenceId: memberClientReferenceId,
               tenantId: RegistrationDeliverySingleton().tenantId,
             );
           }
@@ -735,7 +735,7 @@ class BeneficiaryRegistrationBloc
                 lastModifiedBy: event.userUuid,
                 createdBy: event.userUuid,
               ),
-                relationships: relationship != null ? [relationship] : null
+                memberRelationships: relationship != null ? [relationship] : null
             ),
           );
         } catch (error) {

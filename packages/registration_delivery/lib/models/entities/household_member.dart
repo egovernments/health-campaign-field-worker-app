@@ -71,7 +71,7 @@ class HouseholdMemberModel extends EntityModel
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
-  final List<HouseholdMemberRelationShipModel>? relationships;
+  final List<HouseholdMemberRelationShipModel>? memberRelationships;
   final HouseholdMemberAdditionalFields? additionalFields;
 
   HouseholdMemberModel({
@@ -81,7 +81,7 @@ class HouseholdMemberModel extends EntityModel
     this.householdClientReferenceId,
     this.individualId,
     this.individualClientReferenceId,
-    this.relationships,
+    this.memberRelationships,
     required this.isHeadOfHousehold,
     this.nonRecoverableError = false,
     required this.clientReferenceId,

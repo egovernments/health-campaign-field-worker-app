@@ -312,11 +312,11 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
-            final relationshipAdditionalId = responseEntity?.relationships?.first.id == null  //TODO: need to check logic after, will work for now as we have only single relationship
+            final relationshipAdditionalId = responseEntity?.memberRelationships?.first.id == null  //TODO: need to check logic after, will work for now as we have only single relationship
                 ? null
                 : AdditionalId(
               idType: memberRelationshipIdKey,
-              id: responseEntity!.relationships!.first.id!,
+              id: responseEntity!.memberRelationships!.first.id!,
             );
 
             await local.opLogManager.updateServerGeneratedIds(
@@ -931,7 +931,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           ?.id;
 
       updatedEntity = updatedEntity.copyWith(
-        relationships: updatedEntity.relationships?.map((e) {
+        memberRelationships: updatedEntity.memberRelationships?.map((e) {
           if (relationshipId != null) {
             return e.copyWith(
               relativeId: serverGeneratedId,

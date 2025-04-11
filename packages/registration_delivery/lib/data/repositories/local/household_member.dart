@@ -73,7 +73,7 @@ class HouseholdMemberLocalRepository
         // Fetch relationships based on clientReferenceId
         final val = await (sql.select(sql.householdMemberRelationShip)
           ..where(
-                (tbl) => tbl.selfIdClientReferenceId.equals(
+                (tbl) => tbl.selfClientReferenceId.equals(
               householdMember.clientReferenceId ?? '',
             ),
           ))
@@ -83,7 +83,7 @@ class HouseholdMemberLocalRepository
             .map((relation) {
 
           return HouseholdMemberRelationShipModel(
-            selfIdClientReferenceId: relation.selfIdClientReferenceId,
+            selfClientReferenceId: relation.selfClientReferenceId,
             relationshipType: relation.relationshipType,
             relativeClientReferenceId: relation.relativeClientReferenceId,
             tenantId: relation.tenantId,
@@ -128,7 +128,7 @@ class HouseholdMemberLocalRepository
             )
                 : null,
             clientReferenceId: householdMember.clientReferenceId,
-            relationships: res,
+            memberRelationships: res,
           ),
         );
       }
@@ -146,7 +146,7 @@ class HouseholdMemberLocalRepository
     return retryLocalCallOperation(() async {
       final householdMemberCompanion = entity.companion;
       final relationshipCompanions =
-      entity.relationships?.map((e) => e.companion).toList();
+      entity.memberRelationships?.map((e) => e.companion).toList();
 
       await sql.batch((batch) {
         batch.insert(sql.householdMember, householdMemberCompanion);
@@ -175,8 +175,8 @@ class HouseholdMemberLocalRepository
       final List<HouseholdMemberRelationShipCompanion> relationshipCompanions = [];
 
       for (final entity in entities) {
-        if (entity.relationships != null) {
-          for (final relationship in entity.relationships!) {
+        if (entity.memberRelationships != null) {
+          for (final relationship in entity.memberRelationships!) {
             relationshipCompanions.add(relationship.companion);
           }
         }
@@ -208,7 +208,7 @@ class HouseholdMemberLocalRepository
     return retryLocalCallOperation(() async {
       final householdMemberCompanion = entity.companion;
       final relationshipCompanions =
-      entity.relationships?.map((e) => e.companion).toList();
+      entity.memberRelationships?.map((e) => e.companion).toList();
 
       await sql.batch((batch) {
         batch.update(

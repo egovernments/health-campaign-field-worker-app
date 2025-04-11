@@ -48,7 +48,7 @@ class HouseholdMemberRelationShipModel extends EntityModel
 
   final String? id;
   final String? selfId;
-  final String? selfIdClientReferenceId;
+  final String? selfClientReferenceId;
   final String? relativeId;
   final String? relativeClientReferenceId;
   final String? relationshipType;
@@ -61,7 +61,7 @@ class HouseholdMemberRelationShipModel extends EntityModel
     this.additionalFields,
     this.id,
     this.selfId,
-    this.selfIdClientReferenceId,
+    this.selfClientReferenceId,
     required this.clientReferenceId,
     this.relativeId,
     this.relativeClientReferenceId,
@@ -79,7 +79,7 @@ class HouseholdMemberRelationShipModel extends EntityModel
       id: Value(id),
       selfId: Value(selfId),
       clientReferenceId: Value(clientReferenceId),
-      selfIdClientReferenceId: Value(selfIdClientReferenceId),
+      selfClientReferenceId: Value(selfClientReferenceId),
       relativeId: Value(relativeId),
       relativeClientReferenceId: Value(relativeClientReferenceId),
       relationshipType: Value(relationshipType),
