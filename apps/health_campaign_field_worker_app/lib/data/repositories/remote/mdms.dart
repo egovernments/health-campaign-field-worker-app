@@ -8,8 +8,10 @@ import 'package:isar/isar.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../../models/mdms/service_registry/pgr_service_defenitions.dart';
 import '../../../models/mdms/service_registry/service_registry_model.dart';
+import '../../../models/privacy_notice/privacy_notice_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
 import '../../local_store/no_sql/schema/app_configuration.dart';
+import '../../local_store/no_sql/schema/project_types.dart';
 import '../../local_store/no_sql/schema/row_versions.dart';
 import '../../local_store/no_sql/schema/service_registry.dart';
 
@@ -389,6 +391,33 @@ class MdmsRepository {
 
       return RoleActionsWrapperModel.fromJson(json.decode(response.toString()));
     } catch (_) {
+      rethrow;
+    }
+  }
+
+  //To Search Project Type from MDMS
+  Future<List<ProjectTypeModel>> searchProjectType(
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
+    try {
+      final response = await _client.post(apiEndPoint, data: body);
+
+      final jsonData = json.decode(response.toString())['MdmsRes']
+          ['HCM-PROJECT-TYPES']['projectTypes'] as List;
+
+      List<ProjectTypeModel> projectTypes = jsonData
+          .map((e) => ProjectTypeModelMapper.fromJson(json.encode(e)))
+          .toList();
+
+      return projectTypes;
+    } on DioException catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: '$e',
+        stackTrace: e.stackTrace,
+      );
+
       rethrow;
     }
   }
