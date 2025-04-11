@@ -190,7 +190,7 @@ abstract class RemoteRepository<D extends EntityModel,
       response = await executeFuture(
         future: () async {
           return await dio.post(
-            "/referralmanagement/beneficiary-downsync/v1/_get",  //// TODO: hardcoded need to recheck the logic for this
+            searchPath,
             queryParameters: {
               'offset': offSet ?? 0,
               'limit': limit ?? 100,
