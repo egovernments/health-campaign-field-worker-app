@@ -101,6 +101,10 @@ class ApiOperationMapper extends EnumMapper<ApiOperation> {
         return ApiOperation.bulkDelete;
       case 'single_create':
         return ApiOperation.singleCreate;
+      case 'clf_search':
+        return ApiOperation.clfSearch;
+      case 'clf_member_search':
+        return ApiOperation.clfMemberSearch;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -127,6 +131,10 @@ class ApiOperationMapper extends EnumMapper<ApiOperation> {
         return 'bulk_delete';
       case ApiOperation.singleCreate:
         return 'single_create';
+      case ApiOperation.clfSearch:
+        return 'clf_search';
+      case ApiOperation.clfMemberSearch:
+        return 'clf_member_search';
     }
   }
 }

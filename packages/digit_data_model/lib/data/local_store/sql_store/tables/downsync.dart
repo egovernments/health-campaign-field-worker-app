@@ -10,6 +10,10 @@ class Downsync extends Table {
   IntColumn get limit => integer().nullable()();
   IntColumn get lastSyncedTime => integer().nullable()();
   IntColumn get totalCount => integer().nullable()();
+  IntColumn get clfOffset => integer().nullable()();
+  IntColumn get clfTotalCount => integer().nullable()();
+  IntColumn get clfMemberOffset => integer().nullable()();
+  IntColumn get clfMemberTotalCount => integer().nullable()();
   TextColumn get boundaryName => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
