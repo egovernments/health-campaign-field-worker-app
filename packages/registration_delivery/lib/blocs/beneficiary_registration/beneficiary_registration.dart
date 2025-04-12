@@ -1,6 +1,5 @@
 // GENERATED using mason_cli
 import 'dart:async';
-import 'dart:math';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
@@ -190,7 +189,8 @@ class BeneficiaryRegistrationBloc
                 createdTime: DateTime.now().millisecondsSinceEpoch,
               ),
             ),
-            isHeadOfHousehold: value.isHeadOfHousehold, parentClientReferenceId: event.parentClientReferenceId));
+            isHeadOfHousehold: value.isHeadOfHousehold,
+            parentClientReferenceId: event.parentClientReferenceId));
       },
     );
   }
@@ -276,6 +276,12 @@ class BeneficiaryRegistrationBloc
                 relativeClientReferenceId: event.parentClientReferenceId,
                 selfClientReferenceId: individual.clientReferenceId,
                 tenantId: RegistrationDeliverySingleton().tenantId,
+                clientAuditDetails: ClientAuditDetails(
+                  createdTime: createdAt,
+                  lastModifiedTime: initialModifiedAt,
+                  lastModifiedBy: event.userUuid,
+                  createdBy: event.userUuid,
+                ),
               );
             }
 
@@ -297,7 +303,8 @@ class BeneficiaryRegistrationBloc
                     createdBy: event.userUuid,
                     createdTime: createdAt,
                   ),
-                  memberRelationships: relationship != null ? [relationship] : null),
+                  memberRelationships:
+                      relationship != null ? [relationship] : null),
             );
           } catch (error) {
             rethrow;
@@ -340,6 +347,7 @@ class BeneficiaryRegistrationBloc
 
         try {
           final createdAt = DateTime.now().millisecondsSinceEpoch;
+          final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
 
           emit(value.copyWith(loading: true));
 
@@ -357,6 +365,12 @@ class BeneficiaryRegistrationBloc
               relativeClientReferenceId: event.parentClientReferenceId,
               selfClientReferenceId: memberClientReferenceId,
               tenantId: RegistrationDeliverySingleton().tenantId,
+              clientAuditDetails: ClientAuditDetails(
+                createdTime: createdAt,
+                lastModifiedTime: initialModifiedAt,
+                lastModifiedBy: event.userUuid,
+                createdBy: event.userUuid,
+              ),
             );
           }
 
@@ -373,7 +387,6 @@ class BeneficiaryRegistrationBloc
               ),
             ),
           );
-          final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
           await individualRepository.create(
             individual.copyWith(
               address: [
@@ -393,24 +406,24 @@ class BeneficiaryRegistrationBloc
 
           await householdMemberRepository.create(
             HouseholdMemberModel(
-              householdClientReferenceId: household.clientReferenceId,
-              individualClientReferenceId: individual.clientReferenceId,
-              isHeadOfHousehold: value.isHeadOfHousehold,
-              tenantId: RegistrationDeliverySingleton().tenantId,
-              rowVersion: 1,
-              clientReferenceId: memberClientReferenceId,
-              clientAuditDetails: ClientAuditDetails(
-                createdTime: createdAt,
-                lastModifiedTime: initialModifiedAt,
-                lastModifiedBy: event.userUuid,
-                createdBy: event.userUuid,
-              ),
-              auditDetails: AuditDetails(
-                createdBy: event.userUuid,
-                createdTime: createdAt,
-              ),
-                memberRelationships: relationship != null ? [relationship] : null
-            ),
+                householdClientReferenceId: household.clientReferenceId,
+                individualClientReferenceId: individual.clientReferenceId,
+                isHeadOfHousehold: value.isHeadOfHousehold,
+                tenantId: RegistrationDeliverySingleton().tenantId,
+                rowVersion: 1,
+                clientReferenceId: memberClientReferenceId,
+                clientAuditDetails: ClientAuditDetails(
+                  createdTime: createdAt,
+                  lastModifiedTime: initialModifiedAt,
+                  lastModifiedBy: event.userUuid,
+                  createdBy: event.userUuid,
+                ),
+                auditDetails: AuditDetails(
+                  createdBy: event.userUuid,
+                  createdTime: createdAt,
+                ),
+                memberRelationships:
+                    relationship != null ? [relationship] : null),
           );
         } catch (error) {
           rethrow;
@@ -418,12 +431,11 @@ class BeneficiaryRegistrationBloc
           emit(value.copyWith(loading: false));
           emit(
             BeneficiaryRegistrationPersistedState(
-              navigateToRoot: false,
-              householdModel: household,
-              addressModel: address,
-              individualModel: individual,
-              parentClientReferenceId: event.parentClientReferenceId
-            ),
+                navigateToRoot: false,
+                householdModel: household,
+                addressModel: address,
+                individualModel: individual,
+                parentClientReferenceId: event.parentClientReferenceId),
           );
         }
       },
@@ -712,31 +724,37 @@ class BeneficiaryRegistrationBloc
               relativeClientReferenceId: event.parentClientReferenceId,
               selfClientReferenceId: memberClientReferenceId,
               tenantId: RegistrationDeliverySingleton().tenantId,
-            );
-          }
-
-          await householdMemberRepository.create(
-            HouseholdMemberModel(
-              householdClientReferenceId:
-                  value.householdModel.clientReferenceId,
-              individualClientReferenceId:
-                  event.individualModel.clientReferenceId,
-              isHeadOfHousehold: false,
-              tenantId: RegistrationDeliverySingleton().tenantId,
-              rowVersion: 1,
-              clientReferenceId: memberClientReferenceId,
-              auditDetails: AuditDetails(
-                createdBy: event.userUuid,
-                createdTime: createdAt,
-              ),
               clientAuditDetails: ClientAuditDetails(
                 createdTime: createdAt,
                 lastModifiedTime: initialModifiedAt,
                 lastModifiedBy: event.userUuid,
                 createdBy: event.userUuid,
               ),
-                memberRelationships: relationship != null ? [relationship] : null
-            ),
+            );
+          }
+
+          await householdMemberRepository.create(
+            HouseholdMemberModel(
+                householdClientReferenceId:
+                    value.householdModel.clientReferenceId,
+                individualClientReferenceId:
+                    event.individualModel.clientReferenceId,
+                isHeadOfHousehold: false,
+                tenantId: RegistrationDeliverySingleton().tenantId,
+                rowVersion: 1,
+                clientReferenceId: memberClientReferenceId,
+                auditDetails: AuditDetails(
+                  createdBy: event.userUuid,
+                  createdTime: createdAt,
+                ),
+                clientAuditDetails: ClientAuditDetails(
+                  createdTime: createdAt,
+                  lastModifiedTime: initialModifiedAt,
+                  lastModifiedBy: event.userUuid,
+                  createdBy: event.userUuid,
+                ),
+                memberRelationships:
+                    relationship != null ? [relationship] : null),
           );
         } catch (error) {
           rethrow;

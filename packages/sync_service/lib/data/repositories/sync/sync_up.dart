@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -193,9 +192,6 @@ class PerformSyncUp {
                     operationGroupedEntity: operationGroupedEntity,
                     typeGroupedEntity: typeGroupedEntity);
               } else {
-                // for(final entity in entities){
-                //   if(entity.enti)
-                // }
                 remote.bulkCreate(entities);
               }
             } else if (operationGroupedEntity.key == DataOperation.update) {
