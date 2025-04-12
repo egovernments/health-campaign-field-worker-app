@@ -309,6 +309,8 @@ class BeneficiaryDetails {
 
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
 
+  String get totalCLFMembers => 'TOTAL_CLF_MEMBERS';
+
   String get totalMembers => 'TOTAL_HOUSEHOLD_MEMBERS';
 }
 
@@ -606,7 +608,9 @@ class MemberCard {
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
 
   String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
+
   String get noOfChildren => 'MEMBER_CARD_NO_OF_CHILDREN';
+
   String get addChildLabel => 'MEMBER_CARD_ADD_CHILD_LABEL';
 }
 

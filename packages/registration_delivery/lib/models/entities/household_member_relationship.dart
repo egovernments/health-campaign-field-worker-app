@@ -86,6 +86,14 @@ class HouseholdMemberRelationShipModel extends EntityModel
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       additionalFields: Value(additionalFields?.toJson()),
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
     );
   }
 }

@@ -1,10 +1,10 @@
-## 1.0.1+4
+## 1.0.2-dev.1-enumeration
 
-  * Added referenceIds to search model
-  * Added downsync of service and service attributes
-  * Added new type in checklist view
-  * Added service update in repository
-  * added parser to support checklist configuration
+* Added referenceIds to search model
+* Added downsync of service and service attributes
+* Added new type in checklist view
+* Added service update in repository
+* added parser to support checklist configuration
 
 ## 1.0.1+3
 

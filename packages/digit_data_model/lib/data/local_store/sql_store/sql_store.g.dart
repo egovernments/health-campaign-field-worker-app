@@ -34921,6 +34921,64 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
   late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
       'tenant_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _isDeletedMeta =
       const VerificationMeta('isDeleted');
   @override
@@ -34953,6 +35011,15 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
         relationshipType,
         clientReferenceId,
         tenantId,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
         isDeleted,
         rowVersion,
         additionalFields
@@ -35012,6 +35079,60 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
       context.handle(_tenantIdMeta,
           tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
     }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
     if (data.containsKey('is_deleted')) {
       context.handle(_isDeletedMeta,
           isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
@@ -35056,6 +35177,24 @@ class $HouseholdMemberRelationShipTable extends HouseholdMemberRelationShip
           DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
       tenantId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
       isDeleted: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
@@ -35081,6 +35220,15 @@ class HouseholdMemberRelationShipData extends DataClass
   final String? relationshipType;
   final String clientReferenceId;
   final String? tenantId;
+  final String? auditCreatedBy;
+  final bool? nonRecoverableError;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
   final bool? isDeleted;
   final int? rowVersion;
   final String? additionalFields;
@@ -35093,6 +35241,15 @@ class HouseholdMemberRelationShipData extends DataClass
       this.relationshipType,
       required this.clientReferenceId,
       this.tenantId,
+      this.auditCreatedBy,
+      this.nonRecoverableError,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
       this.isDeleted,
       this.rowVersion,
       this.additionalFields});
@@ -35121,6 +35278,33 @@ class HouseholdMemberRelationShipData extends DataClass
     map['client_reference_id'] = Variable<String>(clientReferenceId);
     if (!nullToAbsent || tenantId != null) {
       map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
     }
     if (!nullToAbsent || isDeleted != null) {
       map['is_deleted'] = Variable<bool>(isDeleted);
@@ -35156,6 +35340,33 @@ class HouseholdMemberRelationShipData extends DataClass
       tenantId: tenantId == null && nullToAbsent
           ? const Value.absent()
           : Value(tenantId),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
       isDeleted: isDeleted == null && nullToAbsent
           ? const Value.absent()
           : Value(isDeleted),
@@ -35182,6 +35393,16 @@ class HouseholdMemberRelationShipData extends DataClass
       relationshipType: serializer.fromJson<String?>(json['relationshipType']),
       clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
       tenantId: serializer.fromJson<String?>(json['tenantId']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
@@ -35201,6 +35422,15 @@ class HouseholdMemberRelationShipData extends DataClass
       'relationshipType': serializer.toJson<String?>(relationshipType),
       'clientReferenceId': serializer.toJson<String>(clientReferenceId),
       'tenantId': serializer.toJson<String?>(tenantId),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
       'additionalFields': serializer.toJson<String?>(additionalFields),
@@ -35216,6 +35446,15 @@ class HouseholdMemberRelationShipData extends DataClass
           Value<String?> relationshipType = const Value.absent(),
           String? clientReferenceId,
           Value<String?> tenantId = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
@@ -35234,6 +35473,32 @@ class HouseholdMemberRelationShipData extends DataClass
             : this.relationshipType,
         clientReferenceId: clientReferenceId ?? this.clientReferenceId,
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
         additionalFields: additionalFields.present
@@ -35251,6 +35516,15 @@ class HouseholdMemberRelationShipData extends DataClass
           ..write('relationshipType: $relationshipType, ')
           ..write('clientReferenceId: $clientReferenceId, ')
           ..write('tenantId: $tenantId, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields')
@@ -35268,6 +35542,15 @@ class HouseholdMemberRelationShipData extends DataClass
       relationshipType,
       clientReferenceId,
       tenantId,
+      auditCreatedBy,
+      nonRecoverableError,
+      auditCreatedTime,
+      clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
+      clientModifiedTime,
+      auditModifiedBy,
+      auditModifiedTime,
       isDeleted,
       rowVersion,
       additionalFields);
@@ -35283,6 +35566,15 @@ class HouseholdMemberRelationShipData extends DataClass
           other.relationshipType == this.relationshipType &&
           other.clientReferenceId == this.clientReferenceId &&
           other.tenantId == this.tenantId &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
           other.additionalFields == this.additionalFields);
@@ -35298,6 +35590,15 @@ class HouseholdMemberRelationShipCompanion
   final Value<String?> relationshipType;
   final Value<String> clientReferenceId;
   final Value<String?> tenantId;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> nonRecoverableError;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
@@ -35311,6 +35612,15 @@ class HouseholdMemberRelationShipCompanion
     this.relationshipType = const Value.absent(),
     this.clientReferenceId = const Value.absent(),
     this.tenantId = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
@@ -35325,6 +35635,15 @@ class HouseholdMemberRelationShipCompanion
     this.relationshipType = const Value.absent(),
     required String clientReferenceId,
     this.tenantId = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
@@ -35339,6 +35658,15 @@ class HouseholdMemberRelationShipCompanion
     Expression<String>? relationshipType,
     Expression<String>? clientReferenceId,
     Expression<String>? tenantId,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? nonRecoverableError,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
     Expression<String>? additionalFields,
@@ -35355,6 +35683,17 @@ class HouseholdMemberRelationShipCompanion
       if (relationshipType != null) 'relationship_type': relationshipType,
       if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
       if (tenantId != null) 'tenant_id': tenantId,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
       if (additionalFields != null) 'additional_fields': additionalFields,
@@ -35371,6 +35710,15 @@ class HouseholdMemberRelationShipCompanion
       Value<String?>? relationshipType,
       Value<String>? clientReferenceId,
       Value<String?>? tenantId,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? nonRecoverableError,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
       Value<String?>? additionalFields,
@@ -35386,6 +35734,15 @@ class HouseholdMemberRelationShipCompanion
       relationshipType: relationshipType ?? this.relationshipType,
       clientReferenceId: clientReferenceId ?? this.clientReferenceId,
       tenantId: tenantId ?? this.tenantId,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
       additionalFields: additionalFields ?? this.additionalFields,
@@ -35422,6 +35779,33 @@ class HouseholdMemberRelationShipCompanion
     if (tenantId.present) {
       map['tenant_id'] = Variable<String>(tenantId.value);
     }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
     if (isDeleted.present) {
       map['is_deleted'] = Variable<bool>(isDeleted.value);
     }
@@ -35448,6 +35832,15 @@ class HouseholdMemberRelationShipCompanion
           ..write('relationshipType: $relationshipType, ')
           ..write('clientReferenceId: $clientReferenceId, ')
           ..write('tenantId: $tenantId, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields, ')
@@ -54092,6 +54485,15 @@ typedef $$HouseholdMemberRelationShipTableInsertCompanionBuilder
   Value<String?> relationshipType,
   required String clientReferenceId,
   Value<String?> tenantId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
@@ -54107,6 +54509,15 @@ typedef $$HouseholdMemberRelationShipTableUpdateCompanionBuilder
   Value<String?> relationshipType,
   Value<String> clientReferenceId,
   Value<String?> tenantId,
+  Value<String?> auditCreatedBy,
+  Value<bool?> nonRecoverableError,
+  Value<int?> auditCreatedTime,
+  Value<int?> clientCreatedTime,
+  Value<String?> clientModifiedBy,
+  Value<String?> clientCreatedBy,
+  Value<int?> clientModifiedTime,
+  Value<String?> auditModifiedBy,
+  Value<int?> auditModifiedTime,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
@@ -54142,6 +54553,15 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
             Value<String?> relationshipType = const Value.absent(),
             Value<String> clientReferenceId = const Value.absent(),
             Value<String?> tenantId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
@@ -54156,6 +54576,15 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
             relationshipType: relationshipType,
             clientReferenceId: clientReferenceId,
             tenantId: tenantId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
@@ -54170,6 +54599,15 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
             Value<String?> relationshipType = const Value.absent(),
             required String clientReferenceId,
             Value<String?> tenantId = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<bool?> nonRecoverableError = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<int?> clientCreatedTime = const Value.absent(),
+            Value<String?> clientModifiedBy = const Value.absent(),
+            Value<String?> clientCreatedBy = const Value.absent(),
+            Value<int?> clientModifiedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
@@ -54184,6 +54622,15 @@ class $$HouseholdMemberRelationShipTableTableManager extends RootTableManager<
             relationshipType: relationshipType,
             clientReferenceId: clientReferenceId,
             tenantId: tenantId,
+            auditCreatedBy: auditCreatedBy,
+            nonRecoverableError: nonRecoverableError,
+            auditCreatedTime: auditCreatedTime,
+            clientCreatedTime: clientCreatedTime,
+            clientModifiedBy: clientModifiedBy,
+            clientCreatedBy: clientCreatedBy,
+            clientModifiedTime: clientModifiedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditModifiedTime: auditModifiedTime,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
@@ -54249,6 +54696,51 @@ class $$HouseholdMemberRelationShipTableFilterComposer extends FilterComposer<
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<bool> get isDeleted => $state.composableBuilder(
       column: $state.table.isDeleted,
       builder: (column, joinBuilders) =>
@@ -54307,6 +54799,51 @@ class $$HouseholdMemberRelationShipTableOrderingComposer
 
   ColumnOrderings<String> get tenantId => $state.composableBuilder(
       column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get nonRecoverableError => $state.composableBuilder(
+      column: $state.table.nonRecoverableError,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientCreatedTime => $state.composableBuilder(
+      column: $state.table.clientCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientModifiedBy => $state.composableBuilder(
+      column: $state.table.clientModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get clientCreatedBy => $state.composableBuilder(
+      column: $state.table.clientCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get clientModifiedTime => $state.composableBuilder(
+      column: $state.table.clientModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

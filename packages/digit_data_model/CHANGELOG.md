@@ -1,8 +1,12 @@
-## 1.0.6+4
+## 1.0.7-dev.2-enumeration
 
-* updated new memberRelationship column in member
-* added new member relationship table
-* added tenant id in dump error call
+* Updated member relation table with client audit details
+
+## 1.0.7-dev.1-enumeration
+
+* Updated new memberRelationship column in member
+* Added new member relationship table
+* Added tenant id in dump error call
 
 ## 1.0.6+3
 
