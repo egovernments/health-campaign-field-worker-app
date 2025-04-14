@@ -1,3 +1,7 @@
+## 1.0.7-dev.2-enumeration
+
+* Updated member repository to update relationship
+
 ## 1.0.7-dev.1-enumeration
 
 * Added Checklist for household and individual page

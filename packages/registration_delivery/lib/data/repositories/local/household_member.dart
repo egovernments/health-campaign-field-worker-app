@@ -207,8 +207,7 @@ class HouseholdMemberLocalRepository
   }) async {
     return retryLocalCallOperation(() async {
       final householdMemberCompanion = entity.companion;
-      final relationshipCompanions =
-      entity.memberRelationships?.map((e) => e.companion).toList();
+      final relationships = entity.memberRelationships;
 
       await sql.batch((batch) {
         batch.update(
@@ -218,7 +217,21 @@ class HouseholdMemberLocalRepository
             entity.clientReferenceId,
           ),
         );
-        // TODO:  relationship update not require now
+
+
+        // Update each relationship individually with correct where clause
+        if (relationships != null && relationships.isNotEmpty) {
+          for (final relationship in relationships) {
+            batch.update(
+              sql.householdMemberRelationShip,
+              relationship.companion,
+              where: (table) => table.clientReferenceId.equals(
+                relationship.clientReferenceId,
+              ),
+            );
+          }
+        }
+
       });
 
       await super.update(entity, createOpLog: createOpLog);

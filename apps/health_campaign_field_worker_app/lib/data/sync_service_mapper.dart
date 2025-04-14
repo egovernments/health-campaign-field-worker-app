@@ -152,6 +152,8 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
     const memberRelationshipIdKey = 'memberRelationshipId';
+    const memberRelationshipSelfIdKey = 'memberRelationshipSelfId';
+    const memberRelationshipRelativeIdKey = 'memberRelationshipRelativeId';
 
     switch (typeGroupedEntity.key) {
       case DataModelType.individual:
@@ -318,12 +320,26 @@ class SyncServiceMapper extends SyncEntityMapperListener {
               idType: memberRelationshipIdKey,
               id: responseEntity!.memberRelationships!.first.id!,
             );
+            final relationshipSelfId = responseEntity?.memberRelationships?.first.selfId == null
+                ? null
+                : AdditionalId(
+              idType: memberRelationshipSelfIdKey,
+              id: responseEntity!.memberRelationships!.first.selfId!,
+            );
+            final relationshipRelativeId = responseEntity?.memberRelationships?.first.relativeId == null
+                ? null
+                : AdditionalId(
+              idType: memberRelationshipRelativeIdKey,
+              id: responseEntity!.memberRelationships!.first.relativeId!,
+            );
 
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
                 additionalIds: [
                   if (relationshipAdditionalId != null) relationshipAdditionalId,
+                  if (relationshipSelfId != null) relationshipSelfId,
+                  if (relationshipRelativeId != null) relationshipRelativeId
                 ],
                 serverGeneratedId: serverGeneratedId,
                 dataOperation: element.operation,
@@ -861,6 +877,8 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
     const memberRelationshipIdKey = 'memberRelationshipId';
+    const memberRelationshipSelfIdKey = 'memberRelationshipSelfId';
+    const memberRelationshipRelativeIdKey = 'memberRelationshipRelativeId';
 
     if (updatedEntity is HouseholdModel) {
       final addressId = e.additionalIds.firstWhereOrNull(
@@ -929,13 +947,24 @@ class SyncServiceMapper extends SyncEntityMapperListener {
             (element) => element.idType == memberRelationshipIdKey,
       )
           ?.id;
+      final relativeId = e.additionalIds
+          .firstWhereOrNull(
+            (element) => element.idType == memberRelationshipRelativeIdKey,
+      )
+          ?.id;
+      final selfId = e.additionalIds
+          .firstWhereOrNull(
+            (element) => element.idType == memberRelationshipSelfIdKey,
+      )
+          ?.id;
 
       updatedEntity = updatedEntity.copyWith(
         memberRelationships: updatedEntity.memberRelationships?.map((e) {
           if (relationshipId != null) {
             return e.copyWith(
-              relativeId: serverGeneratedId,
-              id: e.id ?? relationshipId,
+              relativeId: relativeId,
+              id: relationshipId,
+              selfId: selfId,
             );
           }
 
