@@ -1,6 +1,7 @@
 ## 1.0.1
 
-* Added missing await in syncUp
+* Bug Fix:
+    * Added missing await in syncUp
 
 ## 1.0.0
 

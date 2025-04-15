@@ -1808,9 +1808,10 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      path: "../../packages/registration_delivery"
-      relative: true
-    source: path
+      name: registration_delivery
+      sha256: "01bdb6ad7d0e5c9e4a18d4749d1390edb04b5348da402961f718edecf9e5fd40"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.6+2"
   rxdart:
     dependency: transitive
@@ -2037,10 +2038,10 @@ packages:
     dependency: "direct main"
     description:
       name: sync_service
-      sha256: eb214ed7351f1f4ab63c90a23d2ad9f554ac92d73dbbe0dd7ce167776b941de9
+      sha256: "992cd5889a192716c9e77fe29bd10b9f3dc771797d6a91a7a94bc34193b21444"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   synchronized:
     dependency: transitive
     description:
