@@ -21,6 +21,7 @@ mixin _$FormsEvent {
     required TResult Function() load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
+    required TResult Function(String key, dynamic value) updateField,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +29,7 @@ mixin _$FormsEvent {
     TResult? Function()? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
+    TResult? Function(String key, dynamic value)? updateField,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,7 @@ mixin _$FormsEvent {
     TResult Function()? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
+    TResult Function(String key, dynamic value)? updateField,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$FormsEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsCreateMappingEvent value) createMapping,
     required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$FormsEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsCreateMappingEvent value)? createMapping,
     TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$FormsEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsCreateMappingEvent value)? createMapping,
     TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -121,6 +127,7 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     required TResult Function() load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
+    required TResult Function(String key, dynamic value) updateField,
   }) {
     return load();
   }
@@ -131,6 +138,7 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult? Function()? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
+    TResult? Function(String key, dynamic value)? updateField,
   }) {
     return load?.call();
   }
@@ -141,6 +149,7 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult Function()? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
+    TResult Function(String key, dynamic value)? updateField,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -155,6 +164,7 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsCreateMappingEvent value) createMapping,
     required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
   }) {
     return load(this);
   }
@@ -165,6 +175,7 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsCreateMappingEvent value)? createMapping,
     TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
   }) {
     return load?.call(this);
   }
@@ -175,6 +186,7 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsCreateMappingEvent value)? createMapping,
     TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -232,6 +244,7 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     required TResult Function() load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
+    required TResult Function(String key, dynamic value) updateField,
   }) {
     return createMapping();
   }
@@ -242,6 +255,7 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     TResult? Function()? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
+    TResult? Function(String key, dynamic value)? updateField,
   }) {
     return createMapping?.call();
   }
@@ -252,6 +266,7 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     TResult Function()? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
+    TResult Function(String key, dynamic value)? updateField,
     required TResult orElse(),
   }) {
     if (createMapping != null) {
@@ -266,6 +281,7 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsCreateMappingEvent value) createMapping,
     required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
   }) {
     return createMapping(this);
   }
@@ -276,6 +292,7 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsCreateMappingEvent value)? createMapping,
     TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
   }) {
     return createMapping?.call(this);
   }
@@ -286,6 +303,7 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsCreateMappingEvent value)? createMapping,
     TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
     required TResult orElse(),
   }) {
     if (createMapping != null) {
@@ -377,6 +395,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     required TResult Function() load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
+    required TResult Function(String key, dynamic value) updateField,
   }) {
     return update(object);
   }
@@ -387,6 +406,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult? Function()? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
+    TResult? Function(String key, dynamic value)? updateField,
   }) {
     return update?.call(object);
   }
@@ -397,6 +417,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult Function()? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
+    TResult Function(String key, dynamic value)? updateField,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -411,6 +432,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     required TResult Function(FormsLoadEvent value) load,
     required TResult Function(FormsCreateMappingEvent value) createMapping,
     required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
   }) {
     return update(this);
   }
@@ -421,6 +443,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult? Function(FormsLoadEvent value)? load,
     TResult? Function(FormsCreateMappingEvent value)? createMapping,
     TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
   }) {
     return update?.call(this);
   }
@@ -431,6 +454,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult Function(FormsLoadEvent value)? load,
     TResult Function(FormsCreateMappingEvent value)? createMapping,
     TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -448,6 +472,165 @@ abstract class FormsUpdateEvent implements FormsEvent {
   @JsonKey(ignore: true)
   _$$FormsUpdateEventImplCopyWith<_$FormsUpdateEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FormsUpdateFieldEventImplCopyWith<$Res> {
+  factory _$$FormsUpdateFieldEventImplCopyWith(
+          _$FormsUpdateFieldEventImpl value,
+          $Res Function(_$FormsUpdateFieldEventImpl) then) =
+      __$$FormsUpdateFieldEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String key, dynamic value});
+}
+
+/// @nodoc
+class __$$FormsUpdateFieldEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsUpdateFieldEventImpl>
+    implements _$$FormsUpdateFieldEventImplCopyWith<$Res> {
+  __$$FormsUpdateFieldEventImplCopyWithImpl(_$FormsUpdateFieldEventImpl _value,
+      $Res Function(_$FormsUpdateFieldEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? key = null,
+    Object? value = freezed,
+  }) {
+    return _then(_$FormsUpdateFieldEventImpl(
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
+  const _$FormsUpdateFieldEventImpl({required this.key, required this.value});
+
+  @override
+  final String key;
+  @override
+  final dynamic value;
+
+  @override
+  String toString() {
+    return 'FormsEvent.updateField(key: $key, value: $value)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormsUpdateFieldEventImpl &&
+            (identical(other.key, key) || other.key == key) &&
+            const DeepCollectionEquality().equals(other.value, value));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, key, const DeepCollectionEquality().hash(value));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsUpdateFieldEventImplCopyWith<_$FormsUpdateFieldEventImpl>
+      get copyWith => __$$FormsUpdateFieldEventImplCopyWithImpl<
+          _$FormsUpdateFieldEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() load,
+    required TResult Function() createMapping,
+    required TResult Function(SchemaObject object) update,
+    required TResult Function(String key, dynamic value) updateField,
+  }) {
+    return updateField(key, value);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? load,
+    TResult? Function()? createMapping,
+    TResult? Function(SchemaObject object)? update,
+    TResult? Function(String key, dynamic value)? updateField,
+  }) {
+    return updateField?.call(key, value);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? load,
+    TResult Function()? createMapping,
+    TResult Function(SchemaObject object)? update,
+    TResult Function(String key, dynamic value)? updateField,
+    required TResult orElse(),
+  }) {
+    if (updateField != null) {
+      return updateField(key, value);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FormsLoadEvent value) load,
+    required TResult Function(FormsCreateMappingEvent value) createMapping,
+    required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
+  }) {
+    return updateField(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FormsLoadEvent value)? load,
+    TResult? Function(FormsCreateMappingEvent value)? createMapping,
+    TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
+  }) {
+    return updateField?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FormsLoadEvent value)? load,
+    TResult Function(FormsCreateMappingEvent value)? createMapping,
+    TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
+    required TResult orElse(),
+  }) {
+    if (updateField != null) {
+      return updateField(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FormsUpdateFieldEvent implements FormsEvent {
+  const factory FormsUpdateFieldEvent(
+      {required final String key,
+      required final dynamic value}) = _$FormsUpdateFieldEventImpl;
+
+  String get key;
+  dynamic get value;
+  @JsonKey(ignore: true)
+  _$$FormsUpdateFieldEventImplCopyWith<_$FormsUpdateFieldEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc

@@ -159,7 +159,7 @@ class JsonFormBuilder extends StatelessWidget {
           if (components != null) {
             if (components!.isNotEmpty) {
               for (var i = 0; i < components!.length; i++) {
-                if (schema.format == PropertySchemaFormat.cutsom) {
+                if (schema.format == PropertySchemaFormat.cutsom ) {
                   child = components!.first.entries.first.value;
 
                   break;

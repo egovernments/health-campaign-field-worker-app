@@ -20,12 +20,12 @@ import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:survey_form/survey_form.dart';
-
+import 'package:forms_engine/blocs/forms/forms.dart';
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
-import 'blocs/forms/forms.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'data/fake_schema.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
@@ -103,7 +103,7 @@ class MainApplicationState extends State<MainApplication>
           child: MultiBlocProvider(
             providers: [
                   BlocProvider(
-          create: (context) => FormsBloc()..add(const FormsLoadEvent()),
+          create: (context) => FormsBloc(fakeSchema)..add(const FormsLoadEvent()),
         ),
               // INFO : Need to add bloc of package Here
               BlocProvider(

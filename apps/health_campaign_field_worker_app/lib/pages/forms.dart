@@ -5,14 +5,14 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
-
+import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:forms_engine/json_forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/forms/forms.dart';
 // import '../widgets/header/back_navigation_help_header.dart';
 import '../router/app_router.dart';
+import '../widgets/custom_text.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/showcase/showcase_button.dart';
 
@@ -41,6 +41,7 @@ class FormsPage extends StatelessWidget {
           final index = schemaObject.pages.keys.toList().indexOf(pageName);
           final showcaseKeys = <GlobalKey>[];
           final Map<String, Widget> widgetMap = {
+            'customText': const CustomText(),
             'scanner':  Container(
               padding: const EdgeInsets.all(8),
               child:     DigitButton(
@@ -61,7 +62,6 @@ class FormsPage extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                       )
               ),
-
           };
           return ReactiveFormBuilder(
             form: () => fb.group(
