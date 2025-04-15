@@ -41,6 +41,8 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return RolesType.registrar;
       case "TEAM_SUPERVISOR":
         return RolesType.teamSupervisor;
+      case "COMMUNITY_CREATOR":
+        return RolesType.communityCreator;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -65,6 +67,8 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return "REGISTRAR";
       case RolesType.teamSupervisor:
         return "TEAM_SUPERVISOR";
+      case RolesType.communityCreator:
+        return "COMMUNITY_CREATOR";
     }
   }
 }

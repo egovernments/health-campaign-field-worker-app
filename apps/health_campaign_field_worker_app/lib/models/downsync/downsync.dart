@@ -52,9 +52,13 @@ class DownsyncModel extends EntityModel with DownsyncModelMappable {
   final String? locality;
   final String? projectId;
   final int? offset;
+  final int? clfOffset;
+  final int? clfMemberOffset;
   final int? limit;
   final int? lastSyncedTime;
   final int? totalCount;
+  final int? clfTotalCount;
+  final int? clfMemberTotalCount;
   final String? boundaryName;
   final bool? nonRecoverableError;
   final String? tenantId;
@@ -66,9 +70,13 @@ class DownsyncModel extends EntityModel with DownsyncModelMappable {
     this.locality,
     this.projectId,
     this.offset,
+    this.clfOffset,
+    this.clfMemberOffset,
     this.limit,
     this.lastSyncedTime,
     this.totalCount,
+    this.clfTotalCount,
+    this.clfMemberTotalCount,
     this.boundaryName,
     this.nonRecoverableError = false,
     this.tenantId,

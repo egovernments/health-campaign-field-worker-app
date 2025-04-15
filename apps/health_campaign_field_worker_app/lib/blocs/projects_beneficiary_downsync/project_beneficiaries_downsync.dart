@@ -110,8 +110,10 @@ class BeneficiaryDownSyncBloc
     } else {
       emit(const BeneficiaryDownSyncState.loading(true));
       await LocalSecureStore.instance.setManualSyncTrigger(true);
+
+      int serverTotalCount = 0, clfServerCount = 0, clfMemberCount =0;
       final existingDownSyncData =
-          await downSyncLocalRepository.search(DownsyncSearchModel(
+      await downSyncLocalRepository.search(DownsyncSearchModel(
         locality: event.boundaryCode,
       ));
 
@@ -119,9 +121,38 @@ class BeneficiaryDownSyncBloc
           ? null
           : existingDownSyncData.first.lastSyncedTime;
 
-      //To get the server totalCount,
-      final initialResults = await downSyncRemoteRepository.downSync(
-        DownsyncSearchModel(
+      //Check if the event is for DISTRIBUTOR
+      if (event.isDistributor) {
+        //To get the server totalCount,
+        final initialResults = await downSyncRemoteRepository.downSync(
+          DownsyncSearchModel(
+            locality: event.boundaryCode,
+            offset: existingDownSyncData.firstOrNull?.offset ?? 0,
+            limit: 1,
+            isDeleted: true,
+            lastSyncedTime: lastSyncedTime,
+            tenantId: envConfig.variables.tenantId,
+            projectId: event.projectId,
+          ),
+        );
+
+        //If API request failed, reset the State and emit a failure state
+        if (initialResults.isEmpty) {
+          await LocalSecureStore.instance.setManualSyncTrigger(false);
+          emit(const BeneficiaryDownSyncState.resetState());
+          emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+          return;
+        }
+
+        //Extract server total count
+        serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
+      }
+
+      //Check if the event is for COMMUNITY_CREATOR
+      if (event.isCommunityCreator) {
+        //To get the CLF server totalCount
+        final initialCLFResults = await downSyncRemoteRepository
+            .downSync(DownsyncSearchModel(
           locality: event.boundaryCode,
           offset: existingDownSyncData.firstOrNull?.offset ?? 0,
           limit: 1,
@@ -129,22 +160,50 @@ class BeneficiaryDownSyncBloc
           lastSyncedTime: lastSyncedTime,
           tenantId: envConfig.variables.tenantId,
           projectId: event.projectId,
-        ),
-      );
-      if (initialResults.isNotEmpty) {
-        // Current response from server is String, Expecting it to be int
-        //[TODO: Need to move the dynamic keys to constants
-        int serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
+        ), apiOperation: ApiOperation.clfSearch.toValue());
 
-        emit(BeneficiaryDownSyncState.dataFound(
-          serverTotalCount,
-          event.batchSize,
-        ));
-      } else {
-        await LocalSecureStore.instance.setManualSyncTrigger(false);
-        emit(const BeneficiaryDownSyncState.resetState());
-        emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+        //If API request failed, reset the State and emit a failure state
+        if (initialCLFResults.isEmpty) {
+          await LocalSecureStore.instance.setManualSyncTrigger(false);
+          emit(const BeneficiaryDownSyncState.resetState());
+          emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+          return;
+        }
+
+        //Extract clf total count
+        clfServerCount = initialCLFResults["DownsyncCriteria"]["totalCount"];
+
+        //To get the CLF MEMBER server totalCount
+        final initialCLFMemberResults = await downSyncRemoteRepository
+            .downSync(DownsyncSearchModel(
+          locality: event.boundaryCode,
+          offset: existingDownSyncData.firstOrNull?.offset ?? 0,
+          limit: 1,
+          isDeleted: true,
+          lastSyncedTime: lastSyncedTime,
+          tenantId: envConfig.variables.tenantId,
+          projectId: event.projectId,
+        ), apiOperation: ApiOperation.clfMemberSearch.toValue());
+
+        //If API request failed, reset the State and emit a failure state
+        if (initialCLFMemberResults.isEmpty) {
+          await LocalSecureStore.instance.setManualSyncTrigger(false);
+          emit(const BeneficiaryDownSyncState.resetState());
+          emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+          return;
+        }
+
+        //Extract clf total count
+        clfMemberCount = initialCLFMemberResults["DownsyncCriteria"]["totalCount"];
       }
+
+      // Emit a new state indicating that data has been found. Pass the server's total count, and clf total count
+      emit(BeneficiaryDownSyncState.dataFound(
+        serverTotalCount,
+        clfServerCount,
+        clfMemberCount,
+        event.batchSize,
+      ));
     }
   }
 
@@ -172,16 +231,34 @@ class BeneficiaryDownSyncBloc
           int offset = existingDownSyncData.isEmpty
               ? 0
               : existingDownSyncData.first.offset ?? 0;
+
+          int clfOffset = existingDownSyncData.isEmpty
+              ? 0
+              : existingDownSyncData.first.clfOffset ?? 0;
+
+          int clfMemberOffset = existingDownSyncData.isEmpty
+              ? 0
+              : existingDownSyncData.first.clfMemberOffset ?? 0;
+
           int totalCount = event.initialServerCount;
+          int clfTotalCount = event.clfServerCount;
+          int clfMemberTotalCount = event.clfMemberServerCount;
+
           int? lastSyncedTime = existingDownSyncData.isEmpty
               ? null
               : existingDownSyncData.first.lastSyncedTime;
+
+
           if (existingDownSyncData.isEmpty) {
             await downSyncLocalRepository.create(DownsyncModel(
               offset: offset,
+              clfOffset: clfOffset,
+              clfMemberOffset: clfMemberOffset,
               limit: event.batchSize,
               lastSyncedTime: lastSyncedTime,
               totalCount: totalCount,
+              clfTotalCount: clfTotalCount,
+              clfMemberTotalCount: clfMemberTotalCount,
               locality: event.boundaryCode,
               boundaryName: event.boundaryName,
             ));
@@ -280,7 +357,11 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required String boundaryCode,
     required int batchSize,
     required int initialServerCount,
+    required int clfServerCount,
+    required int clfMemberServerCount,
     required String boundaryName,
+    required bool isCommunityCreator,
+    required bool isDistributor,
   }) = DownSyncBeneficiaryEvent;
 
   const factory BeneficiaryDownSyncEvent.checkForData({
@@ -289,6 +370,8 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required int pendingSyncCount,
     required int batchSize,
     required String boundaryName,
+    required bool isCommunityCreator,
+    required bool isDistributor,
   }) = DownSyncCheckTotalCountEvent;
 
   const factory BeneficiaryDownSyncEvent.getBatchSize({
@@ -328,6 +411,8 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
       _DownSyncInsufficientStorageState;
   const factory BeneficiaryDownSyncState.dataFound(
     int initialServerCount,
+    int initialCLFCount,
+    int initialCLFMemberCount,
     int batchSize,
   ) = _DownSyncDataFoundState;
   const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;

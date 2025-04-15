@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../../../models/downsync/downsync.dart';
+import '../../../models/entities/roles_type.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
@@ -68,6 +69,20 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
+
+    bool isDistributor = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.distributor.toValue(),
+    )
+        .toList()
+        .isNotEmpty;
+
+    bool isCommunityCreator = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.communityCreator.toValue(),
+    )
+        .toList()
+        .isNotEmpty;
 
     return Scaffold(
       body: BlocBuilder<AppInitializationBloc, AppInitializationState>(
@@ -128,6 +143,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                   pendingSyncCount: pendingSyncCount,
                                   boundaryName: boundaryName,
                                   batchSize: batchSize,
+                                  isDistributor: isDistributor,
+                                  isCommunityCreator: isCommunityCreator,
                                 ),
                               ),
                       report: (downSyncCriteriaList) {
@@ -157,7 +174,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         dialogType: DigitProgressDialogType.pendingSync,
                         isPop: true,
                       ),
-                      dataFound: (initialServerCount, batchSize) =>
+                      dataFound: (initialServerCount, clfServerCount, clfMemberCount,batchSize) =>
                           showDownloadDialog(
                         context,
                         model: DownloadBeneficiary(

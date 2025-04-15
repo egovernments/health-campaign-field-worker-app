@@ -307,7 +307,11 @@ void showDownloadDialog(
                               // Batch Size need to be defined based on Internet speed.
                               batchSize: model.batchSize ?? 1,
                               initialServerCount: model.totalCount ?? 0,
+                              clfServerCount: model.totalClfCount ?? 0,
+                              clfMemberServerCount: model.totalClfMemberCount ?? 0,
                               boundaryName: model.boundaryName,
+                              isDistributor: model.isDistributor ?? false,
+                              isCommunityCreator: model.isCommunityCreator ?? false,
                             ),
                           );
                     } else {

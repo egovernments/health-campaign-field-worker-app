@@ -60,6 +60,7 @@ abstract class RemoteRepository<D extends EntityModel,
 
   String get bulkDeletePath => actionMap[ApiOperation.bulkDelete] ?? '';
 
+
   RemoteRepository(
     this.dio, {
     required this.actionMap,
@@ -183,6 +184,7 @@ abstract class RemoteRepository<D extends EntityModel,
     R query, {
     int? offSet,
     int? limit,
+        String? apiOperation
   }) async {
     Response response;
 
@@ -190,7 +192,7 @@ abstract class RemoteRepository<D extends EntityModel,
       response = await executeFuture(
         future: () async {
           return await dio.post(
-            searchPath,
+            actionMap[apiOperation ?? ApiOperation.search] ?? '',
             queryParameters: {
               'offset': offSet ?? 0,
               'limit': limit ?? 100,

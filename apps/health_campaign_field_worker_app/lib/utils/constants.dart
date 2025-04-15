@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
@@ -355,6 +357,8 @@ class DownloadBeneficiary {
   int? pendingSyncCount;
   int? syncCount;
   int? totalCount;
+  int? totalClfCount;
+  int? totalClfMemberCount;
   String? content;
   int? batchSize;
   String? primaryButtonLabel;
@@ -362,6 +366,8 @@ class DownloadBeneficiary {
   String? prefixLabel;
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
+  bool? isDistributor;
+  bool? isCommunityCreator;
 
   DownloadBeneficiary({
     required this.title,
@@ -373,10 +379,14 @@ class DownloadBeneficiary {
     this.batchSize,
     this.syncCount,
     this.totalCount,
+    this.totalClfCount,
+    this.totalClfMemberCount,
     this.content,
     this.primaryButtonLabel,
     this.secondaryButtonLabel,
     this.prefixLabel,
     this.suffixLabel,
+    this.isDistributor,
+    this.isCommunityCreator,
   });
 }

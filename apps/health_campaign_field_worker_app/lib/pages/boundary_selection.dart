@@ -84,6 +84,13 @@ class _BoundarySelectionPageState
         .toList()
         .isNotEmpty;
 
+    bool isCommunityCreator = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.communityCreator.toValue(),
+    )
+        .toList()
+        .isNotEmpty;
+
     return PopScope(
       canPop: shouldPop,
       child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
@@ -185,6 +192,8 @@ class _BoundarySelectionPageState
                                                     .value!.name
                                                     .toString(),
                                                 batchSize: batchSize,
+                                                isDistributor: isDistributor,
+                                                isCommunityCreator: isCommunityCreator,
                                               ),
                                             ),
                                     pendingSync: () => showDownloadDialog(
@@ -207,12 +216,14 @@ class _BoundarySelectionPageState
                                         boundaryName: selectedBoundary
                                             .value!.name
                                             .toString(),
+                                        isDistributor : isDistributor,
+                                        isCommunityCreator: isCommunityCreator,
                                       ),
                                       dialogType:
                                           DigitProgressDialogType.pendingSync,
                                       isPop: true,
                                     ),
-                                    dataFound: (initialServerCount, batchSize) {
+                                    dataFound: (initialServerCount, clfServerCount, clfMemberCount, batchSize) {
                                       clickedStatus.value = false;
                                       showDownloadDialog(
                                         context,
@@ -231,6 +242,8 @@ class _BoundarySelectionPageState
                                               .toString(),
                                           batchSize: batchSize,
                                           totalCount: initialServerCount,
+                                          totalClfCount: clfServerCount,
+                                          totalClfMemberCount: clfMemberCount,
                                           content: localizations.translate(
                                             initialServerCount > 0
                                                 ? i18.beneficiaryDetails
@@ -255,6 +268,8 @@ class _BoundarySelectionPageState
                                           boundaryName: selectedBoundary
                                               .value!.name
                                               .toString(),
+                                          isDistributor : isDistributor,
+                                          isCommunityCreator: isCommunityCreator,
                                         ),
                                         dialogType:
                                             DigitProgressDialogType.dataFound,
@@ -491,7 +506,7 @@ class _BoundarySelectionPageState
 
                                                 if (context.mounted) {
                                                   if (isOnline &&
-                                                      isDistributor) {
+                                                      (isDistributor  || isCommunityCreator)) {
                                                     context
                                                         .read<
                                                             BeneficiaryDownSyncBloc>()
