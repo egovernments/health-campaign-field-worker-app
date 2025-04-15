@@ -5,6 +5,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   final int? maxLength;
   final List<String>? enums;
   final String? format;
+  
   final Widget? suffix;
 
   const JsonSchemaStringBuilder({
@@ -24,10 +25,15 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
 
   @override
   Widget build(BuildContext context) {
-    return ReactiveTextField(
+    return  ReactiveTextField(
       readOnly: readOnly,
       formControlName: formControlName,
+        validationMessages: {
+          ValidationMessage.pattern:(error) => 'Pattron Mismatch',
+          ValidationMessage.minLength:(controler)=> 'Min...Length'
+        } , 
       decoration: InputDecoration(
+
         labelText: hint,
         suffixIconConstraints: const BoxConstraints(
           maxHeight: 48,

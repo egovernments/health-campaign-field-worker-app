@@ -39,6 +39,7 @@ mixin _$PropertySchema {
   String? get label => throw _privateConstructorUsedError;
   dynamic get value => throw _privateConstructorUsedError;
   DisplayBehavior? get displayBehavior => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get conditions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -69,7 +70,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       String? hint,
       String? label,
       dynamic value,
-      DisplayBehavior? displayBehavior});
+      DisplayBehavior? displayBehavior,
+      Map<String, dynamic>? conditions});
 
   $DateFormatValueCopyWith<$Res>? get firstDate;
   $DateFormatValueCopyWith<$Res>? get lastDate;
@@ -106,6 +108,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? label = freezed,
     Object? value = freezed,
     Object? displayBehavior = freezed,
+    Object? conditions = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -176,6 +179,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.displayBehavior
           : displayBehavior // ignore: cast_nullable_to_non_nullable
               as DisplayBehavior?,
+      conditions: freezed == conditions
+          ? _value.conditions
+          : conditions // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
     ) as $Val);
   }
 
@@ -241,7 +248,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       String? hint,
       String? label,
       dynamic value,
-      DisplayBehavior? displayBehavior});
+      DisplayBehavior? displayBehavior,
+      Map<String, dynamic>? conditions});
 
   @override
   $DateFormatValueCopyWith<$Res>? get firstDate;
@@ -279,6 +287,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? label = freezed,
     Object? value = freezed,
     Object? displayBehavior = freezed,
+    Object? conditions = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -349,6 +358,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.displayBehavior
           : displayBehavior // ignore: cast_nullable_to_non_nullable
               as DisplayBehavior?,
+      conditions: freezed == conditions
+          ? _value._conditions
+          : conditions // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
     ));
   }
 }
@@ -374,10 +387,12 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.hint,
       this.label,
       this.value,
-      this.displayBehavior})
+      this.displayBehavior,
+      final Map<String, dynamic>? conditions})
       : _properties = properties,
         _required = required,
-        _enums = enums;
+        _enums = enums,
+        _conditions = conditions;
 
   factory _$PropertySchemaImpl.fromJson(Map<String, dynamic> json) =>
       _$$PropertySchemaImplFromJson(json);
@@ -441,10 +456,19 @@ class _$PropertySchemaImpl implements _PropertySchema {
   final dynamic value;
   @override
   final DisplayBehavior? displayBehavior;
+  final Map<String, dynamic>? _conditions;
+  @override
+  Map<String, dynamic>? get conditions {
+    final value = _conditions;
+    if (value == null) return null;
+    if (_conditions is EqualUnmodifiableMapView) return _conditions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readonly: $readonly, displayOnly: $displayOnly, properties: $properties, required: $required, enums: $enums, format: $format, firstDate: $firstDate, lastDate: $lastDate, minLength: $minLength, maxLength: $maxLength, maximum: $maximum, minimum: $minimum, hint: $hint, label: $label, value: $value, displayBehavior: $displayBehavior)';
+    return 'PropertySchema(type: $type, readonly: $readonly, displayOnly: $displayOnly, properties: $properties, required: $required, enums: $enums, format: $format, firstDate: $firstDate, lastDate: $lastDate, minLength: $minLength, maxLength: $maxLength, maximum: $maximum, minimum: $minimum, hint: $hint, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions)';
   }
 
   @override
@@ -476,7 +500,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.label, label) || other.label == label) &&
             const DeepCollectionEquality().equals(other.value, value) &&
             (identical(other.displayBehavior, displayBehavior) ||
-                other.displayBehavior == displayBehavior));
+                other.displayBehavior == displayBehavior) &&
+            const DeepCollectionEquality()
+                .equals(other._conditions, _conditions));
   }
 
   @JsonKey(ignore: true)
@@ -499,7 +525,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       hint,
       label,
       const DeepCollectionEquality().hash(value),
-      displayBehavior);
+      displayBehavior,
+      const DeepCollectionEquality().hash(_conditions));
 
   @JsonKey(ignore: true)
   @override
@@ -534,7 +561,8 @@ abstract class _PropertySchema implements PropertySchema {
       final String? hint,
       final String? label,
       final dynamic value,
-      final DisplayBehavior? displayBehavior}) = _$PropertySchemaImpl;
+      final DisplayBehavior? displayBehavior,
+      final Map<String, dynamic>? conditions}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -574,6 +602,8 @@ abstract class _PropertySchema implements PropertySchema {
   dynamic get value;
   @override
   DisplayBehavior? get displayBehavior;
+  @override
+  Map<String, dynamic>? get conditions;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>

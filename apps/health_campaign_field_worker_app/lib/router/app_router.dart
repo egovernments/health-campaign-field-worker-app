@@ -1,6 +1,7 @@
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
+import '../pages/forms.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/router/complaints_router.dart';
@@ -68,12 +69,14 @@ class AppRouter extends _$AppRouter {
           initial: true,
         ),
         AutoRoute(page: LoginRoute.page, path: 'login'),
+        AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
       ],
     ),
     AutoRoute(
       page: AuthenticatedRouteWrapper.page,
       path: '/',
       children: [
+        AutoRoute(page: FormsRoute.page, path: 'forms/:pageName'),
         AutoRoute(page: HomeRoute.page, path: 'home'),
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),

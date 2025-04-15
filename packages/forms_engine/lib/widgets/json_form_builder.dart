@@ -3,17 +3,19 @@ part of 'json_schema_builder.dart';
 class JsonFormBuilder extends StatelessWidget {
   final String formControlName;
   final PropertySchema schema;
+  final List<Map<String, Widget>>? components;
 
   const JsonFormBuilder({
     Key? key,
     required this.formControlName,
     required this.schema,
+    this.components,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final type = schema.type;
-    Widget? child;
+    Widget child;
 
     final display = schema.displayBehavior;
     final form = ReactiveForm.of(context) as FormGroup;
@@ -51,21 +53,57 @@ class JsonFormBuilder extends StatelessWidget {
     }
 
     switch (type) {
+     
       case PropertySchemaType.string:
-        if (schema.enums?.isNotEmpty ?? false) {
-          child = LabeledField(
+          if (schema.format == PropertySchemaFormat.select) {
+          child = Container(
+            padding:const EdgeInsets.only( top: 8),
+            child:LabeledField(
             label: schema.label ?? '',
-            child: JsonSchemaDropdownBuilder(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child:  JsonSchemaSelectionBuilder(
+                form: form,
+                formControlName: formControlName,
+                hint: schema.hint,
+                enums: schema.enums ??[],
+              )),));
+
+        }
+        else if (schema.enums?.isNotEmpty ?? false) {
+          child = Container(
+            padding: const EdgeInsets.all(8),
+            child:  Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:  [ 
+              LabeledField(
+            label: schema.label ?? '',
+            child:
+            Container(
+            width:  MediaQuery.of(context).size.width ,
+            // padding: EdgeInsets.all( spacer6),
+            decoration: BoxDecoration(
+              color: DigitColors().light.paperSecondary,
+              borderRadius: BorderRadius.circular(spacer1),
+              border: Border.all(
+                color: const DigitColors().light.genericBackground,
+                width: 1,
+              ),
+            ),
+            child:  
+             JsonSchemaDropdownBuilder(
               form: form,
               formControlName: formControlName,
               value: schema.value as String?,
               enums: schema.enums!,
               hint: schema.hint,
             ),
-          );
+          ),)]),);
           break;
         } else if (schema.format == PropertySchemaFormat.date) {
-          child = LabeledField(
+          child = Container(
+            padding: const EdgeInsets.all(8),
+            child:LabeledField(
             label: schema.label ?? '',
             child: JsonSchemaDatePickerBuilder(
               form: form,
@@ -75,56 +113,115 @@ class JsonFormBuilder extends StatelessWidget {
               start: schema.firstDate?.dateValue,
               end: schema.lastDate?.dateValue,
             ),
-          );
+          ));
           break;
+
+        }
+      
+
+      // else if (schema.format == P){
+      //   Container(
+      //         padding: const EdgeInsets.all(8),
+      //         child:     DigitButton(
+      //                   size: DigitButtonSize.large,
+      //                   label:'scanner',
+      //                   onPressed: () async {
+      //                     context.read<DigitScannerBloc>().add(
+      //                           const DigitScannerEvent.handleScanner(),
+      //                         );
+      //                     context.router.push(DigitScannerRoute(
+      //                       quantity: 1,
+      //                       isGS1code: false,
+      //                       singleValue: true,
+      //                     ));
+      //                   },
+      //                   type: DigitButtonType.secondary,
+      //                   prefixIcon: Icons.qr_code,
+      //                   mainAxisSize: MainAxisSize.max,
+      //                 )
+      //         );
+      // }
+        
+        
+         else if (schema.format == PropertySchemaFormat.locality) {
+          child = LabeledField(
+              label: schema.label ?? '',
+              child: JsonSchemaStringBuilder(
+                form: form,
+                formControlName: formControlName,
+                hint: schema.hint,
+                readOnly: true,
+              ));
+
+          
+        } else if (schema.format == PropertySchemaFormat.cutsom) {
+          child = Container();
+          if (components != null) {
+            if (components!.isNotEmpty) {
+              for (var i = 0; i < components!.length; i++) {
+                if (schema.format == PropertySchemaFormat.cutsom) {
+                  child = components!.first.entries.first.value;
+
+                  break;
+                }
+              }
+            }
+          }
         } else if (schema.format == PropertySchemaFormat.latLng) {
           child = BlocConsumer<LocationBloc, LocationState>(
             listener: (_, state) {
               form.control(formControlName).value = state.latLngString;
             },
             builder: (context, state) {
-              return LabeledField(
-                label: schema.label ?? '',
-                child: JsonSchemaStringBuilder(
-                  form: form,
-                  formControlName: formControlName,
-                  hint: schema.hint,
-                  readOnly: true,
-                  suffix: Container(
-                    padding: const EdgeInsets.only(right: 8),
-                    height: 18,
-                    child: state.loading
-                        ? const AspectRatio(
-                            aspectRatio: 1,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.my_location),
+              return Container(
+                padding: const EdgeInsets.all(8),
+                child: LabeledField(
+                  label: schema.label ?? '',
+                  child: JsonSchemaStringBuilder(
+                    form: form,
+                    formControlName: formControlName,
+                    hint: schema.hint,
+                    readOnly: true,
+                    suffix: Container(
+                      padding: const EdgeInsets.only(right: 8),
+                      height: 18,
+                      child: state.loading
+                          ? const AspectRatio(
+                              aspectRatio: 1,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.my_location),
+                    ),
+                    onTap: state.loading
+                        ? null
+                        : () => context.read<LocationBloc>().add(
+                              const LoadLocationEvent(),
+                            ),
                   ),
-                  onTap: state.loading
-                      ? null
-                      : () => context.read<LocationBloc>().add(
-                            const LoadLocationEvent(),
-                          ),
                 ),
               );
             },
           );
         } else {
-          child = LabeledField(
-            label: schema.label ?? '',
-            child: JsonSchemaStringBuilder(
-              form: form,
-              formControlName: formControlName,
-              value: schema.value as String?,
-              maxLength: schema.maxLength,
-              minLength: schema.minLength,
-              hint: schema.hint,
-            ),
-          );
+          child = Container(
+              padding: const EdgeInsets.all(8),
+              child: LabeledField(
+                label: schema.label ?? '',
+                child: JsonSchemaStringBuilder(
+                  form: form,
+                  formControlName: formControlName,
+                  value: schema.value as String?,
+                  maxLength: schema.maxLength,
+                  minLength: schema.minLength,
+                  hint: schema.hint,
+                ),
+              ));
         }
         break;
       case PropertySchemaType.integer:
-        child = LabeledField(
+        child = Container(
+            padding:const EdgeInsets.all(8),
+            child: LabeledField(
           label: schema.label ?? '',
           child: JsonSchemaIntegerBuilder(
             form: form,
@@ -135,7 +232,7 @@ class JsonFormBuilder extends StatelessWidget {
             minimum: schema.minimum?.toInt(),
             hint: schema.hint,
           ),
-        );
+        ));
         break;
       case PropertySchemaType.numeric:
         child = LabeledField(
@@ -151,12 +248,14 @@ class JsonFormBuilder extends StatelessWidget {
         );
         break;
       case PropertySchemaType.boolean:
-        child = JsonSchemaBooleanBuilder(
+        child = Container(
+            padding:const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+            child: JsonSchemaBooleanBuilder(
           form: form,
           formControlName: formControlName,
           value: schema.value as bool?,
           hint: schema.label,
-        );
+        ));
         break;
       case PropertySchemaType.object:
         child = Column(
@@ -167,6 +266,7 @@ class JsonFormBuilder extends StatelessWidget {
                 return JsonFormBuilder(
                   formControlName: subName,
                   schema: subSchema,
+                  components: components,
                 );
               }).toList() ??
               [const Text('No schema')],
