@@ -18,6 +18,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     on<FormsLoadEvent>(_handleLoadForm);
     on<FormsUpdateEvent>(_handleUpdateForm);
     on<FormsCreateMappingEvent>(_handleCreateMapping);
+    on<FormsUpdateFieldEvent>(_handleUpdateField);
   }
 
   FutureOr<void> _handleLoadForm(FormsLoadEvent event, FormsStateEmitter emit) {
@@ -49,6 +50,30 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     final dataMap = Map.fromEntries(propertiesMap);
     emit(state.copyWith(savedProperties: dataMap));
   }
+
+  void _handleUpdateField(FormsUpdateFieldEvent event, FormsStateEmitter emit) {
+    final schemaCopy = state.schema;
+    if (schemaCopy == null) return;
+
+    final updatedPages = {
+      for (final page in schemaCopy.pages.entries)
+        page.key: page.value.copyWith(
+          properties: page.value.properties == null
+              ? null
+              : {
+            for (final prop in page.value.properties!.entries)
+              prop.key: prop.key == event.key
+                  ? prop.value.copyWith(value: event.value)
+                  : prop.value,
+          },
+        ),
+    };
+
+    final updatedSchema = schemaCopy.copyWith(pages: updatedPages);
+    emit(state.copyWith(schema: updatedSchema));
+  }
+
+
 }
 
 @freezed
@@ -58,6 +83,9 @@ class FormsEvent with _$FormsEvent {
   const factory FormsEvent.createMapping() = FormsCreateMappingEvent;
 
   const factory FormsEvent.update(SchemaObject object) = FormsUpdateEvent;
+
+  const factory FormsEvent.updateField({required String key, required dynamic value}) = FormsUpdateFieldEvent;
+
 }
 
 @freezed

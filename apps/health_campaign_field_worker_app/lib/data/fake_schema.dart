@@ -19,7 +19,11 @@ const fakeSchema = """
           "format" : "latLng",
           "label": "Lat/Long *"
         },
-          
+         "customText": {
+          "type": "string",
+          "format": "cutsom",
+          "label": "Custom Text Value"
+        }, 
         "addressLine1": {
           "type": "string",
           "label": "Address Line 1"

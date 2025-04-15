@@ -36,7 +36,7 @@ import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
-import '../blocs/forms/forms.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
 import '../blocs/localization/localization.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
