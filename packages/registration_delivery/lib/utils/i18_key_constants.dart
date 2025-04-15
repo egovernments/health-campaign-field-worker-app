@@ -310,6 +310,8 @@ class BeneficiaryDetails {
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
 
   String get totalMembers => 'TOTAL_HOUSEHOLD_MEMBERS';
+
+  String get totalCLFMembers => 'TOTAL_CLF_MEMBERS';
 }
 
 class IndividualDetails {
