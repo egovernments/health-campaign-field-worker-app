@@ -32,7 +32,7 @@ class JsonSchemaSelectionBuilder extends JsonSchemaBuilder<String> {
               valueMapper: (e) => e,
               allowMultipleSelection: false,
               equalWidthOptions: true,
-              showParentContainer: false,
+              showParentContainer: true,
               initialSelection: field.value != null ? [field.value!] : [],
               onSelectionChanged: (selected) {
                 field.control.markAsTouched();
