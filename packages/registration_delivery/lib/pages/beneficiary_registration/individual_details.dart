@@ -141,11 +141,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 form.control(_genderKey).setErrors({'': true});
                               });
                             }
-                            bool validForm = checklistKey.currentState
-                                    ?.validateSurveyForm() ??
-                                false;
 
-                            if (validForm == false) return;
+                            if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
+                              bool validForm = checklistKey.currentState
+                                  ?.validateSurveyForm() ??
+                                  false;
+
+                              if (validForm == false) return;
+                            }
+
                             final userId = RegistrationDeliverySingleton()
                                 .loggedInUserUuid;
                             final projectId =
@@ -174,12 +178,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   form: form,
                                   oldIndividual: null,
                                 );
+if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
+  checklistKey.currentState?.submitSurvey(
+      latitude: 876765,
+      longitude: 89798,
+      relatedReferenceId:
+      individual.clientReferenceId);
+}
 
-                                checklistKey.currentState?.submitSurvey(
-                                    latitude: 876765,
-                                    longitude: 89798,
-                                    relatedReferenceId:
-                                        individual.clientReferenceId);
 
                                 final boundary =
                                     RegistrationDeliverySingleton().boundary;
@@ -187,7 +193,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 bloc.add(
                                   BeneficiaryRegistrationSaveIndividualDetailsEvent(
                                     model: individual,
-                                    parentClientReferenceId: widget.parentClientReferenceId,
+                                    parentClientReferenceId:
+                                        widget.parentClientReferenceId,
                                     isHeadOfHousehold: widget.isHeadOfHousehold,
                                   ),
                                 );
@@ -216,7 +223,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       projectId: projectId!,
                                       userUuid: userId!,
                                       boundary: boundary!,
-                                      parentClientReferenceId: widget.parentClientReferenceId,
+                                      parentClientReferenceId:
+                                          widget.parentClientReferenceId,
                                       tag: scannerBloc.state.qrCodes.isNotEmpty
                                           ? scannerBloc.state.qrCodes.first
                                           : null,
@@ -243,11 +251,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   form: form,
                                   oldIndividual: individualModel,
                                 );
-                                checklistKey.currentState?.submitSurvey(
-                                    latitude: 876765,
-                                    longitude: 89798,
-                                    relatedReferenceId:
-                                        individual.clientReferenceId);
+                                if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
+                                  checklistKey.currentState?.submitSurvey(
+                                      latitude: 876765,
+                                      longitude: 89798,
+                                      relatedReferenceId:
+                                      individual.clientReferenceId);
+                                }
+
                                 final tag = scannerBloc.state.qrCodes.isNotEmpty
                                     ? scannerBloc.state.qrCodes.first
                                     : null;
@@ -289,7 +300,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                               )
                                             : null,
                                       ),
-                                      parentClientReferenceId: widget.parentClientReferenceId,
+                                      parentClientReferenceId:
+                                          widget.parentClientReferenceId,
                                       tag: scannerBloc.state.qrCodes.isNotEmpty
                                           ? scannerBloc.state.qrCodes.first
                                           : null,
@@ -307,12 +319,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   context,
                                   form: form,
                                 );
-
-                                checklistKey.currentState?.submitSurvey(
-                                    latitude: addressModel.latitude,
-                                    longitude: addressModel.longitude,
-                                    relatedReferenceId:
-                                        individual.clientReferenceId);
+                                if (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.family) {
+                                  checklistKey.currentState?.submitSurvey(
+                                      latitude: addressModel.latitude,
+                                      longitude: addressModel.longitude,
+                                      relatedReferenceId:
+                                          individual.clientReferenceId);
+                                }
 
                                 if (context.mounted) {
                                   final scannerBloc =
@@ -338,7 +353,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                         householdModel: householdModel,
                                         individualModel: individual,
                                         addressModel: addressModel,
-                                        parentClientReferenceId: widget.parentClientReferenceId,
+                                        parentClientReferenceId:
+                                            widget.parentClientReferenceId,
                                         userUuid:
                                             RegistrationDeliverySingleton()
                                                 .loggedInUserUuid!,

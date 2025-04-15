@@ -158,8 +158,12 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               form.control(_childrenCountKey).value as int;
 
                           bool validForm =
-                              checklistKey.currentState?.validateSurveyForm() ??
-                                  false;
+                              RegistrationDeliverySingleton().householdType ==
+                                      HouseholdType.family
+                                  ? checklistKey.currentState
+                                          ?.validateSurveyForm() ??
+                                      false
+                                  : true;
 
                           if (validForm == false) return;
 
@@ -277,13 +281,16 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                             children,
                                           )
                                         ]));
-
-                                checklistKey.currentState?.submitSurvey(
-                                    latitude: addressModel?.latitude,
-                                    longitude: addressModel?.longitude,
-                                    relatedReferenceId:
-                                        householdModel?.clientReferenceId ??
-                                            IdGen.i.identifier);
+                                if (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.family) {
+                                  checklistKey.currentState?.submitSurvey(
+                                      latitude: addressModel?.latitude,
+                                      longitude: addressModel?.longitude,
+                                      relatedReferenceId:
+                                          householdModel?.clientReferenceId ??
+                                              IdGen.i.identifier);
+                                }
 
                                 bloc.add(
                                   BeneficiaryRegistrationSaveHouseholdDetailsEvent(
@@ -720,8 +727,17 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               ),
                             ),
                           ),
-                          if(RegistrationDeliverySingleton().householdType == HouseholdType.family)
-                          SurveyFormViewPage(key: checklistKey, hideFooter: true, hideHeader: true, checklistType: BeneficiaryChecklistEnums.household.toValue(), hideBackAlert: true, useScaffold: false,)
+                          if (RegistrationDeliverySingleton().householdType ==
+                              HouseholdType.family)
+                            SurveyFormViewPage(
+                              key: checklistKey,
+                              hideFooter: true,
+                              hideHeader: true,
+                              checklistType:
+                                  BeneficiaryChecklistEnums.household.toValue(),
+                              hideBackAlert: true,
+                              useScaffold: false,
+                            )
                         ]),
                   ),
                 ],
