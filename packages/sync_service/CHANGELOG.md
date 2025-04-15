@@ -1,3 +1,7 @@
+## 1.0.1-dev.2-enumeration
+
+* Added missing await in syncUp
+
 ## 1.0.1-dev.1-enumeration
 
 * Added downsync of service to support enumeration
