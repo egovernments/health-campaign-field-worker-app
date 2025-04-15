@@ -30,7 +30,10 @@ class PropertySchema with _$PropertySchema {
     String? label,
     dynamic value,
     DisplayBehavior? displayBehavior,
+    Map<String, dynamic>? conditions,
   }) = _PropertySchema;
+
+
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
       _$PropertySchemaFromJson(json);
@@ -75,7 +78,11 @@ enum PropertySchemaFormat {
   date,
   dateTime,
   latLng,
+  cutsom,
+  locality,
+  select,
   incrementer;
+
 }
 
 enum PropertySchemaType { object, string, integer, boolean, numeric }

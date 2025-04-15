@@ -36,6 +36,7 @@ import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/forms/forms.dart';
 import '../blocs/localization/localization.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -97,6 +98,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     final theme = Theme.of(context);
     final state = context.read<AuthBloc>().state;
     final localSecureStore = LocalSecureStore.instance;
@@ -267,7 +269,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     return count == 0
                         ? const Offstage()
                         : Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: spacer2,
                             ),
                             child: InfoCard(
@@ -324,6 +326,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (state is! AuthAuthenticatedState) {
       return null;
     }
+            final pageName =
+        context.watch<FormsBloc>().state.schema?.pages.entries.first.key;
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
@@ -506,6 +510,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
+          
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
@@ -513,8 +518,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            ;
-            context.router.push(const ManageAttendanceRoute());
+            
+            context.router.push( FormsRoute(pageName: pageName!));
           },
         ),
       ),
@@ -523,13 +528,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.table_chart,
           label: i18.home.db,
           onPressed: () async {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
-              ),
-            );
+            print(pageName);
+         pageName !=null? context.router.push( FormsRoute(pageName: pageName)):null;
           },
         ),
       ),

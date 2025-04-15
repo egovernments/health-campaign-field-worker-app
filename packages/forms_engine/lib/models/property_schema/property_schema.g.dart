@@ -39,6 +39,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DisplayBehavior.fromJson(
               json['displayBehavior'] as Map<String, dynamic>),
+      conditions: json['conditions'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -70,6 +71,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('label', instance.label);
   writeNotNull('value', instance.value);
   writeNotNull('displayBehavior', instance.displayBehavior?.toJson());
+  writeNotNull('conditions', instance.conditions);
   return val;
 }
 
@@ -85,6 +87,9 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.date: 'date',
   PropertySchemaFormat.dateTime: 'dateTime',
   PropertySchemaFormat.latLng: 'latLng',
+  PropertySchemaFormat.cutsom: 'cutsom',
+  PropertySchemaFormat.locality: 'locality',
+  PropertySchemaFormat.select: 'select',
   PropertySchemaFormat.incrementer: 'incrementer',
 };
 

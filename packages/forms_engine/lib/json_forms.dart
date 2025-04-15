@@ -8,16 +8,20 @@ import 'models/property_schema/property_schema.dart';
 
 class JsonForms extends StatelessWidget {
   final PropertySchema propertySchema;
-
+final List<Map <String, Widget>>? childrens;
   const JsonForms({
     super.key,
-    required this.propertySchema,
+    required this.propertySchema, 
+    this.childrens,
   });
 
   static Map<String, FormControl> getFormControls(
-    PropertySchema propertySchema, {
+ 
+    PropertySchema propertySchema,
+       final List<Map <String, Widget>>? childrens, {
     String? defaultLatlng,
-  }) {
+  }
+  ) {
     assert(propertySchema.properties != null);
     final controls = Map.fromEntries(
       propertySchema.properties!.entries
@@ -71,11 +75,14 @@ class JsonForms extends StatelessWidget {
       late FormControl control;
       switch (type) {
         case PropertySchemaType.integer:
+        
           control = FormControl<int>(
+   
             value: schema.format == PropertySchemaFormat.incrementer
                 ? schema.value ?? 0
                 : schema.value,
             validators: requiredValidators,
+            
           );
           break;
         case PropertySchemaType.numeric:
@@ -107,8 +114,71 @@ class JsonForms extends StatelessWidget {
           break;
       }
       entries.add(MapEntry(name, control));
-    }
 
+      if (schema.conditions != null) {
+        final condition = schema.conditions!['isVisible'];
+        final regexCondition = schema.conditions!['regex'];
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final form = control.parent as FormGroup?;
+          if (form == null) return;
+
+          // 🔥 Handle Visibility Condition
+          if (condition != null) {
+            final controllingField = condition['field'];
+            final expectedValue = condition['value'];
+
+            if (controllingField != null && form.contains(controllingField)) {
+              final parentControl = form.control(controllingField);
+
+              void updateVisibility(dynamic value) {
+                bool shouldShow = expectedValue is List
+                    ? expectedValue.contains(value)
+                    : value == expectedValue;
+
+                if (shouldShow) {
+                  control.markAsEnabled();
+                } else {
+                  control.reset();
+                  control.markAsDisabled();
+                }
+              }
+
+              updateVisibility(parentControl.value);
+              parentControl.valueChanges.listen(updateVisibility);
+            }
+          }
+
+          // 🔥 Handle Dynamic Regex Condition
+          if (regexCondition != null) {
+            final controllingField = regexCondition['field'];
+            final regexRules = regexCondition[
+                'regexRules']; // Expected to be Map<String, String>
+
+            if (controllingField != null &&
+                regexRules is Map<String, String> &&
+                form.contains(controllingField)) {
+              final parentControl = form.control(controllingField);
+
+              void updateRegex(dynamic value) {
+                if (regexRules.containsKey(value)) {
+                  final newPattern = regexRules[value]!;
+                  control
+                      .setValidators([Validators.pattern(RegExp(newPattern))]);
+                } else {
+                  control.setValidators(
+                      []); // Reset validators if no matching rule
+                }
+                control.updateValueAndValidity(); // Apply changes
+              }
+
+              updateRegex(parentControl.value);
+              parentControl.valueChanges.listen(updateRegex);
+            }
+          }
+        });
+      }
+    }
     return entries;
   }
 
@@ -133,15 +203,15 @@ class JsonForms extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+  Widget build(BuildContext context) => Column(
           children: [
             JsonFormBuilder(
               schema: propertySchema,
               formControlName: '/',
+              components: childrens,
             ),
+            // TODO [Need to add version]
           ],
-        ),
-      );
+        );
+      
 }

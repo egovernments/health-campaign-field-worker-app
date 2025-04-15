@@ -23,6 +23,7 @@ import 'package:survey_form/survey_form.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
+import 'blocs/forms/forms.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -101,6 +102,9 @@ class MainApplicationState extends State<MainApplication>
           sql: widget.sql,
           child: MultiBlocProvider(
             providers: [
+                  BlocProvider(
+          create: (context) => FormsBloc()..add(const FormsLoadEvent()),
+        ),
               // INFO : Need to add bloc of package Here
               BlocProvider(
                 create: (_) {
