@@ -17,13 +17,8 @@ const fakeSchema = """
           "latlng": {
           "type": "string",
           "format" : "latLng",
-     
           "label": "Lat/Long *"
         },
-        "height":{
-          "type":"string",
-          format : ""
-        }
           
         "addressLine1": {
           "type": "string",
@@ -37,15 +32,9 @@ const fakeSchema = """
           "type": "string",
           "label": "Land Mark"
         },
-         
         "pinCode": {
           "type": "string",
           "label": "PostalCode"
-        },
-          "scanner": {
-          "type": "string",
-          "format" : "cutsom",
-          "label": "Lat/Long *"
         }
       }
     },
