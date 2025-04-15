@@ -1,6 +1,7 @@
 ## 1.0.7-dev.2-enumeration
 
 * Updated member repository to update relationship
+* Updated check with household type to restrict checklist in clf
 
 ## 1.0.7-dev.1-enumeration
 
