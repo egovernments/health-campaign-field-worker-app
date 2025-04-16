@@ -10,7 +10,6 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
   ServiceSearchModelMapper._();
 
   static ServiceSearchModelMapper? _instance;
-
   static ServiceSearchModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ServiceSearchModelMapper._());
@@ -24,7 +23,6 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
   static String? _$id(ServiceSearchModel v) => v.id;
   static const Field<ServiceSearchModel, String> _f$id =
       Field('id', _$id, opt: true);
-
   static String? _$clientId(ServiceSearchModel v) => v.clientId;
   static const Field<ServiceSearchModel, String> _f$clientId =
       Field('clientId', _$clientId, opt: true);
@@ -34,27 +32,21 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
   static String? _$serviceDefId(ServiceSearchModel v) => v.serviceDefId;
   static const Field<ServiceSearchModel, String> _f$serviceDefId =
       Field('serviceDefId', _$serviceDefId, opt: true);
-
   static String? _$accountId(ServiceSearchModel v) => v.accountId;
   static const Field<ServiceSearchModel, String> _f$accountId =
       Field('accountId', _$accountId, opt: true);
-
   static String? _$createdAt(ServiceSearchModel v) => v.createdAt;
   static const Field<ServiceSearchModel, String> _f$createdAt =
       Field('createdAt', _$createdAt, opt: true);
-
   static String? _$tenantId(ServiceSearchModel v) => v.tenantId;
   static const Field<ServiceSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
-
   static String? _$boundaryCode(ServiceSearchModel v) => v.boundaryCode;
   static const Field<ServiceSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
-
   static AuditDetails? _$auditDetails(ServiceSearchModel v) => v.auditDetails;
   static const Field<ServiceSearchModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, mode: FieldMode.member);
-
   static AdditionalFields? _$additionalFields(ServiceSearchModel v) =>
       v.additionalFields;
   static const Field<ServiceSearchModel, AdditionalFields> _f$additionalFields =
@@ -123,7 +115,6 @@ mixin ServiceSearchModelMappable {
           ServiceSearchModel>
       get copyWith => _ServiceSearchModelCopyWithImpl(
           this as ServiceSearchModel, $identity, $identity);
-
   @override
   String toString() {
     return ServiceSearchModelMapper.ensureInitialized()
@@ -164,7 +155,6 @@ abstract class ServiceSearchModelCopyWith<$R, $In extends ServiceSearchModel,
       String? createdAt,
       String? tenantId,
       String? boundaryCode});
-
   ServiceSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -177,7 +167,6 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<ServiceSearchModel> $mapper =
       ServiceSearchModelMapper.ensureInitialized();
-
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get referenceIds => $value.referenceIds != null
@@ -206,7 +195,6 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
         if (tenantId != $none) #tenantId: tenantId,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
-
   @override
   ServiceSearchModel $make(CopyWithData data) =>
       ServiceSearchModel.ignoreDeleted(
@@ -229,7 +217,6 @@ class ServiceModelMapper extends SubClassMapperBase<ServiceModel> {
   ServiceModelMapper._();
 
   static ServiceModelMapper? _instance;
-
   static ServiceModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ServiceModelMapper._());
@@ -245,65 +232,51 @@ class ServiceModelMapper extends SubClassMapperBase<ServiceModel> {
   static const Field<ServiceModel, ServiceAdditionalFields>
       _f$additionalFields =
       Field('additionalFields', _$additionalFields, opt: true);
-
   static String? _$id(ServiceModel v) => v.id;
   static const Field<ServiceModel, String> _f$id = Field('id', _$id, opt: true);
-
   static String _$clientId(ServiceModel v) => v.clientId;
   static const Field<ServiceModel, String> _f$clientId =
       Field('clientId', _$clientId);
-
   static String? _$serviceDefId(ServiceModel v) => v.serviceDefId;
   static const Field<ServiceModel, String> _f$serviceDefId =
       Field('serviceDefId', _$serviceDefId, opt: true);
   static String? _$referenceId(ServiceModel v) => v.referenceId;
   static const Field<ServiceModel, String> _f$referenceId =
       Field('referenceId', _$referenceId, opt: true);
-
   static bool? _$isActive(ServiceModel v) => v.isActive;
   static const Field<ServiceModel, bool> _f$isActive =
       Field('isActive', _$isActive, opt: true);
-
   static String? _$accountId(ServiceModel v) => v.accountId;
   static const Field<ServiceModel, String> _f$accountId =
       Field('accountId', _$accountId, opt: true);
-
   static Map<String, dynamic>? _$additionalDetails(ServiceModel v) =>
       v.additionalDetails;
   static const Field<ServiceModel, Map<String, dynamic>> _f$additionalDetails =
       Field('additionalDetails', _$additionalDetails, opt: true);
-
   static String? _$createdAt(ServiceModel v) => v.createdAt;
   static const Field<ServiceModel, String> _f$createdAt =
       Field('createdAt', _$createdAt, opt: true);
-
   static bool? _$nonRecoverableError(ServiceModel v) => v.nonRecoverableError;
   static const Field<ServiceModel, bool> _f$nonRecoverableError = Field(
       'nonRecoverableError', _$nonRecoverableError,
       opt: true, def: false);
-
   static String? _$tenantId(ServiceModel v) => v.tenantId;
   static const Field<ServiceModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
-
   static int? _$rowVersion(ServiceModel v) => v.rowVersion;
   static const Field<ServiceModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-
   static List<ServiceAttributesModel>? _$attributes(ServiceModel v) =>
       v.attributes;
   static const Field<ServiceModel, List<ServiceAttributesModel>> _f$attributes =
       Field('attributes', _$attributes, opt: true);
-
   static AuditDetails? _$auditDetails(ServiceModel v) => v.auditDetails;
   static const Field<ServiceModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
-
   static ClientAuditDetails? _$clientAuditDetails(ServiceModel v) =>
       v.clientAuditDetails;
   static const Field<ServiceModel, ClientAuditDetails> _f$clientAuditDetails =
       Field('clientAuditDetails', _$clientAuditDetails, opt: true);
-
   static bool? _$isDeleted(ServiceModel v) => v.isDeleted;
   static const Field<ServiceModel, bool> _f$isDeleted =
       Field('isDeleted', _$isDeleted, opt: true, def: false);
@@ -383,7 +356,6 @@ mixin ServiceModelMappable {
 
   ServiceModelCopyWith<ServiceModel, ServiceModel, ServiceModel> get copyWith =>
       _ServiceModelCopyWithImpl(this as ServiceModel, $identity, $identity);
-
   @override
   String toString() {
     return ServiceModelMapper.ensureInitialized()
@@ -413,23 +385,18 @@ abstract class ServiceModelCopyWith<$R, $In extends ServiceModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
   ServiceAdditionalFieldsCopyWith<$R, ServiceAdditionalFields,
       ServiceAdditionalFields>? get additionalFields;
-
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
       get additionalDetails;
-
   ListCopyWith<
       $R,
       ServiceAttributesModel,
       ServiceAttributesModelCopyWith<$R, ServiceAttributesModel,
           ServiceAttributesModel>>? get attributes;
-
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-
   @override
   ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
       get clientAuditDetails;
-
   @override
   $R call(
       {ServiceAdditionalFields? additionalFields,
@@ -448,7 +415,6 @@ abstract class ServiceModelCopyWith<$R, $In extends ServiceModel, $Out>
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
-
   ServiceModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -460,13 +426,11 @@ class _ServiceModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<ServiceModel> $mapper =
       ServiceModelMapper.ensureInitialized();
-
   @override
   ServiceAdditionalFieldsCopyWith<$R, ServiceAdditionalFields,
           ServiceAdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
-
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
       get additionalDetails => $value.additionalDetails != null
@@ -475,7 +439,6 @@ class _ServiceModelCopyWithImpl<$R, $Out>
               (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(additionalDetails: v))
           : null;
-
   @override
   ListCopyWith<
       $R,
@@ -485,16 +448,13 @@ class _ServiceModelCopyWithImpl<$R, $Out>
       ? ListCopyWith($value.attributes!, (v, t) => v.copyWith.$chain(t),
           (v) => call(attributes: v))
       : null;
-
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-
   @override
   ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
       get clientAuditDetails => $value.clientAuditDetails?.copyWith
           .$chain((v) => call(clientAuditDetails: v));
-
   @override
   $R call(
           {Object? additionalFields = $none,
@@ -533,7 +493,6 @@ class _ServiceModelCopyWithImpl<$R, $Out>
           #clientAuditDetails: clientAuditDetails,
         if (isDeleted != $none) #isDeleted: isDeleted
       }));
-
   @override
   ServiceModel $make(CopyWithData data) => ServiceModel(
       additionalFields:
@@ -568,7 +527,6 @@ class ServiceAdditionalFieldsMapper
   ServiceAdditionalFieldsMapper._();
 
   static ServiceAdditionalFieldsMapper? _instance;
-
   static ServiceAdditionalFieldsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals
@@ -583,11 +541,9 @@ class ServiceAdditionalFieldsMapper
   static String _$schema(ServiceAdditionalFields v) => v.schema;
   static const Field<ServiceAdditionalFields, String> _f$schema =
       Field('schema', _$schema, opt: true, def: 'Service');
-
   static int _$version(ServiceAdditionalFields v) => v.version;
   static const Field<ServiceAdditionalFields, int> _f$version =
       Field('version', _$version);
-
   static List<AdditionalField> _$fields(ServiceAdditionalFields v) => v.fields;
   static const Field<ServiceAdditionalFields, List<AdditionalField>> _f$fields =
       Field('fields', _$fields, opt: true, def: const []);
@@ -643,7 +599,6 @@ mixin ServiceAdditionalFieldsMappable {
           ServiceAdditionalFields, ServiceAdditionalFields>
       get copyWith => _ServiceAdditionalFieldsCopyWithImpl(
           this as ServiceAdditionalFields, $identity, $identity);
-
   @override
   String toString() {
     return ServiceAdditionalFieldsMapper.ensureInitialized()
@@ -677,10 +632,8 @@ abstract class ServiceAdditionalFieldsCopyWith<
   @override
   ListCopyWith<$R, AdditionalField,
       AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
-
   @override
   $R call({String? schema, int? version, List<AdditionalField>? fields});
-
   ServiceAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -694,13 +647,11 @@ class _ServiceAdditionalFieldsCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<ServiceAdditionalFields> $mapper =
       ServiceAdditionalFieldsMapper.ensureInitialized();
-
   @override
   ListCopyWith<$R, AdditionalField,
           AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
       get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
           (v) => call(fields: v));
-
   @override
   $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
       $apply(FieldCopyWithData({
@@ -708,7 +659,6 @@ class _ServiceAdditionalFieldsCopyWithImpl<$R, $Out>
         if (version != null) #version: version,
         if (fields != null) #fields: fields
       }));
-
   @override
   ServiceAdditionalFields $make(CopyWithData data) => ServiceAdditionalFields(
       schema: data.get(#schema, or: $value.schema),
