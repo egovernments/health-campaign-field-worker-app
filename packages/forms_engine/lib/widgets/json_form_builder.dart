@@ -117,32 +117,6 @@ class JsonFormBuilder extends StatelessWidget {
           break;
 
         }
-      
-
-      // else if (schema.format == P){
-      //   Container(
-      //         padding: const EdgeInsets.all(8),
-      //         child:     DigitButton(
-      //                   size: DigitButtonSize.large,
-      //                   label:'scanner',
-      //                   onPressed: () async {
-      //                     context.read<DigitScannerBloc>().add(
-      //                           const DigitScannerEvent.handleScanner(),
-      //                         );
-      //                     context.router.push(DigitScannerRoute(
-      //                       quantity: 1,
-      //                       isGS1code: false,
-      //                       singleValue: true,
-      //                     ));
-      //                   },
-      //                   type: DigitButtonType.secondary,
-      //                   prefixIcon: Icons.qr_code,
-      //                   mainAxisSize: MainAxisSize.max,
-      //                 )
-      //         );
-      // }
-        
-        
          else if (schema.format == PropertySchemaFormat.locality) {
           child = LabeledField(
               label: schema.label ?? '',
@@ -154,16 +128,14 @@ class JsonFormBuilder extends StatelessWidget {
               ));
 
           
-        } else if (schema.format == PropertySchemaFormat.cutsom) {
+        } else if (schema.format == PropertySchemaFormat.custom) {
           child = Container();
-          if (components != null) {
-            if (components!.isNotEmpty) {
-              for (var i = 0; i < components!.length; i++) {
-                if (schema.format == PropertySchemaFormat.cutsom ) {
-                  child = components!.first.entries.first.value;
-
-                  break;
-                }
+          if (components != null && components!.isNotEmpty) {
+            for (var component in components!) {
+              // Check if the map contains the key that matches the formController
+              if (component.containsKey(formControlName)) {
+                child = component[formControlName]!;  // Return the widget associated with the key
+                break;  // Exit the loop once the matching widget is found
               }
             }
           }

@@ -19,11 +19,6 @@ const fakeSchema = """
           "format" : "latLng",
           "label": "Lat/Long *"
         },
-         "customText": {
-          "type": "string",
-          "format": "cutsom",
-          "label": "Custom Text Value"
-        }, 
         "addressLine1": {
           "type": "string",
           "label": "Address Line 1"
@@ -57,7 +52,6 @@ const fakeSchema = """
           "type": "integer",
           "format": "incrementer",
           "label": "No of Rooms"
-
         }
         }
         },
@@ -123,10 +117,10 @@ const fakeSchema = """
             }
           }
         },
-        "dob": {
+        "dobPicker": {
           "type": "string",
-          "format": "date",
-          "label": "Date of Birth"
+          "label": "Date of Birth",
+          "format": "custom"
         },
         "gender": {
           "type": "string",
@@ -144,10 +138,10 @@ const fakeSchema = """
             }
           }
         },
-           "andaR": {
+         "scanner": {
           "type": "string",
-          "format" : "cutsom",
-          "label": "Link Voucher to Individual"
+          "label": "Link voucher to individual",
+          "format": "custom"
         }
       }
     },

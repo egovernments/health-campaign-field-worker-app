@@ -12,7 +12,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // import '../widgets/header/back_navigation_help_header.dart';
 import '../router/app_router.dart';
+import '../widgets/custom_scanner.dart';
 import '../widgets/custom_text.dart';
+import '../widgets/dob_picker.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/showcase/showcase_button.dart';
 
@@ -41,33 +43,16 @@ class FormsPage extends StatelessWidget {
           final index = schemaObject.pages.keys.toList().indexOf(pageName);
           final showcaseKeys = <GlobalKey>[];
           final Map<String, Widget> widgetMap = {
+            'dobPicker': const DobPicker(),
             'customText': const CustomText(),
-            'scanner':  Container(
-              padding: const EdgeInsets.all(8),
-              child:     DigitButton(
-                        size: DigitButtonSize.large,
-                        label:'scanner',
-                        onPressed: () async {
-                          context.read<DigitScannerBloc>().add(
-                                const DigitScannerEvent.handleScanner(),
-                              );
-                          context.router.push(DigitScannerRoute(
-                            quantity: 1,
-                            isGS1code: false,
-                            singleValue: true,
-                          ));
-                        },
-                        type: DigitButtonType.secondary,
-                        prefixIcon: Icons.qr_code,
-                        mainAxisSize: MainAxisSize.max,
-                      )
-              ),
+            'scanner':  const CustomScanner(),
           };
           return ReactiveFormBuilder(
             form: () => fb.group(
               JsonForms.getFormControls(schema, [widgetMap]),
             ),
             builder: (context, formGroup, child) => ScrollableContent(
+              enableFixedDigitButton: true,
               header: Column(
                 children: [
                   Padding(
@@ -153,6 +138,7 @@ class FormsPage extends StatelessWidget {
               ),
               children: [
                 DigitCard(
+                  margin: const EdgeInsets.all(spacer2),
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
