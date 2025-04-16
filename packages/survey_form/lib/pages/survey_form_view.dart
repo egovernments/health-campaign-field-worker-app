@@ -186,6 +186,71 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
         );
   }
 
+  void updateSurvey({
+    required double? latitude,
+    required double? longitude,
+  }) {
+    if (initialAttributes == null || initialAttributes!.isEmpty) return;
+    final referenceId = IdGen.i.identifier;
+    List<ServiceAttributesModel> attributes = [];
+
+    for (int i = 0; i < controller.length; i++) {
+      final attribute = initialAttributes;
+      attributes.add(
+        ServiceAttributesModel(
+          auditDetails: AuditDetails(
+            createdBy: SurveyFormSingleton().loggedInUserUuid,
+            createdTime: context.millisecondsSinceEpoch(),
+          ),
+          attributeCode: '${attribute?[i].code}',
+          dataType: attribute?[i].dataType,
+          clientReferenceId: referenceId,
+          referenceId: IdGen.i.identifier,
+          value: attribute?[i].dataType != 'SingleValueList' &&  // TODO: [need to revisit update logic while updating]
+              attribute?[i].dataType != 'MultiValueList'
+              ? controller[i].text.trim().isNotEmpty
+              ? controller[i].text
+              : i18.surveyForm.notSelectedKey
+              : visibleSurveyFormIndexes.contains(i)
+              ? controller[i].text.trim().isNotEmpty
+              ? controller[i].text
+              : i18.surveyForm.notSelectedKey
+              : i18.surveyForm.notSelectedKey,
+          additionalDetails: ((attribute?[i].values?.length == 2 ||
+              attribute?[i].values?.length == 3) &&
+              controller[i].text == attribute?[i].values?[1].trim())
+              ? additionalController[i].text.isEmpty
+              ? null
+              : additionalController[i].text
+              : null,
+        ),
+      );
+    }
+
+    context.read<ServiceBloc>().add(
+      ServiceUpdateEvent(
+        serviceModel: ServiceModel(
+          createdAt: DigitDateUtils.getDateFromTimestamp(
+            DateTime.now().toLocal().millisecondsSinceEpoch,
+            dateFormat: Constants.SurveyFormViewDateFormat,
+          ),
+          clientId: referenceId,
+          attributes: attributes,
+          auditDetails: AuditDetails(
+            createdBy: SurveyFormSingleton().loggedInUserUuid,
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+          ),
+          clientAuditDetails: ClientAuditDetails(
+            createdBy: SurveyFormSingleton().loggedInUserUuid,
+            createdTime: context.millisecondsSinceEpoch(),
+            lastModifiedBy: SurveyFormSingleton().loggedInUserUuid,
+            lastModifiedTime: context.millisecondsSinceEpoch(),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
