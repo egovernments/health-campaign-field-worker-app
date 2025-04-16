@@ -203,15 +203,10 @@ final List<Map <String, Widget>>? childrens;
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-          children: [
-            JsonFormBuilder(
-              schema: propertySchema,
-              formControlName: '/',
-              components: childrens,
-            ),
-            // TODO [Need to add version]
-          ],
-        );
+  Widget build(BuildContext context) => JsonFormBuilder(
+    schema: propertySchema,
+    formControlName: '/',
+    components: childrens,
+  );
       
 }

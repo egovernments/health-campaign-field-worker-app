@@ -87,7 +87,7 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.date: 'date',
   PropertySchemaFormat.dateTime: 'dateTime',
   PropertySchemaFormat.latLng: 'latLng',
-  PropertySchemaFormat.cutsom: 'cutsom',
+  PropertySchemaFormat.custom: 'custom',
   PropertySchemaFormat.locality: 'locality',
   PropertySchemaFormat.select: 'select',
   PropertySchemaFormat.incrementer: 'incrementer',

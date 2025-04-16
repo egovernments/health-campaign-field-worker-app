@@ -22,6 +22,9 @@ mixin _$FormsEvent {
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
+    required TResult Function(String key) clearField,
+    required TResult Function(String pageKey) clearPage,
+    required TResult Function() clearForm,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -30,6 +33,9 @@ mixin _$FormsEvent {
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
+    TResult? Function(String key)? clearField,
+    TResult? Function(String pageKey)? clearPage,
+    TResult? Function()? clearForm,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -38,6 +44,9 @@ mixin _$FormsEvent {
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
+    TResult Function(String key)? clearField,
+    TResult Function(String pageKey)? clearPage,
+    TResult Function()? clearForm,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -47,6 +56,9 @@ mixin _$FormsEvent {
     required TResult Function(FormsCreateMappingEvent value) createMapping,
     required TResult Function(FormsUpdateEvent value) update,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -55,6 +67,9 @@ mixin _$FormsEvent {
     TResult? Function(FormsCreateMappingEvent value)? createMapping,
     TResult? Function(FormsUpdateEvent value)? update,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -63,6 +78,9 @@ mixin _$FormsEvent {
     TResult Function(FormsCreateMappingEvent value)? createMapping,
     TResult Function(FormsUpdateEvent value)? update,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -128,6 +146,9 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
+    required TResult Function(String key) clearField,
+    required TResult Function(String pageKey) clearPage,
+    required TResult Function() clearForm,
   }) {
     return load();
   }
@@ -139,6 +160,9 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
+    TResult? Function(String key)? clearField,
+    TResult? Function(String pageKey)? clearPage,
+    TResult? Function()? clearForm,
   }) {
     return load?.call();
   }
@@ -150,6 +174,9 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
+    TResult Function(String key)? clearField,
+    TResult Function(String pageKey)? clearPage,
+    TResult Function()? clearForm,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -165,6 +192,9 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     required TResult Function(FormsCreateMappingEvent value) createMapping,
     required TResult Function(FormsUpdateEvent value) update,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
   }) {
     return load(this);
   }
@@ -176,6 +206,9 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult? Function(FormsCreateMappingEvent value)? createMapping,
     TResult? Function(FormsUpdateEvent value)? update,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
   }) {
     return load?.call(this);
   }
@@ -187,6 +220,9 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult Function(FormsCreateMappingEvent value)? createMapping,
     TResult Function(FormsUpdateEvent value)? update,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -245,6 +281,9 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
+    required TResult Function(String key) clearField,
+    required TResult Function(String pageKey) clearPage,
+    required TResult Function() clearForm,
   }) {
     return createMapping();
   }
@@ -256,6 +295,9 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
+    TResult? Function(String key)? clearField,
+    TResult? Function(String pageKey)? clearPage,
+    TResult? Function()? clearForm,
   }) {
     return createMapping?.call();
   }
@@ -267,6 +309,9 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
+    TResult Function(String key)? clearField,
+    TResult Function(String pageKey)? clearPage,
+    TResult Function()? clearForm,
     required TResult orElse(),
   }) {
     if (createMapping != null) {
@@ -282,6 +327,9 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     required TResult Function(FormsCreateMappingEvent value) createMapping,
     required TResult Function(FormsUpdateEvent value) update,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
   }) {
     return createMapping(this);
   }
@@ -293,6 +341,9 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     TResult? Function(FormsCreateMappingEvent value)? createMapping,
     TResult? Function(FormsUpdateEvent value)? update,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
   }) {
     return createMapping?.call(this);
   }
@@ -304,6 +355,9 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
     TResult Function(FormsCreateMappingEvent value)? createMapping,
     TResult Function(FormsUpdateEvent value)? update,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
     required TResult orElse(),
   }) {
     if (createMapping != null) {
@@ -396,6 +450,9 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
+    required TResult Function(String key) clearField,
+    required TResult Function(String pageKey) clearPage,
+    required TResult Function() clearForm,
   }) {
     return update(object);
   }
@@ -407,6 +464,9 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
+    TResult? Function(String key)? clearField,
+    TResult? Function(String pageKey)? clearPage,
+    TResult? Function()? clearForm,
   }) {
     return update?.call(object);
   }
@@ -418,6 +478,9 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
+    TResult Function(String key)? clearField,
+    TResult Function(String pageKey)? clearPage,
+    TResult Function()? clearForm,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -433,6 +496,9 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     required TResult Function(FormsCreateMappingEvent value) createMapping,
     required TResult Function(FormsUpdateEvent value) update,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
   }) {
     return update(this);
   }
@@ -444,6 +510,9 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult? Function(FormsCreateMappingEvent value)? createMapping,
     TResult? Function(FormsUpdateEvent value)? update,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
   }) {
     return update?.call(this);
   }
@@ -455,6 +524,9 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
     TResult Function(FormsCreateMappingEvent value)? createMapping,
     TResult Function(FormsUpdateEvent value)? update,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -553,6 +625,9 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
+    required TResult Function(String key) clearField,
+    required TResult Function(String pageKey) clearPage,
+    required TResult Function() clearForm,
   }) {
     return updateField(key, value);
   }
@@ -564,6 +639,9 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
+    TResult? Function(String key)? clearField,
+    TResult? Function(String pageKey)? clearPage,
+    TResult? Function()? clearForm,
   }) {
     return updateField?.call(key, value);
   }
@@ -575,6 +653,9 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
+    TResult Function(String key)? clearField,
+    TResult Function(String pageKey)? clearPage,
+    TResult Function()? clearForm,
     required TResult orElse(),
   }) {
     if (updateField != null) {
@@ -590,6 +671,9 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     required TResult Function(FormsCreateMappingEvent value) createMapping,
     required TResult Function(FormsUpdateEvent value) update,
     required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
   }) {
     return updateField(this);
   }
@@ -601,6 +685,9 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     TResult? Function(FormsCreateMappingEvent value)? createMapping,
     TResult? Function(FormsUpdateEvent value)? update,
     TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
   }) {
     return updateField?.call(this);
   }
@@ -612,6 +699,9 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
     TResult Function(FormsCreateMappingEvent value)? createMapping,
     TResult Function(FormsUpdateEvent value)? update,
     TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
     required TResult orElse(),
   }) {
     if (updateField != null) {
@@ -631,6 +721,470 @@ abstract class FormsUpdateFieldEvent implements FormsEvent {
   @JsonKey(ignore: true)
   _$$FormsUpdateFieldEventImplCopyWith<_$FormsUpdateFieldEventImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FormsClearFieldEventImplCopyWith<$Res> {
+  factory _$$FormsClearFieldEventImplCopyWith(_$FormsClearFieldEventImpl value,
+          $Res Function(_$FormsClearFieldEventImpl) then) =
+      __$$FormsClearFieldEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String key});
+}
+
+/// @nodoc
+class __$$FormsClearFieldEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsClearFieldEventImpl>
+    implements _$$FormsClearFieldEventImplCopyWith<$Res> {
+  __$$FormsClearFieldEventImplCopyWithImpl(_$FormsClearFieldEventImpl _value,
+      $Res Function(_$FormsClearFieldEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? key = null,
+  }) {
+    return _then(_$FormsClearFieldEventImpl(
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FormsClearFieldEventImpl implements FormsClearFieldEvent {
+  const _$FormsClearFieldEventImpl({required this.key});
+
+  @override
+  final String key;
+
+  @override
+  String toString() {
+    return 'FormsEvent.clearField(key: $key)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormsClearFieldEventImpl &&
+            (identical(other.key, key) || other.key == key));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, key);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsClearFieldEventImplCopyWith<_$FormsClearFieldEventImpl>
+      get copyWith =>
+          __$$FormsClearFieldEventImplCopyWithImpl<_$FormsClearFieldEventImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() load,
+    required TResult Function() createMapping,
+    required TResult Function(SchemaObject object) update,
+    required TResult Function(String key, dynamic value) updateField,
+    required TResult Function(String key) clearField,
+    required TResult Function(String pageKey) clearPage,
+    required TResult Function() clearForm,
+  }) {
+    return clearField(key);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? load,
+    TResult? Function()? createMapping,
+    TResult? Function(SchemaObject object)? update,
+    TResult? Function(String key, dynamic value)? updateField,
+    TResult? Function(String key)? clearField,
+    TResult? Function(String pageKey)? clearPage,
+    TResult? Function()? clearForm,
+  }) {
+    return clearField?.call(key);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? load,
+    TResult Function()? createMapping,
+    TResult Function(SchemaObject object)? update,
+    TResult Function(String key, dynamic value)? updateField,
+    TResult Function(String key)? clearField,
+    TResult Function(String pageKey)? clearPage,
+    TResult Function()? clearForm,
+    required TResult orElse(),
+  }) {
+    if (clearField != null) {
+      return clearField(key);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FormsLoadEvent value) load,
+    required TResult Function(FormsCreateMappingEvent value) createMapping,
+    required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+  }) {
+    return clearField(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FormsLoadEvent value)? load,
+    TResult? Function(FormsCreateMappingEvent value)? createMapping,
+    TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+  }) {
+    return clearField?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FormsLoadEvent value)? load,
+    TResult Function(FormsCreateMappingEvent value)? createMapping,
+    TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    required TResult orElse(),
+  }) {
+    if (clearField != null) {
+      return clearField(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FormsClearFieldEvent implements FormsEvent {
+  const factory FormsClearFieldEvent({required final String key}) =
+      _$FormsClearFieldEventImpl;
+
+  String get key;
+  @JsonKey(ignore: true)
+  _$$FormsClearFieldEventImplCopyWith<_$FormsClearFieldEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FormsClearPageEventImplCopyWith<$Res> {
+  factory _$$FormsClearPageEventImplCopyWith(_$FormsClearPageEventImpl value,
+          $Res Function(_$FormsClearPageEventImpl) then) =
+      __$$FormsClearPageEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String pageKey});
+}
+
+/// @nodoc
+class __$$FormsClearPageEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsClearPageEventImpl>
+    implements _$$FormsClearPageEventImplCopyWith<$Res> {
+  __$$FormsClearPageEventImplCopyWithImpl(_$FormsClearPageEventImpl _value,
+      $Res Function(_$FormsClearPageEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? pageKey = null,
+  }) {
+    return _then(_$FormsClearPageEventImpl(
+      pageKey: null == pageKey
+          ? _value.pageKey
+          : pageKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$FormsClearPageEventImpl implements FormsClearPageEvent {
+  const _$FormsClearPageEventImpl({required this.pageKey});
+
+  @override
+  final String pageKey;
+
+  @override
+  String toString() {
+    return 'FormsEvent.clearPage(pageKey: $pageKey)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormsClearPageEventImpl &&
+            (identical(other.pageKey, pageKey) || other.pageKey == pageKey));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, pageKey);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsClearPageEventImplCopyWith<_$FormsClearPageEventImpl> get copyWith =>
+      __$$FormsClearPageEventImplCopyWithImpl<_$FormsClearPageEventImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() load,
+    required TResult Function() createMapping,
+    required TResult Function(SchemaObject object) update,
+    required TResult Function(String key, dynamic value) updateField,
+    required TResult Function(String key) clearField,
+    required TResult Function(String pageKey) clearPage,
+    required TResult Function() clearForm,
+  }) {
+    return clearPage(pageKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? load,
+    TResult? Function()? createMapping,
+    TResult? Function(SchemaObject object)? update,
+    TResult? Function(String key, dynamic value)? updateField,
+    TResult? Function(String key)? clearField,
+    TResult? Function(String pageKey)? clearPage,
+    TResult? Function()? clearForm,
+  }) {
+    return clearPage?.call(pageKey);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? load,
+    TResult Function()? createMapping,
+    TResult Function(SchemaObject object)? update,
+    TResult Function(String key, dynamic value)? updateField,
+    TResult Function(String key)? clearField,
+    TResult Function(String pageKey)? clearPage,
+    TResult Function()? clearForm,
+    required TResult orElse(),
+  }) {
+    if (clearPage != null) {
+      return clearPage(pageKey);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FormsLoadEvent value) load,
+    required TResult Function(FormsCreateMappingEvent value) createMapping,
+    required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+  }) {
+    return clearPage(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FormsLoadEvent value)? load,
+    TResult? Function(FormsCreateMappingEvent value)? createMapping,
+    TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+  }) {
+    return clearPage?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FormsLoadEvent value)? load,
+    TResult Function(FormsCreateMappingEvent value)? createMapping,
+    TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    required TResult orElse(),
+  }) {
+    if (clearPage != null) {
+      return clearPage(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FormsClearPageEvent implements FormsEvent {
+  const factory FormsClearPageEvent({required final String pageKey}) =
+      _$FormsClearPageEventImpl;
+
+  String get pageKey;
+  @JsonKey(ignore: true)
+  _$$FormsClearPageEventImplCopyWith<_$FormsClearPageEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FormsClearFormEventImplCopyWith<$Res> {
+  factory _$$FormsClearFormEventImplCopyWith(_$FormsClearFormEventImpl value,
+          $Res Function(_$FormsClearFormEventImpl) then) =
+      __$$FormsClearFormEventImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$FormsClearFormEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsClearFormEventImpl>
+    implements _$$FormsClearFormEventImplCopyWith<$Res> {
+  __$$FormsClearFormEventImplCopyWithImpl(_$FormsClearFormEventImpl _value,
+      $Res Function(_$FormsClearFormEventImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$FormsClearFormEventImpl implements FormsClearFormEvent {
+  const _$FormsClearFormEventImpl();
+
+  @override
+  String toString() {
+    return 'FormsEvent.clearForm()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormsClearFormEventImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() load,
+    required TResult Function() createMapping,
+    required TResult Function(SchemaObject object) update,
+    required TResult Function(String key, dynamic value) updateField,
+    required TResult Function(String key) clearField,
+    required TResult Function(String pageKey) clearPage,
+    required TResult Function() clearForm,
+  }) {
+    return clearForm();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? load,
+    TResult? Function()? createMapping,
+    TResult? Function(SchemaObject object)? update,
+    TResult? Function(String key, dynamic value)? updateField,
+    TResult? Function(String key)? clearField,
+    TResult? Function(String pageKey)? clearPage,
+    TResult? Function()? clearForm,
+  }) {
+    return clearForm?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? load,
+    TResult Function()? createMapping,
+    TResult Function(SchemaObject object)? update,
+    TResult Function(String key, dynamic value)? updateField,
+    TResult Function(String key)? clearField,
+    TResult Function(String pageKey)? clearPage,
+    TResult Function()? clearForm,
+    required TResult orElse(),
+  }) {
+    if (clearForm != null) {
+      return clearForm();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FormsLoadEvent value) load,
+    required TResult Function(FormsCreateMappingEvent value) createMapping,
+    required TResult Function(FormsUpdateEvent value) update,
+    required TResult Function(FormsUpdateFieldEvent value) updateField,
+    required TResult Function(FormsClearFieldEvent value) clearField,
+    required TResult Function(FormsClearPageEvent value) clearPage,
+    required TResult Function(FormsClearFormEvent value) clearForm,
+  }) {
+    return clearForm(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FormsLoadEvent value)? load,
+    TResult? Function(FormsCreateMappingEvent value)? createMapping,
+    TResult? Function(FormsUpdateEvent value)? update,
+    TResult? Function(FormsUpdateFieldEvent value)? updateField,
+    TResult? Function(FormsClearFieldEvent value)? clearField,
+    TResult? Function(FormsClearPageEvent value)? clearPage,
+    TResult? Function(FormsClearFormEvent value)? clearForm,
+  }) {
+    return clearForm?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FormsLoadEvent value)? load,
+    TResult Function(FormsCreateMappingEvent value)? createMapping,
+    TResult Function(FormsUpdateEvent value)? update,
+    TResult Function(FormsUpdateFieldEvent value)? updateField,
+    TResult Function(FormsClearFieldEvent value)? clearField,
+    TResult Function(FormsClearPageEvent value)? clearPage,
+    TResult Function(FormsClearFormEvent value)? clearForm,
+    required TResult orElse(),
+  }) {
+    if (clearForm != null) {
+      return clearForm(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FormsClearFormEvent implements FormsEvent {
+  const factory FormsClearFormEvent() = _$FormsClearFormEventImpl;
 }
 
 /// @nodoc

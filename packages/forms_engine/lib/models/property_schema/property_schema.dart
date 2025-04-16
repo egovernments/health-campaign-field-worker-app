@@ -78,11 +78,10 @@ enum PropertySchemaFormat {
   date,
   dateTime,
   latLng,
-  cutsom,
+  custom,
   locality,
   select,
   incrementer;
-
 }
 
 enum PropertySchemaType { object, string, integer, boolean, numeric }
