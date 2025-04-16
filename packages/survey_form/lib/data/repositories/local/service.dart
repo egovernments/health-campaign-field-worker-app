@@ -218,6 +218,8 @@ class ServiceLocalRepository
     return retryLocalCallOperation(() async {
       final serviceCompanion = entity.companion;
 
+      final attributes = entity.attributes;
+
       await sql.batch((batch) async {
         batch.update(
           sql.service,
@@ -226,6 +228,20 @@ class ServiceLocalRepository
             entity.referenceId ?? '',
           ),
         );
+
+        // Update each attributes individually with correct where clause
+        if (attributes != null && attributes.isNotEmpty) {
+          for (final attribute in attributes) {
+            batch.update(
+              sql.serviceAttributes,
+              relationship.companion,
+              where: (table) => table.clientReferenceId.equals(
+                relationship.clientReferenceId,
+              ),
+            );
+          }
+        }
+
       });
 
       await super.update(entity, createOpLog: createOpLog);

@@ -68,10 +68,9 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      name: attendance_management
-      sha256: "976d2b2f7c7c79bf8f05647a4138b66dab9017316697222223d888273a95f96a"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/attendance_management"
+      relative: true
+    source: path
     version: "1.0.4+2"
   audioplayers:
     dependency: transitive
@@ -266,7 +265,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -340,10 +339,9 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      name: closed_household
-      sha256: "966e319584acabfb940decc3c240964363f7b93c71833d8bd147df19d99c2e92"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/closed_household"
+      relative: true
+    source: path
     version: "1.0.5+1"
   code_builder:
     dependency: transitive
@@ -509,18 +507,16 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "82afbb98a2ba248e6645f618b0a087364c5eb5dd9e1047e3370aefe9515eaa95"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.0.7-dev.2-enumeration"
   digit_dss:
     dependency: "direct main"
     description:
-      name: digit_dss
-      sha256: e1a541a5360413ed903ee77af580faf93623160aa5e7143e8bc1d0ec44dd980b
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_dss"
+      relative: true
+    source: path
     version: "1.0.4+1"
   digit_firebase_services:
     dependency: "direct main"
@@ -541,18 +537,16 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: c8f82938906a11c516d445d7e5e27b7e6c6a1d07e0a608c2f90f63dd234241a5
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.5+1"
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "4667b29e652738a1621e907359da327594c288417f5dfa3da60e77f0342a4eae"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_showcase"
+      relative: true
+    source: path
     version: "1.0.2+1"
   digit_ui_components:
     dependency: "direct main"
@@ -675,7 +669,7 @@ packages:
     source: hosted
     version: "8.0.7"
   file_selector_linux:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: file_selector_linux
       sha256: "54cbbd957e1156d29548c7d9b9ec0c0ebb6de0a90452198683a7d23aed617a33"
@@ -691,7 +685,7 @@ packages:
     source: hosted
     version: "0.9.4+2"
   file_selector_platform_interface:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: file_selector_platform_interface
       sha256: a3994c26f10378a039faa11de174d7b78eb8f79e4dd0af2a451410c1a5c3f66b
@@ -821,7 +815,7 @@ packages:
     source: hosted
     version: "3.0.7"
   flutter_dropzone_platform_interface:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: flutter_dropzone_platform_interface
       sha256: b4e2df75364bab2f4c3ca32b87193267d786b6e158c3f345c3a1daeb911d82b9
@@ -1328,10 +1322,9 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      name: inventory_management
-      sha256: "68271fd2f99fae4b3f826403b16b6b3568bb74ba96dc92c45c1eff457fdbcd49"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/inventory_management"
+      relative: true
+    source: path
     version: "1.0.5+1"
   io:
     dependency: transitive
@@ -1800,18 +1793,16 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      name: referral_reconciliation
-      sha256: "4687ef18a4bb6c3cab1ba083c1ae7948a29525c740fde72968e24b1bc106e2e9"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
     version: "1.0.5-dev.1-enumeration"
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "56e9f54fa4419c7052e771f431548ae79405277d70d88e64e07e94ac6415b388"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.7-dev.2-enumeration"
   rxdart:
     dependency: transitive
@@ -2021,10 +2012,9 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      name: survey_form
-      sha256: "10feeb60ffa1068cb08fc0d4beb59be02114b6eb12fde2f93a8a30270d2d9a07"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/survey_form"
+      relative: true
+    source: path
     version: "1.0.2-dev.1-enumeration"
   sync_http:
     dependency: transitive
@@ -2037,10 +2027,9 @@ packages:
   sync_service:
     dependency: "direct main"
     description:
-      name: sync_service
-      sha256: cfdea2cf5a5f1237a6eaa0af5e975527fb587b92950591132a38e5eb426e9bc1
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/sync_service"
+      relative: true
+    source: path
     version: "1.0.1-dev.2-enumeration"
   synchronized:
     dependency: transitive
@@ -2363,5 +2352,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.1 <3.9.0"
+  dart: ">=3.4.0 <4.0.0"
   flutter: ">=3.22.0"
