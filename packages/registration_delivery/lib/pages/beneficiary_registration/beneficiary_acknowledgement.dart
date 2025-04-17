@@ -52,12 +52,20 @@ class BeneficiaryAcknowledgementPageState
           title: localizations
               .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
           additionalDetails: [
-            Text(
-              getSubText(wrapper),
-              textAlign: TextAlign.center,
-              style: textTheme.headingM
-                  .copyWith(color: const DigitColors().light.paperPrimary),
-            )
+            if (wrapper?.members?.lastOrNull!.identifiers!
+                    .lastWhereOrNull(
+                      (e) =>
+                          e.identifierType ==
+                          IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                    )
+                    ?.identifierId !=
+                null)
+              Text(
+                getSubText(wrapper),
+                textAlign: TextAlign.center,
+                style: textTheme.headingM
+                    .copyWith(color: const DigitColors().light.paperPrimary),
+              )
           ],
           actions: [
             DigitButton(
