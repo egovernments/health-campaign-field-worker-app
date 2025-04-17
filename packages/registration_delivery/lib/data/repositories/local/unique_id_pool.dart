@@ -62,7 +62,9 @@ class UniqueIdPoolLocalRepository
       final results = await (selectQuery
             ..where(buildAnd([
               if (query.status != null)
-                sql.uniqueIdPool.status.equals(query.status!)
+                sql.uniqueIdPool.status.equals(query.status!),
+              if (query.userUuid != null)
+                sql.uniqueIdPool.userUuid.equals(query.userUuid!)
             ])))
           .get();
 

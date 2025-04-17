@@ -67,6 +67,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'APP_CONFIG') required List<AppConfig> appConfig,
     @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
     required List<BandWidthBatchSize> bandWidthBatchSize,
+    @JsonKey(name: 'BENEFICIARY_ID_CONFIG')
+    required List<BeneficiaryIdConfig> beneficiaryIdConfig,
     @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
     required List<BandWidthBatchSize> downSyncBandWidthBatchSize,
     @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
@@ -210,6 +212,17 @@ class BandWidthBatchSize with _$BandWidthBatchSize {
 
   factory BandWidthBatchSize.fromJson(Map<String, dynamic> json) =>
       _$BandWidthBatchSizeFromJson(json);
+}
+
+@freezed
+class BeneficiaryIdConfig with _$BeneficiaryIdConfig {
+  factory BeneficiaryIdConfig({
+    @JsonKey(name: 'MIN_COUNT') required double minCount,
+    @JsonKey(name: 'BATCH_SIZE') required int batchSize,
+  }) = _BeneficiaryIdConfig;
+
+  factory BeneficiaryIdConfig.fromJson(Map<String, dynamic> json) =>
+      _$BeneficiaryIdConfigFromJson(json);
 }
 
 @freezed

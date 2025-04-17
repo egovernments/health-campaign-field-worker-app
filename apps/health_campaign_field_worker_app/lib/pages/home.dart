@@ -548,7 +548,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
         child: HomeItemCard(
-          icon: Icons.credit_card_outlined,
           label: i18.home.beneficiaryIdLabel,
           onPressed: () {
             if (isTriggerLocalisation) {
@@ -557,6 +556,10 @@ class _HomePageState extends LocalizedState<HomePage> {
             }
             context.router.push(BeneficiaryIdDownSyncRoute());
           },
+          icon: Icons.account_box,
+          enableCustomIcon: true,
+          customIconSize: spacer9,
+          customIcon: Constants.beneficiaryIdDownload,
         ),
       ),
     };
@@ -622,8 +625,6 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
       filteredLabels.remove(i18.home.db);
     }
-
-    filteredLabels.add(i18.home.beneficiaryIdLabel);
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -765,6 +766,10 @@ void setPackagesSingleton(BuildContext context) {
         );
 
         RegistrationDeliverySingleton().setInitialData(
+          beneficiaryIdMinCount:
+              appConfiguration.beneficiaryIdConfig?.first.minCount.toInt(),
+          beneficiaryIdBatchSize:
+              appConfiguration.beneficiaryIdConfig?.first.batchSize.toInt(),
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
@@ -787,22 +792,34 @@ void setPackagesSingleton(BuildContext context) {
           deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
               .map((e) => e.code)
               .toList(),
-          symptomsTypes:
-              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          symptomsTypes: appConfiguration.symptomsTypes
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
           searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
               ? appConfiguration.searchHouseHoldFilters!
+                  .where((e) => e.active)
                   .map((e) => e.code)
                   .toList()
               : [],
           searchCLFFilters: appConfiguration.searchCLFFilters != null
-              ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
+              ? appConfiguration.searchCLFFilters!
+                  .where((e) => e.active)
+                  .map((e) => e.code)
+                  .toList()
               : [],
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList(),
-          houseStructureTypes:
-              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
-          refusalReasons:
-              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+          referralReasons: appConfiguration.referralReasons
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
+          houseStructureTypes: appConfiguration.houseStructureTypes
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
+          refusalReasons: appConfiguration.refusalReasons
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
         );
 
         ClosedHouseholdSingleton().setInitialData(
@@ -848,9 +865,11 @@ void setPackagesSingleton(BuildContext context) {
           genderOptions:
               appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
           cycles: context.cycles,
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
-                  [],
+          referralReasons: appConfiguration.referralReasons
+                  ?.where((e) => e.active)
+                  .map((e) => e.code)
+                  .toList() ??
+              [],
           checklistTypes:
               appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
                   [],

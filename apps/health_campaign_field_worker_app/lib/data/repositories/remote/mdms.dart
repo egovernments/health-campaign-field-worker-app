@@ -170,6 +170,15 @@ class MdmsRepository {
       return bandwidthBatchSizeElement;
     }).toList();
 
+    final List<BeneficiaryIdConfig>? beneficiaryIdConfig =
+        element?.beneficiaryIdConfig.map((e) {
+      final beneficiaryIdConfigElement = BeneficiaryIdConfig()
+        ..batchSize = e.batchSize
+        ..minCount = e.minCount;
+
+      return beneficiaryIdConfigElement;
+    }).toList();
+
     final List<BandwidthBatchSize>? downSyncBandWidthBatchSize =
         element?.downSyncBandWidthBatchSize.map((e) {
       final bandwidthBatchSizeElement = BandwidthBatchSize()
@@ -317,6 +326,7 @@ class MdmsRepository {
     appConfiguration.languages = languageList;
     appConfiguration.complaintTypes = complaintTypesList;
     appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
+    appConfiguration.beneficiaryIdConfig = beneficiaryIdConfig;
     appConfiguration.downSyncBandwidthBatchSize = downSyncBandWidthBatchSize;
     appConfiguration.searchHouseHoldFilters =
         result.hcmWrapperModel?.searchHouseHoldFilters?.map((e) {

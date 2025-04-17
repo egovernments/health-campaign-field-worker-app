@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
@@ -11,8 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/unique_id/unique_id.dart';
 import 'package:registration_delivery/models/entities/unique_id_pool.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../blocs/app_localization.dart';
+import '../../data/repositories/remote/unique_id_pool.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/beneficiary/id_count_alert.dart';
@@ -31,9 +34,7 @@ class BeneficiaryIdDownSyncPage extends LocalizedStatefulWidget {
 }
 
 class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
-  int beneficiaryIdCount = 0,
-      beneficiaryIdTotalCount = 0,
-      beneficiaryMinCount = 120; // TODO: configure in MDMS
+  int beneficiaryIdCount = 0, beneficiaryIdTotalCount = 0;
   bool _isProgressDialogVisible = false;
   final ProgressDialog _progressDialog = ProgressDialog();
 
@@ -58,8 +59,8 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
         return UniqueIdBloc(
             uniqueIdPoolLocalRepository: context.read<
                 LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>(),
-            uniqueIdPoolRemoteRepository: context.read<
-                RemoteRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>())
+            uniqueIdPoolRemoteRepository:
+                context.read<UniqueIdPoolRemoteRepository>())
           ..add(const UniqueIdEvent.fetchIdCount());
       },
       child: BlocListener<UniqueIdBloc, UniqueIdState>(
@@ -73,10 +74,6 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                 beneficiaryIdTotalCount = totalCount;
               },
               ids: (ids) {
-                context
-                    .read<UniqueIdBloc>()
-                    .add(const UniqueIdEvent.fetchIdCount());
-                _progressDialog.closeProgressDialog();
                 _isProgressDialogVisible = false;
               },
               fetching: (currentCount, totalCount) {
@@ -106,6 +103,37 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                         i18.beneficiaryDetails.failedBeneficiaryIds,
                       ),
                       type: ToastType.error);
+                }
+              },
+              limitExceeded: (String? error) {
+                _progressDialog.closeProgressDialog();
+                _isProgressDialogVisible = false;
+                if (error != null) {
+                  DigitSyncDialog.show(
+                    context,
+                    type: DialogType.failed,
+                    label: i18.beneficiaryDetails.beneficiaryIdsLimitError,
+                    primaryAction: DigitDialogActions(
+                      label: RegistrationDeliveryLocalization.of(context)
+                          .translate(
+                        i18.beneficiaryDetails.beneficiaryIdsReFetch,
+                      ),
+                      action: (ctx) {
+                        Navigator.pop(ctx);
+                        context.read<UniqueIdBloc>().add(
+                              const UniqueIdEvent.fetchUniqueIdsFromServer(
+                                  reFetch: true),
+                            );
+                      },
+                    ),
+                    secondaryAction: DigitDialogActions(
+                      label: RegistrationDeliveryLocalization.of(context)
+                          .translate(
+                        i18.common.corecommonclose,
+                      ),
+                      action: (ctx) => Navigator.pop(ctx),
+                    ),
+                  );
                 }
               },
               noInternet: () {
@@ -167,7 +195,9 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                   margin: const EdgeInsets.only(top: spacer2),
                   children: [
                     DigitButton(
-                      isDisabled: beneficiaryIdCount >= beneficiaryMinCount,
+                      isDisabled: beneficiaryIdCount >=
+                          RegistrationDeliverySingleton()
+                              .beneficiaryIdMinCount!,
                       label: localizations.translate(
                           i18.beneficiaryDetails.downloadBeneficiaryIds),
                       type: DigitButtonType.primary,
@@ -186,7 +216,8 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                   child: BeneficiaryIDGauge(
                     idCount: beneficiaryIdCount,
                     totalCount: beneficiaryIdTotalCount,
-                    beneficiaryMinCount: beneficiaryMinCount,
+                    beneficiaryMinCount:
+                        RegistrationDeliverySingleton().beneficiaryIdMinCount!,
                   ),
                 )
               ],
