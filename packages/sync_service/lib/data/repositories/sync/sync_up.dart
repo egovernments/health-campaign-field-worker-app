@@ -192,21 +192,21 @@ class PerformSyncUp {
                     operationGroupedEntity: operationGroupedEntity,
                     typeGroupedEntity: typeGroupedEntity);
               } else {
-                remote.bulkCreate(entities);
+                await remote.bulkCreate(entities);
               }
             } else if (operationGroupedEntity.key == DataOperation.update) {
               await Future.delayed(const Duration(seconds: 1));
               if (registry != null) {
                 await registry.update(entities, local);
               } else {
-                remote.bulkUpdate(entities);
+                await remote.bulkUpdate(entities);
               }
             } else if (operationGroupedEntity.key == DataOperation.delete) {
               await Future.delayed(const Duration(seconds: 1));
               if (registry != null) {
                 await registry.delete(entities, local);
               } else {
-                remote.bulkDelete(entities);
+                await remote.bulkDelete(entities);
               }
             }
             if (operationGroupedEntity.key == DataOperation.singleCreate) {
@@ -214,12 +214,12 @@ class PerformSyncUp {
                 if (registry != null) {
                   await registry.singleCreate(element, local);
                 } else {
-                  remote.singleCreate(element);
+                  await remote.singleCreate(element);
                 }
               }
             }
             if (registry != null) {
-              registry.localMarkSyncUp(sublist, local);
+              await registry.localMarkSyncUp(sublist, local);
             } else {
               for (final syncedEntity in sublist) {
                 await local.markSyncedUp(

@@ -572,7 +572,7 @@ class Home {
 
   String get dashboard => 'HOME_DASHBOARD_LABEL';
 
-  String get beneficiaryIdLabel => 'BENEFICIARY_ID_LABEL';
+  String get beneficiaryIdLabel => 'HOME_BENEFICIARY_ID_LABEL';
 
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
 

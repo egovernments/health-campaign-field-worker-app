@@ -19,21 +19,21 @@ mixin _$UniqueIdEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() fetchIdCount,
-    required TResult Function() fetchUniqueIdsFromServer,
+    required TResult Function(bool? reFetch) fetchUniqueIdsFromServer,
     required TResult Function() fetchAUniqueId,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchIdCount,
-    TResult? Function()? fetchUniqueIdsFromServer,
+    TResult? Function(bool? reFetch)? fetchUniqueIdsFromServer,
     TResult? Function()? fetchAUniqueId,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchIdCount,
-    TResult Function()? fetchUniqueIdsFromServer,
+    TResult Function(bool? reFetch)? fetchUniqueIdsFromServer,
     TResult Function()? fetchAUniqueId,
     required TResult orElse(),
   }) =>
@@ -120,7 +120,7 @@ class _$UniqueIdCountEventImpl implements UniqueIdCountEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() fetchIdCount,
-    required TResult Function() fetchUniqueIdsFromServer,
+    required TResult Function(bool? reFetch) fetchUniqueIdsFromServer,
     required TResult Function() fetchAUniqueId,
   }) {
     return fetchIdCount();
@@ -130,7 +130,7 @@ class _$UniqueIdCountEventImpl implements UniqueIdCountEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchIdCount,
-    TResult? Function()? fetchUniqueIdsFromServer,
+    TResult? Function(bool? reFetch)? fetchUniqueIdsFromServer,
     TResult? Function()? fetchAUniqueId,
   }) {
     return fetchIdCount?.call();
@@ -140,7 +140,7 @@ class _$UniqueIdCountEventImpl implements UniqueIdCountEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchIdCount,
-    TResult Function()? fetchUniqueIdsFromServer,
+    TResult Function(bool? reFetch)? fetchUniqueIdsFromServer,
     TResult Function()? fetchAUniqueId,
     required TResult orElse(),
   }) {
@@ -195,6 +195,8 @@ abstract class _$$FetchUniqueIdsEventImplCopyWith<$Res> {
   factory _$$FetchUniqueIdsEventImplCopyWith(_$FetchUniqueIdsEventImpl value,
           $Res Function(_$FetchUniqueIdsEventImpl) then) =
       __$$FetchUniqueIdsEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool? reFetch});
 }
 
 /// @nodoc
@@ -204,58 +206,82 @@ class __$$FetchUniqueIdsEventImplCopyWithImpl<$Res>
   __$$FetchUniqueIdsEventImplCopyWithImpl(_$FetchUniqueIdsEventImpl _value,
       $Res Function(_$FetchUniqueIdsEventImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? reFetch = freezed,
+  }) {
+    return _then(_$FetchUniqueIdsEventImpl(
+      reFetch: freezed == reFetch
+          ? _value.reFetch
+          : reFetch // ignore: cast_nullable_to_non_nullable
+              as bool?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$FetchUniqueIdsEventImpl implements FetchUniqueIdsEvent {
-  const _$FetchUniqueIdsEventImpl();
+  const _$FetchUniqueIdsEventImpl({this.reFetch});
+
+  @override
+  final bool? reFetch;
 
   @override
   String toString() {
-    return 'UniqueIdEvent.fetchUniqueIdsFromServer()';
+    return 'UniqueIdEvent.fetchUniqueIdsFromServer(reFetch: $reFetch)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FetchUniqueIdsEventImpl);
+            other is _$FetchUniqueIdsEventImpl &&
+            (identical(other.reFetch, reFetch) || other.reFetch == reFetch));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, reFetch);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FetchUniqueIdsEventImplCopyWith<_$FetchUniqueIdsEventImpl> get copyWith =>
+      __$$FetchUniqueIdsEventImplCopyWithImpl<_$FetchUniqueIdsEventImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() fetchIdCount,
-    required TResult Function() fetchUniqueIdsFromServer,
+    required TResult Function(bool? reFetch) fetchUniqueIdsFromServer,
     required TResult Function() fetchAUniqueId,
   }) {
-    return fetchUniqueIdsFromServer();
+    return fetchUniqueIdsFromServer(reFetch);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchIdCount,
-    TResult? Function()? fetchUniqueIdsFromServer,
+    TResult? Function(bool? reFetch)? fetchUniqueIdsFromServer,
     TResult? Function()? fetchAUniqueId,
   }) {
-    return fetchUniqueIdsFromServer?.call();
+    return fetchUniqueIdsFromServer?.call(reFetch);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchIdCount,
-    TResult Function()? fetchUniqueIdsFromServer,
+    TResult Function(bool? reFetch)? fetchUniqueIdsFromServer,
     TResult Function()? fetchAUniqueId,
     required TResult orElse(),
   }) {
     if (fetchUniqueIdsFromServer != null) {
-      return fetchUniqueIdsFromServer();
+      return fetchUniqueIdsFromServer(reFetch);
     }
     return orElse();
   }
@@ -297,7 +323,13 @@ class _$FetchUniqueIdsEventImpl implements FetchUniqueIdsEvent {
 }
 
 abstract class FetchUniqueIdsEvent implements UniqueIdEvent {
-  const factory FetchUniqueIdsEvent() = _$FetchUniqueIdsEventImpl;
+  const factory FetchUniqueIdsEvent({final bool? reFetch}) =
+      _$FetchUniqueIdsEventImpl;
+
+  bool? get reFetch;
+  @JsonKey(ignore: true)
+  _$$FetchUniqueIdsEventImplCopyWith<_$FetchUniqueIdsEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -340,7 +372,7 @@ class _$FetchAUniqueIdEventImpl implements FetchAUniqueIdEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() fetchIdCount,
-    required TResult Function() fetchUniqueIdsFromServer,
+    required TResult Function(bool? reFetch) fetchUniqueIdsFromServer,
     required TResult Function() fetchAUniqueId,
   }) {
     return fetchAUniqueId();
@@ -350,7 +382,7 @@ class _$FetchAUniqueIdEventImpl implements FetchAUniqueIdEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchIdCount,
-    TResult? Function()? fetchUniqueIdsFromServer,
+    TResult? Function(bool? reFetch)? fetchUniqueIdsFromServer,
     TResult? Function()? fetchAUniqueId,
   }) {
     return fetchAUniqueId?.call();
@@ -360,7 +392,7 @@ class _$FetchAUniqueIdEventImpl implements FetchAUniqueIdEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchIdCount,
-    TResult Function()? fetchUniqueIdsFromServer,
+    TResult Function(bool? reFetch)? fetchUniqueIdsFromServer,
     TResult Function()? fetchAUniqueId,
     required TResult orElse(),
   }) {
@@ -421,6 +453,7 @@ mixin _$UniqueIdState {
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
+    required TResult Function(String message) limitExceeded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -432,6 +465,7 @@ mixin _$UniqueIdState {
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
+    TResult? Function(String message)? limitExceeded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -443,6 +477,7 @@ mixin _$UniqueIdState {
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
+    TResult Function(String message)? limitExceeded,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -455,6 +490,7 @@ mixin _$UniqueIdState {
     required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
     required TResult Function(NoInternetState value) noInternet,
+    required TResult Function(LimitExceeded value) limitExceeded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -466,6 +502,7 @@ mixin _$UniqueIdState {
     TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
     TResult? Function(NoInternetState value)? noInternet,
+    TResult? Function(LimitExceeded value)? limitExceeded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -477,6 +514,7 @@ mixin _$UniqueIdState {
     TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
     TResult Function(NoInternetState value)? noInternet,
+    TResult Function(LimitExceeded value)? limitExceeded,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -545,6 +583,7 @@ class _$LoadingStateImpl implements LoadingState {
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
+    required TResult Function(String message) limitExceeded,
   }) {
     return loading();
   }
@@ -559,6 +598,7 @@ class _$LoadingStateImpl implements LoadingState {
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
+    TResult? Function(String message)? limitExceeded,
   }) {
     return loading?.call();
   }
@@ -573,6 +613,7 @@ class _$LoadingStateImpl implements LoadingState {
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
+    TResult Function(String message)? limitExceeded,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -591,6 +632,7 @@ class _$LoadingStateImpl implements LoadingState {
     required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
     required TResult Function(NoInternetState value) noInternet,
+    required TResult Function(LimitExceeded value) limitExceeded,
   }) {
     return loading(this);
   }
@@ -605,6 +647,7 @@ class _$LoadingStateImpl implements LoadingState {
     TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
     TResult? Function(NoInternetState value)? noInternet,
+    TResult? Function(LimitExceeded value)? limitExceeded,
   }) {
     return loading?.call(this);
   }
@@ -619,6 +662,7 @@ class _$LoadingStateImpl implements LoadingState {
     TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
     TResult Function(NoInternetState value)? noInternet,
+    TResult Function(LimitExceeded value)? limitExceeded,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -713,6 +757,7 @@ class _$FetchingStateImpl implements FetchingState {
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
+    required TResult Function(String message) limitExceeded,
   }) {
     return fetching(progress, totalCount);
   }
@@ -727,6 +772,7 @@ class _$FetchingStateImpl implements FetchingState {
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
+    TResult? Function(String message)? limitExceeded,
   }) {
     return fetching?.call(progress, totalCount);
   }
@@ -741,6 +787,7 @@ class _$FetchingStateImpl implements FetchingState {
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
+    TResult Function(String message)? limitExceeded,
     required TResult orElse(),
   }) {
     if (fetching != null) {
@@ -759,6 +806,7 @@ class _$FetchingStateImpl implements FetchingState {
     required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
     required TResult Function(NoInternetState value) noInternet,
+    required TResult Function(LimitExceeded value) limitExceeded,
   }) {
     return fetching(this);
   }
@@ -773,6 +821,7 @@ class _$FetchingStateImpl implements FetchingState {
     TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
     TResult? Function(NoInternetState value)? noInternet,
+    TResult? Function(LimitExceeded value)? limitExceeded,
   }) {
     return fetching?.call(this);
   }
@@ -787,6 +836,7 @@ class _$FetchingStateImpl implements FetchingState {
     TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
     TResult Function(NoInternetState value)? noInternet,
+    TResult Function(LimitExceeded value)? limitExceeded,
     required TResult orElse(),
   }) {
     if (fetching != null) {
@@ -888,6 +938,7 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
+    required TResult Function(String message) limitExceeded,
   }) {
     return idCount(count, totalCount);
   }
@@ -902,6 +953,7 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
+    TResult? Function(String message)? limitExceeded,
   }) {
     return idCount?.call(count, totalCount);
   }
@@ -916,6 +968,7 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
+    TResult Function(String message)? limitExceeded,
     required TResult orElse(),
   }) {
     if (idCount != null) {
@@ -934,6 +987,7 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
     required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
     required TResult Function(NoInternetState value) noInternet,
+    required TResult Function(LimitExceeded value) limitExceeded,
   }) {
     return idCount(this);
   }
@@ -948,6 +1002,7 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
     TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
     TResult? Function(NoInternetState value)? noInternet,
+    TResult? Function(LimitExceeded value)? limitExceeded,
   }) {
     return idCount?.call(this);
   }
@@ -962,6 +1017,7 @@ class _$FetchedIdCountStateImpl implements FetchedIdCountState {
     TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
     TResult Function(NoInternetState value)? noInternet,
+    TResult Function(LimitExceeded value)? limitExceeded,
     required TResult orElse(),
   }) {
     if (idCount != null) {
@@ -1062,6 +1118,7 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
+    required TResult Function(String message) limitExceeded,
   }) {
     return ids(this.ids);
   }
@@ -1076,6 +1133,7 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
+    TResult? Function(String message)? limitExceeded,
   }) {
     return ids?.call(this.ids);
   }
@@ -1090,6 +1148,7 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
+    TResult Function(String message)? limitExceeded,
     required TResult orElse(),
   }) {
     if (ids != null) {
@@ -1108,6 +1167,7 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
     required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
     required TResult Function(NoInternetState value) noInternet,
+    required TResult Function(LimitExceeded value) limitExceeded,
   }) {
     return ids(this);
   }
@@ -1122,6 +1182,7 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
     TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
     TResult? Function(NoInternetState value)? noInternet,
+    TResult? Function(LimitExceeded value)? limitExceeded,
   }) {
     return ids?.call(this);
   }
@@ -1136,6 +1197,7 @@ class _$FetchedUniqueIdsStateImpl implements FetchedUniqueIdsState {
     TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
     TResult Function(NoInternetState value)? noInternet,
+    TResult Function(LimitExceeded value)? limitExceeded,
     required TResult orElse(),
   }) {
     if (ids != null) {
@@ -1226,6 +1288,7 @@ class _$FailedStateImpl implements FailedState {
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
+    required TResult Function(String message) limitExceeded,
   }) {
     return failed(error);
   }
@@ -1240,6 +1303,7 @@ class _$FailedStateImpl implements FailedState {
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
+    TResult? Function(String message)? limitExceeded,
   }) {
     return failed?.call(error);
   }
@@ -1254,6 +1318,7 @@ class _$FailedStateImpl implements FailedState {
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
+    TResult Function(String message)? limitExceeded,
     required TResult orElse(),
   }) {
     if (failed != null) {
@@ -1272,6 +1337,7 @@ class _$FailedStateImpl implements FailedState {
     required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
     required TResult Function(NoInternetState value) noInternet,
+    required TResult Function(LimitExceeded value) limitExceeded,
   }) {
     return failed(this);
   }
@@ -1286,6 +1352,7 @@ class _$FailedStateImpl implements FailedState {
     TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
     TResult? Function(NoInternetState value)? noInternet,
+    TResult? Function(LimitExceeded value)? limitExceeded,
   }) {
     return failed?.call(this);
   }
@@ -1300,6 +1367,7 @@ class _$FailedStateImpl implements FailedState {
     TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
     TResult Function(NoInternetState value)? noInternet,
+    TResult Function(LimitExceeded value)? limitExceeded,
     required TResult orElse(),
   }) {
     if (failed != null) {
@@ -1392,6 +1460,7 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
+    required TResult Function(String message) limitExceeded,
   }) {
     return aUniqueId(this.aUniqueId);
   }
@@ -1406,6 +1475,7 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
+    TResult? Function(String message)? limitExceeded,
   }) {
     return aUniqueId?.call(this.aUniqueId);
   }
@@ -1420,6 +1490,7 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
+    TResult Function(String message)? limitExceeded,
     required TResult orElse(),
   }) {
     if (aUniqueId != null) {
@@ -1438,6 +1509,7 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
     required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
     required TResult Function(NoInternetState value) noInternet,
+    required TResult Function(LimitExceeded value) limitExceeded,
   }) {
     return aUniqueId(this);
   }
@@ -1452,6 +1524,7 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
     TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
     TResult? Function(NoInternetState value)? noInternet,
+    TResult? Function(LimitExceeded value)? limitExceeded,
   }) {
     return aUniqueId?.call(this);
   }
@@ -1466,6 +1539,7 @@ class _$FetchedUniqueIdStateImpl implements FetchedUniqueIdState {
     TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
     TResult Function(NoInternetState value)? noInternet,
+    TResult Function(LimitExceeded value)? limitExceeded,
     required TResult orElse(),
   }) {
     if (aUniqueId != null) {
@@ -1530,6 +1604,7 @@ class _$NoInternetStateImpl implements NoInternetState {
     required TResult Function(String? error) failed,
     required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
     required TResult Function() noInternet,
+    required TResult Function(String message) limitExceeded,
   }) {
     return noInternet();
   }
@@ -1544,6 +1619,7 @@ class _$NoInternetStateImpl implements NoInternetState {
     TResult? Function(String? error)? failed,
     TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult? Function()? noInternet,
+    TResult? Function(String message)? limitExceeded,
   }) {
     return noInternet?.call();
   }
@@ -1558,6 +1634,7 @@ class _$NoInternetStateImpl implements NoInternetState {
     TResult Function(String? error)? failed,
     TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
     TResult Function()? noInternet,
+    TResult Function(String message)? limitExceeded,
     required TResult orElse(),
   }) {
     if (noInternet != null) {
@@ -1576,6 +1653,7 @@ class _$NoInternetStateImpl implements NoInternetState {
     required TResult Function(FailedState value) failed,
     required TResult Function(FetchedUniqueIdState value) aUniqueId,
     required TResult Function(NoInternetState value) noInternet,
+    required TResult Function(LimitExceeded value) limitExceeded,
   }) {
     return noInternet(this);
   }
@@ -1590,6 +1668,7 @@ class _$NoInternetStateImpl implements NoInternetState {
     TResult? Function(FailedState value)? failed,
     TResult? Function(FetchedUniqueIdState value)? aUniqueId,
     TResult? Function(NoInternetState value)? noInternet,
+    TResult? Function(LimitExceeded value)? limitExceeded,
   }) {
     return noInternet?.call(this);
   }
@@ -1604,6 +1683,7 @@ class _$NoInternetStateImpl implements NoInternetState {
     TResult Function(FailedState value)? failed,
     TResult Function(FetchedUniqueIdState value)? aUniqueId,
     TResult Function(NoInternetState value)? noInternet,
+    TResult Function(LimitExceeded value)? limitExceeded,
     required TResult orElse(),
   }) {
     if (noInternet != null) {
@@ -1615,4 +1695,173 @@ class _$NoInternetStateImpl implements NoInternetState {
 
 abstract class NoInternetState implements UniqueIdState {
   const factory NoInternetState() = _$NoInternetStateImpl;
+}
+
+/// @nodoc
+abstract class _$$LimitExceededImplCopyWith<$Res> {
+  factory _$$LimitExceededImplCopyWith(
+          _$LimitExceededImpl value, $Res Function(_$LimitExceededImpl) then) =
+      __$$LimitExceededImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class __$$LimitExceededImplCopyWithImpl<$Res>
+    extends _$UniqueIdStateCopyWithImpl<$Res, _$LimitExceededImpl>
+    implements _$$LimitExceededImplCopyWith<$Res> {
+  __$$LimitExceededImplCopyWithImpl(
+      _$LimitExceededImpl _value, $Res Function(_$LimitExceededImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$LimitExceededImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LimitExceededImpl implements LimitExceeded {
+  const _$LimitExceededImpl(this.message);
+
+  @override
+  final String message;
+
+  @override
+  String toString() {
+    return 'UniqueIdState.limitExceeded(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LimitExceededImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LimitExceededImplCopyWith<_$LimitExceededImpl> get copyWith =>
+      __$$LimitExceededImplCopyWithImpl<_$LimitExceededImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function(int progress, int totalCount) fetching,
+    required TResult Function(int count, int totalCount) idCount,
+    required TResult Function(List<UniqueIdPoolModel> ids) ids,
+    required TResult Function(String? error) failed,
+    required TResult Function(UniqueIdPoolModel aUniqueId) aUniqueId,
+    required TResult Function() noInternet,
+    required TResult Function(String message) limitExceeded,
+  }) {
+    return limitExceeded(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function(int progress, int totalCount)? fetching,
+    TResult? Function(int count, int totalCount)? idCount,
+    TResult? Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult? Function(String? error)? failed,
+    TResult? Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult? Function()? noInternet,
+    TResult? Function(String message)? limitExceeded,
+  }) {
+    return limitExceeded?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function(int progress, int totalCount)? fetching,
+    TResult Function(int count, int totalCount)? idCount,
+    TResult Function(List<UniqueIdPoolModel> ids)? ids,
+    TResult Function(String? error)? failed,
+    TResult Function(UniqueIdPoolModel aUniqueId)? aUniqueId,
+    TResult Function()? noInternet,
+    TResult Function(String message)? limitExceeded,
+    required TResult orElse(),
+  }) {
+    if (limitExceeded != null) {
+      return limitExceeded(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadingState value) loading,
+    required TResult Function(FetchingState value) fetching,
+    required TResult Function(FetchedIdCountState value) idCount,
+    required TResult Function(FetchedUniqueIdsState value) ids,
+    required TResult Function(FailedState value) failed,
+    required TResult Function(FetchedUniqueIdState value) aUniqueId,
+    required TResult Function(NoInternetState value) noInternet,
+    required TResult Function(LimitExceeded value) limitExceeded,
+  }) {
+    return limitExceeded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadingState value)? loading,
+    TResult? Function(FetchingState value)? fetching,
+    TResult? Function(FetchedIdCountState value)? idCount,
+    TResult? Function(FetchedUniqueIdsState value)? ids,
+    TResult? Function(FailedState value)? failed,
+    TResult? Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult? Function(NoInternetState value)? noInternet,
+    TResult? Function(LimitExceeded value)? limitExceeded,
+  }) {
+    return limitExceeded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadingState value)? loading,
+    TResult Function(FetchingState value)? fetching,
+    TResult Function(FetchedIdCountState value)? idCount,
+    TResult Function(FetchedUniqueIdsState value)? ids,
+    TResult Function(FailedState value)? failed,
+    TResult Function(FetchedUniqueIdState value)? aUniqueId,
+    TResult Function(NoInternetState value)? noInternet,
+    TResult Function(LimitExceeded value)? limitExceeded,
+    required TResult orElse(),
+  }) {
+    if (limitExceeded != null) {
+      return limitExceeded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LimitExceeded implements UniqueIdState {
+  const factory LimitExceeded(final String message) = _$LimitExceededImpl;
+
+  String get message;
+  @JsonKey(ignore: true)
+  _$$LimitExceededImplCopyWith<_$LimitExceededImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

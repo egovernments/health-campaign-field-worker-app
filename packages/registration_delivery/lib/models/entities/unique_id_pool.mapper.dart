@@ -43,6 +43,10 @@ class UniqueIdPoolSearchModelMapper
   static String? _$tenantId(UniqueIdPoolSearchModel v) => v.tenantId;
   static const Field<UniqueIdPoolSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static bool? _$fetchAllocatedIds(UniqueIdPoolSearchModel v) =>
+      v.fetchAllocatedIds;
+  static const Field<UniqueIdPoolSearchModel, bool> _f$fetchAllocatedIds =
+      Field('fetchAllocatedIds', _$fetchAllocatedIds, opt: true);
   static String? _$boundaryCode(UniqueIdPoolSearchModel v) => v.boundaryCode;
   static const Field<UniqueIdPoolSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -65,6 +69,7 @@ class UniqueIdPoolSearchModelMapper
     #count: _f$count,
     #userUuid: _f$userUuid,
     #tenantId: _f$tenantId,
+    #fetchAllocatedIds: _f$fetchAllocatedIds,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -89,6 +94,7 @@ class UniqueIdPoolSearchModelMapper
         count: data.dec(_f$count),
         userUuid: data.dec(_f$userUuid),
         tenantId: data.dec(_f$tenantId),
+        fetchAllocatedIds: data.dec(_f$fetchAllocatedIds),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -158,6 +164,7 @@ abstract class UniqueIdPoolSearchModelCopyWith<
       int? count,
       String? userUuid,
       String? tenantId,
+      bool? fetchAllocatedIds,
       String? boundaryCode});
   UniqueIdPoolSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -181,6 +188,7 @@ class _UniqueIdPoolSearchModelCopyWithImpl<$R, $Out>
           Object? count = $none,
           Object? userUuid = $none,
           Object? tenantId = $none,
+          Object? fetchAllocatedIds = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
@@ -190,6 +198,7 @@ class _UniqueIdPoolSearchModelCopyWithImpl<$R, $Out>
         if (count != $none) #count: count,
         if (userUuid != $none) #userUuid: userUuid,
         if (tenantId != $none) #tenantId: tenantId,
+        if (fetchAllocatedIds != $none) #fetchAllocatedIds: fetchAllocatedIds,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -202,6 +211,8 @@ class _UniqueIdPoolSearchModelCopyWithImpl<$R, $Out>
           count: data.get(#count, or: $value.count),
           userUuid: data.get(#userUuid, or: $value.userUuid),
           tenantId: data.get(#tenantId, or: $value.tenantId),
+          fetchAllocatedIds:
+              data.get(#fetchAllocatedIds, or: $value.fetchAllocatedIds),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -594,4 +605,193 @@ class _UniqueIdPoolAdditionalFieldsCopyWithImpl<$R, $Out>
   UniqueIdPoolAdditionalFieldsCopyWith<$R2, UniqueIdPoolAdditionalFields, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
           _UniqueIdPoolAdditionalFieldsCopyWithImpl($value, $cast, t);
+}
+
+class UniqueIdSearchResponseMapper
+    extends SubClassMapperBase<UniqueIdSearchResponse> {
+  UniqueIdSearchResponseMapper._();
+
+  static UniqueIdSearchResponseMapper? _instance;
+  static UniqueIdSearchResponseMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = UniqueIdSearchResponseMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'UniqueIdSearchResponse';
+
+  static List<UniqueIdPoolModel> _$models(UniqueIdSearchResponse v) => v.models;
+  static const Field<UniqueIdSearchResponse, List<UniqueIdPoolModel>>
+      _f$models = Field('models', _$models);
+  static int _$fetchLimit(UniqueIdSearchResponse v) => v.fetchLimit;
+  static const Field<UniqueIdSearchResponse, int> _f$fetchLimit =
+      Field('fetchLimit', _$fetchLimit);
+  static AuditDetails? _$auditDetails(UniqueIdSearchResponse v) =>
+      v.auditDetails;
+  static const Field<UniqueIdSearchResponse, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
+  static ClientAuditDetails? _$clientAuditDetails(UniqueIdSearchResponse v) =>
+      v.clientAuditDetails;
+  static const Field<UniqueIdSearchResponse, ClientAuditDetails>
+      _f$clientAuditDetails =
+      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
+  static bool? _$isDeleted(UniqueIdSearchResponse v) => v.isDeleted;
+  static const Field<UniqueIdSearchResponse, bool> _f$isDeleted =
+      Field('isDeleted', _$isDeleted, opt: true, def: false);
+
+  @override
+  final MappableFields<UniqueIdSearchResponse> fields = const {
+    #models: _f$models,
+    #fetchLimit: _f$fetchLimit,
+    #auditDetails: _f$auditDetails,
+    #clientAuditDetails: _f$clientAuditDetails,
+    #isDeleted: _f$isDeleted,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      EntityModelMapper.ensureInitialized();
+
+  static UniqueIdSearchResponse _instantiate(DecodingData data) {
+    return UniqueIdSearchResponse(
+        models: data.dec(_f$models),
+        fetchLimit: data.dec(_f$fetchLimit),
+        auditDetails: data.dec(_f$auditDetails),
+        clientAuditDetails: data.dec(_f$clientAuditDetails),
+        isDeleted: data.dec(_f$isDeleted));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static UniqueIdSearchResponse fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<UniqueIdSearchResponse>(map);
+  }
+
+  static UniqueIdSearchResponse fromJson(String json) {
+    return ensureInitialized().decodeJson<UniqueIdSearchResponse>(json);
+  }
+}
+
+mixin UniqueIdSearchResponseMappable {
+  String toJson() {
+    return UniqueIdSearchResponseMapper.ensureInitialized()
+        .encodeJson<UniqueIdSearchResponse>(this as UniqueIdSearchResponse);
+  }
+
+  Map<String, dynamic> toMap() {
+    return UniqueIdSearchResponseMapper.ensureInitialized()
+        .encodeMap<UniqueIdSearchResponse>(this as UniqueIdSearchResponse);
+  }
+
+  UniqueIdSearchResponseCopyWith<UniqueIdSearchResponse, UniqueIdSearchResponse,
+          UniqueIdSearchResponse>
+      get copyWith => _UniqueIdSearchResponseCopyWithImpl(
+          this as UniqueIdSearchResponse, $identity, $identity);
+  @override
+  String toString() {
+    return UniqueIdSearchResponseMapper.ensureInitialized()
+        .stringifyValue(this as UniqueIdSearchResponse);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return UniqueIdSearchResponseMapper.ensureInitialized()
+        .equalsValue(this as UniqueIdSearchResponse, other);
+  }
+
+  @override
+  int get hashCode {
+    return UniqueIdSearchResponseMapper.ensureInitialized()
+        .hashValue(this as UniqueIdSearchResponse);
+  }
+}
+
+extension UniqueIdSearchResponseValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, UniqueIdSearchResponse, $Out> {
+  UniqueIdSearchResponseCopyWith<$R, UniqueIdSearchResponse, $Out>
+      get $asUniqueIdSearchResponse =>
+          $base.as((v, t, t2) => _UniqueIdSearchResponseCopyWithImpl(v, t, t2));
+}
+
+abstract class UniqueIdSearchResponseCopyWith<
+    $R,
+    $In extends UniqueIdSearchResponse,
+    $Out> implements EntityModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, UniqueIdPoolModel,
+          UniqueIdPoolModelCopyWith<$R, UniqueIdPoolModel, UniqueIdPoolModel>>
+      get models;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails;
+  @override
+  $R call(
+      {List<UniqueIdPoolModel>? models,
+      int? fetchLimit,
+      AuditDetails? auditDetails,
+      ClientAuditDetails? clientAuditDetails,
+      bool? isDeleted});
+  UniqueIdSearchResponseCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _UniqueIdSearchResponseCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, UniqueIdSearchResponse, $Out>
+    implements
+        UniqueIdSearchResponseCopyWith<$R, UniqueIdSearchResponse, $Out> {
+  _UniqueIdSearchResponseCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<UniqueIdSearchResponse> $mapper =
+      UniqueIdSearchResponseMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, UniqueIdPoolModel,
+          UniqueIdPoolModelCopyWith<$R, UniqueIdPoolModel, UniqueIdPoolModel>>
+      get models => ListCopyWith($value.models, (v, t) => v.copyWith.$chain(t),
+          (v) => call(models: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails => $value.clientAuditDetails?.copyWith
+          .$chain((v) => call(clientAuditDetails: v));
+  @override
+  $R call(
+          {List<UniqueIdPoolModel>? models,
+          int? fetchLimit,
+          Object? auditDetails = $none,
+          Object? clientAuditDetails = $none,
+          Object? isDeleted = $none}) =>
+      $apply(FieldCopyWithData({
+        if (models != null) #models: models,
+        if (fetchLimit != null) #fetchLimit: fetchLimit,
+        if (auditDetails != $none) #auditDetails: auditDetails,
+        if (clientAuditDetails != $none)
+          #clientAuditDetails: clientAuditDetails,
+        if (isDeleted != $none) #isDeleted: isDeleted
+      }));
+  @override
+  UniqueIdSearchResponse $make(CopyWithData data) => UniqueIdSearchResponse(
+      models: data.get(#models, or: $value.models),
+      fetchLimit: data.get(#fetchLimit, or: $value.fetchLimit),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      clientAuditDetails:
+          data.get(#clientAuditDetails, or: $value.clientAuditDetails),
+      isDeleted: data.get(#isDeleted, or: $value.isDeleted));
+
+  @override
+  UniqueIdSearchResponseCopyWith<$R2, UniqueIdSearchResponse, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _UniqueIdSearchResponseCopyWithImpl($value, $cast, t);
 }

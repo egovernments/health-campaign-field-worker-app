@@ -17,6 +17,7 @@ import '../blocs/search_households/tag_by_search.dart';
 import '../blocs/unique_id/unique_id.dart';
 import '../data/repositories/local/household_global_search.dart';
 import '../data/repositories/local/registration_delivery_address.dart';
+import '../data/repositories/remote/unique_id_pool.dart';
 import '../models/entities/household.dart';
 import '../models/entities/household_member.dart';
 import '../models/entities/project_beneficiary.dart';
@@ -194,9 +195,7 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                     .read<LocalRepository<UniqueIdPoolModel,
                     UniqueIdPoolSearchModel>>(),
                     uniqueIdPoolRemoteRepository: context.read<
-                        RemoteRepository<
-                            UniqueIdPoolModel,
-                            UniqueIdPoolSearchModel>>()),
+                        UniqueIdPoolRemoteRepository>()),
           ),
         ],
         child: const AutoRouter(),

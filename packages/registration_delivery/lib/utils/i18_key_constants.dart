@@ -150,7 +150,7 @@ class SearchBeneficiary {
   String get communityProximityLabel =>
       'BENEFICIARY_SEARCH_COMMUNITY_PROXIMITY_LABEL_TEXT';
 
-  String get beneficiaryIdLabel => 'BENEFICIARY_ID_SEARCH_LABEL_TEXT';
+  String get beneficiaryIdSearchLabel => 'BENEFICIARY_ID_SEARCH_LABEL_TEXT';
 
   String get clfSearchHintText => 'BENEFICIARY_CLF_SEARCH_HINT_TEXT';
 
@@ -317,6 +317,10 @@ class BeneficiaryDetails {
   String get noInternetBeneficiaryIdsText => 'NO_INTERNET_BENEFICIARY_IDS_TEXT';
 
   String get failedBeneficiaryIds => 'FAILED_BENEFICIARY_IDS';
+
+  String get beneficiaryIdsLimitError => 'BENEFICIARY_IDS_LIMIT_ERROR';
+
+  String get beneficiaryIdsReFetch => 'BENEFICIARY_IDS_RE_FETCH';
 
   String get totalBeneficiaryIds => 'TOTAL_BENEFICIARY_IDS';
 

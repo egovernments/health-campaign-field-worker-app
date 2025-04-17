@@ -477,6 +477,11 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
+        if (value == DataModelType.uniqueId)
+          RepositoryProvider<UniqueIdPoolRemoteRepository>(
+            create: (context) =>
+                UniqueIdPoolRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.hFReferral)
           RepositoryProvider<
               RemoteRepository<HFReferralModel, HFReferralSearchModel>>(

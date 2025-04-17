@@ -49,4 +49,5 @@ void initializeMappers() {
   p13.UniqueIdPoolSearchModelMapper.ensureInitialized();
   p13.UniqueIdPoolModelMapper.ensureInitialized();
   p13.UniqueIdPoolAdditionalFieldsMapper.ensureInitialized();
+  p13.UniqueIdSearchResponseMapper.ensureInitialized();
 }

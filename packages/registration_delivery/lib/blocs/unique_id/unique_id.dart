@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/id_status.dart';
 import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 
+import '../../data/repositories/remote/unique_id_pool.dart';
 import '../../utils/utils.dart';
 
 part 'unique_id.freezed.dart';
@@ -19,8 +20,7 @@ typedef UniqueIdEmitter = Emitter<UniqueIdState>;
 class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
   final LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>
       uniqueIdPoolLocalRepository;
-  final RemoteRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>
-      uniqueIdPoolRemoteRepository;
+  final UniqueIdPoolRemoteRepository uniqueIdPoolRemoteRepository;
 
   UniqueIdBloc(
       {required this.uniqueIdPoolLocalRepository,
@@ -37,10 +37,15 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
 
     try {
       final count = await uniqueIdPoolLocalRepository.search(
-        UniqueIdPoolSearchModel(status: IdStatus.unAssigned.toValue()),
+        UniqueIdPoolSearchModel(
+          status: IdStatus.unAssigned.toValue(),
+          userUuid: RegistrationDeliverySingleton().loggedInUserUuid,
+        ),
       );
       final totalCount = await uniqueIdPoolLocalRepository.search(
-        UniqueIdPoolSearchModel(),
+        UniqueIdPoolSearchModel(
+          userUuid: RegistrationDeliverySingleton().loggedInUserUuid,
+        ),
       );
       emit(UniqueIdState.idCount(count.length, totalCount.length));
     } catch (e) {
@@ -50,38 +55,88 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
 
   FutureOr<void> _fetchUniqueIdsFromServer(
       FetchUniqueIdsEvent event, Emitter<UniqueIdState> emit) async {
-    emit(const UniqueIdState.fetching(0, 10));
+    emit(UniqueIdState.fetching(
+        0, RegistrationDeliverySingleton().beneficiaryIdBatchSize!));
     try {
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      final deviceInfo = DeviceInfoPlugin();
+      final androidInfo = await deviceInfo.androidInfo;
+      final userUuid = RegistrationDeliverySingleton().loggedInUserUuid;
+      final deviceUuid = androidInfo.id;
+      final tenantId = RegistrationDeliverySingleton().tenantId;
 
-      List<UniqueIdPoolModel> idsList = [];
-      final List<ConnectivityResult> connectivityResult =
-          await (Connectivity().checkConnectivity());
-      emit(const UniqueIdState.fetching(1, 10));
-
+      final connectivityResult = await Connectivity().checkConnectivity();
       if (connectivityResult.contains(ConnectivityResult.none)) {
-        emit(const NoInternetState());
-      } else {
-        int totalCount = 5;
-        emit(const UniqueIdState.fetching(4, 10));
-
-        var ids = await uniqueIdPoolRemoteRepository.search(
-            limit: 5,
-            offSet: 0,
-            UniqueIdPoolSearchModel(
-                deviceInfo: androidInfo.toString(),
-                userUuid: RegistrationDeliverySingleton().loggedInUserUuid,
-                deviceUuid: androidInfo.id,
-                count: totalCount));
-
-        await uniqueIdPoolLocalRepository.bulkCreate(ids);
-
-        emit(const UniqueIdState.fetching(8, 10));
-        emit(UniqueIdState.ids([]));
+        emit(const UniqueIdState.noInternet());
+        return;
       }
+
+      int offset = 0;
+      int totalToFetch = 0;
+      List<UniqueIdPoolModel> allFetchedIds = [];
+      int batchSize = RegistrationDeliverySingleton().beneficiaryIdBatchSize!;
+
+      while (true) {
+        emit(UniqueIdState.fetching(
+            offset, totalToFetch == 0 ? batchSize : totalToFetch));
+
+        final searchModel = event.reFetch == true
+            ? UniqueIdPoolSearchModel(
+                deviceInfo: androidInfo.toString(),
+                userUuid: userUuid,
+                deviceUuid: deviceUuid,
+                tenantId: tenantId,
+                count: batchSize,
+                fetchAllocatedIds: event.reFetch,
+              )
+            : UniqueIdPoolSearchModel(
+                deviceInfo: androidInfo.toString(),
+                userUuid: userUuid,
+                deviceUuid: deviceUuid,
+                tenantId: tenantId,
+                count: batchSize,
+              );
+
+        final response = await uniqueIdPoolRemoteRepository.searchWithMetadata(
+          limit: batchSize,
+          offSet: offset,
+          searchModel,
+        );
+
+        final List<UniqueIdPoolModel> batch = response.models;
+        final int fetchLimit = response.fetchLimit;
+
+        if (totalToFetch == 0) {
+          totalToFetch = fetchLimit;
+          if (batchSize >= fetchLimit) {
+            batchSize = fetchLimit;
+          }
+        }
+        if (batch.isEmpty) break;
+
+        await uniqueIdPoolLocalRepository.bulkCreate(batch);
+        allFetchedIds.addAll(batch);
+
+        offset += batch.length;
+
+        if (offset >= totalToFetch) {
+          emit(UniqueIdState.fetching(
+              offset,
+              totalToFetch == 0
+                  ? batch.isEmpty
+                      ? batchSize
+                      : batch.length
+                  : totalToFetch));
+          break;
+        }
+      }
+
+      emit(UniqueIdState.ids(allFetchedIds));
     } catch (e) {
-      emit(UniqueIdState.failed(e.toString()));
+      if (e is UniqueIdLimitExceededException) {
+        emit(UniqueIdState.limitExceeded(e.message));
+      } else {
+        emit(UniqueIdState.failed(e.toString()));
+      }
     }
   }
 
@@ -91,7 +146,10 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
 
     try {
       final count = await uniqueIdPoolLocalRepository.search(
-        UniqueIdPoolSearchModel(status: IdStatus.unAssigned.toValue()),
+        UniqueIdPoolSearchModel(
+          status: IdStatus.unAssigned.toValue(),
+          userUuid: RegistrationDeliverySingleton().loggedInUserUuid,
+        ),
       );
 
       emit(UniqueIdState.aUniqueId(count.first));
@@ -105,7 +163,8 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
 class UniqueIdEvent with _$UniqueIdEvent {
   const factory UniqueIdEvent.fetchIdCount() = UniqueIdCountEvent;
 
-  const factory UniqueIdEvent.fetchUniqueIdsFromServer() = FetchUniqueIdsEvent;
+  const factory UniqueIdEvent.fetchUniqueIdsFromServer({bool? reFetch}) =
+      FetchUniqueIdsEvent;
 
   const factory UniqueIdEvent.fetchAUniqueId() = FetchAUniqueIdEvent;
 }
@@ -129,4 +188,6 @@ class UniqueIdState with _$UniqueIdState {
       FetchedUniqueIdState;
 
   const factory UniqueIdState.noInternet() = NoInternetState;
+
+  const factory UniqueIdState.limitExceeded(String message) = LimitExceeded;
 }

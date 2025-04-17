@@ -96,6 +96,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       bandWidthBatchSize: (json['BANDWIDTH_BATCH_SIZE'] as List<dynamic>)
           .map((e) => BandWidthBatchSize.fromJson(e as Map<String, dynamic>))
           .toList(),
+      beneficiaryIdConfig: (json['BENEFICIARY_ID_CONFIG'] as List<dynamic>)
+          .map((e) => BeneficiaryIdConfig.fromJson(e as Map<String, dynamic>))
+          .toList(),
       downSyncBandWidthBatchSize: (json['DOWNSYNC-BANDWIDTH_BATCH_SIZE']
               as List<dynamic>)
           .map((e) => BandWidthBatchSize.fromJson(e as Map<String, dynamic>))
@@ -163,6 +166,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
     <String, dynamic>{
       'APP_CONFIG': instance.appConfig,
       'BANDWIDTH_BATCH_SIZE': instance.bandWidthBatchSize,
+      'BENEFICIARY_ID_CONFIG': instance.beneficiaryIdConfig,
       'DOWNSYNC-BANDWIDTH_BATCH_SIZE': instance.downSyncBandWidthBatchSize,
       'HOUSEHOLD_DELETION_REASON_OPTIONS':
           instance.householdDeletionReasonOptions,
@@ -314,6 +318,20 @@ Map<String, dynamic> _$$BandWidthBatchSizeImplToJson(
     <String, dynamic>{
       'MIN_RANGE': instance.minRange,
       'MAX_RANGE': instance.maxRange,
+      'BATCH_SIZE': instance.batchSize,
+    };
+
+_$BeneficiaryIdConfigImpl _$$BeneficiaryIdConfigImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BeneficiaryIdConfigImpl(
+      minCount: (json['MIN_COUNT'] as num).toDouble(),
+      batchSize: (json['BATCH_SIZE'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$BeneficiaryIdConfigImplToJson(
+        _$BeneficiaryIdConfigImpl instance) =>
+    <String, dynamic>{
+      'MIN_COUNT': instance.minCount,
       'BATCH_SIZE': instance.batchSize,
     };
 

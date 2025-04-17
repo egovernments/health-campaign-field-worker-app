@@ -4,6 +4,7 @@ import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
+import 'package:registration_delivery/data/repositories/remote/unique_id_pool.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../blocs/unique_id/unique_id.dart';
@@ -110,9 +111,8 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
           BlocProvider(
             create: (context) => UniqueIdBloc(
                 uniqueIdPoolLocalRepository: uniqueIdRepo,
-                uniqueIdPoolRemoteRepository: context.read<
-                    RemoteRepository<UniqueIdPoolModel,
-                        UniqueIdPoolSearchModel>>()),
+                uniqueIdPoolRemoteRepository:
+                    context.read<UniqueIdPoolRemoteRepository>()),
           ),
           BlocProvider(
             create: (context) => BeneficiaryRegistrationBloc(initialState,

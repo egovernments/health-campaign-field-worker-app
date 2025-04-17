@@ -91,7 +91,8 @@ class Constants {
 
   static const String boundaryLocalizationPath = 'rainmaker-boundary-admin';
 
-  static const String dashboardAnalyticsPath = '/dashboard-analytics/dashboard/getChartV2';
+  static const String dashboardAnalyticsPath =
+      '/dashboard-analytics/dashboard/getChartV2';
 
   static RegExp mobileNumberRegExp =
       RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
@@ -186,6 +187,9 @@ class Constants {
 
   static const String closedHouseholdSvg =
       'assets/icons/svg/closed_household.svg';
+
+  static const String beneficiaryIdDownload =
+      'assets/icons/svg/beneficiary_ids.svg';
 
   static List<RemoteRepository> getRemoteRepositories(
     Dio dio,

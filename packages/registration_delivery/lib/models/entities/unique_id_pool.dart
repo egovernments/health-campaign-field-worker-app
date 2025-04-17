@@ -15,6 +15,7 @@ class UniqueIdPoolSearchModel extends EntitySearchModel
   final int? count;
   final String? status;
   final String? tenantId;
+  final bool? fetchAllocatedIds;
 
   UniqueIdPoolSearchModel({
     this.id,
@@ -24,6 +25,7 @@ class UniqueIdPoolSearchModel extends EntitySearchModel
     this.count,
     this.deviceInfo,
     this.tenantId,
+    this.fetchAllocatedIds,
     super.isDeleted,
     super.boundaryCode,
   }) : super();
@@ -37,6 +39,7 @@ class UniqueIdPoolSearchModel extends EntitySearchModel
     this.count,
     this.userUuid,
     this.tenantId,
+    this.fetchAllocatedIds,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
@@ -89,5 +92,20 @@ class UniqueIdPoolAdditionalFields extends AdditionalFields
     super.schema = 'UniqueIds',
     super.version = 1, // TODO: revert once backend handles null
     super.fields,
+  });
+}
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class UniqueIdSearchResponse extends EntityModel
+    with UniqueIdSearchResponseMappable {
+  final List<UniqueIdPoolModel> models;
+  final int fetchLimit;
+
+  UniqueIdSearchResponse({
+    required this.models,
+    required this.fetchLimit,
+    super.auditDetails,
+    super.clientAuditDetails,
+    super.isDeleted = false,
   });
 }

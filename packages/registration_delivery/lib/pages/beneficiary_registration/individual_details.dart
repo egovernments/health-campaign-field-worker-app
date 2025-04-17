@@ -6,10 +6,13 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_dob_picker.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,12 +23,14 @@ import 'package:registration_delivery/blocs/unique_id/unique_id.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
+import '../../blocs/app_localization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
+import '../../widgets/beneficiary/id_count_alert.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 
@@ -54,11 +59,23 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
+  bool _isProgressDialogVisible = false;
+  final ProgressDialog _progressDialog = ProgressDialog();
 
   @override
   void initState() {
-    context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
+    if (RegistrationDeliverySingleton()
+        .idTypeOptions!
+        .contains(IdentifierTypes.uniqueBeneficiaryID.toValue())) {
+      context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
+    }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _progressDialog.dispose();
+    super.dispose();
   }
 
   @override
@@ -338,7 +355,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      displayUniqueIdCount(theme, form),
+                      if (RegistrationDeliverySingleton()
+                          .idTypeOptions!
+                          .contains(
+                              IdentifierTypes.uniqueBeneficiaryID.toValue()))
+                        displayUniqueIdCount(theme, form),
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
@@ -1016,9 +1037,133 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             orElse: () {},
             idCount: (availableIdCount, totalCount) {
               idCount = availableIdCount;
+              if (availableIdCount != 0 &&
+                  availableIdCount <
+                      RegistrationDeliverySingleton().beneficiaryIdMinCount!) {
+                showLowIdsAlert(
+                    context: context,
+                    localizations: localizations,
+                    shouldProceedFurther: (bool proceed) {});
+              } else if (availableIdCount <= 0) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  showNoIdsAlert(
+                    context: context,
+                    localizations: localizations,
+                  );
+                });
+              }
+            },
+            ids: (ids) {
+              _isProgressDialogVisible = false;
             },
             aUniqueId: (uniqueId) {
               form.control(_idNumberKey).value = uniqueId.id;
+            },
+            fetching: (currentCount, totalCount) {
+              if (_isProgressDialogVisible == false) {
+                _progressDialog.showProgressDialog(
+                  context: context,
+                  localizations: RegistrationDeliveryLocalization.of(context),
+                  currentCount: currentCount,
+                  totalCount: totalCount,
+                  theme: Theme.of(context),
+                );
+                _isProgressDialogVisible = true;
+              } else {
+                // To update progress:
+                _progressDialog.updateProgressDialog(
+                  currentCount: currentCount,
+                  totalCount: totalCount,
+                );
+              }
+            },
+            failed: (String? error) {
+              _progressDialog.closeProgressDialog();
+              _isProgressDialogVisible = false;
+              if (error != null) {
+                Toast.showToast(context,
+                    message: localizations.translate(
+                      i18.beneficiaryDetails.failedBeneficiaryIds,
+                    ),
+                    type: ToastType.error);
+              }
+            },
+            limitExceeded: (String? error) {
+              _progressDialog.closeProgressDialog();
+              _isProgressDialogVisible = false;
+              if (error != null) {
+                DigitSyncDialog.show(
+                  context,
+                  type: DialogType.failed,
+                  label: i18.beneficiaryDetails.beneficiaryIdsLimitError,
+                  primaryAction: DigitDialogActions(
+                    label:
+                        RegistrationDeliveryLocalization.of(context).translate(
+                      i18.beneficiaryDetails.beneficiaryIdsReFetch,
+                    ),
+                    action: (ctx) {
+                      Navigator.pop(ctx);
+                      context.read<UniqueIdBloc>().add(
+                            const UniqueIdEvent.fetchUniqueIdsFromServer(
+                                reFetch: true),
+                          );
+                    },
+                  ),
+                  secondaryAction: DigitDialogActions(
+                    label:
+                        RegistrationDeliveryLocalization.of(context).translate(
+                      i18.common.corecommonclose,
+                    ),
+                    action: (ctx) => Navigator.pop(ctx),
+                  ),
+                );
+              }
+            },
+            noInternet: () {
+              _progressDialog.closeProgressDialog();
+              _isProgressDialogVisible = false;
+              showCustomPopup(
+                  context: context,
+                  builder: (ctx) {
+                    return Popup(
+                      type: PopUpType.alert,
+                      actions: [
+                        DigitButton(
+                          capitalizeLetters: false,
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
+                          mainAxisSize: MainAxisSize.max,
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+
+                            context.read<UniqueIdBloc>().add(
+                                  const UniqueIdEvent
+                                      .fetchUniqueIdsFromServer(),
+                                );
+                          },
+                          label: localizations.translate(
+                            i18.common.coreCommonDataSyncRetry,
+                          ),
+                        ),
+                        DigitButton(
+                          capitalizeLetters: false,
+                          type: DigitButtonType.secondary,
+                          size: DigitButtonSize.large,
+                          mainAxisSize: MainAxisSize.max,
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+                          },
+                          label: localizations.translate(
+                            i18.common.corecommonclose,
+                          ),
+                        ),
+                      ],
+                      title: localizations
+                          .translate(i18.common.coreCommonNoInternet),
+                      description: localizations.translate(
+                          i18.beneficiaryDetails.noInternetBeneficiaryIdsText),
+                    );
+                  });
             });
       },
       child: BlocBuilder<UniqueIdBloc, UniqueIdState>(
@@ -1059,7 +1204,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                       Text(
                         " $idCount",
                         style: theme.digitTextTheme(context).headingS.copyWith(
-                            color: idCount! < 10
+                            color: idCount! <
+                                    RegistrationDeliverySingleton()
+                                        .beneficiaryIdMinCount!
                                 ? theme.colorTheme.alert.error
                                 : theme.colorTheme.primary.primary2),
                       ),

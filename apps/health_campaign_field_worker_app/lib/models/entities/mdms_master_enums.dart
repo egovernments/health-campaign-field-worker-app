@@ -17,6 +17,8 @@ enum MasterEnums {
   refusalReasons,
   @MappableValue("BANDWIDTH_BATCH_SIZE")
   bandWidthBatchSize,
+  @MappableValue("BENEFICIARY_ID_CONFIG")
+  beneficiaryIdConfig,
   @MappableValue("DOWNSYNC-BANDWIDTH_BATCH_SIZE")
   downSyncBandwidthBatchSize,
   @MappableValue("HOUSEHOLD_DELETION_REASON_OPTIONS")

@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../blocs/app_localization.dart';
-import '../../router/registration_delivery_router.gm.dart';
+import '../../blocs/unique_id/unique_id.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
@@ -19,7 +19,7 @@ void showLowIdsAlert(
     required Function(bool proceed) shouldProceedFurther}) {
   showCustomPopup(
       context: context,
-      builder: (context) {
+      builder: (ctx) {
         return Popup(
           type: PopUpType.alert,
           actions: [
@@ -29,8 +29,10 @@ void showLowIdsAlert(
               size: DigitButtonSize.large,
               mainAxisSize: MainAxisSize.max,
               onPressed: () {
-                Navigator.of(context).pop();
-                context.router.push(BeneficiaryIdDownSyncRoute());
+                Navigator.of(ctx).pop();
+                context.read<UniqueIdBloc>().add(
+                      const UniqueIdEvent.fetchUniqueIdsFromServer(),
+                    );
               },
               prefixIcon: Icons.download,
               label: localizations.translate(
@@ -43,7 +45,7 @@ void showLowIdsAlert(
               size: DigitButtonSize.large,
               mainAxisSize: MainAxisSize.max,
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(ctx).pop();
                 shouldProceedFurther(true);
               },
               label: localizations.translate(
@@ -64,18 +66,20 @@ void showNoIdsAlert(
     required RegistrationDeliveryLocalization localizations}) {
   showCustomPopup(
       context: context,
-      builder: (context) {
+      builder: (ctx) {
         return Popup(
           type: PopUpType.alert,
           actions: [
             DigitButton(
               capitalizeLetters: false,
-              type: DigitButtonType.secondary,
+              type: DigitButtonType.primary,
               size: DigitButtonSize.large,
               mainAxisSize: MainAxisSize.max,
               onPressed: () {
-                Navigator.of(context).pop();
-                context.router.push(BeneficiaryIdDownSyncRoute());
+                Navigator.of(ctx).pop();
+                context.read<UniqueIdBloc>().add(
+                      const UniqueIdEvent.fetchUniqueIdsFromServer(),
+                    );
               },
               prefixIcon: Icons.download,
               label: localizations.translate(
@@ -129,7 +133,7 @@ class ProgressDialog {
       builder: (dialogContext) {
         _dialogContext = dialogContext;
         return StatefulBuilder(
-          builder: (context, setState) {
+          builder: (ctx, setState) {
             _setState = setState;
 
             double progressValue =
@@ -137,10 +141,32 @@ class ProgressDialog {
 
             return Popup(
               type: PopUpType.simple,
-              title: _localizations!.translate(
-                i18.beneficiaryDetails.downloadBeneficiaryIds,
-              ),
+              title: '',
               additionalWidgets: [
+                progressValue == 1.0
+                    ? Center(
+                        child: Lottie.asset(
+                          Constants.downloadSuccessAnimation,
+                          height: MediaQuery.of(context).size.height * 0.1,
+                        ),
+                      )
+                    : Center(
+                        child: Lottie.asset(
+                          Constants.downloadAnimation,
+                          height: MediaQuery.of(context).size.height * 0.1,
+                        ),
+                      ),
+                Center(
+                  child: Text(
+                    _localizations!.translate(
+                      i18.beneficiaryDetails.downloadBeneficiaryIds,
+                    ),
+                    style: _theme?.digitTextTheme(context).headingM.copyWith(
+                          color: theme.colorTheme.primary.primary2,
+                        ),
+                  ),
+                ),
+                const SizedBox(height: spacer2 * 2),
                 LinearProgressIndicator(
                   value: progressValue,
                   minHeight: spacer1,
@@ -148,24 +174,26 @@ class ProgressDialog {
                   borderRadius:
                       const BorderRadius.all(Radius.circular(spacer2)),
                 ),
-                Center(
-                  child: Lottie.asset(
-                    Constants.downloadAnimation,
-                    height: MediaQuery.of(context).size.height * 0.1,
-                  ),
-                ),
-                const SizedBox(height: spacer2 * 2),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      _localizations!
-                          .translate(i18.common.coreCommonDownloading),
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: _theme!.colorTheme.text.primary,
-                      ),
-                    ),
+                    progressValue == 1.0
+                        ? Text(
+                            _localizations!.translate(
+                                i18.beneficiaryDetails.downloadcompleted),
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: _theme!.colorTheme.text.primary,
+                            ),
+                          )
+                        : Text(
+                            _localizations!
+                                .translate(i18.common.coreCommonDownloading),
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: _theme!.colorTheme.text.primary,
+                            ),
+                          ),
                     Text(
                       '$_currentCount/$_totalCount',
                       style: TextStyle(
@@ -175,7 +203,24 @@ class ProgressDialog {
                       ),
                     ),
                   ],
-                )
+                ),
+                progressValue == 1.0
+                    ? DigitButton(
+                        capitalizeLetters: false,
+                        type: DigitButtonType.tertiary,
+                        size: DigitButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                          context
+                              .read<UniqueIdBloc>()
+                              .add(const UniqueIdEvent.fetchIdCount());
+                        },
+                        label: localizations.translate(
+                          i18.common.corecommonclose,
+                        ),
+                      )
+                    : const Offstage()
               ],
             );
           },

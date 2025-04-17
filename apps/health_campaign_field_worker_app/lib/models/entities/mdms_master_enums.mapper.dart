@@ -37,6 +37,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.refusalReasons;
       case "BANDWIDTH_BATCH_SIZE":
         return MasterEnums.bandWidthBatchSize;
+      case "BENEFICIARY_ID_CONFIG":
+        return MasterEnums.beneficiaryIdConfig;
       case "DOWNSYNC-BANDWIDTH_BATCH_SIZE":
         return MasterEnums.downSyncBandwidthBatchSize;
       case "HOUSEHOLD_DELETION_REASON_OPTIONS":
@@ -95,6 +97,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "REFUSAL_REASONS";
       case MasterEnums.bandWidthBatchSize:
         return "BANDWIDTH_BATCH_SIZE";
+      case MasterEnums.beneficiaryIdConfig:
+        return "BENEFICIARY_ID_CONFIG";
       case MasterEnums.downSyncBandwidthBatchSize:
         return "DOWNSYNC-BANDWIDTH_BATCH_SIZE";
       case MasterEnums.hhDelReasons:
