@@ -75,7 +75,7 @@ class _CustomDigitScannerPageState
   String phase = '00';
 
   RegExp pattern = RegExp(r'^2025-00-48-\d{2}-\d{2}-\d{2}$');
-  RegExp balePattern = RegExp(r'^\d{18}$');
+  RegExp balePattern = RegExp(r'^[a-zA-Z0-9]{9,21}$');
   late BuildContext currentContext;
   @override
   void initState() {

@@ -335,6 +335,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
+//Attendance_card
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
@@ -371,6 +372,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
         child: HomeItemCard(
@@ -381,6 +383,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
         child: HomeItemCard(
           icon: Icons.announcement,
