@@ -100,6 +100,8 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                   searchQuery,
                                   loading,
                                   isHeadOfHousehold,
+                                    householdChecklists,
+                                    individualChecklists,
                                 ) {
                                   var houseModel = HouseholdModel(
                                       clientReferenceId: IdGen.i.identifier,
@@ -175,6 +177,8 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                   projectBeneficiaryModel,
                                   loading,
                                   headOfHousehold,
+                                    householdChecklists,
+                                    individualChecklists,
                                 ) {
                                   var houseModel = householdModel.copyWith(
                                       additionalFields:

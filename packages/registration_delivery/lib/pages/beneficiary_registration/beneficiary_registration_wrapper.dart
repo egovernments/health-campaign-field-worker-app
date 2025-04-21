@@ -82,7 +82,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
                           projectBeneficiaryModel,
                           parentClientReferenceId,
                           loading,
-                          headOfHousehold) =>
+                          headOfHousehold, householdChecklists,individualChecklists,) =>
                       headOfHousehold),
                   members: initialState.maybeWhen(
                     orElse: () => null,
@@ -92,6 +92,8 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
                         registrationDate,
                         projectBeneficiaryModel,
                         parentClientReferenceId,
+                        householdChecklists,
+                        individualChecklists,
                         loading,
                         headOfHousehold) =>
                     individualModel,
@@ -105,7 +107,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
                         registrationDate,
                         projectBeneficiaryModel,
                         loading,
-                        headOfHousehold) =>
+                        headOfHousehold, householdChecklists, individualChecklists) =>
                     projectBeneficiaryModel != null
                         ? [projectBeneficiaryModel]
                         : [],

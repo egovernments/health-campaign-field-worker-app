@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:collection/collection.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -33,6 +33,7 @@ class SurveyFormViewPage extends LocalizedStatefulWidget {
   final DateTime? age;
   final String? gender;
   final bool isChild;
+  final ServiceModel? initialService;
 
   const SurveyFormViewPage({
     Key? key,
@@ -45,6 +46,7 @@ class SurveyFormViewPage extends LocalizedStatefulWidget {
     this.age,
     this.gender,
     this.isChild = false,
+    this.initialService,
   }) : super(key: key);
 
   @override
@@ -115,7 +117,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
           attributeCode: '${attribute?[i].code}',
           dataType: attribute?[i].dataType,
           clientReferenceId: referenceId,
-          referenceId: referenceId,
+          referenceId: IdGen.i.identifier,
           value: attribute?[i].dataType != 'SingleValueList' &&
                   attribute?[i].dataType != 'MultiValueList'
               ? controller[i].text.trim().isNotEmpty
@@ -190,23 +192,41 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
     required double? latitude,
     required double? longitude,
   }) {
-    if (initialAttributes == null || initialAttributes!.isEmpty) return;
+
+    if (initialAttributes == null || initialAttributes!.isEmpty || widget.initialService == null) return;
     final referenceId = IdGen.i.identifier;
     List<ServiceAttributesModel> attributes = [];
-
     for (int i = 0; i < controller.length; i++) {
       final attribute = initialAttributes;
-      attributes.add(
-        ServiceAttributesModel(
+
+      // Find the corresponding service attribute by matching the code
+      final matchingServiceAttribute = widget.initialService?.attributes?.firstWhere(
+            (serviceAttribute) => serviceAttribute.attributeCode == attribute?[i].code,
+        orElse: () => ServiceAttributesModel( // Returning an empty ServiceAttributesModel instead of null
           auditDetails: AuditDetails(
             createdBy: SurveyFormSingleton().loggedInUserUuid,
             createdTime: context.millisecondsSinceEpoch(),
           ),
-          attributeCode: '${attribute?[i].code}',
-          dataType: attribute?[i].dataType,
+          attributeCode: attribute?[i].code ?? '',
+          dataType: attribute?[i].dataType ?? '',
+          value: i18.surveyForm.notSelectedKey,
+          additionalDetails: null,
+        ),
+      );
+
+      // If no matching service attribute is found, skip to the next iteration
+      if (matchingServiceAttribute?.attributeCode == null) {
+        continue;
+      }
+
+      attributes.add(
+        matchingServiceAttribute!.copyWith(
+          auditDetails: AuditDetails(
+            createdBy: SurveyFormSingleton().loggedInUserUuid,
+            createdTime: context.millisecondsSinceEpoch(),
+          ),
           clientReferenceId: referenceId,
-          referenceId: IdGen.i.identifier,
-          value: attribute?[i].dataType != 'SingleValueList' &&  // TODO: [need to revisit update logic while updating]
+          value: attribute?[i].dataType != 'SingleValueList' &&
               attribute?[i].dataType != 'MultiValueList'
               ? controller[i].text.trim().isNotEmpty
               ? controller[i].text
@@ -229,7 +249,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
     context.read<ServiceBloc>().add(
       ServiceUpdateEvent(
-        serviceModel: ServiceModel(
+        serviceModel: widget.initialService!.copyWith(
           createdAt: DigitDateUtils.getDateFromTimestamp(
             DateTime.now().toLocal().millisecondsSinceEpoch,
             dateFormat: Constants.SurveyFormViewDateFormat,
@@ -249,6 +269,31 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
         ),
       ),
     );
+  }
+
+  void initializeControllersWithPrefilledValues({
+    required List<AttributesModel> targetAttributes,
+    required List<TextEditingController> mainController,
+    required List<TextEditingController> additionalController,
+    List<ServiceAttributesModel>? sourceAttributes,
+  }) {
+    for (final attribute in targetAttributes) {
+      final matched = sourceAttributes?.firstWhereOrNull(
+            (e) => e.attributeCode == attribute.code,
+      );
+
+      final value = matched?.value;
+
+      final textValue = (value is List &&value.isNotEmpty && !value.contains('NOT_SELECTED'))
+          ? value.join('.')
+          : value == 'NOT_SELECTED' ? '' : value?.toString() ?? '';
+      if(textValue.isEmpty){
+        mainController.add(TextEditingController());
+      }else{
+        mainController.add(TextEditingController(text: textValue));
+      }
+
+    }
   }
 
   @override
@@ -291,8 +336,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 gender: widget.gender,
                 isChild: widget.isChild);
             if (!isControllersInitialized) {
+
+              initializeControllersWithPrefilledValues(targetAttributes: initialAttributes!, mainController: controller, additionalController: additionalController, sourceAttributes: widget.initialService?.attributes!=null ? widget.initialService!.attributes : null);
               initialAttributes?.forEach((e) {
-                controller.add(TextEditingController());
                 additionalController.add(TextEditingController());
               });
 
@@ -677,6 +723,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
               /// TODO:need to fix the data type to something more generic
               !(e.code ?? '').contains('.')) ...[
+
             FormField<String>(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) {
@@ -696,6 +743,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   return null;
                 },
                 builder: (field) {
+                  if (controller[index].text.isEmpty) {
+                    controller[index].text = '0';
+                  }
                   return LabeledField(
                     label: localizations
                         .translate(
@@ -718,7 +768,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                       },
                       step: 1,
                       minValue: 0,
-                      initialValue: '0',
                       errorMessage: field.errorText,
                       keyboardType: TextInputType.number,
                       controller: controller[index],
@@ -894,6 +943,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                               valueMapper: (value) {
                                 return localizations.translate(value);
                               },
+                              initialSelection: controller[index].text.split('.'),
                               options: getOptionLabels(e),
                               onSelectionChanged: (curValue) {
                                 field.didChange(curValue
@@ -1277,7 +1327,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 },
                 step: 1,
                 minValue: 0,
-                initialValue: '0',
+                // initialValue: controller[index].text,
                 keyboardType: TextInputType.number,
                 errorMessage: field.errorText,
                 controller: controller[index],
@@ -1448,15 +1498,15 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                       return localizations.translate(value);
                     },
                     options: getOptionLabels(item),
-                    onSelectionChanged: (curValue) {
-                      field.didChange(
-                          curValue.join('.')); // Join list values with '.'
-                      if (curValue.isNotEmpty) {
-                        controller[index].value = TextEditingValue(
-                          text: curValue.join('.'), // Store as a single string
-                        );
+                    initialSelection: controller[index].text.split('.'),
+                      onSelectionChanged: (curValue) {
+                        final joinedValue = curValue.where((e) => e.trim().isNotEmpty).join('.');
+                        field.didChange(joinedValue);
+
+                        if (curValue.isNotEmpty) {
+                          controller[index].value = TextEditingValue(text: joinedValue);
+                        }
                       }
-                    },
                   ),
                 );
               },

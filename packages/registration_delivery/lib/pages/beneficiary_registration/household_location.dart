@@ -164,6 +164,8 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                 searchQuery,
                                 loading,
                                 isHeadOfHousehold,
+                                  householdChecklists,
+                                  individualChecklists,
                               ) {
                                 var addressModel = AddressModel(
                                   addressLine1: addressLine1 != null &&
@@ -241,6 +243,8 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                 projectBeneficiaryModel,
                                 loading,
                                 headOfHousehold,
+                                  householdChecklists,
+                                  individualChecklists,
                               ) {
                                 var addressModel = address.copyWith(
                                   addressLine1: addressLine1 != null &&
