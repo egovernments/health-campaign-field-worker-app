@@ -64,7 +64,8 @@ class UniqueIdPoolLocalRepository
               if (query.status != null)
                 sql.uniqueIdPool.status.equals(query.status!),
               if (query.userUuid != null)
-                sql.uniqueIdPool.userUuid.equals(query.userUuid!)
+                sql.uniqueIdPool.userUuid.equals(query.userUuid!),
+              if (query.id != null) sql.uniqueIdPool.id.equals(query.id!),
             ])))
           .get();
 
