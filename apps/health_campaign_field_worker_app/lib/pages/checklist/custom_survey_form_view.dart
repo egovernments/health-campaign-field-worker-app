@@ -835,8 +835,9 @@ class CustomSurveyFormViewPageState
                 builder: (context, state) {
                   return (controller[index].text == item.values?[1].trim() &&
                           !(isHealthFacilityWorker &&
-                              widget.referralClientRefId != null) &&
-                          item.dataType != 'SingleValueList')
+                              widget.referralClientRefId != null)
+                      //  && item.dataType != 'SingleValueList'
+                      )
                       ? Padding(
                           padding: const EdgeInsets.only(
                             left: spacer1,
