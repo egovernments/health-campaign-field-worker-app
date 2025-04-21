@@ -1043,6 +1043,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 showLowIdsAlert(
                     context: context,
                     localizations: localizations,
+                    availableCount: availableIdCount,
                     shouldProceedFurther: (bool proceed) {});
               } else if (availableIdCount <= 0) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {

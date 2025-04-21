@@ -348,6 +348,7 @@ class _SearchBeneficiaryPageState
                                     .beneficiaryIdMinCount!) {
                           showLowIdsAlert(
                               context: context,
+                              availableCount: availableIdCount,
                               localizations: localizations,
                               shouldProceedFurther: (bool proceed) {
                                 if (proceed) {

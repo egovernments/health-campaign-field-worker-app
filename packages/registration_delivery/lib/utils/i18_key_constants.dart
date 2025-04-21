@@ -310,6 +310,8 @@ class BeneficiaryDetails {
 
   String get lowBeneficiaryIdsText => 'LOW_BENEFICIARY_IDS_TEXT';
 
+  String get lowBeneficiaryIdsAlertText => 'LOW_BENEFICIARY_IDS_ALERT_TEXT';
+
   String get noBeneficiaryIdsLabel => 'NO_BENEFICIARY_IDS_LABEL';
 
   String get noBeneficiaryIdsText => 'NO_BENEFICIARY_IDS_TEXT';
