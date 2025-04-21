@@ -302,7 +302,7 @@ class BeneficiaryDetails {
 
   String get downloadBeneficiaryIds => 'DOWNLOAD_BENEFICIARY_IDS';
 
-  String get availableBeneficiaryIdsLabel => 'AVAILABLE_BENEFICIARY_IDS_LABEL';
+  String get noOfBeneficiaryIdsLeft => 'NO_OF_BENEFICIARY_IDS_LEFT';
 
   String get availableBeneficiaryIdsText => 'AVAILABLE_BENEFICIARY_IDS_TEXT';
 
