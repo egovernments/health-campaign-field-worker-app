@@ -836,6 +836,7 @@ class CustomSurveyFormViewPageState
                   return (controller[index].text == item.values?[1].trim() &&
                           !(isHealthFacilityWorker &&
                               widget.referralClientRefId != null)
+                      //Info : commented so that enable for single value list also
                       //  && item.dataType != 'SingleValueList'
                       )
                       ? Padding(
