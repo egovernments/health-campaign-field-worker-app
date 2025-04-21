@@ -370,6 +370,7 @@ class _HouseholdOverviewPageState
                                                                 date,
                                                             projectBeneficiaryModel:
                                                                 projectBeneficiary,
+                                                                householdChecklists: state.householdMemberWrapper.householdChecklists
                                                           ),
                                                           children: [
                                                             HouseholdLocationRoute(),
@@ -399,7 +400,6 @@ class _HouseholdOverviewPageState
                                           size: DigitButtonSize.medium,
                                           prefixIcon: Icons.edit,
                                           capitalizeLetters: false,
-                                          isDisabled: true,  // TODO: need to check later
                                         ),
                                       ),
 
@@ -865,6 +865,7 @@ class _HouseholdOverviewPageState
                                                                   .household
                                                                   ?.clientReferenceId),
                                                     ),
+                                                        individualChecklists: individualChecklist!= null ? [individualChecklist] : [],
                                                   ),
                                                   children: [
                                                     IndividualDetailsRoute(

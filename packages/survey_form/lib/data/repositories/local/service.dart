@@ -235,8 +235,8 @@ class ServiceLocalRepository
             batch.update(
               sql.serviceAttributes,
               attribute.companion,
-              where: (table) => table.clientReferenceId.equals(
-                attribute.clientReferenceId ?? '',
+              where: (table) => table.referenceId.equals(
+                attribute.referenceId ?? '',
               ),
             );
           }

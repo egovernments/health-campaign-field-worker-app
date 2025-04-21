@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/task.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member_relationship.dart';
@@ -856,6 +857,8 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     String? searchQuery,
     @Default(false) bool loading,
     @Default(false) bool isHeadOfHousehold,
+    List<ServiceModel>? householdChecklists,
+    List<ServiceModel>? individualChecklists,
   }) = BeneficiaryRegistrationCreateState;
 
   const factory BeneficiaryRegistrationState.editHousehold({
@@ -867,6 +870,8 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     @Default(false) bool loading,
     IndividualModel? headOfHousehold,
+    List<ServiceModel>? householdChecklists,
+    List<ServiceModel>? individualChecklists,
   }) = BeneficiaryRegistrationEditHouseholdState;
 
   const factory BeneficiaryRegistrationState.editIndividual({
@@ -876,6 +881,8 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     final String? parentClientReferenceId,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     @Default(false) bool loading,
+    List<ServiceModel>? householdChecklists,
+    List<ServiceModel>? individualChecklists,
   }) = BeneficiaryRegistrationEditIndividualState;
 
   const factory BeneficiaryRegistrationState.addMember({
@@ -883,6 +890,8 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required HouseholdModel householdModel,
     final String? parentClientReferenceId,
     @Default(false) bool loading,
+    List<ServiceModel>? householdChecklists,
+    List<ServiceModel>? individualChecklists,
   }) = BeneficiaryRegistrationAddMemberState;
 
   const factory BeneficiaryRegistrationState.persisted({
@@ -896,6 +905,8 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     @Default(false) bool loading,
     @Default(false) bool isEdit,
     @Default(false) bool isHeadOfHousehold,
+    List<ServiceModel>? householdChecklists,
+    List<ServiceModel>? individualChecklists,
   }) = BeneficiaryRegistrationPersistedState;
 
   const factory BeneficiaryRegistrationState.summary({
@@ -908,6 +919,8 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     AddressModel? addressModel,
     @Default(false) bool loading,
     @Default(false) bool isHeadOfHousehold,
+    List<ServiceModel>? householdChecklists,
+    List<ServiceModel>? individualChecklists,
   }) = BeneficiaryRegistrationSummaryState;
 }
 

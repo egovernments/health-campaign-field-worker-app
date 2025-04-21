@@ -163,6 +163,8 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                 addressModel,
                                 loading,
                                 isHeadOfHousehold,
+                                  householdChecklists,
+                                  individualChecklists,
                               ) async {
                                 final submit = await showDialog(
                                   context: context,
@@ -459,6 +461,8 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                           addressModel,
                                           loading,
                                           isHeadOfHousehold,
+                                          householdChecklists,
+                                          individualChecklists,
                                           ) =>
                                       individualModel?.name?.givenName ??
                                           localizations.translate(
@@ -482,6 +486,8 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                         addressModel,
                                         loading,
                                         isHeadOfHousehold,
+                                        householdChecklists,
+                                        individualChecklists,
                                         ) =>
                                     individualModel?.dateOfBirth != null
                                         ? DigitDateUtils.getFilteredDate(
@@ -514,6 +520,8 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                           addressModel,
                                           loading,
                                           isHeadOfHousehold,
+                                          householdChecklists,
+                                          individualChecklists,
                                           ) =>
                                       individualModel?.gender != null
                                           ? localizations.translate(

@@ -127,9 +127,7 @@ class MemberCard extends StatelessWidget {
                             size: DigitButtonSize.medium)
                             : DigitButton(
                           isDisabled:
-                          (projectBeneficiaries ?? []).isEmpty ||
-                              true,
-                          // todo: need to check the logic again
+                          (projectBeneficiaries ?? []).isEmpty,
                           onPressed: () => showDialog(
                             context: context,
                             builder: (ctx) => DigitActionCard(

@@ -3881,6 +3881,10 @@ mixin _$BeneficiaryRegistrationState {
   HouseholdModel? get householdModel => throw _privateConstructorUsedError;
   String? get parentClientReferenceId => throw _privateConstructorUsedError;
   bool get loading => throw _privateConstructorUsedError;
+  List<ServiceModel>? get householdChecklists =>
+      throw _privateConstructorUsedError;
+  List<ServiceModel>? get individualChecklists =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
@@ -3892,7 +3896,9 @@ mixin _$BeneficiaryRegistrationState {
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         create,
     required TResult Function(
             AddressModel addressModel,
@@ -3902,7 +3908,9 @@ mixin _$BeneficiaryRegistrationState {
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -3910,13 +3918,17 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editIndividual,
     required TResult Function(
             AddressModel addressModel,
             HouseholdModel householdModel,
             String? parentClientReferenceId,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         addMember,
     required TResult Function(
             bool navigateToRoot,
@@ -3928,7 +3940,9 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         persisted,
     required TResult Function(
             bool navigateToRoot,
@@ -3939,7 +3953,9 @@ mixin _$BeneficiaryRegistrationState {
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         summary,
   }) =>
       throw _privateConstructorUsedError;
@@ -3954,7 +3970,9 @@ mixin _$BeneficiaryRegistrationState {
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult? Function(
             AddressModel addressModel,
@@ -3964,7 +3982,9 @@ mixin _$BeneficiaryRegistrationState {
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -3972,10 +3992,17 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult? Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
@@ -3987,7 +4014,9 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult? Function(
             bool navigateToRoot,
@@ -3998,7 +4027,9 @@ mixin _$BeneficiaryRegistrationState {
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
   }) =>
       throw _privateConstructorUsedError;
@@ -4013,7 +4044,9 @@ mixin _$BeneficiaryRegistrationState {
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult Function(
             AddressModel addressModel,
@@ -4023,7 +4056,9 @@ mixin _$BeneficiaryRegistrationState {
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -4031,10 +4066,17 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult Function(
             bool navigateToRoot,
@@ -4046,7 +4088,9 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult Function(
             bool navigateToRoot,
@@ -4057,7 +4101,9 @@ mixin _$BeneficiaryRegistrationState {
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
     required TResult orElse(),
   }) =>
@@ -4120,7 +4166,9 @@ abstract class $BeneficiaryRegistrationStateCopyWith<$Res> {
       {AddressModel addressModel,
       HouseholdModel householdModel,
       String? parentClientReferenceId,
-      bool loading});
+      bool loading,
+      List<ServiceModel>? householdChecklists,
+      List<ServiceModel>? individualChecklists});
 }
 
 /// @nodoc
@@ -4141,6 +4189,8 @@ class _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
     Object? householdModel = null,
     Object? parentClientReferenceId = freezed,
     Object? loading = null,
+    Object? householdChecklists = freezed,
+    Object? individualChecklists = freezed,
   }) {
     return _then(_value.copyWith(
       addressModel: null == addressModel
@@ -4159,6 +4209,14 @@ class _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
+      householdChecklists: freezed == householdChecklists
+          ? _value.householdChecklists
+          : householdChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
+      individualChecklists: freezed == individualChecklists
+          ? _value.individualChecklists
+          : individualChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
     ) as $Val);
   }
 }
@@ -4181,7 +4239,9 @@ abstract class _$$BeneficiaryRegistrationCreateStateImplCopyWith<$Res>
       DateTime? registrationDate,
       String? searchQuery,
       bool loading,
-      bool isHeadOfHousehold});
+      bool isHeadOfHousehold,
+      List<ServiceModel>? householdChecklists,
+      List<ServiceModel>? individualChecklists});
 }
 
 /// @nodoc
@@ -4206,6 +4266,8 @@ class __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<$Res>
     Object? searchQuery = freezed,
     Object? loading = null,
     Object? isHeadOfHousehold = null,
+    Object? householdChecklists = freezed,
+    Object? individualChecklists = freezed,
   }) {
     return _then(_$BeneficiaryRegistrationCreateStateImpl(
       addressModel: freezed == addressModel
@@ -4244,6 +4306,14 @@ class __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<$Res>
           ? _value.isHeadOfHousehold
           : isHeadOfHousehold // ignore: cast_nullable_to_non_nullable
               as bool,
+      householdChecklists: freezed == householdChecklists
+          ? _value._householdChecklists
+          : householdChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
+      individualChecklists: freezed == individualChecklists
+          ? _value._individualChecklists
+          : individualChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
     ));
   }
 }
@@ -4261,7 +4331,11 @@ class _$BeneficiaryRegistrationCreateStateImpl
       this.registrationDate,
       this.searchQuery,
       this.loading = false,
-      this.isHeadOfHousehold = false});
+      this.isHeadOfHousehold = false,
+      final List<ServiceModel>? householdChecklists,
+      final List<ServiceModel>? individualChecklists})
+      : _householdChecklists = householdChecklists,
+        _individualChecklists = individualChecklists;
 
   @override
   final AddressModel? addressModel;
@@ -4283,10 +4357,31 @@ class _$BeneficiaryRegistrationCreateStateImpl
   @override
   @JsonKey()
   final bool isHeadOfHousehold;
+  final List<ServiceModel>? _householdChecklists;
+  @override
+  List<ServiceModel>? get householdChecklists {
+    final value = _householdChecklists;
+    if (value == null) return null;
+    if (_householdChecklists is EqualUnmodifiableListView)
+      return _householdChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<ServiceModel>? _individualChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists {
+    final value = _individualChecklists;
+    if (value == null) return null;
+    if (_individualChecklists is EqualUnmodifiableListView)
+      return _individualChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.create(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, searchQuery: $searchQuery, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationState.create(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, searchQuery: $searchQuery, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold, householdChecklists: $householdChecklists, individualChecklists: $individualChecklists)';
   }
 
   @override
@@ -4312,7 +4407,11 @@ class _$BeneficiaryRegistrationCreateStateImpl
                 other.searchQuery == searchQuery) &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isHeadOfHousehold, isHeadOfHousehold) ||
-                other.isHeadOfHousehold == isHeadOfHousehold));
+                other.isHeadOfHousehold == isHeadOfHousehold) &&
+            const DeepCollectionEquality()
+                .equals(other._householdChecklists, _householdChecklists) &&
+            const DeepCollectionEquality()
+                .equals(other._individualChecklists, _individualChecklists));
   }
 
   @override
@@ -4326,7 +4425,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
       registrationDate,
       searchQuery,
       loading,
-      isHeadOfHousehold);
+      isHeadOfHousehold,
+      const DeepCollectionEquality().hash(_householdChecklists),
+      const DeepCollectionEquality().hash(_individualChecklists));
 
   @JsonKey(ignore: true)
   @override
@@ -4348,7 +4449,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         create,
     required TResult Function(
             AddressModel addressModel,
@@ -4358,7 +4461,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -4366,13 +4471,17 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editIndividual,
     required TResult Function(
             AddressModel addressModel,
             HouseholdModel householdModel,
             String? parentClientReferenceId,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         addMember,
     required TResult Function(
             bool navigateToRoot,
@@ -4384,7 +4493,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         persisted,
     required TResult Function(
             bool navigateToRoot,
@@ -4395,7 +4506,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         summary,
   }) {
     return create(
@@ -4407,7 +4520,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
         registrationDate,
         searchQuery,
         loading,
-        isHeadOfHousehold);
+        isHeadOfHousehold,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -4422,7 +4537,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult? Function(
             AddressModel addressModel,
@@ -4432,7 +4549,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -4440,10 +4559,17 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult? Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
@@ -4455,7 +4581,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult? Function(
             bool navigateToRoot,
@@ -4466,7 +4594,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
   }) {
     return create?.call(
@@ -4478,7 +4608,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
         registrationDate,
         searchQuery,
         loading,
-        isHeadOfHousehold);
+        isHeadOfHousehold,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -4493,7 +4625,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult Function(
             AddressModel addressModel,
@@ -4503,7 +4637,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -4511,10 +4647,17 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult Function(
             bool navigateToRoot,
@@ -4526,7 +4669,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult Function(
             bool navigateToRoot,
@@ -4537,7 +4682,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
     required TResult orElse(),
   }) {
@@ -4551,7 +4698,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
           registrationDate,
           searchQuery,
           loading,
-          isHeadOfHousehold);
+          isHeadOfHousehold,
+          householdChecklists,
+          individualChecklists);
     }
     return orElse();
   }
@@ -4612,15 +4761,18 @@ class _$BeneficiaryRegistrationCreateStateImpl
 abstract class BeneficiaryRegistrationCreateState
     implements BeneficiaryRegistrationState {
   const factory BeneficiaryRegistrationCreateState(
-      {final AddressModel? addressModel,
-      final HouseholdModel? householdModel,
-      final IndividualModel? individualModel,
-      final ProjectBeneficiaryModel? projectBeneficiaryModel,
-      final String? parentClientReferenceId,
-      final DateTime? registrationDate,
-      final String? searchQuery,
-      final bool loading,
-      final bool isHeadOfHousehold}) = _$BeneficiaryRegistrationCreateStateImpl;
+          {final AddressModel? addressModel,
+          final HouseholdModel? householdModel,
+          final IndividualModel? individualModel,
+          final ProjectBeneficiaryModel? projectBeneficiaryModel,
+          final String? parentClientReferenceId,
+          final DateTime? registrationDate,
+          final String? searchQuery,
+          final bool loading,
+          final bool isHeadOfHousehold,
+          final List<ServiceModel>? householdChecklists,
+          final List<ServiceModel>? individualChecklists}) =
+      _$BeneficiaryRegistrationCreateStateImpl;
 
   @override
   AddressModel? get addressModel;
@@ -4635,6 +4787,10 @@ abstract class BeneficiaryRegistrationCreateState
   @override
   bool get loading;
   bool get isHeadOfHousehold;
+  @override
+  List<ServiceModel>? get householdChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists;
   @override
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationCreateStateImplCopyWith<
@@ -4659,7 +4815,9 @@ abstract class _$$BeneficiaryRegistrationEditHouseholdStateImplCopyWith<$Res>
       DateTime registrationDate,
       ProjectBeneficiaryModel? projectBeneficiaryModel,
       bool loading,
-      IndividualModel? headOfHousehold});
+      IndividualModel? headOfHousehold,
+      List<ServiceModel>? householdChecklists,
+      List<ServiceModel>? individualChecklists});
 }
 
 /// @nodoc
@@ -4683,6 +4841,8 @@ class __$$BeneficiaryRegistrationEditHouseholdStateImplCopyWithImpl<$Res>
     Object? projectBeneficiaryModel = freezed,
     Object? loading = null,
     Object? headOfHousehold = freezed,
+    Object? householdChecklists = freezed,
+    Object? individualChecklists = freezed,
   }) {
     return _then(_$BeneficiaryRegistrationEditHouseholdStateImpl(
       addressModel: null == addressModel
@@ -4717,6 +4877,14 @@ class __$$BeneficiaryRegistrationEditHouseholdStateImplCopyWithImpl<$Res>
           ? _value.headOfHousehold
           : headOfHousehold // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
+      householdChecklists: freezed == householdChecklists
+          ? _value._householdChecklists
+          : householdChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
+      individualChecklists: freezed == individualChecklists
+          ? _value._individualChecklists
+          : individualChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
     ));
   }
 }
@@ -4733,8 +4901,12 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
       required this.registrationDate,
       this.projectBeneficiaryModel,
       this.loading = false,
-      this.headOfHousehold})
-      : _individualModel = individualModel;
+      this.headOfHousehold,
+      final List<ServiceModel>? householdChecklists,
+      final List<ServiceModel>? individualChecklists})
+      : _individualModel = individualModel,
+        _householdChecklists = householdChecklists,
+        _individualChecklists = individualChecklists;
 
   @override
   final AddressModel addressModel;
@@ -4759,10 +4931,31 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
   final bool loading;
   @override
   final IndividualModel? headOfHousehold;
+  final List<ServiceModel>? _householdChecklists;
+  @override
+  List<ServiceModel>? get householdChecklists {
+    final value = _householdChecklists;
+    if (value == null) return null;
+    if (_householdChecklists is EqualUnmodifiableListView)
+      return _householdChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<ServiceModel>? _individualChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists {
+    final value = _individualChecklists;
+    if (value == null) return null;
+    if (_individualChecklists is EqualUnmodifiableListView)
+      return _individualChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.editHousehold(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, projectBeneficiaryModel: $projectBeneficiaryModel, loading: $loading, headOfHousehold: $headOfHousehold)';
+    return 'BeneficiaryRegistrationState.editHousehold(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, projectBeneficiaryModel: $projectBeneficiaryModel, loading: $loading, headOfHousehold: $headOfHousehold, householdChecklists: $householdChecklists, individualChecklists: $individualChecklists)';
   }
 
   @override
@@ -4786,7 +4979,11 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
                 other.projectBeneficiaryModel == projectBeneficiaryModel) &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.headOfHousehold, headOfHousehold) ||
-                other.headOfHousehold == headOfHousehold));
+                other.headOfHousehold == headOfHousehold) &&
+            const DeepCollectionEquality()
+                .equals(other._householdChecklists, _householdChecklists) &&
+            const DeepCollectionEquality()
+                .equals(other._individualChecklists, _individualChecklists));
   }
 
   @override
@@ -4799,7 +4996,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
       registrationDate,
       projectBeneficiaryModel,
       loading,
-      headOfHousehold);
+      headOfHousehold,
+      const DeepCollectionEquality().hash(_householdChecklists),
+      const DeepCollectionEquality().hash(_individualChecklists));
 
   @JsonKey(ignore: true)
   @override
@@ -4823,7 +5022,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         create,
     required TResult Function(
             AddressModel addressModel,
@@ -4833,7 +5034,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -4841,13 +5044,17 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editIndividual,
     required TResult Function(
             AddressModel addressModel,
             HouseholdModel householdModel,
             String? parentClientReferenceId,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         addMember,
     required TResult Function(
             bool navigateToRoot,
@@ -4859,7 +5066,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         persisted,
     required TResult Function(
             bool navigateToRoot,
@@ -4870,7 +5079,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         summary,
   }) {
     return editHousehold(
@@ -4881,7 +5092,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
         registrationDate,
         projectBeneficiaryModel,
         loading,
-        headOfHousehold);
+        headOfHousehold,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -4896,7 +5109,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult? Function(
             AddressModel addressModel,
@@ -4906,7 +5121,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -4914,10 +5131,17 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult? Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
@@ -4929,7 +5153,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult? Function(
             bool navigateToRoot,
@@ -4940,7 +5166,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
   }) {
     return editHousehold?.call(
@@ -4951,7 +5179,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
         registrationDate,
         projectBeneficiaryModel,
         loading,
-        headOfHousehold);
+        headOfHousehold,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -4966,7 +5196,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult Function(
             AddressModel addressModel,
@@ -4976,7 +5208,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -4984,10 +5218,17 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult Function(
             bool navigateToRoot,
@@ -4999,7 +5240,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult Function(
             bool navigateToRoot,
@@ -5010,7 +5253,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
     required TResult orElse(),
   }) {
@@ -5023,7 +5268,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
           registrationDate,
           projectBeneficiaryModel,
           loading,
-          headOfHousehold);
+          headOfHousehold,
+          householdChecklists,
+          individualChecklists);
     }
     return orElse();
   }
@@ -5091,7 +5338,9 @@ abstract class BeneficiaryRegistrationEditHouseholdState
           required final DateTime registrationDate,
           final ProjectBeneficiaryModel? projectBeneficiaryModel,
           final bool loading,
-          final IndividualModel? headOfHousehold}) =
+          final IndividualModel? headOfHousehold,
+          final List<ServiceModel>? householdChecklists,
+          final List<ServiceModel>? individualChecklists}) =
       _$BeneficiaryRegistrationEditHouseholdStateImpl;
 
   @override
@@ -5106,6 +5355,10 @@ abstract class BeneficiaryRegistrationEditHouseholdState
   @override
   bool get loading;
   IndividualModel? get headOfHousehold;
+  @override
+  List<ServiceModel>? get householdChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists;
   @override
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationEditHouseholdStateImplCopyWith<
@@ -5129,7 +5382,9 @@ abstract class _$$BeneficiaryRegistrationEditIndividualStateImplCopyWith<$Res>
       AddressModel addressModel,
       String? parentClientReferenceId,
       ProjectBeneficiaryModel? projectBeneficiaryModel,
-      bool loading});
+      bool loading,
+      List<ServiceModel>? householdChecklists,
+      List<ServiceModel>? individualChecklists});
 }
 
 /// @nodoc
@@ -5151,6 +5406,8 @@ class __$$BeneficiaryRegistrationEditIndividualStateImplCopyWithImpl<$Res>
     Object? parentClientReferenceId = freezed,
     Object? projectBeneficiaryModel = freezed,
     Object? loading = null,
+    Object? householdChecklists = freezed,
+    Object? individualChecklists = freezed,
   }) {
     return _then(_$BeneficiaryRegistrationEditIndividualStateImpl(
       householdModel: null == householdModel
@@ -5177,6 +5434,14 @@ class __$$BeneficiaryRegistrationEditIndividualStateImplCopyWithImpl<$Res>
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
+      householdChecklists: freezed == householdChecklists
+          ? _value._householdChecklists
+          : householdChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
+      individualChecklists: freezed == individualChecklists
+          ? _value._individualChecklists
+          : individualChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
     ));
   }
 }
@@ -5191,7 +5456,11 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
       required this.addressModel,
       this.parentClientReferenceId,
       this.projectBeneficiaryModel,
-      this.loading = false});
+      this.loading = false,
+      final List<ServiceModel>? householdChecklists,
+      final List<ServiceModel>? individualChecklists})
+      : _householdChecklists = householdChecklists,
+        _individualChecklists = individualChecklists;
 
   @override
   final HouseholdModel householdModel;
@@ -5206,10 +5475,31 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
   @override
   @JsonKey()
   final bool loading;
+  final List<ServiceModel>? _householdChecklists;
+  @override
+  List<ServiceModel>? get householdChecklists {
+    final value = _householdChecklists;
+    if (value == null) return null;
+    if (_householdChecklists is EqualUnmodifiableListView)
+      return _householdChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<ServiceModel>? _individualChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists {
+    final value = _individualChecklists;
+    if (value == null) return null;
+    if (_individualChecklists is EqualUnmodifiableListView)
+      return _individualChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.editIndividual(householdModel: $householdModel, individualModel: $individualModel, addressModel: $addressModel, parentClientReferenceId: $parentClientReferenceId, projectBeneficiaryModel: $projectBeneficiaryModel, loading: $loading)';
+    return 'BeneficiaryRegistrationState.editIndividual(householdModel: $householdModel, individualModel: $individualModel, addressModel: $addressModel, parentClientReferenceId: $parentClientReferenceId, projectBeneficiaryModel: $projectBeneficiaryModel, loading: $loading, householdChecklists: $householdChecklists, individualChecklists: $individualChecklists)';
   }
 
   @override
@@ -5229,12 +5519,24 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             (identical(
                     other.projectBeneficiaryModel, projectBeneficiaryModel) ||
                 other.projectBeneficiaryModel == projectBeneficiaryModel) &&
-            (identical(other.loading, loading) || other.loading == loading));
+            (identical(other.loading, loading) || other.loading == loading) &&
+            const DeepCollectionEquality()
+                .equals(other._householdChecklists, _householdChecklists) &&
+            const DeepCollectionEquality()
+                .equals(other._individualChecklists, _individualChecklists));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, householdModel, individualModel,
-      addressModel, parentClientReferenceId, projectBeneficiaryModel, loading);
+  int get hashCode => Object.hash(
+      runtimeType,
+      householdModel,
+      individualModel,
+      addressModel,
+      parentClientReferenceId,
+      projectBeneficiaryModel,
+      loading,
+      const DeepCollectionEquality().hash(_householdChecklists),
+      const DeepCollectionEquality().hash(_individualChecklists));
 
   @JsonKey(ignore: true)
   @override
@@ -5258,7 +5560,9 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         create,
     required TResult Function(
             AddressModel addressModel,
@@ -5268,7 +5572,9 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -5276,13 +5582,17 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editIndividual,
     required TResult Function(
             AddressModel addressModel,
             HouseholdModel householdModel,
             String? parentClientReferenceId,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         addMember,
     required TResult Function(
             bool navigateToRoot,
@@ -5294,7 +5604,9 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         persisted,
     required TResult Function(
             bool navigateToRoot,
@@ -5305,11 +5617,20 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         summary,
   }) {
-    return editIndividual(householdModel, individualModel, addressModel,
-        parentClientReferenceId, projectBeneficiaryModel, loading);
+    return editIndividual(
+        householdModel,
+        individualModel,
+        addressModel,
+        parentClientReferenceId,
+        projectBeneficiaryModel,
+        loading,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -5324,7 +5645,9 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult? Function(
             AddressModel addressModel,
@@ -5334,7 +5657,9 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -5342,10 +5667,17 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult? Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
@@ -5357,7 +5689,9 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult? Function(
             bool navigateToRoot,
@@ -5368,11 +5702,20 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
   }) {
-    return editIndividual?.call(householdModel, individualModel, addressModel,
-        parentClientReferenceId, projectBeneficiaryModel, loading);
+    return editIndividual?.call(
+        householdModel,
+        individualModel,
+        addressModel,
+        parentClientReferenceId,
+        projectBeneficiaryModel,
+        loading,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -5387,7 +5730,9 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult Function(
             AddressModel addressModel,
@@ -5397,7 +5742,9 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -5405,10 +5752,17 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult Function(
             bool navigateToRoot,
@@ -5420,7 +5774,9 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult Function(
             bool navigateToRoot,
@@ -5431,13 +5787,22 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
     required TResult orElse(),
   }) {
     if (editIndividual != null) {
-      return editIndividual(householdModel, individualModel, addressModel,
-          parentClientReferenceId, projectBeneficiaryModel, loading);
+      return editIndividual(
+          householdModel,
+          individualModel,
+          addressModel,
+          parentClientReferenceId,
+          projectBeneficiaryModel,
+          loading,
+          householdChecklists,
+          individualChecklists);
     }
     return orElse();
   }
@@ -5498,12 +5863,15 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
 abstract class BeneficiaryRegistrationEditIndividualState
     implements BeneficiaryRegistrationState {
   const factory BeneficiaryRegistrationEditIndividualState(
-      {required final HouseholdModel householdModel,
-      required final IndividualModel individualModel,
-      required final AddressModel addressModel,
-      final String? parentClientReferenceId,
-      final ProjectBeneficiaryModel? projectBeneficiaryModel,
-      final bool loading}) = _$BeneficiaryRegistrationEditIndividualStateImpl;
+          {required final HouseholdModel householdModel,
+          required final IndividualModel individualModel,
+          required final AddressModel addressModel,
+          final String? parentClientReferenceId,
+          final ProjectBeneficiaryModel? projectBeneficiaryModel,
+          final bool loading,
+          final List<ServiceModel>? householdChecklists,
+          final List<ServiceModel>? individualChecklists}) =
+      _$BeneficiaryRegistrationEditIndividualStateImpl;
 
   @override
   HouseholdModel get householdModel;
@@ -5515,6 +5883,10 @@ abstract class BeneficiaryRegistrationEditIndividualState
   ProjectBeneficiaryModel? get projectBeneficiaryModel;
   @override
   bool get loading;
+  @override
+  List<ServiceModel>? get householdChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists;
   @override
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationEditIndividualStateImplCopyWith<
@@ -5535,7 +5907,9 @@ abstract class _$$BeneficiaryRegistrationAddMemberStateImplCopyWith<$Res>
       {AddressModel addressModel,
       HouseholdModel householdModel,
       String? parentClientReferenceId,
-      bool loading});
+      bool loading,
+      List<ServiceModel>? householdChecklists,
+      List<ServiceModel>? individualChecklists});
 }
 
 /// @nodoc
@@ -5555,6 +5929,8 @@ class __$$BeneficiaryRegistrationAddMemberStateImplCopyWithImpl<$Res>
     Object? householdModel = null,
     Object? parentClientReferenceId = freezed,
     Object? loading = null,
+    Object? householdChecklists = freezed,
+    Object? individualChecklists = freezed,
   }) {
     return _then(_$BeneficiaryRegistrationAddMemberStateImpl(
       addressModel: null == addressModel
@@ -5573,6 +5949,14 @@ class __$$BeneficiaryRegistrationAddMemberStateImplCopyWithImpl<$Res>
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
+      householdChecklists: freezed == householdChecklists
+          ? _value._householdChecklists
+          : householdChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
+      individualChecklists: freezed == individualChecklists
+          ? _value._individualChecklists
+          : individualChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
     ));
   }
 }
@@ -5585,7 +5969,11 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
       {required this.addressModel,
       required this.householdModel,
       this.parentClientReferenceId,
-      this.loading = false});
+      this.loading = false,
+      final List<ServiceModel>? householdChecklists,
+      final List<ServiceModel>? individualChecklists})
+      : _householdChecklists = householdChecklists,
+        _individualChecklists = individualChecklists;
 
   @override
   final AddressModel addressModel;
@@ -5596,10 +5984,31 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
   @override
   @JsonKey()
   final bool loading;
+  final List<ServiceModel>? _householdChecklists;
+  @override
+  List<ServiceModel>? get householdChecklists {
+    final value = _householdChecklists;
+    if (value == null) return null;
+    if (_householdChecklists is EqualUnmodifiableListView)
+      return _householdChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<ServiceModel>? _individualChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists {
+    final value = _individualChecklists;
+    if (value == null) return null;
+    if (_individualChecklists is EqualUnmodifiableListView)
+      return _individualChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.addMember(addressModel: $addressModel, householdModel: $householdModel, parentClientReferenceId: $parentClientReferenceId, loading: $loading)';
+    return 'BeneficiaryRegistrationState.addMember(addressModel: $addressModel, householdModel: $householdModel, parentClientReferenceId: $parentClientReferenceId, loading: $loading, householdChecklists: $householdChecklists, individualChecklists: $individualChecklists)';
   }
 
   @override
@@ -5614,12 +6023,22 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             (identical(
                     other.parentClientReferenceId, parentClientReferenceId) ||
                 other.parentClientReferenceId == parentClientReferenceId) &&
-            (identical(other.loading, loading) || other.loading == loading));
+            (identical(other.loading, loading) || other.loading == loading) &&
+            const DeepCollectionEquality()
+                .equals(other._householdChecklists, _householdChecklists) &&
+            const DeepCollectionEquality()
+                .equals(other._individualChecklists, _individualChecklists));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, addressModel, householdModel,
-      parentClientReferenceId, loading);
+  int get hashCode => Object.hash(
+      runtimeType,
+      addressModel,
+      householdModel,
+      parentClientReferenceId,
+      loading,
+      const DeepCollectionEquality().hash(_householdChecklists),
+      const DeepCollectionEquality().hash(_individualChecklists));
 
   @JsonKey(ignore: true)
   @override
@@ -5641,7 +6060,9 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         create,
     required TResult Function(
             AddressModel addressModel,
@@ -5651,7 +6072,9 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -5659,13 +6082,17 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editIndividual,
     required TResult Function(
             AddressModel addressModel,
             HouseholdModel householdModel,
             String? parentClientReferenceId,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         addMember,
     required TResult Function(
             bool navigateToRoot,
@@ -5677,7 +6104,9 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         persisted,
     required TResult Function(
             bool navigateToRoot,
@@ -5688,11 +6117,13 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         summary,
   }) {
-    return addMember(
-        addressModel, householdModel, parentClientReferenceId, loading);
+    return addMember(addressModel, householdModel, parentClientReferenceId,
+        loading, householdChecklists, individualChecklists);
   }
 
   @override
@@ -5707,7 +6138,9 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult? Function(
             AddressModel addressModel,
@@ -5717,7 +6150,9 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -5725,10 +6160,17 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult? Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
@@ -5740,7 +6182,9 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult? Function(
             bool navigateToRoot,
@@ -5751,11 +6195,18 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
   }) {
     return addMember?.call(
-        addressModel, householdModel, parentClientReferenceId, loading);
+        addressModel,
+        householdModel,
+        parentClientReferenceId,
+        loading,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -5770,7 +6221,9 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult Function(
             AddressModel addressModel,
@@ -5780,7 +6233,9 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -5788,10 +6243,17 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult Function(
             bool navigateToRoot,
@@ -5803,7 +6265,9 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult Function(
             bool navigateToRoot,
@@ -5814,13 +6278,15 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
     required TResult orElse(),
   }) {
     if (addMember != null) {
-      return addMember(
-          addressModel, householdModel, parentClientReferenceId, loading);
+      return addMember(addressModel, householdModel, parentClientReferenceId,
+          loading, householdChecklists, individualChecklists);
     }
     return orElse();
   }
@@ -5881,10 +6347,13 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
 abstract class BeneficiaryRegistrationAddMemberState
     implements BeneficiaryRegistrationState {
   const factory BeneficiaryRegistrationAddMemberState(
-      {required final AddressModel addressModel,
-      required final HouseholdModel householdModel,
-      final String? parentClientReferenceId,
-      final bool loading}) = _$BeneficiaryRegistrationAddMemberStateImpl;
+          {required final AddressModel addressModel,
+          required final HouseholdModel householdModel,
+          final String? parentClientReferenceId,
+          final bool loading,
+          final List<ServiceModel>? householdChecklists,
+          final List<ServiceModel>? individualChecklists}) =
+      _$BeneficiaryRegistrationAddMemberStateImpl;
 
   @override
   AddressModel get addressModel;
@@ -5894,6 +6363,10 @@ abstract class BeneficiaryRegistrationAddMemberState
   String? get parentClientReferenceId;
   @override
   bool get loading;
+  @override
+  List<ServiceModel>? get householdChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists;
   @override
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationAddMemberStateImplCopyWith<
@@ -5920,7 +6393,9 @@ abstract class _$$BeneficiaryRegistrationPersistedStateImplCopyWith<$Res>
       AddressModel? addressModel,
       bool loading,
       bool isEdit,
-      bool isHeadOfHousehold});
+      bool isHeadOfHousehold,
+      List<ServiceModel>? householdChecklists,
+      List<ServiceModel>? individualChecklists});
 }
 
 /// @nodoc
@@ -5946,6 +6421,8 @@ class __$$BeneficiaryRegistrationPersistedStateImplCopyWithImpl<$Res>
     Object? loading = null,
     Object? isEdit = null,
     Object? isHeadOfHousehold = null,
+    Object? householdChecklists = freezed,
+    Object? individualChecklists = freezed,
   }) {
     return _then(_$BeneficiaryRegistrationPersistedStateImpl(
       navigateToRoot: null == navigateToRoot
@@ -5988,6 +6465,14 @@ class __$$BeneficiaryRegistrationPersistedStateImplCopyWithImpl<$Res>
           ? _value.isHeadOfHousehold
           : isHeadOfHousehold // ignore: cast_nullable_to_non_nullable
               as bool,
+      householdChecklists: freezed == householdChecklists
+          ? _value._householdChecklists
+          : householdChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
+      individualChecklists: freezed == individualChecklists
+          ? _value._individualChecklists
+          : individualChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
     ));
   }
 }
@@ -6006,7 +6491,11 @@ class _$BeneficiaryRegistrationPersistedStateImpl
       this.addressModel,
       this.loading = false,
       this.isEdit = false,
-      this.isHeadOfHousehold = false});
+      this.isHeadOfHousehold = false,
+      final List<ServiceModel>? householdChecklists,
+      final List<ServiceModel>? individualChecklists})
+      : _householdChecklists = householdChecklists,
+        _individualChecklists = individualChecklists;
 
   @override
   @JsonKey()
@@ -6032,10 +6521,31 @@ class _$BeneficiaryRegistrationPersistedStateImpl
   @override
   @JsonKey()
   final bool isHeadOfHousehold;
+  final List<ServiceModel>? _householdChecklists;
+  @override
+  List<ServiceModel>? get householdChecklists {
+    final value = _householdChecklists;
+    if (value == null) return null;
+    if (_householdChecklists is EqualUnmodifiableListView)
+      return _householdChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<ServiceModel>? _individualChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists {
+    final value = _individualChecklists;
+    if (value == null) return null;
+    if (_individualChecklists is EqualUnmodifiableListView)
+      return _individualChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.persisted(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isEdit: $isEdit, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationState.persisted(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isEdit: $isEdit, isHeadOfHousehold: $isHeadOfHousehold, householdChecklists: $householdChecklists, individualChecklists: $individualChecklists)';
   }
 
   @override
@@ -6062,7 +6572,11 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isEdit, isEdit) || other.isEdit == isEdit) &&
             (identical(other.isHeadOfHousehold, isHeadOfHousehold) ||
-                other.isHeadOfHousehold == isHeadOfHousehold));
+                other.isHeadOfHousehold == isHeadOfHousehold) &&
+            const DeepCollectionEquality()
+                .equals(other._householdChecklists, _householdChecklists) &&
+            const DeepCollectionEquality()
+                .equals(other._individualChecklists, _individualChecklists));
   }
 
   @override
@@ -6077,7 +6591,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
       addressModel,
       loading,
       isEdit,
-      isHeadOfHousehold);
+      isHeadOfHousehold,
+      const DeepCollectionEquality().hash(_householdChecklists),
+      const DeepCollectionEquality().hash(_individualChecklists));
 
   @JsonKey(ignore: true)
   @override
@@ -6099,7 +6615,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         create,
     required TResult Function(
             AddressModel addressModel,
@@ -6109,7 +6627,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -6117,13 +6637,17 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editIndividual,
     required TResult Function(
             AddressModel addressModel,
             HouseholdModel householdModel,
             String? parentClientReferenceId,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         addMember,
     required TResult Function(
             bool navigateToRoot,
@@ -6135,7 +6659,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         persisted,
     required TResult Function(
             bool navigateToRoot,
@@ -6146,7 +6672,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         summary,
   }) {
     return persisted(
@@ -6159,7 +6687,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         addressModel,
         loading,
         isEdit,
-        isHeadOfHousehold);
+        isHeadOfHousehold,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -6174,7 +6704,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult? Function(
             AddressModel addressModel,
@@ -6184,7 +6716,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -6192,10 +6726,17 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult? Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
@@ -6207,7 +6748,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult? Function(
             bool navigateToRoot,
@@ -6218,7 +6761,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
   }) {
     return persisted?.call(
@@ -6231,7 +6776,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         addressModel,
         loading,
         isEdit,
-        isHeadOfHousehold);
+        isHeadOfHousehold,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -6246,7 +6793,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult Function(
             AddressModel addressModel,
@@ -6256,7 +6805,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -6264,10 +6815,17 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult Function(
             bool navigateToRoot,
@@ -6279,7 +6837,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult Function(
             bool navigateToRoot,
@@ -6290,7 +6850,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
     required TResult orElse(),
   }) {
@@ -6305,7 +6867,9 @@ class _$BeneficiaryRegistrationPersistedStateImpl
           addressModel,
           loading,
           isEdit,
-          isHeadOfHousehold);
+          isHeadOfHousehold,
+          householdChecklists,
+          individualChecklists);
     }
     return orElse();
   }
@@ -6375,7 +6939,9 @@ abstract class BeneficiaryRegistrationPersistedState
           final AddressModel? addressModel,
           final bool loading,
           final bool isEdit,
-          final bool isHeadOfHousehold}) =
+          final bool isHeadOfHousehold,
+          final List<ServiceModel>? householdChecklists,
+          final List<ServiceModel>? individualChecklists}) =
       _$BeneficiaryRegistrationPersistedStateImpl;
 
   bool get navigateToRoot;
@@ -6392,6 +6958,10 @@ abstract class BeneficiaryRegistrationPersistedState
   bool get loading;
   bool get isEdit;
   bool get isHeadOfHousehold;
+  @override
+  List<ServiceModel>? get householdChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists;
   @override
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationPersistedStateImplCopyWith<
@@ -6417,7 +6987,9 @@ abstract class _$$BeneficiaryRegistrationSummaryStateImplCopyWith<$Res>
       DateTime? registrationDate,
       AddressModel? addressModel,
       bool loading,
-      bool isHeadOfHousehold});
+      bool isHeadOfHousehold,
+      List<ServiceModel>? householdChecklists,
+      List<ServiceModel>? individualChecklists});
 }
 
 /// @nodoc
@@ -6442,6 +7014,8 @@ class __$$BeneficiaryRegistrationSummaryStateImplCopyWithImpl<$Res>
     Object? addressModel = freezed,
     Object? loading = null,
     Object? isHeadOfHousehold = null,
+    Object? householdChecklists = freezed,
+    Object? individualChecklists = freezed,
   }) {
     return _then(_$BeneficiaryRegistrationSummaryStateImpl(
       navigateToRoot: null == navigateToRoot
@@ -6480,6 +7054,14 @@ class __$$BeneficiaryRegistrationSummaryStateImplCopyWithImpl<$Res>
           ? _value.isHeadOfHousehold
           : isHeadOfHousehold // ignore: cast_nullable_to_non_nullable
               as bool,
+      householdChecklists: freezed == householdChecklists
+          ? _value._householdChecklists
+          : householdChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
+      individualChecklists: freezed == individualChecklists
+          ? _value._individualChecklists
+          : individualChecklists // ignore: cast_nullable_to_non_nullable
+              as List<ServiceModel>?,
     ));
   }
 }
@@ -6497,7 +7079,11 @@ class _$BeneficiaryRegistrationSummaryStateImpl
       this.registrationDate,
       this.addressModel,
       this.loading = false,
-      this.isHeadOfHousehold = false});
+      this.isHeadOfHousehold = false,
+      final List<ServiceModel>? householdChecklists,
+      final List<ServiceModel>? individualChecklists})
+      : _householdChecklists = householdChecklists,
+        _individualChecklists = individualChecklists;
 
   @override
   @JsonKey()
@@ -6520,10 +7106,31 @@ class _$BeneficiaryRegistrationSummaryStateImpl
   @override
   @JsonKey()
   final bool isHeadOfHousehold;
+  final List<ServiceModel>? _householdChecklists;
+  @override
+  List<ServiceModel>? get householdChecklists {
+    final value = _householdChecklists;
+    if (value == null) return null;
+    if (_householdChecklists is EqualUnmodifiableListView)
+      return _householdChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<ServiceModel>? _individualChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists {
+    final value = _individualChecklists;
+    if (value == null) return null;
+    if (_individualChecklists is EqualUnmodifiableListView)
+      return _individualChecklists;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.summary(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationState.summary(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, parentClientReferenceId: $parentClientReferenceId, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold, householdChecklists: $householdChecklists, individualChecklists: $individualChecklists)';
   }
 
   @override
@@ -6549,7 +7156,11 @@ class _$BeneficiaryRegistrationSummaryStateImpl
                 other.addressModel == addressModel) &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isHeadOfHousehold, isHeadOfHousehold) ||
-                other.isHeadOfHousehold == isHeadOfHousehold));
+                other.isHeadOfHousehold == isHeadOfHousehold) &&
+            const DeepCollectionEquality()
+                .equals(other._householdChecklists, _householdChecklists) &&
+            const DeepCollectionEquality()
+                .equals(other._individualChecklists, _individualChecklists));
   }
 
   @override
@@ -6563,7 +7174,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
       registrationDate,
       addressModel,
       loading,
-      isHeadOfHousehold);
+      isHeadOfHousehold,
+      const DeepCollectionEquality().hash(_householdChecklists),
+      const DeepCollectionEquality().hash(_individualChecklists));
 
   @JsonKey(ignore: true)
   @override
@@ -6585,7 +7198,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         create,
     required TResult Function(
             AddressModel addressModel,
@@ -6595,7 +7210,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -6603,13 +7220,17 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         editIndividual,
     required TResult Function(
             AddressModel addressModel,
             HouseholdModel householdModel,
             String? parentClientReferenceId,
-            bool loading)
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         addMember,
     required TResult Function(
             bool navigateToRoot,
@@ -6621,7 +7242,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         persisted,
     required TResult Function(
             bool navigateToRoot,
@@ -6632,7 +7255,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)
         summary,
   }) {
     return summary(
@@ -6644,7 +7269,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
         registrationDate,
         addressModel,
         loading,
-        isHeadOfHousehold);
+        isHeadOfHousehold,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -6659,7 +7286,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult? Function(
             AddressModel addressModel,
@@ -6669,7 +7298,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -6677,10 +7308,17 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult? Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult? Function(
             bool navigateToRoot,
@@ -6692,7 +7330,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult? Function(
             bool navigateToRoot,
@@ -6703,7 +7343,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
   }) {
     return summary?.call(
@@ -6715,7 +7357,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
         registrationDate,
         addressModel,
         loading,
-        isHeadOfHousehold);
+        isHeadOfHousehold,
+        householdChecklists,
+        individualChecklists);
   }
 
   @override
@@ -6730,7 +7374,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         create,
     TResult Function(
             AddressModel addressModel,
@@ -6740,7 +7386,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             bool loading,
-            IndividualModel? headOfHousehold)?
+            IndividualModel? headOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -6748,10 +7396,17 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             AddressModel addressModel,
             String? parentClientReferenceId,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         editIndividual,
-    TResult Function(AddressModel addressModel, HouseholdModel householdModel,
-            String? parentClientReferenceId, bool loading)?
+    TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            String? parentClientReferenceId,
+            bool loading,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         addMember,
     TResult Function(
             bool navigateToRoot,
@@ -6763,7 +7418,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             AddressModel? addressModel,
             bool loading,
             bool isEdit,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         persisted,
     TResult Function(
             bool navigateToRoot,
@@ -6774,7 +7431,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
-            bool isHeadOfHousehold)?
+            bool isHeadOfHousehold,
+            List<ServiceModel>? householdChecklists,
+            List<ServiceModel>? individualChecklists)?
         summary,
     required TResult orElse(),
   }) {
@@ -6788,7 +7447,9 @@ class _$BeneficiaryRegistrationSummaryStateImpl
           registrationDate,
           addressModel,
           loading,
-          isHeadOfHousehold);
+          isHeadOfHousehold,
+          householdChecklists,
+          individualChecklists);
     }
     return orElse();
   }
@@ -6857,7 +7518,9 @@ abstract class BeneficiaryRegistrationSummaryState
           final DateTime? registrationDate,
           final AddressModel? addressModel,
           final bool loading,
-          final bool isHeadOfHousehold}) =
+          final bool isHeadOfHousehold,
+          final List<ServiceModel>? householdChecklists,
+          final List<ServiceModel>? individualChecklists}) =
       _$BeneficiaryRegistrationSummaryStateImpl;
 
   bool get navigateToRoot;
@@ -6873,6 +7536,10 @@ abstract class BeneficiaryRegistrationSummaryState
   @override
   bool get loading;
   bool get isHeadOfHousehold;
+  @override
+  List<ServiceModel>? get householdChecklists;
+  @override
+  List<ServiceModel>? get individualChecklists;
   @override
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationSummaryStateImplCopyWith<

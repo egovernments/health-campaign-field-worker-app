@@ -137,6 +137,15 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                         state.selectedIndividual
                                                             ?.clientReferenceId)
                                                     .firstOrNull,
+                                                    individualChecklists:state
+                                                        .householdMemberWrapper
+                                                        .individualChecklists!
+                                                        .where((e) =>
+                                                    e.referenceId ==
+                                                        state
+                                                            .selectedIndividual
+                                                            ?.clientReferenceId)
+                                                        .toList(),
                                               ),
                                               children: [
                                                 IndividualDetailsRoute(),
@@ -147,7 +156,6 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                         label: localizations.translate(
                                           i18.memberCard.editIndividualDetails,
                                         ),
-                                        isDisabled: true,  // TODO: need to check again
                                         type: DigitButtonType.tertiary,
                                         size: DigitButtonSize.medium,
                                         prefixIcon: Icons.edit,
@@ -419,6 +427,14 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                           editMemberAction: () async {
                                             final bloc = context.read<HouseholdOverviewBloc>();
 
+                                            final parentClientReferenceId = bloc
+                                                .state.householdMemberWrapper.householdMembers
+                                                ?.where((e) =>
+                                            e.individualClientReferenceId ==
+                                                state.selectedIndividual?.clientReferenceId)
+                                                .firstOrNull
+                                                ?.clientReferenceId;
+
                                             Navigator.of(
                                               context,
                                               rootNavigator: true,
@@ -446,9 +462,10 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                   householdModel: household!,
                                                   addressModel: address,
                                                   projectBeneficiaryModel: projectBeneficiary?.first,
+                                                  individualChecklists: individualChecklist!=null ? [individualChecklist] : null,
                                                 ),
                                                 children: [
-                                                  IndividualDetailsRoute(),
+                                                  IndividualDetailsRoute( parentClientReferenceId: parentClientReferenceId),
                                                 ],
                                               ),
                                             );

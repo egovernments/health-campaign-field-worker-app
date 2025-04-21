@@ -142,9 +142,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               });
                             }
 
-                            if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
+                            if (RegistrationDeliverySingleton().householdType ==
+                                HouseholdType.family) {
                               bool validForm = checklistKey.currentState
-                                  ?.validateSurveyForm() ??
+                                      ?.validateSurveyForm() ??
                                   false;
 
                               if (validForm == false) return;
@@ -172,20 +173,23 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 searchQuery,
                                 loading,
                                 isHeadOfHousehold,
+                                householdChecklists,
+                                  individualChecklists,
                               ) async {
                                 final individual = _getIndividualModel(
                                   context,
                                   form: form,
                                   oldIndividual: null,
                                 );
-if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
-  checklistKey.currentState?.submitSurvey(
-      latitude: 876765,
-      longitude: 89798,
-      relatedReferenceId:
-      individual.clientReferenceId);
-}
-
+                                if (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.family) {
+                                  checklistKey.currentState?.submitSurvey(
+                                      latitude: 876765,
+                                      longitude: 89798,
+                                      relatedReferenceId:
+                                          individual.clientReferenceId);
+                                }
 
                                 final boundary =
                                     RegistrationDeliverySingleton().boundary;
@@ -240,6 +244,8 @@ if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
                                 parentClientReferenceId,
                                 projectBeneficiaryModel,
                                 loading,
+                                householdChecklists,
+                                  individualChecklists,
                               ) {
                                 final scannerBloc =
                                     context.read<DigitScannerBloc>();
@@ -251,13 +257,7 @@ if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
                                   form: form,
                                   oldIndividual: individualModel,
                                 );
-                                if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
-                                  checklistKey.currentState?.submitSurvey(
-                                      latitude: 876765,
-                                      longitude: 89798,
-                                      relatedReferenceId:
-                                      individual.clientReferenceId);
-                                }
+
 
                                 final tag = scannerBloc.state.qrCodes.isNotEmpty
                                     ? scannerBloc.state.qrCodes.first
@@ -273,6 +273,13 @@ if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
                                       ),
                                       type: ToastType.error);
                                 } else {
+                                  if (RegistrationDeliverySingleton()
+                                      .householdType ==
+                                      HouseholdType.family && state.individualChecklists?.first!=null) {
+                                    checklistKey.currentState?.updateSurvey(
+                                        latitude: addressModel.latitude,
+                                        longitude: addressModel.longitude);
+                                  }
                                   bloc.add(
                                     BeneficiaryRegistrationUpdateIndividualDetailsEvent(
                                       addressModel: addressModel,
@@ -314,6 +321,8 @@ if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
                                 householdModel,
                                 parentClientReferenceId,
                                 loading,
+                                householdChecklists,
+                                  individualChecklists,
                               ) {
                                 final individual = _getIndividualModel(
                                   context,
@@ -673,6 +682,7 @@ if(RegistrationDeliverySingleton().householdType == HouseholdType.family){
                             hideBackAlert: true,
                             useScaffold: false,
                             isChild: widget.parentClientReferenceId != null,
+                            initialService: state.individualChecklists?.first,
                           ),
                         // const SizedBox(height: spacer4),
                         if ((RegistrationDeliverySingleton().beneficiaryType ==
