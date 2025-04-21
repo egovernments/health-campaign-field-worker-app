@@ -163,42 +163,51 @@ class MemberCard extends StatelessWidget {
                 Column(
                   children: [
                     if (individual.identifiers != null)
-                      Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.all(spacer2),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color:
-                                      DigitTheme.instance.colorScheme.primary,
+                      if (individual.identifiers!
+                              .lastWhereOrNull(
+                                (e) =>
+                                    e.identifierType ==
+                                    IdentifierTypes.uniqueBeneficiaryID
+                                        .toValue(),
+                              )
+                              ?.identifierId !=
+                          null)
+                        Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(spacer2),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color:
+                                        DigitTheme.instance.colorScheme.primary,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(spacer2),
+                                  ),
                                 ),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(spacer2),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(
+                                    spacer2,
+                                  ),
+                                  child: Text(
+                                    individual.identifiers
+                                            ?.lastWhereOrNull(
+                                              (e) =>
+                                                  e.identifierType ==
+                                                  IdentifierTypes
+                                                      .uniqueBeneficiaryID
+                                                      .toValue(),
+                                            )
+                                            ?.identifierId ??
+                                        localizations.translate(
+                                            i18.common.noResultsFound),
+                                  ),
                                 ),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(
-                                  spacer2,
-                                ),
-                                child: Text(
-                                  individual.identifiers
-                                          ?.lastWhereOrNull(
-                                            (e) =>
-                                                e.identifierType ==
-                                                IdentifierTypes
-                                                    .uniqueBeneficiaryID
-                                                    .toValue(),
-                                          )
-                                          ?.identifierId ??
-                                      localizations
-                                          .translate(i18.common.noResultsFound),
-                                ),
-                              ),
-                            ),
-                          ))
-                    else
-                      const Offstage(),
+                            ))
+                      else
+                        const Offstage(),
                     Padding(
                       padding: const EdgeInsets.all(spacer2),
                       child: Row(
