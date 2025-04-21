@@ -207,7 +207,7 @@ class ProgressDialog {
                 progressValue == 1.0
                     ? DigitButton(
                         capitalizeLetters: false,
-                        type: DigitButtonType.tertiary,
+                        type: DigitButtonType.secondary,
                         size: DigitButtonSize.large,
                         mainAxisSize: MainAxisSize.max,
                         onPressed: () {

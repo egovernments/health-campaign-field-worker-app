@@ -324,8 +324,8 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                                         ? theme.colorTheme.alert.error
                                         : theme.colorTheme.primary.primary2)),
                         Text(
-                            localizations.translate(i18.beneficiaryDetails
-                                .availableBeneficiaryIdsLabel),
+                            localizations.translate(
+                                i18.beneficiaryDetails.noOfBeneficiaryIdsLeft),
                             style: textTheme.bodyS.copyWith(
                                 fontSize: 14,
                                 color:
@@ -344,7 +344,9 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                   title: localizations
                       .translate(i18.beneficiaryDetails.lowBeneficiaryIdsLabel),
                   type: InfoType.error,
-                  description: i18.beneficiaryDetails.lowBeneficiaryIdsText)
+                  capitalizedLetter: true,
+                  description: localizations
+                      .translate(i18.beneficiaryDetails.lowBeneficiaryIdsText))
               : const Offstage(),
           DigitCard(margin: const EdgeInsets.all(spacer4), children: [
             Row(
