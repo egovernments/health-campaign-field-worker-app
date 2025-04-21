@@ -1,6 +1,6 @@
 name: sync_service
 description: "Sync Service package provides access to sync to offline applications"
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/sync_service
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
