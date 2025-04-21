@@ -16,6 +16,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 void showLowIdsAlert(
     {required BuildContext context,
     required RegistrationDeliveryLocalization localizations,
+    required int availableCount,
     required Function(bool proceed) shouldProceedFurther}) {
   showCustomPopup(
       context: context,
@@ -56,7 +57,8 @@ void showLowIdsAlert(
           title: localizations
               .translate(i18.beneficiaryDetails.lowBeneficiaryIdsLabel),
           description: localizations
-              .translate(i18.beneficiaryDetails.lowBeneficiaryIdsText),
+              .translate(i18.beneficiaryDetails.lowBeneficiaryIdsAlertText)
+              .replaceAll('{}', availableCount.toString()),
         );
       });
 }
