@@ -434,8 +434,8 @@ class _SearchBeneficiaryPageState
                           DigitSyncDialog.show(
                             context,
                             type: DialogType.failed,
-                            label:
-                                i18.beneficiaryDetails.beneficiaryIdsLimitError,
+                            label: localizations.translate(i18
+                                .beneficiaryDetails.beneficiaryIdsLimitError),
                             primaryAction: DigitDialogActions(
                               label:
                                   RegistrationDeliveryLocalization.of(context)
