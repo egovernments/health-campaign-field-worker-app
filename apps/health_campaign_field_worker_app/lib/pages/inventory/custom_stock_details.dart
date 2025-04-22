@@ -1845,6 +1845,7 @@ class CustomStockDetailsPageState
                                       i18_local.stockDetailsReceiptShowcase
                                           .driverName,
                                     ),
+                                    isRequired: true,
                                     formControlName: _driverNameKey,
                                     validationMessages: {
                                       'required': (object) =>
