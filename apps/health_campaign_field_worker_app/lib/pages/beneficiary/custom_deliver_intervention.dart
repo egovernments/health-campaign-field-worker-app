@@ -1008,13 +1008,13 @@ class CustomDeliverInterventionPageState
     final household = householdMemberWrapper.household;
     final additionalFields = household?.additionalFields?.fields;
 
-    if (additionalFields == null) return 0;
+    if (additionalFields == null) return 1;
 
     final bedField = additionalFields.firstWhereOrNull(
       (field) => field.key == 'noOfBedCount',
     );
 
-    return int.tryParse(bedField?.value ?? '0') ?? 0;
+    return int.tryParse(bedField?.value ?? '1') ?? 1;
   }
 
   dynamic getBednetCount(HouseholdMemberWrapper householdMemberWrapper) {
