@@ -87,7 +87,7 @@ class CustomStockDetailsPageState
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
-        validators: [],
+        validators: [Validators.required],
       ),
       _balesQuantityKey: FormControl<int>(
         validators: [
