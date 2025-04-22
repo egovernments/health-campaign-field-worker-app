@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 
 class ServiceAttributes extends Table {
+  TextColumn get id => text().nullable()();
   TextColumn get attributeCode => text().nullable()();
   TextColumn get value => text().nullable()();
   TextColumn get dataType => text().nullable()();

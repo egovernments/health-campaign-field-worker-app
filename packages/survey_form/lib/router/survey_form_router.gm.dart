@@ -75,6 +75,7 @@ abstract class $SurveyFormRoute extends _i7.AutoRouterModule {
           age: args.age,
           gender: args.gender,
           isChild: args.isChild,
+          initialService: args.initialService,
         ),
       );
     },
@@ -254,6 +255,7 @@ class SurveyFormViewRoute extends _i7.PageRouteInfo<SurveyFormViewRouteArgs> {
     DateTime? age,
     String? gender,
     bool isChild = false,
+    _i10.ServiceModel? initialService,
     List<_i7.PageRouteInfo>? children,
   }) : super(
           SurveyFormViewRoute.name,
@@ -268,6 +270,7 @@ class SurveyFormViewRoute extends _i7.PageRouteInfo<SurveyFormViewRouteArgs> {
             age: age,
             gender: gender,
             isChild: isChild,
+            initialService: initialService,
           ),
           initialChildren: children,
         );
@@ -290,6 +293,7 @@ class SurveyFormViewRouteArgs {
     this.age,
     this.gender,
     this.isChild = false,
+    this.initialService,
   });
 
   final _i8.Key? key;
@@ -312,9 +316,11 @@ class SurveyFormViewRouteArgs {
 
   final bool isChild;
 
+  final _i10.ServiceModel? initialService;
+
   @override
   String toString() {
-    return 'SurveyFormViewRouteArgs{key: $key, appLocalizations: $appLocalizations, hideFooter: $hideFooter, hideHeader: $hideHeader, hideBackAlert: $hideBackAlert, checklistType: $checklistType, useScaffold: $useScaffold, age: $age, gender: $gender, isChild: $isChild}';
+    return 'SurveyFormViewRouteArgs{key: $key, appLocalizations: $appLocalizations, hideFooter: $hideFooter, hideHeader: $hideHeader, hideBackAlert: $hideBackAlert, checklistType: $checklistType, useScaffold: $useScaffold, age: $age, gender: $gender, isChild: $isChild, initialService: $initialService}';
   }
 }
 

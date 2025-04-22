@@ -10,10 +10,12 @@ class ServiceAttributesSearchModel extends EntitySearchModel
     with ServiceAttributesSearchModelMappable {
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final String? id;
 
   ServiceAttributesSearchModel({
     this.clientReferenceId,
     this.tenantId,
+    this.id,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -22,6 +24,7 @@ class ServiceAttributesSearchModel extends EntitySearchModel
   ServiceAttributesSearchModel.ignoreDeleted({
     this.clientReferenceId,
     this.tenantId,
+    this.id,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
@@ -30,7 +33,7 @@ class ServiceAttributesSearchModel extends EntitySearchModel
 class ServiceAttributesModel extends EntityModel
     with ServiceAttributesModelMappable {
   static const schemaName = 'ServiceAttributes';
-
+  final String? id;
   final String? attributeCode;
   final dynamic value;
   final String? dataType;
@@ -43,6 +46,7 @@ class ServiceAttributesModel extends EntityModel
   final ServiceAttributesAdditionalFields? additionalFields;
 
   ServiceAttributesModel({
+    this.id,
     this.additionalFields,
     this.attributeCode,
     this.value,
@@ -73,6 +77,7 @@ class ServiceAttributesModel extends EntityModel
       isDeleted: Value(isDeleted),
       attributeCode: Value(attributeCode),
       value: Value(value),
+      id: Value(id),
       dataType: Value(dataType),
       referenceId: Value(referenceId),
       additionalDetails: Value(additionalDetails),

@@ -30,6 +30,9 @@ class ServiceAttributesSearchModelMapper
   static String? _$tenantId(ServiceAttributesSearchModel v) => v.tenantId;
   static const Field<ServiceAttributesSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static String? _$id(ServiceAttributesSearchModel v) => v.id;
+  static const Field<ServiceAttributesSearchModel, String> _f$id =
+      Field('id', _$id, opt: true);
   static String? _$boundaryCode(ServiceAttributesSearchModel v) =>
       v.boundaryCode;
   static const Field<ServiceAttributesSearchModel, String> _f$boundaryCode =
@@ -49,6 +52,7 @@ class ServiceAttributesSearchModelMapper
   final MappableFields<ServiceAttributesSearchModel> fields = const {
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
+    #id: _f$id,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -68,6 +72,7 @@ class ServiceAttributesSearchModelMapper
     return ServiceAttributesSearchModel.ignoreDeleted(
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
+        id: data.dec(_f$id),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -136,6 +141,7 @@ abstract class ServiceAttributesSearchModelCopyWith<
   $R call(
       {List<String>? clientReferenceId,
       String? tenantId,
+      String? id,
       String? boundaryCode});
   ServiceAttributesSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -164,10 +170,12 @@ class _ServiceAttributesSearchModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? clientReferenceId = $none,
           Object? tenantId = $none,
+          Object? id = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
+        if (id != $none) #id: id,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -176,6 +184,7 @@ class _ServiceAttributesSearchModelCopyWithImpl<$R, $Out>
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
+          id: data.get(#id, or: $value.id),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
@@ -199,6 +208,9 @@ class ServiceAttributesModelMapper
   @override
   final String id = 'ServiceAttributesModel';
 
+  static String? _$id(ServiceAttributesModel v) => v.id;
+  static const Field<ServiceAttributesModel, String> _f$id =
+      Field('id', _$id, opt: true);
   static ServiceAttributesAdditionalFields? _$additionalFields(
           ServiceAttributesModel v) =>
       v.additionalFields;
@@ -251,6 +263,7 @@ class ServiceAttributesModelMapper
 
   @override
   final MappableFields<ServiceAttributesModel> fields = const {
+    #id: _f$id,
     #additionalFields: _f$additionalFields,
     #attributeCode: _f$attributeCode,
     #value: _f$value,
@@ -278,6 +291,7 @@ class ServiceAttributesModelMapper
 
   static ServiceAttributesModel _instantiate(DecodingData data) {
     return ServiceAttributesModel(
+        id: data.dec(_f$id),
         additionalFields: data.dec(_f$additionalFields),
         attributeCode: data.dec(_f$attributeCode),
         value: data.dec(_f$value),
@@ -361,7 +375,8 @@ abstract class ServiceAttributesModelCopyWith<
       get clientAuditDetails;
   @override
   $R call(
-      {ServiceAttributesAdditionalFields? additionalFields,
+      {String? id,
+      ServiceAttributesAdditionalFields? additionalFields,
       String? attributeCode,
       dynamic value,
       String? dataType,
@@ -401,7 +416,8 @@ class _ServiceAttributesModelCopyWithImpl<$R, $Out>
           .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
-          {Object? additionalFields = $none,
+          {Object? id = $none,
+          Object? additionalFields = $none,
           Object? attributeCode = $none,
           Object? value = $none,
           Object? dataType = $none,
@@ -415,6 +431,7 @@ class _ServiceAttributesModelCopyWithImpl<$R, $Out>
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
+        if (id != $none) #id: id,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (attributeCode != $none) #attributeCode: attributeCode,
         if (value != $none) #value: value,
@@ -433,6 +450,7 @@ class _ServiceAttributesModelCopyWithImpl<$R, $Out>
       }));
   @override
   ServiceAttributesModel $make(CopyWithData data) => ServiceAttributesModel(
+      id: data.get(#id, or: $value.id),
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       attributeCode: data.get(#attributeCode, or: $value.attributeCode),

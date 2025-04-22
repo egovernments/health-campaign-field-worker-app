@@ -22443,6 +22443,11 @@ class $ServiceAttributesTable extends ServiceAttributes
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ServiceAttributesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _attributeCodeMeta =
       const VerificationMeta('attributeCode');
   @override
@@ -22566,6 +22571,7 @@ class $ServiceAttributesTable extends ServiceAttributes
       type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
+        id,
         attributeCode,
         value,
         dataType,
@@ -22596,6 +22602,9 @@ class $ServiceAttributesTable extends ServiceAttributes
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('attribute_code')) {
       context.handle(
           _attributeCodeMeta,
@@ -22711,6 +22720,8 @@ class $ServiceAttributesTable extends ServiceAttributes
   ServiceAttribute map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ServiceAttribute(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
       attributeCode: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}attribute_code']),
       value: attachedDatabase.typeMapping
@@ -22760,6 +22771,7 @@ class $ServiceAttributesTable extends ServiceAttributes
 
 class ServiceAttribute extends DataClass
     implements Insertable<ServiceAttribute> {
+  final String? id;
   final String? attributeCode;
   final String? value;
   final String? dataType;
@@ -22780,7 +22792,8 @@ class ServiceAttribute extends DataClass
   final int? rowVersion;
   final String? additionalFields;
   const ServiceAttribute(
-      {this.attributeCode,
+      {this.id,
+      this.attributeCode,
       this.value,
       this.dataType,
       this.referenceId,
@@ -22802,6 +22815,9 @@ class ServiceAttribute extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
     if (!nullToAbsent || attributeCode != null) {
       map['attribute_code'] = Variable<String>(attributeCode);
     }
@@ -22864,6 +22880,7 @@ class ServiceAttribute extends DataClass
 
   ServiceAttributesCompanion toCompanion(bool nullToAbsent) {
     return ServiceAttributesCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       attributeCode: attributeCode == null && nullToAbsent
           ? const Value.absent()
           : Value(attributeCode),
@@ -22927,6 +22944,7 @@ class ServiceAttribute extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ServiceAttribute(
+      id: serializer.fromJson<String?>(json['id']),
       attributeCode: serializer.fromJson<String?>(json['attributeCode']),
       value: serializer.fromJson<String?>(json['value']),
       dataType: serializer.fromJson<String?>(json['dataType']),
@@ -22955,6 +22973,7 @@ class ServiceAttribute extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
       'attributeCode': serializer.toJson<String?>(attributeCode),
       'value': serializer.toJson<String?>(value),
       'dataType': serializer.toJson<String?>(dataType),
@@ -22978,7 +22997,8 @@ class ServiceAttribute extends DataClass
   }
 
   ServiceAttribute copyWith(
-          {Value<String?> attributeCode = const Value.absent(),
+          {Value<String?> id = const Value.absent(),
+          Value<String?> attributeCode = const Value.absent(),
           Value<String?> value = const Value.absent(),
           Value<String?> dataType = const Value.absent(),
           Value<String?> referenceId = const Value.absent(),
@@ -22998,6 +23018,7 @@ class ServiceAttribute extends DataClass
           Value<int?> rowVersion = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       ServiceAttribute(
+        id: id.present ? id.value : this.id,
         attributeCode:
             attributeCode.present ? attributeCode.value : this.attributeCode,
         value: value.present ? value.value : this.value,
@@ -23045,6 +23066,7 @@ class ServiceAttribute extends DataClass
   @override
   String toString() {
     return (StringBuffer('ServiceAttribute(')
+          ..write('id: $id, ')
           ..write('attributeCode: $attributeCode, ')
           ..write('value: $value, ')
           ..write('dataType: $dataType, ')
@@ -23070,6 +23092,7 @@ class ServiceAttribute extends DataClass
 
   @override
   int get hashCode => Object.hash(
+      id,
       attributeCode,
       value,
       dataType,
@@ -23093,6 +23116,7 @@ class ServiceAttribute extends DataClass
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ServiceAttribute &&
+          other.id == this.id &&
           other.attributeCode == this.attributeCode &&
           other.value == this.value &&
           other.dataType == this.dataType &&
@@ -23115,6 +23139,7 @@ class ServiceAttribute extends DataClass
 }
 
 class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
+  final Value<String?> id;
   final Value<String?> attributeCode;
   final Value<String?> value;
   final Value<String?> dataType;
@@ -23136,6 +23161,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const ServiceAttributesCompanion({
+    this.id = const Value.absent(),
     this.attributeCode = const Value.absent(),
     this.value = const Value.absent(),
     this.dataType = const Value.absent(),
@@ -23158,6 +23184,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     this.rowid = const Value.absent(),
   });
   ServiceAttributesCompanion.insert({
+    this.id = const Value.absent(),
     this.attributeCode = const Value.absent(),
     this.value = const Value.absent(),
     this.dataType = const Value.absent(),
@@ -23180,6 +23207,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     this.rowid = const Value.absent(),
   });
   static Insertable<ServiceAttribute> custom({
+    Expression<String>? id,
     Expression<String>? attributeCode,
     Expression<String>? value,
     Expression<String>? dataType,
@@ -23202,6 +23230,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (attributeCode != null) 'attribute_code': attributeCode,
       if (value != null) 'value': value,
       if (dataType != null) 'data_type': dataType,
@@ -23228,7 +23257,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
   }
 
   ServiceAttributesCompanion copyWith(
-      {Value<String?>? attributeCode,
+      {Value<String?>? id,
+      Value<String?>? attributeCode,
       Value<String?>? value,
       Value<String?>? dataType,
       Value<String?>? referenceId,
@@ -23249,6 +23279,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return ServiceAttributesCompanion(
+      id: id ?? this.id,
       attributeCode: attributeCode ?? this.attributeCode,
       value: value ?? this.value,
       dataType: dataType ?? this.dataType,
@@ -23275,6 +23306,9 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
     if (attributeCode.present) {
       map['attribute_code'] = Variable<String>(attributeCode.value);
     }
@@ -23341,6 +23375,7 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
   @override
   String toString() {
     return (StringBuffer('ServiceAttributesCompanion(')
+          ..write('id: $id, ')
           ..write('attributeCode: $attributeCode, ')
           ..write('value: $value, ')
           ..write('dataType: $dataType, ')
@@ -49496,6 +49531,7 @@ class $$ServiceTableOrderingComposer
 
 typedef $$ServiceAttributesTableInsertCompanionBuilder
     = ServiceAttributesCompanion Function({
+  Value<String?> id,
   Value<String?> attributeCode,
   Value<String?> value,
   Value<String?> dataType,
@@ -49519,6 +49555,7 @@ typedef $$ServiceAttributesTableInsertCompanionBuilder
 });
 typedef $$ServiceAttributesTableUpdateCompanionBuilder
     = ServiceAttributesCompanion Function({
+  Value<String?> id,
   Value<String?> attributeCode,
   Value<String?> value,
   Value<String?> dataType,
@@ -49562,6 +49599,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
           getChildManagerBuilder: (p) =>
               $$ServiceAttributesTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
             Value<String?> attributeCode = const Value.absent(),
             Value<String?> value = const Value.absent(),
             Value<String?> dataType = const Value.absent(),
@@ -49584,6 +49622,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             Value<int> rowid = const Value.absent(),
           }) =>
               ServiceAttributesCompanion(
+            id: id,
             attributeCode: attributeCode,
             value: value,
             dataType: dataType,
@@ -49606,6 +49645,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
+            Value<String?> id = const Value.absent(),
             Value<String?> attributeCode = const Value.absent(),
             Value<String?> value = const Value.absent(),
             Value<String?> dataType = const Value.absent(),
@@ -49628,6 +49668,7 @@ class $$ServiceAttributesTableTableManager extends RootTableManager<
             Value<int> rowid = const Value.absent(),
           }) =>
               ServiceAttributesCompanion.insert(
+            id: id,
             attributeCode: attributeCode,
             value: value,
             dataType: dataType,
@@ -49668,6 +49709,11 @@ class $$ServiceAttributesTableProcessedTableManager
 class $$ServiceAttributesTableFilterComposer
     extends FilterComposer<_$LocalSqlDataStore, $ServiceAttributesTable> {
   $$ServiceAttributesTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<String> get attributeCode => $state.composableBuilder(
       column: $state.table.attributeCode,
       builder: (column, joinBuilders) =>
@@ -49767,6 +49813,11 @@ class $$ServiceAttributesTableFilterComposer
 class $$ServiceAttributesTableOrderingComposer
     extends OrderingComposer<_$LocalSqlDataStore, $ServiceAttributesTable> {
   $$ServiceAttributesTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
   ColumnOrderings<String> get attributeCode => $state.composableBuilder(
       column: $state.table.attributeCode,
       builder: (column, joinBuilders) =>
