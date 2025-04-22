@@ -564,77 +564,81 @@ class MemberCard extends StatelessWidget {
                 const SizedBox(
                   height: spacer2,
                 ),
-                if (showAddChildAction)
-                  Row(
-                    children: [
-                      if((children ?? []).isNotEmpty)
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: DigitButton(
-                            label:
-                            '${localizations.translate(i18.memberCard.noOfChildren)} ${children?.length}',
-                            onPressed: () {
-                              context.read<ParentOverviewBloc>().add(
-                                  ParentOverviewEvent.selectedIndividual(
-                                      individualModel: individual));
-                              context.router.push(ParentOverviewRoute());
-                            },
-                            type: DigitButtonType.tertiary,
-                            size: DigitButtonSize.medium),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          if (showAddChildAction)
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: DigitButton(
+                                label:
+                                localizations.translate(i18.memberCard.addChildLabel),
+                                type: DigitButtonType.tertiary,
+                                prefixIcon: Icons.add_circle_outline,
+                                size: DigitButtonSize.medium,
+                                onPressed: () async {
+                                  if (household != null) {
+                                    final bloc = context.read<HouseholdOverviewBloc>();
+
+                                    final address = household?.address;
+
+                                    final parentClientReferenceId = bloc
+                                        .state.householdMemberWrapper.householdMembers
+                                        ?.where((e) =>
+                                    e.individualClientReferenceId ==
+                                        individual.clientReferenceId)
+                                        .firstOrNull
+                                        ?.clientReferenceId;
+
+                                    if (address == null) return;
+                                    bloc.add(
+                                      HouseholdOverviewReloadEvent(
+                                        projectId:
+                                        RegistrationDeliverySingleton().projectId!,
+                                        projectBeneficiaryType:
+                                        RegistrationDeliverySingleton()
+                                            .beneficiaryType!,
+                                      ),
+                                    );
+                                    await context.router.root.push(
+                                      BeneficiaryRegistrationWrapperRoute(
+                                        initialState:
+                                        BeneficiaryRegistrationAddMemberState(
+                                            addressModel: address,
+                                            householdModel: household!,
+                                            parentClientReferenceId: parentClientReferenceId
+                                        ),
+                                        children: [
+                                          IndividualDetailsRoute(
+                                              parentClientReferenceId:
+                                              parentClientReferenceId),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          if((children ?? []).isNotEmpty)
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: DigitButton(
+                                label:
+                                '${localizations.translate(i18.memberCard.noOfChildren)} ${children?.length}',
+                                onPressed: () {
+                                  context.read<ParentOverviewBloc>().add(
+                                      ParentOverviewEvent.selectedIndividual(
+                                          individualModel: individual));
+                                  context.router.push(ParentOverviewRoute());
+                                },
+                                type: DigitButtonType.tertiary,
+                                size: DigitButtonSize.medium),
+                          ),
+                        ],
                       ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: DigitButton(
-                          label:
-                          localizations.translate(i18.memberCard.addChildLabel),
-                          type: DigitButtonType.tertiary,
-                          prefixIcon: Icons.add_circle_outline,
-                          size: DigitButtonSize.medium,
-                          onPressed: () async {
-                            if (household != null) {
-                              final bloc = context.read<HouseholdOverviewBloc>();
 
-                              final address = household?.address;
-
-                              final parentClientReferenceId = bloc
-                                  .state.householdMemberWrapper.householdMembers
-                                  ?.where((e) =>
-                              e.individualClientReferenceId ==
-                                  individual.clientReferenceId)
-                                  .firstOrNull
-                                  ?.clientReferenceId;
-
-                              if (address == null) return;
-                              bloc.add(
-                                HouseholdOverviewReloadEvent(
-                                  projectId:
-                                  RegistrationDeliverySingleton().projectId!,
-                                  projectBeneficiaryType:
-                                  RegistrationDeliverySingleton()
-                                      .beneficiaryType!,
-                                ),
-                              );
-                              await context.router.root.push(
-                                BeneficiaryRegistrationWrapperRoute(
-                                  initialState:
-                                  BeneficiaryRegistrationAddMemberState(
-                                      addressModel: address,
-                                      householdModel: household!,
-                                      parentClientReferenceId: parentClientReferenceId
-                                  ),
-                                  children: [
-                                    IndividualDetailsRoute(
-                                        parentClientReferenceId:
-                                        parentClientReferenceId),
-                                  ],
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  )
               ])
         ]);
   }

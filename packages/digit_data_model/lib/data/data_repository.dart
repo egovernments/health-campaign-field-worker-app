@@ -179,6 +179,16 @@ abstract class RemoteRepository<D extends EntityModel,
     );
   }
 
+  FutureOr<Response> singleUpdate(D entity) async {
+    return await dio.post(
+      updatePath,
+      data: {
+        'Service': entity.toMap(),
+        "apiOperation": "UPDATE",
+      },
+    );
+  }
+
   FutureOr<Map<String, dynamic>> downSync(
     R query, {
     int? offSet,
@@ -441,8 +451,8 @@ abstract class LocalRepository<D extends EntityModel,
 
   @override
   @mustCallSuper
-  FutureOr<void> update(D entity, {bool createOpLog = true}) async {
-    if (createOpLog) await createOplogEntry(entity, DataOperation.update);
+  FutureOr<void> update(D entity, {bool createOpLog = true, DataOperation dataOperation = DataOperation.update,}) async {
+    if (createOpLog) await createOplogEntry(entity, dataOperation);
   }
 
   @override

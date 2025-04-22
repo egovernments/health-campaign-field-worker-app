@@ -362,10 +362,9 @@ packages:
   complaints:
     dependency: "direct main"
     description:
-      name: complaints
-      sha256: cba8a9d32754fa28a0987d844b9b050aacb5c62a7345dfd41254f26b0bb4f0ea
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/complaints"
+      relative: true
+    source: path
     version: "1.0.2+1"
   connectivity_plus:
     dependency: "direct main"

@@ -894,6 +894,16 @@ class SyncServiceMapper extends SyncEntityMapperListener {
       );
     }
 
+    if (updatedEntity is ServiceModel) {
+//TODO:
+      // updatedEntity = updatedEntity.copyWith(
+      //   address: updatedEntity.address?.copyWith(
+      //     id: updatedEntity.address?.id ?? addressId,
+      //   ),
+      // );
+      return updatedEntity;
+    }
+
     if (updatedEntity is IndividualModel) {
       final identifierId = e.additionalIds.firstWhereOrNull(
         (element) {

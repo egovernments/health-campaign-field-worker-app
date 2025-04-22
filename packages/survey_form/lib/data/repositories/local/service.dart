@@ -214,11 +214,57 @@ class ServiceLocalRepository
   FutureOr<void> update(
       ServiceModel entity, {
         bool createOpLog = true,
+        DataOperation dataOperation = DataOperation.singleUpdate,
       }) async {
     return retryLocalCallOperation(() async {
       final serviceCompanion = entity.companion;
 
       final attributes = entity.attributes;
+
+      // transformation logic to send attributes values in proper format
+      final transformedAttributesForLocal = attributes?.map((e) {
+        final value = e.value;
+
+        return e.value is List
+            ? e.copyWith(
+          value: value.join('.'),
+          additionalDetails: e.additionalDetails != null
+              ? {"value": e.additionalDetails}
+              : null,
+        )
+            : e.dataType == 'SingleValueList'
+            ? e.copyWith(
+          additionalDetails: e.additionalDetails != null
+              ? {"value": e.additionalDetails}
+              : null,
+        )
+            : e;
+      }).toList();
+
+
+      // transform attributes value for local update
+      final transformedAttributesForServer = attributes?.map((e) {
+        final value = e.value;
+
+        return e.dataType == 'Number'
+            ? e.copyWith(value: int.tryParse('$value'))
+            : value is String &&
+            value.contains('.')
+            ? e.copyWith(
+          value: value.split('.'),
+          additionalDetails: e.additionalDetails != null
+              ? {"value": e.additionalDetails}
+              : null,
+        )
+            : e.dataType == 'SingleValueList'
+            ? e.copyWith(
+          additionalDetails: e.additionalDetails != null
+              ? {"value": e.additionalDetails}
+              : null,
+        )
+            : e;
+      }).toList();
+
 
       await sql.batch((batch) async {
         batch.update(
@@ -230,8 +276,8 @@ class ServiceLocalRepository
         );
 
         // Update each attributes individually with correct where clause
-        if (attributes != null && attributes.isNotEmpty) {
-          for (final attribute in attributes) {
+        if (transformedAttributesForLocal != null && transformedAttributesForLocal.isNotEmpty) {
+          for (final attribute in transformedAttributesForLocal) {
             batch.update(
               sql.serviceAttributes,
               attribute.companion,
@@ -244,7 +290,24 @@ class ServiceLocalRepository
 
       });
 
-      await super.update(entity, createOpLog: createOpLog);
+      // Create a new entity with transformed attributes to pass to super.update
+      final updatedEntity = ServiceModel(
+        id: entity.id,
+        clientId: entity.clientId,
+        referenceId: entity.referenceId,
+        serviceDefId: entity.serviceDefId,
+        isActive: entity.isActive,
+        accountId: entity.accountId,
+        tenantId: entity.tenantId,
+        isDeleted: entity.isDeleted,
+        rowVersion: entity.rowVersion,
+        additionalFields: entity.additionalFields,
+        auditDetails: entity.auditDetails,
+        clientAuditDetails: entity.clientAuditDetails,
+        attributes: transformedAttributesForServer,
+      );
+
+      await super.update(updatedEntity, dataOperation: DataOperation.singleUpdate,createOpLog: createOpLog);
     });
   }
 
