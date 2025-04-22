@@ -154,6 +154,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const memberRelationshipIdKey = 'memberRelationshipId';
     const memberRelationshipSelfIdKey = 'memberRelationshipSelfId';
     const memberRelationshipRelativeIdKey = 'memberRelationshipRelativeId';
+    const serviceAttributesIdKey = 'serviceAttributesId';
 
     switch (typeGroupedEntity.key) {
       case DataModelType.individual:
@@ -772,6 +773,18 @@ class SyncServiceMapper extends SyncEntityMapperListener {
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientId,
                 serverGeneratedId: serverGeneratedId,
+                additionalIds: responseEntity?.attributes
+                    ?.map((e) {
+                  final id = e.id;
+                  if (id == null) return null;
+
+                  return AdditionalId(
+                    idType: serviceAttributesIdKey,
+                    id: id,
+                  );
+                })
+                    .whereNotNull()
+                    .toList(),
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
               ),
@@ -879,6 +892,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const memberRelationshipIdKey = 'memberRelationshipId';
     const memberRelationshipSelfIdKey = 'memberRelationshipSelfId';
     const memberRelationshipRelativeIdKey = 'memberRelationshipRelativeId';
+    const serviceAttributesIdKey = 'serviceAttributesId';
 
     if (updatedEntity is HouseholdModel) {
       final addressId = e.additionalIds.firstWhereOrNull(
@@ -895,12 +909,26 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     }
 
     if (updatedEntity is ServiceModel) {
-//TODO:
-      // updatedEntity = updatedEntity.copyWith(
-      //   address: updatedEntity.address?.copyWith(
-      //     id: updatedEntity.address?.id ?? addressId,
-      //   ),
-      // );
+
+      final attributeIds = e.additionalIds
+          .where((element) => element.idType == serviceAttributesIdKey)
+          .map((e) => e.id)
+          .toList();
+
+      updatedEntity = updatedEntity.copyWith(
+        attributes: updatedEntity.attributes?.asMap().entries.map((entry) {
+          final index = entry.key;
+          final attribute = entry.value;
+
+          final attributeId = (index < attributeIds.length)
+              ? attributeIds[index]
+              : serverGeneratedId;
+
+          return attribute.copyWith(
+            id: attribute.id ?? attributeId,
+          );
+        }).toList(),
+      );
       return updatedEntity;
     }
 

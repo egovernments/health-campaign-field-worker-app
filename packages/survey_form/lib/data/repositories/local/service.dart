@@ -176,6 +176,7 @@ class ServiceLocalRepository
           final attribute = e.readTableOrNull(sql.serviceAttributes);
           if (attribute != null) {
             return ServiceAttributesModel(
+              id: attribute.id,
                 clientReferenceId: attribute.clientReferenceId,
                 attributeCode: attribute.attributeCode,
                 value: attribute.value,
@@ -195,6 +196,7 @@ class ServiceLocalRepository
         serviceList.add(ServiceModel(
             clientId: data.clientId,
             id: data.id,
+            accountId: data.accountId,
             tenantId: data.tenantId,
             rowVersion: data.rowVersion,
             isActive: data.isActive,
