@@ -204,6 +204,7 @@ class HouseholdMemberLocalRepository
   FutureOr<void> update(
     HouseholdMemberModel entity, {
     bool createOpLog = true,
+        DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final householdMemberCompanion = entity.companion;

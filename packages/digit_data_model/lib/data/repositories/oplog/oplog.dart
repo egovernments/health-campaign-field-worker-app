@@ -36,6 +36,16 @@ abstract class OpLogManager<T extends EntityModel> {
         .createdByEqualTo(createdBy)
         .findAllSync();
 
+    final singleUpdateOpLogs = isar.opLogs
+        .filter()
+        .entityTypeEqualTo(type)
+        .operationEqualTo(DataOperation.singleUpdate)
+        .serverGeneratedIdIsNotNull()
+        .syncedUpEqualTo(false)
+        .syncedDownEqualTo(false)
+        .createdByEqualTo(createdBy)
+        .findAllSync();
+
     final updateOpLogs = isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
@@ -82,6 +92,7 @@ abstract class OpLogManager<T extends EntityModel> {
       updateOpLogs,
       deleteOpLogs,
       singleCreateOpLogs,
+      singleUpdateOpLogs,
       errorOpLogs,
       nonRecoverableOpLogs,
     ].expand((element) => element);
