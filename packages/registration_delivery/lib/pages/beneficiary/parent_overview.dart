@@ -519,7 +519,7 @@ class _ParentOverviewPageState extends LocalizedState<ParentOverviewPage> {
                                                     ]);
                                               },
                                             );
-                                          }, setAsHeadAction: () {  }, showAddChildAction: false,
+                                          }, setAsHeadAction: null, showAddChildAction: false,
                                         );
                                       },
                                     ).toList(),

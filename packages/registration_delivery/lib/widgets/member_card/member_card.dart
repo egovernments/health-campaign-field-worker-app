@@ -40,7 +40,7 @@ class MemberCard extends StatelessWidget {
   final List<ProjectBeneficiaryModel>? projectBeneficiaries;
   final bool isDelivered;
   final bool showAddChildAction;
-  final VoidCallback setAsHeadAction;
+  final VoidCallback? setAsHeadAction;
   final VoidCallback editMemberAction;
   final VoidCallback deleteMemberAction;
   final RegistrationDeliveryLocalization localizations;
@@ -65,7 +65,7 @@ class MemberCard extends StatelessWidget {
     this.showAddChildAction = true,
     required this.localizations,
     required this.isDelivered,
-    required this.setAsHeadAction,
+    this.setAsHeadAction,
     required this.editMemberAction,
     required this.deleteMemberAction,
     this.projectBeneficiaries,
@@ -113,19 +113,7 @@ class MemberCard extends StatelessWidget {
                     Positioned(
                       child: Align(
                         alignment: Alignment.topRight,
-                        child: (children ?? []).isNotEmpty
-                            ? DigitButton(
-                            label:
-                            '${localizations.translate(i18.memberCard.noOfChildren)} ${children?.length}',
-                            onPressed: () {
-                              context.read<ParentOverviewBloc>().add(
-                                  ParentOverviewEvent.selectedIndividual(
-                                      individualModel: individual));
-                              context.router.push(ParentOverviewRoute());
-                            },
-                            type: DigitButtonType.tertiary,
-                            size: DigitButtonSize.medium)
-                            : DigitButton(
+                        child: DigitButton(
                           isDisabled:
                           (projectBeneficiaries ?? []).isEmpty,
                           onPressed: () => showDialog(
@@ -147,8 +135,8 @@ class MemberCard extends StatelessWidget {
                                     i18.memberCard
                                         .assignAsHouseholdhead,
                                   ),
-                                  isDisabled: isHead ? true : false,
-                                  onPressed: setAsHeadAction,
+                                  isDisabled: isHead  || setAsHeadAction == null? true : false,
+                                  onPressed: setAsHeadAction!= null ? setAsHeadAction! : () {},
                                   type: DigitButtonType.secondary,
                                   size: DigitButtonSize.large,
                                 ),
@@ -577,56 +565,75 @@ class MemberCard extends StatelessWidget {
                   height: spacer2,
                 ),
                 if (showAddChildAction)
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: DigitButton(
-                      label:
-                      localizations.translate(i18.memberCard.addChildLabel),
-                      type: DigitButtonType.tertiary,
-                      prefixIcon: Icons.add_circle_outline,
-                      size: DigitButtonSize.medium,
-                      onPressed: () async {
-                        if (household != null) {
-                          final bloc = context.read<HouseholdOverviewBloc>();
+                  Row(
+                    children: [
+                      if((children ?? []).isNotEmpty)
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: DigitButton(
+                            label:
+                            '${localizations.translate(i18.memberCard.noOfChildren)} ${children?.length}',
+                            onPressed: () {
+                              context.read<ParentOverviewBloc>().add(
+                                  ParentOverviewEvent.selectedIndividual(
+                                      individualModel: individual));
+                              context.router.push(ParentOverviewRoute());
+                            },
+                            type: DigitButtonType.tertiary,
+                            size: DigitButtonSize.medium),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: DigitButton(
+                          label:
+                          localizations.translate(i18.memberCard.addChildLabel),
+                          type: DigitButtonType.tertiary,
+                          prefixIcon: Icons.add_circle_outline,
+                          size: DigitButtonSize.medium,
+                          onPressed: () async {
+                            if (household != null) {
+                              final bloc = context.read<HouseholdOverviewBloc>();
 
-                          final address = household?.address;
+                              final address = household?.address;
 
-                          final parentClientReferenceId = bloc
-                              .state.householdMemberWrapper.householdMembers
-                              ?.where((e) =>
-                          e.individualClientReferenceId ==
-                              individual.clientReferenceId)
-                              .firstOrNull
-                              ?.clientReferenceId;
+                              final parentClientReferenceId = bloc
+                                  .state.householdMemberWrapper.householdMembers
+                                  ?.where((e) =>
+                              e.individualClientReferenceId ==
+                                  individual.clientReferenceId)
+                                  .firstOrNull
+                                  ?.clientReferenceId;
 
-                          if (address == null) return;
-                          bloc.add(
-                            HouseholdOverviewReloadEvent(
-                              projectId:
-                              RegistrationDeliverySingleton().projectId!,
-                              projectBeneficiaryType:
-                              RegistrationDeliverySingleton()
-                                  .beneficiaryType!,
-                            ),
-                          );
-                          await context.router.root.push(
-                            BeneficiaryRegistrationWrapperRoute(
-                              initialState:
-                              BeneficiaryRegistrationAddMemberState(
-                                  addressModel: address,
-                                  householdModel: household!,
-                                  parentClientReferenceId: parentClientReferenceId
-                              ),
-                              children: [
-                                IndividualDetailsRoute(
-                                    parentClientReferenceId:
-                                    parentClientReferenceId),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                              if (address == null) return;
+                              bloc.add(
+                                HouseholdOverviewReloadEvent(
+                                  projectId:
+                                  RegistrationDeliverySingleton().projectId!,
+                                  projectBeneficiaryType:
+                                  RegistrationDeliverySingleton()
+                                      .beneficiaryType!,
+                                ),
+                              );
+                              await context.router.root.push(
+                                BeneficiaryRegistrationWrapperRoute(
+                                  initialState:
+                                  BeneficiaryRegistrationAddMemberState(
+                                      addressModel: address,
+                                      householdModel: household!,
+                                      parentClientReferenceId: parentClientReferenceId
+                                  ),
+                                  children: [
+                                    IndividualDetailsRoute(
+                                        parentClientReferenceId:
+                                        parentClientReferenceId),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   )
               ])
         ]);
