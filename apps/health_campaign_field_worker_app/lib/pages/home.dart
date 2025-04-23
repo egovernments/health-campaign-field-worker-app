@@ -513,7 +513,6 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            ;
             context.router.push(const ManageAttendanceRoute());
           },
         ),
@@ -603,9 +602,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.viewReportsLabel,
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
-      i18.home.db,
       i18.home.dashboard,
       i18.home.beneficiaryIdLabel,
+      i18.home.db,
     ];
 
     final List<String> filteredLabels = homeItemsLabel

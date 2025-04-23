@@ -23,6 +23,9 @@ void showLowIdsAlert(
       builder: (ctx) {
         return Popup(
           type: PopUpType.alert,
+          onCrossTap: () {
+            Navigator.of(ctx).pop();
+          },
           actions: [
             DigitButton(
               capitalizeLetters: false,
@@ -65,12 +68,18 @@ void showLowIdsAlert(
 
 void showNoIdsAlert(
     {required BuildContext context,
-    required RegistrationDeliveryLocalization localizations}) {
+    required RegistrationDeliveryLocalization localizations,
+    required bool showSkip,
+    required Function(bool proceed) shouldProceedFurther}) {
   showCustomPopup(
       context: context,
       builder: (ctx) {
         return Popup(
           type: PopUpType.alert,
+          inlineActions: true,
+          onCrossTap: () {
+            Navigator.of(ctx).pop();
+          },
           actions: [
             DigitButton(
               capitalizeLetters: false,
@@ -88,6 +97,20 @@ void showNoIdsAlert(
                 i18.beneficiaryDetails.downloadBeneficiaryIds,
               ),
             ),
+            if (showSkip)
+              DigitButton(
+                capitalizeLetters: false,
+                type: DigitButtonType.tertiary,
+                size: DigitButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  shouldProceedFurther(true);
+                },
+                label: localizations.translate(
+                  i18.common.coreCommonSkipContinue,
+                ),
+              ),
           ],
           title: localizations
               .translate(i18.beneficiaryDetails.noBeneficiaryIdsLabel),

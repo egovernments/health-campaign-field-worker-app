@@ -56,6 +56,7 @@ class UniqueIdPoolRemoteRepository
 
     final rawEntities = responseMap['UniqueBeneficiaryIds'];
     final fetchLimit = responseMap['FetchLimit'] ?? 0;
+    final totalCount = responseMap['TotalLimit'] ?? 0;
 
     if (rawEntities is! List) {
       if (responseMap['Errors'] is List) {
@@ -93,9 +94,7 @@ class UniqueIdPoolRemoteRepository
     }).toList();
 
     return UniqueIdSearchResponse(
-      models: updatedBatch,
-      fetchLimit: fetchLimit,
-    );
+        models: updatedBatch, fetchLimit: fetchLimit, totalLimit: totalCount);
   }
 
   @override

@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
@@ -109,32 +108,49 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                 _progressDialog.closeProgressDialog();
                 _isProgressDialogVisible = false;
                 if (error != null) {
-                  DigitSyncDialog.show(
-                    context,
-                    type: DialogType.failed,
-                    label: localizations.translate(
-                        i18.beneficiaryDetails.beneficiaryIdsLimitError),
-                    primaryAction: DigitDialogActions(
-                      label: RegistrationDeliveryLocalization.of(context)
-                          .translate(
-                        i18.beneficiaryDetails.beneficiaryIdsReFetch,
-                      ),
-                      action: (ctx) {
-                        Navigator.pop(ctx);
-                        context.read<UniqueIdBloc>().add(
-                              const UniqueIdEvent.fetchUniqueIdsFromServer(
-                                  reFetch: true),
-                            );
-                      },
-                    ),
-                    secondaryAction: DigitDialogActions(
-                      label: RegistrationDeliveryLocalization.of(context)
-                          .translate(
-                        i18.common.corecommonclose,
-                      ),
-                      action: (ctx) => Navigator.pop(ctx),
-                    ),
-                  );
+                  showCustomPopup(
+                      context: context,
+                      builder: (ctx) {
+                        return Popup(
+                          type: PopUpType.alert,
+                          inlineActions: true,
+                          onCrossTap: () {
+                            Navigator.of(ctx).pop();
+                          },
+                          actions: [
+                            DigitButton(
+                              capitalizeLetters: false,
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large,
+                              mainAxisSize: MainAxisSize.max,
+                              onPressed: () {
+                                Navigator.pop(ctx);
+                                context.read<UniqueIdBloc>().add(
+                                      const UniqueIdEvent
+                                          .fetchUniqueIdsFromServer(
+                                          reFetch: true),
+                                    );
+                              },
+                              label: localizations.translate(
+                                  i18.beneficiaryDetails.beneficiaryIdsReFetch),
+                            ),
+                            DigitButton(
+                              capitalizeLetters: false,
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.large,
+                              mainAxisSize: MainAxisSize.max,
+                              onPressed: () {
+                                Navigator.pop(ctx);
+                              },
+                              label: localizations.translate(
+                                i18.common.corecommonclose,
+                              ),
+                            ),
+                          ],
+                          title: localizations.translate(
+                              i18.beneficiaryDetails.beneficiaryIdsLimitError),
+                        );
+                      });
                 }
               },
               noInternet: () {
@@ -145,6 +161,10 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                     builder: (ctx) {
                       return Popup(
                         type: PopUpType.alert,
+                        inlineActions: true,
+                        onCrossTap: () {
+                          Navigator.of(ctx).pop();
+                        },
                         actions: [
                           DigitButton(
                             capitalizeLetters: false,
@@ -340,16 +360,15 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
               },
             ),
           ),
-          widget.idCount < widget.beneficiaryMinCount
-              ? InfoCard(
-                  title: localizations
-                      .translate(i18.beneficiaryDetails.lowBeneficiaryIdsLabel),
-                  type: InfoType.error,
-                  capitalizedLetter: true,
-                  description: localizations
-                      .translate(i18.beneficiaryDetails.lowBeneficiaryIdsText))
-              : const Offstage(),
-          DigitCard(margin: const EdgeInsets.all(spacer4), children: [
+          if (widget.idCount < widget.beneficiaryMinCount)
+            InfoCard(
+                title: localizations
+                    .translate(i18.beneficiaryDetails.lowBeneficiaryIdsLabel),
+                type: InfoType.error,
+                capitalizedLetter: false,
+                description: localizations
+                    .translate(i18.beneficiaryDetails.lowBeneficiaryIdsText)),
+          DigitCard(margin: const EdgeInsets.all(spacer1), children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
