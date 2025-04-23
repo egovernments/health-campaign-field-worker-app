@@ -1003,6 +1003,20 @@ class CustomDeliverInterventionPageState
     return task;
   }
 
+  //return bedCount
+  int getBedCount(HouseholdMemberWrapper householdMemberWrapper) {
+    final household = householdMemberWrapper.household;
+    final additionalFields = household?.additionalFields?.fields;
+
+    if (additionalFields == null) return 1;
+
+    final bedField = additionalFields.firstWhereOrNull(
+      (field) => field.key == 'noOfBedCount',
+    );
+
+    return int.tryParse(bedField?.value ?? '1') ?? 1;
+  }
+
   dynamic getBednetCount(HouseholdMemberWrapper householdMemberWrapper) {
     // Early return if the householdMemberWrapper or household is null
     final household = householdMemberWrapper.household;
@@ -1040,7 +1054,8 @@ class CustomDeliverInterventionPageState
       if (communityValue == CommunityTypes.refugeeCamps.toValue()) {
         return (memberCount / 2).round();
       } else if (communityValue == CommunityTypes.specialGroups.toValue()) {
-        return memberCount;
+        final bedCount = getBedCount(householdMemberWrapper);
+        return bedCount;
       }
     }
 
