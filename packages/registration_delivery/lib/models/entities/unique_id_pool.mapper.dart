@@ -628,6 +628,9 @@ class UniqueIdSearchResponseMapper
   static int _$fetchLimit(UniqueIdSearchResponse v) => v.fetchLimit;
   static const Field<UniqueIdSearchResponse, int> _f$fetchLimit =
       Field('fetchLimit', _$fetchLimit);
+  static int _$totalLimit(UniqueIdSearchResponse v) => v.totalLimit;
+  static const Field<UniqueIdSearchResponse, int> _f$totalLimit =
+      Field('totalLimit', _$totalLimit);
   static AuditDetails? _$auditDetails(UniqueIdSearchResponse v) =>
       v.auditDetails;
   static const Field<UniqueIdSearchResponse, AuditDetails> _f$auditDetails =
@@ -645,6 +648,7 @@ class UniqueIdSearchResponseMapper
   final MappableFields<UniqueIdSearchResponse> fields = const {
     #models: _f$models,
     #fetchLimit: _f$fetchLimit,
+    #totalLimit: _f$totalLimit,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -664,6 +668,7 @@ class UniqueIdSearchResponseMapper
     return UniqueIdSearchResponse(
         models: data.dec(_f$models),
         fetchLimit: data.dec(_f$fetchLimit),
+        totalLimit: data.dec(_f$totalLimit),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -738,6 +743,7 @@ abstract class UniqueIdSearchResponseCopyWith<
   $R call(
       {List<UniqueIdPoolModel>? models,
       int? fetchLimit,
+      int? totalLimit,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -770,12 +776,14 @@ class _UniqueIdSearchResponseCopyWithImpl<$R, $Out>
   $R call(
           {List<UniqueIdPoolModel>? models,
           int? fetchLimit,
+          int? totalLimit,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
         if (models != null) #models: models,
         if (fetchLimit != null) #fetchLimit: fetchLimit,
+        if (totalLimit != null) #totalLimit: totalLimit,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -785,6 +793,7 @@ class _UniqueIdSearchResponseCopyWithImpl<$R, $Out>
   UniqueIdSearchResponse $make(CopyWithData data) => UniqueIdSearchResponse(
       models: data.get(#models, or: $value.models),
       fetchLimit: data.get(#fetchLimit, or: $value.fetchLimit),
+      totalLimit: data.get(#totalLimit, or: $value.totalLimit),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),

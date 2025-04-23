@@ -100,10 +100,12 @@ class UniqueIdSearchResponse extends EntityModel
     with UniqueIdSearchResponseMappable {
   final List<UniqueIdPoolModel> models;
   final int fetchLimit;
+  final int totalLimit;
 
   UniqueIdSearchResponse({
     required this.models,
     required this.fetchLimit,
+    required this.totalLimit,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,

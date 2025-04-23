@@ -6,7 +6,6 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_chip.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -219,6 +218,9 @@ class _SearchBeneficiaryPageState
                                 padding: const EdgeInsets.all(spacer2),
                                 child: DigitSearchBar(
                                   controller: searchController,
+                                  keyboardType: !isBeneficiaryIdSearchEnabled
+                                      ? TextInputType.text
+                                      : TextInputType.number,
                                   hintText: !isBeneficiaryIdSearchEnabled
                                       ? (RegistrationDeliverySingleton()
                                                   .householdType ==
@@ -237,7 +239,9 @@ class _SearchBeneficiaryPageState
                                   textCapitalization: TextCapitalization.words,
                                   onChanged: (value) {
                                     if (value.isEmpty ||
-                                        value.trim().length > 2) {
+                                            isBeneficiaryIdSearchEnabled
+                                        ? value.trim().length > 5
+                                        : value.trim().length > 2) {
                                       triggerGlobalSearchEvent();
                                     }
                                   },
@@ -389,9 +393,26 @@ class _SearchBeneficiaryPageState
                         if (availableIdCount <= 0) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             showNoIdsAlert(
-                              context: context,
-                              localizations: localizations,
-                            );
+                                context: context,
+                                showSkip: true,
+                                localizations: localizations,
+                                shouldProceedFurther: (bool skip) {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                  context.read<DigitScannerBloc>().add(
+                                        const DigitScannerEvent.handleScanner(),
+                                      );
+                                  context.router
+                                      .push(BeneficiaryRegistrationWrapperRoute(
+                                    initialState:
+                                        BeneficiaryRegistrationCreateState(
+                                      searchQuery:
+                                          searchHouseholdsState.searchQuery,
+                                    ),
+                                  ));
+                                  searchController.clear();
+                                  selectedFilters = [];
+                                  blocWrapper.clearEvent();
+                                });
                           });
                         }
                       },
@@ -432,35 +453,51 @@ class _SearchBeneficiaryPageState
                         _progressDialog.closeProgressDialog();
                         _isProgressDialogVisible = false;
                         if (error != null) {
-                          DigitSyncDialog.show(
-                            context,
-                            type: DialogType.failed,
-                            label: localizations.translate(i18
-                                .beneficiaryDetails.beneficiaryIdsLimitError),
-                            primaryAction: DigitDialogActions(
-                              label:
-                                  RegistrationDeliveryLocalization.of(context)
-                                      .translate(
-                                i18.beneficiaryDetails.beneficiaryIdsReFetch,
-                              ),
-                              action: (ctx) {
-                                Navigator.pop(ctx);
-                                context.read<UniqueIdBloc>().add(
-                                      const UniqueIdEvent
-                                          .fetchUniqueIdsFromServer(
-                                          reFetch: true),
-                                    );
-                              },
-                            ),
-                            secondaryAction: DigitDialogActions(
-                              label:
-                                  RegistrationDeliveryLocalization.of(context)
-                                      .translate(
-                                i18.common.corecommonclose,
-                              ),
-                              action: (ctx) => Navigator.pop(ctx),
-                            ),
-                          );
+                          showCustomPopup(
+                              context: context,
+                              builder: (ctx) {
+                                return Popup(
+                                  type: PopUpType.alert,
+                                  inlineActions: true,
+                                  onCrossTap: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  actions: [
+                                    DigitButton(
+                                      capitalizeLetters: false,
+                                      type: DigitButtonType.primary,
+                                      size: DigitButtonSize.large,
+                                      mainAxisSize: MainAxisSize.max,
+                                      onPressed: () {
+                                        Navigator.pop(ctx);
+                                        context.read<UniqueIdBloc>().add(
+                                              const UniqueIdEvent
+                                                  .fetchUniqueIdsFromServer(
+                                                  reFetch: true),
+                                            );
+                                      },
+                                      label: localizations.translate(i18
+                                          .beneficiaryDetails
+                                          .beneficiaryIdsReFetch),
+                                    ),
+                                    DigitButton(
+                                      capitalizeLetters: false,
+                                      type: DigitButtonType.secondary,
+                                      size: DigitButtonSize.large,
+                                      mainAxisSize: MainAxisSize.max,
+                                      onPressed: () {
+                                        Navigator.pop(ctx);
+                                      },
+                                      label: localizations.translate(
+                                        i18.common.corecommonclose,
+                                      ),
+                                    ),
+                                  ],
+                                  title: localizations.translate(i18
+                                      .beneficiaryDetails
+                                      .beneficiaryIdsLimitError),
+                                );
+                              });
                         }
                       },
                       noInternet: () {
@@ -471,6 +508,10 @@ class _SearchBeneficiaryPageState
                             builder: (ctx) {
                               return Popup(
                                 type: PopUpType.alert,
+                                inlineActions: true,
+                                onCrossTap: () {
+                                  Navigator.of(ctx).pop();
+                                },
                                 actions: [
                                   DigitButton(
                                     capitalizeLetters: false,
@@ -814,7 +855,7 @@ class _SearchBeneficiaryPageState
                     householdType:
                         RegistrationDeliverySingleton().householdType,
                     identifierId: isBeneficiaryIdSearchEnabled
-                        ? searchController.text.trim().length > 2
+                        ? searchController.text.trim().length > 5
                             ? searchController.text.trim()
                             : blocWrapper
                                 .searchHouseholdsBloc.state.beneficiaryIdQuery

@@ -104,13 +104,15 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
 
         final List<UniqueIdPoolModel> batch = response.models;
         final int fetchLimit = response.fetchLimit;
+        final int totalCount = response.totalLimit;
 
         if (totalToFetch == 0) {
-          totalToFetch = fetchLimit;
-          if (batchSize >= fetchLimit) {
-            batchSize = fetchLimit;
+          totalToFetch = offset + totalCount;
+          if (batchSize >= totalCount) {
+            batchSize = totalCount;
           }
         }
+
         if (batch.isEmpty) break;
 
         await uniqueIdPoolLocalRepository.bulkCreate(batch);
@@ -118,14 +120,13 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
 
         offset += batch.length;
 
-        if (offset >= totalToFetch) {
-          emit(UniqueIdState.fetching(
-              offset,
-              totalToFetch == 0
-                  ? batch.isEmpty
-                      ? batchSize
-                      : batch.length
-                  : totalToFetch));
+        if (fetchLimit == 0) {
+          emit(UniqueIdState.fetching(offset, totalCount));
+          break;
+        }
+
+        if (offset >= totalCount) {
+          emit(UniqueIdState.fetching(offset, totalCount));
           break;
         }
       }

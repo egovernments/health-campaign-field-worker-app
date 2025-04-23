@@ -845,7 +845,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     );
 
     var identifier = (individual.identifiers?.isNotEmpty ?? false)
-        ? individual.identifiers!.first
+        ? individual.identifiers!.contains(form.control(_idTypeKey).value)
+            ? individual.identifiers!.last
+            : null
         : null;
 
     identifier ??= IdentifierModel(
@@ -1013,14 +1015,20 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     );
 
     if (individual == null) {
-      context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchAUniqueId());
+      context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
       final uniqueId = context.read<UniqueIdBloc>().state;
       uniqueId.maybeWhen(
           orElse: () {},
+          idCount: (availableCount, totalCount) {
+            if (availableCount > 0) {
+              context
+                  .read<UniqueIdBloc>()
+                  .add(const UniqueIdEvent.fetchAUniqueId());
+            }
+          },
           aUniqueId: (uniqueId) {
             form.control(_idNumberKey).value = uniqueId.id;
           });
-      context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
     } else {
       form.control(_idTypeKey).value =
           individual.identifiers?.firstOrNull?.identifierType;
@@ -1048,9 +1056,13 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
               } else if (availableIdCount <= 0) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   showNoIdsAlert(
-                    context: context,
-                    localizations: localizations,
-                  );
+                      context: context,
+                      showSkip: form.control(_idTypeKey).value ==
+                              IdentifierTypes.uniqueBeneficiaryID.toValue()
+                          ? false
+                          : true,
+                      localizations: localizations,
+                      shouldProceedFurther: (bool skip) {});
                 });
               }
             },
@@ -1093,32 +1105,49 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
               _progressDialog.closeProgressDialog();
               _isProgressDialogVisible = false;
               if (error != null) {
-                DigitSyncDialog.show(
-                  context,
-                  type: DialogType.failed,
-                  label: localizations.translate(
-                      i18.beneficiaryDetails.beneficiaryIdsLimitError),
-                  primaryAction: DigitDialogActions(
-                    label:
-                        RegistrationDeliveryLocalization.of(context).translate(
-                      i18.beneficiaryDetails.beneficiaryIdsReFetch,
-                    ),
-                    action: (ctx) {
-                      Navigator.pop(ctx);
-                      context.read<UniqueIdBloc>().add(
-                            const UniqueIdEvent.fetchUniqueIdsFromServer(
-                                reFetch: true),
-                          );
-                    },
-                  ),
-                  secondaryAction: DigitDialogActions(
-                    label:
-                        RegistrationDeliveryLocalization.of(context).translate(
-                      i18.common.corecommonclose,
-                    ),
-                    action: (ctx) => Navigator.pop(ctx),
-                  ),
-                );
+                showCustomPopup(
+                    context: context,
+                    builder: (ctx) {
+                      return Popup(
+                        type: PopUpType.alert,
+                        inlineActions: true,
+                        onCrossTap: () {
+                          Navigator.of(ctx).pop();
+                        },
+                        actions: [
+                          DigitButton(
+                            capitalizeLetters: false,
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () {
+                              Navigator.pop(ctx);
+                              context.read<UniqueIdBloc>().add(
+                                    const UniqueIdEvent
+                                        .fetchUniqueIdsFromServer(
+                                        reFetch: true),
+                                  );
+                            },
+                            label: localizations.translate(
+                                i18.beneficiaryDetails.beneficiaryIdsReFetch),
+                          ),
+                          DigitButton(
+                            capitalizeLetters: false,
+                            type: DigitButtonType.secondary,
+                            size: DigitButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () {
+                              Navigator.pop(ctx);
+                            },
+                            label: localizations.translate(
+                              i18.common.corecommonclose,
+                            ),
+                          ),
+                        ],
+                        title: localizations.translate(
+                            i18.beneficiaryDetails.beneficiaryIdsLimitError),
+                      );
+                    });
               }
             },
             noInternet: () {
@@ -1129,6 +1158,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                   builder: (ctx) {
                     return Popup(
                       type: PopUpType.alert,
+                      inlineActions: true,
+                      onCrossTap: () {
+                        Navigator.of(ctx).pop();
+                      },
                       actions: [
                         DigitButton(
                           capitalizeLetters: false,
@@ -1200,8 +1233,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             i18.beneficiaryDetails.availableBeneficiaryIdsText),
                         style: theme
                             .digitTextTheme(context)
-                            .bodyXS
-                            .copyWith(color: theme.colorTheme.text.secondary),
+                            .bodyS
+                            .copyWith(color: theme.colorTheme.text.primary),
                       ),
                       Text(
                         " $idCount",
