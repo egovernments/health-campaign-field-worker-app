@@ -87,7 +87,11 @@ class CustomStockDetailsPageState
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _driverNameKey: FormControl<String>(
-        validators: [Validators.required],
+        validators: [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(200),
+        ],
       ),
       _balesQuantityKey: FormControl<int>(
         validators: [
@@ -1181,6 +1185,7 @@ class CustomStockDetailsPageState
                                                   )
                                                       .setValidators(
                                                     [
+                                                      Validators.required,
                                                       Validators.minLength(2),
                                                       Validators.maxLength(200),
                                                     ],
@@ -1244,6 +1249,7 @@ class CustomStockDetailsPageState
                                                     )
                                                         .setValidators(
                                                       [
+                                                        Validators.required,
                                                         Validators.minLength(2),
                                                         Validators.maxLength(
                                                             200),
@@ -1375,7 +1381,13 @@ class CustomStockDetailsPageState
                                                         _driverNameKey,
                                                       )
                                                           .setValidators(
-                                                        [],
+                                                        [
+                                                          Validators.required,
+                                                          Validators.minLength(
+                                                              2),
+                                                          Validators.maxLength(
+                                                              200),
+                                                        ],
                                                         updateParent: true,
                                                         autoValidate: true,
                                                       );
@@ -1435,6 +1447,7 @@ class CustomStockDetailsPageState
                                                         )
                                                             .setValidators(
                                                           [
+                                                            Validators.required,
                                                             Validators
                                                                 .minLength(2),
                                                             Validators
