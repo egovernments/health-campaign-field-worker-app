@@ -215,7 +215,7 @@ List<DeliveryDoseCriteria>? fetchProductVariant(
       );
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
 
-      gender = individualModel.gender?.index;
+      gender = individualModel.gender?.toValue();
 
       weight = double.tryParse(individualModel.additionalFields?.fields
                   .firstWhere(
@@ -263,18 +263,32 @@ List<DeliveryDoseCriteria>? fetchProductVariant(
 
           List expressionParser = [];
           for (var element in conditions) {
-            final expression = FormulaParser(
-              element,
-              {
+            // final expression = FormulaParser(
+            //   element,
+            //   {
+            //     'age': individualAgeInMonths,
+            //     if (gender != null) 'gender': gender,
+            //     if (memberCount != null) 'memberCount': memberCount,
+            //     if (roomCount != null) 'roomCount': roomCount,
+            //     'weight': weight,
+            //     'height': height,
+            //   },
+
+            // );
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
                 'age': individualAgeInMonths,
-                if (gender != null) 'gender': gender,
-                if (memberCount != null) 'memberCount': memberCount,
-                if (roomCount != null) 'roomCount': roomCount,
-                'weight': weight,
-                'height': height,
-              },
-            );
-            final error = expression.parse;
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType,
+              'weight': weight,
+              'height': height,
+            }, stringKeys: [
+              'type_of_structure',
+              'gender'
+            ]);
+            final error = expression;
             expressionParser.add(error["value"]);
           }
 
@@ -295,7 +309,8 @@ List<DeliveryDoseCriteria>? fetchProductVariant(
               'weight': weight,
               'height': height,
             }, stringKeys: [
-              'type_of_structure'
+              'type_of_structure',
+              'gender'
             ]);
             final error = expression;
             expressionParser.add(error["value"]);
@@ -321,7 +336,8 @@ List<DeliveryDoseCriteria>? fetchProductVariant(
               'weight': weight,
               'height': height,
             }, stringKeys: [
-              'type_of_structure'
+              'type_of_structure',
+              'gender'
             ]);
             final error = expression;
             expressionParser.add(error["value"]);
