@@ -304,38 +304,43 @@ class CustomDeliverInterventionPageState
                                                                 List<AdditionalField>
                                                                     codeAdditionalFields =
                                                                     [];
-                                                                for (var element
-                                                                    in barcodes) {
-                                                                  List<String>
-                                                                      keys = [];
-                                                                  List<String>
-                                                                      values =
-                                                                      [];
-                                                                  for (var e in element
-                                                                      .elements
-                                                                      .entries) {
-                                                                    e.value
-                                                                        .rawData;
-                                                                    keys.add(
-                                                                      e.key
-                                                                          .toString(),
-                                                                    );
-                                                                    values.add(
-                                                                      e.value
-                                                                          .data
-                                                                          .toString(),
-                                                                    );
-                                                                  }
-                                                                  codeAdditionalFields
-                                                                      .add(
-                                                                    AdditionalField(
-                                                                      keys.join(
-                                                                          '|'),
-                                                                      values.join(
-                                                                          '|'),
-                                                                    ),
-                                                                  );
-                                                                }
+
+                                                                codeAdditionalFields.addAll(
+                                                                    addBarCodesToFields(
+                                                                        scannerState
+                                                                            .barCodes));
+                                                                // for (var element
+                                                                //     in barcodes) {
+                                                                //   List<String>
+                                                                //       keys = [];
+                                                                //   List<String>
+                                                                //       values =
+                                                                //       [];
+                                                                //   for (var e in element
+                                                                //       .elements
+                                                                //       .entries) {
+                                                                //     e.value
+                                                                //         .rawData;
+                                                                //     keys.add(
+                                                                //       e.key
+                                                                //           .toString(),
+                                                                //     );
+                                                                //     values.add(
+                                                                //       e.value
+                                                                //           .data
+                                                                //           .toString(),
+                                                                //     );
+                                                                //   }
+                                                                //   codeAdditionalFields
+                                                                //       .add(
+                                                                //     AdditionalField(
+                                                                //       keys.join(
+                                                                //           '|'),
+                                                                //       values.join(
+                                                                //           '|'),
+                                                                //     ),
+                                                                //   );
+                                                                // }
 
                                                                 final deliveredProducts =
                                                                     ((form.control(_resourceDeliveredKey)
@@ -1158,5 +1163,27 @@ class CustomDeliverInterventionPageState
         ),
       ]),
     });
+  }
+
+  List<AdditionalField> addBarCodesToFields(
+      List<(BarcodeScanType, GS1Barcode)> barCodes) {
+    List<AdditionalField> additionalFields = [];
+    for (var element in barCodes) {
+      List<String> keys = [];
+      List<String> values = [];
+      BarcodeScanType barcodeScanType = element.$1;
+      for (var e in element.$2.elements.entries) {
+        String key = e.key.toString();
+        if (key == "00" || key == "21") {
+          if (barcodeScanType == BarcodeScanType.manual) {
+            key = "manual_${e.key}";
+          }
+          keys.add(key);
+          values.add(e.value.data.toString());
+        }
+      }
+      additionalFields.add(AdditionalField(keys.join('|'), values.join('|')));
+    }
+    return additionalFields;
   }
 }
