@@ -315,30 +315,36 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
-            final relationshipAdditionalId = responseEntity?.memberRelationships?.first.id == null  //TODO: need to check logic after, will work for now as we have only single relationship
+            final relationshipAdditionalId = responseEntity
+                        ?.memberRelationships?.first.id ==
+                    null //TODO: need to check logic after, will work for now as we have only single relationship
                 ? null
                 : AdditionalId(
-              idType: memberRelationshipIdKey,
-              id: responseEntity!.memberRelationships!.first.id!,
-            );
-            final relationshipSelfId = responseEntity?.memberRelationships?.first.selfId == null
-                ? null
-                : AdditionalId(
-              idType: memberRelationshipSelfIdKey,
-              id: responseEntity!.memberRelationships!.first.selfId!,
-            );
-            final relationshipRelativeId = responseEntity?.memberRelationships?.first.relativeId == null
-                ? null
-                : AdditionalId(
-              idType: memberRelationshipRelativeIdKey,
-              id: responseEntity!.memberRelationships!.first.relativeId!,
-            );
+                    idType: memberRelationshipIdKey,
+                    id: responseEntity!.memberRelationships!.first.id!,
+                  );
+            final relationshipSelfId =
+                responseEntity?.memberRelationships?.first.selfId == null
+                    ? null
+                    : AdditionalId(
+                        idType: memberRelationshipSelfIdKey,
+                        id: responseEntity!.memberRelationships!.first.selfId!,
+                      );
+            final relationshipRelativeId =
+                responseEntity?.memberRelationships?.first.relativeId == null
+                    ? null
+                    : AdditionalId(
+                        idType: memberRelationshipRelativeIdKey,
+                        id: responseEntity!
+                            .memberRelationships!.first.relativeId!,
+                      );
 
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
                 additionalIds: [
-                  if (relationshipAdditionalId != null) relationshipAdditionalId,
+                  if (relationshipAdditionalId != null)
+                    relationshipAdditionalId,
                   if (relationshipSelfId != null) relationshipSelfId,
                   if (relationshipRelativeId != null) relationshipRelativeId
                 ],
@@ -759,11 +765,10 @@ class SyncServiceMapper extends SyncEntityMapperListener {
         for (var element in operationGroupedEntity.value) {
           if (element.id == null) continue;
           final entity = element.entity as ServiceModel;
-          final responseEntity = responseEntities
-              .whereType<ServiceModel>()
-              .firstWhereOrNull(
-                (e) => e.referenceId == entity.referenceId,
-          );
+          final responseEntity =
+              responseEntities.whereType<ServiceModel>().firstWhereOrNull(
+                    (e) => e.referenceId == entity.referenceId,
+                  );
 
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
@@ -775,14 +780,14 @@ class SyncServiceMapper extends SyncEntityMapperListener {
                 serverGeneratedId: serverGeneratedId,
                 additionalIds: responseEntity?.attributes
                     ?.map((e) {
-                  final id = e.id;
-                  if (id == null) return null;
+                      final id = e.id;
+                      if (id == null) return null;
 
-                  return AdditionalId(
-                    idType: serviceAttributesIdKey,
-                    id: id,
-                  );
-                })
+                      return AdditionalId(
+                        idType: serviceAttributesIdKey,
+                        id: id,
+                      );
+                    })
                     .whereNotNull()
                     .toList(),
                 dataOperation: element.operation,
@@ -790,8 +795,8 @@ class SyncServiceMapper extends SyncEntityMapperListener {
               ),
             );
           } else {
-            final bool markAsNonRecoverable = await local.opLogManager
-                .updateSyncDownRetry(entity.clientId);
+            final bool markAsNonRecoverable =
+                await local.opLogManager.updateSyncDownRetry(entity.clientId);
 
             if (markAsNonRecoverable) {
               await local.update(
@@ -909,7 +914,6 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     }
 
     if (updatedEntity is ServiceModel) {
-
       final attributeIds = e.additionalIds
           .where((element) => element.idType == serviceAttributesIdKey)
           .map((e) => e.id)
@@ -983,17 +987,17 @@ class SyncServiceMapper extends SyncEntityMapperListener {
       final relationshipId = e.additionalIds
           .firstWhereOrNull(
             (element) => element.idType == memberRelationshipIdKey,
-      )
+          )
           ?.id;
       final relativeId = e.additionalIds
           .firstWhereOrNull(
             (element) => element.idType == memberRelationshipRelativeIdKey,
-      )
+          )
           ?.id;
       final selfId = e.additionalIds
           .firstWhereOrNull(
             (element) => element.idType == memberRelationshipSelfIdKey,
-      )
+          )
           ?.id;
 
       updatedEntity = updatedEntity.copyWith(

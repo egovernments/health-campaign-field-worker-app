@@ -187,8 +187,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 searchQuery,
                                 loading,
                                 isHeadOfHousehold,
-                                  householdChecklists,
-                                  individualChecklists,
+                                householdChecklists,
+                                individualChecklists,
                               ) {
                                 var household = householdModel;
                                 household ??= HouseholdModel(
@@ -326,8 +326,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 projectBeneficiaryModel,
                                 loading,
                                 isHeadOfHousehold,
-                                  householdChecklists,
-                                  individualChecklists,
+                                householdChecklists,
+                                individualChecklists,
                               ) {
                                 var household = householdModel.copyWith(
                                     memberCount: memberCount,
@@ -383,8 +383,9 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                         ]));
 
                                 checklistKey.currentState?.updateSurvey(
-                                    latitude: addressModel.latitude,
-                                    longitude: addressModel.longitude,);
+                                  latitude: addressModel.latitude,
+                                  longitude: addressModel.longitude,
+                                );
 
                                 bloc.add(
                                   BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
@@ -739,7 +740,8 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   BeneficiaryChecklistEnums.household.toValue(),
                               hideBackAlert: true,
                               useScaffold: false,
-initialService: registrationState.householdChecklists?.firstOrNull,
+                              initialService: registrationState
+                                  .householdChecklists?.firstOrNull,
                             )
                         ]),
                   ),

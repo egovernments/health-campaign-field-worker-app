@@ -79,43 +79,42 @@ abstract class RemoteRepository<D extends EntityModel,
     try {
       response = await executeFuture(
         future: () async {
-          return await dio.post(
-            searchPath,
-            queryParameters: {
-              'offset': offSet ?? 0,
-              'limit': limit ?? 100,
-              'tenantId': DigitDataModelSingleton().tenantId,
-              if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
-            },
-            data: entityName == 'User'
-                ? query.toMap()
-                : {
-              entityName == 'ServiceDefinition'
-                  ? 'ServiceDefinitionCriteria'
-                  : entityName == 'Downsync'
-                  ? 'DownsyncCriteria'
-                  : entityName == 'Service'
-                  ? 'ServiceCriteria'
-                  : isPlural
-                  ? entityNamePlural
-                  : entityName:
-              isPlural
-                  ? (entityName == 'Service'
-                  ? [
-                {
-                  ...query.toMap(),
-                  'tenantId': DigitDataModelSingleton().tenantId,
-                }
-              ]
-                  : [query.toMap()])
-                  : (entityName == 'Service'
-                  ? {
-                ...query.toMap(),
+          return await dio.post(searchPath,
+              queryParameters: {
+                'offset': offSet ?? 0,
+                'limit': limit ?? 100,
                 'tenantId': DigitDataModelSingleton().tenantId,
-              }
-                  : query.toMap()),
-            }
-          );
+                if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+              },
+              data: entityName == 'User'
+                  ? query.toMap()
+                  : {
+                      entityName == 'ServiceDefinition'
+                          ? 'ServiceDefinitionCriteria'
+                          : entityName == 'Downsync'
+                              ? 'DownsyncCriteria'
+                              : entityName == 'Service'
+                                  ? 'ServiceCriteria'
+                                  : isPlural
+                                      ? entityNamePlural
+                                      : entityName: isPlural
+                          ? (entityName == 'Service'
+                              ? [
+                                  {
+                                    ...query.toMap(),
+                                    'tenantId':
+                                        DigitDataModelSingleton().tenantId,
+                                  }
+                                ]
+                              : [query.toMap()])
+                          : (entityName == 'Service'
+                              ? {
+                                  ...query.toMap(),
+                                  'tenantId':
+                                      DigitDataModelSingleton().tenantId,
+                                }
+                              : query.toMap()),
+                    });
         },
       );
     } catch (error) {
@@ -133,7 +132,9 @@ abstract class RemoteRepository<D extends EntityModel,
     }
 
     if (!responseMap.containsKey(
-      (isSearchResponsePlural || entityName == 'ServiceDefinition' || entityName == 'Service')
+      (isSearchResponsePlural ||
+              entityName == 'ServiceDefinition' ||
+              entityName == 'Service')
           ? entityNamePlural
           : entityName,
     )) {
@@ -144,10 +145,11 @@ abstract class RemoteRepository<D extends EntityModel,
       );
     }
 
-    final entityResponse = await responseMap[
-        (isSearchResponsePlural || entityName == 'ServiceDefinition' || entityName == 'Service')
-            ? entityNamePlural
-            : entityName];
+    final entityResponse = await responseMap[(isSearchResponsePlural ||
+            entityName == 'ServiceDefinition' ||
+            entityName == 'Service')
+        ? entityNamePlural
+        : entityName];
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
@@ -184,7 +186,6 @@ abstract class RemoteRepository<D extends EntityModel,
       updatePath,
       data: {
         'Service': entity.toMap(),
-        "apiOperation": "UPDATE",
       },
     );
   }
@@ -451,7 +452,11 @@ abstract class LocalRepository<D extends EntityModel,
 
   @override
   @mustCallSuper
-  FutureOr<void> update(D entity, {bool createOpLog = true, DataOperation dataOperation = DataOperation.update,}) async {
+  FutureOr<void> update(
+    D entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.update,
+  }) async {
     if (createOpLog) await createOplogEntry(entity, dataOperation);
   }
 

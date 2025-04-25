@@ -174,7 +174,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 loading,
                                 isHeadOfHousehold,
                                 householdChecklists,
-                                  individualChecklists,
+                                individualChecklists,
                               ) async {
                                 final individual = _getIndividualModel(
                                   context,
@@ -245,7 +245,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 projectBeneficiaryModel,
                                 loading,
                                 householdChecklists,
-                                  individualChecklists,
+                                individualChecklists,
                               ) {
                                 final scannerBloc =
                                     context.read<DigitScannerBloc>();
@@ -257,7 +257,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   form: form,
                                   oldIndividual: individualModel,
                                 );
-
 
                                 final tag = scannerBloc.state.qrCodes.isNotEmpty
                                     ? scannerBloc.state.qrCodes.first
@@ -274,8 +273,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       type: ToastType.error);
                                 } else {
                                   if (RegistrationDeliverySingleton()
-                                      .householdType ==
-                                      HouseholdType.family && state.individualChecklists?.first!=null) {
+                                              .householdType ==
+                                          HouseholdType.family &&
+                                      state.individualChecklists?.firstOrNull !=
+                                          null) {
                                     checklistKey.currentState?.updateSurvey(
                                         latitude: addressModel.latitude,
                                         longitude: addressModel.longitude);
@@ -322,7 +323,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 parentClientReferenceId,
                                 loading,
                                 householdChecklists,
-                                  individualChecklists,
+                                individualChecklists,
                               ) {
                                 final individual = _getIndividualModel(
                                   context,
@@ -682,7 +683,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             hideBackAlert: true,
                             useScaffold: false,
                             isChild: widget.parentClientReferenceId != null,
-                            initialService: state.individualChecklists?.first,
+                            initialService:
+                                state.individualChecklists?.firstOrNull,
                           ),
                         // const SizedBox(height: spacer4),
                         if ((RegistrationDeliverySingleton().beneficiaryType ==

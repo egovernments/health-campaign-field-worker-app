@@ -337,6 +337,7 @@ abstract class OpLogManager<T extends EntityModel> {
   String getClientReferenceId(T entity);
 
   bool? getNonRecoverableError(T entity);
+
   T applyServerGeneratedIdToEntity(
     T entity,
     String serverGeneratedId,

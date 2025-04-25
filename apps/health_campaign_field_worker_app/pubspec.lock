@@ -68,9 +68,10 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      path: "../../packages/attendance_management"
-      relative: true
-    source: path
+      name: attendance_management
+      sha256: "976d2b2f7c7c79bf8f05647a4138b66dab9017316697222223d888273a95f96a"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.4+2"
   audioplayers:
     dependency: transitive
@@ -265,7 +266,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -339,9 +340,10 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      path: "../../packages/closed_household"
-      relative: true
-    source: path
+      name: closed_household
+      sha256: "966e319584acabfb940decc3c240964363f7b93c71833d8bd147df19d99c2e92"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.5+1"
   code_builder:
     dependency: transitive
@@ -430,6 +432,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  curl_logger_dio_interceptor:
+    dependency: "direct main"
+    description:
+      name: curl_logger_dio_interceptor
+      sha256: f20d89187a321d2150e1412bca30ebf4d89130bafc648ce21bd4f1ef4062b214
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -513,9 +523,10 @@ packages:
   digit_dss:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_dss"
-      relative: true
-    source: path
+      name: digit_dss
+      sha256: e1a541a5360413ed903ee77af580faf93623160aa5e7143e8bc1d0ec44dd980b
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.4+1"
   digit_firebase_services:
     dependency: "direct main"
@@ -536,16 +547,18 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
+      name: digit_scanner
+      sha256: c8f82938906a11c516d445d7e5e27b7e6c6a1d07e0a608c2f90f63dd234241a5
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.5+1"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
+      name: digit_showcase
+      sha256: "4667b29e652738a1621e907359da327594c288417f5dfa3da60e77f0342a4eae"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.2+1"
   digit_ui_components:
     dependency: "direct main"
@@ -668,7 +681,7 @@ packages:
     source: hosted
     version: "8.0.7"
   file_selector_linux:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: file_selector_linux
       sha256: "54cbbd957e1156d29548c7d9b9ec0c0ebb6de0a90452198683a7d23aed617a33"
@@ -684,7 +697,7 @@ packages:
     source: hosted
     version: "0.9.4+2"
   file_selector_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: file_selector_platform_interface
       sha256: a3994c26f10378a039faa11de174d7b78eb8f79e4dd0af2a451410c1a5c3f66b
@@ -814,7 +827,7 @@ packages:
     source: hosted
     version: "3.0.7"
   flutter_dropzone_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: flutter_dropzone_platform_interface
       sha256: b4e2df75364bab2f4c3ca32b87193267d786b6e158c3f345c3a1daeb911d82b9
@@ -2351,5 +2364,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.0 <3.9.0"
   flutter: ">=3.22.0"

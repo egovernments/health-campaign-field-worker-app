@@ -242,6 +242,11 @@ class ServiceAttributesModelMapper
       v.clientReferenceId;
   static const Field<ServiceAttributesModel, String> _f$clientReferenceId =
       Field('clientReferenceId', _$clientReferenceId, opt: true);
+  static String? _$serviceClientReferenceId(ServiceAttributesModel v) =>
+      v.serviceClientReferenceId;
+  static const Field<ServiceAttributesModel, String>
+      _f$serviceClientReferenceId =
+      Field('serviceClientReferenceId', _$serviceClientReferenceId, opt: true);
   static String? _$tenantId(ServiceAttributesModel v) => v.tenantId;
   static const Field<ServiceAttributesModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
@@ -272,6 +277,7 @@ class ServiceAttributesModelMapper
     #additionalDetails: _f$additionalDetails,
     #nonRecoverableError: _f$nonRecoverableError,
     #clientReferenceId: _f$clientReferenceId,
+    #serviceClientReferenceId: _f$serviceClientReferenceId,
     #tenantId: _f$tenantId,
     #rowVersion: _f$rowVersion,
     #auditDetails: _f$auditDetails,
@@ -300,6 +306,7 @@ class ServiceAttributesModelMapper
         additionalDetails: data.dec(_f$additionalDetails),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         clientReferenceId: data.dec(_f$clientReferenceId),
+        serviceClientReferenceId: data.dec(_f$serviceClientReferenceId),
         tenantId: data.dec(_f$tenantId),
         rowVersion: data.dec(_f$rowVersion),
         auditDetails: data.dec(_f$auditDetails),
@@ -384,6 +391,7 @@ abstract class ServiceAttributesModelCopyWith<
       dynamic additionalDetails,
       bool? nonRecoverableError,
       String? clientReferenceId,
+      String? serviceClientReferenceId,
       String? tenantId,
       int? rowVersion,
       AuditDetails? auditDetails,
@@ -425,6 +433,7 @@ class _ServiceAttributesModelCopyWithImpl<$R, $Out>
           Object? additionalDetails = $none,
           Object? nonRecoverableError = $none,
           Object? clientReferenceId = $none,
+          Object? serviceClientReferenceId = $none,
           Object? tenantId = $none,
           Object? rowVersion = $none,
           Object? auditDetails = $none,
@@ -441,6 +450,8 @@ class _ServiceAttributesModelCopyWithImpl<$R, $Out>
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
+        if (serviceClientReferenceId != $none)
+          #serviceClientReferenceId: serviceClientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (auditDetails != $none) #auditDetails: auditDetails,
@@ -463,6 +474,8 @@ class _ServiceAttributesModelCopyWithImpl<$R, $Out>
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       clientReferenceId:
           data.get(#clientReferenceId, or: $value.clientReferenceId),
+      serviceClientReferenceId: data.get(#serviceClientReferenceId,
+          or: $value.serviceClientReferenceId),
       tenantId: data.get(#tenantId, or: $value.tenantId),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),

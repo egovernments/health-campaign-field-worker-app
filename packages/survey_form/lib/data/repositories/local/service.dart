@@ -11,8 +11,8 @@ class ServiceLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-      List<ServiceModel> entities,
-      )async {
+    List<ServiceModel> entities,
+  ) async {
     return retryLocalCallOperation(() async {
       // Collect all service companions
       final serviceCompanions = entities.map((e) => e.companion).toList();
@@ -25,24 +25,28 @@ class ServiceLocalRepository
           for (final attr in entity.attributes!) {
             final transformedAttr = attr.dataType == 'Number'
                 ? attr.copyWith(
-              value: attr.value.toString(), // Convert int back to string
-            )
-                : attr.dataType == 'MultiValueList' || attr.value is List // Convert list back to dot-separated string
-                ? attr.copyWith(
-              value: (attr.value is List)
-                  ? (attr.value as List).join('.')
-                  : attr.value, // Convert list back to dot-separated string
-              additionalDetails: attr.additionalDetails != null
-                  ? {"value": attr.additionalDetails}
-                  : attr.additionalDetails, // Keep original if null
-            )
-                : attr.dataType == 'SingleValueList'
-                ? attr.copyWith(
-              additionalDetails: attr.additionalDetails != null
-                  ? {"value": attr.additionalDetails}
-                  : attr.additionalDetails, // Keep original if null
-            )
-                : attr;
+                    value: attr.value.toString(), // Convert int back to string
+                  )
+                : attr.dataType == 'MultiValueList' ||
+                        attr.value
+                            is List // Convert list back to dot-separated string
+                    ? attr.copyWith(
+                        value: (attr.value is List)
+                            ? (attr.value as List).join('.')
+                            : attr
+                                .value, // Convert list back to dot-separated string
+                        additionalDetails: attr.additionalDetails != null
+                            ? {"value": attr.additionalDetails}
+                            : attr.additionalDetails, // Keep original if null
+                      )
+                    : attr.dataType == 'SingleValueList'
+                        ? attr.copyWith(
+                            additionalDetails: attr.additionalDetails != null
+                                ? {"value": attr.additionalDetails}
+                                : attr
+                                    .additionalDetails, // Keep original if null
+                          )
+                        : attr;
 
             attributesCompanions.add(transformedAttr.companion);
           }
@@ -68,7 +72,6 @@ class ServiceLocalRepository
           );
         }
       });
-
     });
   }
 
@@ -150,33 +153,33 @@ class ServiceLocalRepository
     return retryLocalCallOperation<List<ServiceModel>>(() async {
       final selectQuery = sql.select(sql.service).join([]);
       final results = await (selectQuery
-        ..where(buildAnd([
-          if (query.id != null)
-            sql.service.serviceDefId.equals(query.id!),
-          if (query.clientId != null)
-            sql.service.clientId.equals(query.clientId!),
-          if (query.referenceIds != null && query.referenceIds!.isNotEmpty)
-            sql.service.referenceId.isIn(query.referenceIds!),
-        ])))
+            ..where(buildAnd([
+              if (query.id != null) sql.service.serviceDefId.equals(query.id!),
+              if (query.clientId != null)
+                sql.service.clientId.equals(query.clientId!),
+              if (query.referenceIds != null && query.referenceIds!.isNotEmpty)
+                sql.service.referenceId.isIn(query.referenceIds!),
+            ])))
           .get();
 
       final List<ServiceModel> serviceList = [];
       for (final e in results) {
         final data = e.readTable(sql.service);
-        final selectattributeQuery = sql.select(sql.serviceAttributes).join([]);
+        final selectAttributeQuery = sql.select(sql.serviceAttributes).join([]);
 
-        final val = await (selectattributeQuery
+        final val = await (selectAttributeQuery
               ..where(buildAnd([
-                sql.serviceAttributes.clientReferenceId.equals(
+                sql.serviceAttributes.serviceClientReferenceId.equals(
                   data.clientId,
                 ),
               ])))
             .get();
+
         final res = val.map((e) {
           final attribute = e.readTableOrNull(sql.serviceAttributes);
           if (attribute != null) {
             return ServiceAttributesModel(
-              id: attribute.id,
+                id: attribute.id,
                 clientReferenceId: attribute.clientReferenceId,
                 attributeCode: attribute.attributeCode,
                 value: attribute.value,
@@ -186,6 +189,16 @@ class ServiceLocalRepository
                 tenantId: attribute.tenantId,
                 isDeleted: attribute.isDeleted,
                 rowVersion: attribute.rowVersion,
+                serviceClientReferenceId: attribute.serviceClientReferenceId,
+                auditDetails: (attribute.auditCreatedBy != null &&
+                        attribute.auditCreatedTime != null)
+                    ? AuditDetails(
+                        createdBy: attribute.auditCreatedBy!,
+                        createdTime: attribute.auditCreatedTime!,
+                        lastModifiedBy: attribute.auditModifiedBy,
+                        lastModifiedTime: attribute.auditModifiedTime,
+                      )
+                    : null,
                 additionalFields: attribute.additionalFields != null
                     ? ServiceAttributesAdditionalFieldsMapper.fromJson(
                         attribute.additionalFields!)
@@ -211,13 +224,12 @@ class ServiceLocalRepository
     });
   }
 
-
   @override
   FutureOr<void> update(
-      ServiceModel entity, {
-        bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.singleUpdate,
-      }) async {
+    ServiceModel entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.singleUpdate,
+  }) async {
     return retryLocalCallOperation(() async {
       final serviceCompanion = entity.companion;
 
@@ -229,44 +241,88 @@ class ServiceLocalRepository
 
         return e.value is List
             ? e.copyWith(
-          value: value.join('.'),
-          additionalDetails: e.additionalDetails != null
-              ? {"value": e.additionalDetails}
-              : null,
-        )
+                value: value.join('.'),
+                additionalDetails: e.additionalDetails != null
+                    ? {"value": e.additionalDetails}
+                    : null,
+              )
             : e.dataType == 'SingleValueList'
-            ? e.copyWith(
-          additionalDetails: e.additionalDetails != null
-              ? {"value": e.additionalDetails}
-              : null,
-        )
-            : e;
+                ? e.copyWith(
+                    additionalDetails: e.additionalDetails != null
+                        ? {"value": e.additionalDetails}
+                        : null,
+                  )
+                : e;
       }).toList();
-
 
       // transform attributes value for local update
       final transformedAttributesForServer = attributes?.map((e) {
         final value = e.value;
 
-        return e.dataType == 'Number'
-            ? e.copyWith(value: int.tryParse('$value'))
-            : value is String &&
-            value.contains('.')
+        return e.value is List
             ? e.copyWith(
-          value: value.split('.'),
-          additionalDetails: e.additionalDetails != null
-              ? {"value": e.additionalDetails}
-              : null,
-        )
-            : e.dataType == 'SingleValueList'
-            ? e.copyWith(
-          additionalDetails: e.additionalDetails != null
-              ? {"value": e.additionalDetails}
-              : null,
-        )
-            : e;
+                value: value.join('.'),
+                additionalDetails: e.additionalDetails != null
+                    ? {"value": e.additionalDetails}
+                    : null,
+              )
+            : e.dataType == 'Number'
+                ? e.copyWith(value: int.tryParse('$value'))
+                : value is String && value.contains('.')
+                    ? e.copyWith(
+                        value: value.split('.'),
+                        additionalDetails: e.additionalDetails != null
+                            ? {"value": e.additionalDetails}
+                            : null,
+                      )
+                    : e.dataType == 'SingleValueList'
+                        ? e.copyWith(
+                            additionalDetails: e.additionalDetails != null
+                                ? {"value": e.additionalDetails}
+                                : null,
+                          )
+                        : e.dataType == 'MultiValueList'
+                            ? e.copyWith(
+                                value:
+                                    value == 'NOT_SELECTED' ? [value] : value,
+                                additionalDetails: e.additionalDetails != null
+                                    ? {"value": e.additionalDetails}
+                                    : null,
+                              )
+                            : e;
       }).toList();
 
+      // Update each attributes individually with correct where clause
+      if (transformedAttributesForLocal != null &&
+          transformedAttributesForLocal.isNotEmpty) {
+        for (final a in entity.attributes ?? []) {
+          final selectNestedQuery = sql.select(sql.serviceAttributes).join([]);
+
+          final query = await (selectNestedQuery
+                ..where(buildAnd([
+                  sql.serviceAttributes.clientReferenceId
+                      .equals(a.clientReferenceId!),
+                ])))
+              .get();
+
+          var attTable = query
+              .map((e) => e.readTableOrNull(sql.serviceAttributes))
+              .toList();
+
+          if (attTable.isNotEmpty) {
+            await (sql.update(sql.serviceAttributes)
+                  ..where((table) => table.clientReferenceId.equals(
+                        a.clientReferenceId ?? '',
+                      )))
+                .write(attTable.first!.copyWith(
+                    id: Value(a.id),
+                    value: Value(a.value),
+                    referenceId: entity.id != null
+                        ? Value(entity.id)
+                        : Value(entity.clientId)));
+          }
+        }
+      }
 
       await sql.batch((batch) async {
         batch.update(
@@ -276,20 +332,6 @@ class ServiceLocalRepository
             entity.referenceId ?? '',
           ),
         );
-
-        // Update each attributes individually with correct where clause
-        if (transformedAttributesForLocal != null && transformedAttributesForLocal.isNotEmpty) {
-          for (final attribute in transformedAttributesForLocal) {
-            batch.update(
-              sql.serviceAttributes,
-              attribute.companion,
-              where: (table) => table.referenceId.equals(
-                attribute.referenceId ?? '',
-              ),
-            );
-          }
-        }
-
       });
 
       // Create a new entity with transformed attributes to pass to super.update
@@ -309,7 +351,8 @@ class ServiceLocalRepository
         attributes: transformedAttributesForServer,
       );
 
-      await super.update(updatedEntity, dataOperation: DataOperation.singleUpdate,createOpLog: createOpLog);
+      await super.update(updatedEntity,
+          dataOperation: DataOperation.singleUpdate, createOpLog: createOpLog);
     });
   }
 
