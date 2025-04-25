@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
@@ -15,22 +16,22 @@ import '../../utils/global_search_parameters.dart';
 import '../../utils/utils.dart';
 
 class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
-  IndividualGlobalSearchBloc(
-      {required super.userUid,
-      required super.projectId,
-      required super.individual,
-      required super.householdMember,
-      required super.household,
-      required super.projectBeneficiary,
-      required super.taskDataRepository,
-      required super.beneficiaryType,
-      required super.sideEffectDataRepository,
-      required super.addressRepository,
-      required super.referralDataRepository,
-      required super.individualGlobalSearchRepository,
-      required super.houseHoldGlobalSearchRepository,
-        required super.serviceDataRepository,
-      }) {
+  IndividualGlobalSearchBloc({
+    required super.userUid,
+    required super.projectId,
+    required super.individual,
+    required super.householdMember,
+    required super.household,
+    required super.projectBeneficiary,
+    required super.taskDataRepository,
+    required super.beneficiaryType,
+    required super.sideEffectDataRepository,
+    required super.addressRepository,
+    required super.referralDataRepository,
+    required super.individualGlobalSearchRepository,
+    required super.houseHoldGlobalSearchRepository,
+    required super.serviceDataRepository,
+  }) {
     on<IndividualGlobalSearchEvent>(_individualGlobalSearch);
   }
 
@@ -313,6 +314,19 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
               membersIds.contains(element.beneficiaryClientReferenceId))
           .toList();
 
+      final householdChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: [filteredHousehold.clientReferenceId],
+      ));
+
+      final memberChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: householdMembers
+            .map((e) => e.individualClientReferenceId)
+            .whereNotNull()
+            .toList(),
+      ));
+
       // Filter tasks based on project beneficiary client reference IDs
       for (var beneficiary in filteredBeneficiaries) {
         var tasksForBeneficiary = taskList.where((element) =>
@@ -339,14 +353,15 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       // Add household member wrapper to containers
       containers.add(
         HouseholdMemberWrapper(
-          household: filteredHousehold,
-          headOfHousehold: head,
-          members: filteredIndividuals,
-          projectBeneficiaries: filteredBeneficiaries,
-          tasks: filteredTasks.isEmpty ? null : filteredTasks,
-          sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
-          referrals: referralsList.isEmpty ? null : referralsList,
-        ),
+            household: filteredHousehold,
+            headOfHousehold: head,
+            members: filteredIndividuals,
+            projectBeneficiaries: filteredBeneficiaries,
+            tasks: filteredTasks.isEmpty ? null : filteredTasks,
+            sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
+            referrals: referralsList.isEmpty ? null : referralsList,
+            householdChecklists: householdChecklist,
+            individualChecklists: memberChecklist),
       );
     }
   }
