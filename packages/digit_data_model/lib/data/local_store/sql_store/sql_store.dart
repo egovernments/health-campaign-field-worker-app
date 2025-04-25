@@ -115,7 +115,8 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
   int get schemaVersion => 6; // Increment schema version
 
   @override
-  MigrationStrategy get migration => MigrationStrategy(
+  MigrationStrategy get migration =>
+      MigrationStrategy(
         onUpgrade: (migrator, from, to) async {
           if (from < 5) {
             //Add column for projectType in Project Table
@@ -192,6 +193,18 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               if (kDebugMode) {
                 print(
                     "Failed to add columns for householdType, attendance - localityCode, and service - relatedClientReferenceId");
+              }
+            }
+          }
+          if (from < 7) {
+            try {
+              await migrator.addColumn(serviceAttributes, serviceAttributes.id);
+              await migrator.addColumn(serviceAttributes,
+                  serviceAttributes.serviceClientReferenceId);
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to add columns for serviceAttributes - serviceClientReferenceId");
               }
             }
           }

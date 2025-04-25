@@ -1,6 +1,7 @@
 import 'dart:math';
-import 'package:collection/collection.dart';
+
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
@@ -103,10 +104,12 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
     String? relatedReferenceId,
   }) {
     if (initialAttributes == null || initialAttributes!.isEmpty) return;
-    final referenceId = IdGen.i.identifier;
+    final serviceReferenceId = IdGen.i.identifier;
     List<ServiceAttributesModel> attributes = [];
 
     for (int i = 0; i < controller.length; i++) {
+      final attReferenceId = IdGen.i.identifier;
+
       final attribute = initialAttributes;
       attributes.add(
         ServiceAttributesModel(
@@ -116,8 +119,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
           ),
           attributeCode: '${attribute?[i].code}',
           dataType: attribute?[i].dataType,
-          clientReferenceId: referenceId,
-          referenceId: IdGen.i.identifier,
+          clientReferenceId: attReferenceId,
+          serviceClientReferenceId: serviceReferenceId,
+          referenceId: serviceReferenceId,
           value: attribute?[i].dataType != 'SingleValueList' &&
                   attribute?[i].dataType != 'MultiValueList'
               ? controller[i].text.trim().isNotEmpty
@@ -158,7 +162,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 dateFormat: Constants.SurveyFormViewDateFormat,
               ),
               tenantId: selectedServiceDefinition!.tenantId,
-              clientId: referenceId,
+              clientId: serviceReferenceId,
               referenceId: relatedReferenceId,
               serviceDefId: selectedServiceDefinition?.id,
               attributes: attributes,
@@ -192,17 +196,20 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
     required double? latitude,
     required double? longitude,
   }) {
-
-    if (initialAttributes == null || initialAttributes!.isEmpty || widget.initialService == null) return;
-    final referenceId = IdGen.i.identifier;
+    if (initialAttributes == null ||
+        initialAttributes!.isEmpty ||
+        widget.initialService == null) return;
     List<ServiceAttributesModel> attributes = [];
     for (int i = 0; i < controller.length; i++) {
       final attribute = initialAttributes;
 
       // Find the corresponding service attribute by matching the code
-      final matchingServiceAttribute = widget.initialService?.attributes?.firstWhere(
-            (serviceAttribute) => serviceAttribute.attributeCode == attribute?[i].code,
-        orElse: () => ServiceAttributesModel( // Returning an empty ServiceAttributesModel instead of null
+      final matchingServiceAttribute =
+          widget.initialService?.attributes?.firstWhere(
+        (serviceAttribute) =>
+            serviceAttribute.attributeCode == attribute?[i].code,
+        orElse: () => ServiceAttributesModel(
+          // Returning an empty ServiceAttributesModel instead of null
           auditDetails: AuditDetails(
             createdBy: SurveyFormSingleton().loggedInUserUuid,
             createdTime: context.millisecondsSinceEpoch(),
@@ -225,50 +232,48 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             createdBy: SurveyFormSingleton().loggedInUserUuid,
             createdTime: context.millisecondsSinceEpoch(),
           ),
-          clientReferenceId: referenceId,
           value: attribute?[i].dataType != 'SingleValueList' &&
-              attribute?[i].dataType != 'MultiValueList'
+                  attribute?[i].dataType != 'MultiValueList'
               ? controller[i].text.trim().isNotEmpty
-              ? controller[i].text
-              : i18.surveyForm.notSelectedKey
+                  ? controller[i].text
+                  : i18.surveyForm.notSelectedKey
               : visibleSurveyFormIndexes.contains(i)
-              ? controller[i].text.trim().isNotEmpty
-              ? controller[i].text
-              : i18.surveyForm.notSelectedKey
-              : i18.surveyForm.notSelectedKey,
+                  ? controller[i].text.trim().isNotEmpty
+                      ? controller[i].text
+                      : i18.surveyForm.notSelectedKey
+                  : i18.surveyForm.notSelectedKey,
           additionalDetails: ((attribute?[i].values?.length == 2 ||
-              attribute?[i].values?.length == 3) &&
-              controller[i].text == attribute?[i].values?[1].trim())
+                      attribute?[i].values?.length == 3) &&
+                  controller[i].text == attribute?[i].values?[1].trim())
               ? additionalController[i].text.isEmpty
-              ? null
-              : additionalController[i].text
+                  ? null
+                  : additionalController[i].text
               : null,
         ),
       );
     }
 
     context.read<ServiceBloc>().add(
-      ServiceUpdateEvent(
-        serviceModel: widget.initialService!.copyWith(
-          createdAt: DigitDateUtils.getDateFromTimestamp(
-            DateTime.now().toLocal().millisecondsSinceEpoch,
-            dateFormat: Constants.SurveyFormViewDateFormat,
+          ServiceUpdateEvent(
+            serviceModel: widget.initialService!.copyWith(
+              createdAt: DigitDateUtils.getDateFromTimestamp(
+                DateTime.now().toLocal().millisecondsSinceEpoch,
+                dateFormat: Constants.SurveyFormViewDateFormat,
+              ),
+              attributes: attributes,
+              auditDetails: AuditDetails(
+                createdBy: SurveyFormSingleton().loggedInUserUuid,
+                createdTime: DateTime.now().millisecondsSinceEpoch,
+              ),
+              clientAuditDetails: ClientAuditDetails(
+                createdBy: SurveyFormSingleton().loggedInUserUuid,
+                createdTime: context.millisecondsSinceEpoch(),
+                lastModifiedBy: SurveyFormSingleton().loggedInUserUuid,
+                lastModifiedTime: context.millisecondsSinceEpoch(),
+              ),
+            ),
           ),
-          clientId: referenceId,
-          attributes: attributes,
-          auditDetails: AuditDetails(
-            createdBy: SurveyFormSingleton().loggedInUserUuid,
-            createdTime: DateTime.now().millisecondsSinceEpoch,
-          ),
-          clientAuditDetails: ClientAuditDetails(
-            createdBy: SurveyFormSingleton().loggedInUserUuid,
-            createdTime: context.millisecondsSinceEpoch(),
-            lastModifiedBy: SurveyFormSingleton().loggedInUserUuid,
-            lastModifiedTime: context.millisecondsSinceEpoch(),
-          ),
-        ),
-      ),
-    );
+        );
   }
 
   void initializeControllersWithPrefilledValues({
@@ -279,20 +284,22 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }) {
     for (final attribute in targetAttributes) {
       final matched = sourceAttributes?.firstWhereOrNull(
-            (e) => e.attributeCode == attribute.code,
+        (e) => e.attributeCode == attribute.code,
       );
 
       final value = matched?.value;
 
-      final textValue = (value is List &&value.isNotEmpty && !value.contains('NOT_SELECTED'))
-          ? value.join('.')
-          : value == 'NOT_SELECTED' ? '' : value?.toString() ?? '';
-      if(textValue.isEmpty){
+      final textValue =
+          (value is List && value.isNotEmpty && !value.contains('NOT_SELECTED'))
+              ? value.join('.')
+              : value == 'NOT_SELECTED'
+                  ? ''
+                  : value?.toString() ?? '';
+      if (textValue.isEmpty) {
         mainController.add(TextEditingController());
-      }else{
+      } else {
         mainController.add(TextEditingController(text: textValue));
       }
-
     }
   }
 
@@ -336,8 +343,13 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 gender: widget.gender,
                 isChild: widget.isChild);
             if (!isControllersInitialized) {
-
-              initializeControllersWithPrefilledValues(targetAttributes: initialAttributes!, mainController: controller, additionalController: additionalController, sourceAttributes: widget.initialService?.attributes!=null ? widget.initialService!.attributes : null);
+              initializeControllersWithPrefilledValues(
+                  targetAttributes: initialAttributes!,
+                  mainController: controller,
+                  additionalController: additionalController,
+                  sourceAttributes: widget.initialService?.attributes != null
+                      ? widget.initialService!.attributes
+                      : null);
               initialAttributes?.forEach((e) {
                 additionalController.add(TextEditingController());
               });
@@ -723,7 +735,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
               /// TODO:need to fix the data type to something more generic
               !(e.code ?? '').contains('.')) ...[
-
             FormField<String>(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) {
@@ -943,7 +954,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                               valueMapper: (value) {
                                 return localizations.translate(value);
                               },
-                              initialSelection: controller[index].text.split('.'),
+                              initialSelection:
+                                  controller[index].text.split('.'),
                               options: getOptionLabels(e),
                               onSelectionChanged: (curValue) {
                                 field.didChange(curValue
@@ -1137,7 +1149,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                       final childIndex = initialAttributes
                                           ?.indexOf(matchingChildItem);
                                       if (childIndex != null) {
-                                        // controller[childIndex].clear();
+                                        controller[childIndex].clear();
                                         visibleSurveyFormIndexes.removeWhere(
                                             (v) => v == childIndex);
                                       }
@@ -1492,22 +1504,24 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                     return null;
                   },
                   builder: (field) => SelectionCard(
-                    errorMessage: field.errorText,
-                    allowMultipleSelection: getSelectionType(item),
-                    valueMapper: (value) {
-                      return localizations.translate(value);
-                    },
-                    options: getOptionLabels(item),
-                    initialSelection: controller[index].text.split('.'),
+                      errorMessage: field.errorText,
+                      allowMultipleSelection: getSelectionType(item),
+                      valueMapper: (value) {
+                        return localizations.translate(value);
+                      },
+                      options: getOptionLabels(item),
+                      initialSelection: controller[index].text.split('.'),
                       onSelectionChanged: (curValue) {
-                        final joinedValue = curValue.where((e) => e.trim().isNotEmpty).join('.');
+                        final joinedValue = curValue
+                            .where((e) => e.trim().isNotEmpty)
+                            .join('.');
                         field.didChange(joinedValue);
 
                         if (curValue.isNotEmpty) {
-                          controller[index].value = TextEditingValue(text: joinedValue);
+                          controller[index].value =
+                              TextEditingValue(text: joinedValue);
                         }
-                      }
-                  ),
+                      }),
                 );
               },
             ),
@@ -1525,8 +1539,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             ),
             description: description != null
                 ? localizations.translate(
-              '${selectedServiceDefinition?.code}.$description',
-            )
+                    '${selectedServiceDefinition?.code}.$description',
+                  )
                 : null,
             isRequired: item.required ?? false,
             capitalizedFirstLetter: false,
@@ -1552,22 +1566,22 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                     valueMapper: (value) {
                       return value
                           ? localizations.translate(
-                        i18.common.coreCommonYes,
-                      )
+                              i18.common.coreCommonYes,
+                            )
                           : localizations.translate(
-                        i18.common.coreCommonNo,
-                      );
+                              i18.common.coreCommonNo,
+                            );
                     },
                     initialSelection: const [false],
                     options: const [true, false],
                     onSelectionChanged: (value) {
                       field.didChange(value.first);
                       context.read<ServiceBloc>().add(
-                        ServiceSurveyFormEvent(
-                          value: value.toString(),
-                          submitTriggered: submitTriggered,
-                        ),
-                      );
+                            ServiceSurveyFormEvent(
+                              value: value.toString(),
+                              submitTriggered: submitTriggered,
+                            ),
+                          );
                       final String ele;
                       var val = controller[index].text.split('.');
                       if (val.contains(e)) {
@@ -1589,7 +1603,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
           ),
         ),
       );
-    }else {
+    } else {
       return const SizedBox.shrink();
     }
   }

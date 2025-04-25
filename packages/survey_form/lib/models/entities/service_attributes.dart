@@ -1,4 +1,6 @@
 // Generated using mason. Do not modify by hand
+import 'dart:convert';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
@@ -37,10 +39,11 @@ class ServiceAttributesModel extends EntityModel
   final String? attributeCode;
   final dynamic value;
   final String? dataType;
-  final String? referenceId;
+  final String? referenceId; // Service Client Id
   final dynamic additionalDetails;
   final bool? nonRecoverableError;
-  final String? clientReferenceId;  ///TODO:
+  final String? clientReferenceId;
+  final String? serviceClientReferenceId;
   final String? tenantId;
   final int? rowVersion;
   final ServiceAttributesAdditionalFields? additionalFields;
@@ -55,6 +58,7 @@ class ServiceAttributesModel extends EntityModel
     this.additionalDetails,
     this.nonRecoverableError = false,
     this.clientReferenceId,
+    this.serviceClientReferenceId,
     this.tenantId,
     this.rowVersion,
     super.auditDetails,
@@ -80,9 +84,10 @@ class ServiceAttributesModel extends EntityModel
       id: Value(id),
       dataType: Value(dataType),
       referenceId: Value(referenceId),
-      additionalDetails: Value(additionalDetails),
+      additionalDetails: Value(jsonEncode(additionalDetails)),
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
+      serviceClientReferenceId: Value(serviceClientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
     );
