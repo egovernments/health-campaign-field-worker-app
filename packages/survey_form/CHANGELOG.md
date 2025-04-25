@@ -1,3 +1,9 @@
+## 1.0.2-dev.2-enumeration
+
+* Added serviceClientReferenceId to service attribute entity and table
+* Modified update query for attribute update with id and value
+* Added clear children when value is changed
+
 ## 1.0.2-dev.1-enumeration
 
 * Added referenceIds to search model

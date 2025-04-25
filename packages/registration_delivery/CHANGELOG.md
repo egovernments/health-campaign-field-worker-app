@@ -1,3 +1,11 @@
+## 1.0.7-dev.4-enumeration
+
+* Updated global search to fetch services related to household and member
+
+## 1.0.7-dev.3-enumeration
+
+* Enabled edit flow
+
 ## 1.0.7-dev.2-enumeration
 
 * Updated member repository to update relationship

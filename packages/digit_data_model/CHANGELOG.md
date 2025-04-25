@@ -1,3 +1,7 @@
+## 1.0.7-dev.3-enumeration
+
+* Updated service attribute table with serviceClientReferenceId
+
 ## 1.0.7-dev.2-enumeration
 
 * Updated member relation table with client audit details

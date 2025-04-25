@@ -61,14 +61,14 @@ dependencies:
   digit_scanner: ^1.0.5
   inventory_management: ^1.0.5+1
   referral_reconciliation: ^1.0.5-dev.1-enumeration
-  digit_data_model: ^1.0.7-dev.2-enumeration
-  registration_delivery: ^1.0.7-dev.2-enumeration
+  digit_data_model: ^1.0.7-dev.3-enumeration
+  registration_delivery: ^1.0.7-dev.4-enumeration
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.4+1
   closed_household: ^1.0.5+1
   digit_location_tracker: ^1.0.0
   permission_handler: ^11.3.1
-  survey_form: ^1.0.2-dev.1-enumeration
+  survey_form: ^1.0.2-dev.2-enumeration
   complaints: ^1.0.2+1
   curl_logger_dio_interceptor: ^1.0.0
 
