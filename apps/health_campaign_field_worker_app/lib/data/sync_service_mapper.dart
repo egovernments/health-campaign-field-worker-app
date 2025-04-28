@@ -315,29 +315,30 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
-            final relationshipAdditionalId = responseEntity
-                        ?.memberRelationships?.first.id ==
-                    null //TODO: need to check logic after, will work for now as we have only single relationship
+            final memberRelationship = (responseEntity?.memberRelationships != null && responseEntity!.memberRelationships!.isNotEmpty)
+                ? responseEntity.memberRelationships!.first
+                : null;
+
+            final relationshipAdditionalId = memberRelationship?.id == null
                 ? null
                 : AdditionalId(
-                    idType: memberRelationshipIdKey,
-                    id: responseEntity!.memberRelationships!.first.id!,
-                  );
-            final relationshipSelfId =
-                responseEntity?.memberRelationships?.first.selfId == null
-                    ? null
-                    : AdditionalId(
-                        idType: memberRelationshipSelfIdKey,
-                        id: responseEntity!.memberRelationships!.first.selfId!,
-                      );
-            final relationshipRelativeId =
-                responseEntity?.memberRelationships?.first.relativeId == null
-                    ? null
-                    : AdditionalId(
-                        idType: memberRelationshipRelativeIdKey,
-                        id: responseEntity!
-                            .memberRelationships!.first.relativeId!,
-                      );
+              idType: memberRelationshipIdKey,
+              id: memberRelationship!.id!,
+            );
+
+            final relationshipSelfId = memberRelationship?.selfId == null
+                ? null
+                : AdditionalId(
+              idType: memberRelationshipSelfIdKey,
+              id: memberRelationship!.selfId!,
+            );
+
+            final relationshipRelativeId = memberRelationship?.relativeId == null
+                ? null
+                : AdditionalId(
+              idType: memberRelationshipRelativeIdKey,
+              id: memberRelationship!.relativeId!,
+            );
 
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
