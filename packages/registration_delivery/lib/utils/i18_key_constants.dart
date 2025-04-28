@@ -274,6 +274,8 @@ class BeneficiaryDetails {
 
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
+  String get beneficiaryIdHeader => 'BENEFICIARY_ID_TABLE_HEADER';
+
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
 
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';

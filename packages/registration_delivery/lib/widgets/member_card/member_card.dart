@@ -81,6 +81,48 @@ class MemberCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (individual.identifiers != null)
+                  if (individual.identifiers!
+                          .lastWhereOrNull(
+                            (e) =>
+                                e.identifierType ==
+                                IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                          )
+                          ?.identifierId !=
+                      null)
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(spacer1),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: theme.colorTheme.text.disabled,
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(spacer2),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(spacer1),
+                              child: Text(
+                                individual.identifiers
+                                        ?.lastWhereOrNull(
+                                          (e) =>
+                                              e.identifierType ==
+                                              IdentifierTypes
+                                                  .uniqueBeneficiaryID
+                                                  .toValue(),
+                                        )
+                                        ?.identifierId ??
+                                    localizations
+                                        .translate(i18.common.noResultsFound),
+                                style: textTheme.headingXS.copyWith(
+                                    color: theme.colorTheme.primary.primary2),
+                              ),
+                            ),
+                          ),
+                        )),
                 Stack(
                   children: [
                     Row(
@@ -162,52 +204,6 @@ class MemberCard extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    if (individual.identifiers != null)
-                      if (individual.identifiers!
-                              .lastWhereOrNull(
-                                (e) =>
-                                    e.identifierType ==
-                                    IdentifierTypes.uniqueBeneficiaryID
-                                        .toValue(),
-                              )
-                              ?.identifierId !=
-                          null)
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(spacer2),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color:
-                                        DigitTheme.instance.colorScheme.primary,
-                                  ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(spacer2),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(
-                                    spacer2,
-                                  ),
-                                  child: Text(
-                                    individual.identifiers
-                                            ?.lastWhereOrNull(
-                                              (e) =>
-                                                  e.identifierType ==
-                                                  IdentifierTypes
-                                                      .uniqueBeneficiaryID
-                                                      .toValue(),
-                                            )
-                                            ?.identifierId ??
-                                        localizations.translate(
-                                            i18.common.noResultsFound),
-                                  ),
-                                ),
-                              ),
-                            ))
-                      else
-                        const Offstage(),
                     Padding(
                       padding: const EdgeInsets.all(spacer2),
                       child: Row(

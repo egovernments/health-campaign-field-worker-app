@@ -76,7 +76,6 @@ void showNoIdsAlert(
       builder: (ctx) {
         return Popup(
           type: PopUpType.alert,
-          inlineActions: true,
           onCrossTap: () {
             Navigator.of(ctx).pop();
           },
@@ -172,6 +171,7 @@ class ProgressDialog {
                     ? Center(
                         child: Lottie.asset(
                           Constants.downloadSuccessAnimation,
+                          animate: false,
                           height: MediaQuery.of(context).size.height * 0.1,
                         ),
                       )
