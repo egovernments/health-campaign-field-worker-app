@@ -432,7 +432,7 @@ class _RecordReferralDetailsPageState
                                     ),
                                   ]),
                               serviceSearch:
-                                  (serviceList, selectedService, loading) {
+                                  (serviceList, selectedService, loading, drafts) {
                                 return DigitCard(
                                     cardType: CardType.primary,
                                     children: [
