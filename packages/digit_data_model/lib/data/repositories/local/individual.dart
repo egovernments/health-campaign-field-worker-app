@@ -366,7 +366,6 @@ class IndividualLocalRepository
   FutureOr<void> update(
     IndividualModel entity, {
     bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final individualCompanion = entity.companion;
