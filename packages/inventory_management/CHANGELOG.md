@@ -1,3 +1,7 @@
+## 1.0.5+2
+
+* Synced with data model upgrade
+
 ## 1.0.5+1
 
 * Bug Fix:

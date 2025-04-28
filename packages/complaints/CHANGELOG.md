@@ -1,3 +1,7 @@
+## 1.0.2+3
+
+* synced with data model upgrade
+
 ## 1.0.2+1
 
 * Upgraded to latest packages
