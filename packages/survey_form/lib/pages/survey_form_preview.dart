@@ -42,7 +42,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
           builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const Offstage(),
-              serviceSearch: (value1, value2, value3) {
+              serviceSearch: (value1, value2, value3, value4) {
                 return value2 != null
                     ? DigitCard(
                         cardType: CardType.primary,
@@ -70,7 +70,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
           BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const Offstage(),
-              serviceSearch: (serviceList, selectedService, loading) {
+              serviceSearch: (serviceList, selectedService, loading, drafts) {
                 return selectedService == null
                     ? serviceList.isNotEmpty
                         ? Column(
