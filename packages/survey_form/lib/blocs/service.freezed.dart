@@ -25,8 +25,6 @@ mixin _$ServiceEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceModel service) selectService,
     required TResult Function(List<ServiceModel> serviceList) resetSelected,
-    required TResult Function(ServiceModel draftService) draftService,
-    required TResult Function() clearDrafts,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -38,8 +36,6 @@ mixin _$ServiceEvent {
         multiSurveyFormChanged,
     TResult? Function(ServiceModel service)? selectService,
     TResult? Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult? Function(ServiceModel draftService)? draftService,
-    TResult? Function()? clearDrafts,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -51,8 +47,6 @@ mixin _$ServiceEvent {
         multiSurveyFormChanged,
     TResult Function(ServiceModel service)? selectService,
     TResult Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult Function(ServiceModel draftService)? draftService,
-    TResult Function()? clearDrafts,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -65,8 +59,6 @@ mixin _$ServiceEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceSelectionEvent value) selectService,
     required TResult Function(ServiceResetEvent value) resetSelected,
-    required TResult Function(ServiceDraftEvent value) draftService,
-    required TResult Function(ServiceClearDraftsEvent value) clearDrafts,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -77,8 +69,6 @@ mixin _$ServiceEvent {
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
     TResult? Function(ServiceResetEvent value)? resetSelected,
-    TResult? Function(ServiceDraftEvent value)? draftService,
-    TResult? Function(ServiceClearDraftsEvent value)? clearDrafts,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -89,8 +79,6 @@ mixin _$ServiceEvent {
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
     TResult Function(ServiceResetEvent value)? resetSelected,
-    TResult Function(ServiceDraftEvent value)? draftService,
-    TResult Function(ServiceClearDraftsEvent value)? clearDrafts,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -187,8 +175,6 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceModel service) selectService,
     required TResult Function(List<ServiceModel> serviceList) resetSelected,
-    required TResult Function(ServiceModel draftService) draftService,
-    required TResult Function() clearDrafts,
   }) {
     return create(serviceModel);
   }
@@ -203,8 +189,6 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
         multiSurveyFormChanged,
     TResult? Function(ServiceModel service)? selectService,
     TResult? Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult? Function(ServiceModel draftService)? draftService,
-    TResult? Function()? clearDrafts,
   }) {
     return create?.call(serviceModel);
   }
@@ -219,8 +203,6 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
         multiSurveyFormChanged,
     TResult Function(ServiceModel service)? selectService,
     TResult Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult Function(ServiceModel draftService)? draftService,
-    TResult Function()? clearDrafts,
     required TResult orElse(),
   }) {
     if (create != null) {
@@ -239,8 +221,6 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceSelectionEvent value) selectService,
     required TResult Function(ServiceResetEvent value) resetSelected,
-    required TResult Function(ServiceDraftEvent value) draftService,
-    required TResult Function(ServiceClearDraftsEvent value) clearDrafts,
   }) {
     return create(this);
   }
@@ -254,8 +234,6 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
     TResult? Function(ServiceResetEvent value)? resetSelected,
-    TResult? Function(ServiceDraftEvent value)? draftService,
-    TResult? Function(ServiceClearDraftsEvent value)? clearDrafts,
   }) {
     return create?.call(this);
   }
@@ -269,8 +247,6 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
     TResult Function(ServiceResetEvent value)? resetSelected,
-    TResult Function(ServiceDraftEvent value)? draftService,
-    TResult Function(ServiceClearDraftsEvent value)? clearDrafts,
     required TResult orElse(),
   }) {
     if (create != null) {
@@ -363,8 +339,6 @@ class _$ServiceUpdateEventImpl implements ServiceUpdateEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceModel service) selectService,
     required TResult Function(List<ServiceModel> serviceList) resetSelected,
-    required TResult Function(ServiceModel draftService) draftService,
-    required TResult Function() clearDrafts,
   }) {
     return update(serviceModel);
   }
@@ -379,8 +353,6 @@ class _$ServiceUpdateEventImpl implements ServiceUpdateEvent {
         multiSurveyFormChanged,
     TResult? Function(ServiceModel service)? selectService,
     TResult? Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult? Function(ServiceModel draftService)? draftService,
-    TResult? Function()? clearDrafts,
   }) {
     return update?.call(serviceModel);
   }
@@ -395,8 +367,6 @@ class _$ServiceUpdateEventImpl implements ServiceUpdateEvent {
         multiSurveyFormChanged,
     TResult Function(ServiceModel service)? selectService,
     TResult Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult Function(ServiceModel draftService)? draftService,
-    TResult Function()? clearDrafts,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -415,8 +385,6 @@ class _$ServiceUpdateEventImpl implements ServiceUpdateEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceSelectionEvent value) selectService,
     required TResult Function(ServiceResetEvent value) resetSelected,
-    required TResult Function(ServiceDraftEvent value) draftService,
-    required TResult Function(ServiceClearDraftsEvent value) clearDrafts,
   }) {
     return update(this);
   }
@@ -430,8 +398,6 @@ class _$ServiceUpdateEventImpl implements ServiceUpdateEvent {
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
     TResult? Function(ServiceResetEvent value)? resetSelected,
-    TResult? Function(ServiceDraftEvent value)? draftService,
-    TResult? Function(ServiceClearDraftsEvent value)? clearDrafts,
   }) {
     return update?.call(this);
   }
@@ -445,8 +411,6 @@ class _$ServiceUpdateEventImpl implements ServiceUpdateEvent {
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
     TResult Function(ServiceResetEvent value)? resetSelected,
-    TResult Function(ServiceDraftEvent value)? draftService,
-    TResult Function(ServiceClearDraftsEvent value)? clearDrafts,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -539,8 +503,6 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceModel service) selectService,
     required TResult Function(List<ServiceModel> serviceList) resetSelected,
-    required TResult Function(ServiceModel draftService) draftService,
-    required TResult Function() clearDrafts,
   }) {
     return search(serviceSearchModel);
   }
@@ -555,8 +517,6 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
         multiSurveyFormChanged,
     TResult? Function(ServiceModel service)? selectService,
     TResult? Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult? Function(ServiceModel draftService)? draftService,
-    TResult? Function()? clearDrafts,
   }) {
     return search?.call(serviceSearchModel);
   }
@@ -571,8 +531,6 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
         multiSurveyFormChanged,
     TResult Function(ServiceModel service)? selectService,
     TResult Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult Function(ServiceModel draftService)? draftService,
-    TResult Function()? clearDrafts,
     required TResult orElse(),
   }) {
     if (search != null) {
@@ -591,8 +549,6 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceSelectionEvent value) selectService,
     required TResult Function(ServiceResetEvent value) resetSelected,
-    required TResult Function(ServiceDraftEvent value) draftService,
-    required TResult Function(ServiceClearDraftsEvent value) clearDrafts,
   }) {
     return search(this);
   }
@@ -606,8 +562,6 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
     TResult? Function(ServiceResetEvent value)? resetSelected,
-    TResult? Function(ServiceDraftEvent value)? draftService,
-    TResult? Function(ServiceClearDraftsEvent value)? clearDrafts,
   }) {
     return search?.call(this);
   }
@@ -621,8 +575,6 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
     TResult Function(ServiceResetEvent value)? resetSelected,
-    TResult Function(ServiceDraftEvent value)? draftService,
-    TResult Function(ServiceClearDraftsEvent value)? clearDrafts,
     required TResult orElse(),
   }) {
     if (search != null) {
@@ -727,8 +679,6 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceModel service) selectService,
     required TResult Function(List<ServiceModel> serviceList) resetSelected,
-    required TResult Function(ServiceModel draftService) draftService,
-    required TResult Function() clearDrafts,
   }) {
     return multiSurveyFormChanged(value, submitTriggered);
   }
@@ -743,8 +693,6 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
         multiSurveyFormChanged,
     TResult? Function(ServiceModel service)? selectService,
     TResult? Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult? Function(ServiceModel draftService)? draftService,
-    TResult? Function()? clearDrafts,
   }) {
     return multiSurveyFormChanged?.call(value, submitTriggered);
   }
@@ -759,8 +707,6 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
         multiSurveyFormChanged,
     TResult Function(ServiceModel service)? selectService,
     TResult Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult Function(ServiceModel draftService)? draftService,
-    TResult Function()? clearDrafts,
     required TResult orElse(),
   }) {
     if (multiSurveyFormChanged != null) {
@@ -779,8 +725,6 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceSelectionEvent value) selectService,
     required TResult Function(ServiceResetEvent value) resetSelected,
-    required TResult Function(ServiceDraftEvent value) draftService,
-    required TResult Function(ServiceClearDraftsEvent value) clearDrafts,
   }) {
     return multiSurveyFormChanged(this);
   }
@@ -794,8 +738,6 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
     TResult? Function(ServiceResetEvent value)? resetSelected,
-    TResult? Function(ServiceDraftEvent value)? draftService,
-    TResult? Function(ServiceClearDraftsEvent value)? clearDrafts,
   }) {
     return multiSurveyFormChanged?.call(this);
   }
@@ -809,8 +751,6 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
     TResult Function(ServiceResetEvent value)? resetSelected,
-    TResult Function(ServiceDraftEvent value)? draftService,
-    TResult Function(ServiceClearDraftsEvent value)? clearDrafts,
     required TResult orElse(),
   }) {
     if (multiSurveyFormChanged != null) {
@@ -905,8 +845,6 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceModel service) selectService,
     required TResult Function(List<ServiceModel> serviceList) resetSelected,
-    required TResult Function(ServiceModel draftService) draftService,
-    required TResult Function() clearDrafts,
   }) {
     return selectService(service);
   }
@@ -921,8 +859,6 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
         multiSurveyFormChanged,
     TResult? Function(ServiceModel service)? selectService,
     TResult? Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult? Function(ServiceModel draftService)? draftService,
-    TResult? Function()? clearDrafts,
   }) {
     return selectService?.call(service);
   }
@@ -937,8 +873,6 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
         multiSurveyFormChanged,
     TResult Function(ServiceModel service)? selectService,
     TResult Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult Function(ServiceModel draftService)? draftService,
-    TResult Function()? clearDrafts,
     required TResult orElse(),
   }) {
     if (selectService != null) {
@@ -957,8 +891,6 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceSelectionEvent value) selectService,
     required TResult Function(ServiceResetEvent value) resetSelected,
-    required TResult Function(ServiceDraftEvent value) draftService,
-    required TResult Function(ServiceClearDraftsEvent value) clearDrafts,
   }) {
     return selectService(this);
   }
@@ -972,8 +904,6 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
     TResult? Function(ServiceResetEvent value)? resetSelected,
-    TResult? Function(ServiceDraftEvent value)? draftService,
-    TResult? Function(ServiceClearDraftsEvent value)? clearDrafts,
   }) {
     return selectService?.call(this);
   }
@@ -987,8 +917,6 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
     TResult Function(ServiceResetEvent value)? resetSelected,
-    TResult Function(ServiceDraftEvent value)? draftService,
-    TResult Function(ServiceClearDraftsEvent value)? clearDrafts,
     required TResult orElse(),
   }) {
     if (selectService != null) {
@@ -1088,8 +1016,6 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceModel service) selectService,
     required TResult Function(List<ServiceModel> serviceList) resetSelected,
-    required TResult Function(ServiceModel draftService) draftService,
-    required TResult Function() clearDrafts,
   }) {
     return resetSelected(serviceList);
   }
@@ -1104,8 +1030,6 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
         multiSurveyFormChanged,
     TResult? Function(ServiceModel service)? selectService,
     TResult? Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult? Function(ServiceModel draftService)? draftService,
-    TResult? Function()? clearDrafts,
   }) {
     return resetSelected?.call(serviceList);
   }
@@ -1120,8 +1044,6 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
         multiSurveyFormChanged,
     TResult Function(ServiceModel service)? selectService,
     TResult Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult Function(ServiceModel draftService)? draftService,
-    TResult Function()? clearDrafts,
     required TResult orElse(),
   }) {
     if (resetSelected != null) {
@@ -1140,8 +1062,6 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
         multiSurveyFormChanged,
     required TResult Function(ServiceSelectionEvent value) selectService,
     required TResult Function(ServiceResetEvent value) resetSelected,
-    required TResult Function(ServiceDraftEvent value) draftService,
-    required TResult Function(ServiceClearDraftsEvent value) clearDrafts,
   }) {
     return resetSelected(this);
   }
@@ -1155,8 +1075,6 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
     TResult? Function(ServiceResetEvent value)? resetSelected,
-    TResult? Function(ServiceDraftEvent value)? draftService,
-    TResult? Function(ServiceClearDraftsEvent value)? clearDrafts,
   }) {
     return resetSelected?.call(this);
   }
@@ -1170,8 +1088,6 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
     TResult Function(ServiceResetEvent value)? resetSelected,
-    TResult Function(ServiceDraftEvent value)? draftService,
-    TResult Function(ServiceClearDraftsEvent value)? clearDrafts,
     required TResult orElse(),
   }) {
     if (resetSelected != null) {
@@ -1193,388 +1109,47 @@ abstract class ServiceResetEvent implements ServiceEvent {
 }
 
 /// @nodoc
-abstract class _$$ServiceDraftEventImplCopyWith<$Res> {
-  factory _$$ServiceDraftEventImplCopyWith(_$ServiceDraftEventImpl value,
-          $Res Function(_$ServiceDraftEventImpl) then) =
-      __$$ServiceDraftEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({ServiceModel draftService});
-}
-
-/// @nodoc
-class __$$ServiceDraftEventImplCopyWithImpl<$Res>
-    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceDraftEventImpl>
-    implements _$$ServiceDraftEventImplCopyWith<$Res> {
-  __$$ServiceDraftEventImplCopyWithImpl(_$ServiceDraftEventImpl _value,
-      $Res Function(_$ServiceDraftEventImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? draftService = null,
-  }) {
-    return _then(_$ServiceDraftEventImpl(
-      draftService: null == draftService
-          ? _value.draftService
-          : draftService // ignore: cast_nullable_to_non_nullable
-              as ServiceModel,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$ServiceDraftEventImpl implements ServiceDraftEvent {
-  const _$ServiceDraftEventImpl({required this.draftService});
-
-  @override
-  final ServiceModel draftService;
-
-  @override
-  String toString() {
-    return 'ServiceEvent.draftService(draftService: $draftService)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ServiceDraftEventImpl &&
-            (identical(other.draftService, draftService) ||
-                other.draftService == draftService));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, draftService);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ServiceDraftEventImplCopyWith<_$ServiceDraftEventImpl> get copyWith =>
-      __$$ServiceDraftEventImplCopyWithImpl<_$ServiceDraftEventImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(ServiceModel serviceModel) create,
-    required TResult Function(ServiceModel serviceModel) update,
-    required TResult Function(ServiceSearchModel serviceSearchModel) search,
-    required TResult Function(String value, bool submitTriggered)
-        multiSurveyFormChanged,
-    required TResult Function(ServiceModel service) selectService,
-    required TResult Function(List<ServiceModel> serviceList) resetSelected,
-    required TResult Function(ServiceModel draftService) draftService,
-    required TResult Function() clearDrafts,
-  }) {
-    return draftService(this.draftService);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(ServiceModel serviceModel)? create,
-    TResult? Function(ServiceModel serviceModel)? update,
-    TResult? Function(ServiceSearchModel serviceSearchModel)? search,
-    TResult? Function(String value, bool submitTriggered)?
-        multiSurveyFormChanged,
-    TResult? Function(ServiceModel service)? selectService,
-    TResult? Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult? Function(ServiceModel draftService)? draftService,
-    TResult? Function()? clearDrafts,
-  }) {
-    return draftService?.call(this.draftService);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(ServiceModel serviceModel)? create,
-    TResult Function(ServiceModel serviceModel)? update,
-    TResult Function(ServiceSearchModel serviceSearchModel)? search,
-    TResult Function(String value, bool submitTriggered)?
-        multiSurveyFormChanged,
-    TResult Function(ServiceModel service)? selectService,
-    TResult Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult Function(ServiceModel draftService)? draftService,
-    TResult Function()? clearDrafts,
-    required TResult orElse(),
-  }) {
-    if (draftService != null) {
-      return draftService(this.draftService);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(ServiceCreateEvent value) create,
-    required TResult Function(ServiceUpdateEvent value) update,
-    required TResult Function(ServiceSearchEvent value) search,
-    required TResult Function(ServiceSurveyFormEvent value)
-        multiSurveyFormChanged,
-    required TResult Function(ServiceSelectionEvent value) selectService,
-    required TResult Function(ServiceResetEvent value) resetSelected,
-    required TResult Function(ServiceDraftEvent value) draftService,
-    required TResult Function(ServiceClearDraftsEvent value) clearDrafts,
-  }) {
-    return draftService(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(ServiceCreateEvent value)? create,
-    TResult? Function(ServiceUpdateEvent value)? update,
-    TResult? Function(ServiceSearchEvent value)? search,
-    TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
-    TResult? Function(ServiceSelectionEvent value)? selectService,
-    TResult? Function(ServiceResetEvent value)? resetSelected,
-    TResult? Function(ServiceDraftEvent value)? draftService,
-    TResult? Function(ServiceClearDraftsEvent value)? clearDrafts,
-  }) {
-    return draftService?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(ServiceCreateEvent value)? create,
-    TResult Function(ServiceUpdateEvent value)? update,
-    TResult Function(ServiceSearchEvent value)? search,
-    TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
-    TResult Function(ServiceSelectionEvent value)? selectService,
-    TResult Function(ServiceResetEvent value)? resetSelected,
-    TResult Function(ServiceDraftEvent value)? draftService,
-    TResult Function(ServiceClearDraftsEvent value)? clearDrafts,
-    required TResult orElse(),
-  }) {
-    if (draftService != null) {
-      return draftService(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class ServiceDraftEvent implements ServiceEvent {
-  const factory ServiceDraftEvent({required final ServiceModel draftService}) =
-      _$ServiceDraftEventImpl;
-
-  ServiceModel get draftService;
-  @JsonKey(ignore: true)
-  _$$ServiceDraftEventImplCopyWith<_$ServiceDraftEventImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$ServiceClearDraftsEventImplCopyWith<$Res> {
-  factory _$$ServiceClearDraftsEventImplCopyWith(
-          _$ServiceClearDraftsEventImpl value,
-          $Res Function(_$ServiceClearDraftsEventImpl) then) =
-      __$$ServiceClearDraftsEventImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$ServiceClearDraftsEventImplCopyWithImpl<$Res>
-    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceClearDraftsEventImpl>
-    implements _$$ServiceClearDraftsEventImplCopyWith<$Res> {
-  __$$ServiceClearDraftsEventImplCopyWithImpl(
-      _$ServiceClearDraftsEventImpl _value,
-      $Res Function(_$ServiceClearDraftsEventImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$ServiceClearDraftsEventImpl implements ServiceClearDraftsEvent {
-  const _$ServiceClearDraftsEventImpl();
-
-  @override
-  String toString() {
-    return 'ServiceEvent.clearDrafts()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ServiceClearDraftsEventImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(ServiceModel serviceModel) create,
-    required TResult Function(ServiceModel serviceModel) update,
-    required TResult Function(ServiceSearchModel serviceSearchModel) search,
-    required TResult Function(String value, bool submitTriggered)
-        multiSurveyFormChanged,
-    required TResult Function(ServiceModel service) selectService,
-    required TResult Function(List<ServiceModel> serviceList) resetSelected,
-    required TResult Function(ServiceModel draftService) draftService,
-    required TResult Function() clearDrafts,
-  }) {
-    return clearDrafts();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(ServiceModel serviceModel)? create,
-    TResult? Function(ServiceModel serviceModel)? update,
-    TResult? Function(ServiceSearchModel serviceSearchModel)? search,
-    TResult? Function(String value, bool submitTriggered)?
-        multiSurveyFormChanged,
-    TResult? Function(ServiceModel service)? selectService,
-    TResult? Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult? Function(ServiceModel draftService)? draftService,
-    TResult? Function()? clearDrafts,
-  }) {
-    return clearDrafts?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(ServiceModel serviceModel)? create,
-    TResult Function(ServiceModel serviceModel)? update,
-    TResult Function(ServiceSearchModel serviceSearchModel)? search,
-    TResult Function(String value, bool submitTriggered)?
-        multiSurveyFormChanged,
-    TResult Function(ServiceModel service)? selectService,
-    TResult Function(List<ServiceModel> serviceList)? resetSelected,
-    TResult Function(ServiceModel draftService)? draftService,
-    TResult Function()? clearDrafts,
-    required TResult orElse(),
-  }) {
-    if (clearDrafts != null) {
-      return clearDrafts();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(ServiceCreateEvent value) create,
-    required TResult Function(ServiceUpdateEvent value) update,
-    required TResult Function(ServiceSearchEvent value) search,
-    required TResult Function(ServiceSurveyFormEvent value)
-        multiSurveyFormChanged,
-    required TResult Function(ServiceSelectionEvent value) selectService,
-    required TResult Function(ServiceResetEvent value) resetSelected,
-    required TResult Function(ServiceDraftEvent value) draftService,
-    required TResult Function(ServiceClearDraftsEvent value) clearDrafts,
-  }) {
-    return clearDrafts(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(ServiceCreateEvent value)? create,
-    TResult? Function(ServiceUpdateEvent value)? update,
-    TResult? Function(ServiceSearchEvent value)? search,
-    TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
-    TResult? Function(ServiceSelectionEvent value)? selectService,
-    TResult? Function(ServiceResetEvent value)? resetSelected,
-    TResult? Function(ServiceDraftEvent value)? draftService,
-    TResult? Function(ServiceClearDraftsEvent value)? clearDrafts,
-  }) {
-    return clearDrafts?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(ServiceCreateEvent value)? create,
-    TResult Function(ServiceUpdateEvent value)? update,
-    TResult Function(ServiceSearchEvent value)? search,
-    TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
-    TResult Function(ServiceSelectionEvent value)? selectService,
-    TResult Function(ServiceResetEvent value)? resetSelected,
-    TResult Function(ServiceDraftEvent value)? draftService,
-    TResult Function(ServiceClearDraftsEvent value)? clearDrafts,
-    required TResult orElse(),
-  }) {
-    if (clearDrafts != null) {
-      return clearDrafts(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class ServiceClearDraftsEvent implements ServiceEvent {
-  const factory ServiceClearDraftsEvent() = _$ServiceClearDraftsEventImpl;
-}
-
-/// @nodoc
 mixin _$ServiceState {
-  List<ServiceModel> get drafts => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<ServiceModel> drafts) empty,
-    required TResult Function(List<ServiceModel> drafts) isloading,
-    required TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)
+    required TResult Function() empty,
+    required TResult Function() isloading,
+    required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
-    required TResult Function(
-            ServiceModel serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            bool isEditing,
-            List<ServiceModel> drafts)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
-    required TResult Function(List<ServiceModel> drafts) serviceDraft,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<ServiceModel> drafts)? empty,
-    TResult? Function(List<ServiceModel> drafts)? isloading,
-    TResult? Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult? Function()? empty,
+    TResult? Function()? isloading,
+    TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult? Function(List<ServiceModel> drafts)? serviceDraft,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ServiceModel> drafts)? empty,
-    TResult Function(List<ServiceModel> drafts)? isloading,
-    TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult Function()? empty,
+    TResult Function()? isloading,
+    TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult Function(List<ServiceModel> drafts)? serviceDraft,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1586,7 +1161,6 @@ mixin _$ServiceState {
         multiSurveyFormChanged,
     required TResult Function(ServiceCreateState value) serviceCreate,
     required TResult Function(ServiceSearchState value) serviceSearch,
-    required TResult Function(ServiceDraftState value) serviceDraft,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1597,7 +1171,6 @@ mixin _$ServiceState {
         multiSurveyFormChanged,
     TResult? Function(ServiceCreateState value)? serviceCreate,
     TResult? Function(ServiceSearchState value)? serviceSearch,
-    TResult? Function(ServiceDraftState value)? serviceDraft,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1608,13 +1181,8 @@ mixin _$ServiceState {
         multiSurveyFormChanged,
     TResult Function(ServiceCreateState value)? serviceCreate,
     TResult Function(ServiceSearchState value)? serviceSearch,
-    TResult Function(ServiceDraftState value)? serviceDraft,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $ServiceStateCopyWith<ServiceState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1623,8 +1191,6 @@ abstract class $ServiceStateCopyWith<$Res> {
   factory $ServiceStateCopyWith(
           ServiceState value, $Res Function(ServiceState) then) =
       _$ServiceStateCopyWithImpl<$Res, ServiceState>;
-  @useResult
-  $Res call({List<ServiceModel> drafts});
 }
 
 /// @nodoc
@@ -1636,30 +1202,13 @@ class _$ServiceStateCopyWithImpl<$Res, $Val extends ServiceState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? drafts = null,
-  }) {
-    return _then(_value.copyWith(
-      drafts: null == drafts
-          ? _value.drafts
-          : drafts // ignore: cast_nullable_to_non_nullable
-              as List<ServiceModel>,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$ServiceEmptyStateImplCopyWith<$Res>
-    implements $ServiceStateCopyWith<$Res> {
+abstract class _$$ServiceEmptyStateImplCopyWith<$Res> {
   factory _$$ServiceEmptyStateImplCopyWith(_$ServiceEmptyStateImpl value,
           $Res Function(_$ServiceEmptyStateImpl) then) =
       __$$ServiceEmptyStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({List<ServiceModel> drafts});
 }
 
 /// @nodoc
@@ -1669,130 +1218,78 @@ class __$$ServiceEmptyStateImplCopyWithImpl<$Res>
   __$$ServiceEmptyStateImplCopyWithImpl(_$ServiceEmptyStateImpl _value,
       $Res Function(_$ServiceEmptyStateImpl) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? drafts = null,
-  }) {
-    return _then(_$ServiceEmptyStateImpl(
-      drafts: null == drafts
-          ? _value._drafts
-          : drafts // ignore: cast_nullable_to_non_nullable
-              as List<ServiceModel>,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$ServiceEmptyStateImpl implements ServiceEmptyState {
-  const _$ServiceEmptyStateImpl({final List<ServiceModel> drafts = const []})
-      : _drafts = drafts;
-
-  final List<ServiceModel> _drafts;
-  @override
-  @JsonKey()
-  List<ServiceModel> get drafts {
-    if (_drafts is EqualUnmodifiableListView) return _drafts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_drafts);
-  }
+  const _$ServiceEmptyStateImpl();
 
   @override
   String toString() {
-    return 'ServiceState.empty(drafts: $drafts)';
+    return 'ServiceState.empty()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ServiceEmptyStateImpl &&
-            const DeepCollectionEquality().equals(other._drafts, _drafts));
+        (other.runtimeType == runtimeType && other is _$ServiceEmptyStateImpl);
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_drafts));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ServiceEmptyStateImplCopyWith<_$ServiceEmptyStateImpl> get copyWith =>
-      __$$ServiceEmptyStateImplCopyWithImpl<_$ServiceEmptyStateImpl>(
-          this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<ServiceModel> drafts) empty,
-    required TResult Function(List<ServiceModel> drafts) isloading,
-    required TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)
+    required TResult Function() empty,
+    required TResult Function() isloading,
+    required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
-    required TResult Function(
-            ServiceModel serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            bool isEditing,
-            List<ServiceModel> drafts)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
-    required TResult Function(List<ServiceModel> drafts) serviceDraft,
   }) {
-    return empty(drafts);
+    return empty();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<ServiceModel> drafts)? empty,
-    TResult? Function(List<ServiceModel> drafts)? isloading,
-    TResult? Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult? Function()? empty,
+    TResult? Function()? isloading,
+    TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult? Function(List<ServiceModel> drafts)? serviceDraft,
   }) {
-    return empty?.call(drafts);
+    return empty?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ServiceModel> drafts)? empty,
-    TResult Function(List<ServiceModel> drafts)? isloading,
-    TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult Function()? empty,
+    TResult Function()? isloading,
+    TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult Function(List<ServiceModel> drafts)? serviceDraft,
     required TResult orElse(),
   }) {
     if (empty != null) {
-      return empty(drafts);
+      return empty();
     }
     return orElse();
   }
@@ -1806,7 +1303,6 @@ class _$ServiceEmptyStateImpl implements ServiceEmptyState {
         multiSurveyFormChanged,
     required TResult Function(ServiceCreateState value) serviceCreate,
     required TResult Function(ServiceSearchState value) serviceSearch,
-    required TResult Function(ServiceDraftState value) serviceDraft,
   }) {
     return empty(this);
   }
@@ -1820,7 +1316,6 @@ class _$ServiceEmptyStateImpl implements ServiceEmptyState {
         multiSurveyFormChanged,
     TResult? Function(ServiceCreateState value)? serviceCreate,
     TResult? Function(ServiceSearchState value)? serviceSearch,
-    TResult? Function(ServiceDraftState value)? serviceDraft,
   }) {
     return empty?.call(this);
   }
@@ -1834,7 +1329,6 @@ class _$ServiceEmptyStateImpl implements ServiceEmptyState {
         multiSurveyFormChanged,
     TResult Function(ServiceCreateState value)? serviceCreate,
     TResult Function(ServiceSearchState value)? serviceSearch,
-    TResult Function(ServiceDraftState value)? serviceDraft,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -1845,27 +1339,15 @@ class _$ServiceEmptyStateImpl implements ServiceEmptyState {
 }
 
 abstract class ServiceEmptyState implements ServiceState {
-  const factory ServiceEmptyState({final List<ServiceModel> drafts}) =
-      _$ServiceEmptyStateImpl;
-
-  @override
-  List<ServiceModel> get drafts;
-  @override
-  @JsonKey(ignore: true)
-  _$$ServiceEmptyStateImplCopyWith<_$ServiceEmptyStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  const factory ServiceEmptyState() = _$ServiceEmptyStateImpl;
 }
 
 /// @nodoc
-abstract class _$$ServiceIsloadingStateImplCopyWith<$Res>
-    implements $ServiceStateCopyWith<$Res> {
+abstract class _$$ServiceIsloadingStateImplCopyWith<$Res> {
   factory _$$ServiceIsloadingStateImplCopyWith(
           _$ServiceIsloadingStateImpl value,
           $Res Function(_$ServiceIsloadingStateImpl) then) =
       __$$ServiceIsloadingStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({List<ServiceModel> drafts});
 }
 
 /// @nodoc
@@ -1875,131 +1357,79 @@ class __$$ServiceIsloadingStateImplCopyWithImpl<$Res>
   __$$ServiceIsloadingStateImplCopyWithImpl(_$ServiceIsloadingStateImpl _value,
       $Res Function(_$ServiceIsloadingStateImpl) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? drafts = null,
-  }) {
-    return _then(_$ServiceIsloadingStateImpl(
-      drafts: null == drafts
-          ? _value._drafts
-          : drafts // ignore: cast_nullable_to_non_nullable
-              as List<ServiceModel>,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$ServiceIsloadingStateImpl implements ServiceIsloadingState {
-  const _$ServiceIsloadingStateImpl(
-      {final List<ServiceModel> drafts = const []})
-      : _drafts = drafts;
-
-  final List<ServiceModel> _drafts;
-  @override
-  @JsonKey()
-  List<ServiceModel> get drafts {
-    if (_drafts is EqualUnmodifiableListView) return _drafts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_drafts);
-  }
+  const _$ServiceIsloadingStateImpl();
 
   @override
   String toString() {
-    return 'ServiceState.isloading(drafts: $drafts)';
+    return 'ServiceState.isloading()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceIsloadingStateImpl &&
-            const DeepCollectionEquality().equals(other._drafts, _drafts));
+            other is _$ServiceIsloadingStateImpl);
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_drafts));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ServiceIsloadingStateImplCopyWith<_$ServiceIsloadingStateImpl>
-      get copyWith => __$$ServiceIsloadingStateImplCopyWithImpl<
-          _$ServiceIsloadingStateImpl>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<ServiceModel> drafts) empty,
-    required TResult Function(List<ServiceModel> drafts) isloading,
-    required TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)
+    required TResult Function() empty,
+    required TResult Function() isloading,
+    required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
-    required TResult Function(
-            ServiceModel serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            bool isEditing,
-            List<ServiceModel> drafts)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
-    required TResult Function(List<ServiceModel> drafts) serviceDraft,
   }) {
-    return isloading(drafts);
+    return isloading();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<ServiceModel> drafts)? empty,
-    TResult? Function(List<ServiceModel> drafts)? isloading,
-    TResult? Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult? Function()? empty,
+    TResult? Function()? isloading,
+    TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult? Function(List<ServiceModel> drafts)? serviceDraft,
   }) {
-    return isloading?.call(drafts);
+    return isloading?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ServiceModel> drafts)? empty,
-    TResult Function(List<ServiceModel> drafts)? isloading,
-    TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult Function()? empty,
+    TResult Function()? isloading,
+    TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult Function(List<ServiceModel> drafts)? serviceDraft,
     required TResult orElse(),
   }) {
     if (isloading != null) {
-      return isloading(drafts);
+      return isloading();
     }
     return orElse();
   }
@@ -2013,7 +1443,6 @@ class _$ServiceIsloadingStateImpl implements ServiceIsloadingState {
         multiSurveyFormChanged,
     required TResult Function(ServiceCreateState value) serviceCreate,
     required TResult Function(ServiceSearchState value) serviceSearch,
-    required TResult Function(ServiceDraftState value) serviceDraft,
   }) {
     return isloading(this);
   }
@@ -2027,7 +1456,6 @@ class _$ServiceIsloadingStateImpl implements ServiceIsloadingState {
         multiSurveyFormChanged,
     TResult? Function(ServiceCreateState value)? serviceCreate,
     TResult? Function(ServiceSearchState value)? serviceSearch,
-    TResult? Function(ServiceDraftState value)? serviceDraft,
   }) {
     return isloading?.call(this);
   }
@@ -2041,7 +1469,6 @@ class _$ServiceIsloadingStateImpl implements ServiceIsloadingState {
         multiSurveyFormChanged,
     TResult Function(ServiceCreateState value)? serviceCreate,
     TResult Function(ServiceSearchState value)? serviceSearch,
-    TResult Function(ServiceDraftState value)? serviceDraft,
     required TResult orElse(),
   }) {
     if (isloading != null) {
@@ -2052,27 +1479,17 @@ class _$ServiceIsloadingStateImpl implements ServiceIsloadingState {
 }
 
 abstract class ServiceIsloadingState implements ServiceState {
-  const factory ServiceIsloadingState({final List<ServiceModel> drafts}) =
-      _$ServiceIsloadingStateImpl;
-
-  @override
-  List<ServiceModel> get drafts;
-  @override
-  @JsonKey(ignore: true)
-  _$$ServiceIsloadingStateImplCopyWith<_$ServiceIsloadingStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  const factory ServiceIsloadingState() = _$ServiceIsloadingStateImpl;
 }
 
 /// @nodoc
-abstract class _$$ServiceMultiSurveyFormChangedStateImplCopyWith<$Res>
-    implements $ServiceStateCopyWith<$Res> {
+abstract class _$$ServiceMultiSurveyFormChangedStateImplCopyWith<$Res> {
   factory _$$ServiceMultiSurveyFormChangedStateImplCopyWith(
           _$ServiceMultiSurveyFormChangedStateImpl value,
           $Res Function(_$ServiceMultiSurveyFormChangedStateImpl) then) =
       __$$ServiceMultiSurveyFormChangedStateImplCopyWithImpl<$Res>;
-  @override
   @useResult
-  $Res call({String value, bool submitTriggered, List<ServiceModel> drafts});
+  $Res call({String value, bool submitTriggered});
 }
 
 /// @nodoc
@@ -2090,7 +1507,6 @@ class __$$ServiceMultiSurveyFormChangedStateImplCopyWithImpl<$Res>
   $Res call({
     Object? value = null,
     Object? submitTriggered = null,
-    Object? drafts = null,
   }) {
     return _then(_$ServiceMultiSurveyFormChangedStateImpl(
       value: null == value
@@ -2101,10 +1517,6 @@ class __$$ServiceMultiSurveyFormChangedStateImplCopyWithImpl<$Res>
           ? _value.submitTriggered
           : submitTriggered // ignore: cast_nullable_to_non_nullable
               as bool,
-      drafts: null == drafts
-          ? _value._drafts
-          : drafts // ignore: cast_nullable_to_non_nullable
-              as List<ServiceModel>,
     ));
   }
 }
@@ -2114,10 +1526,7 @@ class __$$ServiceMultiSurveyFormChangedStateImplCopyWithImpl<$Res>
 class _$ServiceMultiSurveyFormChangedStateImpl
     implements ServiceMultiSurveyFormChangedState {
   const _$ServiceMultiSurveyFormChangedStateImpl(
-      {this.value = '',
-      this.submitTriggered = false,
-      final List<ServiceModel> drafts = const []})
-      : _drafts = drafts;
+      {this.value = '', this.submitTriggered = false});
 
   @override
   @JsonKey()
@@ -2125,18 +1534,10 @@ class _$ServiceMultiSurveyFormChangedStateImpl
   @override
   @JsonKey()
   final bool submitTriggered;
-  final List<ServiceModel> _drafts;
-  @override
-  @JsonKey()
-  List<ServiceModel> get drafts {
-    if (_drafts is EqualUnmodifiableListView) return _drafts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_drafts);
-  }
 
   @override
   String toString() {
-    return 'ServiceState.multiSurveyFormChanged(value: $value, submitTriggered: $submitTriggered, drafts: $drafts)';
+    return 'ServiceState.multiSurveyFormChanged(value: $value, submitTriggered: $submitTriggered)';
   }
 
   @override
@@ -2146,13 +1547,11 @@ class _$ServiceMultiSurveyFormChangedStateImpl
             other is _$ServiceMultiSurveyFormChangedStateImpl &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.submitTriggered, submitTriggered) ||
-                other.submitTriggered == submitTriggered) &&
-            const DeepCollectionEquality().equals(other._drafts, _drafts));
+                other.submitTriggered == submitTriggered));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, value, submitTriggered,
-      const DeepCollectionEquality().hash(_drafts));
+  int get hashCode => Object.hash(runtimeType, value, submitTriggered);
 
   @JsonKey(ignore: true)
   @override
@@ -2165,73 +1564,54 @@ class _$ServiceMultiSurveyFormChangedStateImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<ServiceModel> drafts) empty,
-    required TResult Function(List<ServiceModel> drafts) isloading,
-    required TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)
+    required TResult Function() empty,
+    required TResult Function() isloading,
+    required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
-    required TResult Function(
-            ServiceModel serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            bool isEditing,
-            List<ServiceModel> drafts)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
-    required TResult Function(List<ServiceModel> drafts) serviceDraft,
   }) {
-    return multiSurveyFormChanged(value, submitTriggered, drafts);
+    return multiSurveyFormChanged(value, submitTriggered);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<ServiceModel> drafts)? empty,
-    TResult? Function(List<ServiceModel> drafts)? isloading,
-    TResult? Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult? Function()? empty,
+    TResult? Function()? isloading,
+    TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult? Function(List<ServiceModel> drafts)? serviceDraft,
   }) {
-    return multiSurveyFormChanged?.call(value, submitTriggered, drafts);
+    return multiSurveyFormChanged?.call(value, submitTriggered);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ServiceModel> drafts)? empty,
-    TResult Function(List<ServiceModel> drafts)? isloading,
-    TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult Function()? empty,
+    TResult Function()? isloading,
+    TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult Function(List<ServiceModel> drafts)? serviceDraft,
     required TResult orElse(),
   }) {
     if (multiSurveyFormChanged != null) {
-      return multiSurveyFormChanged(value, submitTriggered, drafts);
+      return multiSurveyFormChanged(value, submitTriggered);
     }
     return orElse();
   }
@@ -2245,7 +1625,6 @@ class _$ServiceMultiSurveyFormChangedStateImpl
         multiSurveyFormChanged,
     required TResult Function(ServiceCreateState value) serviceCreate,
     required TResult Function(ServiceSearchState value) serviceSearch,
-    required TResult Function(ServiceDraftState value) serviceDraft,
   }) {
     return multiSurveyFormChanged(this);
   }
@@ -2259,7 +1638,6 @@ class _$ServiceMultiSurveyFormChangedStateImpl
         multiSurveyFormChanged,
     TResult? Function(ServiceCreateState value)? serviceCreate,
     TResult? Function(ServiceSearchState value)? serviceSearch,
-    TResult? Function(ServiceDraftState value)? serviceDraft,
   }) {
     return multiSurveyFormChanged?.call(this);
   }
@@ -2273,7 +1651,6 @@ class _$ServiceMultiSurveyFormChangedStateImpl
         multiSurveyFormChanged,
     TResult Function(ServiceCreateState value)? serviceCreate,
     TResult Function(ServiceSearchState value)? serviceSearch,
-    TResult Function(ServiceDraftState value)? serviceDraft,
     required TResult orElse(),
   }) {
     if (multiSurveyFormChanged != null) {
@@ -2285,16 +1662,11 @@ class _$ServiceMultiSurveyFormChangedStateImpl
 
 abstract class ServiceMultiSurveyFormChangedState implements ServiceState {
   const factory ServiceMultiSurveyFormChangedState(
-          {final String value,
-          final bool submitTriggered,
-          final List<ServiceModel> drafts}) =
-      _$ServiceMultiSurveyFormChangedStateImpl;
+      {final String value,
+      final bool submitTriggered}) = _$ServiceMultiSurveyFormChangedStateImpl;
 
   String get value;
   bool get submitTriggered;
-  @override
-  List<ServiceModel> get drafts;
-  @override
   @JsonKey(ignore: true)
   _$$ServiceMultiSurveyFormChangedStateImplCopyWith<
           _$ServiceMultiSurveyFormChangedStateImpl>
@@ -2302,19 +1674,16 @@ abstract class ServiceMultiSurveyFormChangedState implements ServiceState {
 }
 
 /// @nodoc
-abstract class _$$ServiceCreateStateImplCopyWith<$Res>
-    implements $ServiceStateCopyWith<$Res> {
+abstract class _$$ServiceCreateStateImplCopyWith<$Res> {
   factory _$$ServiceCreateStateImplCopyWith(_$ServiceCreateStateImpl value,
           $Res Function(_$ServiceCreateStateImpl) then) =
       __$$ServiceCreateStateImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call(
       {ServiceModel serviceList,
       ServiceModel? selectedService,
       bool loading,
-      bool isEditing,
-      List<ServiceModel> drafts});
+      bool isEditing});
 }
 
 /// @nodoc
@@ -2332,7 +1701,6 @@ class __$$ServiceCreateStateImplCopyWithImpl<$Res>
     Object? selectedService = freezed,
     Object? loading = null,
     Object? isEditing = null,
-    Object? drafts = null,
   }) {
     return _then(_$ServiceCreateStateImpl(
       serviceList: null == serviceList
@@ -2351,10 +1719,6 @@ class __$$ServiceCreateStateImplCopyWithImpl<$Res>
           ? _value.isEditing
           : isEditing // ignore: cast_nullable_to_non_nullable
               as bool,
-      drafts: null == drafts
-          ? _value._drafts
-          : drafts // ignore: cast_nullable_to_non_nullable
-              as List<ServiceModel>,
     ));
   }
 }
@@ -2366,9 +1730,7 @@ class _$ServiceCreateStateImpl implements ServiceCreateState {
       {required this.serviceList,
       this.selectedService,
       this.loading = false,
-      this.isEditing = false,
-      final List<ServiceModel> drafts = const []})
-      : _drafts = drafts;
+      this.isEditing = false});
 
   @override
   final ServiceModel serviceList;
@@ -2380,18 +1742,10 @@ class _$ServiceCreateStateImpl implements ServiceCreateState {
   @override
   @JsonKey()
   final bool isEditing;
-  final List<ServiceModel> _drafts;
-  @override
-  @JsonKey()
-  List<ServiceModel> get drafts {
-    if (_drafts is EqualUnmodifiableListView) return _drafts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_drafts);
-  }
 
   @override
   String toString() {
-    return 'ServiceState.serviceCreate(serviceList: $serviceList, selectedService: $selectedService, loading: $loading, isEditing: $isEditing, drafts: $drafts)';
+    return 'ServiceState.serviceCreate(serviceList: $serviceList, selectedService: $selectedService, loading: $loading, isEditing: $isEditing)';
   }
 
   @override
@@ -2405,13 +1759,12 @@ class _$ServiceCreateStateImpl implements ServiceCreateState {
                 other.selectedService == selectedService) &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isEditing, isEditing) ||
-                other.isEditing == isEditing) &&
-            const DeepCollectionEquality().equals(other._drafts, _drafts));
+                other.isEditing == isEditing));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, serviceList, selectedService,
-      loading, isEditing, const DeepCollectionEquality().hash(_drafts));
+  int get hashCode => Object.hash(
+      runtimeType, serviceList, selectedService, loading, isEditing);
 
   @JsonKey(ignore: true)
   @override
@@ -2423,76 +1776,55 @@ class _$ServiceCreateStateImpl implements ServiceCreateState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<ServiceModel> drafts) empty,
-    required TResult Function(List<ServiceModel> drafts) isloading,
-    required TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)
+    required TResult Function() empty,
+    required TResult Function() isloading,
+    required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
-    required TResult Function(
-            ServiceModel serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            bool isEditing,
-            List<ServiceModel> drafts)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
-    required TResult Function(List<ServiceModel> drafts) serviceDraft,
   }) {
-    return serviceCreate(
-        serviceList, selectedService, loading, isEditing, drafts);
+    return serviceCreate(serviceList, selectedService, loading, isEditing);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<ServiceModel> drafts)? empty,
-    TResult? Function(List<ServiceModel> drafts)? isloading,
-    TResult? Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult? Function()? empty,
+    TResult? Function()? isloading,
+    TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult? Function(List<ServiceModel> drafts)? serviceDraft,
   }) {
     return serviceCreate?.call(
-        serviceList, selectedService, loading, isEditing, drafts);
+        serviceList, selectedService, loading, isEditing);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ServiceModel> drafts)? empty,
-    TResult Function(List<ServiceModel> drafts)? isloading,
-    TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult Function()? empty,
+    TResult Function()? isloading,
+    TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult Function(List<ServiceModel> drafts)? serviceDraft,
     required TResult orElse(),
   }) {
     if (serviceCreate != null) {
-      return serviceCreate(
-          serviceList, selectedService, loading, isEditing, drafts);
+      return serviceCreate(serviceList, selectedService, loading, isEditing);
     }
     return orElse();
   }
@@ -2506,7 +1838,6 @@ class _$ServiceCreateStateImpl implements ServiceCreateState {
         multiSurveyFormChanged,
     required TResult Function(ServiceCreateState value) serviceCreate,
     required TResult Function(ServiceSearchState value) serviceSearch,
-    required TResult Function(ServiceDraftState value) serviceDraft,
   }) {
     return serviceCreate(this);
   }
@@ -2520,7 +1851,6 @@ class _$ServiceCreateStateImpl implements ServiceCreateState {
         multiSurveyFormChanged,
     TResult? Function(ServiceCreateState value)? serviceCreate,
     TResult? Function(ServiceSearchState value)? serviceSearch,
-    TResult? Function(ServiceDraftState value)? serviceDraft,
   }) {
     return serviceCreate?.call(this);
   }
@@ -2534,7 +1864,6 @@ class _$ServiceCreateStateImpl implements ServiceCreateState {
         multiSurveyFormChanged,
     TResult Function(ServiceCreateState value)? serviceCreate,
     TResult Function(ServiceSearchState value)? serviceSearch,
-    TResult Function(ServiceDraftState value)? serviceDraft,
     required TResult orElse(),
   }) {
     if (serviceCreate != null) {
@@ -2549,34 +1878,27 @@ abstract class ServiceCreateState implements ServiceState {
       {required final ServiceModel serviceList,
       final ServiceModel? selectedService,
       final bool loading,
-      final bool isEditing,
-      final List<ServiceModel> drafts}) = _$ServiceCreateStateImpl;
+      final bool isEditing}) = _$ServiceCreateStateImpl;
 
   ServiceModel get serviceList;
   ServiceModel? get selectedService;
   bool get loading;
   bool get isEditing;
-  @override
-  List<ServiceModel> get drafts;
-  @override
   @JsonKey(ignore: true)
   _$$ServiceCreateStateImplCopyWith<_$ServiceCreateStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ServiceSearchStateImplCopyWith<$Res>
-    implements $ServiceStateCopyWith<$Res> {
+abstract class _$$ServiceSearchStateImplCopyWith<$Res> {
   factory _$$ServiceSearchStateImplCopyWith(_$ServiceSearchStateImpl value,
           $Res Function(_$ServiceSearchStateImpl) then) =
       __$$ServiceSearchStateImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call(
       {List<ServiceModel> serviceList,
       ServiceModel? selectedService,
-      bool loading,
-      List<ServiceModel> drafts});
+      bool loading});
 }
 
 /// @nodoc
@@ -2593,7 +1915,6 @@ class __$$ServiceSearchStateImplCopyWithImpl<$Res>
     Object? serviceList = null,
     Object? selectedService = freezed,
     Object? loading = null,
-    Object? drafts = null,
   }) {
     return _then(_$ServiceSearchStateImpl(
       serviceList: null == serviceList
@@ -2608,10 +1929,6 @@ class __$$ServiceSearchStateImplCopyWithImpl<$Res>
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
-      drafts: null == drafts
-          ? _value._drafts
-          : drafts // ignore: cast_nullable_to_non_nullable
-              as List<ServiceModel>,
     ));
   }
 }
@@ -2622,10 +1939,8 @@ class _$ServiceSearchStateImpl implements ServiceSearchState {
   const _$ServiceSearchStateImpl(
       {required final List<ServiceModel> serviceList,
       this.selectedService,
-      this.loading = false,
-      final List<ServiceModel> drafts = const []})
-      : _serviceList = serviceList,
-        _drafts = drafts;
+      this.loading = false})
+      : _serviceList = serviceList;
 
   final List<ServiceModel> _serviceList;
   @override
@@ -2640,18 +1955,10 @@ class _$ServiceSearchStateImpl implements ServiceSearchState {
   @override
   @JsonKey()
   final bool loading;
-  final List<ServiceModel> _drafts;
-  @override
-  @JsonKey()
-  List<ServiceModel> get drafts {
-    if (_drafts is EqualUnmodifiableListView) return _drafts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_drafts);
-  }
 
   @override
   String toString() {
-    return 'ServiceState.serviceSearch(serviceList: $serviceList, selectedService: $selectedService, loading: $loading, drafts: $drafts)';
+    return 'ServiceState.serviceSearch(serviceList: $serviceList, selectedService: $selectedService, loading: $loading)';
   }
 
   @override
@@ -2663,8 +1970,7 @@ class _$ServiceSearchStateImpl implements ServiceSearchState {
                 .equals(other._serviceList, _serviceList) &&
             (identical(other.selectedService, selectedService) ||
                 other.selectedService == selectedService) &&
-            (identical(other.loading, loading) || other.loading == loading) &&
-            const DeepCollectionEquality().equals(other._drafts, _drafts));
+            (identical(other.loading, loading) || other.loading == loading));
   }
 
   @override
@@ -2672,8 +1978,7 @@ class _$ServiceSearchStateImpl implements ServiceSearchState {
       runtimeType,
       const DeepCollectionEquality().hash(_serviceList),
       selectedService,
-      loading,
-      const DeepCollectionEquality().hash(_drafts));
+      loading);
 
   @JsonKey(ignore: true)
   @override
@@ -2685,73 +1990,54 @@ class _$ServiceSearchStateImpl implements ServiceSearchState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<ServiceModel> drafts) empty,
-    required TResult Function(List<ServiceModel> drafts) isloading,
-    required TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)
+    required TResult Function() empty,
+    required TResult Function() isloading,
+    required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
-    required TResult Function(
-            ServiceModel serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            bool isEditing,
-            List<ServiceModel> drafts)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
-    required TResult Function(List<ServiceModel> drafts) serviceDraft,
   }) {
-    return serviceSearch(serviceList, selectedService, loading, drafts);
+    return serviceSearch(serviceList, selectedService, loading);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<ServiceModel> drafts)? empty,
-    TResult? Function(List<ServiceModel> drafts)? isloading,
-    TResult? Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult? Function()? empty,
+    TResult? Function()? isloading,
+    TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult? Function(List<ServiceModel> drafts)? serviceDraft,
   }) {
-    return serviceSearch?.call(serviceList, selectedService, loading, drafts);
+    return serviceSearch?.call(serviceList, selectedService, loading);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ServiceModel> drafts)? empty,
-    TResult Function(List<ServiceModel> drafts)? isloading,
-    TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
+    TResult Function()? empty,
+    TResult Function()? isloading,
+    TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
     TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
-    TResult Function(List<ServiceModel> drafts)? serviceDraft,
     required TResult orElse(),
   }) {
     if (serviceSearch != null) {
-      return serviceSearch(serviceList, selectedService, loading, drafts);
+      return serviceSearch(serviceList, selectedService, loading);
     }
     return orElse();
   }
@@ -2765,7 +2051,6 @@ class _$ServiceSearchStateImpl implements ServiceSearchState {
         multiSurveyFormChanged,
     required TResult Function(ServiceCreateState value) serviceCreate,
     required TResult Function(ServiceSearchState value) serviceSearch,
-    required TResult Function(ServiceDraftState value) serviceDraft,
   }) {
     return serviceSearch(this);
   }
@@ -2779,7 +2064,6 @@ class _$ServiceSearchStateImpl implements ServiceSearchState {
         multiSurveyFormChanged,
     TResult? Function(ServiceCreateState value)? serviceCreate,
     TResult? Function(ServiceSearchState value)? serviceSearch,
-    TResult? Function(ServiceDraftState value)? serviceDraft,
   }) {
     return serviceSearch?.call(this);
   }
@@ -2793,7 +2077,6 @@ class _$ServiceSearchStateImpl implements ServiceSearchState {
         multiSurveyFormChanged,
     TResult Function(ServiceCreateState value)? serviceCreate,
     TResult Function(ServiceSearchState value)? serviceSearch,
-    TResult Function(ServiceDraftState value)? serviceDraft,
     required TResult orElse(),
   }) {
     if (serviceSearch != null) {
@@ -2807,220 +2090,12 @@ abstract class ServiceSearchState implements ServiceState {
   const factory ServiceSearchState(
       {required final List<ServiceModel> serviceList,
       final ServiceModel? selectedService,
-      final bool loading,
-      final List<ServiceModel> drafts}) = _$ServiceSearchStateImpl;
+      final bool loading}) = _$ServiceSearchStateImpl;
 
   List<ServiceModel> get serviceList;
   ServiceModel? get selectedService;
   bool get loading;
-  @override
-  List<ServiceModel> get drafts;
-  @override
   @JsonKey(ignore: true)
   _$$ServiceSearchStateImplCopyWith<_$ServiceSearchStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$ServiceDraftStateImplCopyWith<$Res>
-    implements $ServiceStateCopyWith<$Res> {
-  factory _$$ServiceDraftStateImplCopyWith(_$ServiceDraftStateImpl value,
-          $Res Function(_$ServiceDraftStateImpl) then) =
-      __$$ServiceDraftStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({List<ServiceModel> drafts});
-}
-
-/// @nodoc
-class __$$ServiceDraftStateImplCopyWithImpl<$Res>
-    extends _$ServiceStateCopyWithImpl<$Res, _$ServiceDraftStateImpl>
-    implements _$$ServiceDraftStateImplCopyWith<$Res> {
-  __$$ServiceDraftStateImplCopyWithImpl(_$ServiceDraftStateImpl _value,
-      $Res Function(_$ServiceDraftStateImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? drafts = null,
-  }) {
-    return _then(_$ServiceDraftStateImpl(
-      drafts: null == drafts
-          ? _value._drafts
-          : drafts // ignore: cast_nullable_to_non_nullable
-              as List<ServiceModel>,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$ServiceDraftStateImpl implements ServiceDraftState {
-  const _$ServiceDraftStateImpl({required final List<ServiceModel> drafts})
-      : _drafts = drafts;
-
-  final List<ServiceModel> _drafts;
-  @override
-  List<ServiceModel> get drafts {
-    if (_drafts is EqualUnmodifiableListView) return _drafts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_drafts);
-  }
-
-  @override
-  String toString() {
-    return 'ServiceState.serviceDraft(drafts: $drafts)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ServiceDraftStateImpl &&
-            const DeepCollectionEquality().equals(other._drafts, _drafts));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_drafts));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ServiceDraftStateImplCopyWith<_$ServiceDraftStateImpl> get copyWith =>
-      __$$ServiceDraftStateImplCopyWithImpl<_$ServiceDraftStateImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(List<ServiceModel> drafts) empty,
-    required TResult Function(List<ServiceModel> drafts) isloading,
-    required TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)
-        multiSurveyFormChanged,
-    required TResult Function(
-            ServiceModel serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            bool isEditing,
-            List<ServiceModel> drafts)
-        serviceCreate,
-    required TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)
-        serviceSearch,
-    required TResult Function(List<ServiceModel> drafts) serviceDraft,
-  }) {
-    return serviceDraft(drafts);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<ServiceModel> drafts)? empty,
-    TResult? Function(List<ServiceModel> drafts)? isloading,
-    TResult? Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
-        multiSurveyFormChanged,
-    TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
-        serviceCreate,
-    TResult? Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
-        serviceSearch,
-    TResult? Function(List<ServiceModel> drafts)? serviceDraft,
-  }) {
-    return serviceDraft?.call(drafts);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<ServiceModel> drafts)? empty,
-    TResult Function(List<ServiceModel> drafts)? isloading,
-    TResult Function(
-            String value, bool submitTriggered, List<ServiceModel> drafts)?
-        multiSurveyFormChanged,
-    TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
-            bool loading, bool isEditing, List<ServiceModel> drafts)?
-        serviceCreate,
-    TResult Function(
-            List<ServiceModel> serviceList,
-            ServiceModel? selectedService,
-            bool loading,
-            List<ServiceModel> drafts)?
-        serviceSearch,
-    TResult Function(List<ServiceModel> drafts)? serviceDraft,
-    required TResult orElse(),
-  }) {
-    if (serviceDraft != null) {
-      return serviceDraft(drafts);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(ServiceEmptyState value) empty,
-    required TResult Function(ServiceIsloadingState value) isloading,
-    required TResult Function(ServiceMultiSurveyFormChangedState value)
-        multiSurveyFormChanged,
-    required TResult Function(ServiceCreateState value) serviceCreate,
-    required TResult Function(ServiceSearchState value) serviceSearch,
-    required TResult Function(ServiceDraftState value) serviceDraft,
-  }) {
-    return serviceDraft(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(ServiceEmptyState value)? empty,
-    TResult? Function(ServiceIsloadingState value)? isloading,
-    TResult? Function(ServiceMultiSurveyFormChangedState value)?
-        multiSurveyFormChanged,
-    TResult? Function(ServiceCreateState value)? serviceCreate,
-    TResult? Function(ServiceSearchState value)? serviceSearch,
-    TResult? Function(ServiceDraftState value)? serviceDraft,
-  }) {
-    return serviceDraft?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(ServiceEmptyState value)? empty,
-    TResult Function(ServiceIsloadingState value)? isloading,
-    TResult Function(ServiceMultiSurveyFormChangedState value)?
-        multiSurveyFormChanged,
-    TResult Function(ServiceCreateState value)? serviceCreate,
-    TResult Function(ServiceSearchState value)? serviceSearch,
-    TResult Function(ServiceDraftState value)? serviceDraft,
-    required TResult orElse(),
-  }) {
-    if (serviceDraft != null) {
-      return serviceDraft(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class ServiceDraftState implements ServiceState {
-  const factory ServiceDraftState({required final List<ServiceModel> drafts}) =
-      _$ServiceDraftStateImpl;
-
-  @override
-  List<ServiceModel> get drafts;
-  @override
-  @JsonKey(ignore: true)
-  _$$ServiceDraftStateImplCopyWith<_$ServiceDraftStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

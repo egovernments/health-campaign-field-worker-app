@@ -286,7 +286,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 if (RegistrationDeliverySingleton()
                                         .householdType ==
                                     HouseholdType.family) {
-                                  checklistKey.currentState?.draftSurvey(
+                                  checklistKey.currentState?.submitSurvey(
                                       latitude: addressModel?.latitude,
                                       longitude: addressModel?.longitude,
                                       relatedReferenceId:
