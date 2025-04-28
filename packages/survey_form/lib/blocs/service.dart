@@ -23,6 +23,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on(_handlereset);
     on(_handleSelect);
     on(_handleUpdate);
+    on(_handleDraftService);
+    on(_handleClearDrafts);
   }
 
   FutureOr<void> _multiSurveyFormChanged(
@@ -32,6 +34,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(ServiceState.multiSurveyFormChanged(
       value: event.value,
       submitTriggered: event.submitTriggered,
+      drafts: state.drafts,
     ));
   }
 
@@ -56,6 +59,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(ServiceSearchState(
       selectedService: null,
       serviceList: event.serviceList,
+      drafts: []
     ));
   }
 
@@ -66,7 +70,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       ) async {
     final results =
     await serviceDataRepository.search(event.serviceSearchModel);
-    emit(ServiceSearchState(serviceList: results));
+    emit(ServiceSearchState(serviceList: results, drafts: state.drafts));
   }
 
   //
@@ -77,9 +81,43 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     state.mapOrNull(
       serviceSearch: (value) => emit(value.copyWith(
         selectedService: event.service,
+        drafts: state.drafts
       )),
     );
   }
+
+  FutureOr<void> _handleDraftService(
+      ServiceDraftEvent event,
+      ServiceEmitter emit,
+      ) async {
+    final currentDrafts = state.maybeWhen(
+      serviceDraft: (drafts) => drafts,
+      orElse: () => [],
+    );
+
+    // Check if this draft (based on clientId) already exists
+    final index = currentDrafts.indexWhere((d) => d.clientId == event.draftService.clientId);
+
+    List<ServiceModel> updatedDrafts = List.from(currentDrafts);
+
+    if (index >= 0) {
+      // Update existing draft
+      updatedDrafts[index] = event.draftService;
+    } else {
+      // Add new draft
+      updatedDrafts.add(event.draftService);
+    }
+
+    emit(ServiceState.serviceDraft(drafts: updatedDrafts));
+  }
+
+  FutureOr<void> _handleClearDrafts(
+      ServiceClearDraftsEvent event,
+      ServiceEmitter emit,
+      ) async {
+    emit(const ServiceState.serviceDraft(drafts: []));
+  }
+
 }
 
 @freezed
@@ -105,17 +143,28 @@ class ServiceEvent with _$ServiceEvent {
   const factory ServiceEvent.resetSelected({
     required List<ServiceModel> serviceList,
   }) = ServiceResetEvent;
+
+  const factory ServiceEvent.draftService({
+    required ServiceModel draftService,
+  }) = ServiceDraftEvent;
+
+  const factory ServiceEvent.clearDrafts() = ServiceClearDraftsEvent;
 }
 
 @freezed
 class ServiceState with _$ServiceState {
-  const factory ServiceState.empty() = ServiceEmptyState;
+  const factory ServiceState.empty({
+    @Default([]) List<ServiceModel> drafts,
+  }) = ServiceEmptyState;
 
-  const factory ServiceState.isloading() = ServiceIsloadingState;
+  const factory ServiceState.isloading({
+    @Default([]) List<ServiceModel> drafts,
+  }) = ServiceIsloadingState;
 
   const factory ServiceState.multiSurveyFormChanged({
     @Default('') String value,
     @Default(false) bool submitTriggered,
+    @Default([]) List<ServiceModel> drafts,
   }) = ServiceMultiSurveyFormChangedState;
 
   const factory ServiceState.serviceCreate({
@@ -123,11 +172,18 @@ class ServiceState with _$ServiceState {
     ServiceModel? selectedService,
     @Default(false) bool loading,
     @Default(false) bool isEditing,
+    @Default([]) List<ServiceModel> drafts,
   }) = ServiceCreateState;
 
   const factory ServiceState.serviceSearch({
     required List<ServiceModel> serviceList,
     ServiceModel? selectedService,
     @Default(false) bool loading,
+    @Default([]) List<ServiceModel> drafts,
   }) = ServiceSearchState;
+
+  const factory ServiceState.serviceDraft({
+    required List<ServiceModel> drafts,
+  }) = ServiceDraftState;
+
 }

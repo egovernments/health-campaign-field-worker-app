@@ -43,7 +43,7 @@ class _ReferralReasonChecklistPreviewPageState
           builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const Offstage(),
-              serviceSearch: (serviceList, selectedService, loading) {
+              serviceSearch: (serviceList, selectedService, loading, drafts) {
                 return selectedService != null
                     ? DigitCard(
                         cardType: CardType.primary,
@@ -76,7 +76,7 @@ class _ReferralReasonChecklistPreviewPageState
           BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const Offstage(),
-              serviceSearch: (value1, value2, value3) {
+              serviceSearch: (value1, value2, value3, value4) {
                 return value2 == null
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
