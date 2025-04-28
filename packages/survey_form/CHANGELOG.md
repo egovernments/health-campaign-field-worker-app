@@ -1,3 +1,8 @@
+## 1.0.2-dev.3-enumeration
+
+* Bug fix:
+  * Fixed issue in service attributes update
+
 ## 1.0.2-dev.2-enumeration
 
 * Added serviceClientReferenceId to service attribute entity and table
