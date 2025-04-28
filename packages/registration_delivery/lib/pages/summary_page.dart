@@ -43,15 +43,15 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
   void initState() {
     super.initState();
     final householdState = context.read<BeneficiaryRegistrationBloc>().state;
-    // context.read<ServiceBloc>().add(
-    //       ServiceSearchEvent(
-    //         serviceSearchModel: ServiceSearchModel(
-    //           referenceIds: [
-    //             householdState.householdModel?.clientReferenceId ?? ""
-    //           ],
-    //         ),
-    //       ),
-    //     );
+    context.read<ServiceBloc>().add(
+          ServiceSearchEvent(
+            serviceSearchModel: ServiceSearchModel(
+              referenceIds: [
+                householdState.householdModel?.clientReferenceId ?? ""
+              ],
+            ),
+          ),
+        );
   }
 
   String getLocalizedMessage(String code) {
@@ -215,14 +215,6 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                           tag: projectBeneficiaryModel?.tag,
                                           navigateToSummary: false),
                                     );
-                                    final drafts = context.read<ServiceBloc>().state.drafts;
-
-// Loop through and dispatch create for each draft
-                                    for (final draft in drafts) {
-                                      context.read<ServiceBloc>().add(
-                                        ServiceEvent.create(serviceModel: draft),
-                                      );
-                                    }
                                   }
                                 }
                               },

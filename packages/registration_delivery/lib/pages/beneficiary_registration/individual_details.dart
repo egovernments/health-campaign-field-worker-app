@@ -184,9 +184,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 if (RegistrationDeliverySingleton()
                                         .householdType ==
                                     HouseholdType.family) {
-                                  checklistKey.currentState?.draftSurvey(
-                                      latitude: addressModel?.latitude,
-                                      longitude: addressModel?.longitude,
+                                  checklistKey.currentState?.submitSurvey(
+                                      latitude: 876765,
+                                      longitude: 89798,
                                       relatedReferenceId:
                                           individual.clientReferenceId);
                                 }
@@ -329,6 +329,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                   context,
                                   form: form,
                                 );
+                                if (RegistrationDeliverySingleton()
+                                        .householdType ==
+                                    HouseholdType.family) {
+                                  checklistKey.currentState?.submitSurvey(
+                                      latitude: addressModel.latitude,
+                                      longitude: addressModel.longitude,
+                                      relatedReferenceId:
+                                          individual.clientReferenceId);
+                                }
 
                                 if (context.mounted) {
                                   final scannerBloc =
@@ -346,16 +355,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       type: ToastType.error,
                                     );
                                   } else {
-                                    if (RegistrationDeliverySingleton()
-                                        .householdType ==
-                                        HouseholdType.family) {
-                                      checklistKey.currentState?.submitSurvey(
-                                          latitude: addressModel.latitude,
-                                          longitude: addressModel.longitude,
-                                          relatedReferenceId:
-                                          individual.clientReferenceId);
-                                    }
-
                                     bloc.add(
                                       BeneficiaryRegistrationAddMemberEvent(
                                         beneficiaryType:

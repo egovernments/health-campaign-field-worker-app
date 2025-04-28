@@ -257,7 +257,46 @@ class HouseholdMemberLocalRepository
               )
             : null,
         rowVersion: entity.rowVersion?.increment,
+        memberRelationships: entity.memberRelationships?.map((e) => e.copyWith(isDeleted: true,
+          clientAuditDetails: (e.clientAuditDetails?.createdBy != null &&
+              e.clientAuditDetails?.createdTime != null)
+              ? ClientAuditDetails(
+                createdBy: e.clientAuditDetails!.createdBy,
+                createdTime: e.clientAuditDetails!.createdTime,
+                lastModifiedBy: e.clientAuditDetails!.lastModifiedBy,
+                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+              ): null,
+          rowVersion: e.rowVersion?.increment,
+        )).toList(),
       );
+      final relationships = entity.memberRelationships;
+
+      if (relationships != null && relationships.isNotEmpty) {
+        for (final relationship in relationships) {
+          final updatedRetionship = relationship.copyWith(
+            isDeleted: true,
+            clientAuditDetails: (relationship.clientAuditDetails?.createdBy != null &&
+                    relationship.clientAuditDetails?.createdTime != null)
+                ? ClientAuditDetails(
+                    createdBy: relationship.clientAuditDetails!.createdBy,
+                    createdTime: relationship.clientAuditDetails!.createdTime,
+                    lastModifiedBy: relationship.clientAuditDetails!.lastModifiedBy,
+                    lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                  )
+                : null,
+            rowVersion: relationship.rowVersion?.increment,
+          );
+          await sql.batch((batch) {
+            batch.update(
+              sql.householdMemberRelationShip,
+              updatedRetionship.companion,
+              where: (table) => table.clientReferenceId.equals(
+                updatedRetionship.clientReferenceId,
+              ),
+            );
+          });
+        }
+      }
       await sql.batch((batch) {
         batch.update(
           sql.householdMember,
