@@ -6,7 +6,6 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_dob_picker.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -1110,7 +1109,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                     builder: (ctx) {
                       return Popup(
                         type: PopUpType.alert,
-                        inlineActions: true,
                         onCrossTap: () {
                           Navigator.of(ctx).pop();
                         },
@@ -1158,7 +1156,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                   builder: (ctx) {
                     return Popup(
                       type: PopUpType.alert,
-                      inlineActions: true,
                       onCrossTap: () {
                         Navigator.of(ctx).pop();
                       },
@@ -1233,12 +1230,12 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             i18.beneficiaryDetails.availableBeneficiaryIdsText),
                         style: theme
                             .digitTextTheme(context)
-                            .bodyS
+                            .bodyXS
                             .copyWith(color: theme.colorTheme.text.primary),
                       ),
                       Text(
                         " $idCount",
-                        style: theme.digitTextTheme(context).headingS.copyWith(
+                        style: theme.digitTextTheme(context).headingXS.copyWith(
                             color: idCount! <
                                     RegistrationDeliverySingleton()
                                         .beneficiaryIdMinCount!

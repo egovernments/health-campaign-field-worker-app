@@ -663,6 +663,21 @@ class BeneficiaryRegistrationBloc
               ],
             ),
           );
+
+          final uniqueId = event.individualModel.identifiers!.firstWhereOrNull(
+              (id) =>
+                  id.identifierType ==
+                  IdentifierTypes.uniqueBeneficiaryID.toValue());
+
+          if (uniqueId != null) {
+            var id = await uniqueIdPoolLocalRepository
+                .search(UniqueIdPoolSearchModel(id: uniqueId.identifierId!));
+
+            uniqueIdPoolLocalRepository.update(id.firstOrNull!.copyWith(
+              status: IdStatus.assigned.toValue(),
+            ));
+          }
+
           if (event.beneficiaryType == BeneficiaryType.individual) {
             await projectBeneficiaryRepository.create(
               ProjectBeneficiaryModel(
