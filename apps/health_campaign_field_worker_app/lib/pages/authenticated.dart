@@ -88,7 +88,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                       ]);
                                     },
                                     child: Container(
-                                      padding: const EdgeInsets.only(right: spacer2),
+                                      padding:
+                                          const EdgeInsets.only(right: spacer2),
                                       width: MediaQuery.of(context).size.width -
                                           60,
                                       child: Align(

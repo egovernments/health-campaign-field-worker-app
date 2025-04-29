@@ -193,25 +193,31 @@ class _SearchBeneficiaryPageState
                                           ),
                                         )
                                       : const Offstage(),
-                                  Padding(
-                                    padding: const EdgeInsets.all(spacer2),
-                                    child: DigitSwitch(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      label: localizations.translate(
-                                        i18.searchBeneficiary
-                                            .beneficiaryIdSearchLabel,
+                                  if (RegistrationDeliverySingleton()
+                                      .idTypeOptions!
+                                      .contains(IdentifierTypes
+                                          .uniqueBeneficiaryID
+                                          .toValue()))
+                                    Padding(
+                                      padding: const EdgeInsets.all(spacer2),
+                                      child: DigitSwitch(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        label: localizations.translate(
+                                          i18.searchBeneficiary
+                                              .beneficiaryIdSearchLabel,
+                                        ),
+                                        value: isBeneficiaryIdSearchEnabled,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isBeneficiaryIdSearchEnabled =
+                                                value;
+                                          });
+                                          blocWrapper.clearEvent();
+                                          triggerGlobalSearchEvent();
+                                        },
                                       ),
-                                      value: isBeneficiaryIdSearchEnabled,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          isBeneficiaryIdSearchEnabled = value;
-                                        });
-                                        blocWrapper.clearEvent();
-                                        triggerGlobalSearchEvent();
-                                      },
-                                    ),
-                                  )
+                                    )
                                 ],
                               ),
                               Padding(

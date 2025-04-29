@@ -122,7 +122,7 @@ class BeneficiaryDownSyncBloc
         DownsyncSearchModel(
           locality: event.boundaryCode,
           offset: existingDownSyncData.firstOrNull?.offset ?? 0,
-          limit: 1,
+          limit: 0,
           isDeleted: true,
           lastSyncedTime: lastSyncedTime,
           tenantId: envConfig.variables.tenantId,
