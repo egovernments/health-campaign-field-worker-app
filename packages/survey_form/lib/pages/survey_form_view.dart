@@ -78,6 +78,15 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   }
 
   bool validateSurveyForm() {
+
+    if(initialAttributes == null || initialAttributes!.isEmpty) return false;
+    for(int i = 0; i < initialAttributes!.length; i++){
+      final child = initialAttributes![i];
+      final parent = getParentQuestion(child.code.toString(), initialAttributes ?? []);
+      if(parent != null && initialAttributes?.indexOf(parent) != null && !visibleSurveyFormIndexes.contains(initialAttributes?.indexOf(parent))) {
+        visibleSurveyFormIndexes.remove(initialAttributes?.indexOf(child));
+      }
+    }
     // Step 1: Form validation
     final isValid = surveyFormKey.currentState?.validate() ?? false;
     if (!isValid) return false;
@@ -1653,6 +1662,20 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
     return nextSurveyForm;
   }
+
+  AttributesModel? getParentQuestion(
+      String childCode,
+      List<AttributesModel> surveyFormItems,
+      ) {
+    final segments = childCode.split('.');
+
+    if (segments.length < 2) return null;
+
+    final parentCode = segments.sublist(0, segments.length - 2).join('.');
+
+    return surveyFormItems.firstWhereOrNull((item) => item.code == parentCode);
+  }
+
 
   int countDots(String inputString) {
     int dotCount = 0;
