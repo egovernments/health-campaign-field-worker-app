@@ -4,20 +4,37 @@ const fakeSchema = """
   "version": 1,
 
   "pages": {
+       "HouseDetails": {
+      "type": "object",
+      "label": "House Details",
+      "properties": {
+             "structureType": {
+          "type": "string",
+           "format": "select",
+          "label": "Type of Structure",
+          "enums": ["Glass", "Metal", "Clay","Redds","Cement"]
+        },
+        "NoofRooms": {
+          "type": "integer",
+          "format": "incrementer",
+          "label": "No of Rooms"
+        }
+        }
+        },
     "beneficiaryLocation": {
       "type": "object",
-      "label": "Beneficiary Location",
+      "label": "Beneficiary Location Screen",
       "properties": {
-        "administrativeArea": {
-          "type": "string",
-          "format": "locality",
-          "label": "Administrative Area *",
-          "value": ""
-        },
+    
           "latlng": {
           "type": "string",
           "format" : "latLng",
           "label": "Lat/Long *"
+        },    "administrativeArea": {
+          "type": "string",
+          "format": "locality",
+          "label": "Administrative Area *",
+          "value": ""
         },
         "addressLine1": {
           "type": "string",
@@ -38,23 +55,7 @@ const fakeSchema = """
       }
     },
 
-        "HouseDetails": {
-      "type": "object",
-      "label": "House Details",
-      "properties": {
-             "structureType": {
-          "type": "string",
-           "format": "select",
-          "label": "Type of Structure",
-          "enums": ["Glass", "Metal", "Clay","Redds","Cement"]
-        },
-        "NoofRooms": {
-          "type": "integer",
-          "format": "incrementer",
-          "label": "No of Rooms"
-        }
-        }
-        },
+   
                 "HouseHoldDetails": {
       "type": "object",
       "label": "HouseHold Details",

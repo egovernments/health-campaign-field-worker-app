@@ -366,13 +366,15 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            RegistrationDeliverySingleton()
-                .setHouseholdType(HouseholdType.family);
-            if (isTriggerLocalisation) {
-              triggerLocalization();
-              isTriggerLocalisation = false;
-            }
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
+            context.read<FormsBloc>().add(const FormsEvent.clearForm());
+            pageName !=null? context.router.push( FormsRoute(pageName: pageName)):null;
+            // RegistrationDeliverySingleton()
+            //     .setHouseholdType(HouseholdType.family);
+            // if (isTriggerLocalisation) {
+            //   triggerLocalization();
+            //   isTriggerLocalisation = false;
+            // }
+            // await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),
