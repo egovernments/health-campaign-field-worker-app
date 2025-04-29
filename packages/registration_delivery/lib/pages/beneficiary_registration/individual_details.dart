@@ -185,8 +185,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                         .householdType ==
                                     HouseholdType.family) {
                                   checklistKey.currentState?.submitSurvey(
-                                      latitude: 876765,
-                                      longitude: 89798,
+                                      latitude: householdModel?.latitude,
+                                      longitude: householdModel?.longitude,
                                       relatedReferenceId:
                                           individual.clientReferenceId);
                                 }

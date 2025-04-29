@@ -866,6 +866,17 @@ class HouseholdOverviewBloc
                   lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
                 )
               : null,
+          memberRelationships: i.memberRelationships?.map((e) => e.copyWith(
+            clientAuditDetails: (e.clientAuditDetails?.createdBy != null &&
+                e.clientAuditDetails?.createdTime != null)
+                ? ClientAuditDetails(
+              createdBy: e.clientAuditDetails!.createdBy,
+              createdTime: e.clientAuditDetails!.createdTime,
+              lastModifiedBy: e.clientAuditDetails!.lastModifiedBy,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            ): null,
+            rowVersion: e.rowVersion,
+          )).toList(),
         ),
       );
     }

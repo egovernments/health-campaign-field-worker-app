@@ -1,3 +1,8 @@
+## 1.0.7-dev.5-enumeration
+
+* BugFix:
+  * Fixed child delete sync issue
+
 ## 1.0.7-dev.4-enumeration
 
 * Updated global search to fetch services related to household and member

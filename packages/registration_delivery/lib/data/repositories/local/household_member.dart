@@ -90,6 +90,24 @@ class HouseholdMemberLocalRepository
             isDeleted: relation.isDeleted,
             rowVersion: relation.rowVersion,
             clientReferenceId: relation.clientReferenceId,
+            clientAuditDetails: (relation.clientCreatedBy != null &&
+                relation.clientCreatedTime != null)
+                ? ClientAuditDetails(
+              createdBy: relation.clientCreatedBy!,
+              createdTime: relation.clientCreatedTime!,
+              lastModifiedBy: relation.clientModifiedBy,
+              lastModifiedTime: relation.clientModifiedTime,
+            )
+                : null,
+            auditDetails: (relation.auditCreatedBy != null &&
+                relation.auditCreatedTime != null)
+                ? AuditDetails(
+              createdBy: relation.auditCreatedBy!,
+              createdTime: relation.auditCreatedTime!,
+              lastModifiedBy: relation.auditModifiedBy,
+              lastModifiedTime: relation.auditModifiedTime,
+            )
+                : null,
             additionalFields: relation.additionalFields != null
                 ? HouseholdMemberRelationShipAdditionalFieldsMapper.fromJson(
                 relation.additionalFields!)
