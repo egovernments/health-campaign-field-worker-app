@@ -56,7 +56,10 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
   FutureOr<void> _fetchUniqueIdsFromServer(
       FetchUniqueIdsEvent event, Emitter<UniqueIdState> emit) async {
     emit(UniqueIdState.fetching(
-        0, RegistrationDeliverySingleton().beneficiaryIdBatchSize!));
+      0,
+      RegistrationDeliverySingleton().beneficiaryIdBatchSize!,
+    ));
+
     try {
       final deviceInfo = DeviceInfoPlugin();
       final androidInfo = await deviceInfo.androidInfo;
@@ -71,30 +74,25 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
       }
 
       int offset = 0;
-      int totalToFetch = 0;
+      int totalFetched = 0;
       List<UniqueIdPoolModel> allFetchedIds = [];
       int batchSize = RegistrationDeliverySingleton().beneficiaryIdBatchSize!;
+      int totalLimit = 0;
 
       while (true) {
         emit(UniqueIdState.fetching(
-            offset, totalToFetch == 0 ? batchSize : totalToFetch));
+          totalFetched,
+          totalLimit == 0 ? batchSize : totalLimit,
+        ));
 
-        final searchModel = event.reFetch == true
-            ? UniqueIdPoolSearchModel(
-                deviceInfo: androidInfo.toString(),
-                userUuid: userUuid,
-                deviceUuid: deviceUuid,
-                tenantId: tenantId,
-                count: batchSize,
-                fetchAllocatedIds: event.reFetch,
-              )
-            : UniqueIdPoolSearchModel(
-                deviceInfo: androidInfo.toString(),
-                userUuid: userUuid,
-                deviceUuid: deviceUuid,
-                tenantId: tenantId,
-                count: batchSize,
-              );
+        final searchModel = UniqueIdPoolSearchModel(
+          deviceInfo: androidInfo.toString(),
+          userUuid: userUuid,
+          deviceUuid: deviceUuid,
+          tenantId: tenantId,
+          count: batchSize,
+          fetchAllocatedIds: event.reFetch,
+        );
 
         final response = await uniqueIdPoolRemoteRepository.searchWithMetadata(
           limit: batchSize,
@@ -104,29 +102,29 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
 
         final List<UniqueIdPoolModel> batch = response.models;
         final int fetchLimit = response.fetchLimit;
-        final int totalCount = response.totalLimit;
+        totalLimit = response.totalLimit;
 
-        if (totalToFetch == 0) {
-          totalToFetch = offset + totalCount;
-          if (batchSize >= totalCount) {
-            batchSize = totalCount;
+        // Check if batch is empty
+        if (batch.isEmpty) {
+          if (fetchLimit == 0) {
+            // All done
+            emit(UniqueIdState.fetching(totalLimit, totalLimit));
+            break;
+          } else {
+            // Something is wrong: server says there's more, but we got nothing
+            throw UniqueIdLimitExceededException(
+              'Server returned no data but indicated more IDs were available.',
+            );
           }
         }
-
-        if (batch.isEmpty) break;
 
         await uniqueIdPoolLocalRepository.bulkCreate(batch);
         allFetchedIds.addAll(batch);
 
         offset += batch.length;
+        totalFetched += batch.length;
 
-        if (fetchLimit == 0) {
-          emit(UniqueIdState.fetching(offset, totalCount));
-          break;
-        }
-
-        if (offset >= totalCount) {
-          emit(UniqueIdState.fetching(offset, totalCount));
+        if (totalFetched >= totalLimit) {
           break;
         }
       }

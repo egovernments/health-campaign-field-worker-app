@@ -113,7 +113,6 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                       builder: (ctx) {
                         return Popup(
                           type: PopUpType.alert,
-                          inlineActions: true,
                           onCrossTap: () {
                             Navigator.of(ctx).pop();
                           },
@@ -161,7 +160,6 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                     builder: (ctx) {
                       return Popup(
                         type: PopUpType.alert,
-                        inlineActions: true,
                         onCrossTap: () {
                           Navigator.of(ctx).pop();
                         },

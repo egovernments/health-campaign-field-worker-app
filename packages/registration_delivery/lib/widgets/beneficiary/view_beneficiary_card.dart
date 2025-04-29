@@ -100,10 +100,8 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 false)) ??
         false;
 
-    if (hasMissingUniqueID) {
-      filteredHeaderList
-          .removeWhere((element) => element.cellValue == 'beneficiaryId');
-    }
+    // filteredHeaderList
+    //     .removeWhere((element) => element.cellValue == 'beneficiaryId');
 
     final currentCycle =
         RegistrationDeliverySingleton().projectType?.cycles?.firstWhereOrNull(
@@ -198,20 +196,17 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             ].whereNotNull().join(' '),
             cellKey: 'beneficiary',
           ),
-          if (e.identifiers!
-              .contains(IdentifierTypes.uniqueBeneficiaryID.toValue()))
-            DigitTableData(
-              [
-                e.identifiers
-                    ?.lastWhereOrNull(
-                      (e) =>
-                          e.identifierType ==
+          DigitTableData(
+            e.identifiers!
+                    .lastWhereOrNull(
+                      (ind) =>
+                          ind.identifierType ==
                           IdentifierTypes.uniqueBeneficiaryID.toValue(),
                     )
-                    ?.identifierId,
-              ].whereNotNull().join(' '),
-              cellKey: 'beneficiaryId',
-            ),
+                    ?.identifierId ??
+                '--',
+            cellKey: 'beneficiaryId',
+          ),
           DigitTableData(
             getTableCellText(
               StatusKeys(
@@ -516,31 +511,5 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     } else {
       return Status.notRegistered.toValue();
     }
-  }
-
-  showBeneficiaryId() {
-    widget.householdMember.members?.forEach((var ind) {
-      if (ind.identifiers!
-              .lastWhereOrNull(
-                (e) =>
-                    e.identifierType ==
-                    IdentifierTypes.uniqueBeneficiaryID.toValue(),
-              )
-              ?.identifierId !=
-          null) {
-        DigitTableData(
-          [
-            ind.identifiers
-                ?.lastWhereOrNull(
-                  (e) =>
-                      e.identifierType ==
-                      IdentifierTypes.uniqueBeneficiaryID.toValue(),
-                )
-                ?.identifierId
-          ].whereNotNull().join(' '),
-          cellKey: 'beneficiaryId',
-        );
-      }
-    });
   }
 }
