@@ -104,22 +104,22 @@ class UniqueIdBloc extends Bloc<UniqueIdEvent, UniqueIdState> {
         final int fetchLimit = response.fetchLimit;
         totalLimit = response.totalLimit;
 
+        await uniqueIdPoolLocalRepository.bulkCreate(batch);
+        allFetchedIds.addAll(batch);
+
         // Check if batch is empty
         if (batch.isEmpty) {
           if (fetchLimit == 0) {
             // All done
             emit(UniqueIdState.fetching(totalLimit, totalLimit));
             break;
-          } else {
-            // Something is wrong: server says there's more, but we got nothing
-            throw UniqueIdLimitExceededException(
-              'Server returned no data but indicated more IDs were available.',
-            );
+          }
+        } else {
+          if (fetchLimit == 0) {
+            emit(UniqueIdState.fetching(totalLimit, totalLimit));
+            break;
           }
         }
-
-        await uniqueIdPoolLocalRepository.bulkCreate(batch);
-        allFetchedIds.addAll(batch);
 
         offset += batch.length;
         totalFetched += batch.length;
