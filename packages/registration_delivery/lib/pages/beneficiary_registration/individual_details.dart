@@ -1029,10 +1029,30 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             form.control(_idNumberKey).value = uniqueId.id;
           });
     } else {
-      form.control(_idTypeKey).value =
-          individual.identifiers?.firstOrNull?.identifierType;
-      form.control(_idNumberKey).value =
-          individual.identifiers?.firstOrNull?.identifierId;
+      if (individual.identifiers!
+          .contains(IdentifierTypes.uniqueBeneficiaryID.toValue())) {
+        form.control(_idTypeKey).value =
+            individual.identifiers?.firstOrNull?.identifierType;
+        form.control(_idNumberKey).value =
+            individual.identifiers?.firstOrNull?.identifierId;
+      } else {
+        context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
+        final uniqueId = context.read<UniqueIdBloc>().state;
+        uniqueId.maybeWhen(
+            orElse: () {},
+            idCount: (availableCount, totalCount) {
+              if (availableCount > 0) {
+                context
+                    .read<UniqueIdBloc>()
+                    .add(const UniqueIdEvent.fetchAUniqueId());
+              }
+            },
+            aUniqueId: (uniqueId) {
+              form.control(_idTypeKey).value =
+                  IdentifierTypes.uniqueBeneficiaryID.toValue();
+              form.control(_idNumberKey).value = uniqueId.id;
+            });
+      }
     }
   }
 

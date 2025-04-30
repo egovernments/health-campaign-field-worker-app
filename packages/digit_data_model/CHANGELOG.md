@@ -1,3 +1,7 @@
+## 1.0.7-dev.1-idGen
+
+* Added new table for storing unique Id's
+
 ## 1.0.6+3
 
 * Added additionalFields to individual search entity
@@ -58,12 +62,15 @@
 * Updated project type beneficiary type model and table to BeneficiaryType enum
 
 ## 1.0.4-dev.7-uniqueId
+
 * Modified identifierType of unique beneficiary id
 
 ## 1.0.4-dev.6-uniqueId
+
 * Added additionalDetails field to service definition attributes model
 
 ## 1.0.4-dev.5-uniqueId
+
 * Added identifierType enum entity
 * Added identifierType and id as primary key to identifier table
 

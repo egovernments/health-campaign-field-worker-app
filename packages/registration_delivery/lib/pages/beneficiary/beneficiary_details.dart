@@ -311,9 +311,15 @@ class BeneficiaryDetailsPageState
                                         return '--';
                                       }
 
-                                      return maskString(identifiers
-                                          .first.identifierId
-                                          .toString());
+                                      return identifiers.first.identifierType ==
+                                              IdentifierTypes
+                                                  .uniqueBeneficiaryID
+                                                  .toValue()
+                                          ? identifiers.first.identifierId
+                                              .toString()
+                                          : maskString(identifiers
+                                              .first.identifierId
+                                              .toString());
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonAge,

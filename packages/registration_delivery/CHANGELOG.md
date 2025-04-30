@@ -1,3 +1,11 @@
+## 1.0.7-dev.1-idGen
+
+* IdGen:
+    * Added new screen for down-syncing unique ID's
+    * Modified search beneficiary page to check for ID's and show specific alerts
+    * Modified search by UniqueId by toggle
+    * Modified individual page to fetch new ID's and un-used unique Id
+
 ## 1.0.6+3
 
 * BugFix:
@@ -64,7 +72,7 @@
 ## 1.0.4-dev.3-search-fix
 
 * Bug Fix -
-  * Individual, Household search for child query fix
+    * Individual, Household search for child query fix
 
 ## 1.0.4-dev.2-uniqueId
 
@@ -79,7 +87,7 @@
 ## 1.0.3+2
 
 * Bug Fix -
-  * fixed wrong status map of beneficiaryRefused in utils
+    * fixed wrong status map of beneficiaryRefused in utils
 * Sorting tasks based on createTime
 
 ## 1.0.3+1
