@@ -81,6 +81,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
                           registrationDate,
                           projectBeneficiaryModel,
                           parentClientReferenceId,
+                          relationshipType,
                           loading,
                           headOfHousehold, householdChecklists,individualChecklists,) =>
                       headOfHousehold),
@@ -92,6 +93,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
                         registrationDate,
                         projectBeneficiaryModel,
                         parentClientReferenceId,
+                        relationshipType,
                         householdChecklists,
                         individualChecklists,
                         loading,
@@ -102,6 +104,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
                     orElse: () => null,
                     editHousehold: (addressModel,
                         parentClientReferenceId,
+                        relationshipType,
                         householdModel,
                         individualModel,
                         registrationDate,
