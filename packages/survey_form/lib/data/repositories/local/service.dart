@@ -246,13 +246,9 @@ class ServiceLocalRepository
                     ? {"value": e.additionalDetails}
                     : null,
               )
-            : e.dataType == 'SingleValueList'
-                ? e.copyWith(
-                    additionalDetails: e.additionalDetails != null
-                        ? {"value": e.additionalDetails}
-                        : null,
-                  )
-                : e;
+            : e.copyWith(
+                value: value.toString(),
+              );
       }).toList();
 
       // transform attributes value for local update
