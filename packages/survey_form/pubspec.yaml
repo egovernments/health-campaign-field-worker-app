@@ -1,6 +1,6 @@
 name: survey_form
 description: "This package enables supervisors to monitor certain activities and record observations according to defined set of questions."
-version: 1.0.2-dev.3-enumeration
+version: 1.0.2-dev.4-enumeration
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/survey_form
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
