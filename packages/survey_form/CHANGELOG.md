@@ -1,7 +1,11 @@
+## 1.0.2-dev.4-enumeration
+
+* Removed unwanted type check in attributes for local
+
 ## 1.0.2-dev.3-enumeration
 
 * Bug fix:
-  * Fixed issue in service attributes update
+    * Fixed issue in service attributes update
 
 ## 1.0.2-dev.2-enumeration
 

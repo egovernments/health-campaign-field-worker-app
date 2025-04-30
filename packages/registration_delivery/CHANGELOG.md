@@ -1,7 +1,11 @@
+## 1.0.7-dev.6-enumeration
+
+* Passing member relation type from ui to bloc
+
 ## 1.0.7-dev.5-enumeration
 
 * BugFix:
-  * Fixed child delete sync issue
+    * Fixed child delete sync issue
 
 ## 1.0.7-dev.4-enumeration
 

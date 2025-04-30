@@ -1407,10 +1407,10 @@ packages:
     dependency: "direct main"
     description:
       name: survey_form
-      sha256: "10feeb60ffa1068cb08fc0d4beb59be02114b6eb12fde2f93a8a30270d2d9a07"
+      sha256: bec78edb6c935c1b489e7bece80c34b06471771e576af50335b13581f86731bb
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2-dev.1-enumeration"
+    version: "1.0.2-dev.4-enumeration"
   synchronized:
     dependency: transitive
     description:

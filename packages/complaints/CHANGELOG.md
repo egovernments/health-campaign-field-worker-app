@@ -1,6 +1,6 @@
-## 1.0.2+3
+## 1.0.3-dev.1-enumeration
 
-* synced with data model upgrade
+* Updated with data_model changes
 
 ## 1.0.2+1
 
