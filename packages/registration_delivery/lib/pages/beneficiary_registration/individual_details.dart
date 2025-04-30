@@ -169,6 +169,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 individualModel,
                                 projectBeneficiaryModel,
                                 parentClientReferenceId,
+                                relationshipType,
                                 registrationDate,
                                 searchQuery,
                                 loading,
@@ -199,6 +200,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                     model: individual,
                                     parentClientReferenceId:
                                         widget.parentClientReferenceId,
+                                    relationshipType:
+                                        RegistrationDeliverySingleton()
+                                            .memberRelationTypeOptions
+                                            ?.first,
                                     isHeadOfHousehold: widget.isHeadOfHousehold,
                                   ),
                                 );
@@ -229,6 +234,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       boundary: boundary!,
                                       parentClientReferenceId:
                                           widget.parentClientReferenceId,
+                                      relationshipType:
+                                          RegistrationDeliverySingleton()
+                                              .memberRelationTypeOptions
+                                              ?.first,
                                       tag: scannerBloc.state.qrCodes.isNotEmpty
                                           ? scannerBloc.state.qrCodes.first
                                           : null,
@@ -242,6 +251,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 individualModel,
                                 addressModel,
                                 parentClientReferenceId,
+                                relationshipType,
                                 projectBeneficiaryModel,
                                 loading,
                                 householdChecklists,
@@ -310,6 +320,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       ),
                                       parentClientReferenceId:
                                           widget.parentClientReferenceId,
+                                      relationshipType:
+                                          RegistrationDeliverySingleton()
+                                              .memberRelationTypeOptions
+                                              ?.first,
                                       tag: scannerBloc.state.qrCodes.isNotEmpty
                                           ? scannerBloc.state.qrCodes.first
                                           : null,
@@ -321,6 +335,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 addressModel,
                                 householdModel,
                                 parentClientReferenceId,
+                                relationshipType,
                                 loading,
                                 householdChecklists,
                                 individualChecklists,
@@ -365,6 +380,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                         addressModel: addressModel,
                                         parentClientReferenceId:
                                             widget.parentClientReferenceId,
+                                        relationshipType:
+                                            RegistrationDeliverySingleton()
+                                                .memberRelationTypeOptions
+                                                ?.first,
                                         userUuid:
                                             RegistrationDeliverySingleton()
                                                 .loggedInUserUuid!,
@@ -856,14 +875,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
     );
-
-    // IndividualAdditionalFields additionalFields =
-    //     IndividualAdditionalFields(version: 1, fields: [
-    //   if (widget.parentClientReferenceId != null) ...[
-    //     AdditionalField(
-    //         'parentClientReferenceId', widget.parentClientReferenceId),
-    //   ],
-    // ]);
 
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(

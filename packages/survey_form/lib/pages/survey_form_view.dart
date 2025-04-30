@@ -79,7 +79,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
   bool validateSurveyForm() {
 
-    if(initialAttributes == null || initialAttributes!.isEmpty) return false;
+    if(initialAttributes == null || initialAttributes!.isEmpty) return true;
     for(int i = 0; i < initialAttributes!.length; i++){
       final child = initialAttributes![i];
       final parent = getParentQuestion(child.code.toString(), initialAttributes ?? []);
