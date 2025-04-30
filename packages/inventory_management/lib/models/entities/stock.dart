@@ -15,7 +15,7 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   final String? referenceIdType;
   final String? transactingPartyId;
   final String? transactingPartyType;
-  final String? receiverId;
+  final List<String>? receiverId;
   final String? receiverType;
   final String? senderId;
   final String? senderType;
@@ -89,7 +89,7 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? transactingPartyType;
   final String? quantity;
   final String? wayBillNumber;
-  final String? receiverId;
+  final List<String>? receiverId;
   final String? receiverType;
   final String? senderId;
   final String? senderType;
