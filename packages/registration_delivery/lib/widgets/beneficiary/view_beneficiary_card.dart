@@ -93,15 +93,6 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 .where((element) => element.cellValue != 'delivery')
                 .toList()
             : headerList;
-    final hasMissingUniqueID = householdMember.members?.any((ind) =>
-            !(ind.identifiers?.any((id) =>
-                    id.identifierType ==
-                    IdentifierTypes.uniqueBeneficiaryID.toValue()) ??
-                false)) ??
-        false;
-
-    // filteredHeaderList
-    //     .removeWhere((element) => element.cellValue == 'beneficiaryId');
 
     final currentCycle =
         RegistrationDeliverySingleton().projectType?.cycles?.firstWhereOrNull(

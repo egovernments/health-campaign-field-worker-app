@@ -440,7 +440,7 @@ packages:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.6+3"
+    version: "1.0.7-dev.1-idGen"
   digit_scanner:
     dependency: "direct main"
     description:
