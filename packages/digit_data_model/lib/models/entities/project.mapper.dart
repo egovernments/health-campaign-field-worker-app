@@ -326,10 +326,6 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
   static String? _$projectType(ProjectModel v) => v.projectType;
   static const Field<ProjectModel, String> _f$projectType =
       Field('projectType', _$projectType, opt: true);
-  static String? _$additionalProjectType(ProjectModel v) =>
-      v.additionalProjectType;
-  static const Field<ProjectModel, String> _f$additionalProjectType =
-      Field('additionalProjectType', _$additionalProjectType, opt: true);
   static List<DocumentModel>? _$documents(ProjectModel v) => v.documents;
   static const Field<ProjectModel, List<DocumentModel>> _f$documents =
       Field('documents', _$documents, opt: true);
@@ -381,7 +377,6 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
     #address: _f$address,
     #targets: _f$targets,
     #projectType: _f$projectType,
-    #additionalProjectType: _f$additionalProjectType,
     #documents: _f$documents,
     #additionalDetails: _f$additionalDetails,
     #startDate: _f$startDate,
@@ -423,7 +418,6 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
         address: data.dec(_f$address),
         targets: data.dec(_f$targets),
         projectType: data.dec(_f$projectType),
-        additionalProjectType: data.dec(_f$additionalProjectType),
         documents: data.dec(_f$documents),
         additionalDetails: data.dec(_f$additionalDetails),
         startDate: data.dec(_f$startDate),
@@ -519,7 +513,6 @@ abstract class ProjectModelCopyWith<$R, $In extends ProjectModel, $Out>
       AddressModel? address,
       List<TargetModel>? targets,
       String? projectType,
-      String? additionalProjectType,
       List<DocumentModel>? documents,
       ProjectAdditionalDetails? additionalDetails,
       int? startDate,
@@ -592,7 +585,6 @@ class _ProjectModelCopyWithImpl<$R, $Out>
           Object? address = $none,
           Object? targets = $none,
           Object? projectType = $none,
-          Object? additionalProjectType = $none,
           Object? documents = $none,
           Object? additionalDetails = $none,
           Object? startDate = $none,
@@ -620,8 +612,6 @@ class _ProjectModelCopyWithImpl<$R, $Out>
         if (address != $none) #address: address,
         if (targets != $none) #targets: targets,
         if (projectType != $none) #projectType: projectType,
-        if (additionalProjectType != $none)
-          #additionalProjectType: additionalProjectType,
         if (documents != $none) #documents: documents,
         if (additionalDetails != $none) #additionalDetails: additionalDetails,
         if (startDate != $none) #startDate: startDate,
@@ -655,8 +645,6 @@ class _ProjectModelCopyWithImpl<$R, $Out>
       address: data.get(#address, or: $value.address),
       targets: data.get(#targets, or: $value.targets),
       projectType: data.get(#projectType, or: $value.projectType),
-      additionalProjectType:
-          data.get(#additionalProjectType, or: $value.additionalProjectType),
       documents: data.get(#documents, or: $value.documents),
       additionalDetails:
           data.get(#additionalDetails, or: $value.additionalDetails),

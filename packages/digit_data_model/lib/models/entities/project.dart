@@ -99,7 +99,6 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
   @MappableField(key: 'additionalDetails')
   final ProjectAdditionalDetails? additionalDetails;
   final String? projectType;
-  final String? additionalProjectType;
 
   ProjectModel({
     this.additionalFields,
@@ -120,7 +119,6 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
     this.address,
     this.targets,
     this.projectType,
-    this.additionalProjectType,
     this.documents,
     this.additionalDetails,
     int? startDate,
