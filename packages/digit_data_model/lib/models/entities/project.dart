@@ -20,7 +20,6 @@ class ProjectSearchModel extends EntitySearchModel
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   final String? projectType;
-  final String? additionalProjectType;
 
   ProjectSearchModel({
     this.id,
@@ -32,7 +31,6 @@ class ProjectSearchModel extends EntitySearchModel
     this.department,
     this.referenceId,
     this.projectType,
-    this.additionalProjectType,
     this.tenantId,
     int? startDate,
     int? endDate,
@@ -58,7 +56,6 @@ class ProjectSearchModel extends EntitySearchModel
     this.referenceId,
     this.tenantId,
     this.projectType,
-    this.additionalProjectType,
     int? startDate,
     int? endDate,
     super.boundaryCode,
@@ -159,7 +156,6 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
       projectTypeId: Value(projectTypeId),
       projectNumber: Value(projectNumber),
       projectType: Value(projectType),
-      additionalProjectType: Value(additionalProjectType),
       subProjectTypeId: Value(subProjectTypeId),
       isTaskEnabled: Value(isTaskEnabled),
       parent: Value(parent),
@@ -197,4 +193,3 @@ class ProjectAdditionalDetails with ProjectAdditionalDetailsMappable {
     this.additionalProjectType,
   }) : super();
 }
-

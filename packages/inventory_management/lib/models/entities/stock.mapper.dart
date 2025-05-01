@@ -46,8 +46,8 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
       v.transactingPartyType;
   static const Field<StockSearchModel, String> _f$transactingPartyType =
       Field('transactingPartyType', _$transactingPartyType, opt: true);
-  static String? _$receiverId(StockSearchModel v) => v.receiverId;
-  static const Field<StockSearchModel, String> _f$receiverId =
+  static List<String>? _$receiverId(StockSearchModel v) => v.receiverId;
+  static const Field<StockSearchModel, List<String>> _f$receiverId =
       Field('receiverId', _$receiverId, opt: true);
   static String? _$receiverType(StockSearchModel v) => v.receiverType;
   static const Field<StockSearchModel, String> _f$receiverType =
@@ -196,6 +196,7 @@ extension StockSearchModelValueCopy<$R, $Out>
 
 abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
     implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get receiverId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
@@ -212,7 +213,7 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       String? referenceIdType,
       String? transactingPartyId,
       String? transactingPartyType,
-      String? receiverId,
+      List<String>? receiverId,
       String? receiverType,
       String? senderId,
       String? senderType,
@@ -233,6 +234,14 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<StockSearchModel> $mapper =
       StockSearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get receiverId => $value.receiverId != null
+          ? ListCopyWith(
+              $value.receiverId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(receiverId: v))
+          : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId => $value.clientReferenceId != null
@@ -378,8 +387,8 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   static String? _$wayBillNumber(StockModel v) => v.wayBillNumber;
   static const Field<StockModel, String> _f$wayBillNumber =
       Field('wayBillNumber', _$wayBillNumber, opt: true);
-  static String? _$receiverId(StockModel v) => v.receiverId;
-  static const Field<StockModel, String> _f$receiverId =
+  static List<String>? _$receiverId(StockModel v) => v.receiverId;
+  static const Field<StockModel, List<String>> _f$receiverId =
       Field('receiverId', _$receiverId, opt: true);
   static String? _$receiverType(StockModel v) => v.receiverType;
   static const Field<StockModel, String> _f$receiverType =
@@ -540,6 +549,7 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
   StockAdditionalFieldsCopyWith<$R, StockAdditionalFields,
       StockAdditionalFields>? get additionalFields;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get receiverId;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -559,7 +569,7 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       String? transactingPartyType,
       String? quantity,
       String? wayBillNumber,
-      String? receiverId,
+      List<String>? receiverId,
       String? receiverType,
       String? senderId,
       String? senderType,
@@ -587,6 +597,14 @@ class _StockModelCopyWithImpl<$R, $Out>
           StockAdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get receiverId => $value.receiverId != null
+          ? ListCopyWith(
+              $value.receiverId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(receiverId: v))
+          : null;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
