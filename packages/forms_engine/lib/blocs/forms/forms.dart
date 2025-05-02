@@ -17,6 +17,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   FormsBloc(this.schema) : super(const FormsState()) {
     on<FormsLoadEvent>(_handleLoadForm);
     on<FormsUpdateEvent>(_handleUpdateForm);
+    on<FormsSubmitEvent>(_handleSubmitForm);
     on<FormsCreateMappingEvent>(_handleCreateMapping);
     on<FormsUpdateFieldEvent>(_handleUpdateField);
     on<FormsClearFieldEvent>(_handleClearField);
@@ -51,7 +52,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     }
 
     final dataMap = Map.fromEntries(propertiesMap);
-    emit(state.copyWith(savedProperties: dataMap));
+    emit(state.copyWith(formData: dataMap));
   }
 
   void _handleUpdateField(FormsUpdateFieldEvent event, FormsStateEmitter emit) {
@@ -161,9 +162,41 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 
     emit(state.copyWith(
       schema: schemaCopy.copyWith(pages: clearedPages),
-      savedProperties: {},
+      formData: {},
     ));
   }
+
+  void _handleSubmitForm(FormsSubmitEvent event, FormsStateEmitter emit) {
+    final schemaObject = state.schema;
+    if (schemaObject == null) return;
+
+    final formData = <String, Map<String, dynamic>>{};
+
+    for (final pageEntry in schemaObject.pages.entries) {
+      final pageName = pageEntry.key;
+      final page = pageEntry.value;
+
+      if (page.properties == null) continue;
+
+      final pageValues = <String, dynamic>{};
+
+      for (final propEntry in page.properties!.entries) {
+        final key = propEntry.key;
+        final value = propEntry.value.value;
+
+        if (value != null) {
+          pageValues[key] = value;
+        }
+      }
+
+      if (pageValues.isNotEmpty) {
+        formData[pageName] = pageValues;
+      }
+    }
+
+    emit(state.copyWith(formData: formData));
+  }
+
 
 }
 
@@ -183,12 +216,15 @@ class FormsEvent with _$FormsEvent {
 
   const factory FormsEvent.clearForm() = FormsClearFormEvent;
 
+  const factory FormsEvent.submit(SchemaObject object) = FormsSubmitEvent;
+
+
 }
 
 @freezed
 class FormsState with _$FormsState {
   const factory FormsState({
     SchemaObject? schema,
-    Map<String, dynamic>? savedProperties,
+    Map<String, dynamic>? formData,
   }) = _FormsState;
 }
