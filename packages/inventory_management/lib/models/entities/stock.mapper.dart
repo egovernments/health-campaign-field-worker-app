@@ -387,8 +387,8 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   static String? _$wayBillNumber(StockModel v) => v.wayBillNumber;
   static const Field<StockModel, String> _f$wayBillNumber =
       Field('wayBillNumber', _$wayBillNumber, opt: true);
-  static List<String>? _$receiverId(StockModel v) => v.receiverId;
-  static const Field<StockModel, List<String>> _f$receiverId =
+  static String? _$receiverId(StockModel v) => v.receiverId;
+  static const Field<StockModel, String> _f$receiverId =
       Field('receiverId', _$receiverId, opt: true);
   static String? _$receiverType(StockModel v) => v.receiverType;
   static const Field<StockModel, String> _f$receiverType =
@@ -549,7 +549,6 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
   StockAdditionalFieldsCopyWith<$R, StockAdditionalFields,
       StockAdditionalFields>? get additionalFields;
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get receiverId;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -569,7 +568,7 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       String? transactingPartyType,
       String? quantity,
       String? wayBillNumber,
-      List<String>? receiverId,
+      String? receiverId,
       String? receiverType,
       String? senderId,
       String? senderType,
@@ -597,14 +596,6 @@ class _StockModelCopyWithImpl<$R, $Out>
           StockAdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
-  @override
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
-      get receiverId => $value.receiverId != null
-          ? ListCopyWith(
-              $value.receiverId!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(receiverId: v))
-          : null;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));

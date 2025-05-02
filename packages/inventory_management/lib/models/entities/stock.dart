@@ -89,7 +89,7 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? transactingPartyType;
   final String? quantity;
   final String? wayBillNumber;
-  final List<String>? receiverId;
+  final String? receiverId;
   final String? receiverType;
   final String? senderId;
   final String? senderType;

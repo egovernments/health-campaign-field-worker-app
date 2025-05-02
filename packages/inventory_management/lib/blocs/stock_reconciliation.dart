@@ -1,5 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +74,7 @@ class StockReconciliationBloc
     final receivedStocks = (await stockRepository.search(
       StockSearchModel(
           productVariantId: productVariantId,
-          receiverId: facilityId,
+          receiverId: [facilityId!],
           transactionType: [TransactionType.received.toValue()]),
     ))
         .where((element) =>
