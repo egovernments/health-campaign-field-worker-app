@@ -1,4 +1,4 @@
-## 1.0.6-dev.1-bauachi
+## 1.0.5-dev.1-bauachi
 
 * Converted receiverId field in stocksearch model to List of strings
 
