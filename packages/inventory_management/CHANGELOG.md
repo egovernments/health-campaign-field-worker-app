@@ -1,3 +1,8 @@
+## 1.0.5-dev.1
+
+* This change is for Bauchi campaign
+* Converted receiverId field in stocksearch model to List of strings
+
 ## 1.0.5
 
 * Upgraded to latest versions

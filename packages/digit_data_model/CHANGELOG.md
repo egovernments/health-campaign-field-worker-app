@@ -1,3 +1,8 @@
+## 1.0.6-dev.1
+
+* This change is for Bauchi campaign
+* Added additionalProjectType in additionalFields of project
+
 ## 1.0.6
 
 * Added localityCode in attendance table

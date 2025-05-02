@@ -52,12 +52,12 @@ class InventoryReportBloc
       List<String>? transactionReason;
       List<String>? transactionType;
       String? senderId;
-      String? receiverId;
+      List<String>? receiverId;
 
       if (reportType == InventoryReportType.receipt) {
         transactionType = [TransactionType.received.toValue()];
         transactionReason = [TransactionReason.received.toValue()];
-        receiverId = facilityId;
+        receiverId = [facilityId];
         senderId = null;
       } else if (reportType == InventoryReportType.dispatch) {
         transactionType = [TransactionType.dispatched.toValue()];
@@ -67,7 +67,7 @@ class InventoryReportBloc
       } else if (reportType == InventoryReportType.returned) {
         transactionType = [TransactionType.received.toValue()];
         transactionReason = [TransactionReason.returned.toValue()];
-        receiverId = facilityId;
+        receiverId = [facilityId];
         senderId = null;
       } else if (reportType == InventoryReportType.damage) {
         transactionType = [TransactionType.dispatched.toValue()];
@@ -75,7 +75,7 @@ class InventoryReportBloc
           TransactionReason.damagedInStorage.toValue(),
           TransactionReason.damagedInTransit.toValue(),
         ];
-        receiverId = facilityId;
+        receiverId = [facilityId];
         senderId = null;
       } else if (reportType == InventoryReportType.loss) {
         transactionType = [TransactionType.dispatched.toValue()];
@@ -83,7 +83,7 @@ class InventoryReportBloc
           TransactionReason.lostInStorage.toValue(),
           TransactionReason.lostInTransit.toValue(),
         ];
-        receiverId = facilityId;
+        receiverId = [facilityId];
         senderId = null;
       }
       final data = (receiverId != null

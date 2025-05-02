@@ -830,16 +830,25 @@ class ProjectAdditionalDetailsMapper
       v.projectType;
   static const Field<ProjectAdditionalDetails, ProjectTypeModel>
       _f$projectType = Field('projectType', _$projectType, opt: true);
+  static ProjectTypeModel? _$additionalProjectType(
+          ProjectAdditionalDetails v) =>
+      v.additionalProjectType;
+  static const Field<ProjectAdditionalDetails, ProjectTypeModel>
+      _f$additionalProjectType =
+      Field('additionalProjectType', _$additionalProjectType, opt: true);
 
   @override
   final MappableFields<ProjectAdditionalDetails> fields = const {
     #projectType: _f$projectType,
+    #additionalProjectType: _f$additionalProjectType,
   };
   @override
   final bool ignoreNull = true;
 
   static ProjectAdditionalDetails _instantiate(DecodingData data) {
-    return ProjectAdditionalDetails(projectType: data.dec(_f$projectType));
+    return ProjectAdditionalDetails(
+        projectType: data.dec(_f$projectType),
+        additionalProjectType: data.dec(_f$additionalProjectType));
   }
 
   @override
@@ -901,7 +910,10 @@ abstract class ProjectAdditionalDetailsCopyWith<
     $Out> implements ClassCopyWith<$R, $In, $Out> {
   ProjectTypeModelCopyWith<$R, ProjectTypeModel, ProjectTypeModel>?
       get projectType;
-  $R call({ProjectTypeModel? projectType});
+  ProjectTypeModelCopyWith<$R, ProjectTypeModel, ProjectTypeModel>?
+      get additionalProjectType;
+  $R call(
+      {ProjectTypeModel? projectType, ProjectTypeModel? additionalProjectType});
   ProjectAdditionalDetailsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -920,11 +932,23 @@ class _ProjectAdditionalDetailsCopyWithImpl<$R, $Out>
       get projectType =>
           $value.projectType?.copyWith.$chain((v) => call(projectType: v));
   @override
-  $R call({Object? projectType = $none}) => $apply(
-      FieldCopyWithData({if (projectType != $none) #projectType: projectType}));
+  ProjectTypeModelCopyWith<$R, ProjectTypeModel, ProjectTypeModel>?
+      get additionalProjectType => $value.additionalProjectType?.copyWith
+          .$chain((v) => call(additionalProjectType: v));
+  @override
+  $R call(
+          {Object? projectType = $none,
+          Object? additionalProjectType = $none}) =>
+      $apply(FieldCopyWithData({
+        if (projectType != $none) #projectType: projectType,
+        if (additionalProjectType != $none)
+          #additionalProjectType: additionalProjectType
+      }));
   @override
   ProjectAdditionalDetails $make(CopyWithData data) => ProjectAdditionalDetails(
-      projectType: data.get(#projectType, or: $value.projectType));
+      projectType: data.get(#projectType, or: $value.projectType),
+      additionalProjectType:
+          data.get(#additionalProjectType, or: $value.additionalProjectType));
 
   @override
   ProjectAdditionalDetailsCopyWith<$R2, ProjectAdditionalDetails, $Out2>
