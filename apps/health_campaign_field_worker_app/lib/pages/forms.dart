@@ -9,8 +9,10 @@ import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:forms_engine/json_forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_data_transformer/src/transformer_service.dart';
 
 // import '../widgets/header/back_navigation_help_header.dart';
+import '../data/transformer_config.dart';
 import '../router/app_router.dart';
 import '../widgets/custom_scanner.dart';
 import '../widgets/custom_text.dart';
@@ -67,74 +69,114 @@ class FormsPage extends StatelessWidget {
                   const SizedBox.shrink()
                 ],
               ),
-              footer: DigitCard(
-                margin: EdgeInsets.zero,
-                children: [
-                  ReactiveFormConsumer(
-                      builder: (context, formGroup, child) => DigitButton(
-                            label: (index) < schemaObject.pages.length - 1
-                                ? 'Next'
-                                : 'Submit',
-                            onPressed: !formGroup.valid
-                                ? () {}
-                                : () {
-                                    final values = JsonForms.getFormValues(
-                                      formGroup,
-                                      schema,
-                                    );
+              footer: BlocListener<FormsBloc, FormsState>(
+                listener: (context, state) {
+                  // Check if formData is updated and perform the transformation
+                  if (state.formData != null && state.formData!.isNotEmpty) {
+                    final formData = state.formData;
 
-                                    final updatedPropertySchema =
-                                        schema.copyWith(
-                                      properties: Map.fromEntries(
-                                        schema.properties?.entries.map(
-                                              (e) => values.containsKey(e.key)
-                                                  ? MapEntry(
-                                                      e.key,
-                                                      e.value.copyWith(
-                                                        value: values[e.key],
-                                                      ),
-                                                    )
-                                                  : MapEntry(e.key, e.value),
-                                            ) ??
-                                            [],
-                                      ),
-                                    );
 
-                                    context.read<FormsBloc>().add(
-                                          FormsUpdateEvent(
-                                            schemaObject.copyWith(
-                                              pages: Map.fromEntries(
-                                                schemaObject.pages.entries.map(
-                                                  (entry) => MapEntry(
-                                                    entry.key,
-                                                    entry.key == pageName
-                                                        ? updatedPropertySchema
-                                                        : entry.value,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+// Check if formData is null or empty
+                    if (formData == null || formData.isEmpty) return;
+
+                    try {
+                      // Get all models as a list
+                      final modelsConfig = jsonConfig['beneficiaryRegistration']?['models'] as Map<String, dynamic>;
+
+
+                      final formEntityMapper = FormEntityMapper(config: jsonConfig);
+
+                      final entities = formEntityMapper.mapFormToEntities(
+                        formValues: formData,
+                        modelsConfig: modelsConfig,
+                      );
+
+                      // You now have a list of transformed models, so you can proceed with further processing
+                      for (var entity in entities) {
+                        // Do something with the entity (e.g., submit to API)
+                        // submitTransformedData(entity);
+                      }
+                    } catch (e) {
+                      // Handle any errors during the mapping process
+                      print('Error: $e');
+                    }
+                  }
+                },
+                child: DigitCard(
+                    margin: EdgeInsets.zero,
+                    children: [
+                      ReactiveFormConsumer(
+                          builder: (context, formGroup, child) => DigitButton(
+                                label: (index) < schemaObject.pages.length - 1
+                                    ? 'Next'
+                                    : 'Submit',
+                                onPressed: !formGroup.valid
+                                    ? () {}
+                                    : () {
+                                        final values = JsonForms.getFormValues(
+                                          formGroup,
+                                          schema,
+                                        );
+
+                                        final updatedPropertySchema =
+                                            schema.copyWith(
+                                          properties: Map.fromEntries(
+                                            schema.properties?.entries.map(
+                                                  (e) => values.containsKey(e.key)
+                                                      ? MapEntry(
+                                                          e.key,
+                                                          e.value.copyWith(
+                                                            value: values[e.key],
+                                                          ),
+                                                        )
+                                                      : MapEntry(e.key, e.value),
+                                                ) ??
+                                                [],
                                           ),
                                         );
 
-                                    if ((index) <
-                                        schemaObject.pages.length - 1) {
-                                      context.router.push(FormsRoute(
-                                        pageName: schemaObject.pages.entries
-                                            .elementAt(index + 1)
-                                            .key,
-                                      ));
-                                    } else {
-                                      context.read<FormsBloc>().add(
-                                            const FormsCreateMappingEvent(),
+                                        context.read<FormsBloc>().add(
+                                              FormsUpdateEvent(
+                                                schemaObject.copyWith(
+                                                  pages: Map.fromEntries(
+                                                    schemaObject.pages.entries.map(
+                                                      (entry) => MapEntry(
+                                                        entry.key,
+                                                        entry.key == pageName
+                                                            ? updatedPropertySchema
+                                                            : entry.value,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+
+                                        if ((index) <
+                                            schemaObject.pages.length - 1) {
+                                          context.router.push(FormsRoute(
+                                            pageName: schemaObject.pages.entries
+                                                .elementAt(index + 1)
+                                                .key,
+                                          ));
+                                        } else {
+                                          // When form is completed, submit form and send data to the state
+                                          context.read<FormsBloc>().add(
+                                            FormsSubmitEvent(
+                                               schemaObject, // Pass form values to the event
+                                            ),
                                           );
-                                    }
-                                  },
-                            type: DigitButtonType.primary,
-                            size: DigitButtonSize.large,
-                            mainAxisSize: MainAxisSize.max,
-                          ))
-                ],
+                                          // context.read<FormsBloc>().add(
+                                          //       const FormsCreateMappingEvent(),
+                                          //     );
+                                        }
+                                      },
+                                type: DigitButtonType.primary,
+                                size: DigitButtonSize.large,
+                                mainAxisSize: MainAxisSize.max,
+                              ))
+                    ],
+                  ),
               ),
               children: [
                 DigitCard(
