@@ -15,7 +15,7 @@ class JsonSchemaBooleanBuilder extends JsonSchemaBuilder<bool> {
       builder: (context, formGroup, child) {
         final control = formGroup.control(formControlName);
         return DigitCheckbox(
-          label: hint ?? 'Some',
+          label: hint ?? 'checkbox label',
           value: (control.value ?? false) as bool,
           onChanged: (value) => control.value = value,
         );
