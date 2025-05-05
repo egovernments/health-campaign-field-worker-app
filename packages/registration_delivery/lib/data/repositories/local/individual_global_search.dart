@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:drift/drift.dart';
@@ -574,143 +573,161 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     return totalCount == null ? 0 : totalCount.first.data['total_count'];
   }
 
-  _returnIndividualModel(results, int? count) {
-    var data = results
-        .map((e) {
-          final individual = e.readTableOrNull(sql.individual);
-          final address = e.readTableOrNull(sql.address);
-          final name = e.readTableOrNull(sql.name);
-          final identifier = e.readTableOrNull(sql.identifier);
+  _returnIndividualModel(List results, int? count) {
+    final Map<String, IndividualModel> individualsByClientRefId = {};
 
-          return IndividualModel(
-            id: individual.id,
-            tenantId: individual.tenantId,
-            individualId: individual.individualId,
-            clientReferenceId: individual.clientReferenceId,
-            dateOfBirth: individual.dateOfBirth,
-            mobileNumber: individual.mobileNumber,
-            isDeleted: individual.isDeleted,
-            rowVersion: individual.rowVersion,
-            clientAuditDetails: (individual.clientCreatedBy != null &&
-                    individual.clientCreatedTime != null)
-                ? ClientAuditDetails(
-                    createdBy: individual.clientCreatedBy!,
-                    createdTime: individual.clientCreatedTime!,
-                    lastModifiedBy: individual.clientModifiedBy,
-                    lastModifiedTime: individual.clientModifiedTime,
-                  )
-                : null,
-            auditDetails: (individual.auditCreatedBy != null &&
-                    individual.auditCreatedTime != null)
-                ? AuditDetails(
-                    createdBy: individual.auditCreatedBy!,
-                    createdTime: individual.auditCreatedTime!,
-                    lastModifiedBy: individual.auditModifiedBy,
-                    lastModifiedTime: individual.auditModifiedTime,
-                  )
-                : null,
-            name: name == null
-                ? null
-                : NameModel(
-                    id: name.id,
-                    individualClientReferenceId: individual.clientReferenceId,
-                    familyName: name.familyName,
-                    givenName: name.givenName,
-                    otherNames: name.otherNames,
-                    rowVersion: name.rowVersion,
-                    tenantId: name.tenantId,
-                    auditDetails: (name.auditCreatedBy != null &&
-                            name.auditCreatedTime != null)
-                        ? AuditDetails(
-                            createdBy: name.auditCreatedBy!,
-                            createdTime: name.auditCreatedTime!,
-                            lastModifiedBy: name.auditModifiedBy,
-                            lastModifiedTime: name.auditModifiedTime,
-                          )
-                        : null,
-                    clientAuditDetails: (name.clientCreatedBy != null &&
-                            name.clientCreatedTime != null)
-                        ? ClientAuditDetails(
-                            createdBy: name.clientCreatedBy!,
-                            createdTime: name.clientCreatedTime!,
-                            lastModifiedBy: name.clientModifiedBy,
-                            lastModifiedTime: name.clientModifiedTime,
-                          )
-                        : null,
-                  ),
-            bloodGroup: individual.bloodGroup,
-            address: [
-              address == null
-                  ? null
-                  : AddressModel(
-                      id: address.id,
-                      relatedClientReferenceId: individual.clientReferenceId,
-                      tenantId: address.tenantId,
-                      doorNo: address.doorNo,
-                      latitude: address.latitude,
-                      longitude: address.longitude,
-                      landmark: address.landmark,
-                      locationAccuracy: address.locationAccuracy,
-                      addressLine1: address.addressLine1,
-                      addressLine2: address.addressLine2,
-                      city: address.city,
-                      pincode: address.pincode,
-                      type: address.type,
-                      locality: address.localityBoundaryCode != null
-                          ? LocalityModel(
-                              code: address.localityBoundaryCode!,
-                              name: address.localityBoundaryName,
-                            )
-                          : null,
-                      rowVersion: address.rowVersion,
-                      auditDetails: (address.auditCreatedBy != null &&
-                              address.auditCreatedTime != null)
-                          ? AuditDetails(
-                              createdBy: address.auditCreatedBy!,
-                              createdTime: address.auditCreatedTime!,
-                              lastModifiedBy: address.auditModifiedBy,
-                              lastModifiedTime: address.auditModifiedTime,
-                            )
-                          : null,
-                      clientAuditDetails: (address.clientCreatedBy != null &&
-                              address.clientCreatedTime != null)
-                          ? ClientAuditDetails(
-                              createdBy: address.clientCreatedBy!,
-                              createdTime: address.clientCreatedTime!,
-                              lastModifiedBy: address.clientModifiedBy,
-                              lastModifiedTime: address.clientModifiedTime,
-                            )
-                          : null,
-                    ),
-            ].whereNotNull().toList(),
-            gender: individual.gender,
-            identifiers: [
-              if (identifier != null)
-                IdentifierModel(
-                  id: identifier.id,
-                  clientReferenceId: individual.clientReferenceId,
-                  identifierType: identifier.identifierType,
-                  identifierId: identifier.identifierId,
-                  rowVersion: identifier.rowVersion,
-                  tenantId: identifier.tenantId,
-                  auditDetails: AuditDetails(
-                    createdBy: identifier.auditCreatedBy!,
-                    createdTime: identifier.auditCreatedTime!,
-                    lastModifiedBy: identifier.auditModifiedBy,
-                    lastModifiedTime: identifier.auditModifiedTime,
-                  ),
+    for (final e in results) {
+      final individualTable = e.readTableOrNull(sql.individual);
+      final addressTable = e.readTableOrNull(sql.address);
+      final nameTable = e.readTableOrNull(sql.name);
+      final identifierTable = e.readTableOrNull(sql.identifier);
+
+      if (individualTable == null) continue;
+
+      final clientReferenceId = individualTable.clientReferenceId;
+
+      final existingIndividual = individualsByClientRefId[clientReferenceId];
+
+      // Build Identifier
+      final identifierModel = identifierTable == null
+          ? null
+          : IdentifierModel(
+              id: identifierTable.id,
+              clientReferenceId: identifierTable.clientReferenceId,
+              identifierType: identifierTable.identifierType,
+              identifierId: identifierTable.identifierId,
+              tenantId: identifierTable.tenantId,
+              rowVersion: identifierTable.rowVersion,
+              auditDetails: AuditDetails(
+                createdBy: identifierTable.auditCreatedBy!,
+                createdTime: identifierTable.auditCreatedTime!,
+                lastModifiedBy: identifierTable.auditModifiedBy,
+                lastModifiedTime: identifierTable.auditModifiedTime,
+              ),
+            );
+
+      if (existingIndividual != null) {
+        // Individual already exists, append the identifier
+        if (identifierModel != null) {
+          existingIndividual.identifiers?.add(identifierModel);
+        }
+      } else {
+        // First time seeing this individual, create
+        individualsByClientRefId[clientReferenceId] = IndividualModel(
+          id: individualTable.id,
+          tenantId: individualTable.tenantId,
+          individualId: individualTable.individualId,
+          clientReferenceId: individualTable.clientReferenceId,
+          dateOfBirth: individualTable.dateOfBirth,
+          mobileNumber: individualTable.mobileNumber,
+          gender: individualTable.gender,
+          isDeleted: individualTable.isDeleted,
+          bloodGroup: individualTable.bloodGroup,
+          rowVersion: individualTable.rowVersion,
+          clientAuditDetails: (individualTable.clientCreatedBy != null &&
+                  individualTable.clientCreatedTime != null)
+              ? ClientAuditDetails(
+                  createdBy: individualTable.clientCreatedBy!,
+                  createdTime: individualTable.clientCreatedTime!,
+                  lastModifiedBy: individualTable.clientModifiedBy,
+                  lastModifiedTime: individualTable.clientModifiedTime,
+                )
+              : null,
+          auditDetails: (individualTable.auditCreatedBy != null &&
+                  individualTable.auditCreatedTime != null)
+              ? AuditDetails(
+                  createdBy: individualTable.auditCreatedBy!,
+                  createdTime: individualTable.auditCreatedTime!,
+                  lastModifiedBy: individualTable.auditModifiedBy,
+                  lastModifiedTime: individualTable.auditModifiedTime,
+                )
+              : null,
+          name: nameTable == null
+              ? null
+              : NameModel(
+                  id: nameTable.id,
+                  individualClientReferenceId:
+                      individualTable.clientReferenceId,
+                  familyName: nameTable.familyName,
+                  givenName: nameTable.givenName,
+                  otherNames: nameTable.otherNames,
+                  rowVersion: nameTable.rowVersion,
+                  tenantId: nameTable.tenantId,
+                  auditDetails: (nameTable.auditCreatedBy != null &&
+                          nameTable.auditCreatedTime != null)
+                      ? AuditDetails(
+                          createdBy: nameTable.auditCreatedBy!,
+                          createdTime: nameTable.auditCreatedTime!,
+                          lastModifiedBy: nameTable.auditModifiedBy,
+                          lastModifiedTime: nameTable.auditModifiedTime,
+                        )
+                      : null,
+                  clientAuditDetails: (nameTable.clientCreatedBy != null &&
+                          nameTable.clientCreatedTime != null)
+                      ? ClientAuditDetails(
+                          createdBy: nameTable.clientCreatedBy!,
+                          createdTime: nameTable.clientCreatedTime!,
+                          lastModifiedBy: nameTable.clientModifiedBy,
+                          lastModifiedTime: nameTable.clientModifiedTime,
+                        )
+                      : null,
                 ),
-            ],
-            additionalFields: individual.additionalFields == null
-                ? null
-                : IndividualAdditionalFieldsMapper.fromJson(
-                    individual.additionalFields!,
-                  ),
-          );
-        })
-        .where((element) => element.isDeleted != true)
-        .toList();
+          address: [
+            if (addressTable != null)
+              AddressModel(
+                id: addressTable.id,
+                relatedClientReferenceId: individualTable.clientReferenceId,
+                tenantId: addressTable.tenantId,
+                doorNo: addressTable.doorNo,
+                latitude: addressTable.latitude,
+                longitude: addressTable.longitude,
+                landmark: addressTable.landmark,
+                locationAccuracy: addressTable.locationAccuracy,
+                addressLine1: addressTable.addressLine1,
+                addressLine2: addressTable.addressLine2,
+                city: addressTable.city,
+                pincode: addressTable.pincode,
+                type: addressTable.type,
+                locality: addressTable.localityBoundaryCode != null
+                    ? LocalityModel(
+                        code: addressTable.localityBoundaryCode!,
+                        name: addressTable.localityBoundaryName,
+                      )
+                    : null,
+                rowVersion: addressTable.rowVersion,
+                auditDetails: (addressTable.auditCreatedBy != null &&
+                        addressTable.auditCreatedTime != null)
+                    ? AuditDetails(
+                        createdBy: addressTable.auditCreatedBy!,
+                        createdTime: addressTable.auditCreatedTime!,
+                        lastModifiedBy: addressTable.auditModifiedBy,
+                        lastModifiedTime: addressTable.auditModifiedTime,
+                      )
+                    : null,
+                clientAuditDetails: (addressTable.clientCreatedBy != null &&
+                        addressTable.clientCreatedTime != null)
+                    ? ClientAuditDetails(
+                        createdBy: addressTable.clientCreatedBy!,
+                        createdTime: addressTable.clientCreatedTime!,
+                        lastModifiedBy: addressTable.clientModifiedBy,
+                        lastModifiedTime: addressTable.clientModifiedTime,
+                      )
+                    : null,
+              )
+          ],
+          identifiers: identifierModel != null ? [identifierModel] : [],
+          additionalFields: individualTable.additionalFields == null
+              ? null
+              : IndividualAdditionalFieldsMapper.fromJson(
+                  individualTable.additionalFields!,
+                ),
+        );
+      }
+    }
 
-    return {'total_count': count, 'data': data};
+    return {
+      'total_count': count,
+      'data': individualsByClientRefId.values.toList(),
+    };
   }
 }
