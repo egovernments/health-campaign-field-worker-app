@@ -111,37 +111,7 @@ class JsonFormBuilder extends StatelessWidget {
             }
           }
         } else if (schema.format == PropertySchemaFormat.latLng) {
-          child = BlocConsumer<LocationBloc, LocationState>(
-            listener: (_, state) {
-              form.control(formControlName).value = state.latLngString;
-            },
-            builder: (context, state) {
-              return LabeledField(
-                label: schema.label ?? '',
-                child: JsonSchemaStringBuilder(
-                  form: form,
-                  formControlName: formControlName,
-                  hint: schema.hint,
-                  readOnly: true,
-                  suffix: Container(
-                    padding: const EdgeInsets.only(right: 8),
-                    height: 18,
-                    child: state.loading
-                        ? const AspectRatio(
-                            aspectRatio: 1,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.my_location),
-                  ),
-                  onTap: state.loading
-                      ? null
-                      : () => context.read<LocationBloc>().add(
-                            const LoadLocationEvent(),
-                          ),
-                ),
-              );
-            },
-          );
+          child = JsonSchemaLatLngBuilder(formControlName: formControlName, form: form, label: schema.label,);
         } else {
           child = JsonSchemaStringBuilder(
             form: form,

@@ -1,159 +1,158 @@
 import 'package:digit_data_model/data_model.dart';
-import 'package:registration_delivery/models/entities/household.dart';
+import 'package:flutter/foundation.dart';
 import 'model_factory_registory.dart';
 
 class FormEntityMapper {
   final Map<String, dynamic> config;
+  final Map<String, Map<String, dynamic>> generatedValues = {};
 
   FormEntityMapper({required this.config});
 
-  // Used to store generated values like UUIDs for cross-reference
-  final Map<String, Map<String, dynamic>> generatedValues = {};
-
-  // Method to return a list of models based on the form data and dynamic config
   List<EntityModel> mapFormToEntities({
     required Map<String, dynamic> formValues,
-    required Map<String, dynamic> modelsConfig, // Pass models config dynamically
+    required Map<String, dynamic> modelsConfig,
   }) {
     final List<EntityModel> entities = [];
 
-    // Iterate through each model configuration in the dynamic modelsConfig
     modelsConfig.forEach((modelName, modelConfig) {
       try {
-        final model = mapFormToEntity(
-          modelName: modelName,
-          formValues: formValues,
-          modelConfig: modelConfig,
-        );
+        final model = _mapModel(modelName, formValues, modelConfig);
         entities.add(model);
       } catch (e) {
-        print('Error mapping model $modelName: $e');
+        throw Exception('Error mapping model $modelName: $e');
       }
     });
 
     return entities;
   }
 
-  // Method to map form data to a single entity model
-  EntityModel mapFormToEntity({
-    required String modelName,
-    required Map<String, dynamic> formValues,
-    required Map<String, dynamic> modelConfig, // Pass model config dynamically
-  }) {
-    if (modelConfig == null) {
-      throw Exception("Model config not found for: $modelName");
-    }
-
-    final Map<String, dynamic> mapped = {};
-
-    // Handle scalar mappings
+  EntityModel _mapModel(
+      String modelName,
+      Map<String, dynamic> formValues,
+      Map<String, dynamic> modelConfig,
+      ) {
+    final mapped = <String, dynamic>{};
     final mappings = modelConfig['mappings'] as Map<String, dynamic>? ?? {};
+
     for (final entry in mappings.entries) {
       final targetKey = entry.key;
       final sourcePath = entry.value;
 
-      // Handle additionalFields
-      if (targetKey == 'additionalFields' &&
-          sourcePath is Map<String, dynamic>) {
-        final List<Map<String, dynamic>> fieldsList = [];
-        sourcePath.forEach((customKey, path) {
-          final value = getValueFromMapping(path, formValues, path);
-          if (value != null) {
-            fieldsList.add({'key': customKey, 'value': value});
-          }
-        });
-        if (fieldsList.isNotEmpty) {
-          mapped['additionalFields'] = {
-            'schema': modelName.replaceAll('Model', ''),
-            'version': 1,
-            'fields': fieldsList,
-          };
-        }
+      if (targetKey == 'additionalFields' && sourcePath is Map<String, dynamic>) {
+        mapped[targetKey] = _mapAdditionalFields(sourcePath, formValues, modelName);
         continue;
       }
 
-      // Handle list:ModelType
       if (sourcePath is String && sourcePath.startsWith('list:')) {
-        final listModelName = sourcePath.split(':').last;
-        final listConfig = modelConfig['listMappings']?[listModelName];
-
-        if (listConfig != null) {
-          final mappings = listConfig['mappings'] as Map<String, dynamic>;
-
-          // Initialize an empty list to hold the mapped objects
-          final List<Map<String, dynamic>> mappedList = [];
-
-          // Iterate through each of the mappings for this list (like 'id', 'identifierType', etc.)
-          final Map<String, dynamic> newItem = {};
-
-          mappings.forEach((targetKey, path) {
-            final value = _getValueFromPath(formValues, path);
-
-            // If the value is not null, add it as a key-value pair in the new item
-            if (value != null) {
-              newItem[targetKey] = value;
-            }
-          });
-
-          // If we have any values in newItem, add it to the mappedList
-          if (newItem.isNotEmpty) {
-            mappedList.add(newItem);
-          }
-
-          // Assign the list to the target key in the final mapped object
-          mapped[targetKey] = mappedList.isNotEmpty ? mappedList : null;
-        }
-
+        mapped[targetKey] = _mapListModel(sourcePath, formValues, modelName, modelConfig);
         continue;
       }
 
-      // Scalar & DateTime handling
       final value = getValueFromMapping(sourcePath, formValues, modelName);
-      if (value is DateTime) {
-        mapped[targetKey] = value.millisecondsSinceEpoch;
-      } else {
-        mapped[targetKey] = value;
-      }
-    }
-    // Model factory
-    final modelFactory = modelFactoryRegistry[modelName];
-    if (modelFactory == null) {
-      throw Exception("No model factory found for $modelName");
+      mapped[targetKey] = value is DateTime ? value.millisecondsSinceEpoch : value;
     }
 
-    return modelFactory(mapped);
+    final factory = modelFactoryRegistry[modelName];
+    if (factory == null) throw Exception('No model factory for $modelName');
+
+    return factory(mapped);
+  }
+
+  List<Map<String, dynamic>> _mapListModel(
+      String sourcePath,
+      Map<String, dynamic> formValues,
+      String parentModel,
+      Map<String, dynamic> modelConfig,
+      ) {
+    final listModelName = sourcePath.split(':').last;
+    final listConfig = modelConfig['listMappings']?[listModelName];
+
+    if (listConfig == null) {
+      throw Exception('Missing listMappings config for $listModelName in $parentModel');
+    }
+
+    final mappings = listConfig['mappings'] as Map<String, dynamic>;
+
+    final newItem = <String, dynamic>{};
+
+    for (final entry in mappings.entries) {
+      final targetKey = entry.key;
+      final sourcePath = entry.value;
+
+      if (targetKey == 'additionalFields' && sourcePath is Map<String, dynamic>) {
+        newItem[targetKey] = _mapAdditionalFields(sourcePath, formValues, listModelName);
+        continue;
+      }
+
+      if (sourcePath is String && sourcePath.startsWith('list:')) {
+        newItem[targetKey] = _mapListModel(sourcePath, formValues, listModelName, listConfig);
+        continue;
+      }
+
+      final value = getValueFromMapping(sourcePath, formValues, listModelName);
+      newItem[targetKey] = value is DateTime ? value.millisecondsSinceEpoch : value;
+    }
+
+    return newItem.isNotEmpty ? [newItem] : [];
+  }
+
+  Map<String, dynamic>? _mapAdditionalFields(
+      Map<String, dynamic> fieldsMap,
+      Map<String, dynamic> formValues,
+      String modelName,
+      ) {
+    final fieldsList = <Map<String, dynamic>>[];
+
+    fieldsMap.forEach((customKey, path) {
+      final value = getValueFromMapping(path, formValues, path);
+      if (value != null) {
+        fieldsList.add({'key': customKey, 'value': value});
+      }
+    });
+
+    if (fieldsList.isEmpty) return null;
+
+    return {
+      'schema': modelName.replaceAll('Model', ''),
+      'version': 1,
+      'fields': fieldsList,
+    };
   }
 
   dynamic getValueFromMapping(String instruction, Map<String, dynamic> data, String currentModel) {
-
     if (instruction == '__generate:uuid') {
-      final newUuid = IdGen.i.identifier;
-      generatedValues.putIfAbsent(currentModel, () => {})['clientReferenceId'] = newUuid;
-      return newUuid;
+      final uuid = IdGen.i.identifier;
+      generatedValues.putIfAbsent(currentModel, () => {})['clientReferenceId'] = uuid;
+      return uuid;
     }
 
     if (instruction.startsWith('__ref:')) {
       final parts = instruction.replaceFirst('__ref:', '').split('.');
+      if (parts.length != 2) {
+        throw Exception('Invalid __ref: format for instruction: $instruction');
+      }
       final modelName = parts[0];
       final field = parts[1];
-      return generatedValues[modelName]?[field];
+      final refValue = generatedValues[modelName]?[field];
+      if (refValue == null) {
+        throw Exception('Reference not found for $instruction');
+      }
+      return refValue;
     }
 
-    // Regular JSON path like 'members.householdClientRefId'
-    List<String> keys = instruction.split('.');
-    dynamic value = data;
-    for (final key in keys) {
-      value = value?[key];
-    }
-    return value;
+    return _getValueFromPath(data, instruction);
   }
 
   dynamic _getValueFromPath(Map<String, dynamic> data, String path) {
-    List<String> keys = path.split('.');
-    dynamic value = data;
-    for (final key in keys) {
-      value = value?[key];
-    }
-    return value;
+    return path.split('.').fold<dynamic>(data, (value, key) {
+      if (value is Map<String, dynamic> && value.containsKey(key)) {
+        return value[key];
+      }
+      if (kDebugMode) {
+        print('Warning: Key "$key" not found while resolving path "$path".');
+      }
+      return null;
+    });
   }
 }
+

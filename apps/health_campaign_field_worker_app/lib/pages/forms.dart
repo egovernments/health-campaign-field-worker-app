@@ -47,7 +47,7 @@ class FormsPage extends StatelessWidget {
           final Map<String, Widget> widgetMap = {
             'dobPicker': const DobPicker(),
             'customText': const CustomText(),
-            'scanner':  const CustomScanner(),
+            'scanner': const CustomScanner(),
           };
           return ReactiveFormBuilder(
             form: () => fb.group(
@@ -75,16 +75,16 @@ class FormsPage extends StatelessWidget {
                   if (state.formData != null && state.formData!.isNotEmpty) {
                     final formData = state.formData;
 
-
-// Check if formData is null or empty
+                    // Check if formData is null or empty
                     if (formData == null || formData.isEmpty) return;
 
                     try {
                       // Get all models as a list
-                      final modelsConfig = jsonConfig['beneficiaryRegistration']?['models'] as Map<String, dynamic>;
+                      final modelsConfig = jsonConfig['beneficiaryRegistration']
+                          ?['models'] as Map<String, dynamic>;
 
-
-                      final formEntityMapper = FormEntityMapper(config: jsonConfig);
+                      final formEntityMapper =
+                          FormEntityMapper(config: jsonConfig);
 
                       final entities = formEntityMapper.mapFormToEntities(
                         formValues: formData,
@@ -103,84 +103,85 @@ class FormsPage extends StatelessWidget {
                   }
                 },
                 child: DigitCard(
-                    margin: EdgeInsets.zero,
-                    children: [
-                      ReactiveFormConsumer(
-                          builder: (context, formGroup, child) => DigitButton(
-                                label: (index) < schemaObject.pages.length - 1
-                                    ? 'Next'
-                                    : 'Submit',
-                                onPressed: !formGroup.valid
-                                    ? () {}
-                                    : () {
-                                        final values = JsonForms.getFormValues(
-                                          formGroup,
-                                          schema,
-                                        );
+                  margin: const EdgeInsets.only(top: spacer2),
+                  children: [
+                    ReactiveFormConsumer(
+                        builder: (context, formGroup, child) => DigitButton(
+                              label: (index) < schemaObject.pages.length - 1
+                                  ? 'Next'
+                                  : 'Submit',
+                              onPressed: !formGroup.valid
+                                  ? () {}
+                                  : () {
+                                      final values = JsonForms.getFormValues(
+                                        formGroup,
+                                        schema,
+                                      );
 
-                                        final updatedPropertySchema =
-                                            schema.copyWith(
-                                          properties: Map.fromEntries(
-                                            schema.properties?.entries.map(
-                                                  (e) => values.containsKey(e.key)
-                                                      ? MapEntry(
-                                                          e.key,
-                                                          e.value.copyWith(
-                                                            value: values[e.key],
-                                                          ),
-                                                        )
-                                                      : MapEntry(e.key, e.value),
-                                                ) ??
-                                                [],
-                                          ),
-                                        );
+                                      final updatedPropertySchema =
+                                          schema.copyWith(
+                                        properties: Map.fromEntries(
+                                          schema.properties?.entries.map(
+                                                (e) => values.containsKey(e.key)
+                                                    ? MapEntry(
+                                                        e.key,
+                                                        e.value.copyWith(
+                                                          value: values[e.key],
+                                                        ),
+                                                      )
+                                                    : MapEntry(e.key, e.value),
+                                              ) ??
+                                              [],
+                                        ),
+                                      );
 
-                                        context.read<FormsBloc>().add(
-                                              FormsUpdateEvent(
-                                                schemaObject.copyWith(
-                                                  pages: Map.fromEntries(
-                                                    schemaObject.pages.entries.map(
-                                                      (entry) => MapEntry(
-                                                        entry.key,
-                                                        entry.key == pageName
-                                                            ? updatedPropertySchema
-                                                            : entry.value,
-                                                      ),
+                                      context.read<FormsBloc>().add(
+                                            FormsUpdateEvent(
+                                              schemaObject.copyWith(
+                                                pages: Map.fromEntries(
+                                                  schemaObject.pages.entries
+                                                      .map(
+                                                    (entry) => MapEntry(
+                                                      entry.key,
+                                                      entry.key == pageName
+                                                          ? updatedPropertySchema
+                                                          : entry.value,
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            );
-
-                                        if ((index) <
-                                            schemaObject.pages.length - 1) {
-                                          context.router.push(FormsRoute(
-                                            pageName: schemaObject.pages.entries
-                                                .elementAt(index + 1)
-                                                .key,
-                                          ));
-                                        } else {
-                                          // When form is completed, submit form and send data to the state
-                                          context.read<FormsBloc>().add(
-                                            FormsSubmitEvent(
-                                               schemaObject, // Pass form values to the event
                                             ),
                                           );
-                                          // context.read<FormsBloc>().add(
-                                          //       const FormsCreateMappingEvent(),
-                                          //     );
-                                        }
-                                      },
-                                type: DigitButtonType.primary,
-                                size: DigitButtonSize.large,
-                                mainAxisSize: MainAxisSize.max,
-                              ))
-                    ],
-                  ),
+
+                                      if ((index) <
+                                          schemaObject.pages.length - 1) {
+                                        context.router.push(FormsRoute(
+                                          pageName: schemaObject.pages.entries
+                                              .elementAt(index + 1)
+                                              .key,
+                                        ));
+                                      } else {
+                                        // When form is completed, submit form and send data to the state
+                                        context.read<FormsBloc>().add(
+                                              FormsSubmitEvent(
+                                                schemaObject, // Pass form values to the event
+                                              ),
+                                            );
+                                        // context.read<FormsBloc>().add(
+                                        //       const FormsCreateMappingEvent(),
+                                        //     );
+                                      }
+                                    },
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large,
+                              mainAxisSize: MainAxisSize.max,
+                            ))
+                  ],
+                ),
               ),
               children: [
                 DigitCard(
-                  margin: const EdgeInsets.all(spacer2),
+                  margin: const EdgeInsets.symmetric(horizontal: spacer2),
                   children: [
                     if (schema.label != null)
                       Text(
