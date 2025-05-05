@@ -184,9 +184,8 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         final key = propEntry.key;
         final value = propEntry.value.value;
 
-        if (value != null) {
-          pageValues[key] = value;
-        }
+        pageValues[key] = value;
+
       }
 
       if (pageValues.isNotEmpty) {
