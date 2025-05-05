@@ -151,6 +151,7 @@ const fakeSchema = """
       "properties": {
         "numberDistributed": {
           "type": "integer",
+          "format": "incrementer",
           "label": "Number of Bed nets distributed"
         },
         "reasonIfNotDelivered": {

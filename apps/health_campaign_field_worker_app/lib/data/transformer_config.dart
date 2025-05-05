@@ -15,7 +15,7 @@ final jsonConfig = {
           "husbandName": "family.husbandName",
           "photo": "personalDetails.photo",
           "nonRecoverableError": "errors.nonRecoverable",
-          "clientReferenceId": "personalDetails.clientRefId",
+          "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
           "tenantId": "meta.tenantId",
           "rowVersion": "meta.rowVersion",
           "name.givenName": "nameInfo.firstName",
@@ -23,7 +23,24 @@ final jsonConfig = {
           "bloodGroup": "health.bloodGroup",
           "gender": "personalDetails.gender",
           "address": "addressInfo.addressList",
-          "additionalFields": "additionalInfo.fields"
+          "identifiers": "list:IdentifierModel",
+          "additionalFields": {
+            "customOccupation": "extraInfo.occupation",
+            "customNotes": "extraInfo.notes"
+          }
+        },
+        "listMappings": {
+          "IdentifierModel": {
+            "mappings": {
+              "id": "id",
+              "identifierType": "type",
+              "identifierId": "number",
+              "nonRecoverableError": "error.nonRecoverable",
+              "clientReferenceId": "__generate:uuid",
+              "tenantId": "meta.tenantId",
+              "rowVersion": "meta.rowVersion",
+            }
+          }
         }
       },
       "HouseholdModel": {
@@ -33,24 +50,28 @@ final jsonConfig = {
           "latitude": "location.latitude",
           "longitude": "location.longitude",
           "nonRecoverableError": "errors.nonRecoverable",
-          "clientReferenceId": "housing.clientRefId",
+          "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
           "tenantId": "meta.tenantId",
           "rowVersion": "meta.rowVersion",
           "address": "housing.address",
           "householdType": "housing.type",
-          "additionalFields": "additionalInfo.fields"
+          "additionalFields": {
+            "childrenCount": "HouseHoldDetails.childrenCount",
+            "pregnantWomenCount": "HouseHoldDetails.pregnantWomenCount",
+            "memberCount": "HouseHoldDetails.memberCount"
+          }
         }
       },
       "HouseholdMemberModel": {
         "mappings": {
           "id": "members.id",
           "householdId": "members.householdId",
-          "householdClientReferenceId": "members.householdClientRefId",
+          "householdClientReferenceId": "__ref:HouseholdModel.clientReferenceId",
           "individualId": "members.individualId",
-          "individualClientReferenceId": "members.individualClientRefId",
-          "isHeadOfHousehold": "members.isHead",
+          "individualClientReferenceId": "__ref:IndividualModel.clientReferenceId",
+          "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
           "nonRecoverableError": "errors.nonRecoverable",
-          "clientReferenceId": "members.clientRefId",
+          "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
           "tenantId": "meta.tenantId",
           "rowVersion": "meta.rowVersion",
           "additionalFields": "additionalInfo.fields"
@@ -64,10 +85,10 @@ final jsonConfig = {
           "tag": "beneficiaryDetails.tag",
           "beneficiaryClientReferenceId": "beneficiaryDetails.clientRefId",
           "nonRecoverableError": "errors.nonRecoverable",
-          "clientReferenceId": "beneficiaryDetails.clientRefId",
+          "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
           "tenantId": "meta.tenantId",
           "rowVersion": "meta.rowVersion",
-          "dateOfRegistrationTime": "beneficiaryDetails.dateOfRegistration",
+          "dateOfRegistration": "HouseHoldDetails.dateOfRegistration",
           "additionalFields": "additionalInfo.fields"
         }
       }

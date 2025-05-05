@@ -2,11 +2,13 @@ part of 'json_schema_builder.dart';
 
 class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
   final DateTime? start;
+  final String? label;
   final DateTime? end;
 
   const JsonSchemaDatePickerBuilder({
     required super.formControlName,
     required super.form,
+    this.label,
     super.key,
     super.value,
     super.hint,
@@ -15,21 +17,19 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
   });
 
   @override
-  Widget build(BuildContext context) => ReactiveDatePicker(
-        formControlName: formControlName,
-        firstDate: start ?? DateTime(1900),
-        lastDate: end ?? DateTime.now(),
-        builder: (context, picker, child) {
-          return ReactiveTextField<String>(
-            formControlName: formControlName,
-            readOnly: true,
-            decoration: InputDecoration(
-              label: hint == null ? null : Text(hint!),
-            ),
-            onTap: (control) {
-              picker.showPicker();
-            },
-          );
-        },
-      );
+  Widget build(BuildContext context) => ReactiveWrapperField(
+    formControlName: formControlName,
+    builder: (field) => LabeledField(
+      label: label,
+      child: DigitDateFormInput(
+        readOnly: true,
+        initialValue: DateFormat(
+            Constants().dateMonthYearFormat)
+            .format(form
+            .control(formControlName)
+            .value)
+            .toString(),
+      ),
+    ),
+  );
 }
