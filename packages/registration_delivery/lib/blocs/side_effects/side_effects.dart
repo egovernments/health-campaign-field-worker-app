@@ -50,11 +50,10 @@ class SideEffectsBloc extends Bloc<SideEffectsEvent, SideEffectsState> {
           await sideEffectRepository.search(
         event.sideEffectSearch,
       );
-      if (sideEffects.isNotEmpty) {
-        emit(state.copyWith(sideEffects: sideEffects));
-      } else {
-        emit(state.copyWith(sideEffects: null));
-      }
+      emit(state.copyWith(
+        loading: false,
+        sideEffects: sideEffects.isNotEmpty ? sideEffects : null,
+      ));
     } catch (error) {
       rethrow;
     } finally {

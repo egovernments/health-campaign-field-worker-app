@@ -3,6 +3,8 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/referral.dart';
+import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
 class RegistrationDeliveryTestConstants {
@@ -70,4 +72,21 @@ class RegistrationDeliveryTestConstants {
       tasks: [],
       sideEffects: [],
       referrals: []);
+
+  static SideEffectModel mockSideEffectModel = SideEffectModel(
+    clientReferenceId: '1891de8-02a2-4844-80ff-a080b7b40b70',
+    symptoms: ['Fever'],
+  );
+
+  static SideEffectModel mockUpdatedSideEffectModel = SideEffectModel(
+    clientReferenceId: '1891de8-02a2-4844-80ff-a080b7b40b70',
+    symptoms: ['Fever', 'Headache'],
+  );
+
+  static ReferralModel referralModel = ReferralModel(
+    clientReferenceId: '1891de8-02a2-4844-80ff-a080b7b40b70',
+    referrerId: '1891de8-02a2-4844-80ff-a080b7b40b70',
+    recipientType: 'STAFF',
+    recipientId: 'Community Health Worker',
+  );
 }

@@ -24,7 +24,8 @@ class InventoryReportConstants {
 
   static final ProjectResourceModel projectResourceModel = ProjectResourceModel(
     resource: ProjectProductVariantModel(
-      productVariantId: '1891de8-02a2-4844-80ff-a080b7b40b70', // replace with a meaningful id
+      productVariantId:
+          '1891de8-02a2-4844-80ff-a080b7b40b70', // replace with a meaningful id
     ),
   );
 
@@ -34,7 +35,8 @@ class InventoryReportConstants {
 
   static final ProjectProductVariantModel projectProductVariantModel =
       ProjectProductVariantModel(
-    productVariantId: '1891de8-02a2-4844-80ff-a080b7b40b70', // replace with a meaningful id
+    productVariantId:
+        '1891de8-02a2-4844-80ff-a080b7b40b70', // replace with a meaningful id
   );
 
   static final String dateFormat =
@@ -43,4 +45,6 @@ class InventoryReportConstants {
   static final DateTime dateOfRecord = DateTime(2024, 1, 1);
 
   static const entryType = StockRecordEntryType.receipt;
+
+  static const String primaryType = "WAREHOUSE";
 }
