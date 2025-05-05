@@ -1,12 +1,15 @@
 part of 'json_schema_builder.dart';
 
+
 class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
   final List<String> enums;
+  final String? label;
 
   const JsonSchemaDropdownBuilder({
     required super.formControlName,
     required super.form,
     required this.enums,
+    this.label,
     super.key,
     super.value,
     super.hint,
@@ -14,24 +17,42 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (hint != null)
-          Text(
-            hint!,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ReactiveDropdownField(
-          formControlName: formControlName,
+    return ReactiveWrapperField(
+      formControlName: formControlName,
+      validationMessages: const {
+        // 'required': (_) => localizations.translate(
+        //   i18.common.corecommonRequired,
+        // ),
+      },
+      builder: (field) => LabeledField(
+        label: label,
+        capitalizedFirstLetter: false,
+        isRequired: true,
+        child: DigitDropdown<String>(
+          selectedOption:
+          (form.control(formControlName).value != null)
+              ? DropdownItem(
+              name: form.control(formControlName).value,
+              code: form.control(formControlName).value)
+              : null,
           items: enums
-              .map((e) => DropdownMenuItem(
-                    value: e,
-                    child: Text(e),
-                  ))
+              .map(
+                (e) => DropdownItem(
+                name: e,
+                code: e),
+          )
               .toList(),
+          onSelect: (value) {
+            form.control(formControlName).value = value.code;
+              // if (value.code == 'DEFAULT') {
+              //   form.control(formControlName).value =
+              //       IdGen.i.identifier.toString();
+              // } else {
+              //   form.control(formControlName).value = null;
+              // }
+          },
         ),
-      ],
+      ),
     );
   }
 }

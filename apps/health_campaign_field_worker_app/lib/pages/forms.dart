@@ -182,26 +182,21 @@ class FormsPage extends StatelessWidget {
                 DigitCard(
                   margin: const EdgeInsets.all(spacer2),
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (schema.label != null)
-                          Text(
-                            schema.label!,
-                            style: Theme.of(context)
-                                .digitTextTheme(context)
-                                .headingXl
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorTheme
-                                        .primary
-                                        .primary2),
-                          ),
-                        JsonForms(
-                          propertySchema: schema,
-                          childrens: [widgetMap],
-                        ),
-                      ],
+                    if (schema.label != null)
+                      Text(
+                        schema.label!,
+                        style: Theme.of(context)
+                            .digitTextTheme(context)
+                            .headingXl
+                            .copyWith(
+                                color: Theme.of(context)
+                                    .colorTheme
+                                    .primary
+                                    .primary2),
+                      ),
+                    JsonForms(
+                      propertySchema: schema,
+                      childrens: [widgetMap],
                     )
                   ],
                 ),

@@ -5,6 +5,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   final int? maxLength;
   final List<String>? enums;
   final String? format;
+  final String? label;
   
   final Widget? suffix;
 
@@ -16,6 +17,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     super.key,
     super.value,
     super.hint,
+    this.label,
     this.suffix,
     this.enums,
     this.format,
@@ -25,27 +27,32 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
 
   @override
   Widget build(BuildContext context) {
-    return  ReactiveTextField(
-      readOnly: readOnly,
-      formControlName: formControlName,
-        validationMessages: {
-          ValidationMessage.pattern:(error) => 'Pattron Mismatch',
-          ValidationMessage.minLength:(controler)=> 'Min...Length'
-        } , 
-      decoration: InputDecoration(
-
-        labelText: hint,
-        suffixIconConstraints: const BoxConstraints(
-          maxHeight: 48,
-          maxWidth: 48,
-        ),
-        suffixIcon: suffix == null
-            ? null
-            : InkWell(
-                onTap: onTap,
-                child: suffix,
-              ),
-      ),
+    return ReactiveFormConsumer(
+      builder: (context, formGroup, child) {
+        return ReactiveWrapperField(
+          formControlName: formControlName,
+          validationMessages: {
+            // 'required': (object) =>
+            //     localizations.translate(
+            //       '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+            //     ),
+          },
+          builder: (field) => LabeledField(
+            label: label,
+            capitalizedFirstLetter: false,
+            child: DigitTextFormInput(
+              readOnly: readOnly,
+              initialValue:
+              form.control(formControlName).value,
+              onChange: (value) {
+                form.control(formControlName).value =
+                    value;
+              },
+              errorMessage: field.errorText,
+            ),
+          ),
+        );
+      },
     );
   }
 }

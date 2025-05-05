@@ -3,6 +3,7 @@ part of 'json_schema_builder.dart';
 class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
   final int? minimum;
   final int? maximum;
+  final String? label;
   final bool incrementer;
 
   const JsonSchemaIntegerBuilder({
@@ -10,6 +11,7 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
     required super.form,
     super.key,
     super.value,
+    this.label,
     super.hint,
     this.incrementer = false,
     this.minimum,
@@ -18,65 +20,31 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
 
   @override
   Widget build(BuildContext context) {
-    if (!incrementer) {
-      return ReactiveTextField(
-        formControlName: formControlName,
-        decoration: InputDecoration(labelText: hint),
-        keyboardType: TextInputType.number,
-      );
-    }
-
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          _buildButton(
-            context,
-            border: Border(
-              left: _borderSide,
-              bottom: _borderSide,
-              top: _borderSide,
-            ),
-            icon: Icons.remove,
-            onPressed: () => form.control(formControlName).value -= 1,
-          ),
-          Expanded(
-            child: ReactiveTextField(
-              readOnly: true,
-              textAlign: TextAlign.center,
-              formControlName: formControlName,
-              decoration: InputDecoration(labelText: hint),
-              keyboardType: TextInputType.number,
-            ),
-          ),
-          _buildButton(
-            context,
-            border: Border(
-              right: _borderSide,
-              bottom: _borderSide,
-              top: _borderSide,
-            ),
-            icon: Icons.add,
-            onPressed: () => form.control(formControlName).value += 1,
-          ),
-        ],
+    return ReactiveWrapperField(
+      formControlName: formControlName,
+      builder: (field) => LabeledField(
+        label: label,
+        child: DigitNumericFormInput(
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly
+          ],
+          minValue: 0,
+          maxValue: maximum ?? 100,
+          maxLength: 5,
+          step: 1,
+          initialValue:  form
+              .control(formControlName)
+              .value
+              .toString(),
+          onChange: (value) {
+            if (value.isEmpty) {
+              form.control(formControlName).value = 0;
+              return;
+            }
+            form.control(formControlName).value = int.parse(value);
+          },
+        ),
       ),
     );
   }
-
-  Widget _buildButton(
-    BuildContext context, {
-    required Border border,
-    required IconData icon,
-    VoidCallback? onPressed,
-  }) =>
-      AspectRatio(
-        aspectRatio: 1,
-        child: Material(
-          shape: border,
-          color: Theme.of(context).colorScheme.surface,
-          child: InkWell(onTap: onPressed, child: Icon(icon)),
-        ),
-      );
-
-  BorderSide get _borderSide => const BorderSide(width: 1);
 }

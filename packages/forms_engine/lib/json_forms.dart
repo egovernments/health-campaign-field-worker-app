@@ -99,8 +99,8 @@ final List<Map <String, Widget>>? childrens;
           break;
         default:
           if (schema.format == PropertySchemaFormat.date) {
-            control = FormControl<String>(
-              value: schema.value,
+            control = FormControl<DateTime>(
+              value: schema.value as DateTime? ?? DateTime.now(),
               validators: requiredValidators,
             );
           } else if (schema.format == PropertySchemaFormat.latLng) {
