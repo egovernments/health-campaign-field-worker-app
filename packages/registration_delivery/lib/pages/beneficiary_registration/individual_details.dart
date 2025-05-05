@@ -844,9 +844,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     );
 
     var identifier = (individual.identifiers?.isNotEmpty ?? false)
-        ? individual.identifiers!.contains(form.control(_idTypeKey).value)
-            ? individual.identifiers!.last
-            : null
+        ? individual.identifiers!.firstWhereOrNull((id) =>
+            id.identifierType == form.control(_idTypeKey).value ? true : false)
         : null;
 
     identifier ??= IdentifierModel(
@@ -865,26 +864,22 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
         lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
+      identifierId: form.control(_idNumberKey).value,
+      identifierType: form.control(_idTypeKey).value,
     );
 
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
-      name: name.copyWith(
-        givenName: individualName?.trim(),
-      ),
-      gender: form.control(_genderKey).value == null
-          ? null
-          : Gender.values
-              .byName(form.control(_genderKey).value.toString().toLowerCase()),
-      mobileNumber: form.control(_mobileNumberKey).value,
-      dateOfBirth: dobString,
-      identifiers: [
-        identifier.copyWith(
-          identifierId: form.control(_idNumberKey).value,
-          identifierType: form.control(_idTypeKey).value,
+        name: name.copyWith(
+          givenName: individualName?.trim(),
         ),
-      ],
-    );
+        gender: form.control(_genderKey).value == null
+            ? null
+            : Gender.values.byName(
+                form.control(_genderKey).value.toString().toLowerCase()),
+        mobileNumber: form.control(_mobileNumberKey).value,
+        dateOfBirth: dobString,
+        identifiers: [identifier]);
 
     return individual;
   }

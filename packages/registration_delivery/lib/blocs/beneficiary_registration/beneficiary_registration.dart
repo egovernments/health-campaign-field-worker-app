@@ -597,6 +597,20 @@ class BeneficiaryRegistrationBloc
             nonRecoverableError:
                 existingIndividual?.nonRecoverableError ?? false,
           ));
+
+          final uniqueId = event.model.identifiers!.firstWhereOrNull((id) =>
+              id.identifierType ==
+              IdentifierTypes.uniqueBeneficiaryID.toValue());
+
+          if (uniqueId != null) {
+            var id = await uniqueIdPoolLocalRepository
+                .search(UniqueIdPoolSearchModel(id: uniqueId.identifierId!));
+
+            uniqueIdPoolLocalRepository.update(id.firstOrNull!.copyWith(
+              status: IdStatus.assigned.toValue(),
+            ));
+          }
+
           if (projectBeneficiary.isNotEmpty) {
             if (projectBeneficiary.first.tag != event.tag) {
               await projectBeneficiaryRepository

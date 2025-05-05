@@ -82,7 +82,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                     localizations: RegistrationDeliveryLocalization.of(context),
                     currentCount: currentCount,
                     totalCount: totalCount,
-                    theme: Theme.of(context),
+                    theme: theme,
                   );
                   _isProgressDialogVisible = true;
                 } else {
@@ -214,7 +214,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
                   margin: const EdgeInsets.only(top: spacer2),
                   children: [
                     DigitButton(
-                      isDisabled: beneficiaryIdCount >=
+                      isDisabled: beneficiaryIdCount >
                           RegistrationDeliverySingleton()
                               .beneficiaryIdMinCount!,
                       label: localizations.translate(

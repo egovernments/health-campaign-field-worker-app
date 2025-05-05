@@ -517,10 +517,9 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "3c7bebf0a8619c5cd7944204b0342a72987f68eb0eae9377d63aad9a0d3d68b5"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.0.7-dev.1-idGen"
   digit_dss:
     dependency: "direct main"
@@ -1816,10 +1815,9 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "6a5cd6da2207ba5545c0b22bb2667bd4e4afcd7d368cf4769b6ad7c3356b3301"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.7-dev.1-idGen"
   rxdart:
     dependency: transitive
