@@ -7,6 +7,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/data/repositories/sync/remote_type.dart';
 import 'package:sync_service/data/sync_entity_mapper_listener.dart';
 
@@ -72,6 +73,11 @@ class SyncServiceMapper extends SyncEntityMapperListener {
                   .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
+            case "Services":
+              final entity = entityList
+                  .map((e) => ServiceModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
             default:
               final entity = entityList
                   .map((e) => EntityModelMapper.fromJson(jsonEncode(e)))
@@ -101,6 +107,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.referral:
           case DataModelType.hFReferral:
           case DataModelType.attendance:
+          case DataModelType.service:
             return true;
           default:
             return false;
@@ -144,6 +151,10 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const individualIdentifierIdKey = 'individualIdentifierId';
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
+    const memberRelationshipIdKey = 'memberRelationshipId';
+    const memberRelationshipSelfIdKey = 'memberRelationshipSelfId';
+    const memberRelationshipRelativeIdKey = 'memberRelationshipRelativeId';
+    const serviceAttributesIdKey = 'serviceAttributesId';
 
     switch (typeGroupedEntity.key) {
       case DataModelType.individual:
@@ -304,9 +315,40 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
+            final memberRelationship = (responseEntity?.memberRelationships != null && responseEntity!.memberRelationships!.isNotEmpty)
+                ? responseEntity.memberRelationships!.first
+                : null;
+
+            final relationshipAdditionalId = memberRelationship?.id == null
+                ? null
+                : AdditionalId(
+              idType: memberRelationshipIdKey,
+              id: memberRelationship!.id!,
+            );
+
+            final relationshipSelfId = memberRelationship?.selfId == null
+                ? null
+                : AdditionalId(
+              idType: memberRelationshipSelfIdKey,
+              id: memberRelationship!.selfId!,
+            );
+
+            final relationshipRelativeId = memberRelationship?.relativeId == null
+                ? null
+                : AdditionalId(
+              idType: memberRelationshipRelativeIdKey,
+              id: memberRelationship!.relativeId!,
+            );
+
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
+                additionalIds: [
+                  if (relationshipAdditionalId != null)
+                    relationshipAdditionalId,
+                  if (relationshipSelfId != null) relationshipSelfId,
+                  if (relationshipRelativeId != null) relationshipRelativeId
+                ],
                 serverGeneratedId: serverGeneratedId,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
@@ -712,6 +754,63 @@ class SyncServiceMapper extends SyncEntityMapperListener {
 
         break;
 
+      case DataModelType.service:
+        responseEntities = await remote.search(ServiceSearchModel(
+          referenceIds: entities
+              .whereType<ServiceModel>()
+              .map((e) => e.referenceId)
+              .whereNotNull()
+              .toList(),
+        ));
+
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as ServiceModel;
+          final responseEntity =
+              responseEntities.whereType<ServiceModel>().firstWhereOrNull(
+                    (e) => e.referenceId == entity.referenceId,
+                  );
+
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+
+          if (serverGeneratedId != null) {
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: entity.clientId,
+                serverGeneratedId: serverGeneratedId,
+                additionalIds: responseEntity?.attributes
+                    ?.map((e) {
+                      final id = e.id;
+                      if (id == null) return null;
+
+                      return AdditionalId(
+                        idType: serviceAttributesIdKey,
+                        id: id,
+                      );
+                    })
+                    .whereNotNull()
+                    .toList(),
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+              ),
+            );
+          } else {
+            final bool markAsNonRecoverable =
+                await local.opLogManager.updateSyncDownRetry(entity.clientId);
+
+            if (markAsNonRecoverable) {
+              await local.update(
+                entity.copyWith(
+                  nonRecoverableError: true,
+                ),
+                createOpLog: false,
+              );
+            }
+          }
+        }
+
+        break;
       // Note: Uncomment the following code block to enable complaints sync down
 
       // case DataModelType.complaints:
@@ -796,6 +895,10 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const individualIdentifierIdKey = 'individualIdentifierId';
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
+    const memberRelationshipIdKey = 'memberRelationshipId';
+    const memberRelationshipSelfIdKey = 'memberRelationshipSelfId';
+    const memberRelationshipRelativeIdKey = 'memberRelationshipRelativeId';
+    const serviceAttributesIdKey = 'serviceAttributesId';
 
     if (updatedEntity is HouseholdModel) {
       final addressId = e.additionalIds.firstWhereOrNull(
@@ -809,6 +912,29 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           id: updatedEntity.address?.id ?? addressId,
         ),
       );
+    }
+
+    if (updatedEntity is ServiceModel) {
+      final attributeIds = e.additionalIds
+          .where((element) => element.idType == serviceAttributesIdKey)
+          .map((e) => e.id)
+          .toList();
+
+      updatedEntity = updatedEntity.copyWith(
+        attributes: updatedEntity.attributes?.asMap().entries.map((entry) {
+          final index = entry.key;
+          final attribute = entry.value;
+
+          final attributeId = (index < attributeIds.length)
+              ? attributeIds[index]
+              : serverGeneratedId;
+
+          return attribute.copyWith(
+            id: attribute.id ?? attributeId,
+          );
+        }).toList(),
+      );
+      return updatedEntity;
     }
 
     if (updatedEntity is IndividualModel) {
@@ -855,6 +981,37 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           }
 
           return e.copyWith(taskId: serverGeneratedId);
+        }).toList(),
+      );
+    }
+    if (updatedEntity is HouseholdMemberModel) {
+      final relationshipId = e.additionalIds
+          .firstWhereOrNull(
+            (element) => element.idType == memberRelationshipIdKey,
+          )
+          ?.id;
+      final relativeId = e.additionalIds
+          .firstWhereOrNull(
+            (element) => element.idType == memberRelationshipRelativeIdKey,
+          )
+          ?.id;
+      final selfId = e.additionalIds
+          .firstWhereOrNull(
+            (element) => element.idType == memberRelationshipSelfIdKey,
+          )
+          ?.id;
+
+      updatedEntity = updatedEntity.copyWith(
+        memberRelationships: updatedEntity.memberRelationships?.map((e) {
+          if (relationshipId != null) {
+            return e.copyWith(
+              relativeId: relativeId,
+              id: relationshipId,
+              selfId: selfId,
+            );
+          }
+
+          return e.copyWith(relativeId: serverGeneratedId);
         }).toList(),
       );
     }

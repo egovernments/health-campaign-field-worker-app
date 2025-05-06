@@ -1,3 +1,30 @@
+## 1.0.7-dev.6-enumeration
+
+* Passing member relation type from ui to bloc
+
+## 1.0.7-dev.5-enumeration
+
+* BugFix:
+    * Fixed child delete sync issue
+
+## 1.0.7-dev.4-enumeration
+
+* Updated global search to fetch services related to household and member
+
+## 1.0.7-dev.3-enumeration
+
+* Enabled edit flow
+
+## 1.0.7-dev.2-enumeration
+
+* Updated member repository to update relationship
+* Updated check with household type to restrict checklist in clf
+
+## 1.0.7-dev.1-enumeration
+
+* Added Checklist for household and individual page
+* Added member relationship model and db
+
 ## 1.0.7-dev.1-idGen
 
 * IdGen:

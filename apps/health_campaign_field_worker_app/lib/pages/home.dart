@@ -678,7 +678,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
                 context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>()
+                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
+                context
+                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -712,6 +714,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         AttendanceLogSearchModel>>(),
                 context.read<
                     RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+                context
+                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
               ],
             ),
           );
@@ -784,6 +788,9 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.genderOptions!.map((e) => e.code).toList(),
           idTypeOptions:
               appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          memberRelationTypeOptions: appConfiguration.relationShipTypeOptions!
+              .map((e) => e.code)
+              .toList(),
           householdDeletionReasonOptions: appConfiguration
               .householdDeletionReasonOptions!
               .map((e) => e.code)

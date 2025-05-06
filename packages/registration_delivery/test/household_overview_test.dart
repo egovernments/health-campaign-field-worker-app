@@ -37,6 +37,8 @@ class MockSideEffectDataRepository extends Mock
 class MockReferralDataRepository extends Mock
     implements ReferralDataRepository {}
 
+class MockServiceDataRepository extends Mock implements ServiceDataRepository {}
+
 class MockIndividualGlobalSearchRepository extends Mock
     implements IndividualGlobalSearchRepository {}
 
@@ -49,6 +51,7 @@ void main() {
   late MockTaskDataRepository mockTaskDataRepository;
   late MockSideEffectDataRepository mockSideEffectDataRepository;
   late MockReferralDataRepository mockReferralDataRepository;
+  late MockServiceDataRepository mockServiceDataRepository;
   late HouseholdOverviewBloc householdOverviewBloc;
   late MockIndividualGlobalSearchRepository
       mockIndividualGlobalSearchRepository;
@@ -64,6 +67,7 @@ void main() {
     mockTaskDataRepository = MockTaskDataRepository();
     mockSideEffectDataRepository = MockSideEffectDataRepository();
     mockReferralDataRepository = MockReferralDataRepository();
+    mockServiceDataRepository = MockServiceDataRepository();
     mockIndividualGlobalSearchRepository =
         MockIndividualGlobalSearchRepository();
     householdOverviewBloc = HouseholdOverviewBloc(
@@ -79,6 +83,7 @@ void main() {
       referralDataRepository: mockReferralDataRepository,
       beneficiaryType: BeneficiaryType.individual,
       individualGlobalSearchRepository: mockIndividualGlobalSearchRepository,
+      serviceDataRepository: mockServiceDataRepository,
     );
   });
 

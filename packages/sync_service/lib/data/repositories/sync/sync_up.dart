@@ -218,6 +218,15 @@ class PerformSyncUp {
                 }
               }
             }
+            if (operationGroupedEntity.key == DataOperation.singleUpdate) {
+              for (var element in entities) {
+                if (registry != null) {
+                  await registry.singleUpdate(element, local);
+                } else {
+                  await remote.singleUpdate(element);
+                }
+              }
+            }
             if (registry != null) {
               await registry.localMarkSyncUp(sublist, local);
             } else {
@@ -252,7 +261,9 @@ abstract class SyncUpOperation {
   Future<void> delete(List<EntityModel> entities, LocalRepository local);
 
   Future<void> singleCreate(EntityModel entity, LocalRepository local);
-
+  
+  Future<void> singleUpdate(EntityModel entity, LocalRepository local);
+  
   Future<void> localMarkSyncUp(
       List<OpLogEntry<EntityModel>> entity, LocalRepository local);
 }

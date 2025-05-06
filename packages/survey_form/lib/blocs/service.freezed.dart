@@ -19,6 +19,7 @@ mixin _$ServiceEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceModel serviceModel) update,
     required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
@@ -29,6 +30,7 @@ mixin _$ServiceEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceModel serviceModel)? update,
     TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -39,6 +41,7 @@ mixin _$ServiceEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceModel serviceModel)? update,
     TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -50,6 +53,7 @@ mixin _$ServiceEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(ServiceCreateEvent value) create,
+    required TResult Function(ServiceUpdateEvent value) update,
     required TResult Function(ServiceSearchEvent value) search,
     required TResult Function(ServiceSurveyFormEvent value)
         multiSurveyFormChanged,
@@ -60,6 +64,7 @@ mixin _$ServiceEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServiceCreateEvent value)? create,
+    TResult? Function(ServiceUpdateEvent value)? update,
     TResult? Function(ServiceSearchEvent value)? search,
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
@@ -69,6 +74,7 @@ mixin _$ServiceEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServiceCreateEvent value)? create,
+    TResult Function(ServiceUpdateEvent value)? update,
     TResult Function(ServiceSearchEvent value)? search,
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
@@ -163,6 +169,7 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceModel serviceModel) update,
     required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
@@ -176,6 +183,7 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceModel serviceModel)? update,
     TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -189,6 +197,7 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceModel serviceModel)? update,
     TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -206,6 +215,7 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(ServiceCreateEvent value) create,
+    required TResult Function(ServiceUpdateEvent value) update,
     required TResult Function(ServiceSearchEvent value) search,
     required TResult Function(ServiceSurveyFormEvent value)
         multiSurveyFormChanged,
@@ -219,6 +229,7 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServiceCreateEvent value)? create,
+    TResult? Function(ServiceUpdateEvent value)? update,
     TResult? Function(ServiceSearchEvent value)? search,
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
@@ -231,6 +242,7 @@ class _$ServiceCreateEventImpl implements ServiceCreateEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServiceCreateEvent value)? create,
+    TResult Function(ServiceUpdateEvent value)? update,
     TResult Function(ServiceSearchEvent value)? search,
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
@@ -251,6 +263,170 @@ abstract class ServiceCreateEvent implements ServiceEvent {
   ServiceModel get serviceModel;
   @JsonKey(ignore: true)
   _$$ServiceCreateEventImplCopyWith<_$ServiceCreateEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$ServiceUpdateEventImplCopyWith<$Res> {
+  factory _$$ServiceUpdateEventImplCopyWith(_$ServiceUpdateEventImpl value,
+          $Res Function(_$ServiceUpdateEventImpl) then) =
+      __$$ServiceUpdateEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({ServiceModel serviceModel});
+}
+
+/// @nodoc
+class __$$ServiceUpdateEventImplCopyWithImpl<$Res>
+    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceUpdateEventImpl>
+    implements _$$ServiceUpdateEventImplCopyWith<$Res> {
+  __$$ServiceUpdateEventImplCopyWithImpl(_$ServiceUpdateEventImpl _value,
+      $Res Function(_$ServiceUpdateEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? serviceModel = null,
+  }) {
+    return _then(_$ServiceUpdateEventImpl(
+      serviceModel: null == serviceModel
+          ? _value.serviceModel
+          : serviceModel // ignore: cast_nullable_to_non_nullable
+              as ServiceModel,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ServiceUpdateEventImpl implements ServiceUpdateEvent {
+  const _$ServiceUpdateEventImpl({required this.serviceModel});
+
+  @override
+  final ServiceModel serviceModel;
+
+  @override
+  String toString() {
+    return 'ServiceEvent.update(serviceModel: $serviceModel)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ServiceUpdateEventImpl &&
+            (identical(other.serviceModel, serviceModel) ||
+                other.serviceModel == serviceModel));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, serviceModel);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ServiceUpdateEventImplCopyWith<_$ServiceUpdateEventImpl> get copyWith =>
+      __$$ServiceUpdateEventImplCopyWithImpl<_$ServiceUpdateEventImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceModel serviceModel) update,
+    required TResult Function(ServiceSearchModel serviceSearchModel) search,
+    required TResult Function(String value, bool submitTriggered)
+        multiSurveyFormChanged,
+    required TResult Function(ServiceModel service) selectService,
+    required TResult Function(List<ServiceModel> serviceList) resetSelected,
+  }) {
+    return update(serviceModel);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceModel serviceModel)? update,
+    TResult? Function(ServiceSearchModel serviceSearchModel)? search,
+    TResult? Function(String value, bool submitTriggered)?
+        multiSurveyFormChanged,
+    TResult? Function(ServiceModel service)? selectService,
+    TResult? Function(List<ServiceModel> serviceList)? resetSelected,
+  }) {
+    return update?.call(serviceModel);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceModel serviceModel)? update,
+    TResult Function(ServiceSearchModel serviceSearchModel)? search,
+    TResult Function(String value, bool submitTriggered)?
+        multiSurveyFormChanged,
+    TResult Function(ServiceModel service)? selectService,
+    TResult Function(List<ServiceModel> serviceList)? resetSelected,
+    required TResult orElse(),
+  }) {
+    if (update != null) {
+      return update(serviceModel);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServiceCreateEvent value) create,
+    required TResult Function(ServiceUpdateEvent value) update,
+    required TResult Function(ServiceSearchEvent value) search,
+    required TResult Function(ServiceSurveyFormEvent value)
+        multiSurveyFormChanged,
+    required TResult Function(ServiceSelectionEvent value) selectService,
+    required TResult Function(ServiceResetEvent value) resetSelected,
+  }) {
+    return update(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServiceCreateEvent value)? create,
+    TResult? Function(ServiceUpdateEvent value)? update,
+    TResult? Function(ServiceSearchEvent value)? search,
+    TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
+    TResult? Function(ServiceSelectionEvent value)? selectService,
+    TResult? Function(ServiceResetEvent value)? resetSelected,
+  }) {
+    return update?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServiceCreateEvent value)? create,
+    TResult Function(ServiceUpdateEvent value)? update,
+    TResult Function(ServiceSearchEvent value)? search,
+    TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
+    TResult Function(ServiceSelectionEvent value)? selectService,
+    TResult Function(ServiceResetEvent value)? resetSelected,
+    required TResult orElse(),
+  }) {
+    if (update != null) {
+      return update(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ServiceUpdateEvent implements ServiceEvent {
+  const factory ServiceUpdateEvent({required final ServiceModel serviceModel}) =
+      _$ServiceUpdateEventImpl;
+
+  ServiceModel get serviceModel;
+  @JsonKey(ignore: true)
+  _$$ServiceUpdateEventImplCopyWith<_$ServiceUpdateEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -321,6 +497,7 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceModel serviceModel) update,
     required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
@@ -334,6 +511,7 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceModel serviceModel)? update,
     TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -347,6 +525,7 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceModel serviceModel)? update,
     TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -364,6 +543,7 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(ServiceCreateEvent value) create,
+    required TResult Function(ServiceUpdateEvent value) update,
     required TResult Function(ServiceSearchEvent value) search,
     required TResult Function(ServiceSurveyFormEvent value)
         multiSurveyFormChanged,
@@ -377,6 +557,7 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServiceCreateEvent value)? create,
+    TResult? Function(ServiceUpdateEvent value)? update,
     TResult? Function(ServiceSearchEvent value)? search,
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
@@ -389,6 +570,7 @@ class _$ServiceSearchEventImpl implements ServiceSearchEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServiceCreateEvent value)? create,
+    TResult Function(ServiceUpdateEvent value)? update,
     TResult Function(ServiceSearchEvent value)? search,
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
@@ -491,6 +673,7 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceModel serviceModel) update,
     required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
@@ -504,6 +687,7 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceModel serviceModel)? update,
     TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -517,6 +701,7 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceModel serviceModel)? update,
     TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -534,6 +719,7 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(ServiceCreateEvent value) create,
+    required TResult Function(ServiceUpdateEvent value) update,
     required TResult Function(ServiceSearchEvent value) search,
     required TResult Function(ServiceSurveyFormEvent value)
         multiSurveyFormChanged,
@@ -547,6 +733,7 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServiceCreateEvent value)? create,
+    TResult? Function(ServiceUpdateEvent value)? update,
     TResult? Function(ServiceSearchEvent value)? search,
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
@@ -559,6 +746,7 @@ class _$ServiceSurveyFormEventImpl implements ServiceSurveyFormEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServiceCreateEvent value)? create,
+    TResult Function(ServiceUpdateEvent value)? update,
     TResult Function(ServiceSearchEvent value)? search,
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
@@ -651,6 +839,7 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceModel serviceModel) update,
     required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
@@ -664,6 +853,7 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceModel serviceModel)? update,
     TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -677,6 +867,7 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceModel serviceModel)? update,
     TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -694,6 +885,7 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(ServiceCreateEvent value) create,
+    required TResult Function(ServiceUpdateEvent value) update,
     required TResult Function(ServiceSearchEvent value) search,
     required TResult Function(ServiceSurveyFormEvent value)
         multiSurveyFormChanged,
@@ -707,6 +899,7 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServiceCreateEvent value)? create,
+    TResult? Function(ServiceUpdateEvent value)? update,
     TResult? Function(ServiceSearchEvent value)? search,
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
@@ -719,6 +912,7 @@ class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServiceCreateEvent value)? create,
+    TResult Function(ServiceUpdateEvent value)? update,
     TResult Function(ServiceSearchEvent value)? search,
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,
@@ -816,6 +1010,7 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceModel serviceModel) update,
     required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multiSurveyFormChanged,
@@ -829,6 +1024,7 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceModel serviceModel)? update,
     TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -842,6 +1038,7 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceModel serviceModel)? update,
     TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)?
         multiSurveyFormChanged,
@@ -859,6 +1056,7 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(ServiceCreateEvent value) create,
+    required TResult Function(ServiceUpdateEvent value) update,
     required TResult Function(ServiceSearchEvent value) search,
     required TResult Function(ServiceSurveyFormEvent value)
         multiSurveyFormChanged,
@@ -872,6 +1070,7 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ServiceCreateEvent value)? create,
+    TResult? Function(ServiceUpdateEvent value)? update,
     TResult? Function(ServiceSearchEvent value)? search,
     TResult? Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult? Function(ServiceSelectionEvent value)? selectService,
@@ -884,6 +1083,7 @@ class _$ServiceResetEventImpl implements ServiceResetEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ServiceCreateEvent value)? create,
+    TResult Function(ServiceUpdateEvent value)? update,
     TResult Function(ServiceSearchEvent value)? search,
     TResult Function(ServiceSurveyFormEvent value)? multiSurveyFormChanged,
     TResult Function(ServiceSelectionEvent value)? selectService,

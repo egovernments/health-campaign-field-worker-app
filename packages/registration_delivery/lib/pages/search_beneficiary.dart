@@ -608,7 +608,10 @@ class _SearchBeneficiaryPageState
                                       BeneficiaryRegistrationWrapperRoute(
                                         initialState: BeneficiaryRegistrationState
                                             .editHousehold(
-                                                householdModel: i.household!,
+                                                householdChecklists:
+                                                  i.householdChecklists,
+                                              individualChecklists:
+                                                  i.individualChecklists,householdModel: i.household!,
                                                 individualModel: i.members!,
                                                 registrationDate:
                                                     DateTime.now(),

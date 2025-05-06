@@ -54,6 +54,7 @@ class PgrServiceLocalRepository
   FutureOr<void> update(
     PgrServiceModel entity, {
     bool createOpLog = true,
+        DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final clientReferenceId = entity.clientReferenceId;
