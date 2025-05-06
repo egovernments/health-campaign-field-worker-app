@@ -16,7 +16,7 @@ final jsonConfig = {
           "photo": "personalDetails.photo",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
-          "tenantId": "meta.tenantId",
+          "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "name.givenName": "nameInfo.firstName",
           "name.familyName": "nameInfo.lastName",
@@ -24,10 +24,7 @@ final jsonConfig = {
           "gender": "personalDetails.gender",
           "address": "addressInfo.addressList",
           "identifiers": "list:IdentifierModel",
-          "additionalFields": {
-            "customOccupation": "extraInfo.occupation",
-            "customNotes": "extraInfo.notes"
-          }
+          "boundaryCode": "__context:boundary.code",
         },
         "listMappings": {
           "IdentifierModel": {
@@ -35,9 +32,10 @@ final jsonConfig = {
               "id": "id",
               "identifierType": "type",
               "identifierId": "number",
+              "boundaryCode": "__context:boundary.code",
               "nonRecoverableError": "error.nonRecoverable",
               "clientReferenceId": "__generate:uuid",
-              "tenantId": "meta.tenantId",
+              "tenantId": "__context:tenantId",
               "rowVersion": "meta.rowVersion",
             }
           }
@@ -46,14 +44,35 @@ final jsonConfig = {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
-          "memberCount": "housing.memberCount",
+          "boundaryCode": "__context:boundary.code",
+          "memberCount": "HouseHoldDetails.memberCount",
           "latitude": "location.latitude",
           "longitude": "location.longitude",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
-          "tenantId": "meta.tenantId",
+          "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
-          "address": "housing.address",
+          "address": {
+            "id": "address.id",
+            "boundaryCode": "__context:boundary.code",
+            "relatedClientReferenceId": "__ref:HouseholdModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "address.latitude",
+            "longitude": "address.longitude",
+            "locationAccuracy": "address.locationAccuracy",
+            "addressLine1": "beneficiaryLocation.addressLine1",
+            "addressLine2": "beneficiaryLocation.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion"
+          },
           "householdType": "housing.type",
           "additionalFields": {
             "childrenCount": "HouseHoldDetails.childrenCount",
@@ -72,7 +91,7 @@ final jsonConfig = {
           "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
-          "tenantId": "meta.tenantId",
+          "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "additionalFields": "additionalInfo.fields"
         }
@@ -80,13 +99,13 @@ final jsonConfig = {
       "ProjectBeneficiaryModel": {
         "mappings": {
           "id": "beneficiaryDetails.id",
-          "projectId": "beneficiaryDetails.projectId",
+          "projectId": "__context:project.id",
+          "tenantId": "__context:tenantId",
           "beneficiaryId": "beneficiaryDetails.beneficiaryId",
           "tag": "beneficiaryDetails.tag",
           "beneficiaryClientReferenceId": "beneficiaryDetails.clientRefId",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
-          "tenantId": "meta.tenantId",
           "rowVersion": "meta.rowVersion",
           "dateOfRegistration": "HouseHoldDetails.dateOfRegistration",
           "additionalFields": "additionalInfo.fields"

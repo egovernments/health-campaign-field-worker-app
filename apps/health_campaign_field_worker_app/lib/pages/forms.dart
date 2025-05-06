@@ -14,6 +14,7 @@ import 'package:form_data_transformer/src/transformer_service.dart';
 // import '../widgets/header/back_navigation_help_header.dart';
 import '../data/transformer_config.dart';
 import '../router/app_router.dart';
+import '../utils/utils.dart';
 import '../widgets/custom_scanner.dart';
 import '../widgets/custom_text.dart';
 import '../widgets/dob_picker.dart';
@@ -89,6 +90,12 @@ class FormsPage extends StatelessWidget {
                       final entities = formEntityMapper.mapFormToEntities(
                         formValues: formData,
                         modelsConfig: modelsConfig,
+                        context: {
+                          "project": context.selectedProject,
+                          "user": context.loggedInUser,
+                          "tenantId": context.selectedProject.tenantId,
+                          "boundary": context.boundary,
+                        },
                       );
 
                       // You now have a list of transformed models, so you can proceed with further processing
