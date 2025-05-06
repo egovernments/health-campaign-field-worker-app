@@ -351,6 +351,8 @@ class BeneficiaryDetails {
 
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
 
+  String get totalCLFMembers => 'TOTAL_CLF_MEMBERS';
+
   String get totalMembers => 'TOTAL_HOUSEHOLD_MEMBERS';
 
   String get totalCLFMembers => 'TOTAL_CLF_MEMBERS';
@@ -368,6 +370,8 @@ class IndividualDetails {
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
 
   String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
+
+  String get relationShipTypeLabelText => 'RELATIONSHIP_TYPE_LABEL_TEXT';
 
   String get idNumberLabelText => 'ID_NUMBER_LABEL_TEXT';
 
@@ -609,6 +613,8 @@ class HouseholdOverView {
 
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
+
+  String get householdOverViewAge => 'HOUSEHOLD_OVER_VIEW_AGE';
 }
 
 class MemberCard {
@@ -646,6 +652,10 @@ class MemberCard {
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
 
   String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
+
+  String get noOfChildren => 'MEMBER_CARD_NO_OF_CHILDREN';
+
+  String get addChildLabel => 'MEMBER_CARD_ADD_CHILD_LABEL';
 }
 
 class DeliverIntervention {

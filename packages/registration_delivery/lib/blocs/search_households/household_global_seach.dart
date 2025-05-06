@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
@@ -29,6 +30,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     required super.referralDataRepository,
     required super.individualGlobalSearchRepository,
     required super.houseHoldGlobalSearchRepository,
+    required super.serviceDataRepository,
   }) {
     on<HouseHoldGlobalSearchEvent>(_houseHoldGlobalSearch);
   }
@@ -296,6 +298,19 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         filteredTasks.addAll(tasksForBeneficiary);
       }
 
+      final householdChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: [filteredHousehold.clientReferenceId],
+      ));
+
+      final memberChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: filteredIndividuals
+            .map((e) => e.clientReferenceId)
+            .whereNotNull()
+            .toList(),
+      ));
+
       // Find the head of the household
       final head = filteredIndividuals.firstWhereOrNull(
         (element) =>
@@ -313,14 +328,15 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
       // Add household member wrapper to containers
       containers.add(
         HouseholdMemberWrapper(
-          household: filteredHousehold,
-          headOfHousehold: head,
-          members: filteredIndividuals,
-          projectBeneficiaries: filteredBeneficiaries,
-          tasks: filteredTasks.isEmpty ? null : filteredTasks,
-          sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
-          referrals: referralsList.isEmpty ? null : referralsList,
-        ),
+            household: filteredHousehold,
+            headOfHousehold: head,
+            members: filteredIndividuals,
+            projectBeneficiaries: filteredBeneficiaries,
+            tasks: filteredTasks.isEmpty ? null : filteredTasks,
+            sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
+            referrals: referralsList.isEmpty ? null : referralsList,
+            individualChecklists: memberChecklist,
+            householdChecklists: householdChecklist),
       );
     }
   }

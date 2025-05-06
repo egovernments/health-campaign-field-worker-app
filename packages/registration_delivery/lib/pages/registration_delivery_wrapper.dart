@@ -9,6 +9,7 @@ import 'package:registration_delivery/blocs/search_households/household_global_s
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
@@ -67,7 +68,9 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                   individualGlobalSearchRepository: context.read<
                       IndividualGlobalSearchRepository>(),
                   houseHoldGlobalSearchRepository: context.read<
-                      HouseHoldGlobalSearchRepository>());
+                      HouseHoldGlobalSearchRepository>(),
+                  serviceDataRepository: context.repository<ServiceModel, ServiceSearchModel>(context),
+              );
             },
           ),
           BlocProvider(
@@ -101,7 +104,9 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                   individualGlobalSearchRepository: context.read<
                       IndividualGlobalSearchRepository>(),
                   houseHoldGlobalSearchRepository: context.read<
-                      HouseHoldGlobalSearchRepository>());
+                      HouseHoldGlobalSearchRepository>(),
+                  serviceDataRepository: context.repository<ServiceModel, ServiceSearchModel>(context),
+              );
             },
           ),
           BlocProvider(
@@ -135,7 +140,9 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                   individualGlobalSearchRepository: context.read<
                       IndividualGlobalSearchRepository>(),
                   houseHoldGlobalSearchRepository: context.read<
-                      HouseHoldGlobalSearchRepository>());
+                      HouseHoldGlobalSearchRepository>(),
+                  serviceDataRepository: context.repository<ServiceModel, ServiceSearchModel>(context),
+              );
             },
           ),
           BlocProvider(
@@ -169,7 +176,9 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                   individualGlobalSearchRepository: context.read<
                       IndividualGlobalSearchRepository>(),
                   houseHoldGlobalSearchRepository: context.read<
-                      HouseHoldGlobalSearchRepository>());
+                      HouseHoldGlobalSearchRepository>(),
+                  serviceDataRepository: context.repository<ServiceModel, ServiceSearchModel>(context),
+              );
             },
           ),
           BlocProvider(

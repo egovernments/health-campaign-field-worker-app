@@ -1,3 +1,12 @@
+## 1.0.5-dev.2-enumeration
+
+* Synced with data model upgrade
+
+## 1.0.5-dev.1-enumeration
+
+* Updated service and data model with respect to enumeration changes
+* Updated referenceIds to list in ServiceSearch
+
 ## 1.0.4+2
 
 * BugFix:

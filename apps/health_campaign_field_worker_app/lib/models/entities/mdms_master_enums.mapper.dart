@@ -51,6 +51,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.checklistTypes;
       case "ID_TYPE_OPTIONS_POPULATOR":
         return MasterEnums.idTypes;
+      case "HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES":
+        return MasterEnums.relationShipTypeOptions;
       case "DELIVERY_COMMENT_OPTIONS_POPULATOR":
         return MasterEnums.deliveryComments;
       case "BACKEND_INTERFACE":
@@ -111,6 +113,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "CHECKLIST_TYPES";
       case MasterEnums.idTypes:
         return "ID_TYPE_OPTIONS_POPULATOR";
+      case MasterEnums.relationShipTypeOptions:
+        return "HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES";
       case MasterEnums.deliveryComments:
         return "DELIVERY_COMMENT_OPTIONS_POPULATOR";
       case MasterEnums.backendInterface:

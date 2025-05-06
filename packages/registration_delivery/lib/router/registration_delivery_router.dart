@@ -65,6 +65,7 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                     page: BeneficiaryChecklistRoute.page,
                     path: 'beneficiary-checklist',
                   ),
+                  AutoRoute(page: ParentOverviewRoute.page, path: 'parent'),
                   AutoRoute(
                     page: DeliverInterventionRoute.page,
                     path: 'deliver-intervention',

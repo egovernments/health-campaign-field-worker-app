@@ -1,3 +1,7 @@
+## 1.0.6-dev.1-enumeration
+
+* Updated with data_model changes
+
 ## 1.0.5+1
 
 * Bug Fix:

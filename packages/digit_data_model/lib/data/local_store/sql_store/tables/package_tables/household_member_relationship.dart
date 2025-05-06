@@ -2,18 +2,22 @@
 
 import 'package:drift/drift.dart';
 
-class ServiceAttributes extends Table {
+class HouseholdMemberRelationShip extends Table {
   TextColumn get id => text().nullable()();
 
-  TextColumn get attributeCode => text().nullable()();
+  TextColumn get selfId => text().nullable()();
 
-  TextColumn get value => text().nullable()();
+  TextColumn get selfClientReferenceId => text().nullable()();
 
-  TextColumn get dataType => text().nullable()();
+  TextColumn get relativeId => text().nullable()();
 
-  TextColumn get referenceId => text().nullable()();
+  TextColumn get relativeClientReferenceId => text().nullable()();
 
-  TextColumn get additionalDetails => text().nullable()();
+  TextColumn get relationshipType => text().nullable()();
+
+  TextColumn get clientReferenceId => text()();
+
+  TextColumn get tenantId => text().nullable()();
 
   TextColumn get auditCreatedBy => text().nullable()();
 
@@ -34,17 +38,16 @@ class ServiceAttributes extends Table {
 
   IntColumn get auditModifiedTime => integer().nullable()();
 
-  TextColumn get clientReferenceId => text()
-      .nullable()(); // TODO: making this nullable for now as old downsync service attributes may not have it
-
-  TextColumn get serviceClientReferenceId => text().nullable()();
-
-  TextColumn get tenantId => text().nullable()();
-
   BoolColumn get isDeleted =>
       boolean().nullable().withDefault(const Constant(false))();
 
   IntColumn get rowVersion => integer().nullable()();
 
   TextColumn get additionalFields => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {
+        id,
+        clientReferenceId,
+      };
 }

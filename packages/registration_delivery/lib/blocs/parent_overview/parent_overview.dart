@@ -11,14 +11,22 @@ import 'package:registration_delivery/utils/global_search_parameters.dart';
 import 'package:survey_form/models/entities/service.dart';
 
 import '../../data/repositories/local/individual_global_search.dart';
+import '../../models/entities/household.dart';
+import '../../models/entities/household_member.dart';
+import '../../models/entities/project_beneficiary.dart';
+import '../../models/entities/referral.dart';
+import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
+import '../../models/entities/task.dart';
+import '../../utils/typedefs.dart';
+import '../search_households/search_households.dart';
 
-part 'household_overview.freezed.dart';
+part 'parent_overview.freezed.dart';
 
-typedef HouseholdOverviewEmitter = Emitter<HouseholdOverviewState>;
+typedef ParentOverviewEmitter = Emitter<ParentOverviewState>;
 
-class HouseholdOverviewBloc
-    extends Bloc<HouseholdOverviewEvent, HouseholdOverviewState> {
+class ParentOverviewBloc
+    extends Bloc<ParentOverviewEvent, ParentOverviewState> {
   final BeneficiaryType beneficiaryType;
   final IndividualDataRepository individualRepository;
   final HouseholdDataRepository householdRepository;
@@ -30,7 +38,7 @@ class HouseholdOverviewBloc
   final IndividualGlobalSearchRepository individualGlobalSearchRepository;
   final ServiceDataRepository serviceDataRepository;
 
-  HouseholdOverviewBloc(
+  ParentOverviewBloc(
     super.initialState, {
     required this.projectBeneficiaryRepository,
     required this.householdRepository,
@@ -41,19 +49,16 @@ class HouseholdOverviewBloc
     required this.referralDataRepository,
     required this.beneficiaryType,
     required this.individualGlobalSearchRepository,
-    required this.serviceDataRepository,
+        required this.serviceDataRepository,
   }) {
-    on(_handleDeleteHousehold);
-    on(_handleDeleteIndividual);
-    on(_handleSetAsHead);
     on(_handleReloadMember);
     on(_selectedIndividual);
   }
 
   // This function handles the selection of an individual in the household overview.
   FutureOr<void> _selectedIndividual(
-    HouseholdOverviewSelectIndividualEvent event,
-    Emitter<HouseholdOverviewState> emit,
+    ParentOverviewSelectIndividualEvent event,
+    Emitter<ParentOverviewState> emit,
   ) async {
     // Update the state with the selected individual.
     emit(state.copyWith(selectedIndividual: event.individualModel));
@@ -61,8 +66,8 @@ class HouseholdOverviewBloc
 
   // This function handles reloading and updating the household overview state.
   FutureOr<void> _handleReloadMember(
-    HouseholdOverviewReloadEvent event,
-    Emitter<HouseholdOverviewState> emit,
+    ParentOverviewReloadEvent event,
+    Emitter<ParentOverviewState> emit,
   ) async {
     // Set the loading state to indicate that data is being loaded.
     emit(state.copyWith(loading: true));
@@ -200,13 +205,11 @@ class HouseholdOverviewBloc
             .toList(),
       ));
 
-      final householdChecklist =
-          await serviceDataRepository.search(ServiceSearchModel(
+      final householdChecklist = await serviceDataRepository.search(ServiceSearchModel(
         referenceIds: [resultHousehold.clientReferenceId],
       ));
 
-      final memberChecklist =
-          await serviceDataRepository.search(ServiceSearchModel(
+      final memberChecklist = await serviceDataRepository.search(ServiceSearchModel(
         referenceIds: members
             .map((e) => e.individualClientReferenceId)
             .whereNotNull()
@@ -258,7 +261,7 @@ class HouseholdOverviewBloc
             ],
             householdMembers: [
               ...?state.householdMemberWrapper.householdMembers,
-              ...householdMemberList
+              ...householdMemberList,
             ],
             householdChecklists: [
               ...?state.householdMemberWrapper.householdChecklists,
@@ -559,14 +562,6 @@ class HouseholdOverviewBloc
                       ...sideEffects,
                     },
                   ],
-            householdMembers: event.offset == 0
-                ? householdMemberList
-                : [
-              ...{
-                ...?state.householdMemberWrapper.householdMembers,
-                ...householdMemberList,
-              },
-            ],
             referrals: event.offset == 0
                 ? referrals
                 : [
@@ -687,309 +682,31 @@ class HouseholdOverviewBloc
     }
   }
 
-  // This function handles the deletion of a household and its associated members and beneficiaries.
-  FutureOr<void> _handleDeleteHousehold(
-    HouseholdOverviewDeleteHouseholdEvent event,
-    HouseholdOverviewEmitter emit,
-  ) async {
-    // Delete the household from the repository.
-    final HouseholdModel? existingHousehold =
-        (await householdRepository.search(HouseholdSearchModel(
-      clientReferenceId: [event.householdModel.clientReferenceId],
-    )))
-            .firstOrNull;
-    await householdRepository.delete(
-      event.householdModel.copyWith(
-        id: existingHousehold?.id,
-        rowVersion: existingHousehold?.rowVersion ?? 1,
-        nonRecoverableError: existingHousehold?.nonRecoverableError ?? false,
-      ),
-    );
-
-    // Iterate through individual members of the household.
-    for (final i in event.members) {
-// Delete the individual from the repository.
-      final IndividualModel? existingIndividual =
-          (await individualRepository.search(IndividualSearchModel(
-        clientReferenceId: [i.clientReferenceId],
-      )))
-              .firstOrNull;
-      await individualRepository.delete(i.copyWith(
-        id: existingIndividual?.id,
-        rowVersion: existingIndividual?.rowVersion ?? 1,
-        nonRecoverableError: existingIndividual?.nonRecoverableError ?? false,
-      ));
-      if (event.projectBeneficiaryType == BeneficiaryType.individual) {
-        // Search for project beneficiary associated with the deleted individual.
-        final projectBeneficiaries = await projectBeneficiaryRepository.search(
-          ProjectBeneficiarySearchModel(
-            beneficiaryClientReferenceId: [
-              i.clientReferenceId,
-            ],
-          ),
-        );
-        // Delete the associated project beneficiaries.
-        for (final projectBeneficiary in projectBeneficiaries) {
-          await projectBeneficiaryRepository.delete(
-            projectBeneficiary.copyWith(
-              rowVersion: projectBeneficiary.rowVersion,
-              clientAuditDetails: (projectBeneficiary
-                              .clientAuditDetails?.createdBy !=
-                          null &&
-                      projectBeneficiary.clientAuditDetails?.createdTime !=
-                          null)
-                  ? ClientAuditDetails(
-                      createdBy:
-                          projectBeneficiary.clientAuditDetails!.createdBy,
-                      createdTime:
-                          projectBeneficiary.clientAuditDetails!.createdTime,
-                      lastModifiedBy:
-                          projectBeneficiary.clientAuditDetails!.lastModifiedBy,
-                      lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                    )
-                  : null,
-            ),
-          );
-        }
-      }
-
-      // Search for household members associated with the deleted individual.
-      final householdMember =
-          await householdMemberRepository.search(HouseholdMemberSearchModel(
-        householdClientReferenceId: [event.householdModel.clientReferenceId],
-        individualClientReferenceId: [i.clientReferenceId],
-      ));
-
-      // Delete the associated household members.
-      for (final j in householdMember) {
-        await householdMemberRepository.delete(
-          j.copyWith(
-            rowVersion: j.rowVersion,
-          ),
-        );
-      }
-    }
-
-    if (BeneficiaryType.household == event.projectBeneficiaryType) {
-      // Delete the project beneficiary associated with the household.
-      final ProjectBeneficiaryModel? existingProjectBeneficiary =
-          (await projectBeneficiaryRepository
-                  .search(ProjectBeneficiarySearchModel(
-        clientReferenceId: [event.projectBeneficiaryModel.clientReferenceId],
-      )))
-              .firstOrNull;
-      await projectBeneficiaryRepository.delete(
-        event.projectBeneficiaryModel.copyWith(
-          id: existingProjectBeneficiary?.id,
-          rowVersion: existingProjectBeneficiary?.rowVersion ?? 1,
-          nonRecoverableError:
-              existingProjectBeneficiary?.nonRecoverableError ?? false,
-        ),
-      );
-    }
-  }
-
-  // This function handles the deletion of an individual from a household.
-  FutureOr<void> _handleDeleteIndividual(
-    HouseholdOverviewDeleteIndividualEvent event,
-    HouseholdOverviewEmitter emit,
-  ) async {
-// Delete the individual from the repository.
-    final IndividualModel? existingIndividual =
-        (await individualRepository.search(IndividualSearchModel(
-      clientReferenceId: [event.individualModel.clientReferenceId],
-    )))
-            .firstOrNull;
-    await individualRepository.delete(event.individualModel.copyWith(
-      id: existingIndividual?.id,
-      rowVersion: existingIndividual?.rowVersion ?? 1,
-      nonRecoverableError: existingIndividual?.nonRecoverableError ?? false,
-    ));
-    if (event.projectBeneficiaryType == BeneficiaryType.individual) {
-      // Search for project beneficiary associated with the deleted individual.
-      final projectBeneficiaries = await projectBeneficiaryRepository.search(
-        ProjectBeneficiarySearchModel(
-          beneficiaryClientReferenceId: [
-            event.individualModel.clientReferenceId,
-          ],
-        ),
-      );
-      // Delete the associated project beneficiaries.
-      for (final projectBeneficiary in projectBeneficiaries) {
-        await projectBeneficiaryRepository.delete(
-          projectBeneficiary.copyWith(
-            rowVersion: projectBeneficiary.rowVersion,
-            clientAuditDetails: (projectBeneficiary
-                            .clientAuditDetails?.createdBy !=
-                        null &&
-                    projectBeneficiary.clientAuditDetails?.createdTime != null)
-                ? ClientAuditDetails(
-                    createdBy: projectBeneficiary.clientAuditDetails!.createdBy,
-                    createdTime:
-                        projectBeneficiary.clientAuditDetails!.createdTime,
-                    lastModifiedBy:
-                        projectBeneficiary.clientAuditDetails!.lastModifiedBy,
-                    lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                  )
-                : null,
-          ),
-        );
-      }
-    }
-    // Search for household members associated with the deleted individual.
-    final householdMembers = await householdMemberRepository.search(
-      HouseholdMemberSearchModel(
-        individualClientReferenceId: [event.individualModel.clientReferenceId],
-        householdClientReferenceId: [event.householdModel.clientReferenceId],
-      ),
-    );
-
-    // Delete the associated household members.
-    for (final i in householdMembers) {
-      await householdMemberRepository.delete(
-        i.copyWith(
-          rowVersion: i.rowVersion,
-          clientAuditDetails: (i.clientAuditDetails?.createdBy != null &&
-                  i.clientAuditDetails?.createdTime != null)
-              ? ClientAuditDetails(
-                  createdBy: i.clientAuditDetails!.createdBy,
-                  createdTime: i.clientAuditDetails!.createdTime,
-                  lastModifiedBy: i.clientAuditDetails!.lastModifiedBy,
-                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                )
-              : null,
-          memberRelationships: i.memberRelationships?.map((e) => e.copyWith(
-            clientAuditDetails: (e.clientAuditDetails?.createdBy != null &&
-                e.clientAuditDetails?.createdTime != null)
-                ? ClientAuditDetails(
-              createdBy: e.clientAuditDetails!.createdBy,
-              createdTime: e.clientAuditDetails!.createdTime,
-              lastModifiedBy: e.clientAuditDetails!.lastModifiedBy,
-              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-            ): null,
-            rowVersion: e.rowVersion,
-          )).toList(),
-        ),
-      );
-    }
-
-    // Trigger a reload event to update the household overview.
-    add(HouseholdOverviewReloadEvent(
-      projectId: event.projectId,
-      projectBeneficiaryType: event.projectBeneficiaryType,
-    ));
-  }
-
-  // This function handles setting an individual as the head of a household.
-  FutureOr<void> _handleSetAsHead(
-    HouseholdOverviewSetAsHeadEvent event,
-    HouseholdOverviewEmitter emit,
-  ) async {
-    // Retrieve household members based on certain criteria.
-    final members = await householdMemberRepository.search(
-      HouseholdMemberSearchModel(
-        householdClientReferenceId: [event.householdModel.clientReferenceId],
-      ),
-    );
-
-    // Update the household members based on the given conditions.
-    final updatedMembers = members.map((i) {
-      final individualId = event.individualModel.clientReferenceId;
-      final memberId = i.individualClientReferenceId;
-
-      if (individualId == memberId) {
-        // If the individual is not already the head, set them as the head.
-        if (!i.isHeadOfHousehold) {
-          return i.copyWith(
-            isHeadOfHousehold: true,
-            rowVersion: i.rowVersion,
-          );
-        }
-      } else {
-        // If another individual is currently the head, remove their head status.
-        if (i.isHeadOfHousehold) {
-          return i.copyWith(
-            isHeadOfHousehold: false,
-            rowVersion: i.rowVersion,
-          );
-        }
-      }
-
-      return i;
-    }).toList();
-
-    // Update the household members in the repository.
-    for (final element in updatedMembers) {
-      await householdMemberRepository.update(
-        element.copyWith(
-          rowVersion: element.rowVersion,
-          clientAuditDetails: (element.clientAuditDetails?.createdBy != null &&
-                  element.clientAuditDetails?.createdTime != null)
-              ? ClientAuditDetails(
-                  createdBy: element.clientAuditDetails!.createdBy,
-                  createdTime: element.clientAuditDetails!.createdTime,
-                  lastModifiedBy: element.clientAuditDetails?.lastModifiedBy,
-                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                )
-              : null,
-        ),
-      );
-    }
-
-    // Trigger a reload event to update the household overview.
-    add(HouseholdOverviewReloadEvent(
-      projectId: event.projectId,
-      projectBeneficiaryType: event.projectBeneficiaryType,
-    ));
-  }
-
-// This function updates the state based on certain conditions and filters the tasks.
 }
 
 @freezed
-class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
-  const factory HouseholdOverviewEvent.deleteHousehold({
-    required String projectId,
-    required HouseholdModel householdModel,
-    required List<IndividualModel> members,
-    required ProjectBeneficiaryModel projectBeneficiaryModel,
-    required BeneficiaryType projectBeneficiaryType,
-  }) = HouseholdOverviewDeleteHouseholdEvent;
+class ParentOverviewEvent with _$ParentOverviewEvent {
 
-  const factory HouseholdOverviewEvent.deleteIndividual({
-    required String projectId,
-    required HouseholdModel householdModel,
+  const factory ParentOverviewEvent.selectedIndividual({
     required IndividualModel individualModel,
-    required BeneficiaryType projectBeneficiaryType,
-  }) = HouseholdOverviewDeleteIndividualEvent;
+  }) = ParentOverviewSelectIndividualEvent;
 
-  const factory HouseholdOverviewEvent.setAsHead({
-    required String projectId,
-    required IndividualModel individualModel,
-    required HouseholdModel householdModel,
-    required BeneficiaryType projectBeneficiaryType,
-  }) = HouseholdOverviewSetAsHeadEvent;
-
-  const factory HouseholdOverviewEvent.selectedIndividual({
-    required IndividualModel individualModel,
-  }) = HouseholdOverviewSelectIndividualEvent;
-
-  const factory HouseholdOverviewEvent.reload(
+  const factory ParentOverviewEvent.reload(
       {required String projectId,
       required BeneficiaryType projectBeneficiaryType,
       int? offset,
       int? limit,
       List<String>? selectedFilter,
-      String? searchByName}) = HouseholdOverviewReloadEvent;
+      String? searchByName}) = ParentOverviewReloadEvent;
 }
 
 @freezed
-class HouseholdOverviewState with _$HouseholdOverviewState {
-  const factory HouseholdOverviewState({
+class ParentOverviewState with _$ParentOverviewState {
+  const factory ParentOverviewState({
     @Default(false) bool loading,
     required HouseholdMemberWrapper householdMemberWrapper,
     IndividualModel? selectedIndividual,
     int? offset,
     int? limit,
-  }) = _HouseholdOverviewState;
+  }) = _ParentOverviewState;
 }

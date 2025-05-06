@@ -389,6 +389,7 @@ class IndividualLocalRepository
   FutureOr<void> update(
     IndividualModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final individualCompanion = entity.companion;
@@ -437,7 +438,6 @@ class IndividualLocalRepository
           ),
         );
 
-        // For address, assuming you want same behavior:
         for (final address in addressCompanions) {
           batch.insert(
             sql.address,
@@ -446,7 +446,6 @@ class IndividualLocalRepository
           );
         }
 
-        // For identifiers
         for (final identifier in identifierCompanions) {
           batch.insert(
             sql.identifier,

@@ -22,6 +22,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on(_handleSearch);
     on(_handlereset);
     on(_handleSelect);
+    on(_handleUpdate);
   }
 
   FutureOr<void> _multiSurveyFormChanged(
@@ -39,6 +40,13 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       ServiceEmitter emit,
       ) async {
     await serviceDataRepository.create(event.serviceModel);
+  }
+
+  FutureOr<void> _handleUpdate(
+      ServiceUpdateEvent event,
+      ServiceEmitter emit,
+      ) async {
+    await serviceDataRepository.update(event.serviceModel);
   }
 
   FutureOr<void> _handlereset(
@@ -78,6 +86,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 class ServiceEvent with _$ServiceEvent {
   const factory ServiceEvent.create({required ServiceModel serviceModel}) =
   ServiceCreateEvent;
+
+  const factory ServiceEvent.update({required ServiceModel serviceModel}) =
+  ServiceUpdateEvent;
 
   const factory ServiceEvent.search({
     required ServiceSearchModel serviceSearchModel,

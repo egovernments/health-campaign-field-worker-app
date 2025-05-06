@@ -335,6 +335,7 @@ const _OpLogoperationEnumValueMap = {
   r'update': r'update',
   r'delete': r'delete',
   r'singleCreate': r'singleCreate',
+  r'singleUpdate': r'singleUpdate',
 };
 const _OpLogoperationValueEnumMap = {
   r'create': DataOperation.create,
@@ -342,6 +343,7 @@ const _OpLogoperationValueEnumMap = {
   r'update': DataOperation.update,
   r'delete': DataOperation.delete,
   r'singleCreate': DataOperation.singleCreate,
+  r'singleUpdate': DataOperation.singleUpdate,
 };
 
 Id _opLogGetId(OpLog object) {

@@ -31,6 +31,7 @@ import 'tables/package_tables/attendee.dart';
 import 'tables/package_tables/hf_referral.dart';
 import 'tables/package_tables/household.dart';
 import 'tables/package_tables/household_member.dart';
+import 'tables/package_tables/household_member_relationship.dart';
 import 'tables/package_tables/referral.dart';
 import 'tables/package_tables/side_effect.dart';
 import 'tables/package_tables/staff.dart';
@@ -98,6 +99,7 @@ part 'sql_store.g.dart';
   HFReferral,
   Household,
   HouseholdMember,
+  HouseholdMemberRelationShip,
   Task,
   TaskResource,
   SideEffect,
@@ -115,7 +117,8 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
   int get schemaVersion => 6; // Increment schema version
 
   @override
-  MigrationStrategy get migration => MigrationStrategy(
+  MigrationStrategy get migration =>
+      MigrationStrategy(
         onUpgrade: (migrator, from, to) async {
           if (from < 5) {
             //Add column for projectType in Project Table
@@ -187,12 +190,23 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               await migrator.addColumn(household, household.householdType);
               await migrator.addColumn(
                   attendanceRegister, attendanceRegister.localityCode);
-              await migrator.addColumn(
-                  service, service.relatedClientReferenceId);
+              await migrator.addColumn(service, service.referenceId);
             } catch (e) {
               if (kDebugMode) {
                 print(
                     "Failed to add columns for householdType, attendance - localityCode, and service - relatedClientReferenceId");
+              }
+            }
+          }
+          if (from < 7) {
+            try {
+              await migrator.addColumn(serviceAttributes, serviceAttributes.id);
+              await migrator.addColumn(serviceAttributes,
+                  serviceAttributes.serviceClientReferenceId);
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to add columns for serviceAttributes - serviceClientReferenceId");
               }
             }
           }

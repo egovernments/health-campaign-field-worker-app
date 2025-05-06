@@ -1,3 +1,25 @@
+## 1.0.7-dev.3-enumeration
+
+* Updated service attribute table with serviceClientReferenceId
+
+## 1.0.7-dev.2-enumeration
+
+* Updated member relation table with client audit details
+
+## 1.0.7-dev.1-enumeration
+
+* Updated new memberRelationship column in member
+* Added new member relationship table
+* Added tenant id in dump error call
+
+## 1.0.6+3
+
+* Added additionalFields to individual search entity
+
+## 1.0.6+2
+
+* Added more enum types in beneficiaryType
+
 ## 1.0.7-dev.1-idGen
 
 * Added new table for storing unique Id's

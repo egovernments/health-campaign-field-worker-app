@@ -367,6 +367,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   FutureOr<void> update(
     TaskModel entity, {
     bool createOpLog = true,
+        DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final taskCompanion = entity.companion;

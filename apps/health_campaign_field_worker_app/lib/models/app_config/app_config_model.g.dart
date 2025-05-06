@@ -122,6 +122,11 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       idTypeOptions: (json['ID_TYPE_OPTIONS_POPULATOR'] as List<dynamic>)
           .map((e) => IdTypeOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
+      relationShipTypeOptions:
+          (json['HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES'] as List<dynamic>)
+              .map((e) =>
+                  RelationShipTypeOptions.fromJson(e as Map<String, dynamic>))
+              .toList(),
       deliveryCommentOptions: (json['DELIVERY_COMMENT_OPTIONS_POPULATOR']
               as List<dynamic>)
           .map(
@@ -175,6 +180,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'BACKGROUND_SERVICE_CONFIG': instance.backgroundServiceConfig,
       'CHECKLIST_TYPES': instance.checklistTypes,
       'ID_TYPE_OPTIONS_POPULATOR': instance.idTypeOptions,
+      'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES': instance.relationShipTypeOptions,
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
       'BACKEND_INTERFACE': instance.backendInterface,
       'CALL_SUPPORT': instance.callSupportOptions,
@@ -303,6 +309,22 @@ Map<String, dynamic> _$$IdTypeOptionsImplToJson(_$IdTypeOptionsImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
+    };
+
+_$RelationShipTypeOptionsImpl _$$RelationShipTypeOptionsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$RelationShipTypeOptionsImpl(
+      name: json['name'] as String,
+      code: json['code'] as String,
+      active: json['active'] as bool,
+    );
+
+Map<String, dynamic> _$$RelationShipTypeOptionsImplToJson(
+        _$RelationShipTypeOptionsImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+      'active': instance.active,
     };
 
 _$BandWidthBatchSizeImpl _$$BandWidthBatchSizeImplFromJson(
