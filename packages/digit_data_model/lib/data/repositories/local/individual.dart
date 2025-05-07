@@ -437,14 +437,7 @@ class IndividualLocalRepository
           ),
         );
 
-        // For address, assuming you want same behavior:
-        for (final address in addressCompanions) {
-          batch.insert(
-            sql.address,
-            address,
-            mode: InsertMode.insertOrReplace,
-          );
-        }
+        batch.replaceAll(sql.address, addressCompanions);
 
         // For identifiers
         for (final identifier in identifierCompanions) {

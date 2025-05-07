@@ -479,6 +479,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                         form.control(_idNumberKey).value = null;
                                       }
                                     });
+                                    getIdNumberIfExists(bloc.state, form);
                                   },
                                   emptyItemText: localizations
                                       .translate(i18.common.noMatchFound),
@@ -848,6 +849,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             id.identifierType == form.control(_idTypeKey).value ? true : false)
         : null;
 
+    if (identifier != null &&
+        identifier.identifierId != form.control(_idNumberKey).value) {
+      setState(() {
+        identifier = identifier!.copyWith(
+          identifierId: form.control(_idNumberKey).value,
+        );
+      });
+    }
+
     identifier ??= IdentifierModel(
       clientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
@@ -870,16 +880,19 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
-        name: name.copyWith(
-          givenName: individualName?.trim(),
-        ),
-        gender: form.control(_genderKey).value == null
-            ? null
-            : Gender.values.byName(
-                form.control(_genderKey).value.toString().toLowerCase()),
-        mobileNumber: form.control(_mobileNumberKey).value,
-        dateOfBirth: dobString,
-        identifiers: [identifier]);
+      name: name.copyWith(
+        givenName: individualName?.trim(),
+      ),
+      gender: form.control(_genderKey).value == null
+          ? null
+          : Gender.values
+              .byName(form.control(_genderKey).value.toString().toLowerCase()),
+      mobileNumber: form.control(_mobileNumberKey).value,
+      dateOfBirth: dobString,
+    );
+    if (!individual.identifiers!.contains(identifier)) {
+      individual.identifiers?.add(identifier!);
+    }
 
     return individual;
   }
@@ -1264,5 +1277,30 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         },
       ),
     );
+  }
+
+  void getIdNumberIfExists(BeneficiaryRegistrationState state, FormGroup form) {
+    final individual = state.mapOrNull<IndividualModel>(
+      editIndividual: (value) {
+        if (value.projectBeneficiaryModel?.tag != null) {
+          context.read<DigitScannerBloc>().add(DigitScannerScanEvent(
+              barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
+        }
+
+        return value.individualModel;
+      },
+      create: (value) {
+        return value.individualModel;
+      },
+      summary: (value) {
+        return value.individualModel;
+      },
+    );
+    var existingId = individual!.identifiers?.lastWhereOrNull((id) =>
+        id.identifierType == form.control(_idTypeKey).value ? true : false);
+
+    if (existingId != null) {
+      form.control(_idNumberKey).value = existingId.identifierId;
+    }
   }
 }

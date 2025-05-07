@@ -360,8 +360,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
             sql.householdMember,
             sql.householdMember.individualClientReferenceId
                 .equalsExp(sql.individual.clientReferenceId))
-      ])
-        ..where(sql.householdMember.isHeadOfHousehold.equals(true));
+      ]);
       selectQuery.join([
         leftOuterJoin(
             sql.household,
