@@ -438,13 +438,7 @@ class IndividualLocalRepository
           ),
         );
 
-        for (final address in addressCompanions) {
-          batch.insert(
-            sql.address,
-            address,
-            mode: InsertMode.insertOrReplace,
-          );
-        }
+        batch.replaceAll(sql.address, addressCompanions);
 
         for (final identifier in identifierCompanions) {
           batch.insert(
