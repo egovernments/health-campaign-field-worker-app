@@ -445,8 +445,8 @@ class _HouseholdOverviewPageState
                                                   .householdOverView
                                                   .householdOverViewLabel),
                                           style: textTheme.headingXl.copyWith(
-                                            color: theme.colorTheme.primary.primary2
-                                          ),
+                                              color: theme
+                                                  .colorTheme.primary.primary2),
                                         ),
                                       ),
                                     ),

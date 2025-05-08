@@ -962,11 +962,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 : searchQuery?.trim()),
       ),
       _idTypeKey: FormControl<String>(
-        value: individual?.identifiers?.firstOrNull?.identifierType,
+        value: individual?.identifiers?.lastOrNull?.identifierType,
       ),
       _idNumberKey: FormControl<String>(
         validators: [Validators.required],
-        value: individual?.identifiers?.firstOrNull?.identifierId,
+        value: individual?.identifiers?.lastOrNull?.identifierId,
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
@@ -1090,6 +1090,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           : true,
                       localizations: localizations,
                       shouldProceedFurther: (bool skip) {});
+                });
+                setState(() {
+                  if (form.control(_idTypeKey).value ==
+                          IdentifierTypes.uniqueBeneficiaryID.toValue() &&
+                      form.control(_idNumberKey).value == null) {
+                    form.control(_idTypeKey).value = null;
+                    form.control(_idNumberKey).value = null;
+                  }
                 });
               }
             },
