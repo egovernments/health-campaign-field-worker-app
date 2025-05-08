@@ -530,8 +530,13 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.table_chart,
           label: i18.home.db,
           onPressed: () async {
-            print(pageName);
-         pageName !=null? context.router.push( FormsRoute(pageName: pageName)):null;
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
+              ),
+            );
           },
         ),
       ),

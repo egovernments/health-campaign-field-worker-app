@@ -1,46 +1,6 @@
 final jsonConfig = {
   "beneficiaryRegistration": {
     "models": {
-      "IndividualModel": {
-        "mappings": {
-          "id": "personalDetails.id",
-          "individualId": "personalDetails.individualId",
-          "userId": "personalDetails.userId",
-          "userUuid": "personalDetails.uuid",
-          "dateOfBirth": "personalDetails.dob",
-          "mobileNumber": "contactInfo.mobile",
-          "altContactNumber": "contactInfo.altContact",
-          "email": "contactInfo.email",
-          "fatherName": "family.fatherName",
-          "husbandName": "family.husbandName",
-          "photo": "personalDetails.photo",
-          "nonRecoverableError": "errors.nonRecoverable",
-          "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
-          "tenantId": "__context:tenantId",
-          "rowVersion": "meta.rowVersion",
-          "name.givenName": "nameInfo.firstName",
-          "name.familyName": "nameInfo.lastName",
-          "bloodGroup": "health.bloodGroup",
-          "gender": "personalDetails.gender",
-          "address": "addressInfo.addressList",
-          "identifiers": "list:IdentifierModel",
-          "boundaryCode": "__context:boundary.code",
-        },
-        "listMappings": {
-          "IdentifierModel": {
-            "mappings": {
-              "id": "id",
-              "identifierType": "type",
-              "identifierId": "number",
-              "boundaryCode": "__context:boundary.code",
-              "nonRecoverableError": "error.nonRecoverable",
-              "clientReferenceId": "__generate:uuid",
-              "tenantId": "__context:tenantId",
-              "rowVersion": "meta.rowVersion",
-            }
-          }
-        }
-      },
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
@@ -81,19 +41,44 @@ final jsonConfig = {
           }
         }
       },
-      "HouseholdMemberModel": {
+      "IndividualModel": {
         "mappings": {
-          "id": "members.id",
-          "householdId": "members.householdId",
-          "householdClientReferenceId": "__ref:HouseholdModel.clientReferenceId",
-          "individualId": "members.individualId",
-          "individualClientReferenceId": "__ref:IndividualModel.clientReferenceId",
-          "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
+          "id": "personalDetails.id",
+          "individualId": "personalDetails.individualId",
+          "userId": "personalDetails.userId",
+          "userUuid": "personalDetails.uuid",
+          "dateOfBirth": "personalDetails.dob",
+          "mobileNumber": "contactInfo.mobile",
+          "altContactNumber": "contactInfo.altContact",
+          "email": "contactInfo.email",
+          "fatherName": "family.fatherName",
+          "husbandName": "family.husbandName",
+          "photo": "personalDetails.photo",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
-          "additionalFields": "additionalInfo.fields"
+          "name.givenName": "nameInfo.firstName",
+          "name.familyName": "nameInfo.lastName",
+          "bloodGroup": "health.bloodGroup",
+          "gender": "personalDetails.gender",
+          "address": "addressInfo.addressList",
+          "identifiers": "list:IdentifierModel",
+          "boundaryCode": "__context:boundary.code",
+        },
+        "listMappings": {
+          "IdentifierModel": {
+            "mappings": {
+              "id": "id",
+              "identifierType": "type",
+              "identifierId": "number",
+              "boundaryCode": "__context:boundary.code",
+              "nonRecoverableError": "error.nonRecoverable",
+              "clientReferenceId": "__generate:uuid",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+            }
+          }
         }
       },
       "ProjectBeneficiaryModel": {
@@ -110,7 +95,22 @@ final jsonConfig = {
           "dateOfRegistration": "HouseHoldDetails.dateOfRegistration",
           "additionalFields": "additionalInfo.fields"
         }
-      }
+      },
+      "HouseholdMemberModel": {
+        "mappings": {
+          "id": "members.id",
+          "householdId": "members.householdId",
+          "householdClientReferenceId": "__ref:HouseholdModel.clientReferenceId",
+          "individualId": "members.individualId",
+          "individualClientReferenceId": "__ref:IndividualModel.clientReferenceId",
+          "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "additionalFields": "additionalInfo.fields"
+        }
+      },
     }
   }
 };
