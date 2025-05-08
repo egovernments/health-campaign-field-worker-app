@@ -309,6 +309,11 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
           .where((element) => membersIds.contains(element.clientReferenceId))
           .toList();
 
+      filteredIndividuals.forEach((e) {
+        e.identifiers?.sort((a, b) => a.clientAuditDetails!.lastModifiedTime!
+            .compareTo(b.clientAuditDetails!.lastModifiedTime!));
+      });
+
       // Filter beneficiaries based on individual client reference IDs
       filteredBeneficiaries = projectBeneficiariesList
           .where((element) =>
