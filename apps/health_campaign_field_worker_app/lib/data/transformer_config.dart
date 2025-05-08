@@ -31,9 +31,13 @@ final jsonConfig = {
             "boundary": "address.boundary",
             "nonRecoverableError": "address.nonRecoverable",
             "tenantId": "__context:tenantId",
-            "rowVersion": "meta.rowVersion"
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit",
           },
           "householdType": "housing.type",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
           "additionalFields": {
             "childrenCount": "HouseHoldDetails.childrenCount",
             "pregnantWomenCount": "HouseHoldDetails.pregnantWomenCount",
@@ -58,12 +62,16 @@ final jsonConfig = {
           "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
-          "name.givenName": "nameInfo.firstName",
-          "name.familyName": "nameInfo.lastName",
+          "name": {
+            "individualClientReferenceId": "__ref:IndividualModel.clientReferenceId",
+            "givenName": "beneficiaryDetails.nameOfIndividual",
+          },
           "bloodGroup": "health.bloodGroup",
           "gender": "personalDetails.gender",
           "address": "addressInfo.addressList",
-          "identifiers": "list:IdentifierModel",
+          // "identifiers": "list:IdentifierModel",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
           "boundaryCode": "__context:boundary.code",
         },
         "listMappings": {
@@ -77,6 +85,8 @@ final jsonConfig = {
               "clientReferenceId": "__generate:uuid",
               "tenantId": "__context:tenantId",
               "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
             }
           }
         }
@@ -84,16 +94,18 @@ final jsonConfig = {
       "ProjectBeneficiaryModel": {
         "mappings": {
           "id": "beneficiaryDetails.id",
-          "projectId": "__context:project.id",
+          "projectId": "__context:projectId",
           "tenantId": "__context:tenantId",
           "beneficiaryId": "beneficiaryDetails.beneficiaryId",
           "tag": "beneficiaryDetails.tag",
-          "beneficiaryClientReferenceId": "beneficiaryDetails.clientRefId",
+          "beneficiaryClientReferenceId": "__ref:IndividualModel.clientReferenceId",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
           "rowVersion": "meta.rowVersion",
           "dateOfRegistration": "HouseHoldDetails.dateOfRegistration",
-          "additionalFields": "additionalInfo.fields"
+          "additionalFields": "additionalInfo.fields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
         }
       },
       "HouseholdMemberModel": {
@@ -108,7 +120,9 @@ final jsonConfig = {
           "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
-          "additionalFields": "additionalInfo.fields"
+          "additionalFields": "additionalInfo.fields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit",
         }
       },
     }

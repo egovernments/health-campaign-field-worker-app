@@ -180,6 +180,24 @@ class FormEntityMapper {
       return uuid;
     }
 
+    if (instruction == '__generate:clientAudit') {
+      final now = DateTime.now().millisecondsSinceEpoch;
+      return {
+        "createdBy": context['userUUID'],
+        "createdTime": now,
+        "lastModifiedBy": context['userUUID'],
+        "lastModifiedTime": now,
+      };
+    }
+
+    if (instruction == '__generate:audit') {
+      final now = DateTime.now().millisecondsSinceEpoch;
+      return {
+        "createdBy": context['userUUID'],
+        "createdTime": now,
+      };
+    }
+
     if (instruction.startsWith('__ref:')) {
       final parts = instruction.replaceFirst('__ref:', '').split('.');
       if (parts.length != 2) {

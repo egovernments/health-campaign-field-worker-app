@@ -144,21 +144,6 @@ const fakeSchema = """
           "format": "custom"
         }
       }
-    },
-    "updateDelivery": {
-      "type": "object",
-      "label": "Update Delivery",
-      "properties": {
-        "numberDistributed": {
-          "type": "integer",
-          "format": "incrementer",
-          "label": "Number of Bed nets distributed"
-        },
-        "reasonIfNotDelivered": {
-          "type": "string",
-          "label": "Reason if not delivered"
-        }
-      }
     }
   }
 }

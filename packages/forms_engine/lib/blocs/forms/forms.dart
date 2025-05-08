@@ -27,32 +27,32 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 
   FutureOr<void> _handleLoadForm(FormsLoadEvent event, FormsStateEmitter emit) {
     final schemaObject = SchemaObject.fromJson(json.decode(schema));
-    emit(state.copyWith(schema: schemaObject));
+    emit(FormsState(schema: schemaObject));
   }
 
   void _handleUpdateForm(FormsUpdateEvent event, FormsStateEmitter emit) {
-    emit(state.copyWith(schema: event.object));
+    emit(FormsState(schema: event.object));
   }
 
   void _handleCreateMapping(
-    FormsCreateMappingEvent event,
-    FormsStateEmitter emit,
-  ) {
+      FormsCreateMappingEvent event,
+      FormsStateEmitter emit,
+      ) {
     final propertiesMap = state.schema?.pages.entries
         .map((e) => e.value)
         .map((e) => e.properties)
         .whereNotNull()
         .expand(
           (element) =>
-              element.entries.map((e) => MapEntry(e.key, e.value.value)),
-        );
+          element.entries.map((e) => MapEntry(e.key, e.value.value)),
+    );
 
     if (propertiesMap == null || propertiesMap.isEmpty) {
       throw Exception('Invalid schema output. Data should not be empty');
     }
 
     final dataMap = Map.fromEntries(propertiesMap);
-    emit(state.copyWith(formData: dataMap));
+    emit(FormsState(schema: state.schema, formData: dataMap));
   }
 
   void _handleUpdateField(FormsUpdateFieldEvent event, FormsStateEmitter emit) {
@@ -74,18 +74,9 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     };
 
     final updatedSchema = schemaCopy.copyWith(pages: updatedPages);
-    emit(state.copyWith(schema: updatedSchema));
+    emit(FormsState(schema: updatedSchema));
   }
 
-  /// Handles the clearing of a specific field on the form.
-  ///
-  /// This function takes the key of the field to clear as an argument and
-  /// iterates over each page and its properties in the current form schema,
-  /// resetting the value of the specified field to `null`. After clearing
-  /// the field, it emits a new state with the updated schema.
-  ///
-  /// [event] The `FormsClearFieldEvent` containing the key of the field to clear.
-  /// [emit] The function to emit the new state with cleared field data.
   void _handleClearField(FormsClearFieldEvent event, FormsStateEmitter emit) {
     final schemaCopy = state.schema;
     if (schemaCopy == null) return;
@@ -104,18 +95,9 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         ),
     };
 
-    emit(state.copyWith(schema: schemaCopy.copyWith(pages: updatedPages)));
+    emit(FormsState(schema: schemaCopy.copyWith(pages: updatedPages)));
   }
 
-  /// Handles the clearing of all fields on a specific page in the form schema.
-  ///
-  /// This function takes the key of the page to clear as an argument and
-  /// iterates over each property on the specified page, resetting the values
-  /// of all properties to `null`. After clearing the fields on the page, it
-  /// emits a new state with the updated schema and the same saved properties.
-  ///
-  /// [event] The `FormsClearPageEvent` containing the key of the page to clear.
-  /// [emit] The function to emit the new state with cleared page data.
   void _handleClearPage(FormsClearPageEvent event, FormsStateEmitter emit) {
     final schemaCopy = state.schema;
     if (schemaCopy == null) return;
@@ -131,19 +113,9 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     final updatedPages = Map.of(schemaCopy.pages);
     updatedPages[event.pageKey] = page.copyWith(properties: clearedProperties);
 
-    emit(state.copyWith(schema: schemaCopy.copyWith(pages: updatedPages)));
+    emit(FormsState(schema: schemaCopy.copyWith(pages: updatedPages)));
   }
 
-  /// Handles the clearing of all fields across all pages in the form schema.
-  ///
-  /// This function iterates over each page and its properties in the current
-  /// form schema, resetting the values of all properties to `null`. After
-  /// clearing the fields, it emits a new state with the updated schema and
-  /// an empty map for saved properties.
-  ///
-  /// [event] The `FormsClearFormEvent` containing any additional data needed
-  /// for the operation (not used in this implementation).
-  /// [emit] The function to emit the new state with cleared form data.
   void _handleClearForm(FormsClearFormEvent event, FormsStateEmitter emit) {
     final schemaCopy = state.schema;
     if (schemaCopy == null) return;
@@ -160,7 +132,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         ),
     };
 
-    emit(state.copyWith(
+    emit(FormsState(
       schema: schemaCopy.copyWith(pages: clearedPages),
       formData: {},
     ));
@@ -185,7 +157,6 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         final value = propEntry.value.value;
 
         pageValues[key] = value;
-
       }
 
       if (pageValues.isNotEmpty) {
@@ -193,11 +164,12 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       }
     }
 
-    emit(FormsState.formSubmitted(schema: state.schema, formData: formData));
+    emit(FormsSubmittedState(schema: schemaObject, formData: formData));
+    // Immediately reset to base state to prevent repeat triggers
+    emit(FormsState(schema: schemaObject));
   }
-
-
 }
+
 
 @freezed
 class FormsEvent with _$FormsEvent {

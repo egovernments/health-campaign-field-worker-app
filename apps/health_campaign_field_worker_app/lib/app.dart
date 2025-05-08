@@ -23,6 +23,7 @@ import 'package:survey_form/survey_form.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
+import 'blocs/entity_create/entity_create.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/fake_schema.dart';
@@ -345,6 +346,22 @@ class MainApplicationState extends State<MainApplication>
                             );
                           },
                           lazy: false,
+                        ),
+                        BlocProvider(
+                          create: (ctx) => EntityCreateBloc(
+                            householdMemberRepository: context.repository<
+                                HouseholdMemberModel,
+                                HouseholdMemberSearchModel>(),
+                            householdRepository: context.repository<
+                                HouseholdModel, HouseholdSearchModel>(),
+                            individualRepository: context.repository<
+                                IndividualModel, IndividualSearchModel>(),
+                            projectBeneficiaryRepository: context.repository<
+                                ProjectBeneficiaryModel,
+                                ProjectBeneficiarySearchModel>(),
+                            taskDataRepository: context.repository<
+                                TaskModel, TaskSearchModel>(),
+                          ),
                         ),
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(

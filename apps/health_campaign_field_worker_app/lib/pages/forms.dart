@@ -17,6 +17,7 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:sync_service/data/repositories/sync/remote_type.dart';
 
 // import '../widgets/header/back_navigation_help_header.dart';
+import '../blocs/entity_create/entity_create.dart';
 import '../data/transformer_config.dart';
 import '../router/app_router.dart';
 import '../utils/utils.dart';
@@ -27,36 +28,82 @@ import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
-class FormsPage extends StatelessWidget {
+class FormsPage extends StatefulWidget {
   final String pageName;
 
   const FormsPage({super.key, @PathParam() required this.pageName});
 
   @override
-  Widget build(BuildContext context) {
-    bool _hasProcessed = false;
+  State<FormsPage> createState() => _FormsPageState();
+}
 
+class _FormsPageState extends State<FormsPage> {
+
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<FormsBloc, FormsState>(
+      body: BlocConsumer<FormsBloc, FormsState>(
+        listener: (context, state) async {
+          final isLastPage = state.schema?.pages.keys.last == widget.pageName;
+
+          if ( state is FormsSubmittedState && isLastPage) {
+
+            final formData = state.formData;
+            if (formData.isEmpty) return;
+
+            try {
+              final modelsConfig = jsonConfig['beneficiaryRegistration']
+              ?['models'] as Map<String, dynamic>;
+
+              final formEntityMapper =
+              FormEntityMapper(config: jsonConfig);
+
+              final entities = formEntityMapper.mapFormToEntities(
+                formValues: formData,
+                modelsConfig: modelsConfig,
+                context: {
+                  "projectId": context.selectedProject.id,
+                  "user": context.loggedInUser,
+                  "tenantId": context.selectedProject.tenantId,
+                  "boundary": context.boundary,
+                  'userUUID': context.loggedInUser.uuid,
+                },
+              );
+
+              context.read<EntityCreateBloc>().add(
+                EntityCreateEvent.create(entities: entities),
+              );
+              // Reset to prevent re-handling
+              context.read<FormsBloc>().add(
+                const FormsEvent.clearForm(), // or create a FormsResetEvent
+              );
+            } catch (e) {
+              print('Error: $e');
+            }
+          }
+        },
         builder: (context, state) {
           final schemaObject = state.schema;
           if (schemaObject == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final schema = schemaObject.pages[pageName];
+          final schema = schemaObject.pages[widget.pageName];
 
           if (schema == null) {
             return const Center(child: Text('Form not found'));
           }
 
-          final index = schemaObject.pages.keys.toList().indexOf(pageName);
+          final index =
+              schemaObject.pages.keys.toList().indexOf(widget.pageName);
           final showcaseKeys = <GlobalKey>[];
           final Map<String, Widget> widgetMap = {
             'dobPicker': const DobPicker(),
             'customText': const CustomText(),
             'scanner': const CustomScanner(),
           };
+
           return ReactiveFormBuilder(
             form: () => fb.group(
               JsonForms.getFormControls(schema, [widgetMap]),
@@ -77,141 +124,73 @@ class FormsPage extends StatelessWidget {
                   const SizedBox.shrink()
                 ],
               ),
-              footer: BlocListener<FormsBloc, FormsState>(
-                listener: (context, state) async {
-                  // Check if formData is updated and perform the transformation
-                  if (!_hasProcessed && state is FormsSubmittedState) {
-                    _hasProcessed = true;
-                    final formData = state.formData;
-
-                    // Check if formData is null or empty
-                    if (formData.isEmpty) return;
-
-                    try {
-                      // Get all models as a list
-                      final modelsConfig = jsonConfig['beneficiaryRegistration']
-                          ?['models'] as Map<String, dynamic>;
-
-                      final formEntityMapper =
-                          FormEntityMapper(config: jsonConfig);
-
-                      final entities = formEntityMapper.mapFormToEntities(
-                        formValues: formData,
-                        modelsConfig: modelsConfig,
-                        context: {
-                          "project": context.selectedProject,
-                          "user": context.loggedInUser,
-                          "tenantId": context.selectedProject.tenantId,
-                          "boundary": context.boundary,
-                        },
-                      );
-
-                      // You now have a list of transformed models, so you can proceed with further processing
-                      for (final entity in entities) {
-                        final modelType = getDataModelTypeFromModel(entity);
-
-                        final repository = RepositoryType.getLocalForType(
-                          modelType,
-                          [
-                            context.read<
-                              LocalRepository<IndividualModel,
-                                  IndividualSearchModel>>(),
-                            context.read<
-                                LocalRepository<HouseholdModel,
-                                    HouseholdSearchModel>>(),
-                            context.read<
-                                LocalRepository<HouseholdMemberModel,
-                                    HouseholdMemberSearchModel>>(),
-                            context.read<
-                                LocalRepository<ProjectBeneficiaryModel,
-                                    ProjectBeneficiarySearchModel>>(),
-                            ],
-                        );
-
-                        await repository.create(entity);
-                      }
-                    } catch (e) {
-                      // Handle any errors during the mapping process
-                      print('Error: $e');
-                    }
-                  }
-                },
-                child: DigitCard(
+              footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
                   children: [
                     ReactiveFormConsumer(
-                        builder: (context, formGroup, child) => DigitButton(
-                              label: (index) < schemaObject.pages.length - 1
-                                  ? 'Next'
-                                  : 'Submit',
-                              onPressed: !formGroup.valid
-                                  ? () {}
-                                  : () {
-                                      final values = JsonForms.getFormValues(
-                                        formGroup,
-                                        schema,
-                                      );
+                      builder: (context, formGroup, child) => DigitButton(
+                        label: (index) < schemaObject.pages.length - 1
+                            ? 'Next'
+                            : 'Submit',
+                        onPressed: !formGroup.valid
+                            ? () {}
+                            : () {
+                                final values = JsonForms.getFormValues(
+                                  formGroup,
+                                  schema,
+                                );
 
-                                      final updatedPropertySchema =
-                                          schema.copyWith(
-                                        properties: Map.fromEntries(
-                                          schema.properties?.entries.map(
-                                                (e) => values.containsKey(e.key)
-                                                    ? MapEntry(
-                                                        e.key,
-                                                        e.value.copyWith(
-                                                          value: values[e.key],
-                                                        ),
-                                                      )
-                                                    : MapEntry(e.key, e.value),
-                                              ) ??
-                                              [],
-                                        ),
-                                      );
-
-                                      context.read<FormsBloc>().add(
-                                            FormsUpdateEvent(
-                                              schemaObject.copyWith(
-                                                pages: Map.fromEntries(
-                                                  schemaObject.pages.entries
-                                                      .map(
-                                                    (entry) => MapEntry(
-                                                      entry.key,
-                                                      entry.key == pageName
-                                                          ? updatedPropertySchema
-                                                          : entry.value,
-                                                    ),
+                                final updatedPropertySchema = schema.copyWith(
+                                  properties: Map.fromEntries(
+                                    schema.properties?.entries.map(
+                                          (e) => values.containsKey(e.key)
+                                              ? MapEntry(
+                                                  e.key,
+                                                  e.value.copyWith(
+                                                    value: values[e.key],
                                                   ),
-                                                ),
+                                                )
+                                              : MapEntry(e.key, e.value),
+                                        ) ??
+                                        [],
+                                  ),
+                                );
+
+                                context.read<FormsBloc>().add(
+                                      FormsUpdateEvent(
+                                        schemaObject.copyWith(
+                                          pages: Map.fromEntries(
+                                            schemaObject.pages.entries.map(
+                                              (entry) => MapEntry(
+                                                entry.key,
+                                                entry.key == widget.pageName
+                                                    ? updatedPropertySchema
+                                                    : entry.value,
                                               ),
                                             ),
-                                          );
+                                          ),
+                                        ),
+                                      ),
+                                    );
 
-                                      if ((index) <
-                                          schemaObject.pages.length - 1) {
-                                        context.router.push(FormsRoute(
-                                          pageName: schemaObject.pages.entries
-                                              .elementAt(index + 1)
-                                              .key,
-                                        ));
-                                      } else {
-                                        // When form is completed, submit form and send data to the state
-                                        context.read<FormsBloc>().add(
-                                              FormsSubmitEvent(
-                                                schemaObject, // Pass form values to the event
-                                              ),
-                                            );
-                                        // context.read<FormsBloc>().add(
-                                        //       const FormsCreateMappingEvent(),
-                                        //     );
-                                      }
-                                    },
-                              type: DigitButtonType.primary,
-                              size: DigitButtonSize.large,
-                              mainAxisSize: MainAxisSize.max,
-                            ))
+                                if ((index) < schemaObject.pages.length - 1) {
+                                  context.router.push(FormsRoute(
+                                    pageName: schemaObject.pages.entries
+                                        .elementAt(index + 1)
+                                        .key,
+                                  ));
+                                } else {
+                                  context.read<FormsBloc>().add(
+                                        FormsSubmitEvent(schemaObject),
+                                      );
+                                }
+                              },
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                      ),
+                    ),
                   ],
-                ),
               ),
               children: [
                 DigitCard(
