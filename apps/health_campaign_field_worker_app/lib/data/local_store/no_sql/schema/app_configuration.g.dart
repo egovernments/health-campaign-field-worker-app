@@ -96,97 +96,97 @@ const AppConfigurationSchema = CollectionSchema(
       target: r'HouseholdMemberDeletionReasonOptions',
     ),
     r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES',
       type: IsarType.objectList,
       target: r'RelationShipTypeOptions',
     ),
     r'ID_TYPE_OPTIONS_POPULATOR': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'ID_TYPE_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'IdTypeOptions',
     ),
     r'LANGUAGES': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'LANGUAGES',
       type: IsarType.objectList,
       target: r'Languages',
     ),
     r'NETWORK_DETECTION': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'NETWORK_DETECTION',
       type: IsarType.string,
     ),
     r'PERSISTENCE_MODE': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'PERSISTENCE_MODE',
       type: IsarType.string,
     ),
     r'PROXIMITY_SEARCH_RANGE': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'PROXIMITY_SEARCH_RANGE',
       type: IsarType.double,
     ),
     r'SEARCH_CLF_FILTERS': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'SEARCH_CLF_FILTERS',
       type: IsarType.objectList,
       target: r'SearchCLFFilters',
     ),
     r'SEARCH_HOUSEHOLD_FILTERS': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'SEARCH_HOUSEHOLD_FILTERS',
       type: IsarType.objectList,
       target: r'SearchHouseHoldFilters',
     ),
     r'SYNC_METHOD': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 28,
+      id: 29,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -672,73 +672,73 @@ void _appConfigurationSerialize(
     object.householdMemberDeletionReasonOptions,
   );
   writer.writeObjectList<RelationShipTypeOptions>(
-    offsets[12],
+    offsets[13],
     allOffsets,
     RelationShipTypeOptionsSchema.serialize,
     object.relationShipTypeOptions,
   );
   writer.writeObjectList<IdTypeOptions>(
-    offsets[13],
+    offsets[14],
     allOffsets,
     IdTypeOptionsSchema.serialize,
     object.idTypeOptions,
   );
   writer.writeObjectList<Languages>(
-    offsets[14],
+    offsets[15],
     allOffsets,
     LanguagesSchema.serialize,
     object.languages,
   );
-  writer.writeString(offsets[15], object.networkDetection);
-  writer.writeString(offsets[16], object.persistenceMode);
-  writer.writeDouble(offsets[17], object.maxRadius);
+  writer.writeString(offsets[16], object.networkDetection);
+  writer.writeString(offsets[17], object.persistenceMode);
+  writer.writeDouble(offsets[18], object.maxRadius);
   writer.writeObjectList<SearchCLFFilters>(
-    offsets[18],
+    offsets[19],
     allOffsets,
     SearchCLFFiltersSchema.serialize,
     object.searchCLFFilters,
   );
   writer.writeObjectList<SearchHouseHoldFilters>(
-    offsets[19],
+    offsets[20],
     allOffsets,
     SearchHouseHoldFiltersSchema.serialize,
     object.searchHouseHoldFilters,
   );
-  writer.writeString(offsets[20], object.syncMethod);
-  writer.writeString(offsets[21], object.syncTrigger);
-  writer.writeString(offsets[22], object.tenantId);
+  writer.writeString(offsets[21], object.syncMethod);
+  writer.writeString(offsets[22], object.syncTrigger);
+  writer.writeString(offsets[23], object.tenantId);
   writer.writeObjectList<TransportTypes>(
-    offsets[23],
+    offsets[24],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[24],
+    offsets[25],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[25],
+    offsets[26],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[26],
+    offsets[27],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[27],
+    offsets[28],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[28],
+    offsets[29],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -832,73 +832,73 @@ AppConfiguration _appConfigurationDeserialize(
   );
   object.relationShipTypeOptions =
       reader.readObjectList<RelationShipTypeOptions>(
-    offsets[12],
+    offsets[13],
     RelationShipTypeOptionsSchema.deserialize,
     allOffsets,
     RelationShipTypeOptions(),
   );
   object.idTypeOptions = reader.readObjectList<IdTypeOptions>(
-    offsets[13],
+    offsets[14],
     IdTypeOptionsSchema.deserialize,
     allOffsets,
     IdTypeOptions(),
   );
   object.languages = reader.readObjectList<Languages>(
-    offsets[14],
+    offsets[15],
     LanguagesSchema.deserialize,
     allOffsets,
     Languages(),
   );
-  object.networkDetection = reader.readStringOrNull(offsets[15]);
-  object.persistenceMode = reader.readStringOrNull(offsets[16]);
-  object.maxRadius = reader.readDoubleOrNull(offsets[17]);
+  object.networkDetection = reader.readStringOrNull(offsets[16]);
+  object.persistenceMode = reader.readStringOrNull(offsets[17]);
+  object.maxRadius = reader.readDoubleOrNull(offsets[18]);
   object.searchCLFFilters = reader.readObjectList<SearchCLFFilters>(
-    offsets[18],
+    offsets[19],
     SearchCLFFiltersSchema.deserialize,
     allOffsets,
     SearchCLFFilters(),
   );
   object.searchHouseHoldFilters = reader.readObjectList<SearchHouseHoldFilters>(
-    offsets[19],
+    offsets[20],
     SearchHouseHoldFiltersSchema.deserialize,
     allOffsets,
     SearchHouseHoldFilters(),
   );
-  object.syncMethod = reader.readStringOrNull(offsets[20]);
-  object.syncTrigger = reader.readStringOrNull(offsets[21]);
-  object.tenantId = reader.readStringOrNull(offsets[22]);
+  object.syncMethod = reader.readStringOrNull(offsets[21]);
+  object.syncTrigger = reader.readStringOrNull(offsets[22]);
+  object.tenantId = reader.readStringOrNull(offsets[23]);
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[23],
+    offsets[24],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[24],
+    offsets[25],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[25],
+    offsets[26],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[26],
+    offsets[27],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[27],
+    offsets[28],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[28],
+    offsets[29],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -1008,81 +1008,81 @@ P _appConfigurationDeserializeProp<P>(
         allOffsets,
         RelationShipTypeOptions(),
       )) as P;
-    case 13:
+    case 14:
       return (reader.readObjectList<IdTypeOptions>(
         offset,
         IdTypeOptionsSchema.deserialize,
         allOffsets,
         IdTypeOptions(),
       )) as P;
-    case 14:
+    case 15:
       return (reader.readObjectList<Languages>(
         offset,
         LanguagesSchema.deserialize,
         allOffsets,
         Languages(),
       )) as P;
-    case 15:
-      return (reader.readStringOrNull(offset)) as P;
     case 16:
       return (reader.readStringOrNull(offset)) as P;
     case 17:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 18:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 19:
       return (reader.readObjectList<SearchCLFFilters>(
         offset,
         SearchCLFFiltersSchema.deserialize,
         allOffsets,
         SearchCLFFilters(),
       )) as P;
-    case 19:
+    case 20:
       return (reader.readObjectList<SearchHouseHoldFilters>(
         offset,
         SearchHouseHoldFiltersSchema.deserialize,
         allOffsets,
         SearchHouseHoldFilters(),
       )) as P;
-    case 20:
-      return (reader.readStringOrNull(offset)) as P;
     case 21:
       return (reader.readStringOrNull(offset)) as P;
     case 22:
       return (reader.readStringOrNull(offset)) as P;
     case 23:
+      return (reader.readStringOrNull(offset)) as P;
+    case 24:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 24:
+    case 25:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 25:
+    case 26:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 26:
+    case 27:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 27:
+    case 28:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 28:
+    case 29:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,

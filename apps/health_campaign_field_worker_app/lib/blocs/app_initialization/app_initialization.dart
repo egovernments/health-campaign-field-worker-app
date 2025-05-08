@@ -39,8 +39,10 @@ class AppInitializationBloc
   }
 
   //App Initialization event to setup the app config and init data
-  FutureOr<void> _onAppInitializeSetup(AppInitializationSetupEvent event,
-      AppInitializationEmitter emit,) async {
+  FutureOr<void> _onAppInitializeSetup(
+    AppInitializationSetupEvent event,
+    AppInitializationEmitter emit,
+  ) async {
     emit(const AppInitializing());
 
     try {
@@ -120,14 +122,14 @@ class AppInitializationBloc
                 MdmsModuleDetailModel(
                   moduleName: ModuleEnums.moduleVersion.toValue(),
                   masterDetails:
-                  getMasterDetailsModel([MasterEnums.rowVersion.toValue()]),
+                      getMasterDetailsModel([MasterEnums.rowVersion.toValue()]),
                 ),
               ],
             ),
           ).toJson(),
         );
         final pgrServiceDefinitions =
-        await mdmsRepository.searchPGRServiceDefinitions(
+            await mdmsRepository.searchPGRServiceDefinitions(
           envConfig.variables.mdmsApiPath,
           MdmsRequestModel(
             mdmsCriteria: MdmsCriteriaModel(
@@ -152,7 +154,7 @@ class AppInitializationBloc
         );
         try {
           final dashboardConfigWrapper =
-          await dashboardRemoteRepository.searchDashboardConfig(
+              await dashboardRemoteRepository.searchDashboardConfig(
             envConfig.variables.mdmsApiPath,
             MdmsRequestModel(
               mdmsCriteria: MdmsCriteriaModel(
@@ -171,18 +173,16 @@ class AppInitializationBloc
             ).toJson(),
           );
           if (dashboardConfigWrapper.isNotEmpty) {
-            final dashboardConfigs = DashboardConfigPrimaryWrapper
-                .fromJson(
-                jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                [ModuleEnums.hcm.toValue().toString()])
+            final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
+                    jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                        [ModuleEnums.hcm.toValue().toString()])
                 .dashboardConfigWrapper;
 
             if (dashboardConfigs.isNotEmpty) {
               await dashboardRemoteRepository.writeToDashboardConfigDB(
-                  DashboardConfigPrimaryWrapper
-                      .fromJson(
-                      jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                      [ModuleEnums.hcm.toValue().toString()])
+                  DashboardConfigPrimaryWrapper.fromJson(
+                          jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                              [ModuleEnums.hcm.toValue().toString()])
                       .dashboardConfigWrapper,
                   isar);
             }
@@ -206,7 +206,8 @@ class AppInitializationBloc
   }
 
   Future<MdmsConfig> _loadOfflineData(
-      Emitter<AppInitializationState> emit,) async {
+    Emitter<AppInitializationState> emit,
+  ) async {
     final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
     final configs = await isar.appConfigurations.where().findAll();
     final dashboardConfigs = await isar.dashboardConfigSchemaLists
@@ -261,42 +262,41 @@ class AppInitializationState with _$AppInitializationState {
       failed: () => {},
       initialized: (appConfiguration, serviceRegistryList, _) =>
           serviceRegistryList
-              .map((e) =>
-              e.actions.map((e) {
-                ApiOperation? operation;
-                DataModelType? type;
+              .map((e) => e.actions.map((e) {
+                    ApiOperation? operation;
+                    DataModelType? type;
 
-                operation = ApiOperation.values.firstWhereOrNull((element) {
-                  return e.action.camelCase == element.name;
-                });
+                    operation = ApiOperation.values.firstWhereOrNull((element) {
+                      return e.action.camelCase == element.name;
+                    });
 
-                type = DataModelType.values.firstWhereOrNull((element) {
-                  return e.entityName.camelCase == element.name;
-                });
+                    type = DataModelType.values.firstWhereOrNull((element) {
+                      return e.entityName.camelCase == element.name;
+                    });
 
-                if (operation == null || type == null) return null;
+                    if (operation == null || type == null) return null;
 
-                return ActionPathModel(
-                  operation: operation,
-                  type: type,
-                  path: e.path,
-                );
-              }))
+                    return ActionPathModel(
+                      operation: operation,
+                      type: type,
+                      path: e.path,
+                    );
+                  }))
               .expand((element) => element)
               .whereNotNull()
               .fold(<DataModelType, Map<ApiOperation, String>>{}, (o, element) {
-            if (o.containsKey(element.type)) {
-              o[element.type]?.addEntries(
-                [MapEntry(element.operation, element.path)],
-              );
-            } else {
-              o[element.type] = Map.fromEntries([
-                MapEntry(element.operation, element.path),
-              ]);
-            }
+        if (o.containsKey(element.type)) {
+          o[element.type]?.addEntries(
+            [MapEntry(element.operation, element.path)],
+          );
+        } else {
+          o[element.type] = Map.fromEntries([
+            MapEntry(element.operation, element.path),
+          ]);
+        }
 
-            return o;
-          }),
+        return o;
+      }),
     );
   }
 
@@ -307,7 +307,7 @@ class AppInitializationState with _$AppInitializationState {
       loading: () => 'Loading',
       failed: () => 'Failed',
       initialized: (appConfiguration, serviceRegistryList, _) =>
-      'tenantId: ${appConfiguration.tenantId}\n'
+          'tenantId: ${appConfiguration.tenantId}\n'
           'serviceCount: ${serviceRegistryList.length}',
     );
   }
@@ -318,9 +318,10 @@ class MdmsConfig {
   final List<ServiceRegistry> serviceRegistryList;
   final List<DashboardConfigSchema?>? dashboardConfigSchema;
 
-  const MdmsConfig({required this.appConfigs,
-    required this.serviceRegistryList,
-    this.dashboardConfigSchema});
+  const MdmsConfig(
+      {required this.appConfigs,
+      required this.serviceRegistryList,
+      this.dashboardConfigSchema});
 }
 
 class AppInitializationException implements Exception {
