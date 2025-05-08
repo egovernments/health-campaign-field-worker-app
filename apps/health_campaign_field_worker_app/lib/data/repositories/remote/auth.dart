@@ -17,16 +17,11 @@ class AuthRepository {
       "authorization": "Basic ZWdvdi11c2VyLWNsaWVudDo=",
     };
 
-    //final formData = FormData.fromMap(loginModel.toJson());
-    final encodedFormData = loginModel
-         .toJson()
-         .entries
-         .map((e) =>
-             '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value.toString())}')
-         .join('&');
+    final formData = FormData.fromMap(loginModel.toJson());
+
     final response = await _client.post(
       loginPath,
-      data: encodedFormData,
+      data: formData,
       options: Options(headers: headers),
     );
 
