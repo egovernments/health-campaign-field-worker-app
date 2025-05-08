@@ -40,7 +40,8 @@ class BeneficiaryDownSyncBloc
       sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
       referralLocalRepository;
-  final LocalRepository<ServiceModel, ServiceSearchModel> serviceLocalRepository;
+  final LocalRepository<ServiceModel, ServiceSearchModel>
+      serviceLocalRepository;
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,

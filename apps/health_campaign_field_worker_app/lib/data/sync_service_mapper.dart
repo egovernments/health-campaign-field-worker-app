@@ -315,30 +315,33 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
-            final memberRelationship = (responseEntity?.memberRelationships != null && responseEntity!.memberRelationships!.isNotEmpty)
-                ? responseEntity.memberRelationships!.first
-                : null;
+            final memberRelationship =
+                (responseEntity?.memberRelationships != null &&
+                        responseEntity!.memberRelationships!.isNotEmpty)
+                    ? responseEntity.memberRelationships!.first
+                    : null;
 
             final relationshipAdditionalId = memberRelationship?.id == null
                 ? null
                 : AdditionalId(
-              idType: memberRelationshipIdKey,
-              id: memberRelationship!.id!,
-            );
+                    idType: memberRelationshipIdKey,
+                    id: memberRelationship!.id!,
+                  );
 
             final relationshipSelfId = memberRelationship?.selfId == null
                 ? null
                 : AdditionalId(
-              idType: memberRelationshipSelfIdKey,
-              id: memberRelationship!.selfId!,
-            );
+                    idType: memberRelationshipSelfIdKey,
+                    id: memberRelationship!.selfId!,
+                  );
 
-            final relationshipRelativeId = memberRelationship?.relativeId == null
-                ? null
-                : AdditionalId(
-              idType: memberRelationshipRelativeIdKey,
-              id: memberRelationship!.relativeId!,
-            );
+            final relationshipRelativeId =
+                memberRelationship?.relativeId == null
+                    ? null
+                    : AdditionalId(
+                        idType: memberRelationshipRelativeIdKey,
+                        id: memberRelationship!.relativeId!,
+                      );
 
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
@@ -684,7 +687,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           if (serverGeneratedId != null) {
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
-                clientReferenceId: entity.clientReferenceId!,
+                clientReferenceId: entity.clientReferenceId,
                 serverGeneratedId: serverGeneratedId,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,

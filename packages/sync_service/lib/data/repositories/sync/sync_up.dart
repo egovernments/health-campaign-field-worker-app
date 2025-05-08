@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:sync_service/utils/utils.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
@@ -122,11 +121,6 @@ class PerformSyncUp {
         final registry = SyncServiceSingleton()
             .registries
             ?.getSyncRegistries(typeGroupedEntity.key, remote);
-        if (registry == null) {
-          if (kDebugMode) {
-            print('no custom sync registry found for ${typeGroupedEntity.key}');
-          }
-        }
 
         // Handle non-recoverable errors
         if (listOfBatchedNonRecoverableErrorList.isNotEmpty) {
@@ -175,12 +169,7 @@ class PerformSyncUp {
           final registry = SyncServiceSingleton()
               .registries
               ?.getSyncRegistries(typeGroupedEntity.key, remote);
-          if (registry == null) {
-            if (kDebugMode) {
-              print(
-                  'no custom sync registry found for ${typeGroupedEntity.key}');
-            }
-          }
+
           for (final sublist in listOfBatchedOpLogList) {
             final entities = getEntityModel(sublist, local);
             if (operationGroupedEntity.key == DataOperation.create) {
@@ -261,9 +250,9 @@ abstract class SyncUpOperation {
   Future<void> delete(List<EntityModel> entities, LocalRepository local);
 
   Future<void> singleCreate(EntityModel entity, LocalRepository local);
-  
+
   Future<void> singleUpdate(EntityModel entity, LocalRepository local);
-  
+
   Future<void> localMarkSyncUp(
       List<OpLogEntry<EntityModel>> entity, LocalRepository local);
 }

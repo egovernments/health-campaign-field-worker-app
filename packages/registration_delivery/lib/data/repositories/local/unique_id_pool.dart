@@ -105,6 +105,7 @@ class UniqueIdPoolLocalRepository
   FutureOr<void> update(
     UniqueIdPoolModel entity, {
     bool createOpLog = false,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final uniqueIdCompanion = entity.companion;

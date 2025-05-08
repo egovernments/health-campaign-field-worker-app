@@ -48,7 +48,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
     final serviceDefinition = context.repository<ServiceDefinitionModel,
         ServiceDefinitionSearchModel>(context);
     final service =
-    context.repository<ServiceModel, ServiceSearchModel>(context);
+        context.repository<ServiceModel, ServiceSearchModel>(context);
 
     final projectBeneficiary = context.repository<ProjectBeneficiaryModel,
         ProjectBeneficiarySearchModel>(context);
@@ -77,71 +77,75 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
         ),
         BlocProvider(
           create: (_) => HouseholdOverviewBloc(
-              HouseholdOverviewState(
-                householdMemberWrapper: HouseholdMemberWrapper(
-                  household: initialState.householdModel,
-                  headOfHousehold: initialState.maybeWhen(
-                      orElse: () => null,
-                      editHousehold: (addressModel,
+            HouseholdOverviewState(
+              householdMemberWrapper: HouseholdMemberWrapper(
+                household: initialState.householdModel,
+                headOfHousehold: initialState.maybeWhen(
+                    orElse: () => null,
+                    editHousehold: (
+                      addressModel,
+                      householdModel,
+                      individualModel,
+                      registrationDate,
+                      projectBeneficiaryModel,
+                      parentClientReferenceId,
+                      relationshipType,
+                      loading,
+                      headOfHousehold,
+                      householdChecklists,
+                      individualChecklists,
+                    ) =>
+                        headOfHousehold),
+                members: initialState.maybeWhen(
+                  orElse: () => null,
+                  editHousehold: (addressModel,
                           householdModel,
                           individualModel,
                           registrationDate,
                           projectBeneficiaryModel,
                           parentClientReferenceId,
                           relationshipType,
+                          householdChecklists,
+                          individualChecklists,
                           loading,
-                          headOfHousehold, householdChecklists,individualChecklists,) =>
-                      headOfHousehold),
-                  members: initialState.maybeWhen(
-                    orElse: () => null,
-                    editHousehold: (addressModel,
-                        householdModel,
-                        individualModel,
-                        registrationDate,
-                        projectBeneficiaryModel,
-                        parentClientReferenceId,
-                        relationshipType,
-                        householdChecklists,
-                        individualChecklists,
-                        loading,
-                        headOfHousehold) =>
-                    individualModel,
-                  ),
-                  projectBeneficiaries: initialState.maybeWhen(
-                    orElse: () => null,
-                    editHousehold: (addressModel,
-                        parentClientReferenceId,
-                        relationshipType,
-                        householdModel,
-                        individualModel,
-                        registrationDate,
-                        projectBeneficiaryModel,
-                        loading,
-                        headOfHousehold, householdChecklists, individualChecklists) =>
-                    projectBeneficiaryModel != null
-                        ? [projectBeneficiaryModel]
-                        : [],
-                  ),
+                          headOfHousehold) =>
+                      individualModel,
+                ),
+                projectBeneficiaries: initialState.maybeWhen(
+                  orElse: () => null,
+                  editHousehold: (addressModel,
+                          parentClientReferenceId,
+                          relationshipType,
+                          householdModel,
+                          individualModel,
+                          registrationDate,
+                          projectBeneficiaryModel,
+                          loading,
+                          headOfHousehold,
+                          householdChecklists,
+                          individualChecklists) =>
+                      projectBeneficiaryModel != null
+                          ? [projectBeneficiaryModel]
+                          : [],
                 ),
               ),
-              individualRepository: individual,
-              householdRepository: household,
-              householdMemberRepository: householdMember,
-              projectBeneficiaryRepository: projectBeneficiary,
-              beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
-              taskDataRepository: task,
-              sideEffectDataRepository: sideEffect,
-              individualGlobalSearchRepository: individualGlobalSearch,
-              referralDataRepository: referral,
+            ),
+            individualRepository: individual,
+            householdRepository: household,
+            householdMemberRepository: householdMember,
+            projectBeneficiaryRepository: projectBeneficiary,
+            beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
+            taskDataRepository: task,
+            sideEffectDataRepository: sideEffect,
+            individualGlobalSearchRepository: individualGlobalSearch,
+            referralDataRepository: referral,
             serviceDataRepository: service,
-          )
-            ..add(HouseholdOverviewReloadEvent(
-                projectId: RegistrationDeliverySingleton().selectedProject!.id,
-                projectBeneficiaryType:
-                RegistrationDeliverySingleton().beneficiaryType!)),
-    )
+          )..add(HouseholdOverviewReloadEvent(
+              projectId: RegistrationDeliverySingleton().selectedProject!.id,
+              projectBeneficiaryType:
+                  RegistrationDeliverySingleton().beneficiaryType!)),
+        )
       ],
-
       child: MultiBlocProvider(
         providers: [
           BlocProvider(

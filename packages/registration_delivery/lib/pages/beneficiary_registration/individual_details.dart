@@ -764,21 +764,23 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                     errorMessage: field.errorText,
                                   ),
                                 ),
-                              ),),
-                        if (RegistrationDeliverySingleton().householdType ==
-                            HouseholdType.family)
-                          SurveyFormViewPage(
-                            key: checklistKey,
-                            hideFooter: true,
-                            hideHeader: true,
-                            checklistType:
-                                BeneficiaryChecklistEnums.individual.toValue(),
-                            hideBackAlert: true,
-                            useScaffold: false,
-                            isChild: widget.parentClientReferenceId != null,
-                            initialService:
-                                state.individualChecklists?.firstOrNull,
+                              ),
                             ),
+                            if (RegistrationDeliverySingleton().householdType ==
+                                HouseholdType.family)
+                              SurveyFormViewPage(
+                                key: checklistKey,
+                                hideFooter: true,
+                                hideHeader: true,
+                                checklistType: BeneficiaryChecklistEnums
+                                    .individual
+                                    .toValue(),
+                                hideBackAlert: true,
+                                useScaffold: false,
+                                isChild: widget.parentClientReferenceId != null,
+                                initialService:
+                                    state.individualChecklists?.firstOrNull,
+                              ),
                             // const SizedBox(height: spacer4),
                             if ((RegistrationDeliverySingleton()
                                             .beneficiaryType ==
@@ -938,7 +940,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
     var identifier = (individual.identifiers?.isNotEmpty ?? false)
         ? individual.identifiers!.firstWhereOrNull((id) =>
-            id.identifierType == form.control(_idTypeKey).value ? true : false)
+            id.identifierType == form.control(_idTypeKey).value &&
+                    id.identifierId != form.control(_idNumberKey).value
+                ? true
+                : false)
         : null;
 
     if (identifier != null &&

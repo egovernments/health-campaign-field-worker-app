@@ -606,12 +606,13 @@ class _SearchBeneficiaryPageState
                                     blocWrapper.clearEvent();
                                     await context.router.push(
                                       BeneficiaryRegistrationWrapperRoute(
-                                        initialState: BeneficiaryRegistrationState
-                                            .editHousehold(
+                                        initialState:
+                                            BeneficiaryRegistrationState.editHousehold(
                                                 householdChecklists:
-                                                  i.householdChecklists,
-                                              individualChecklists:
-                                                  i.individualChecklists,householdModel: i.household!,
+                                                    i.householdChecklists,
+                                                individualChecklists:
+                                                    i.individualChecklists,
+                                                householdModel: i.household!,
                                                 individualModel: i.members!,
                                                 registrationDate:
                                                     DateTime.now(),

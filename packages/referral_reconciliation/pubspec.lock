@@ -397,10 +397,9 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "0f43206205f39c768c8009e228712c6cfb09d42db33e32518bd9ad3460b68486"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_data_model"
+      relative: true
+    source: path
     version: "1.0.7-dev.3-enumeration"
   digit_scanner:
     dependency: "direct main"
@@ -1406,10 +1405,9 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      name: survey_form
-      sha256: bec78edb6c935c1b489e7bece80c34b06471771e576af50335b13581f86731bb
-      url: "https://pub.dev"
-    source: hosted
+      path: "../survey_form"
+      relative: true
+    source: path
     version: "1.0.2-dev.4-enumeration"
   synchronized:
     dependency: transitive
