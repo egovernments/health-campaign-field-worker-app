@@ -193,7 +193,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       }
     }
 
-    emit(state.copyWith(formData: formData));
+    emit(FormsState.formSubmitted(schema: state.schema, formData: formData));
   }
 
 
@@ -226,4 +226,9 @@ class FormsState with _$FormsState {
     SchemaObject? schema,
     Map<String, dynamic>? formData,
   }) = _FormsState;
+
+  const factory FormsState.formSubmitted({
+    SchemaObject? schema,
+    required Map<String, dynamic> formData,
+  }) = FormsSubmittedState;
 }

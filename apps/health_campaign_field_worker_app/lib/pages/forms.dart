@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/digit_scanner.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -10,6 +11,10 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:forms_engine/json_forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_data_transformer/src/transformer_service.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:sync_service/data/repositories/sync/remote_type.dart';
 
 // import '../widgets/header/back_navigation_help_header.dart';
 import '../data/transformer_config.dart';
@@ -29,6 +34,8 @@ class FormsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool _hasProcessed = false;
+
     return Scaffold(
       body: BlocBuilder<FormsBloc, FormsState>(
         builder: (context, state) {
@@ -71,13 +78,14 @@ class FormsPage extends StatelessWidget {
                 ],
               ),
               footer: BlocListener<FormsBloc, FormsState>(
-                listener: (context, state) {
+                listener: (context, state) async {
                   // Check if formData is updated and perform the transformation
-                  if (state.formData != null && state.formData!.isNotEmpty) {
+                  if (!_hasProcessed && state is FormsSubmittedState) {
+                    _hasProcessed = true;
                     final formData = state.formData;
 
                     // Check if formData is null or empty
-                    if (formData == null || formData.isEmpty) return;
+                    if (formData.isEmpty) return;
 
                     try {
                       // Get all models as a list
@@ -99,9 +107,28 @@ class FormsPage extends StatelessWidget {
                       );
 
                       // You now have a list of transformed models, so you can proceed with further processing
-                      for (var entity in entities) {
-                        // Do something with the entity (e.g., submit to API)
-                        // submitTransformedData(entity);
+                      for (final entity in entities) {
+                        final modelType = getDataModelTypeFromModel(entity);
+
+                        final repository = RepositoryType.getLocalForType(
+                          modelType,
+                          [
+                            context.read<
+                              LocalRepository<IndividualModel,
+                                  IndividualSearchModel>>(),
+                            context.read<
+                                LocalRepository<HouseholdModel,
+                                    HouseholdSearchModel>>(),
+                            context.read<
+                                LocalRepository<HouseholdMemberModel,
+                                    HouseholdMemberSearchModel>>(),
+                            context.read<
+                                LocalRepository<ProjectBeneficiaryModel,
+                                    ProjectBeneficiarySearchModel>>(),
+                            ],
+                        );
+
+                        await repository.create(entity);
                       }
                     } catch (e) {
                       // Handle any errors during the mapping process
