@@ -33,7 +33,7 @@ class IndividualLocalRepository
           ),
           leftOuterJoin(
             sql.identifier,
-            sql.identifier.clientReferenceId.equalsExp(
+            sql.identifier.individualClientReferenceId.equalsExp(
               sql.individual.clientReferenceId,
             ),
           ),
@@ -109,6 +109,9 @@ class IndividualLocalRepository
             ? null
             : IdentifierModel(
                 id: identifier.id,
+                individualId: identifier.individualId,
+                individualClientReferenceId:
+                    identifier.individualClientReferenceId,
                 clientReferenceId: individual.clientReferenceId,
                 identifierType: identifier.identifierType,
                 identifierId: identifier.identifierId,
@@ -318,19 +321,19 @@ class IndividualLocalRepository
       final individualCompanions = entities.map((e) => e.companion).toList();
 
       final identifiersList = entities
-          .map((e) => e.identifiers?.map((a) {
-                return a
-                    .copyWith(
-                      clientReferenceId: e.clientReferenceId,
-                      clientAuditDetails: e.clientAuditDetails,
-                      auditDetails: e.auditDetails,
-                    )
-                    .companion;
-              }).toList())
+          .map((e) => e.identifiers
+              ?.map((a) => a
+                  .copyWith(
+                    individualClientReferenceId: e.clientReferenceId,
+                    clientAuditDetails: e.clientAuditDetails,
+                    auditDetails: e.auditDetails,
+                  )
+                  .companion)
+              .toList())
           .toList();
 
       final identifierCompanions =
-          identifiersList.expand((e) => [e?[0]]).toList();
+          identifiersList.expand<IdentifierCompanion>((e) => e ?? []).toList();
 
       await sql.batch((batch) async {
         final addressList = entities
@@ -373,7 +376,7 @@ class IndividualLocalRepository
         );
         batch.insertAll(
           sql.identifier,
-          identifierCompanions.whereNotNull().toList(),
+          identifierCompanions,
           mode: InsertMode.insertOrReplace,
         );
         batch.insertAll(

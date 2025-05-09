@@ -1,5 +1,12 @@
 ## 1.0.7-dev.1-idGen
 
+* Modified individual search query with individualClientReferenceId
+* BugFix:
+    * Fetching existing ID if present and prefilling on form during ID change
+    * Fixed multiple ID update to individual
+
+## 1.0.7-dev.1-idGen
+
 * IdGen:
     * Added new screen for down-syncing unique ID's
     * Modified search beneficiary page to check for ID's and show specific alerts

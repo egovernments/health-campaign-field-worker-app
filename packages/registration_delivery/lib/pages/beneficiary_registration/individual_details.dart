@@ -859,7 +859,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     }
 
     identifier ??= IdentifierModel(
-      clientReferenceId: individual.clientReferenceId,
+      clientReferenceId: IdGen.i.identifier,
+      individualId: individual.clientReferenceId,
+      individualClientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
@@ -890,8 +892,25 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       mobileNumber: form.control(_mobileNumberKey).value,
       dateOfBirth: dobString,
     );
-    if (!individual.identifiers!.contains(identifier)) {
-      individual.identifiers?.add(identifier!);
+    if (individual.identifiers != null) {
+      final idType = form.control(_idTypeKey).value;
+
+      final existingIdentifier = individual.identifiers!.firstWhereOrNull(
+        (e) => e.identifierType == idType,
+      );
+
+      if (existingIdentifier == null) {
+        individual.identifiers!.add(identifier!);
+      } else {
+        final updatedIdentifier = existingIdentifier.copyWith(
+          identifierId: identifier!.identifierId,
+        );
+
+        final index = individual.identifiers!.indexOf(existingIdentifier);
+        individual.identifiers![index] = updatedIdentifier;
+      }
+    } else {
+      individual = individual.copyWith(identifiers: [identifier!]);
     }
 
     return individual;
@@ -1304,11 +1323,13 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         return value.individualModel;
       },
     );
-    var existingId = individual!.identifiers?.lastWhereOrNull((id) =>
-        id.identifierType == form.control(_idTypeKey).value ? true : false);
+    if (individual != null) {
+      var existingId = individual.identifiers?.lastWhereOrNull((id) =>
+          id.identifierType == form.control(_idTypeKey).value ? true : false);
 
-    if (existingId != null) {
-      form.control(_idNumberKey).value = existingId.identifierId;
+      if (existingId != null) {
+        form.control(_idNumberKey).value = existingId.identifierId;
+      }
     }
   }
 }

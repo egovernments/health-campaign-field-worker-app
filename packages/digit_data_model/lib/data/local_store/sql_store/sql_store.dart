@@ -12,8 +12,8 @@ import '../../../models/entities/address_type.dart';
 import '../../../models/entities/beneficiary_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
-import '../../../models/entities/pgr_application_status.dart';
 import '../../../models/entities/household_type.dart';
+import '../../../models/entities/pgr_application_status.dart';
 import 'tables/address.dart';
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';
@@ -52,8 +52,8 @@ import 'tables/service.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
 import 'tables/target.dart';
-import 'tables/user.dart';
 import 'tables/unique_id_pool.dart';
+import 'tables/user.dart';
 
 // Part directive for the generated code.
 part 'sql_store.g.dart';
@@ -193,6 +193,19 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               if (kDebugMode) {
                 print(
                     "Failed to add columns for householdType, attendance - localityCode, and service - relatedClientReferenceId");
+              }
+            }
+          }
+
+          if (from < 7) {
+            try {
+              await migrator.addColumn(
+                  identifier, identifier.individualClientReferenceId);
+              await migrator.addColumn(identifier, identifier.individualId);
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to add columns for identifier, individualClientReferenceId");
               }
             }
           }
