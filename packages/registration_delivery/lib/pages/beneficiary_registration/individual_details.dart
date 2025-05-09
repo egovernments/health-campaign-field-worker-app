@@ -853,8 +853,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         identifier.identifierId != form.control(_idNumberKey).value) {
       setState(() {
         identifier = identifier!.copyWith(
-          identifierId: form.control(_idNumberKey).value,
-        );
+            identifierId: form.control(_idNumberKey).value,
+            clientAuditDetails: identifier?.clientAuditDetails?.copyWith(
+              lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
+              lastModifiedTime: context.millisecondsSinceEpoch(),
+            ));
       });
     }
 
@@ -903,8 +906,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         individual.identifiers!.add(identifier!);
       } else {
         final updatedIdentifier = existingIdentifier.copyWith(
-          identifierId: identifier!.identifierId,
-        );
+            identifierId: identifier!.identifierId,
+            clientAuditDetails: identifier?.clientAuditDetails?.copyWith(
+              lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
+              lastModifiedTime: context.millisecondsSinceEpoch(),
+            ));
 
         final index = individual.identifiers!.indexOf(existingIdentifier);
         individual.identifiers![index] = updatedIdentifier;
@@ -981,11 +987,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 : searchQuery?.trim()),
       ),
       _idTypeKey: FormControl<String>(
-        value: individual?.identifiers?.lastOrNull?.identifierType,
+        value: individual?.identifiers?.firstOrNull?.identifierType,
       ),
       _idNumberKey: FormControl<String>(
         validators: [Validators.required],
-        value: individual?.identifiers?.lastOrNull?.identifierId,
+        value: individual?.identifiers?.firstOrNull?.identifierId,
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null

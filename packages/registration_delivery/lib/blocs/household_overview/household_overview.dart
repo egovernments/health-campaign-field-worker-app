@@ -131,11 +131,21 @@ class HouseholdOverviewBloc
       final resultHousehold = households.first;
 
       // Search for individuals based on their client reference IDs.
-      final individuals = await individualRepository.search(
+      var individuals = await individualRepository.search(
         IndividualSearchModel(
           clientReferenceId: individualIds,
         ),
       );
+
+      List<IndividualModel> sortedIndividuals = [];
+      for (var e in individuals) {
+        e.identifiers?.sort((a, b) => a.clientAuditDetails!.lastModifiedTime!
+            .compareTo(b.clientAuditDetails!.lastModifiedTime!));
+
+        sortedIndividuals.add(e);
+      }
+
+      individuals = sortedIndividuals;
 
       // Search for project beneficiaries based on specified criteria.
       final projectBeneficiaries = await projectBeneficiaryRepository.search(
