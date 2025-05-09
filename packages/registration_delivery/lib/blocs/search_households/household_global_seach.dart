@@ -280,10 +280,15 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           .where((element) => membersIds.contains(element.clientReferenceId))
           .toList();
 
-      filteredIndividuals.forEach((e) {
+      List<IndividualModel> sortedIndividuals = [];
+      for (var e in filteredIndividuals) {
         e.identifiers?.sort((a, b) => a.clientAuditDetails!.lastModifiedTime!
             .compareTo(b.clientAuditDetails!.lastModifiedTime!));
-      });
+
+        sortedIndividuals.add(e);
+      }
+
+      filteredIndividuals = sortedIndividuals;
 
       // Filter beneficiaries based on filtered household client reference IDs
       filteredBeneficiaries = projectBeneficiariesList

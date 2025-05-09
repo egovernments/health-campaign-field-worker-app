@@ -520,7 +520,7 @@ packages:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.7-dev.1-idGen"
+    version: "1.0.7-dev.2-idGen"
   digit_dss:
     dependency: "direct main"
     description:
@@ -1818,7 +1818,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.7-dev.1-idGen"
+    version: "1.0.7-dev.2-idGen"
   rxdart:
     dependency: transitive
     description:
