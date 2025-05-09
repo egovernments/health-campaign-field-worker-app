@@ -5,6 +5,10 @@ import 'package:drift/drift.dart';
 class Identifier extends Table {
   TextColumn get id => text().nullable()();
 
+  TextColumn get individualId => text().nullable()();
+
+  TextColumn get individualClientReferenceId => text().nullable()();
+
   TextColumn get identifierType => text().nullable()();
 
   TextColumn get identifierId => text().nullable()();
@@ -40,5 +44,5 @@ class Identifier extends Table {
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => {clientReferenceId, identifierType};
+  Set<Column> get primaryKey => {individualClientReferenceId, identifierType};
 }
