@@ -502,7 +502,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   joinIdentifier(LocalSqlDataStore sql) {
     return leftOuterJoin(
         sql.identifier,
-        sql.identifier.clientReferenceId
+        sql.identifier.individualClientReferenceId
             .equalsExp(sql.individual.clientReferenceId));
   }
 
