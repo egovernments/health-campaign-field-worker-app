@@ -17226,6 +17226,19 @@ class $IdentifierTable extends Identifier
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _individualIdMeta =
+      const VerificationMeta('individualId');
+  @override
+  late final GeneratedColumn<String> individualId = GeneratedColumn<String>(
+      'individual_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _individualClientReferenceIdMeta =
+      const VerificationMeta('individualClientReferenceId');
+  @override
+  late final GeneratedColumn<String> individualClientReferenceId =
+      GeneratedColumn<String>(
+          'individual_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _identifierTypeMeta =
       const VerificationMeta('identifierType');
   @override
@@ -17333,6 +17346,8 @@ class $IdentifierTable extends Identifier
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        individualId,
+        individualClientReferenceId,
         identifierType,
         identifierId,
         auditCreatedBy,
@@ -17362,6 +17377,19 @@ class $IdentifierTable extends Identifier
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('individual_id')) {
+      context.handle(
+          _individualIdMeta,
+          individualId.isAcceptableOrUnknown(
+              data['individual_id']!, _individualIdMeta));
+    }
+    if (data.containsKey('individual_client_reference_id')) {
+      context.handle(
+          _individualClientReferenceIdMeta,
+          individualClientReferenceId.isAcceptableOrUnknown(
+              data['individual_client_reference_id']!,
+              _individualClientReferenceIdMeta));
     }
     if (data.containsKey('identifier_type')) {
       context.handle(
@@ -17461,13 +17489,19 @@ class $IdentifierTable extends Identifier
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {clientReferenceId, identifierType};
+  Set<GeneratedColumn> get $primaryKey =>
+      {individualClientReferenceId, identifierType};
   @override
   IdentifierData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return IdentifierData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      individualId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}individual_id']),
+      individualClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}individual_client_reference_id']),
       identifierType: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}identifier_type']),
       identifierId: attachedDatabase.typeMapping
@@ -17511,6 +17545,8 @@ class $IdentifierTable extends Identifier
 
 class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   final String? id;
+  final String? individualId;
+  final String? individualClientReferenceId;
   final String? identifierType;
   final String? identifierId;
   final String? auditCreatedBy;
@@ -17529,6 +17565,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   final String? additionalFields;
   const IdentifierData(
       {this.id,
+      this.individualId,
+      this.individualClientReferenceId,
       this.identifierType,
       this.identifierId,
       this.auditCreatedBy,
@@ -17550,6 +17588,13 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
     final map = <String, Expression>{};
     if (!nullToAbsent || id != null) {
       map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || individualId != null) {
+      map['individual_id'] = Variable<String>(individualId);
+    }
+    if (!nullToAbsent || individualClientReferenceId != null) {
+      map['individual_client_reference_id'] =
+          Variable<String>(individualClientReferenceId);
     }
     if (!nullToAbsent || identifierType != null) {
       map['identifier_type'] = Variable<String>(identifierType);
@@ -17603,6 +17648,13 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   IdentifierCompanion toCompanion(bool nullToAbsent) {
     return IdentifierCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      individualId: individualId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(individualId),
+      individualClientReferenceId:
+          individualClientReferenceId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(individualClientReferenceId),
       identifierType: identifierType == null && nullToAbsent
           ? const Value.absent()
           : Value(identifierType),
@@ -17657,6 +17709,9 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return IdentifierData(
       id: serializer.fromJson<String?>(json['id']),
+      individualId: serializer.fromJson<String?>(json['individualId']),
+      individualClientReferenceId:
+          serializer.fromJson<String?>(json['individualClientReferenceId']),
       identifierType: serializer.fromJson<String?>(json['identifierType']),
       identifierId: serializer.fromJson<String?>(json['identifierId']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
@@ -17681,6 +17736,9 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String?>(id),
+      'individualId': serializer.toJson<String?>(individualId),
+      'individualClientReferenceId':
+          serializer.toJson<String?>(individualClientReferenceId),
       'identifierType': serializer.toJson<String?>(identifierType),
       'identifierId': serializer.toJson<String?>(identifierId),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
@@ -17702,6 +17760,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
 
   IdentifierData copyWith(
           {Value<String?> id = const Value.absent(),
+          Value<String?> individualId = const Value.absent(),
+          Value<String?> individualClientReferenceId = const Value.absent(),
           Value<String?> identifierType = const Value.absent(),
           Value<String?> identifierId = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
@@ -17720,6 +17780,11 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
           Value<String?> additionalFields = const Value.absent()}) =>
       IdentifierData(
         id: id.present ? id.value : this.id,
+        individualId:
+            individualId.present ? individualId.value : this.individualId,
+        individualClientReferenceId: individualClientReferenceId.present
+            ? individualClientReferenceId.value
+            : this.individualClientReferenceId,
         identifierType:
             identifierType.present ? identifierType.value : this.identifierType,
         identifierId:
@@ -17762,6 +17827,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   String toString() {
     return (StringBuffer('IdentifierData(')
           ..write('id: $id, ')
+          ..write('individualId: $individualId, ')
+          ..write('individualClientReferenceId: $individualClientReferenceId, ')
           ..write('identifierType: $identifierType, ')
           ..write('identifierId: $identifierId, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -17785,6 +17852,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   @override
   int get hashCode => Object.hash(
       id,
+      individualId,
+      individualClientReferenceId,
       identifierType,
       identifierId,
       auditCreatedBy,
@@ -17806,6 +17875,9 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
       identical(this, other) ||
       (other is IdentifierData &&
           other.id == this.id &&
+          other.individualId == this.individualId &&
+          other.individualClientReferenceId ==
+              this.individualClientReferenceId &&
           other.identifierType == this.identifierType &&
           other.identifierId == this.identifierId &&
           other.auditCreatedBy == this.auditCreatedBy &&
@@ -17826,6 +17898,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
 
 class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   final Value<String?> id;
+  final Value<String?> individualId;
+  final Value<String?> individualClientReferenceId;
   final Value<String?> identifierType;
   final Value<String?> identifierId;
   final Value<String?> auditCreatedBy;
@@ -17845,6 +17919,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   final Value<int> rowid;
   const IdentifierCompanion({
     this.id = const Value.absent(),
+    this.individualId = const Value.absent(),
+    this.individualClientReferenceId = const Value.absent(),
     this.identifierType = const Value.absent(),
     this.identifierId = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -17865,6 +17941,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   });
   IdentifierCompanion.insert({
     this.id = const Value.absent(),
+    this.individualId = const Value.absent(),
+    this.individualClientReferenceId = const Value.absent(),
     this.identifierType = const Value.absent(),
     this.identifierId = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -17885,6 +17963,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   }) : clientReferenceId = Value(clientReferenceId);
   static Insertable<IdentifierData> custom({
     Expression<String>? id,
+    Expression<String>? individualId,
+    Expression<String>? individualClientReferenceId,
     Expression<String>? identifierType,
     Expression<String>? identifierId,
     Expression<String>? auditCreatedBy,
@@ -17905,6 +17985,9 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (individualId != null) 'individual_id': individualId,
+      if (individualClientReferenceId != null)
+        'individual_client_reference_id': individualClientReferenceId,
       if (identifierType != null) 'identifier_type': identifierType,
       if (identifierId != null) 'identifier_id': identifierId,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
@@ -17929,6 +18012,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
 
   IdentifierCompanion copyWith(
       {Value<String?>? id,
+      Value<String?>? individualId,
+      Value<String?>? individualClientReferenceId,
       Value<String?>? identifierType,
       Value<String?>? identifierId,
       Value<String?>? auditCreatedBy,
@@ -17948,6 +18033,9 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
       Value<int>? rowid}) {
     return IdentifierCompanion(
       id: id ?? this.id,
+      individualId: individualId ?? this.individualId,
+      individualClientReferenceId:
+          individualClientReferenceId ?? this.individualClientReferenceId,
       identifierType: identifierType ?? this.identifierType,
       identifierId: identifierId ?? this.identifierId,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
@@ -17973,6 +18061,13 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
+    }
+    if (individualId.present) {
+      map['individual_id'] = Variable<String>(individualId.value);
+    }
+    if (individualClientReferenceId.present) {
+      map['individual_client_reference_id'] =
+          Variable<String>(individualClientReferenceId.value);
     }
     if (identifierType.present) {
       map['identifier_type'] = Variable<String>(identifierType.value);
@@ -18032,6 +18127,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   String toString() {
     return (StringBuffer('IdentifierCompanion(')
           ..write('id: $id, ')
+          ..write('individualId: $individualId, ')
+          ..write('individualClientReferenceId: $individualClientReferenceId, ')
           ..write('identifierType: $identifierType, ')
           ..write('identifierId: $identifierId, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -48100,6 +48197,8 @@ class $$IndividualTableOrderingComposer
 
 typedef $$IdentifierTableInsertCompanionBuilder = IdentifierCompanion Function({
   Value<String?> id,
+  Value<String?> individualId,
+  Value<String?> individualClientReferenceId,
   Value<String?> identifierType,
   Value<String?> identifierId,
   Value<String?> auditCreatedBy,
@@ -48120,6 +48219,8 @@ typedef $$IdentifierTableInsertCompanionBuilder = IdentifierCompanion Function({
 });
 typedef $$IdentifierTableUpdateCompanionBuilder = IdentifierCompanion Function({
   Value<String?> id,
+  Value<String?> individualId,
+  Value<String?> individualClientReferenceId,
   Value<String?> identifierType,
   Value<String?> identifierId,
   Value<String?> auditCreatedBy,
@@ -48160,6 +48261,8 @@ class $$IdentifierTableTableManager extends RootTableManager<
               $$IdentifierTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
             Value<String?> id = const Value.absent(),
+            Value<String?> individualId = const Value.absent(),
+            Value<String?> individualClientReferenceId = const Value.absent(),
             Value<String?> identifierType = const Value.absent(),
             Value<String?> identifierId = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
@@ -48180,6 +48283,8 @@ class $$IdentifierTableTableManager extends RootTableManager<
           }) =>
               IdentifierCompanion(
             id: id,
+            individualId: individualId,
+            individualClientReferenceId: individualClientReferenceId,
             identifierType: identifierType,
             identifierId: identifierId,
             auditCreatedBy: auditCreatedBy,
@@ -48200,6 +48305,8 @@ class $$IdentifierTableTableManager extends RootTableManager<
           ),
           getInsertCompanionBuilder: ({
             Value<String?> id = const Value.absent(),
+            Value<String?> individualId = const Value.absent(),
+            Value<String?> individualClientReferenceId = const Value.absent(),
             Value<String?> identifierType = const Value.absent(),
             Value<String?> identifierId = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
@@ -48220,6 +48327,8 @@ class $$IdentifierTableTableManager extends RootTableManager<
           }) =>
               IdentifierCompanion.insert(
             id: id,
+            individualId: individualId,
+            individualClientReferenceId: individualClientReferenceId,
             identifierType: identifierType,
             identifierId: identifierId,
             auditCreatedBy: auditCreatedBy,
@@ -48260,6 +48369,17 @@ class $$IdentifierTableFilterComposer
       column: $state.table.id,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get individualClientReferenceId => $state
+      .composableBuilder(
+          column: $state.table.individualClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<String> get identifierType => $state.composableBuilder(
       column: $state.table.identifierType,
@@ -48349,6 +48469,17 @@ class $$IdentifierTableOrderingComposer
       column: $state.table.id,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualId => $state.composableBuilder(
+      column: $state.table.individualId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get individualClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.individualClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<String> get identifierType => $state.composableBuilder(
       column: $state.table.identifierType,

@@ -203,10 +203,13 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               await migrator.addColumn(serviceAttributes, serviceAttributes.id);
               await migrator.addColumn(serviceAttributes,
                   serviceAttributes.serviceClientReferenceId);
+              await migrator.addColumn(
+                  identifier, identifier.individualClientReferenceId);
+              await migrator.addColumn(identifier, identifier.individualId);
             } catch (e) {
               if (kDebugMode) {
                 print(
-                    "Failed to add columns for serviceAttributes - serviceClientReferenceId");
+                    "Failed to add columns for serviceAttributes - serviceClientReferenceId, id, identifier - individualClientReferenceId, individualId");
               }
             }
           }

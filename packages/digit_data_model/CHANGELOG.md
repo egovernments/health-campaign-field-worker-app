@@ -20,6 +20,15 @@
 
 * Added more enum types in beneficiaryType
 
+## 1.0.7-dev.2-idGen
+
+* Modified Identifier table and model
+    * Added individualId and individualClientReferenceId
+* Updated Migration script for the identifier
+* Modified search query with individualClientReferenceId
+* BugFix:
+    * Updated bulk create to insert all the identifiers instead of first index
+
 ## 1.0.7-dev.1-idGen
 
 * Added new table for storing unique Id's
