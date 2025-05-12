@@ -105,7 +105,9 @@ class _FormsPageState extends State<FormsPage> {
 
         return ReactiveFormBuilder(
           form: () => fb.group(
-            JsonForms.getFormControls(schema, [widgetMap]),
+            JsonForms.getFormControls(schema, [widgetMap], defaultValues: {
+            'locality': context.boundary.code,
+            },),
           ),
           builder: (context, formGroup, child) => ScrollableContent(
             enableFixedDigitButton: true,
@@ -210,6 +212,9 @@ class _FormsPageState extends State<FormsPage> {
                   JsonForms(
                     propertySchema: schema,
                     childrens: [widgetMap],
+                    defaultValues: {
+                      'locality': context.boundary.code,
+                    },
                   )
                 ],
               ),

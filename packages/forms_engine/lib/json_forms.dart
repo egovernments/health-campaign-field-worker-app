@@ -9,10 +9,12 @@ import 'models/property_schema/property_schema.dart';
 class JsonForms extends StatelessWidget {
   final PropertySchema propertySchema;
 final List<Map <String, Widget>>? childrens;
+final Map<String, dynamic>? defaultValues;
   const JsonForms({
     super.key,
     required this.propertySchema, 
     this.childrens,
+    this.defaultValues,
   });
 
   static Map<String, FormControl> getFormControls(
@@ -20,6 +22,7 @@ final List<Map <String, Widget>>? childrens;
     PropertySchema propertySchema,
        final List<Map <String, Widget>>? childrens, {
     String? defaultLatlng,
+        Map<String, dynamic>? defaultValues,
   }
   ) {
     assert(propertySchema.properties != null);
@@ -30,6 +33,7 @@ final List<Map <String, Widget>>? childrens;
                 e.value,
                 propertySchema,
                 defaultLatlng: defaultLatlng,
+        defaultValues: defaultValues,
               ))
           .expand((element) => element),
     );
@@ -52,6 +56,7 @@ final List<Map <String, Widget>>? childrens;
     PropertySchema schema,
     PropertySchema parentSchema, {
     String? defaultLatlng,
+        Map<String, dynamic>? defaultValues,
   }) {
     final List<MapEntry<String, FormControl>> entries = [];
     final type = schema.type;
@@ -66,7 +71,7 @@ final List<Map <String, Widget>>? childrens;
       final properties = schema.properties;
       assert(properties != null);
       final result = properties!.entries
-          .map((e) => _getControls(e.key, e.value, parentSchema))
+          .map((e) => _getControls(e.key, e.value, parentSchema, defaultValues: defaultValues))
           .expand((element) => element)
           .toList();
 
@@ -105,7 +110,9 @@ final List<Map <String, Widget>>? childrens;
             );
           } else if (schema.format == PropertySchemaFormat.latLng) {
             control = FormControl<String>(value: defaultLatlng);
-          } else {
+          } else if (schema.format == PropertySchemaFormat.locality) {
+            control = FormControl<String>(value: defaultValues?['locality']);
+          }else {
             control = FormControl<String>(
               value: schema.value,
               validators: requiredValidators,
@@ -186,6 +193,7 @@ final List<Map <String, Widget>>? childrens;
     FormGroup form,
     String name,
     PropertySchema schema,
+
   ) {
     if (schema.type == PropertySchemaType.object) {
       final results = schema.properties!.entries.map((e) {
