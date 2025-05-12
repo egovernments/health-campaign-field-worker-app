@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_showcase/showcase_widget.dart';
@@ -217,6 +217,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           serviceDataRepository: context
                               .repository<ServiceModel, ServiceSearchModel>(),
                         ),
+                      ),
+                      BlocProvider(
+                        create: (_) => FormsBloc(),
                       ),
                     ],
                     child: AutoRouter(

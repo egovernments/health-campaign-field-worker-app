@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$FormsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(String schema) load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
@@ -30,7 +30,7 @@ mixin _$FormsEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(String schema)? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
@@ -42,7 +42,7 @@ mixin _$FormsEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(String schema)? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
@@ -115,6 +115,8 @@ abstract class _$$FormsLoadEventImplCopyWith<$Res> {
   factory _$$FormsLoadEventImplCopyWith(_$FormsLoadEventImpl value,
           $Res Function(_$FormsLoadEventImpl) then) =
       __$$FormsLoadEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String schema});
 }
 
 /// @nodoc
@@ -124,31 +126,56 @@ class __$$FormsLoadEventImplCopyWithImpl<$Res>
   __$$FormsLoadEventImplCopyWithImpl(
       _$FormsLoadEventImpl _value, $Res Function(_$FormsLoadEventImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? schema = null,
+  }) {
+    return _then(_$FormsLoadEventImpl(
+      schema: null == schema
+          ? _value.schema
+          : schema // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$FormsLoadEventImpl implements FormsLoadEvent {
-  const _$FormsLoadEventImpl();
+  const _$FormsLoadEventImpl({required this.schema});
+
+  @override
+  final String schema;
 
   @override
   String toString() {
-    return 'FormsEvent.load()';
+    return 'FormsEvent.load(schema: $schema)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$FormsLoadEventImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$FormsLoadEventImpl &&
+            (identical(other.schema, schema) || other.schema == schema));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, schema);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormsLoadEventImplCopyWith<_$FormsLoadEventImpl> get copyWith =>
+      __$$FormsLoadEventImplCopyWithImpl<_$FormsLoadEventImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(String schema) load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
@@ -157,13 +184,13 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     required TResult Function() clearForm,
     required TResult Function(SchemaObject object) submit,
   }) {
-    return load();
+    return load(schema);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(String schema)? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
@@ -172,13 +199,13 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     TResult? Function()? clearForm,
     TResult? Function(SchemaObject object)? submit,
   }) {
-    return load?.call();
+    return load?.call(schema);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(String schema)? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
@@ -189,7 +216,7 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
     required TResult orElse(),
   }) {
     if (load != null) {
-      return load();
+      return load(schema);
     }
     return orElse();
   }
@@ -245,7 +272,13 @@ class _$FormsLoadEventImpl implements FormsLoadEvent {
 }
 
 abstract class FormsLoadEvent implements FormsEvent {
-  const factory FormsLoadEvent() = _$FormsLoadEventImpl;
+  const factory FormsLoadEvent({required final String schema}) =
+      _$FormsLoadEventImpl;
+
+  String get schema;
+  @JsonKey(ignore: true)
+  _$$FormsLoadEventImplCopyWith<_$FormsLoadEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -289,7 +322,7 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(String schema) load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
@@ -304,7 +337,7 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(String schema)? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
@@ -319,7 +352,7 @@ class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(String schema)? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
@@ -464,7 +497,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(String schema) load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
@@ -479,7 +512,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(String schema)? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
@@ -494,7 +527,7 @@ class _$FormsUpdateEventImpl implements FormsUpdateEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(String schema)? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
@@ -645,7 +678,7 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(String schema) load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
@@ -660,7 +693,7 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(String schema)? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
@@ -675,7 +708,7 @@ class _$FormsUpdateFieldEventImpl implements FormsUpdateFieldEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(String schema)? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
@@ -819,7 +852,7 @@ class _$FormsClearFieldEventImpl implements FormsClearFieldEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(String schema) load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
@@ -834,7 +867,7 @@ class _$FormsClearFieldEventImpl implements FormsClearFieldEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(String schema)? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
@@ -849,7 +882,7 @@ class _$FormsClearFieldEventImpl implements FormsClearFieldEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(String schema)? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
@@ -990,7 +1023,7 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(String schema) load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
@@ -1005,7 +1038,7 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(String schema)? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
@@ -1020,7 +1053,7 @@ class _$FormsClearPageEventImpl implements FormsClearPageEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(String schema)? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
@@ -1135,7 +1168,7 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(String schema) load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
@@ -1150,7 +1183,7 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(String schema)? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
@@ -1165,7 +1198,7 @@ class _$FormsClearFormEventImpl implements FormsClearFormEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(String schema)? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,
@@ -1310,7 +1343,7 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(String schema) load,
     required TResult Function() createMapping,
     required TResult Function(SchemaObject object) update,
     required TResult Function(String key, dynamic value) updateField,
@@ -1325,7 +1358,7 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(String schema)? load,
     TResult? Function()? createMapping,
     TResult? Function(SchemaObject object)? update,
     TResult? Function(String key, dynamic value)? updateField,
@@ -1340,7 +1373,7 @@ class _$FormsSubmitEventImpl implements FormsSubmitEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(String schema)? load,
     TResult Function()? createMapping,
     TResult Function(SchemaObject object)? update,
     TResult Function(String key, dynamic value)? updateField,

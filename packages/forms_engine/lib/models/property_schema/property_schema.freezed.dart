@@ -40,6 +40,7 @@ mixin _$PropertySchema {
   dynamic get value => throw _privateConstructorUsedError;
   DisplayBehavior? get displayBehavior => throw _privateConstructorUsedError;
   Map<String, dynamic>? get conditions => throw _privateConstructorUsedError;
+  int? get order => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -71,7 +72,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       String? label,
       dynamic value,
       DisplayBehavior? displayBehavior,
-      Map<String, dynamic>? conditions});
+      Map<String, dynamic>? conditions,
+      int? order});
 
   $DateFormatValueCopyWith<$Res>? get firstDate;
   $DateFormatValueCopyWith<$Res>? get lastDate;
@@ -109,6 +111,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? value = freezed,
     Object? displayBehavior = freezed,
     Object? conditions = freezed,
+    Object? order = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -183,6 +186,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.conditions
           : conditions // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>?,
+      order: freezed == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 
@@ -249,7 +256,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       String? label,
       dynamic value,
       DisplayBehavior? displayBehavior,
-      Map<String, dynamic>? conditions});
+      Map<String, dynamic>? conditions,
+      int? order});
 
   @override
   $DateFormatValueCopyWith<$Res>? get firstDate;
@@ -288,6 +296,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? value = freezed,
     Object? displayBehavior = freezed,
     Object? conditions = freezed,
+    Object? order = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -362,6 +371,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value._conditions
           : conditions // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>?,
+      order: freezed == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -388,7 +401,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.label,
       this.value,
       this.displayBehavior,
-      final Map<String, dynamic>? conditions})
+      final Map<String, dynamic>? conditions,
+      this.order})
       : _properties = properties,
         _required = required,
         _enums = enums,
@@ -467,8 +481,11 @@ class _$PropertySchemaImpl implements _PropertySchema {
   }
 
   @override
+  final int? order;
+
+  @override
   String toString() {
-    return 'PropertySchema(type: $type, readonly: $readonly, displayOnly: $displayOnly, properties: $properties, required: $required, enums: $enums, format: $format, firstDate: $firstDate, lastDate: $lastDate, minLength: $minLength, maxLength: $maxLength, maximum: $maximum, minimum: $minimum, hint: $hint, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions)';
+    return 'PropertySchema(type: $type, readonly: $readonly, displayOnly: $displayOnly, properties: $properties, required: $required, enums: $enums, format: $format, firstDate: $firstDate, lastDate: $lastDate, minLength: $minLength, maxLength: $maxLength, maximum: $maximum, minimum: $minimum, hint: $hint, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order)';
   }
 
   @override
@@ -502,31 +519,34 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.displayBehavior, displayBehavior) ||
                 other.displayBehavior == displayBehavior) &&
             const DeepCollectionEquality()
-                .equals(other._conditions, _conditions));
+                .equals(other._conditions, _conditions) &&
+            (identical(other.order, order) || other.order == order));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      type,
-      readonly,
-      displayOnly,
-      const DeepCollectionEquality().hash(_properties),
-      const DeepCollectionEquality().hash(_required),
-      const DeepCollectionEquality().hash(_enums),
-      format,
-      firstDate,
-      lastDate,
-      minLength,
-      maxLength,
-      maximum,
-      minimum,
-      hint,
-      label,
-      const DeepCollectionEquality().hash(value),
-      displayBehavior,
-      const DeepCollectionEquality().hash(_conditions));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        type,
+        readonly,
+        displayOnly,
+        const DeepCollectionEquality().hash(_properties),
+        const DeepCollectionEquality().hash(_required),
+        const DeepCollectionEquality().hash(_enums),
+        format,
+        firstDate,
+        lastDate,
+        minLength,
+        maxLength,
+        maximum,
+        minimum,
+        hint,
+        label,
+        const DeepCollectionEquality().hash(value),
+        displayBehavior,
+        const DeepCollectionEquality().hash(_conditions),
+        order
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -562,7 +582,8 @@ abstract class _PropertySchema implements PropertySchema {
       final String? label,
       final dynamic value,
       final DisplayBehavior? displayBehavior,
-      final Map<String, dynamic>? conditions}) = _$PropertySchemaImpl;
+      final Map<String, dynamic>? conditions,
+      final int? order}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -604,6 +625,8 @@ abstract class _PropertySchema implements PropertySchema {
   DisplayBehavior? get displayBehavior;
   @override
   Map<String, dynamic>? get conditions;
+  @override
+  int? get order;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>

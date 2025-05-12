@@ -93,6 +93,7 @@ class JsonFormBuilder extends StatelessWidget {
               label: schema.label ?? '',
               child: JsonSchemaStringBuilder(
                 form: form,
+                value: schema.value as String?,
                 formControlName: formControlName,
                 hint: schema.hint,
                 readOnly: true,

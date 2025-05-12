@@ -12,9 +12,7 @@ part 'forms.freezed.dart';
 typedef FormsStateEmitter = Emitter<FormsState>;
 
 class FormsBloc extends Bloc<FormsEvent, FormsState> {
-  final String schema;
-
-  FormsBloc(this.schema) : super(const FormsState()) {
+  FormsBloc() : super(const FormsState()) {
     on<FormsLoadEvent>(_handleLoadForm);
     on<FormsUpdateEvent>(_handleUpdateForm);
     on<FormsSubmitEvent>(_handleSubmitForm);
@@ -26,8 +24,38 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   }
 
   FutureOr<void> _handleLoadForm(FormsLoadEvent event, FormsStateEmitter emit) {
-    final schemaObject = SchemaObject.fromJson(json.decode(schema));
-    emit(FormsState(schema: schemaObject));
+    final rawSchema = json.decode(event.schema);
+    final schemaObject = SchemaObject.fromJson(rawSchema);
+
+    // Sort pages by order
+    final sortedPages = Map.fromEntries(
+      schemaObject.pages.entries.toList()
+        ..sort((a, b) {
+          // If either order is null, keep the original order (do not sort)
+          if (a.value.order == null || b.value.order == null) return 0;
+          return a.value.order!.compareTo(b.value.order!);
+        }),
+    ).map((pageKey, pageValue) {
+      // Sort properties inside the page
+      final sortedProperties = pageValue.properties == null
+          ? null
+          : Map.fromEntries(
+        pageValue.properties!.entries.toList()
+          ..sort((a, b) {
+            if (a.value.order == null || b.value.order == null) return 0;
+            return a.value.order!.compareTo(b.value.order!);
+          }),
+      );
+
+      // Return updated page
+      return MapEntry(
+        pageKey,
+        pageValue.copyWith(properties: sortedProperties),
+      );
+    });
+
+    final sortedSchema = schemaObject.copyWith(pages: sortedPages);
+    emit(FormsState(schema: sortedSchema));
   }
 
   void _handleUpdateForm(FormsUpdateEvent event, FormsStateEmitter emit) {
@@ -43,8 +71,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         .map((e) => e.properties)
         .whereNotNull()
         .expand(
-          (element) =>
-          element.entries.map((e) => MapEntry(e.key, e.value.value)),
+          (element) => element.entries.map((e) => MapEntry(e.key, e.value.value)),
     );
 
     if (propertiesMap == null || propertiesMap.isEmpty) {
@@ -165,15 +192,14 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     }
 
     emit(FormsSubmittedState(schema: schemaObject, formData: formData));
-    // Immediately reset to base state to prevent repeat triggers
-    emit(FormsState(schema: schemaObject));
+    emit(FormsState(schema: schemaObject)); // Reset after submit
   }
 }
 
 
 @freezed
 class FormsEvent with _$FormsEvent {
-  const factory FormsEvent.load() = FormsLoadEvent;
+  const factory FormsEvent.load({required String schema}) = FormsLoadEvent;
 
   const factory FormsEvent.createMapping() = FormsCreateMappingEvent;
 
@@ -188,8 +214,6 @@ class FormsEvent with _$FormsEvent {
   const factory FormsEvent.clearForm() = FormsClearFormEvent;
 
   const factory FormsEvent.submit(SchemaObject object) = FormsSubmitEvent;
-
-
 }
 
 @freezed
