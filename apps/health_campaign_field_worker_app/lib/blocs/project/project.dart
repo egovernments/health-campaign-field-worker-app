@@ -559,7 +559,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         ).toJson(),
       );
 
-      await storeSchemaIfNotExists(formConfig);
+      await storeSchema(formConfig);
 
       final rowversionList = await isar.rowVersionLists
           .filter()
@@ -636,18 +636,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ));
   }
 
-  Future<void> storeSchemaIfNotExists(dynamic schemaJson) async {
+  Future<void> storeSchema(dynamic schemaJson) async {
     final prefs = await SharedPreferences.getInstance();
     const schemaKey = 'form_schema';
 
-    // Check if key already exists
-    if (!prefs.containsKey(schemaKey)) {
+
       final schema = json.encode(schemaJson);
       await prefs.setString(schemaKey, schema);
-      print('Schema saved.');
-    } else {
-      print('Schema already exists. Skipping save.');
-    }
+
   }
 
   FutureOr<int> _getBatchSize() async {
