@@ -34,6 +34,11 @@ const fakeSchema = """
         "pinCode": {
           "type": "string",
           "label": "PostalCode"
+        },
+        "type": {
+          "type": "string",
+          "label": "Type of address",
+          "enums": ["PERMANENT", "CORRESPONDENCE", "OTHER"]
         }
       }
     },
@@ -45,7 +50,7 @@ const fakeSchema = """
           "type": "string",
            "format": "select",
           "label": "Type of Structure",
-          "enums": ["Glass", "Metal", "Clay","Redds","Cement"]
+          "enums": ["Glass", "Metal", "Clay","Reeds","Cement"]
         },
         "NoofRooms": {
           "type": "integer",

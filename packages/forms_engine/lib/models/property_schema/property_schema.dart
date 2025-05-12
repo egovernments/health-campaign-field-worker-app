@@ -31,6 +31,7 @@ class PropertySchema with _$PropertySchema {
     dynamic value,
     DisplayBehavior? displayBehavior,
     Map<String, dynamic>? conditions,
+    int? order,
   }) = _PropertySchema;
 
 

@@ -8,7 +8,8 @@ import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/project/project.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -232,6 +233,9 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   void navigateToBoundary(String boundary) async {
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
+    final prefs = await SharedPreferences.getInstance();
+    final schemaJson = prefs.getString('form_schema');
+    context.read<FormsBloc>().add(FormsEvent.load(schema: schemaJson ?? ''));
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);

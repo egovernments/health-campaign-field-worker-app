@@ -40,6 +40,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           : DisplayBehavior.fromJson(
               json['displayBehavior'] as Map<String, dynamic>),
       conditions: json['conditions'] as Map<String, dynamic>?,
+      order: json['order'] as int?,
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -72,6 +73,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('value', instance.value);
   writeNotNull('displayBehavior', instance.displayBehavior?.toJson());
   writeNotNull('conditions', instance.conditions);
+  writeNotNull('order', instance.order);
   return val;
 }
 

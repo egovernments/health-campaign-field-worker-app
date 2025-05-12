@@ -109,6 +109,26 @@ class MdmsRepository {
     }
   }
 
+  Future<dynamic> searchMDMS(
+      String apiEndPoint,
+      Map<String, dynamic> body,
+      ) async {
+    try {
+      final response = await _client.post(apiEndPoint, data: body);
+
+      return response.data?['MdmsRes']?['HCM-ADMIN-CONSOLE']?['TransformedData']?[0];
+
+
+    } on DioError catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: '$e',
+        stackTrace: e.stackTrace,
+      );
+      rethrow;
+    }
+  }
+
   FutureOr<void> writeToAppConfigDB(
     app_configuration.AppConfigPrimaryWrapperModel result,
     PGRServiceDefinitions pgrServiceDefinitions,

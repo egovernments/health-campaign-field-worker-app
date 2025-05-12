@@ -1,5 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:convert';
 import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
@@ -13,6 +14,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
@@ -540,6 +542,25 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         ).toJson(),
       );
 
+      final formConfig = await mdmsRepository.searchMDMS(
+        envConfig.variables.mdmsApiPath,
+        MdmsRequestModel(
+          mdmsCriteria: MdmsCriteriaModel(
+            tenantId: envConfig.variables.tenantId,
+            moduleDetails: [
+              const MdmsModuleDetailModel(
+                moduleName: 'HCM-ADMIN-CONSOLE',
+                masterDetails: [
+                  MdmsMasterDetailModel('TransformedData'),
+                ],
+              ),
+            ],
+          ),
+        ).toJson(),
+      );
+
+      await storeSchemaIfNotExists(formConfig);
+
       final rowversionList = await isar.rowVersionLists
           .filter()
           .moduleEqualTo('egov-location')
@@ -613,6 +634,20 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: false,
       syncError: null,
     ));
+  }
+
+  Future<void> storeSchemaIfNotExists(dynamic schemaJson) async {
+    final prefs = await SharedPreferences.getInstance();
+    const schemaKey = 'form_schema';
+
+    // Check if key already exists
+    if (!prefs.containsKey(schemaKey)) {
+      final schema = json.encode(schemaJson);
+      await prefs.setString(schemaKey, schema);
+      print('Schema saved.');
+    } else {
+      print('Schema already exists. Skipping save.');
+    }
   }
 
   FutureOr<int> _getBatchSize() async {

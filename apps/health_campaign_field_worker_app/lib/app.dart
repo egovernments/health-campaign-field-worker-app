@@ -103,9 +103,6 @@ class MainApplicationState extends State<MainApplication>
           sql: widget.sql,
           child: MultiBlocProvider(
             providers: [
-                  BlocProvider(
-          create: (context) => FormsBloc(fakeSchema)..add(const FormsLoadEvent()),
-        ),
               // INFO : Need to add bloc of package Here
               BlocProvider(
                 create: (_) {
@@ -192,7 +189,7 @@ class MainApplicationState extends State<MainApplication>
                                   LocalizationEvent.onLoadLocalization(
                                     module:
                                         "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                                    tenantId: appConfig.tenantId.toString(),
+                                    tenantId: envConfig.variables.tenantId,
                                     locale: firstLanguage,
                                     path: Constants.localizationApiPath,
                                   ),

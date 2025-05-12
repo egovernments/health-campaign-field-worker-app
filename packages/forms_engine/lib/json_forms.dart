@@ -100,7 +100,7 @@ final List<Map <String, Widget>>? childrens;
         default:
           if (schema.format == PropertySchemaFormat.date) {
             control = FormControl<DateTime>(
-              value: schema.value as DateTime? ?? DateTime.now(),
+              value: DateTime.now(),
               validators: requiredValidators,
             );
           } else if (schema.format == PropertySchemaFormat.latLng) {
