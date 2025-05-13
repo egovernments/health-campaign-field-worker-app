@@ -62,7 +62,7 @@ final Map<String, dynamic>? defaultValues;
     final type = schema.type;
 
     final requiredValidators = [
-      if ((parentSchema.required ?? []).contains(name)) Validators.required,
+      if (parentSchema.required  ?? false) Validators.required,
       if (schema.maxLength != null) Validators.maxLength(schema.maxLength!),
       if (schema.minLength != null) Validators.minLength(schema.minLength!),
     ];

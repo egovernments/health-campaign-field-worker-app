@@ -15,9 +15,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
         (k, e) =>
             MapEntry(k, PropertySchema.fromJson(e as Map<String, dynamic>)),
       ),
-      required: (json['required'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
+      required: json['required'] as bool?,
       enums:
           (json['enums'] as List<dynamic>?)?.map((e) => e as String).toList(),
       format:
@@ -82,17 +80,17 @@ const _$PropertySchemaTypeEnumMap = {
   PropertySchemaType.string: 'string',
   PropertySchemaType.integer: 'integer',
   PropertySchemaType.boolean: 'boolean',
-  PropertySchemaType.numeric: 'numeric',
 };
 
 const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.date: 'date',
-  PropertySchemaFormat.dateTime: 'dateTime',
   PropertySchemaFormat.latLng: 'latLng',
   PropertySchemaFormat.custom: 'custom',
   PropertySchemaFormat.locality: 'locality',
   PropertySchemaFormat.select: 'select',
-  PropertySchemaFormat.incrementer: 'incrementer',
+  PropertySchemaFormat.numeric: 'numeric',
+  PropertySchemaFormat.dropdown: 'dropdown',
+  PropertySchemaFormat.text: 'text',
 };
 
 _$DateFormatValueImpl _$$DateFormatValueImplFromJson(

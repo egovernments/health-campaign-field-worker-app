@@ -551,7 +551,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               const MdmsModuleDetailModel(
                 moduleName: 'HCM-ADMIN-CONSOLE',
                 masterDetails: [
-                  MdmsMasterDetailModel('TransformedData'),
+                  MdmsMasterDetailModel('SimplifiedAppConfigTwo'),
                 ],
               ),
             ],
@@ -640,10 +640,23 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final prefs = await SharedPreferences.getInstance();
     const schemaKey = 'form_schema';
 
+    dynamic transformedSchema;
 
-      final schema = json.encode(schemaJson);
-      await prefs.setString(schemaKey, schema);
+    try {
+      // Safely transform the schema
+      transformedSchema = transformJson(schemaJson);
+    } catch (e, stackTrace) {
+      // Optionally log or handle the error
+      debugPrint('Schema transformation failed: $e');
+      debugPrint('$stackTrace');
 
+      // Fallback to original if transformation fails
+      transformedSchema = '';
+    }
+
+    // Encode and store the schema
+    final schema = json.encode(transformedSchema);
+    await prefs.setString(schemaKey, schema);
   }
 
   FutureOr<int> _getBatchSize() async {

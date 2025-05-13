@@ -26,7 +26,7 @@ mixin _$PropertySchema {
   bool? get displayOnly => throw _privateConstructorUsedError;
   Map<String, PropertySchema>? get properties =>
       throw _privateConstructorUsedError;
-  List<String>? get required => throw _privateConstructorUsedError;
+  bool? get required => throw _privateConstructorUsedError;
   List<String>? get enums => throw _privateConstructorUsedError;
   PropertySchemaFormat? get format => throw _privateConstructorUsedError;
   DateFormatValue? get firstDate => throw _privateConstructorUsedError;
@@ -59,7 +59,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
       bool? readonly,
       bool? displayOnly,
       Map<String, PropertySchema>? properties,
-      List<String>? required,
+      bool? required,
       List<String>? enums,
       PropertySchemaFormat? format,
       DateFormatValue? firstDate,
@@ -133,7 +133,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       required: freezed == required
           ? _value.required
           : required // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as bool?,
       enums: freezed == enums
           ? _value.enums
           : enums // ignore: cast_nullable_to_non_nullable
@@ -243,7 +243,7 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       bool? readonly,
       bool? displayOnly,
       Map<String, PropertySchema>? properties,
-      List<String>? required,
+      bool? required,
       List<String>? enums,
       PropertySchemaFormat? format,
       DateFormatValue? firstDate,
@@ -316,9 +316,9 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, PropertySchema>?,
       required: freezed == required
-          ? _value._required
+          ? _value.required
           : required // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as bool?,
       enums: freezed == enums
           ? _value._enums
           : enums // ignore: cast_nullable_to_non_nullable
@@ -388,7 +388,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.readonly,
       this.displayOnly,
       final Map<String, PropertySchema>? properties,
-      final List<String>? required,
+      this.required,
       final List<String>? enums,
       this.format,
       this.firstDate,
@@ -404,7 +404,6 @@ class _$PropertySchemaImpl implements _PropertySchema {
       final Map<String, dynamic>? conditions,
       this.order})
       : _properties = properties,
-        _required = required,
         _enums = enums,
         _conditions = conditions;
 
@@ -428,16 +427,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
     return EqualUnmodifiableMapView(value);
   }
 
-  final List<String>? _required;
   @override
-  List<String>? get required {
-    final value = _required;
-    if (value == null) return null;
-    if (_required is EqualUnmodifiableListView) return _required;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+  final bool? required;
   final List<String>? _enums;
   @override
   List<String>? get enums {
@@ -500,7 +491,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
                 other.displayOnly == displayOnly) &&
             const DeepCollectionEquality()
                 .equals(other._properties, _properties) &&
-            const DeepCollectionEquality().equals(other._required, _required) &&
+            (identical(other.required, required) ||
+                other.required == required) &&
             const DeepCollectionEquality().equals(other._enums, _enums) &&
             (identical(other.format, format) || other.format == format) &&
             (identical(other.firstDate, firstDate) ||
@@ -531,7 +523,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
         readonly,
         displayOnly,
         const DeepCollectionEquality().hash(_properties),
-        const DeepCollectionEquality().hash(_required),
+        required,
         const DeepCollectionEquality().hash(_enums),
         format,
         firstDate,
@@ -569,7 +561,7 @@ abstract class _PropertySchema implements PropertySchema {
       final bool? readonly,
       final bool? displayOnly,
       final Map<String, PropertySchema>? properties,
-      final List<String>? required,
+      final bool? required,
       final List<String>? enums,
       final PropertySchemaFormat? format,
       final DateFormatValue? firstDate,
@@ -598,7 +590,7 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   Map<String, PropertySchema>? get properties;
   @override
-  List<String>? get required;
+  bool? get required;
   @override
   List<String>? get enums;
   @override

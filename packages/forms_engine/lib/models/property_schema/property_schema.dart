@@ -17,7 +17,7 @@ class PropertySchema with _$PropertySchema {
     bool? readonly,
     bool? displayOnly,
     Map<String, PropertySchema>? properties,
-    List<String>? required,
+    bool? required,
     List<String>? enums,
     PropertySchemaFormat? format,
     DateFormatValue? firstDate,
@@ -77,12 +77,13 @@ enum FormulaBehavior { show, hide }
 
 enum PropertySchemaFormat {
   date,
-  dateTime,
   latLng,
   custom,
   locality,
   select,
-  incrementer;
+  numeric,
+  dropdown,
+  text;
 }
 
-enum PropertySchemaType { object, string, integer, boolean, numeric }
+enum PropertySchemaType { object, string, integer, boolean }

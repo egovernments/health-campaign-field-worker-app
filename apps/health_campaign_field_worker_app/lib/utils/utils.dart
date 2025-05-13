@@ -513,3 +513,44 @@ class LocalizationParams {
 
   bool? get exclude => _exclude;
 }
+
+// Transforms the input JSON into a new structure where each page's properties
+// are keyed by their fieldName and the main structure is flattened for use.
+Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
+  final transformed = <String, dynamic>{};
+
+  transformed['name'] = inputJson['name'];
+  transformed['pages'] = <String, dynamic>{};
+  transformed['version'] = inputJson['version'];
+
+  for (final page in inputJson['pages'] as List<dynamic>) {
+    final pageMap = page as Map<String, dynamic>;
+    final pageKey = pageMap['page'];
+
+    final Map<String, dynamic> properties = {};
+
+    for (final prop in pageMap['properties'] as List<dynamic>) {
+      final property = prop as Map<String, dynamic>;
+      final fieldName = property['fieldName'];
+      if (fieldName != null) {
+        properties[fieldName] = Map<String, dynamic>.from(property);
+      }
+    }
+
+    final transformedPage = <String, dynamic>{
+      'label': pageMap['label'],
+      'order': pageMap['order'],
+      'type': pageMap['type'],
+      'description': pageMap['description'],
+      'actionLabel': pageMap['actionLabel'],
+      'properties': properties,
+    };
+
+    (transformed['pages'] as Map<String, dynamic>)[pageKey] = transformedPage;
+  }
+
+  return transformed;
+}
+
+
+
