@@ -885,16 +885,18 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
-      name: name.copyWith(
-        givenName: individualName?.trim(),
-      ),
-      gender: form.control(_genderKey).value == null
-          ? null
-          : Gender.values
-              .byName(form.control(_genderKey).value.toString().toLowerCase()),
-      mobileNumber: form.control(_mobileNumberKey).value,
-      dateOfBirth: dobString,
-    );
+        name: name.copyWith(
+          givenName: individualName?.trim(),
+        ),
+        gender: form.control(_genderKey).value == null
+            ? null
+            : Gender.values.byName(
+                form.control(_genderKey).value.toString().toLowerCase()),
+        mobileNumber: form.control(_mobileNumberKey).value,
+        dateOfBirth: dobString,
+        additionalFields: IndividualAdditionalFields(version: 1, fields: [
+          AdditionalField("primaryIdType", form.control(_idTypeKey).value),
+        ]));
     if (individual.identifiers != null) {
       final idType = form.control(_idTypeKey).value;
 
@@ -966,6 +968,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       },
     );
 
+    String? primaryIdType = individual?.additionalFields?.fields
+        .firstWhereOrNull((idType) => idType.key == 'primaryIdType')
+        ?.value;
+
     final searchQuery = state.mapOrNull<String>(
       create: (value) {
         return value.searchQuery;
@@ -987,11 +993,21 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 : searchQuery?.trim()),
       ),
       _idTypeKey: FormControl<String>(
-        value: individual?.identifiers?.firstOrNull?.identifierType,
+        value: primaryIdType != null
+            ? individual?.identifiers
+                ?.firstWhereOrNull(
+                    (type) => type.identifierType == primaryIdType)
+                ?.identifierType
+            : individual?.identifiers?.firstOrNull?.identifierType,
       ),
       _idNumberKey: FormControl<String>(
         validators: [Validators.required],
-        value: individual?.identifiers?.firstOrNull?.identifierId,
+        value: primaryIdType != null
+            ? individual?.identifiers
+                ?.firstWhereOrNull(
+                    (type) => type.identifierType == primaryIdType)
+                ?.identifierId
+            : individual?.identifiers?.firstOrNull?.identifierId,
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
