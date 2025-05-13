@@ -609,11 +609,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-
-      if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
-        filteredLabels.remove(i18.home.db);
-      }
-
+    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
+      filteredLabels.remove(i18.home.db);
+    }
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -774,11 +772,6 @@ void setPackagesSingleton(BuildContext context) {
               .householdMemberDeletionReasonOptions!
               .map((e) => e.code)
               .toList(),
-          // deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-          //     .map((e) => e.code)
-          //     .toList(),
-          // symptomsTypes:
-          //     appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
           searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
               ? appConfiguration.searchHouseHoldFilters!
                   .map((e) => e.code)
@@ -787,12 +780,8 @@ void setPackagesSingleton(BuildContext context) {
           searchCLFFilters: appConfiguration.searchCLFFilters != null
               ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
               : [],
-          // referralReasons:
-          //     appConfiguration.referralReasons?.map((e) => e.code).toList(),
           houseStructureTypes:
               appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
-          // refusalReasons:
-          //     appConfiguration.refusalReasons?.map((e) => e.code).toList(),
         );
 
         ClosedHouseholdSingleton().setInitialData(

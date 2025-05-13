@@ -10,7 +10,6 @@ import 'package:location/location.dart';
 import 'package:registration/models/entities/household.dart';
 import 'package:registration/models/entities/household_member.dart';
 import 'package:registration/models/entities/project_beneficiary.dart';
-// import 'package:delivery/models/entities/task.dart';
 
 @RoutePage()
 class ClosedHouseholdWrapperPage extends StatelessWidget {
@@ -42,8 +41,6 @@ class ClosedHouseholdWrapperPage extends StatelessWidget {
               projectBeneficiaryRepository: context.repository<
                   ProjectBeneficiaryModel,
                   ProjectBeneficiarySearchModel>(context),
-              // taskRepository:
-              //     context.repository<TaskModel, TaskSearchModel>(context),
             );
           },
           lazy: false,

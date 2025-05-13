@@ -1,7 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
-import 'package:delivery/models/entities/task.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -337,8 +336,6 @@ class MainApplicationState extends State<MainApplication>
                               projectBeneficiaryRepository: context.repository<
                                   ProjectBeneficiaryModel,
                                   ProjectBeneficiarySearchModel>(),
-                              // taskRepository: context
-                              //     .repository<TaskModel, TaskSearchModel>(),
                             );
                           },
                           lazy: false,
