@@ -116,7 +116,7 @@ class MdmsRepository {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
-      return response.data?['MdmsRes']?['HCM-ADMIN-CONSOLE']?['TransformedData']?[0];
+      return response.data?['MdmsRes']?['HCM-ADMIN-CONSOLE']?['SimplifiedAppConfigTwo']?[0];
 
 
     } on DioError catch (e) {
