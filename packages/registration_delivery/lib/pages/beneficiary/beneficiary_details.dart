@@ -291,9 +291,29 @@ class BeneficiaryDetailsPageState
                                         return '--';
                                       }
 
+                                      String? primaryIdType = state
+                                          .selectedIndividual
+                                          ?.additionalFields
+                                          ?.fields
+                                          .firstWhereOrNull((idType) =>
+                                              idType.key == 'primaryIdType')
+                                          ?.value;
+
                                       return localizations.translate(
-                                          identifiers.first.identifierType ??
-                                              '--');
+                                          primaryIdType != null
+                                              ? state.selectedIndividual
+                                                      ?.identifiers
+                                                      ?.firstWhereOrNull((type) =>
+                                                          type.identifierType ==
+                                                          primaryIdType)
+                                                      ?.identifierType ??
+                                                  '--'
+                                              : state
+                                                      .selectedIndividual
+                                                      ?.identifiers
+                                                      ?.firstOrNull
+                                                      ?.identifierType ??
+                                                  '--');
                                     }(),
                                     localizations.translate(
                                       i18.deliverIntervention.idNumberText,
@@ -311,15 +331,41 @@ class BeneficiaryDetailsPageState
                                         return '--';
                                       }
 
-                                      return identifiers.first.identifierType ==
-                                              IdentifierTypes
-                                                  .uniqueBeneficiaryID
-                                                  .toValue()
-                                          ? identifiers.first.identifierId
-                                              .toString()
-                                          : maskString(identifiers
-                                              .first.identifierId
-                                              .toString());
+                                      String? primaryIdType = state
+                                          .selectedIndividual
+                                          ?.additionalFields
+                                          ?.fields
+                                          .firstWhereOrNull((idType) =>
+                                              idType.key == 'primaryIdType')
+                                          ?.value;
+
+                                      String? getMaskedOrRawIdentifier(
+                                          List<IdentifierModel> identifiers,
+                                          String? type) {
+                                        final identifier =
+                                            identifiers.firstWhereOrNull(
+                                          (id) =>
+                                              type == null ||
+                                              id.identifierType == type,
+                                        );
+                                        if (identifier == null) return null;
+
+                                        return type ==
+                                                IdentifierTypes
+                                                    .uniqueBeneficiaryID
+                                                    .toValue()
+                                            ? identifier.identifierId
+                                            : maskString(
+                                                identifier.identifierId ?? '');
+                                      }
+
+                                      final identifiersList = state
+                                              .selectedIndividual
+                                              ?.identifiers ??
+                                          identifiers;
+
+                                      return getMaskedOrRawIdentifier(
+                                          identifiersList, primaryIdType);
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonAge,

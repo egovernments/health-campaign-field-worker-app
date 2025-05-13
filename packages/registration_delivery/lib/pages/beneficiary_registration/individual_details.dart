@@ -1123,14 +1123,16 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                     shouldProceedFurther: (bool proceed) {});
               } else if (availableIdCount <= 0) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  showNoIdsAlert(
-                      context: context,
-                      showSkip: form.control(_idTypeKey).value ==
-                              IdentifierTypes.uniqueBeneficiaryID.toValue()
-                          ? false
-                          : true,
-                      localizations: localizations,
-                      shouldProceedFurther: (bool skip) {});
+                  if (form.control(_idNumberKey).value == null) {
+                    showNoIdsAlert(
+                        context: context,
+                        showSkip: form.control(_idTypeKey).value ==
+                                IdentifierTypes.uniqueBeneficiaryID.toValue()
+                            ? false
+                            : true,
+                        localizations: localizations,
+                        shouldProceedFurther: (bool skip) {});
+                  }
                 });
                 setState(() {
                   if (form.control(_idTypeKey).value ==
