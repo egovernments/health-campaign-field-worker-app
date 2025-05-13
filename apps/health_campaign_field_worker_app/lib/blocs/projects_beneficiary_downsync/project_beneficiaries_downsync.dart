@@ -1,11 +1,15 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:delivery/models/entities/referral.dart';
+import 'package:delivery/models/entities/side_effect.dart';
+import 'package:delivery/models/entities/task.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration/models/entities/household.dart';
+import 'package:registration/registration_delivery.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';

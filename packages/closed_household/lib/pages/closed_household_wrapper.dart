@@ -7,10 +7,10 @@ import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration/models/entities/household.dart';
+import 'package:registration/models/entities/household_member.dart';
+import 'package:registration/models/entities/project_beneficiary.dart';
+// import 'package:delivery/models/entities/task.dart';
 
 @RoutePage()
 class ClosedHouseholdWrapperPage extends StatelessWidget {
@@ -42,8 +42,8 @@ class ClosedHouseholdWrapperPage extends StatelessWidget {
               projectBeneficiaryRepository: context.repository<
                   ProjectBeneficiaryModel,
                   ProjectBeneficiarySearchModel>(context),
-              taskRepository:
-                  context.repository<TaskModel, TaskSearchModel>(context),
+              // taskRepository:
+              //     context.repository<TaskModel, TaskSearchModel>(context),
             );
           },
           lazy: false,

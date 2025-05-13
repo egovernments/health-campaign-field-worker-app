@@ -3,10 +3,13 @@ import 'dart:convert';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
+import 'package:delivery/models/entities/referral.dart';
+import 'package:delivery/models/entities/side_effect.dart';
+import 'package:delivery/models/entities/task.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration/registration_delivery.dart';
 import 'package:sync_service/data/repositories/sync/remote_type.dart';
 import 'package:sync_service/data/sync_entity_mapper_listener.dart';
 

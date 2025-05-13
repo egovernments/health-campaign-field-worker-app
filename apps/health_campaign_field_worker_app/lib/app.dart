@@ -1,6 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
+import 'package:delivery/models/entities/task.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -12,13 +13,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
-import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
-import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
-import 'package:registration_delivery/data/repositories/oplog/oplog.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration/data/repositories/local/household_global_search.dart';
+import 'package:registration/data/repositories/local/individual_global_search.dart';
+import 'package:registration/data/repositories/oplog/oplog.dart';
+import 'package:registration/models/entities/household.dart';
+import 'package:registration/models/entities/household_member.dart';
+import 'package:registration/models/entities/project_beneficiary.dart';
+
 import 'package:survey_form/survey_form.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
@@ -336,8 +337,8 @@ class MainApplicationState extends State<MainApplication>
                               projectBeneficiaryRepository: context.repository<
                                   ProjectBeneficiaryModel,
                                   ProjectBeneficiarySearchModel>(),
-                              taskRepository: context
-                                  .repository<TaskModel, TaskSearchModel>(),
+                              // taskRepository: context
+                              //     .repository<TaskModel, TaskSearchModel>(),
                             );
                           },
                           lazy: false,

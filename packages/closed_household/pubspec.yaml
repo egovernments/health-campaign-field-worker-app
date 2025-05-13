@@ -35,8 +35,9 @@ dependencies:
   stream_transform: ^2.1.0
   async: ^2.11.0
   formula_parser: ^2.0.1
-  registration_delivery: ^1.0.6+1
+  registration: ^1.0.6+1
   location: ^6.0.2
+  delivery: ^1.0.0
 
 
 dev_dependencies:

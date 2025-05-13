@@ -18,7 +18,7 @@ import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
 import 'package:referral_reconciliation/blocs/app_localization.dart'
     as referral_reconciliation_localization;
-import 'package:registration_delivery/blocs/app_localization.dart'
+import 'package:registration/blocs/app_localization.dart'
     as registration_delivery_localization;
 import 'package:survey_form/blocs/app_localization.dart'
     as survey_form_localization;

@@ -7,13 +7,13 @@ import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/status.dart'
-    as reg_status;
-import 'package:registration_delivery/models/entities/task.dart';
-import 'package:registration_delivery/utils/typedefs.dart';
+import 'package:registration/models/entities/household.dart';
+import 'package:registration/models/entities/household_member.dart';
+import 'package:registration/models/entities/project_beneficiary.dart';
+// import 'package:delivery/models/entities/status.dart'
+//     as reg_status;
+// import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration/utils/typedefs.dart';
 
 import '../utils/utils.dart';
 
@@ -31,7 +31,7 @@ class ClosedHouseholdBloc
 
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
 
-  final TaskDataRepository taskRepository;
+  // final TaskDataRepository taskRepository;
 
   ClosedHouseholdBloc(
     super.initialState, {
@@ -39,7 +39,7 @@ class ClosedHouseholdBloc
     required this.householdRepository,
     required this.householdMemberRepository,
     required this.projectBeneficiaryRepository,
-    required this.taskRepository,
+    // required this.taskRepository,
   }) {
     on(_handleSubmit);
     on(_handleSummary);
@@ -240,24 +240,24 @@ class ClosedHouseholdBloc
         ),
       );
 
-      var task = TaskModel(
-        projectBeneficiaryClientReferenceId:
-            projectBeneficiary.clientReferenceId,
-        clientReferenceId: IdGen.i.identifier,
-        tenantId: ClosedHouseholdSingleton().tenantId,
-        projectId: ClosedHouseholdSingleton().projectId,
-        rowVersion: 1,
-        address: address,
-        status: reg_status.Status.closeHousehold.toValue(),
-        auditDetails: AuditDetails(
-          createdBy: ClosedHouseholdSingleton().loggedInUserUuid!,
-          createdTime: DateTime.now().millisecondsSinceEpoch,
-        ),
-        clientAuditDetails: ClientAuditDetails(
-          createdBy: ClosedHouseholdSingleton().loggedInUserUuid!,
-          createdTime: DateTime.now().millisecondsSinceEpoch,
-        ),
-      );
+      // var task = TaskModel(
+      //   projectBeneficiaryClientReferenceId:
+      //       projectBeneficiary.clientReferenceId,
+      //   clientReferenceId: IdGen.i.identifier,
+      //   tenantId: ClosedHouseholdSingleton().tenantId,
+      //   projectId: ClosedHouseholdSingleton().projectId,
+      //   rowVersion: 1,
+      //   address: address,
+      //   status: reg_status.Status.closeHousehold.toValue(),
+      //   auditDetails: AuditDetails(
+      //     createdBy: ClosedHouseholdSingleton().loggedInUserUuid!,
+      //     createdTime: DateTime.now().millisecondsSinceEpoch,
+      //   ),
+      //   clientAuditDetails: ClientAuditDetails(
+      //     createdBy: ClosedHouseholdSingleton().loggedInUserUuid!,
+      //     createdTime: DateTime.now().millisecondsSinceEpoch,
+      //   ),
+      // );
 
       await householdRepository.create(
         household.copyWith(
@@ -293,7 +293,7 @@ class ClosedHouseholdBloc
         lastModifiedTime: initialModifiedAt,
       )));
 
-      await taskRepository.create(task);
+      // await taskRepository.create(task);
 
       emit(state.copyWith(loading: false));
     } catch (error) {

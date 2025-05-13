@@ -2,6 +2,18 @@ import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:complaints/complaints.dart';
+import 'package:delivery/data/repositories/local/referral.dart';
+import 'package:delivery/data/repositories/local/side_effect.dart';
+
+import 'package:delivery/data/repositories/local/task.dart';
+import 'package:delivery/data/repositories/oplog/oplog_delivery.dart';
+
+import 'package:delivery/data/repositories/remote/referral.dart';
+import 'package:delivery/data/repositories/remote/side_effect.dart';
+import 'package:delivery/data/repositories/remote/task.dart';
+import 'package:delivery/models/entities/referral.dart';
+import 'package:delivery/models/entities/side_effect.dart';
+import 'package:delivery/models/entities/task.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_location_tracker/data/oplog/oplog.dart';
@@ -16,7 +28,8 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:registration_delivery/registration_delivery.dart';
+
+import 'package:registration/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';

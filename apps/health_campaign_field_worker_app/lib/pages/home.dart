@@ -7,6 +7,9 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:delivery/models/entities/referral.dart';
+import 'package:delivery/models/entities/side_effect.dart';
+import 'package:delivery/models/entities/task.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
@@ -28,8 +31,9 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:recase/recase.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+
+import 'package:registration/registration_delivery.dart';
+import 'package:registration/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
@@ -770,11 +774,11 @@ void setPackagesSingleton(BuildContext context) {
               .householdMemberDeletionReasonOptions!
               .map((e) => e.code)
               .toList(),
-          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-              .map((e) => e.code)
-              .toList(),
-          symptomsTypes:
-              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          // deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+          //     .map((e) => e.code)
+          //     .toList(),
+          // symptomsTypes:
+          //     appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
           searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
               ? appConfiguration.searchHouseHoldFilters!
                   .map((e) => e.code)
@@ -783,12 +787,12 @@ void setPackagesSingleton(BuildContext context) {
           searchCLFFilters: appConfiguration.searchCLFFilters != null
               ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
               : [],
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList(),
+          // referralReasons:
+          //     appConfiguration.referralReasons?.map((e) => e.code).toList(),
           houseStructureTypes:
               appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
-          refusalReasons:
-              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+          // refusalReasons:
+          //     appConfiguration.refusalReasons?.map((e) => e.code).toList(),
         );
 
         ClosedHouseholdSingleton().setInitialData(

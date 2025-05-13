@@ -16,8 +16,8 @@ import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
-import 'package:registration_delivery/router/registration_delivery_router.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:registration/router/registration_delivery_router.dart';
+import 'package:registration/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 
