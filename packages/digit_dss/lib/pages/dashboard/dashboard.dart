@@ -6,6 +6,7 @@ import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_toast.dart';
+import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:digit_ui_components/widgets/powered_by_digit.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
@@ -138,7 +139,10 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
                                         ? const ClampingScrollPhysics()
                                         : const NeverScrollableScrollPhysics(),
                                     rows: table.tableData,
-                                    columns: table.headerList,
+                                    columns: table.headerList.map((h) => DigitTableColumn(
+                                        header: localizations.translate(h.header),
+                                        cellValue: h.cellValue,
+                                    )).toList() ,
                                     tableHeight:
                                         MediaQuery.of(context).size.height * .3,
                                     showSelectedState: false,
@@ -151,9 +155,9 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
                             alignment: Alignment.center,
                             child: InfoCard(
                               title: localizations
-                                  .translate(i18.dashboard.noteHeader),
+                                  .translate('${i18.dashboard.noteHeader}_${DashboardSingleton().selectedProject?.projectType ?? ''}'),
                               description: localizations
-                                  .translate(i18.dashboard.noteDescription),
+                                  .translate('${i18.dashboard.noteDescription}_${DashboardSingleton().selectedProject?.projectType ?? ''}'),
                               type: InfoType.info,
                             ),
                           )

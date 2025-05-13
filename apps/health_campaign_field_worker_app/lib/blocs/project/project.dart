@@ -500,24 +500,25 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .map((i) => i.userUuid.toString())
               .toList();
           await processDashboardConfig(
-            dashboardConfig.first.dashboardConfigs
+            dashboardConfig: dashboardConfig.first.dashboardConfigs
                     ?.where((config) =>
                         config.projectTypeId == event.model.projectTypeId ||
                         config.projectTypeCode == event.model.projectType)
                     .first
                     .charts ??
                 [],
-            startDate,
-            endDate,
-            isar,
-            DateTime.now(),
-            dashboardRemoteRepository,
-            dashboardActionPath.trim().isNotEmpty
+            startDate: startDate,
+            endDate: endDate,
+            isar: isar,
+            lastSelectedDate: DateTime.now(),
+            dashboardRemoteRepo: dashboardRemoteRepository,
+            actionPath: dashboardActionPath.trim().isNotEmpty
                 ? dashboardActionPath
                 : Constants.dashboardAnalyticsPath,
-            envConfig.variables.tenantId,
-            event.model.id,
-            userUUIDList,
+            tenantId: envConfig.variables.tenantId,
+            projectId: event.model.id,
+            projectTypeId: event.model.projectTypeId,
+            userList: userUUIDList,
           );
         }
       } catch (e) {
