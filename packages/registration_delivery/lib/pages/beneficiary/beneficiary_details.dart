@@ -164,67 +164,109 @@ class BeneficiaryDetailsPageState
                                                         c.id ==
                                                         deliverState.cycle);
                                                 if (selectedCycle != null) {
-                                                  bloc.add(
-                                                    DeliverInterventionEvent
-                                                        .selectFutureCycleDose(
-                                                      dose: deliverState.dose,
-                                                      cycle:
-                                                          RegistrationDeliverySingleton()
+                                                  final currentCycle =
+                                                      deliverState.cycle >= 0
+                                                          ? deliverState.cycle
+                                                          : 0;
+
+                                                  // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
+                                                  final currentDose =
+                                                      deliverState.dose >= 0
+                                                          ? deliverState.dose
+                                                          : 0;
+
+                                                  final items =
+                                                      RegistrationDeliverySingleton()
                                                               .projectType!
-                                                              .cycles!
-                                                              .firstWhere((c) =>
-                                                                  c.id ==
-                                                                  deliverState
-                                                                      .cycle),
-                                                      individualModel: state
-                                                          .selectedIndividual,
-                                                    ),
-                                                  );
-                                                  showCustomPopup(
-                                                    context: context,
-                                                    builder: (popUpContext) => Popup(
-                                                        title: localizations
-                                                            .translate(i18
-                                                                .beneficiaryDetails
-                                                                .resourcesTobeDelivered),
-                                                        type: PopUpType.simple,
-                                                        contentPadding:
-                                                            EdgeInsets.zero,
-                                                        additionalWidgets: [
-                                                          buildTableContent(
-                                                              deliverState,
-                                                              context,
-                                                              variant,
+                                                              .cycles?[
+                                                                  currentCycle - 1]
+                                                              .deliveries?[
+                                                          currentDose - 1];
+                                                  final matchedDoses =
+                                                      fetchProductVariant(
+                                                              items,
                                                               state
                                                                   .selectedIndividual,
                                                               state
                                                                   .householdMemberWrapper
-                                                                  .household),
-                                                        ],
-                                                        actions: [
-                                                          DigitButton(
-                                                              label: localizations
-                                                                  .translate(i18
-                                                                      .beneficiaryDetails
-                                                                      .ctaProceed),
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                  context,
-                                                                  rootNavigator:
-                                                                      true,
-                                                                ).pop();
-                                                                router.push(
-                                                                  DeliverInterventionRoute(),
-                                                                );
-                                                              },
-                                                              type:
-                                                                  DigitButtonType
-                                                                      .primary,
-                                                              size:
-                                                                  DigitButtonSize
-                                                                      .large),
-                                                        ]),
-                                                  );
+                                                                  .household) ??
+                                                          [];
+
+                                                  if ((matchedDoses != null &&
+                                                      matchedDoses
+                                                          .isNotEmpty)) {
+                                                    bloc.add(
+                                                      DeliverInterventionEvent
+                                                          .selectFutureCycleDose(
+                                                        dose: deliverState.dose,
+                                                        cycle:
+                                                            RegistrationDeliverySingleton()
+                                                                .projectType!
+                                                                .cycles!
+                                                                .firstWhere((c) =>
+                                                                    c.id ==
+                                                                    deliverState
+                                                                        .cycle),
+                                                        individualModel: state
+                                                            .selectedIndividual,
+                                                      ),
+                                                    );
+                                                    showCustomPopup(
+                                                      context: context,
+                                                      builder: (popUpContext) => Popup(
+                                                          title: localizations
+                                                              .translate(i18
+                                                                  .beneficiaryDetails
+                                                                  .resourcesTobeDelivered),
+                                                          type:
+                                                              PopUpType.simple,
+                                                          contentPadding:
+                                                              EdgeInsets.zero,
+                                                          additionalWidgets: [
+                                                            buildTableContent(
+                                                                deliverState,
+                                                                context,
+                                                                variant,
+                                                                state
+                                                                    .selectedIndividual,
+                                                                state
+                                                                    .householdMemberWrapper
+                                                                    .household),
+                                                          ],
+                                                          actions: [
+                                                            DigitButton(
+                                                                label: localizations
+                                                                    .translate(i18
+                                                                        .beneficiaryDetails
+                                                                        .ctaProceed),
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true,
+                                                                  ).pop();
+                                                                  router.push(
+                                                                    DeliverInterventionRoute(),
+                                                                  );
+                                                                },
+                                                                type:
+                                                                    DigitButtonType
+                                                                        .primary,
+                                                                size:
+                                                                    DigitButtonSize
+                                                                        .large),
+                                                          ]),
+                                                    );
+                                                  } else {
+                                                    Toast.showToast(
+                                                      context,
+                                                      type: ToastType.error,
+                                                      message: localizations
+                                                          .translate(i18
+                                                              .beneficiaryDetails
+                                                              .notMeetDeliveryRulesCriteria),
+                                                    );
+                                                  }
                                                 }
                                               },
                                             ),

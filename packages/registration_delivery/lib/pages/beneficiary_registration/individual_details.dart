@@ -18,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/blocs/unique_id/unique_id.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
@@ -58,6 +59,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
+  static const _heightKey = 'height';
+  static const _weightKey = 'weight';
   bool isDuplicateTag = false;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
@@ -793,16 +796,206 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 buildWhen: (p, c) {
                                   return true;
                                 },
-                                builder: (context, state) => state
-                                        .qrCodes.isNotEmpty
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
+                              ),
+                              const SizedBox(height: 4),
+                            ],
+                          ),
+                        if (form.control(_idTypeKey).value == 'DEFAULT')
+                          const SizedBox(
+                            height: spacer2,
+                          ),
+                        individualDetailsShowcaseData.dateOfBirth.buildWith(
+                          child: DigitDobPicker(
+                            datePickerFormControl: _dobKey,
+                            datePickerLabel: localizations.translate(
+                              i18.individualDetails.dobLabelText,
+                            ),
+                            ageFieldLabel: localizations.translate(
+                              i18.individualDetails.ageLabelText,
+                            ),
+                            yearsHintLabel: localizations.translate(
+                              i18.individualDetails.yearsHintText,
+                            ),
+                            monthsHintLabel: localizations.translate(
+                              i18.individualDetails.monthsHintText,
+                            ),
+                            separatorLabel: localizations.translate(
+                              i18.individualDetails.separatorLabelText,
+                            ),
+                            yearsAndMonthsErrMsg: localizations.translate(
+                              i18.individualDetails.yearsAndMonthsErrorText,
+                            ),
+                            errorMessage:
+                                _getDobErrorMessage(form.control(_dobKey)),
+                            initialDate: before150Years,
+                            initialValue: getInitialDateValue(form),
+                            onChangeOfFormControl: (value) {
+                              setState(() {
+                                if (value == null) {
+                                  form.control(_dobKey).setErrors({'': true});
+                                } else {
+                                  DigitDOBAgeConvertor age =
+                                      DigitDateUtils.calculateAge(value);
+                                  if ((age.years == 0 && age.months == 0) ||
+                                      (age.months > 11) ||
+                                      (age.years >= 150 && age.months >= 0)) {
+                                    form.control(_dobKey).value = value;
+                                    form.control(_dobKey).setErrors({'': true});
+                                  } else {
+                                    form.control(_dobKey).value = value;
+                                    form.control(_dobKey).removeError('');
+                                  }
+                                }
+                              });
+                              // Handle changes to the control's value here
+                            },
+                            cancelText: localizations
+                                .translate(i18.common.coreCommonCancel),
+                            confirmText: localizations
+                                .translate(i18.common.coreCommonOk),
+                          ),
+                        ),
+                        SelectionCard<String>(
+                          isRequired: true,
+                          showParentContainer: true,
+                          title: localizations.translate(
+                            i18.individualDetails.genderLabelText,
+                          ),
+                          allowMultipleSelection: false,
+                          width: 126,
+                          initialSelection:
+                              form.control(_genderKey).value != null
+                                  ? [form.control(_genderKey).value]
+                                  : [],
+                          options: RegistrationDeliverySingleton()
+                              .genderOptions!
+                              .map(
+                                (e) => e,
+                              )
+                              .toList(),
+                          onSelectionChanged: (value) {
+                            setState(() {
+                              if (value.isNotEmpty) {
+                                form.control(_genderKey).value = value.first;
+                              } else {
+                                form.control(_genderKey).value = null;
+                                setState(() {
+                                  form
+                                      .control(_genderKey)
+                                      .setErrors({'': true});
+                                });
+                              }
+                            });
+                          },
+                          valueMapper: (value) {
+                            return localizations.translate(value);
+                          },
+                          errorMessage: form.control(_genderKey).hasErrors
+                              ? localizations
+                                  .translate(i18.common.corecommonRequired)
+                              : null,
+                        ),
+                        individualDetailsShowcaseData.mobile.buildWith(
+                          child: ReactiveWrapperField(
+                            formControlName: _mobileNumberKey,
+                            validationMessages: {
+                              'maxLength': (object) => localizations.translate(
+                                  i18.individualDetails
+                                      .mobileNumberLengthValidationMessage),
+                              'minLength': (object) => localizations.translate(
+                                  i18.individualDetails
+                                      .mobileNumberLengthValidationMessage),
+                            },
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.mobileNumberLabelText,
+                              ),
+                              child: DigitTextFormInput(
+                                keyboardType: TextInputType.number,
+                                maxLength: 10,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                initialValue:
+                                    form.control(_mobileNumberKey).value,
+                                onChange: (value) {
+                                  form.control(_mobileNumberKey).value = value;
+                                },
+                                errorMessage: field.errorText,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        individualDetailsShowcaseData.height.buildWith(
+                          child: ReactiveWrapperField(
+                            formControlName: _heightKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.heightLabelText,
+                              ),
+                              child: DigitTextFormInput(
+                                keyboardType: TextInputType.number,
+                                maxLength: 6,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d*\.?\d{0,2}'),
+                                  ),
+                                ],
+                                initialValue: form.control(_heightKey).value,
+                                onChange: (value) {
+                                  form.control(_heightKey).value = value;
+                                },
+                                errorMessage: field.errorText,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        individualDetailsShowcaseData.weight.buildWith(
+                          child: ReactiveWrapperField(
+                            formControlName: _weightKey,
+                            builder: (field) => LabeledField(
+                              label: localizations.translate(
+                                i18.individualDetails.weightLabelText,
+                              ),
+                              child: DigitTextFormInput(
+                                keyboardType: TextInputType.number,
+                                maxLength: 6,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d*\.?\d{0,2}'),
+                                  ),
+                                ],
+                                initialValue: form.control(_weightKey).value,
+                                onChange: (value) {
+                                  form.control(_weightKey).value = value;
+                                },
+                                errorMessage: field.errorText,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // const SizedBox(height: spacer4),
+                        if ((RegistrationDeliverySingleton().beneficiaryType ==
+                                    BeneficiaryType.household &&
+                                widget.isHeadOfHousehold) ||
+                            (RegistrationDeliverySingleton().beneficiaryType ==
+                                BeneficiaryType.individual))
+                          BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                            buildWhen: (p, c) {
+                              return true;
+                            },
+                            builder: (context, state) => state
+                                    .qrCodes.isNotEmpty
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
                                                 3,
                                             child: Text(
                                               localizations.translate(
@@ -1010,6 +1203,86 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       individual = individual.copyWith(identifiers: [identifier!]);
     }
 
+    //             AdditionalField(
+    //               AdditionalFieldsType.height.toValue(),
+    //               (form.control(_heightKey).value).toString().length == 1
+    //                   ? '0${(form.control(_heightKey).value)}'
+    //                   : (form.control(_heightKey).value),
+    //             ),
+    //             AdditionalField(
+    //               AdditionalFieldsType.weight.toValue(),
+    //               (form.control(_weightKey).value).toString().length == 1
+    //                   ? '0${(form.control(_weightKey).value)}'
+    //                   : (form.control(_weightKey).value),
+    //             ),
+    //           ],
+    //         )
+    //       : individual.additionalFields!.copyWith(
+    //           fields: [
+    //             // Filter out any existing `Constants.weight` or `Constants.height` fields
+    //             ...individual.additionalFields!.fields.where(
+    //               (field) =>
+    //                   field.key != AdditionalFieldsType.weight.toValue() &&
+    //                   field.key != AdditionalFieldsType.height.toValue(),
+    //             ),
+    //             // Add new `Constants.height` field if the condition matches
+
+    //             AdditionalField(
+    //               AdditionalFieldsType.height.toValue(),
+    //               (form.control(_heightKey).value).toString().length == 1
+    //                   ? '0${(form.control(_heightKey).value)}'
+    //                   : (form.control(_heightKey).value),
+    //             ),
+
+    //             AdditionalField(
+    //               AdditionalFieldsType.weight.toValue(),
+    //               (form.control(_weightKey).value).toString().length == 1
+    //                   ? '0${(form.control(_weightKey).value)}'
+    //                   : (form.control(_weightKey).value),
+    //             ),
+    //           ],
+    //         ),
+    // );
+
+    individual = individual.copyWith(
+      additionalFields: (() {
+        final heightValue = form.control(_heightKey).value?.toString().trim();
+        final weightValue = form.control(_weightKey).value?.toString().trim();
+
+        if ((heightValue == null || heightValue.isEmpty) &&
+            (weightValue == null || weightValue.isEmpty)) {
+          return null; // Remove additionalFields if both are empty
+        }
+
+        List<AdditionalField> updatedFields = [
+          if (heightValue != null && heightValue.isNotEmpty)
+            AdditionalField(
+              AdditionalFieldsType.height.toValue(),
+              heightValue.length == 1 ? '0$heightValue' : heightValue,
+            ),
+          if (weightValue != null && weightValue.isNotEmpty)
+            AdditionalField(
+              AdditionalFieldsType.weight.toValue(),
+              weightValue.length == 1 ? '0$weightValue' : weightValue,
+            ),
+        ];
+
+        if (individual?.additionalFields == null) {
+          return IndividualAdditionalFields(version: 1, fields: updatedFields);
+        }
+
+        return individual?.additionalFields!.copyWith(
+          fields: [
+            ...individual.additionalFields!.fields.where(
+              (field) =>
+                  field.key != AdditionalFieldsType.weight.toValue() &&
+                  field.key != AdditionalFieldsType.height.toValue(),
+            ),
+            ...updatedFields,
+          ],
+        );
+      })(),
+    );
     return individual;
   }
 
@@ -1099,6 +1372,32 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 localizations.translate(i18.common.coreCommonMobileNumber)),
         Validators.maxLength(10)
       ]),
+      _heightKey: FormControl<String>(
+        value: (individual != null && individual.additionalFields != null)
+            ? individual.additionalFields?.fields
+                    .firstWhere(
+                      (element) =>
+                          element.key == AdditionalFieldsType.height.toValue(),
+                      orElse: () => AdditionalField(
+                          AdditionalFieldsType.height.toValue(), ''),
+                    )
+                    .value ??
+                ''
+            : '',
+      ),
+      _weightKey: FormControl<String>(
+        value: (individual != null && individual.additionalFields != null)
+            ? individual.additionalFields?.fields
+                    .firstWhere(
+                      (element) =>
+                          element.key == AdditionalFieldsType.weight.toValue(),
+                      orElse: () => AdditionalField(
+                          AdditionalFieldsType.weight.toValue(), ''),
+                    )
+                    .value ??
+                ''
+            : '',
+      ),
     });
   }
 
