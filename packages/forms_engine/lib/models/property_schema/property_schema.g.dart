@@ -29,6 +29,8 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       minLength: json['minLength'] as int?,
       maxLength: json['maxLength'] as int?,
       maximum: json['maximum'] as num?,
+      helpText: json['helpText'] as String?,
+      innerLabel: json['innerLabel'] as String?,
       minimum: json['minimum'] as num?,
       hint: json['hint'] as String?,
       label: json['label'] as String?,
@@ -39,6 +41,8 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
               json['displayBehavior'] as Map<String, dynamic>),
       conditions: json['conditions'] as Map<String, dynamic>?,
       order: json['order'] as int?,
+      actionLabel: json['actionLabel'] as String?,
+      description: json['description'] as String?,
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -65,6 +69,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('minLength', instance.minLength);
   writeNotNull('maxLength', instance.maxLength);
   writeNotNull('maximum', instance.maximum);
+  writeNotNull('helpText', instance.helpText);
+  writeNotNull('innerLabel', instance.innerLabel);
   writeNotNull('minimum', instance.minimum);
   writeNotNull('hint', instance.hint);
   writeNotNull('label', instance.label);
@@ -72,6 +78,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('displayBehavior', instance.displayBehavior?.toJson());
   writeNotNull('conditions', instance.conditions);
   writeNotNull('order', instance.order);
+  writeNotNull('actionLabel', instance.actionLabel);
+  writeNotNull('description', instance.description);
   return val;
 }
 
@@ -90,6 +98,8 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.select: 'select',
   PropertySchemaFormat.numeric: 'numeric',
   PropertySchemaFormat.dropdown: 'dropdown',
+  PropertySchemaFormat.string: 'string',
+  PropertySchemaFormat.mobileNumber: 'mobileNumber',
   PropertySchemaFormat.text: 'text',
 };
 

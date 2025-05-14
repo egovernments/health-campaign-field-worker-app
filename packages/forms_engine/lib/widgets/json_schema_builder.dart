@@ -4,9 +4,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_checkbox.dart';
-
-import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:digit_ui_components/theme/ColorTheme/light_color_theme.dart';
+import 'package:digit_ui_components/widgets/localized.dart';
 import 'package:digit_ui_components/widgets/atoms/labelled_fields.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

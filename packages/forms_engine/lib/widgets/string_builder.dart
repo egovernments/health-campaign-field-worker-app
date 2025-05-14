@@ -6,7 +6,8 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   final List<String>? enums;
   final String? format;
   final String? label;
-  
+  final String? innerLabel;
+  final bool isRequired;
   final Widget? suffix;
 
   const JsonSchemaStringBuilder({
@@ -23,6 +24,8 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     this.format,
     this.minLength,
     this.maxLength,
+    this.innerLabel,
+    this.isRequired = false,
   });
 
   @override
@@ -40,7 +43,10 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
           builder: (field) => LabeledField(
             label: label,
             capitalizedFirstLetter: false,
+            isRequired: isRequired,
             child: DigitTextFormInput(
+              helpText: hint,
+              innerLabel: innerLabel,
               readOnly: readOnly,
               initialValue:
               form.control(formControlName).value,

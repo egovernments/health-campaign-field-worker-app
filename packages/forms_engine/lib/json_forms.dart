@@ -83,17 +83,11 @@ final Map<String, dynamic>? defaultValues;
         
           control = FormControl<int>(
    
-            value: schema.format == PropertySchemaFormat.incrementer
+            value: schema.format == PropertySchemaFormat.numeric
                 ? schema.value ?? 0
                 : schema.value,
             validators: requiredValidators,
             
-          );
-          break;
-        case PropertySchemaType.numeric:
-          control = FormControl<num>(
-            value: schema.value,
-            validators: requiredValidators,
           );
           break;
         case PropertySchemaType.boolean:
@@ -113,10 +107,19 @@ final Map<String, dynamic>? defaultValues;
           } else if (schema.format == PropertySchemaFormat.locality) {
             control = FormControl<String>(value: defaultValues?['locality']);
           }else {
-            control = FormControl<String>(
-              value: schema.value,
-              validators: requiredValidators,
-            );
+            if(schema.format == PropertySchemaFormat.numeric){
+              control = FormControl<int>(
+                value: schema.format == PropertySchemaFormat.numeric
+                    ? schema.value ?? 0
+                    : schema.value,
+                validators: requiredValidators,
+              );
+            }else{
+              control = FormControl<String>(
+                value:schema.value,
+                validators: requiredValidators,
+              );
+            }
           }
           break;
       }

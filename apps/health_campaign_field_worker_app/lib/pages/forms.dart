@@ -16,19 +16,20 @@ import '../widgets/custom_scanner.dart';
 import '../widgets/custom_text.dart';
 import '../widgets/dob_picker.dart';
 import '../widgets/header/back_navigation_help_header.dart';
+import '../widgets/localized.dart';
 import '../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
-class FormsPage extends StatefulWidget {
+class FormsPage extends LocalizedStatefulWidget {
   final String pageName;
 
-  const FormsPage({super.key, @PathParam() required this.pageName});
+  const FormsPage({super.key, super.appLocalizations, @PathParam() required this.pageName});
 
   @override
   State<FormsPage> createState() => _FormsPageState();
 }
 
-class _FormsPageState extends State<FormsPage> {
+class _FormsPageState extends LocalizedState<FormsPage> {
 
 
   @override
@@ -106,7 +107,7 @@ class _FormsPageState extends State<FormsPage> {
         return ReactiveFormBuilder(
           form: () => fb.group(
             JsonForms.getFormControls(schema, [widgetMap], defaultValues: {
-            'locality': context.boundary.code,
+            'locality': localizations.translate(context.boundary.code ?? ''),
             },),
           ),
           builder: (context, formGroup, child) => ScrollableContent(
@@ -131,8 +132,8 @@ class _FormsPageState extends State<FormsPage> {
                 ReactiveFormConsumer(
                   builder: (context, formGroup, child) => DigitButton(
                     label: (index) < schemaObject.pages.length - 1
-                        ? 'Next'
-                        : 'Submit',
+                        ? localizations.translate(schema.actionLabel ?? 'Next')
+                        : localizations.translate(schema.actionLabel ?? 'Submit'),
                     onPressed: !formGroup.valid
                         ? () {}
                         : () {
@@ -199,7 +200,7 @@ class _FormsPageState extends State<FormsPage> {
                 children: [
                   if (schema.label != null)
                     Text(
-                      schema.label!,
+                      localizations.translate(schema.label!),
                       style: Theme.of(context)
                           .digitTextTheme(context)
                           .headingXl
@@ -208,6 +209,13 @@ class _FormsPageState extends State<FormsPage> {
                               .colorTheme
                               .primary
                               .primary2),
+                    ),
+                  if(schema.description != null)
+                    Text(
+                      localizations.translate(schema.description!),
+                      style: Theme.of(context)
+                          .digitTextTheme(context)
+                          .bodyS.copyWith(color: Theme.of(context).colorTheme.text.secondary),
                     ),
                   JsonForms(
                     propertySchema: schema,

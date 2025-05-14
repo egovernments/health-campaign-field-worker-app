@@ -726,8 +726,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .read<LocalizationBloc>()
                 .add(LocalizationEvent.onLoadLocalization(
                   module:
-                      "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                  tenantId: appConfig.tenantId ?? "default",
+                      "hcm-dummy-module-APPTWO,${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                  tenantId: envConfig.variables.tenantId ?? "default",
                   locale: selectedLocale!,
                   path: Constants.localizationApiPath,
                 ));
