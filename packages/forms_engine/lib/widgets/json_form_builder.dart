@@ -120,6 +120,16 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
             minimum: widget.schema.minimum?.toInt(),
             hint: widget.schema.hint,
           );
+        } else if (widget.schema.format == PropertySchemaFormat.numeric) {
+          child = JsonSchemaIntegerBuilder(
+            form: form,
+            label: localizations.translate(widget.schema.label ?? ''),
+            formControlName: widget.formControlName,
+            value: widget.schema.value ?? 0,
+            maximum: widget.schema.maximum?.toInt(),
+            minimum: widget.schema.minimum?.toInt(),
+            hint: widget.schema.hint,
+          );
         } else if (widget.schema.format == PropertySchemaFormat.latLng) {
           child = JsonSchemaLatLngBuilder(
             formControlName: widget.formControlName,
@@ -143,15 +153,25 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         break;
 
       case PropertySchemaType.integer:
-        child = JsonSchemaIntegerBuilder(
-          form: form,
-          label: localizations.translate(widget.schema.label ?? ''),
-          formControlName: widget.formControlName,
-          value: widget.schema.value as int?,
-          maximum: widget.schema.maximum?.toInt(),
-          minimum: widget.schema.minimum?.toInt(),
-          hint: widget.schema.helpText,
-        );
+        if (widget.schema.format == PropertySchemaFormat.integer) {
+          child = JsonSchemaStringBuilder(
+            form: form,
+            label: localizations.translate(widget.schema.label ?? ''),
+            formControlName: widget.formControlName,
+            value: widget.schema.value.toString(),
+            hint: widget.schema.helpText !=null ?localizations.translate(widget.schema.helpText!) : null,
+          );
+        } else {
+          child = JsonSchemaIntegerBuilder(
+            form: form,
+            label: localizations.translate(widget.schema.label ?? ''),
+            formControlName: widget.formControlName,
+            value: widget.schema.value as int?,
+            maximum: widget.schema.maximum?.toInt(),
+            minimum: widget.schema.minimum?.toInt(),
+            hint: widget.schema.helpText,
+          );
+        }
         break;
 
       case PropertySchemaType.boolean:
