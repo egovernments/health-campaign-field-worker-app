@@ -14,7 +14,7 @@ const fakeSchema = """
           "label": "Administrative Area *",
           "value": ""
         },
-          "latlng": {
+          "latlng": { 
           "type": "string",
           "format" : "latLng",
           "label": "Lat/Long *"

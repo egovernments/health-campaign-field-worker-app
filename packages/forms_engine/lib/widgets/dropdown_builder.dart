@@ -4,6 +4,8 @@ part of 'json_schema_builder.dart';
 class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
   final List<String> enums;
   final String? label;
+  final bool isRequired;
+  final String? helpText;
 
   const JsonSchemaDropdownBuilder({
     required super.formControlName,
@@ -13,6 +15,8 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
     super.key,
     super.value,
     super.hint,
+    this.isRequired = false,
+    this.helpText,
   });
 
   @override
@@ -27,8 +31,9 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
       builder: (field) => LabeledField(
         label: label,
         capitalizedFirstLetter: false,
-        isRequired: true,
+        isRequired: isRequired,
         child: DigitDropdown<String>(
+          helpText: helpText,
           selectedOption:
           (form.control(formControlName).value != null)
               ? DropdownItem(

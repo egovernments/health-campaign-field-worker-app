@@ -25,6 +25,8 @@ class PropertySchema with _$PropertySchema {
     int? minLength,
     int? maxLength,
     num? maximum,
+    String? helpText,
+    String? innerLabel,
     num? minimum,
     String? hint,
     String? label,
@@ -32,6 +34,8 @@ class PropertySchema with _$PropertySchema {
     DisplayBehavior? displayBehavior,
     Map<String, dynamic>? conditions,
     int? order,
+    String? actionLabel,
+    String? description,
   }) = _PropertySchema;
 
 
@@ -83,6 +87,8 @@ enum PropertySchemaFormat {
   select,
   numeric,
   dropdown,
+  string,
+  mobileNumber,
   text;
 }
 

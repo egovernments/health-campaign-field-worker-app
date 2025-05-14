@@ -25,6 +25,7 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
       builder: (field) => LabeledField(
         label: label,
         child: DigitNumericFormInput(
+          helpText: hint,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly
           ],

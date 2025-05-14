@@ -158,7 +158,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     context.read<LocalizationBloc>().add(
           LocalizationEvent.onLoadLocalization(
             module:
-                'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.map((e) => e.name.toString()).join(',').toString()}',
+                'hcm-dummy-module-APPTWO,hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.map((e) => e.name.toString()).join(',').toString()}',
             tenantId: tenantId,
             locale: locale,
             path: Constants.localizationApiPath,

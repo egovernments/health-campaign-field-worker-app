@@ -34,6 +34,8 @@ mixin _$PropertySchema {
   int? get minLength => throw _privateConstructorUsedError;
   int? get maxLength => throw _privateConstructorUsedError;
   num? get maximum => throw _privateConstructorUsedError;
+  String? get helpText => throw _privateConstructorUsedError;
+  String? get innerLabel => throw _privateConstructorUsedError;
   num? get minimum => throw _privateConstructorUsedError;
   String? get hint => throw _privateConstructorUsedError;
   String? get label => throw _privateConstructorUsedError;
@@ -41,6 +43,8 @@ mixin _$PropertySchema {
   DisplayBehavior? get displayBehavior => throw _privateConstructorUsedError;
   Map<String, dynamic>? get conditions => throw _privateConstructorUsedError;
   int? get order => throw _privateConstructorUsedError;
+  String? get actionLabel => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -67,13 +71,17 @@ abstract class $PropertySchemaCopyWith<$Res> {
       int? minLength,
       int? maxLength,
       num? maximum,
+      String? helpText,
+      String? innerLabel,
       num? minimum,
       String? hint,
       String? label,
       dynamic value,
       DisplayBehavior? displayBehavior,
       Map<String, dynamic>? conditions,
-      int? order});
+      int? order,
+      String? actionLabel,
+      String? description});
 
   $DateFormatValueCopyWith<$Res>? get firstDate;
   $DateFormatValueCopyWith<$Res>? get lastDate;
@@ -105,6 +113,8 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? minLength = freezed,
     Object? maxLength = freezed,
     Object? maximum = freezed,
+    Object? helpText = freezed,
+    Object? innerLabel = freezed,
     Object? minimum = freezed,
     Object? hint = freezed,
     Object? label = freezed,
@@ -112,6 +122,8 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? displayBehavior = freezed,
     Object? conditions = freezed,
     Object? order = freezed,
+    Object? actionLabel = freezed,
+    Object? description = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -162,6 +174,14 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.maximum
           : maximum // ignore: cast_nullable_to_non_nullable
               as num?,
+      helpText: freezed == helpText
+          ? _value.helpText
+          : helpText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      innerLabel: freezed == innerLabel
+          ? _value.innerLabel
+          : innerLabel // ignore: cast_nullable_to_non_nullable
+              as String?,
       minimum: freezed == minimum
           ? _value.minimum
           : minimum // ignore: cast_nullable_to_non_nullable
@@ -190,6 +210,14 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.order
           : order // ignore: cast_nullable_to_non_nullable
               as int?,
+      actionLabel: freezed == actionLabel
+          ? _value.actionLabel
+          : actionLabel // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -251,13 +279,17 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       int? minLength,
       int? maxLength,
       num? maximum,
+      String? helpText,
+      String? innerLabel,
       num? minimum,
       String? hint,
       String? label,
       dynamic value,
       DisplayBehavior? displayBehavior,
       Map<String, dynamic>? conditions,
-      int? order});
+      int? order,
+      String? actionLabel,
+      String? description});
 
   @override
   $DateFormatValueCopyWith<$Res>? get firstDate;
@@ -290,6 +322,8 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? minLength = freezed,
     Object? maxLength = freezed,
     Object? maximum = freezed,
+    Object? helpText = freezed,
+    Object? innerLabel = freezed,
     Object? minimum = freezed,
     Object? hint = freezed,
     Object? label = freezed,
@@ -297,6 +331,8 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? displayBehavior = freezed,
     Object? conditions = freezed,
     Object? order = freezed,
+    Object? actionLabel = freezed,
+    Object? description = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -347,6 +383,14 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.maximum
           : maximum // ignore: cast_nullable_to_non_nullable
               as num?,
+      helpText: freezed == helpText
+          ? _value.helpText
+          : helpText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      innerLabel: freezed == innerLabel
+          ? _value.innerLabel
+          : innerLabel // ignore: cast_nullable_to_non_nullable
+              as String?,
       minimum: freezed == minimum
           ? _value.minimum
           : minimum // ignore: cast_nullable_to_non_nullable
@@ -375,6 +419,14 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.order
           : order // ignore: cast_nullable_to_non_nullable
               as int?,
+      actionLabel: freezed == actionLabel
+          ? _value.actionLabel
+          : actionLabel // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -396,13 +448,17 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.minLength,
       this.maxLength,
       this.maximum,
+      this.helpText,
+      this.innerLabel,
       this.minimum,
       this.hint,
       this.label,
       this.value,
       this.displayBehavior,
       final Map<String, dynamic>? conditions,
-      this.order})
+      this.order,
+      this.actionLabel,
+      this.description})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions;
@@ -452,6 +508,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   final num? maximum;
   @override
+  final String? helpText;
+  @override
+  final String? innerLabel;
+  @override
   final num? minimum;
   @override
   final String? hint;
@@ -473,10 +533,14 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
   @override
   final int? order;
+  @override
+  final String? actionLabel;
+  @override
+  final String? description;
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readonly: $readonly, displayOnly: $displayOnly, properties: $properties, required: $required, enums: $enums, format: $format, firstDate: $firstDate, lastDate: $lastDate, minLength: $minLength, maxLength: $maxLength, maximum: $maximum, minimum: $minimum, hint: $hint, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order)';
+    return 'PropertySchema(type: $type, readonly: $readonly, displayOnly: $displayOnly, properties: $properties, required: $required, enums: $enums, format: $format, firstDate: $firstDate, lastDate: $lastDate, minLength: $minLength, maxLength: $maxLength, maximum: $maximum, helpText: $helpText, innerLabel: $innerLabel, minimum: $minimum, hint: $hint, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description)';
   }
 
   @override
@@ -504,6 +568,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.maxLength, maxLength) ||
                 other.maxLength == maxLength) &&
             (identical(other.maximum, maximum) || other.maximum == maximum) &&
+            (identical(other.helpText, helpText) ||
+                other.helpText == helpText) &&
+            (identical(other.innerLabel, innerLabel) ||
+                other.innerLabel == innerLabel) &&
             (identical(other.minimum, minimum) || other.minimum == minimum) &&
             (identical(other.hint, hint) || other.hint == hint) &&
             (identical(other.label, label) || other.label == label) &&
@@ -512,7 +580,11 @@ class _$PropertySchemaImpl implements _PropertySchema {
                 other.displayBehavior == displayBehavior) &&
             const DeepCollectionEquality()
                 .equals(other._conditions, _conditions) &&
-            (identical(other.order, order) || other.order == order));
+            (identical(other.order, order) || other.order == order) &&
+            (identical(other.actionLabel, actionLabel) ||
+                other.actionLabel == actionLabel) &&
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @JsonKey(ignore: true)
@@ -531,13 +603,17 @@ class _$PropertySchemaImpl implements _PropertySchema {
         minLength,
         maxLength,
         maximum,
+        helpText,
+        innerLabel,
         minimum,
         hint,
         label,
         const DeepCollectionEquality().hash(value),
         displayBehavior,
         const DeepCollectionEquality().hash(_conditions),
-        order
+        order,
+        actionLabel,
+        description
       ]);
 
   @JsonKey(ignore: true)
@@ -569,13 +645,17 @@ abstract class _PropertySchema implements PropertySchema {
       final int? minLength,
       final int? maxLength,
       final num? maximum,
+      final String? helpText,
+      final String? innerLabel,
       final num? minimum,
       final String? hint,
       final String? label,
       final dynamic value,
       final DisplayBehavior? displayBehavior,
       final Map<String, dynamic>? conditions,
-      final int? order}) = _$PropertySchemaImpl;
+      final int? order,
+      final String? actionLabel,
+      final String? description}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -606,6 +686,10 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   num? get maximum;
   @override
+  String? get helpText;
+  @override
+  String? get innerLabel;
+  @override
   num? get minimum;
   @override
   String? get hint;
@@ -619,6 +703,10 @@ abstract class _PropertySchema implements PropertySchema {
   Map<String, dynamic>? get conditions;
   @override
   int? get order;
+  @override
+  String? get actionLabel;
+  @override
+  String? get description;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
