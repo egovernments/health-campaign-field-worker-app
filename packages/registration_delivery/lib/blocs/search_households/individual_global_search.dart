@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
@@ -15,20 +16,22 @@ import '../../utils/global_search_parameters.dart';
 import '../../utils/utils.dart';
 
 class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
-  IndividualGlobalSearchBloc(
-      {required super.userUid,
-      required super.projectId,
-      required super.individual,
-      required super.householdMember,
-      required super.household,
-      required super.projectBeneficiary,
-      required super.taskDataRepository,
-      required super.beneficiaryType,
-      required super.sideEffectDataRepository,
-      required super.addressRepository,
-      required super.referralDataRepository,
-      required super.individualGlobalSearchRepository,
-      required super.houseHoldGlobalSearchRepository}) {
+  IndividualGlobalSearchBloc({
+    required super.userUid,
+    required super.projectId,
+    required super.individual,
+    required super.householdMember,
+    required super.household,
+    required super.projectBeneficiary,
+    required super.taskDataRepository,
+    required super.beneficiaryType,
+    required super.sideEffectDataRepository,
+    required super.addressRepository,
+    required super.referralDataRepository,
+    required super.individualGlobalSearchRepository,
+    required super.houseHoldGlobalSearchRepository,
+    required super.serviceDataRepository,
+  }) {
     on<IndividualGlobalSearchEvent>(_individualGlobalSearch);
   }
 
@@ -51,18 +54,18 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
     final results =
         await individualGlobalSearchRepository.individualGlobalSearch(
       GlobalSearchParameters(
-        projectId: event.globalSearchParams.projectId,
-        isProximityEnabled: event.globalSearchParams.isProximityEnabled,
-        latitude: event.globalSearchParams.latitude,
-        longitude: event.globalSearchParams.longitude,
-        maxRadius: event.globalSearchParams.maxRadius,
-        nameSearch: event.globalSearchParams.nameSearch,
-        filter: event.globalSearchParams.filter,
-        offset: event.globalSearchParams.offset,
-        limit: event.globalSearchParams.limit,
-        totalCount: state.totalResults,
-        householdType: event.globalSearchParams.householdType,
-      ),
+          projectId: event.globalSearchParams.projectId,
+          isProximityEnabled: event.globalSearchParams.isProximityEnabled,
+          latitude: event.globalSearchParams.latitude,
+          longitude: event.globalSearchParams.longitude,
+          maxRadius: event.globalSearchParams.maxRadius,
+          nameSearch: event.globalSearchParams.nameSearch,
+          filter: event.globalSearchParams.filter,
+          offset: event.globalSearchParams.offset,
+          limit: event.globalSearchParams.limit,
+          totalCount: state.totalResults,
+          householdType: event.globalSearchParams.householdType,
+          identifierId: event.globalSearchParams.identifierId),
     );
 
     var totalCount = results['total_count'];
@@ -264,6 +267,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       householdMembers: containers,
       loading: false,
       searchQuery: event.globalSearchParams.nameSearch,
+      beneficiaryIdQuery: event.globalSearchParams.identifierId,
       offset:
           event.globalSearchParams.offset! + event.globalSearchParams.limit!,
       limit: event.globalSearchParams.limit!,
@@ -305,11 +309,29 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
           .where((element) => membersIds.contains(element.clientReferenceId))
           .toList();
 
+      filteredIndividuals.forEach((e) {
+        e.identifiers?.sort((a, b) => a.clientAuditDetails!.lastModifiedTime!
+            .compareTo(b.clientAuditDetails!.lastModifiedTime!));
+      });
+
       // Filter beneficiaries based on individual client reference IDs
       filteredBeneficiaries = projectBeneficiariesList
           .where((element) =>
               membersIds.contains(element.beneficiaryClientReferenceId))
           .toList();
+
+      final householdChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: [filteredHousehold.clientReferenceId],
+      ));
+
+      final memberChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: householdMembers
+            .map((e) => e.individualClientReferenceId)
+            .whereNotNull()
+            .toList(),
+      ));
 
       // Filter tasks based on project beneficiary client reference IDs
       for (var beneficiary in filteredBeneficiaries) {
@@ -337,14 +359,15 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       // Add household member wrapper to containers
       containers.add(
         HouseholdMemberWrapper(
-          household: filteredHousehold,
-          headOfHousehold: head,
-          members: filteredIndividuals,
-          projectBeneficiaries: filteredBeneficiaries,
-          tasks: filteredTasks.isEmpty ? null : filteredTasks,
-          sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
-          referrals: referralsList.isEmpty ? null : referralsList,
-        ),
+            household: filteredHousehold,
+            headOfHousehold: head,
+            members: filteredIndividuals,
+            projectBeneficiaries: filteredBeneficiaries,
+            tasks: filteredTasks.isEmpty ? null : filteredTasks,
+            sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
+            referrals: referralsList.isEmpty ? null : referralsList,
+            householdChecklists: householdChecklist,
+            individualChecklists: memberChecklist),
       );
     }
   }

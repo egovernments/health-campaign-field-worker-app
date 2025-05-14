@@ -224,6 +224,14 @@ class IdentifierModelMapper extends SubClassMapperBase<IdentifierModel> {
   static String? _$id(IdentifierModel v) => v.id;
   static const Field<IdentifierModel, String> _f$id =
       Field('id', _$id, opt: true);
+  static String? _$individualId(IdentifierModel v) => v.individualId;
+  static const Field<IdentifierModel, String> _f$individualId =
+      Field('individualId', _$individualId, opt: true);
+  static String? _$individualClientReferenceId(IdentifierModel v) =>
+      v.individualClientReferenceId;
+  static const Field<IdentifierModel, String> _f$individualClientReferenceId =
+      Field('individualClientReferenceId', _$individualClientReferenceId,
+          opt: true);
   static String? _$identifierType(IdentifierModel v) => v.identifierType;
   static const Field<IdentifierModel, String> _f$identifierType =
       Field('identifierType', _$identifierType, opt: true);
@@ -260,6 +268,8 @@ class IdentifierModelMapper extends SubClassMapperBase<IdentifierModel> {
   final MappableFields<IdentifierModel> fields = const {
     #additionalFields: _f$additionalFields,
     #id: _f$id,
+    #individualId: _f$individualId,
+    #individualClientReferenceId: _f$individualClientReferenceId,
     #identifierType: _f$identifierType,
     #identifierId: _f$identifierId,
     #nonRecoverableError: _f$nonRecoverableError,
@@ -285,6 +295,8 @@ class IdentifierModelMapper extends SubClassMapperBase<IdentifierModel> {
     return IdentifierModel(
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
+        individualId: data.dec(_f$individualId),
+        individualClientReferenceId: data.dec(_f$individualClientReferenceId),
         identifierType: data.dec(_f$identifierType),
         identifierId: data.dec(_f$identifierId),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
@@ -360,6 +372,8 @@ abstract class IdentifierModelCopyWith<$R, $In extends IdentifierModel, $Out>
   $R call(
       {IdentifierAdditionalFields? additionalFields,
       String? id,
+      String? individualId,
+      String? individualClientReferenceId,
       String? identifierType,
       String? identifierId,
       bool? nonRecoverableError,
@@ -397,6 +411,8 @@ class _IdentifierModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? additionalFields = $none,
           Object? id = $none,
+          Object? individualId = $none,
+          Object? individualClientReferenceId = $none,
           Object? identifierType = $none,
           Object? identifierId = $none,
           Object? nonRecoverableError = $none,
@@ -409,6 +425,9 @@ class _IdentifierModelCopyWithImpl<$R, $Out>
       $apply(FieldCopyWithData({
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
+        if (individualId != $none) #individualId: individualId,
+        if (individualClientReferenceId != $none)
+          #individualClientReferenceId: individualClientReferenceId,
         if (identifierType != $none) #identifierType: identifierType,
         if (identifierId != $none) #identifierId: identifierId,
         if (nonRecoverableError != $none)
@@ -426,6 +445,9 @@ class _IdentifierModelCopyWithImpl<$R, $Out>
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
+      individualId: data.get(#individualId, or: $value.individualId),
+      individualClientReferenceId: data.get(#individualClientReferenceId,
+          or: $value.individualClientReferenceId),
       identifierType: data.get(#identifierType, or: $value.identifierType),
       identifierId: data.get(#identifierId, or: $value.identifierId),
       nonRecoverableError:

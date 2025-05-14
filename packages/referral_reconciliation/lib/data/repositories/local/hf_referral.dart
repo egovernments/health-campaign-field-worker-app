@@ -229,6 +229,7 @@ class HFReferralLocalRepository
   FutureOr<void> update(
     HFReferralModel entity, {
     bool createOpLog = true,
+        DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final referralCompanion = entity.companion.copyWith(
