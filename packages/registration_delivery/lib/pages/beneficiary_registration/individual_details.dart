@@ -1078,12 +1078,18 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             form.control(_idNumberKey).value = uniqueId.id;
           });
     } else {
-      if (individual.identifiers!
-          .contains(IdentifierTypes.uniqueBeneficiaryID.toValue())) {
-        form.control(_idTypeKey).value =
-            individual.identifiers?.firstOrNull?.identifierType;
-        form.control(_idNumberKey).value =
-            individual.identifiers?.firstOrNull?.identifierId;
+      var uniqueIdType = individual.identifiers
+          ?.firstWhereOrNull((type) =>
+              type.identifierType ==
+              IdentifierTypes.uniqueBeneficiaryID.toValue())
+          ?.identifierType;
+
+      var uniqueId = individual.identifiers?.firstWhereOrNull((type) =>
+          type.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue());
+
+      if (uniqueIdType == form.control(_idTypeKey).value) {
+        form.control(_idTypeKey).value = uniqueId!.identifierType;
+        form.control(_idNumberKey).value = uniqueId.identifierId;
       } else {
         context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
         final uniqueId = context.read<UniqueIdBloc>().state;
