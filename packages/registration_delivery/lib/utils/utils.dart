@@ -193,14 +193,18 @@ bool checkIfBeneficiaryReferred(
   }
 }
 
-DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
-    IndividualModel? individualModel, HouseholdModel? householdModel) {
+List<DeliveryDoseCriteria>? fetchProductVariant(
+    ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel,
+    HouseholdModel? householdModel) {
   if (currentDelivery != null) {
     var individualAgeInMonths = 0;
     var gender;
     var roomCount;
     var memberCount;
     String? structureType;
+    var weight = 0.0;
+    var height = 0.0;
 
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
@@ -211,7 +215,29 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       );
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
 
-      gender = individualModel.gender?.index;
+      gender = individualModel.gender?.toValue();
+
+      weight = double.tryParse(individualModel.additionalFields?.fields
+                  .firstWhere(
+                    (element) =>
+                        element.key == AdditionalFieldsType.weight.toValue(),
+                    orElse: () => AdditionalField(
+                        AdditionalFieldsType.weight.toValue(), '0.0'),
+                  )
+                  .value ??
+              '0.0') ??
+          0.0;
+
+      height = double.tryParse(individualModel.additionalFields?.fields
+                  .firstWhere(
+                    (element) =>
+                        element.key == AdditionalFieldsType.height.toValue(),
+                    orElse: () => AdditionalField(
+                        AdditionalFieldsType.height.toValue(), '0.0'),
+                  )
+                  .value ??
+              '0.0') ??
+          0.0;
     }
     if (householdModel != null && householdModel.additionalFields != null) {
       memberCount = householdModel.memberCount;
@@ -237,16 +263,32 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
 
           List expressionParser = [];
           for (var element in conditions) {
-            final expression = FormulaParser(
-              element,
-              {
+            // final expression = FormulaParser(
+            //   element,
+            //   {
+            //     'age': individualAgeInMonths,
+            //     if (gender != null) 'gender': gender,
+            //     if (memberCount != null) 'memberCount': memberCount,
+            //     if (roomCount != null) 'roomCount': roomCount,
+            //     'weight': weight,
+            //     'height': height,
+            //   },
+
+            // );
+            final expression = CustomFormulaParser.parseCondition(element, {
+              if (individualModel != null && individualAgeInMonths != 0)
                 'age': individualAgeInMonths,
-                if (gender != null) 'gender': gender,
-                if (memberCount != null) 'memberCount': memberCount,
-                if (roomCount != null) 'roomCount': roomCount
-              },
-            );
-            final error = expression.parse;
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'type_of_structure': structureType,
+              'weight': weight,
+              'height': height,
+            }, stringKeys: [
+              'type_of_structure',
+              'gender'
+            ]);
+            final error = expression;
             expressionParser.add(error["value"]);
           }
 
@@ -263,9 +305,12 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
+              if (structureType != null) 'type_of_structure': structureType,
+              'weight': weight,
+              'height': height,
             }, stringKeys: [
-              'type_of_structure'
+              'type_of_structure',
+              'gender'
             ]);
             final error = expression;
             expressionParser.add(error["value"]);
@@ -275,8 +320,9 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               ? true
               : false;
         } else {
-          final conditions = condition.split(
-              'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
+          final conditions = [
+            condition
+          ]; // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
 
           List expressionParser = [];
           for (var element in conditions) {
@@ -286,9 +332,12 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
+              if (structureType != null) 'type_of_structure': structureType,
+              'weight': weight,
+              'height': height,
             }, stringKeys: [
-              'type_of_structure'
+              'type_of_structure',
+              'gender'
             ]);
             final error = expression;
             expressionParser.add(error["value"]);
@@ -302,7 +351,7 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       return false;
     }).toList();
 
-    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria : null;
   }
 
   return null;

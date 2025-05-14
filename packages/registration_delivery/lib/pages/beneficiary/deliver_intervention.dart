@@ -194,7 +194,8 @@ class DeliverInterventionPageState
                                           deliveryInterventionState.dose - 1],
                                       state.selectedIndividual,
                                       state.householdMemberWrapper.household)
-                                  ?.productVariants)
+                                  ?.expand((e) => e.productVariants!)
+                                  .toList())
                               : RegistrationDeliverySingleton()
                                   .selectedProject
                                   ?.additionalDetails
@@ -218,34 +219,35 @@ class DeliverInterventionPageState
                           : 0;
 
                       final steps = generateSteps(numberOfDoses);
-                      if ((productVariants ?? []).isEmpty && context.mounted) {
-                        SchedulerBinding.instance.addPostFrameCallback((_) {
-                          showCustomPopup(
-                              context: context,
-                              builder: (popUpContext) => Popup(
-                                      title: localizations.translate(
-                                        i18.common.noResultsFound,
-                                      ),
-                                      description: localizations.translate(
-                                        i18.deliverIntervention
-                                            .checkForProductVariantsConfig,
-                                      ),
-                                      type: PopUpType.alert,
-                                      actions: [
-                                        DigitButton(
-                                          label: localizations.translate(
-                                            i18.common.coreCommonOk,
-                                          ),
-                                          onPressed: () {
-                                            context.router.maybePop();
-                                            Navigator.of(popUpContext).pop();
-                                          },
-                                          type: DigitButtonType.primary,
-                                          size: DigitButtonSize.large,
-                                        ),
-                                      ]));
-                        });
-                      }
+                      // TODO:[ already checking the dose criteria for the individual in the previous screen , so disabling now ]
+                      // if ((productVariants ?? []).isEmpty && context.mounted) {
+                      //   SchedulerBinding.instance.addPostFrameCallback((_) {
+                      //     showCustomPopup(
+                      //         context: context,
+                      //         builder: (popUpContext) => Popup(
+                      //                 title: localizations.translate(
+                      //                   i18.common.noResultsFound,
+                      //                 ),
+                      //                 description: localizations.translate(
+                      //                   i18.deliverIntervention
+                      //                       .checkForProductVariantsConfig,
+                      //                 ),
+                      //                 type: PopUpType.alert,
+                      //                 actions: [
+                      //                   DigitButton(
+                      //                     label: localizations.translate(
+                      //                       i18.common.coreCommonOk,
+                      //                     ),
+                      //                     onPressed: () {
+                      //                       context.router.maybePop();
+                      //                       Navigator.of(popUpContext).pop();
+                      //                     },
+                      //                     type: DigitButtonType.primary,
+                      //                     size: DigitButtonSize.large,
+                      //                   ),
+                      //                 ]));
+                      //   });
+                      // }
 
                       return BlocBuilder<ProductVariantBloc,
                           ProductVariantState>(
@@ -465,6 +467,7 @@ class DeliverInterventionPageState
                                                   ),
                                                 ),
                                               ]),
+                                          //TODO
                                           DigitCard(
                                               margin:
                                                   const EdgeInsets.all(spacer2),
@@ -543,6 +546,8 @@ class DeliverInterventionPageState
                                                   ),
                                                 ),
                                               ]),
+
+                                          // end TODO
                                           DigitCard(
                                               margin:
                                                   const EdgeInsets.all(spacer2),
@@ -828,7 +833,8 @@ class DeliverInterventionPageState
                           .deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
                       overViewbloc.householdMemberWrapper.household)
-                  ?.productVariants
+                  ?.expand((e) => e.productVariants ?? [])
+                  .toList()
                   ?.length ??
               0;
 
