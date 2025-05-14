@@ -100,6 +100,9 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.dropdown: 'dropdown',
   PropertySchemaFormat.string: 'string',
   PropertySchemaFormat.mobileNumber: 'mobileNumber',
+  PropertySchemaFormat.checkbox: 'checkbox',
+  PropertySchemaFormat.integer: 'integer',
+  PropertySchemaFormat.boolean: 'boolean',
   PropertySchemaFormat.text: 'text',
 };
 

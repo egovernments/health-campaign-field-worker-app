@@ -89,6 +89,9 @@ enum PropertySchemaFormat {
   dropdown,
   string,
   mobileNumber,
+  checkbox,
+  integer,
+  boolean,
   text;
 }
 
