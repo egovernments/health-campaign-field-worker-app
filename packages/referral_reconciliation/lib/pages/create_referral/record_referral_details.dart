@@ -179,14 +179,14 @@ class _RecordReferralDetailsPageState
                                                           ServiceSearchEvent(
                                                             serviceSearchModel:
                                                                 ServiceSearchModel(
-                                                              relatedClientReferenceId:
+                                                              referenceIds:
                                                                   recordState
                                                                       .mapOrNull(
                                                                 create: (value) => value
                                                                         .viewOnly
-                                                                    ? value
-                                                                        .hfReferralModel
-                                                                        ?.clientReferenceId
+                                                                    ? [value
+                                                                    .hfReferralModel
+                                                                    ?.clientReferenceId ?? '']
                                                                     : null,
                                                               ),
                                                             ),
@@ -503,14 +503,14 @@ class _RecordReferralDetailsPageState
                                                               ServiceSearchEvent(
                                                                 serviceSearchModel:
                                                                     ServiceSearchModel(
-                                                                  relatedClientReferenceId:
+                                                                  referenceIds:
                                                                       recordState
                                                                           .mapOrNull(
                                                                     create: (value) => value
                                                                             .viewOnly
-                                                                        ? value
-                                                                            .hfReferralModel
-                                                                            ?.clientReferenceId
+                                                                        ? [value
+                                                                        .hfReferralModel
+                                                                        ?.clientReferenceId ?? '']
                                                                         : null,
                                                                   ),
                                                                 ),

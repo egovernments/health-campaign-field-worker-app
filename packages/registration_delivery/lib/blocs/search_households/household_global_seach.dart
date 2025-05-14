@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
@@ -29,6 +30,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     required super.referralDataRepository,
     required super.individualGlobalSearchRepository,
     required super.houseHoldGlobalSearchRepository,
+    required super.serviceDataRepository,
   }) {
     on<HouseHoldGlobalSearchEvent>(_houseHoldGlobalSearch);
   }
@@ -61,7 +63,8 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           filter: event.globalSearchParams.filter,
           offset: event.globalSearchParams.offset,
           limit: event.globalSearchParams.limit,
-          totalCount: state.totalResults),
+          totalCount: state.totalResults,
+          identifierId: event.globalSearchParams.identifierId),
     );
 
     var totalCount = results['total_count'];
@@ -237,6 +240,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
       householdMembers: containers,
       loading: false,
       searchQuery: event.globalSearchParams.nameSearch,
+      beneficiaryIdQuery: event.globalSearchParams.identifierId,
       offset:
           event.globalSearchParams.offset! + event.globalSearchParams.limit!,
       limit: event.globalSearchParams.limit!,
@@ -278,6 +282,11 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           .where((element) => membersIds.contains(element.clientReferenceId))
           .toList();
 
+      filteredIndividuals.forEach((e) {
+        e.identifiers?.sort((a, b) => a.clientAuditDetails!.lastModifiedTime!
+            .compareTo(b.clientAuditDetails!.lastModifiedTime!));
+      });
+
       // Filter beneficiaries based on filtered household client reference IDs
       filteredBeneficiaries = projectBeneficiariesList
           .where((element) =>
@@ -293,6 +302,19 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
         filteredTasks.addAll(tasksForBeneficiary);
       }
+
+      final householdChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: [filteredHousehold.clientReferenceId],
+      ));
+
+      final memberChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: filteredIndividuals
+            .map((e) => e.clientReferenceId)
+            .whereNotNull()
+            .toList(),
+      ));
 
       // Find the head of the household
       final head = filteredIndividuals.firstWhereOrNull(
@@ -311,14 +333,15 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
       // Add household member wrapper to containers
       containers.add(
         HouseholdMemberWrapper(
-          household: filteredHousehold,
-          headOfHousehold: head,
-          members: filteredIndividuals,
-          projectBeneficiaries: filteredBeneficiaries,
-          tasks: filteredTasks.isEmpty ? null : filteredTasks,
-          sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
-          referrals: referralsList.isEmpty ? null : referralsList,
-        ),
+            household: filteredHousehold,
+            headOfHousehold: head,
+            members: filteredIndividuals,
+            projectBeneficiaries: filteredBeneficiaries,
+            tasks: filteredTasks.isEmpty ? null : filteredTasks,
+            sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
+            referrals: referralsList.isEmpty ? null : referralsList,
+            individualChecklists: memberChecklist,
+            householdChecklists: householdChecklist),
       );
     }
   }

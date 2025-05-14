@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -8,13 +9,17 @@ import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/parent_overview/parent_overview.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:survey_form/blocs/service_definition.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../blocs/app_localization.dart';
+import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../models/entities/household.dart';
 import '../../models/entities/registration_delivery_enums.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
@@ -22,6 +27,7 @@ import '../../models/entities/task.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
+import '../table_card/table_card.dart';
 
 class MemberCard extends StatelessWidget {
   final String name;
@@ -29,11 +35,13 @@ class MemberCard extends StatelessWidget {
   final int? years;
   final int? months;
   final bool isHead;
+  final HouseholdModel? household;
   final IndividualModel individual;
+  final List<IndividualModel>? children;
   final List<ProjectBeneficiaryModel>? projectBeneficiaries;
   final bool isDelivered;
-
-  final VoidCallback setAsHeadAction;
+  final bool showAddChildAction;
+  final VoidCallback? setAsHeadAction;
   final VoidCallback editMemberAction;
   final VoidCallback deleteMemberAction;
   final RegistrationDeliveryLocalization localizations;
@@ -43,18 +51,22 @@ class MemberCard extends StatelessWidget {
   final bool isBeneficiaryRefused;
   final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
+  final ServiceModel? individualChecklist;
 
   const MemberCard({
     super.key,
     required this.individual,
+    this.children,
     required this.name,
     this.gender,
     this.years,
     this.isHead = false,
     this.months,
+    this.household,
+    this.showAddChildAction = true,
     required this.localizations,
     required this.isDelivered,
-    required this.setAsHeadAction,
+    this.setAsHeadAction,
     required this.editMemberAction,
     required this.deleteMemberAction,
     this.projectBeneficiaries,
@@ -64,6 +76,7 @@ class MemberCard extends StatelessWidget {
     this.isBeneficiaryRefused = false,
     this.isBeneficiaryReferred = false,
     this.sideEffects,
+    this.individualChecklist,
   });
 
   @override
@@ -80,6 +93,48 @@ class MemberCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (individual.identifiers != null)
+                  if (individual.identifiers!
+                          .lastWhereOrNull(
+                            (e) =>
+                                e.identifierType ==
+                                IdentifierTypes.uniqueBeneficiaryID.toValue(),
+                          )
+                          ?.identifierId !=
+                      null)
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(spacer1),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: theme.colorTheme.text.disabled,
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(spacer2),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(spacer1),
+                              child: Text(
+                                individual.identifiers
+                                        ?.lastWhereOrNull(
+                                          (e) =>
+                                              e.identifierType ==
+                                              IdentifierTypes
+                                                  .uniqueBeneficiaryID
+                                                  .toValue(),
+                                        )
+                                        ?.identifierId ??
+                                    localizations
+                                        .translate(i18.common.noResultsFound),
+                                style: textTheme.headingXS.copyWith(
+                                    color: theme.colorTheme.primary.primary2),
+                              ),
+                            ),
+                          ),
+                        )),
                 Stack(
                   children: [
                     Row(
@@ -121,8 +176,12 @@ class MemberCard extends StatelessWidget {
                                       : localizations.translate(
                                           i18.memberCard.assignAsHouseholdhead,
                                         ),
-                                  isDisabled: isHead ? true : false,
-                                  onPressed: setAsHeadAction,
+                                  isDisabled: isHead || setAsHeadAction == null
+                                      ? true
+                                      : false,
+                                  onPressed: setAsHeadAction != null
+                                      ? setAsHeadAction!
+                                      : () {},
                                   type: DigitButtonType.secondary,
                                   size: DigitButtonSize.large,
                                 ),
@@ -159,29 +218,54 @@ class MemberCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(spacer2),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        gender != null
-                            ? localizations.translate(
-                                'CORE_COMMON_${gender?.toUpperCase()}')
-                            : ' -- ',
-                        style: textTheme.bodyS,
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(spacer2),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            gender != null
+                                ? localizations.translate(
+                                    'CORE_COMMON_${gender?.toUpperCase()}')
+                                : ' -- ',
+                            style: textTheme.bodyS,
+                          ),
+                          Expanded(
+                            child: Text(
+                              years != null && months != null
+                                  ? " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}"
+                                  : "|   --",
+                              style: textTheme.bodyS,
+                            ),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: Text(
-                          years != null && months != null
-                              ? " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}"
-                              : "|   --",
-                          style: textTheme.bodyS,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+                if (individualChecklist != null)
+                  Padding(
+                    padding: const EdgeInsets.all(spacer2),
+                    child: DigitTableCard(
+                      element: {
+                        for (var attribute
+                            in individualChecklist?.attributes ?? [])
+                          if (attribute.value != null &&
+                              attribute.value != "" &&
+                              attribute.value != "NOT_SELECTED")
+                            localizations
+                                .translate(
+                                    '${RegistrationDeliverySingleton().selectedProject?.name}.INDIVIDUAL.DISTRIBUTOR.${attribute?.attributeCode}' //TODO:
+                                    ): attribute.value
+                                .split('.') // Split on `.`
+                                .map((part) => localizations.translate(
+                                    part.trim())) // Localize each part
+                                .join(", ") // Join with `, `
+                      },
+                    ),
+                  ),
                 Padding(
                   padding:
                       const EdgeInsets.only(left: spacer1, bottom: spacer2),
@@ -267,6 +351,7 @@ class MemberCard extends StatelessWidget {
                                     onPressed: () {
                                       final bloc =
                                           context.read<HouseholdOverviewBloc>();
+
                                       final serviceDefinitionBloc = context
                                           .read<ServiceDefinitionBloc>()
                                           .state;
@@ -524,6 +609,84 @@ class MemberCard extends StatelessWidget {
                       ],
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: spacer2,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    if (showAddChildAction)
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: DigitButton(
+                          label: localizations
+                              .translate(i18.memberCard.addChildLabel),
+                          type: DigitButtonType.tertiary,
+                          prefixIcon: Icons.add_circle_outline,
+                          size: DigitButtonSize.medium,
+                          onPressed: () async {
+                            if (household != null) {
+                              final bloc =
+                                  context.read<HouseholdOverviewBloc>();
+
+                              final address = household?.address;
+
+                              final parentClientReferenceId = bloc
+                                  .state.householdMemberWrapper.householdMembers
+                                  ?.where((e) =>
+                                      e.individualClientReferenceId ==
+                                      individual.clientReferenceId)
+                                  .firstOrNull
+                                  ?.clientReferenceId;
+
+                              if (address == null) return;
+                              bloc.add(
+                                HouseholdOverviewReloadEvent(
+                                  projectId: RegistrationDeliverySingleton()
+                                      .projectId!,
+                                  projectBeneficiaryType:
+                                      RegistrationDeliverySingleton()
+                                          .beneficiaryType!,
+                                ),
+                              );
+                              await context.router.root.push(
+                                BeneficiaryRegistrationWrapperRoute(
+                                  initialState:
+                                      BeneficiaryRegistrationAddMemberState(
+                                          addressModel: address,
+                                          householdModel: household!,
+                                          parentClientReferenceId:
+                                              parentClientReferenceId),
+                                  children: [
+                                    IndividualDetailsRoute(
+                                        parentClientReferenceId:
+                                            parentClientReferenceId),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    if ((children ?? []).isNotEmpty)
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: DigitButton(
+                            label:
+                                '${localizations.translate(i18.memberCard.noOfChildren)} ${children?.length}',
+                            onPressed: () {
+                              context.read<ParentOverviewBloc>().add(
+                                  ParentOverviewEvent.selectedIndividual(
+                                      individualModel: individual));
+                              context.router.push(ParentOverviewRoute());
+                            },
+                            type: DigitButtonType.tertiary,
+                            size: DigitButtonSize.medium),
+                      ),
+                  ],
                 ),
               ])
         ]);

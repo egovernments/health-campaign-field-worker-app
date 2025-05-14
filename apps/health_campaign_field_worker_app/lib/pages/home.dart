@@ -267,7 +267,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     return count == 0
                         ? const Offstage()
                         : Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: spacer2,
                             ),
                             child: InfoCard(
@@ -459,16 +459,20 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                if (snapshot.data?['enablesManualSync'] == true) {
+                if (envConfig.variables.envType == EnvType.qa) {
                   if (context.mounted) _attemptSyncUp(context);
                 } else {
-                  if (context.mounted) {
-                    Toast.showToast(
-                      context,
-                      message: localizations
-                          .translate(i18.common.coreCommonSyncInProgress),
-                      type: ToastType.success,
-                    );
+                  if (snapshot.data?['enablesManualSync'] == true) {
+                    if (context.mounted) _attemptSyncUp(context);
+                  } else {
+                    if (context.mounted) {
+                      Toast.showToast(
+                        context,
+                        message: localizations
+                            .translate(i18.common.coreCommonSyncInProgress),
+                        type: ToastType.success,
+                      );
+                    }
                   }
                 }
               },
@@ -513,7 +517,6 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            ;
             context.router.push(const ManageAttendanceRoute());
           },
         ),
@@ -542,9 +545,24 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            ;
             context.router.push(const UserDashboardRoute());
           },
+        ),
+      ),
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.buildWith(
+        child: HomeItemCard(
+          label: i18.home.beneficiaryIdLabel,
+          onPressed: () {
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
+            context.router.push(BeneficiaryIdDownSyncRoute());
+          },
+          icon: Icons.account_box,
+          enableCustomIcon: true,
+          customIconSize: spacer9,
+          customIcon: Constants.beneficiaryIdDownload,
         ),
       ),
     };
@@ -572,6 +590,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
+      i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -587,8 +606,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.viewReportsLabel,
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
-      i18.home.db,
       i18.home.dashboard,
+      i18.home.beneficiaryIdLabel,
+      i18.home.db,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -605,11 +625,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-
-      if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
-        filteredLabels.remove(i18.home.db);
-      }
-
+    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
+      filteredLabels.remove(i18.home.db);
+    }
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -660,7 +678,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
                 context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>()
+                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
+                context
+                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -694,6 +714,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         AttendanceLogSearchModel>>(),
                 context.read<
                     RemoteRepository<UserActionModel, UserActionSearchModel>>(),
+                context
+                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
               ],
             ),
           );
@@ -751,6 +773,10 @@ void setPackagesSingleton(BuildContext context) {
         );
 
         RegistrationDeliverySingleton().setInitialData(
+          beneficiaryIdMinCount:
+              appConfiguration.beneficiaryIdConfig?.first.minCount.toInt(),
+          beneficiaryIdBatchSize:
+              appConfiguration.beneficiaryIdConfig?.first.batchSize.toInt(),
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
@@ -762,6 +788,9 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.genderOptions!.map((e) => e.code).toList(),
           idTypeOptions:
               appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          memberRelationTypeOptions: appConfiguration.relationShipTypeOptions!
+              .map((e) => e.code)
+              .toList(),
           householdDeletionReasonOptions: appConfiguration
               .householdDeletionReasonOptions!
               .map((e) => e.code)
@@ -773,22 +802,34 @@ void setPackagesSingleton(BuildContext context) {
           deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
               .map((e) => e.code)
               .toList(),
-          symptomsTypes:
-              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          symptomsTypes: appConfiguration.symptomsTypes
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
           searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
               ? appConfiguration.searchHouseHoldFilters!
+                  .where((e) => e.active)
                   .map((e) => e.code)
                   .toList()
               : [],
           searchCLFFilters: appConfiguration.searchCLFFilters != null
-              ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
+              ? appConfiguration.searchCLFFilters!
+                  .where((e) => e.active)
+                  .map((e) => e.code)
+                  .toList()
               : [],
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList(),
-          houseStructureTypes:
-              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
-          refusalReasons:
-              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+          referralReasons: appConfiguration.referralReasons
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
+          houseStructureTypes: appConfiguration.houseStructureTypes
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
+          refusalReasons: appConfiguration.refusalReasons
+              ?.where((e) => e.active)
+              .map((e) => e.code)
+              .toList(),
         );
 
         ClosedHouseholdSingleton().setInitialData(
@@ -834,9 +875,11 @@ void setPackagesSingleton(BuildContext context) {
           genderOptions:
               appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
           cycles: context.cycles,
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
-                  [],
+          referralReasons: appConfiguration.referralReasons
+                  ?.where((e) => e.active)
+                  .map((e) => e.code)
+                  .toList() ??
+              [],
           checklistTypes:
               appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
                   [],

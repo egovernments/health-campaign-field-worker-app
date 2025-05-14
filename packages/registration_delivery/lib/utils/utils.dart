@@ -478,6 +478,7 @@ class RegistrationDeliverySingleton {
       .offlineFirst; // Default to offline first persistence configuration
   List<String>? _genderOptions;
   List<String>? _idTypeOptions;
+  List<String>? _memberRelationTypeOptions;
   List<String>? _householdDeletionReasonOptions;
   List<String>? _householdMemberDeletionReasonOptions;
   List<String>? _deliveryCommentOptions;
@@ -487,6 +488,8 @@ class RegistrationDeliverySingleton {
   List<String>? _houseStructureTypes;
   List<String>? _refusalReasons;
   HouseholdType? _householdType;
+  int? _beneficiaryIdMinCount;
+  int? _beneficiaryIdBatchSize;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -497,26 +500,28 @@ class RegistrationDeliverySingleton {
     _persistenceConfiguration = persistenceConfiguration;
   }
 
-  void setInitialData({
-    required String loggedInUserUuid,
-    required double maxRadius,
-    required String projectId,
-    required BeneficiaryType selectedBeneficiaryType,
-    required ProjectTypeModel? projectType,
-    required ProjectModel selectedProject,
-    required List<String>? genderOptions,
-    required List<String>? idTypeOptions,
-    required List<String>? householdDeletionReasonOptions,
-    required List<String>? householdMemberDeletionReasonOptions,
-    required List<String>? deliveryCommentOptions,
-    required List<String>? symptomsTypes,
-    required List<String>? searchHouseHoldFilter,
-    required List<String>? searchCLFFilters,
-    required List<String>? referralReasons,
-    required List<String>? houseStructureTypes,
-    required List<String>? refusalReasons,
-    required UserModel? loggedInUser,
-  }) {
+  void setInitialData(
+      {required String loggedInUserUuid,
+      required double maxRadius,
+      required String projectId,
+      required BeneficiaryType selectedBeneficiaryType,
+      required ProjectTypeModel? projectType,
+      required ProjectModel selectedProject,
+      required List<String>? genderOptions,
+      required List<String>? idTypeOptions,
+      List<String>? memberRelationTypeOptions,
+      required List<String>? householdDeletionReasonOptions,
+      required List<String>? householdMemberDeletionReasonOptions,
+      required List<String>? deliveryCommentOptions,
+      required List<String>? symptomsTypes,
+      required List<String>? searchHouseHoldFilter,
+      required List<String>? searchCLFFilters,
+      required List<String>? referralReasons,
+      required List<String>? houseStructureTypes,
+      required List<String>? refusalReasons,
+      required UserModel? loggedInUser,
+      required int? beneficiaryIdMinCount,
+      required int? beneficiaryIdBatchSize}) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
     _projectId = projectId;
@@ -525,6 +530,7 @@ class RegistrationDeliverySingleton {
     _selectedProject = selectedProject;
     _genderOptions = genderOptions;
     _idTypeOptions = idTypeOptions;
+    _memberRelationTypeOptions = memberRelationTypeOptions;
     _householdDeletionReasonOptions = householdDeletionReasonOptions;
     _householdMemberDeletionReasonOptions =
         householdMemberDeletionReasonOptions;
@@ -536,6 +542,8 @@ class RegistrationDeliverySingleton {
     _houseStructureTypes = houseStructureTypes;
     _refusalReasons = refusalReasons;
     _loggedInUser = loggedInUser;
+    _beneficiaryIdMinCount = beneficiaryIdMinCount;
+    _beneficiaryIdBatchSize = beneficiaryIdBatchSize;
   }
 
   void setTenantId(String tenantId) {
@@ -569,6 +577,8 @@ class RegistrationDeliverySingleton {
 
   List<String>? get idTypeOptions => _idTypeOptions;
 
+  List<String>? get memberRelationTypeOptions => _memberRelationTypeOptions;
+
   List<String>? get householdDeletionReasonOptions =>
       _householdDeletionReasonOptions;
 
@@ -592,6 +602,10 @@ class RegistrationDeliverySingleton {
   UserModel? get loggedInUser => _loggedInUser;
 
   HouseholdType? get householdType => _householdType;
+
+  int? get beneficiaryIdMinCount => _beneficiaryIdMinCount;
+
+  int? get beneficiaryIdBatchSize => _beneficiaryIdBatchSize;
 }
 
 bool allDosesDelivered(
