@@ -1,14 +1,7 @@
 part of 'json_schema_builder.dart';
 
 class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
-  final int? minLength;
-  final int? maxLength;
-  final List<String>? enums;
-  final String? format;
-  final String? label;
-  final String? innerLabel;
-  final bool isRequired;
-  final Widget? suffix;
+  final TextInputType inputType;
 
   const JsonSchemaStringBuilder({
     required super.formControlName,
@@ -17,37 +10,33 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     super.onTap,
     super.key,
     super.value,
-    super.hint,
-    this.label,
-    this.suffix,
-    this.enums,
-    this.format,
-    this.minLength,
-    this.maxLength,
-    this.innerLabel,
-    this.isRequired = false,
+    super.label,
+    this.inputType = TextInputType.text,
+    super.isRequired,
+    super.validations,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    final loc = FormLocalization.of(context);
+    final validationMessages = buildValidationMessages(validations, loc);
+
     return ReactiveFormConsumer(
       builder: (context, formGroup, child) {
         return ReactiveWrapperField(
           formControlName: formControlName,
-          validationMessages: {
-            // 'required': (object) =>
-            //     localizations.translate(
-            //       '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-            //     ),
-          },
+          validationMessages: validationMessages,
+          showErrors: (control) => control.invalid && control.touched,
           builder: (field) => LabeledField(
             label: label,
             capitalizedFirstLetter: false,
-            isRequired: isRequired,
+            isRequired: isRequired ?? false,
             child: DigitTextFormInput(
-              helpText: hint,
+              helpText: helpText,
               innerLabel: innerLabel,
               readOnly: readOnly,
+              keyboardType: inputType,
               initialValue:
               form.control(formControlName).value,
               onChange: (value) {

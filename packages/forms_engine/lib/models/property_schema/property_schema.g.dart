@@ -8,31 +8,32 @@ part of 'property_schema.dart';
 
 _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
     _$PropertySchemaImpl(
-      type: $enumDecode(_$PropertySchemaTypeEnumMap, json['type']),
+      type: $enumDecode(_$PropertySchemaTypeEnumMap, json['type'],
+          unknownValue: PropertySchemaType.string),
       readonly: json['readonly'] as bool?,
       displayOnly: json['displayOnly'] as bool?,
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
         (k, e) =>
             MapEntry(k, PropertySchema.fromJson(e as Map<String, dynamic>)),
       ),
-      required: json['required'] as bool?,
       enums:
           (json['enums'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      format:
-          $enumDecodeNullable(_$PropertySchemaFormatEnumMap, json['format']),
+      schemaCode: json['schemaCode'] as String?,
+      format: $enumDecodeNullable(_$PropertySchemaFormatEnumMap, json['format'],
+          unknownValue: PropertySchemaFormat.text),
       firstDate: json['firstDate'] == null
           ? null
           : DateFormatValue.fromJson(json['firstDate'] as Map<String, dynamic>),
       lastDate: json['lastDate'] == null
           ? null
           : DateFormatValue.fromJson(json['lastDate'] as Map<String, dynamic>),
+      minValue: json['minValue'] as int?,
+      maxValue: json['maxValue'] as int?,
       minLength: json['minLength'] as int?,
       maxLength: json['maxLength'] as int?,
-      maximum: json['maximum'] as num?,
       helpText: json['helpText'] as String?,
+      tooltipText: json['tooltipText'] as String?,
       innerLabel: json['innerLabel'] as String?,
-      minimum: json['minimum'] as num?,
-      hint: json['hint'] as String?,
       label: json['label'] as String?,
       value: json['value'],
       displayBehavior: json['displayBehavior'] == null
@@ -43,6 +44,9 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       order: json['order'] as int?,
       actionLabel: json['actionLabel'] as String?,
       description: json['description'] as String?,
+      validations: (json['validations'] as List<dynamic>?)
+          ?.map((e) => ValidationRule.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -61,18 +65,18 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('displayOnly', instance.displayOnly);
   writeNotNull('properties',
       instance.properties?.map((k, e) => MapEntry(k, e.toJson())));
-  writeNotNull('required', instance.required);
   writeNotNull('enums', instance.enums);
+  writeNotNull('schemaCode', instance.schemaCode);
   writeNotNull('format', _$PropertySchemaFormatEnumMap[instance.format]);
   writeNotNull('firstDate', instance.firstDate?.toJson());
   writeNotNull('lastDate', instance.lastDate?.toJson());
+  writeNotNull('minValue', instance.minValue);
+  writeNotNull('maxValue', instance.maxValue);
   writeNotNull('minLength', instance.minLength);
   writeNotNull('maxLength', instance.maxLength);
-  writeNotNull('maximum', instance.maximum);
   writeNotNull('helpText', instance.helpText);
+  writeNotNull('tooltipText', instance.tooltipText);
   writeNotNull('innerLabel', instance.innerLabel);
-  writeNotNull('minimum', instance.minimum);
-  writeNotNull('hint', instance.hint);
   writeNotNull('label', instance.label);
   writeNotNull('value', instance.value);
   writeNotNull('displayBehavior', instance.displayBehavior?.toJson());
@@ -80,6 +84,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('order', instance.order);
   writeNotNull('actionLabel', instance.actionLabel);
   writeNotNull('description', instance.description);
+  writeNotNull(
+      'validations', instance.validations?.map((e) => e.toJson()).toList());
   return val;
 }
 
@@ -98,11 +104,10 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.select: 'select',
   PropertySchemaFormat.numeric: 'numeric',
   PropertySchemaFormat.dropdown: 'dropdown',
-  PropertySchemaFormat.string: 'string',
-  PropertySchemaFormat.mobileNumber: 'mobileNumber',
   PropertySchemaFormat.checkbox: 'checkbox',
-  PropertySchemaFormat.integer: 'integer',
-  PropertySchemaFormat.boolean: 'boolean',
+  PropertySchemaFormat.radio: 'radio',
+  PropertySchemaFormat.dob: 'dob',
+  PropertySchemaFormat.scanner: 'scanner',
   PropertySchemaFormat.text: 'text',
 };
 
@@ -118,6 +123,21 @@ Map<String, dynamic> _$$DateFormatValueImplToJson(
     <String, dynamic>{
       'value': instance.value,
       'format': instance.format,
+    };
+
+_$ValidationRuleImpl _$$ValidationRuleImplFromJson(Map<String, dynamic> json) =>
+    _$ValidationRuleImpl(
+      type: json['type'] as String,
+      value: json['value'],
+      message: json['message'] as String?,
+    );
+
+Map<String, dynamic> _$$ValidationRuleImplToJson(
+        _$ValidationRuleImpl instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'value': instance.value,
+      'message': instance.message,
     };
 
 _$DisplayBehaviorImpl _$$DisplayBehaviorImplFromJson(

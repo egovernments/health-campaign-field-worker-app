@@ -20,196 +20,248 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
 class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   @override
   Widget build(BuildContext context) {
-    final type = widget.schema.type;
-    Widget child;
-
-    final display = widget.schema.displayBehavior;
     final form = ReactiveForm.of(context) as FormGroup;
 
-    if (display != null) {
-      final oneOf = display.oneOf;
-      final allOf = display.allOf;
-
-      final values = (oneOf ?? allOf!).map((e) {
-        final value = form.control(e).value;
-        if (value is bool?) return !(value ?? false);
-        if (value is String?) {
-          return value?.isNotEmpty ?? false;
-        }
-        return false;
-      }).toList();
-
-      bool result;
-
-      if (oneOf != null && oneOf.isNotEmpty) {
-        result = values.fold(
-          true,
-              (previousValue, element) => previousValue && element,
-        );
-      } else {
-        result = values.fold(
-          false,
-              (previousValue, element) => previousValue || element,
-        );
-      }
-
-      if (display.behavior == FormulaBehavior.hide && result) {
-        return const Offstage();
-      }
+    // Handle conditional display logic
+    if (_shouldHideField(form)) {
+      return const Offstage();
     }
 
-    switch (type) {
+    return _buildByType(form);
+  }
+
+  /// Conditionally hide based on display behavior
+  bool _shouldHideField(FormGroup form) {
+    final display = widget.schema.displayBehavior;
+    if (display == null) return false;
+
+    final oneOf = display.oneOf;
+    final allOf = display.allOf;
+
+    final values = (oneOf ?? allOf!).map((e) {
+      final value = form.control(e).value;
+      if (value is bool?) return !(value ?? false);
+      if (value is String?) return value?.isNotEmpty ?? false;
+      return false;
+    }).toList();
+
+    final result = oneOf != null && oneOf.isNotEmpty
+        ? values.fold(true, (prev, curr) => prev && curr)
+        : values.fold(false, (prev, curr) => prev || curr);
+
+    return display.behavior == FormulaBehavior.hide && result;
+  }
+
+  /// Dispatch to builder based on property type
+  Widget _buildByType(FormGroup form) {
+    switch (widget.schema.type) {
       case PropertySchemaType.string:
-        if (widget.schema.format == PropertySchemaFormat.select) {
-          child = LabeledField(
-            label: localizations.translate(widget.schema.label ?? ''),
-            child: JsonSchemaSelectionBuilder(
-              form: form,
-              formControlName: widget.formControlName,
-              hint: widget.schema.hint,
-              enums: (widget.schema.enums ?? []).map((e) => localizations.translate(e)).toList(),
-            ),
-          );
-        } else if (widget.schema.enums?.isNotEmpty ?? false) {
-          child = JsonSchemaDropdownBuilder(
-            form: form,
-            label: localizations.translate(widget.schema.label ?? ''),
-            formControlName: widget.formControlName,
-            value: widget.schema.value as String?,
-            enums: (widget.schema.enums ?? []).map((e) => localizations.translate(e)).toList(),
-            helpText: widget.schema.helpText != null ? localizations.translate(widget.schema.helpText!) : null,
-            isRequired: widget.schema.required ?? false,
-          );
-        } else if (widget.schema.format == PropertySchemaFormat.date) {
-          child = JsonSchemaDatePickerBuilder(
-            label: localizations.translate(widget.schema.label ?? ''),
-            form: form,
-            formControlName: widget.formControlName,
-            hint: widget.schema.hint,
-            start: widget.schema.firstDate?.dateValue,
-            end: widget.schema.lastDate?.dateValue,
-          );
-        } else if (widget.schema.format == PropertySchemaFormat.locality) {
-          child = LabeledField(
-            label: localizations.translate(widget.schema.label ?? ''),
-            child: JsonSchemaStringBuilder(
-              form: form,
-              value: widget.schema.value as String?,
-              formControlName: widget.formControlName,
-              hint: widget.schema.hint,
-              readOnly: true,
-            ),
-          );
-        } else if (widget.schema.format == PropertySchemaFormat.custom) {
-          child = Container();
-          if (widget.components != null && widget.components!.isNotEmpty) {
-            for (var component in widget.components!) {
-              if (component.containsKey(widget.formControlName)) {
-                child = component[widget.formControlName]!;
-                break;
-              }
-            }
-          }
-        } else if (widget.schema.format == PropertySchemaFormat.numeric) {
-          child = JsonSchemaIntegerBuilder(
-            form: form,
-            label: localizations.translate(widget.schema.label ?? ''),
-            formControlName: widget.formControlName,
-            value: widget.schema.value ?? 0,
-            maximum: widget.schema.maximum?.toInt(),
-            minimum: widget.schema.minimum?.toInt(),
-            hint: widget.schema.hint,
-          );
-        } else if (widget.schema.format == PropertySchemaFormat.numeric) {
-          child = JsonSchemaIntegerBuilder(
-            form: form,
-            label: localizations.translate(widget.schema.label ?? ''),
-            formControlName: widget.formControlName,
-            value: widget.schema.value ?? 0,
-            maximum: widget.schema.maximum?.toInt(),
-            minimum: widget.schema.minimum?.toInt(),
-            hint: widget.schema.hint,
-          );
-        } else if (widget.schema.format == PropertySchemaFormat.latLng) {
-          child = JsonSchemaLatLngBuilder(
-            formControlName: widget.formControlName,
-            form: form,
-            label: localizations.translate(widget.schema.label ?? ''),
-          );
-        } else {
-          child = JsonSchemaStringBuilder(
-            form: form,
-            label: localizations.translate(widget.schema.label ?? ''),
-            formControlName: widget.formControlName,
-            value: widget.schema.value as String?,
-            maxLength: widget.schema.maxLength,
-            minLength: widget.schema.minLength,
-            hint: widget.schema.helpText!=null ? localizations.translate(widget.schema.helpText!) : null,
-            isRequired: widget.schema.required ?? false,
-            readOnly: widget.schema.readonly ?? false,
-            innerLabel: widget.schema.innerLabel != null ? localizations.translate(widget.schema.innerLabel!) : null,
-          );
-        }
-        break;
-
+        return _buildStringType(form);
       case PropertySchemaType.integer:
-        if (widget.schema.format == PropertySchemaFormat.integer) {
-          child = JsonSchemaStringBuilder(
-            form: form,
-            label: localizations.translate(widget.schema.label ?? ''),
-            formControlName: widget.formControlName,
-            value: widget.schema.value.toString(),
-            hint: widget.schema.helpText !=null ?localizations.translate(widget.schema.helpText!) : null,
-          );
-        } else {
-          child = JsonSchemaIntegerBuilder(
-            form: form,
-            label: localizations.translate(widget.schema.label ?? ''),
-            formControlName: widget.formControlName,
-            value: widget.schema.value as int?,
-            maximum: widget.schema.maximum?.toInt(),
-            minimum: widget.schema.minimum?.toInt(),
-            hint: widget.schema.helpText,
-          );
-        }
-        break;
-
+        return _buildIntegerType(form);
       case PropertySchemaType.boolean:
-        child = JsonSchemaBooleanBuilder(
+        return _buildBooleanType(form);
+      case PropertySchemaType.object:
+        return _buildObjectType(form);
+    }
+  }
+
+  /// Handle `string` type formats
+  Widget _buildStringType(FormGroup form) {
+    final format = widget.schema.format;
+
+    switch (format) {
+      case PropertySchemaFormat.select:
+        return LabeledField(
+          label: localizations.translate(widget.schema.label ?? ''),
+          child: JsonSchemaSelectionBuilder(
+            form: form,
+            formControlName: widget.formControlName,
+            enums: (widget.schema.enums ?? [])
+                .map(localizations.translate)
+                .toList(),
+            validations: widget.schema.validations,
+          ),
+        );
+
+      case PropertySchemaFormat.dropdown:
+        return LabeledField(
+          label: localizations.translate(widget.schema.label ?? ''),
+          child: JsonSchemaDropdownBuilder(
+            form: form,
+            formControlName: widget.formControlName,
+            enums: (widget.schema.enums ?? [])
+                .map(localizations.translate)
+                .toList(),
+            validations: widget.schema.validations,
+          ),
+        );
+
+      case PropertySchemaFormat.date:
+        return JsonSchemaDatePickerBuilder(
+          label: localizations.translate(widget.schema.label ?? ''),
           form: form,
           formControlName: widget.formControlName,
-          value: widget.schema.value as bool?,
-          hint: localizations.translate(widget.schema.label ?? ''),
+          start: widget.schema.firstDate?.dateValue,
+          end: widget.schema.lastDate?.dateValue,
+          validations: widget.schema.validations,
         );
-        break;
 
-      case PropertySchemaType.object:
-        final entries = widget.schema.properties?.entries.toList() ?? [];
-
-        child = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(entries.length, (index) {
-            final entry = entries[index];
-            final subSchema = entry.value;
-            final subName = entry.key;
-
-            final field = JsonFormBuilder(
-              formControlName: subName,
-              schema: subSchema,
-              components: widget.components,
-            );
-
-            return index < entries.length - 1
-                ? Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: field,
-            )
-                : field;
-          }),
+      case PropertySchemaFormat.locality:
+        return LabeledField(
+          label: localizations.translate(widget.schema.label ?? ''),
+          child: JsonSchemaStringBuilder(
+            form: form,
+            value: widget.schema.value as String?,
+            formControlName: widget.formControlName,
+            readOnly: true,
+          ),
         );
-        break;
+
+      case PropertySchemaFormat.custom:
+        return _buildCustomComponent() ?? const SizedBox.shrink();
+
+      case PropertySchemaFormat.latLng:
+        return JsonSchemaLatLngBuilder(
+          formControlName: widget.formControlName,
+          form: form,
+          label: localizations.translate(widget.schema.label ?? ''),
+        );
+
+      default:
+
+        return JsonSchemaStringBuilder(
+          form: form,
+          label: localizations.translate(widget.schema.label ?? ''),
+          formControlName: widget.formControlName,
+          value: widget.schema.value as String?,
+          validations: widget.schema.validations,
+        );
     }
+  }
 
-    return child;
+  /// Handle `integer` type formats
+  Widget _buildIntegerType(FormGroup form) {
+    final format = widget.schema.format;
+
+    switch (format) {
+      case PropertySchemaFormat.text:
+        return LabeledField(
+          label: localizations.translate(widget.schema.label ?? ''),
+          child: JsonSchemaNumberBuilder(
+            form: form,
+            formControlName: widget.formControlName,
+            inputType: TextInputType.number,
+            validations: widget.schema.validations,
+          ),
+        );
+
+      case PropertySchemaFormat.numeric:
+        return LabeledField(
+          label: localizations.translate(widget.schema.label ?? ''),
+          child: JsonSchemaIntegerBuilder(
+            form: form,
+            value: widget.schema.value as int?,
+            formControlName: widget.formControlName,
+            readOnly: true,
+            minValue: widget.schema.minValue,
+            maxValue: widget.schema.maxValue,
+            validations: widget.schema.validations,
+          ),
+        );
+
+      case PropertySchemaFormat.custom:
+        return _buildCustomComponent() ?? const SizedBox.shrink();
+
+      default:
+        return JsonSchemaNumberBuilder(
+          form: form,
+          label: localizations.translate(widget.schema.label ?? ''),
+          formControlName: widget.formControlName,
+          value: widget.schema.value as int?,
+          validations: widget.schema.validations,
+        );
+    }
+  }
+
+  /// Handle `boolean` type
+  Widget _buildBooleanType(FormGroup form) {
+    final format = widget.schema.format;
+
+    switch (format) {
+      case PropertySchemaFormat.checkbox:
+        return LabeledField(
+          label: localizations.translate(widget.schema.label ?? ''),
+          child: JsonSchemaCheckboxBuilder(
+            form: form,
+            formControlName: widget.formControlName,
+            label: localizations.translate(widget.schema.label ?? ''),
+            validations: widget.schema.validations,
+          ),
+        );
+
+      case PropertySchemaFormat.radio:
+        return LabeledField(
+          label: localizations.translate(widget.schema.label ?? ''),
+          child: JsonSchemaRadioBuilder(
+            form: form,
+            formControlName: widget.formControlName,
+            validations: widget.schema.validations,
+          ),
+        );
+
+      case PropertySchemaFormat.custom:
+        return _buildCustomComponent() ?? const SizedBox.shrink();
+
+      default:
+
+        return JsonSchemaStringBuilder(
+          form: form,
+          label: localizations.translate(widget.schema.label ?? ''),
+          formControlName: widget.formControlName,
+          value: widget.schema.value as String?,
+          readOnly: widget.schema.readonly ?? false,
+          validations: widget.schema.validations,
+        );
+    }
+  }
+
+  /// Handle `object` type
+  Widget _buildObjectType(FormGroup form) {
+    final entries = widget.schema.properties?.entries.toList() ?? [];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(entries.length, (index) {
+        final entry = entries[index];
+        final subSchema = entry.value;
+        final subName = entry.key;
+
+        final field = JsonFormBuilder(
+          formControlName: subName,
+          schema: subSchema,
+          components: widget.components,
+        );
+
+        return index < entries.length - 1
+            ? Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: field,
+        )
+            : field;
+      }),
+    );
+  }
+
+  /// Handle `custom` format
+  Widget? _buildCustomComponent() {
+    if (widget.components == null || widget.components!.isEmpty) return null;
+    for (var component in widget.components!) {
+      if (component.containsKey(widget.formControlName)) {
+        return component[widget.formControlName]!;
+      }
+    }
+    return null;
   }
 }
+

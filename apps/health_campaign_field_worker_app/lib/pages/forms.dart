@@ -106,7 +106,7 @@ class _FormsPageState extends LocalizedState<FormsPage> {
 
         return ReactiveFormBuilder(
           form: () => fb.group(
-            JsonForms.getFormControls(schema, [widgetMap], defaultValues: {
+            JsonForms.getFormControls(schema, defaultValues: {
             'locality': localizations.translate(context.boundary.code ?? ''),
             },),
           ),

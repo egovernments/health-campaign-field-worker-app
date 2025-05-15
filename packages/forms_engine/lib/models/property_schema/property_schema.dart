@@ -13,22 +13,30 @@ class PropertySchema with _$PropertySchema {
     includeIfNull: false,
   )
   const factory PropertySchema({
-    @JsonKey(name: 'type') required PropertySchemaType type,
+    @JsonKey(
+      name: 'type',
+      unknownEnumValue: PropertySchemaType.string,
+    )
+    required PropertySchemaType type,
     bool? readonly,
     bool? displayOnly,
     Map<String, PropertySchema>? properties,
-    bool? required,
     List<String>? enums,
+    String? schemaCode,
+    @JsonKey(
+      name: 'format',
+      unknownEnumValue: PropertySchemaFormat.text,
+    )
     PropertySchemaFormat? format,
     DateFormatValue? firstDate,
     DateFormatValue? lastDate,
+    int? minValue,
+    int? maxValue,
     int? minLength,
     int? maxLength,
-    num? maximum,
     String? helpText,
+    String? tooltipText,
     String? innerLabel,
-    num? minimum,
-    String? hint,
     String? label,
     dynamic value,
     DisplayBehavior? displayBehavior,
@@ -36,6 +44,7 @@ class PropertySchema with _$PropertySchema {
     int? order,
     String? actionLabel,
     String? description,
+    List<ValidationRule>? validations,
   }) = _PropertySchema;
 
 
@@ -66,6 +75,18 @@ class DateFormatValue with _$DateFormatValue {
 }
 
 @freezed
+class ValidationRule with _$ValidationRule {
+  const factory ValidationRule({
+    required String type,
+    dynamic value,
+    String? message,
+  }) = _ValidationRule;
+
+  factory ValidationRule.fromJson(Map<String, dynamic> json) =>
+      _$ValidationRuleFromJson(json);
+}
+
+@freezed
 class DisplayBehavior with _$DisplayBehavior {
   const factory DisplayBehavior({
     required FormulaBehavior behavior,
@@ -87,11 +108,10 @@ enum PropertySchemaFormat {
   select,
   numeric,
   dropdown,
-  string,
-  mobileNumber,
   checkbox,
-  integer,
-  boolean,
+  radio,
+  dob,
+  scanner,
   text;
 }
 
