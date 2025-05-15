@@ -16,7 +16,7 @@ FormControl buildFormControl(
   switch (schema.type) {
     case PropertySchemaType.integer:
       return FormControl<int>(
-        value: schema.value ?? 0,
+        value: schema.value ,
         validators: validators,
       );
 

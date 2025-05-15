@@ -542,24 +542,360 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         ).toJson(),
       );
 
-      final formConfig = await mdmsRepository.searchMDMS(
-        envConfig.variables.mdmsApiPath,
-        MdmsRequestModel(
-          mdmsCriteria: MdmsCriteriaModel(
-            tenantId: envConfig.variables.tenantId,
-            moduleDetails: [
-              const MdmsModuleDetailModel(
-                moduleName: 'HCM-ADMIN-CONSOLE',
-                masterDetails: [
-                  MdmsMasterDetailModel('SimplifiedAppConfigTwo'),
-                ],
-              ),
+      /// TODO: hardcoding data for new as we need to take care this later
+      final formConfig ={
+        "name": "REGISTRATIONFLOW",
+        "pages": [
+          {
+            "page": "APPONE_REGISTRATION_BENEFICIARY_LOCATION",
+            "type": "object",
+            "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
+            "order": 1,
+            "properties": [
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea",
+                "order": 1,
+                "format": "locality",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
+                "fieldName": "administrativeArea",
+                "innerLabel": ""
+              },
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong",
+                "order": 2,
+                "value": "",
+                "format": "latLng",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong_helpText",
+                "fieldName": "latLong",
+                "innerLabel": ""
+              },
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1",
+                "order": 3,
+                "value": "",
+                "format": "text",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
+                "fieldName": "addressLine1",
+                "innerLabel": ""
+              },
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2",
+                "order": 4,
+                "value": "",
+                "format": "text",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
+                "fieldName": "addressLine2",
+                "innerLabel": ""
+              },
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark",
+                "order": 5,
+                "value": "",
+                "format": "text",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_helpText",
+                "fieldName": "landmark",
+                "innerLabel": ""
+              },
+              {
+                "type": "integer",
+                "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode",
+                "order": 6,
+                "value": "",
+                "format": "text",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_helpText",
+                "fieldName": "pincode",
+                "innerLabel": ""
+              }
             ],
-          ),
-        ).toJson(),
-      );
+            "actionLabel": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
+            "description": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION"
+          },
+          {
+            "page": "APPONE_REGISTRATION_HOUSEDETAILS",
+            "type": "object",
+            "label": "APPONE_REGISTRATION_HOUSEDETAILS_SCREEN_HEADING",
+            "order": 1,
+            "properties": [
+              {
+                "type": "string",
+                "enums": null,
+                "schemaCode": "HCM.HOUSE_STRUCTURE_TYPES",
+                "label": "APPONE_REGISTRATION_HOUSEDETAILS_label_structureType",
+                "order": 1,
+                "value": "",
+                "format": "select",
+                "tooltip": "APPONE_REGISTRATION_HOUSEDETAILS_label_structureType_tooltip",
+                "helpText": "APPONE_REGISTRATION_HOUSEDETAILS_label_structureType_helpText",
+                "infoText": "",
+                "fieldName": "structureType",
+                "innerLabel": "",
+                "validations":[
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "Structure type is mandatory for registration"
+                  }
+                ]
+              },
+              {
+                "type": "integer",
+                "label": "APPONE_REGISTRATION_HOUSEDETAILS_label_NoofRooms",
+                "order": 2,
+                "value": 0,
+                "format": "numeric",
+                "tooltip": "APPONE_REGISTRATION_HOUSEDETAILS_label_NoofRooms_tooltip",
+                "helpText": "APPONE_REGISTRATION_HOUSEDETAILS_label_NoofRooms_helpText",
+                "fieldName": "NoofRooms",
+                "innerLabel": "",
+                "minValue": 1,
+                "maxValue": 10,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "Structure type is mandatory for registration"
+                  },
+                  {
+                    "type": "min",
+                    "value": 1,
+                    "message": "Number of rooms must be at least 1"
+                  }
+                ]
+              }
+            ],
+            "actionLabel": "APPONE_REGISTRATION_HOUSEDETAILS_ACTION_BUTTON_LABEL_1",
+            "description": "APPONE_REGISTRATION_HOUSEDETAILS_SCREEN_DESCRIPTION"
+          },
+          {
+            "page": "APPONE_REGISTRATION_HOUSEHOLDDETAILS",
+            "type": "object",
+            "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
+            "order": 2,
+            "properties": [
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration",
+                "order": 1,
+                "value": "",
+                "format": "date",
+                "tooltip": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_tooltip",
+                "helpText": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_helpText",
+                "fieldName": "dateOfRegistration"
+              },
+              {
+                "type": "integer",
+                "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount",
+                "order": 2,
+                "value": 0,
+                "format": "numeric",
+                "tooltip": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount_tooltip",
+                "helpText": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount_helpText",
+                "fieldName": "childrenCount",
+                "innerLabel": ""
+              },
+              {
+                "type": "integer",
+                "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_pregnantWomenCount",
+                "order": 3,
+                "value": 0,
+                "format": "numeric",
+                "tooltip": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_pregnantWomenCount_tooltip",
+                "helpText": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_pregnantWomenCount_helpText",
+                "fieldName": "pregnantWomenCount"
+              },
+              {
+                "type": "integer",
+                "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount",
+                "order": 4,
+                "value": "",
+                "format": "numeric",
+                "tooltip": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_tooltip",
+                "helpText": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_helpText",
+                "fieldName": "memberCount",
+                "minValue": 1,
+                "maxValue": 20,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "this is a required field"
+                  },
+                  {
+                    "type": "min",
+                    "value": 1,
+                    "message": "Member count must be at least 1"
+                  }
+                ]
+              }
+            ],
+            "actionLabel": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_ACTION_BUTTON_LABEL_1",
+            "description": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION"
+          },
+          {
+            "page": "APPONE_REGISTRATION_BENEFICIARYDETAILS",
+            "type": "object",
+            "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
+            "order": 3,
+            "properties": [
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
+                "order": 1,
+                "value": "",
+                "format": "text",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
+                "fieldName": "nameOfIndividual",
+                "innerLabel": "",
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "this is a required field"
+                  },
+                  {
+                    "type": "minLength",
+                    "value": 3,
+                    "message": "Name of individual must be at least 3 character"
+                  }
+                ]
+              },
+              {
+                "type": "boolean",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
+                "order": 2,
+                "value": null,
+                "format": "checkbox",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_helpText",
+                "fieldName": "isHeadOfFamily",
+                "innerLabel": "",
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "this is a required field"
+                  }
+                ]
+              },
+              {
+                "type": "string",
+                "enums": null,
+                "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idType",
+                "order": 3,
+                "value": "",
+                "format": "dropdown",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idType_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idType_helpText",
+                "fieldName": "idType",
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "this is a required field"
+                  }
+                ]
+              },
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idNumber",
+                "order": 4,
+                "value": "",
+                "format": "text",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idNumber_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idNumber_helpText",
+                "fieldName": "idNumber"
+              },
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker",
+                "order": 5,
+                "value": "",
+                "format": "dob",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText",
+                "fieldName": "dobPicker"
+              },
+              {
+                "type": "string",
+                "enums": null,
+                "schemaCode": "common-masters.GenderType",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
+                "order": 6,
+                "value": "",
+                "format": "select",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender_helpText",
+                "fieldName": "gender",
+                "innerLabel": "",
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "this is a required field"
+                  }
+                ]
+              },
+              {
+                "type": "integer",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
+                "order": 7,
+                "value": "",
+                "format": "text",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
+                "fieldName": "phoneNumber",
+                "innerLabel": ""
+              },
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner",
+                "order": 8,
+                "value": "",
+                "format": "scanner",
+                "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner_tooltip",
+                "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner_helpText",
+                "fieldName": "scanner",
+                "innerLabel": ""
+              }
+            ],
+            "actionLabel": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
+            "description": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION"
+          }
+        ],
+        "project": "SMC_2025",
+        "version": 1
+      };
+      // await mdmsRepository.searchMDMS(
+      //   envConfig.variables.mdmsApiPath,
+      //   MdmsRequestModel(
+      //     mdmsCriteria: MdmsCriteriaModel(
+      //       tenantId: envConfig.variables.tenantId,
+      //       moduleDetails: [
+      //         const MdmsModuleDetailModel(
+      //           moduleName: 'HCM-ADMIN-CONSOLE',
+      //           masterDetails: [
+      //             MdmsMasterDetailModel('SimplifiedAppConfigTwo'),
+      //           ],
+      //         ),
+      //       ],
+      //     ),
+      //   ).toJson(),
+      // );
 
-      await storeSchema(formConfig);
+      await enrichFormSchemaWithEnums(formConfig);
 
       final rowversionList = await isar.rowVersionLists
           .filter()
@@ -658,6 +994,67 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final schema = json.encode(transformedSchema);
     await prefs.setString(schemaKey, schema);
   }
+
+  Future<void> enrichFormSchemaWithEnums(Map<String, dynamic> formConfig) async {
+    final Map<String, Set<String>> moduleToMasters = {}; // To collect module: master mapping
+
+    // Step 1 & 2: Traverse the form schema
+    for (final page in formConfig['pages']) {
+      for (final property in page['properties']) {
+        final schemaCode = property['schemaCode'];
+        if (schemaCode != null && schemaCode.toString().isNotEmpty) {
+          final parts = schemaCode.split('.');
+          if (parts.length == 2) {
+            final module = parts[0];
+            final master = parts[1];
+
+            moduleToMasters.putIfAbsent(module, () => <String>{}).add(master);
+          }
+        }
+      }
+    }
+
+    // Step 3: Prepare MDMS moduleDetails
+    final moduleDetails = moduleToMasters.entries.map((entry) {
+      return MdmsModuleDetailModel(
+        moduleName: entry.key,
+        masterDetails: entry.value.map((m) => MdmsMasterDetailModel(m)).toList(),
+      );
+    }).toList();
+
+    // Step 4: Fetch all master data in one MDMS call
+    final mdmsResponse = await mdmsRepository.searchMDMS(
+      envConfig.variables.mdmsApiPath,
+      MdmsRequestModel(
+        mdmsCriteria: MdmsCriteriaModel(
+          tenantId: envConfig.variables.tenantId,
+          moduleDetails: moduleDetails,
+        ),
+      ).toJson(),
+    );
+
+    // Step 5: Assign fetched enums back to form fields
+    for (final page in formConfig['pages']) {
+      for (final property in page['properties']) {
+        final schemaCode = property['schemaCode'];
+        if (schemaCode != null && schemaCode.toString().isNotEmpty) {
+          final parts = schemaCode.split('.');
+          if (parts.length == 2) {
+            final module = parts[0];
+            final master = parts[1];
+
+            final enumValues = mdmsResponse[module]?[master];
+            if (enumValues != null) {
+              property['enums'] = enumValues.map((e) => e['code']).toList();
+            }
+          }
+        }
+      }
+    }
+
+    await storeSchema(formConfig);
+  }
+
 
   FutureOr<int> _getBatchSize() async {
     try {

@@ -27,6 +27,7 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
       builder: (field) =>
           LabeledField(
             label: label,
+            isRequired: true,
             child: DigitDateFormInput(
               readOnly: true,
               errorMessage: field.errorText,

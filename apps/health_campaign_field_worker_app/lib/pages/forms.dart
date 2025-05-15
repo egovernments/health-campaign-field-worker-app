@@ -134,9 +134,23 @@ class _FormsPageState extends LocalizedState<FormsPage> {
                     label: (index) < schemaObject.pages.length - 1
                         ? localizations.translate(schema.actionLabel ?? 'Next')
                         : localizations.translate(schema.actionLabel ?? 'Submit'),
-                    onPressed: !formGroup.valid
-                        ? () {}
-                        : () {
+                    onPressed: () {
+                      // 1. Get current page controls (keys)
+                      final currentKeys = schema.properties?.keys ?? [];
+
+                      // 2. Mark all current page controls as touched
+                      for (final key in currentKeys) {
+                        final control = formGroup.control(key);
+                        control.markAsTouched();
+                        control.updateValueAndValidity();
+                      }
+
+                      // 3. Check validity of just this page
+                      final isCurrentPageValid = currentKeys.every((key) => formGroup.control(key).valid);
+
+                      if (!isCurrentPageValid) return;
+
+                      // 4. Proceed with value extraction and state update
                       final values = JsonForms.getFormValues(
                         formGroup,
                         schema,
@@ -153,8 +167,7 @@ class _FormsPageState extends LocalizedState<FormsPage> {
                               ),
                             )
                                 : MapEntry(e.key, e.value),
-                          ) ??
-                              [],
+                          ) ?? [],
                         ),
                       );
 

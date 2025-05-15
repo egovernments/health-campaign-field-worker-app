@@ -33,17 +33,14 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
           showErrors: (control) => control.invalid && control.touched,
           builder: (field) => LabeledField(
             label: label,
+            isRequired: hasRequiredValidation(validations),
             capitalizedFirstLetter: false,
-            isRequired: isRequired ?? false,
             child: DigitTextFormInput(
               helpText: helpText,
               innerLabel: innerLabel,
               readOnly: readOnly,
               keyboardType: inputType,
-              initialValue:  form
-                  .control(formControlName)
-                  .value
-                  .toString(),
+              initialValue: form.control(formControlName).value?.toString(),
               onChange: (value) {
                 if (value.isEmpty) {
                   form.control(formControlName).value = 0;

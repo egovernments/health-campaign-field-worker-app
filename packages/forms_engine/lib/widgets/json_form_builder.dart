@@ -73,6 +73,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     switch (format) {
       case PropertySchemaFormat.select:
         return LabeledField(
+          isRequired: hasRequiredValidation(widget.schema.validations),
           label: localizations.translate(widget.schema.label ?? ''),
           child: JsonSchemaSelectionBuilder(
             form: form,
@@ -86,6 +87,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
       case PropertySchemaFormat.dropdown:
         return LabeledField(
+          isRequired: hasRequiredValidation(widget.schema.validations),
           label: localizations.translate(widget.schema.label ?? ''),
           child: JsonSchemaDropdownBuilder(
             form: form,
@@ -109,6 +111,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
       case PropertySchemaFormat.locality:
         return LabeledField(
+          isRequired: true,
           label: localizations.translate(widget.schema.label ?? ''),
           child: JsonSchemaStringBuilder(
             form: form,
@@ -129,13 +132,13 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         );
 
       default:
-
         return JsonSchemaStringBuilder(
           form: form,
           label: localizations.translate(widget.schema.label ?? ''),
           formControlName: widget.formControlName,
           value: widget.schema.value as String?,
           validations: widget.schema.validations,
+          isRequired: hasRequiredValidation(widget.schema.validations),
         );
     }
   }
@@ -146,28 +149,26 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
     switch (format) {
       case PropertySchemaFormat.text:
-        return LabeledField(
+        return JsonSchemaNumberBuilder(
+          form: form,
           label: localizations.translate(widget.schema.label ?? ''),
-          child: JsonSchemaNumberBuilder(
-            form: form,
-            formControlName: widget.formControlName,
-            inputType: TextInputType.number,
-            validations: widget.schema.validations,
-          ),
+          formControlName: widget.formControlName,
+          inputType: TextInputType.number,
+          validations: widget.schema.validations,
+          isRequired: hasRequiredValidation(widget.schema.validations),
         );
 
       case PropertySchemaFormat.numeric:
-        return LabeledField(
+        return JsonSchemaIntegerBuilder(
+          form: form,
+          value: widget.schema.value as int? ?? 0,
+          formControlName: widget.formControlName,
+          readOnly: true,
           label: localizations.translate(widget.schema.label ?? ''),
-          child: JsonSchemaIntegerBuilder(
-            form: form,
-            value: widget.schema.value as int?,
-            formControlName: widget.formControlName,
-            readOnly: true,
-            minValue: widget.schema.minValue,
-            maxValue: widget.schema.maxValue,
-            validations: widget.schema.validations,
-          ),
+          minValue: widget.schema.minValue,
+          maxValue: widget.schema.maxValue,
+          validations: widget.schema.validations,
+          isRequired: hasRequiredValidation(widget.schema.validations),
         );
 
       case PropertySchemaFormat.custom:
@@ -190,14 +191,11 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
     switch (format) {
       case PropertySchemaFormat.checkbox:
-        return LabeledField(
+        return JsonSchemaCheckboxBuilder(
+          form: form,
+          formControlName: widget.formControlName,
           label: localizations.translate(widget.schema.label ?? ''),
-          child: JsonSchemaCheckboxBuilder(
-            form: form,
-            formControlName: widget.formControlName,
-            label: localizations.translate(widget.schema.label ?? ''),
-            validations: widget.schema.validations,
-          ),
+          validations: widget.schema.validations,
         );
 
       case PropertySchemaFormat.radio:
