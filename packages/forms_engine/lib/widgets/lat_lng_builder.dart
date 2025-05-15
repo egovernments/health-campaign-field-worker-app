@@ -8,6 +8,7 @@ class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
     required super.formControlName,
     required super.form,
     this.label,
+    super.validations,
   });
 
   @override
@@ -67,6 +68,7 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
               formControlName: widget.formControlName,
               builder: (field) => LabeledField(
                 label: widget.label,
+                isRequired: true,
                 capitalizedFirstLetter: false,
                 child: DigitTextFormInput(
                   readOnly: widget.readOnly,

@@ -3,37 +3,35 @@ part of 'json_schema_builder.dart';
 
 class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
   final List<String> enums;
-  final String? label;
-  final bool isRequired;
-  final String? helpText;
 
   const JsonSchemaDropdownBuilder({
     required super.formControlName,
     required super.form,
     required this.enums,
-    this.label,
+    super.label,
     super.key,
     super.value,
-    super.hint,
-    this.isRequired = false,
-    this.helpText,
+    super.isRequired,
+    super.helpText,
+    super.validations,
   });
 
   @override
   Widget build(BuildContext context) {
+    final loc = FormLocalization.of(context);
+    final validationMessages = buildValidationMessages(validations, loc);
+
     return ReactiveWrapperField(
       formControlName: formControlName,
-      validationMessages: const {
-        // 'required': (_) => localizations.translate(
-        //   i18.common.corecommonRequired,
-        // ),
-      },
+      validationMessages: validationMessages,
+      showErrors: (control) => control.invalid && control.touched,
       builder: (field) => LabeledField(
         label: label,
         capitalizedFirstLetter: false,
-        isRequired: isRequired,
+        isRequired: isRequired ?? false,
         child: DigitDropdown<String>(
           helpText: helpText,
+          errorMessage: field.errorText,
           selectedOption:
           (form.control(formControlName).value != null)
               ? DropdownItem(

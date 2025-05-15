@@ -1,36 +1,43 @@
 part of 'json_schema_builder.dart';
 
 class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
-  final int? minimum;
-  final int? maximum;
-  final String? label;
-  final bool incrementer;
+  final int? maxValue;
+  final int? minValue;
 
   const JsonSchemaIntegerBuilder({
     required super.formControlName,
     required super.form,
     super.key,
     super.value,
-    this.label,
-    super.hint,
-    this.incrementer = false,
-    this.minimum,
-    this.maximum,
+    this.maxValue,
+    this.minValue,
+    super.label,
+    super.helpText,
+    super.innerLabel,
+    super.readOnly,
+    super.validations,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    final loc = FormLocalization.of(context);
+    final validationMessages = buildValidationMessages(validations, loc);
+
     return ReactiveWrapperField(
       formControlName: formControlName,
+      validationMessages: validationMessages,
+      showErrors: (control) => control.invalid && control.touched,
       builder: (field) => LabeledField(
         label: label,
         child: DigitNumericFormInput(
-          helpText: hint,
+          helpText: helpText,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly
           ],
-          minValue: 0,
-          maxValue: maximum ?? 100,
+          errorMessage: field.errorText,
+          minValue: minValue ?? 0,
+          maxValue: maxValue ?? 100,
           maxLength: 5,
           step: 1,
           initialValue:  form
