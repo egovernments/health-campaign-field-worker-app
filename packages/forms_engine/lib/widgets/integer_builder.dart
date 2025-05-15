@@ -16,6 +16,7 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
     super.innerLabel,
     super.readOnly,
     super.validations,
+    super.isRequired,
   });
 
   @override
@@ -30,6 +31,7 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) => LabeledField(
         label: label,
+        isRequired: isRequired ?? false,
         child: DigitNumericFormInput(
           helpText: helpText,
           inputFormatters: [
@@ -40,10 +42,7 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
           maxValue: maxValue ?? 100,
           maxLength: 5,
           step: 1,
-          initialValue:  form
-              .control(formControlName)
-              .value
-              .toString(),
+          initialValue: (form.control(formControlName).value ?? 0).toString(),
           onChange: (value) {
             if (value.isEmpty) {
               form.control(formControlName).value = 0;

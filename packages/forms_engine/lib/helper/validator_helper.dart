@@ -58,3 +58,10 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
 
   return validators;
 }
+
+/// Checks if the validations contain a rule of type 'required'.
+bool hasRequiredValidation(List<ValidationRule>? validations) {
+  if (validations == null) return false;
+
+  return validations.any((rule) => rule.type == 'required');
+}
