@@ -99,6 +99,22 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           ),
         );
 
+      case PropertySchemaFormat.dob:
+        return JsonSchemaDOBBuilder(
+          label: localizations.translate(widget.schema.label ?? ''),
+          form: form,
+          formControlName: widget.formControlName,
+          validations: widget.schema.validations,
+        );
+
+      case PropertySchemaFormat.scanner:
+        return JsonSchemaScannerBuilder(
+          form: form,
+          value: widget.schema.value as String?,
+          formControlName: widget.formControlName,
+          label: localizations.translate(widget.schema.label ?? ''),
+        );
+
       case PropertySchemaFormat.date:
         return JsonSchemaDatePickerBuilder(
           label: localizations.translate(widget.schema.label ?? ''),

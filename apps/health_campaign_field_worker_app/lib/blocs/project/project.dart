@@ -826,7 +826,21 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "format": "dob",
                 "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
                 "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText",
-                "fieldName": "dobPicker"
+                "fieldName": "dobPicker",
+                "validations": [
+                  { "type": "required",
+                    "value": true,
+                    "message": "DOB is required"
+                  },
+                  { "type": "minAge",
+                    "value": "1_month",
+                    "message": "Age must be at least 1 month"
+                  },
+                  { "type": "maxAge",
+                    "value": "150_years",
+                    "message": "Age must be below 150 years"
+                  }
+                ]
               },
               {
                 "type": "string",

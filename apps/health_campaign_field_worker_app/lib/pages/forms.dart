@@ -12,9 +12,7 @@ import '../blocs/entity_create/entity_create.dart';
 import '../data/transformer_config.dart';
 import '../router/app_router.dart';
 import '../utils/utils.dart';
-import '../widgets/custom_scanner.dart';
 import '../widgets/custom_text.dart';
-import '../widgets/dob_picker.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../widgets/showcase/showcase_button.dart';
@@ -99,9 +97,7 @@ class _FormsPageState extends LocalizedState<FormsPage> {
         schemaObject.pages.keys.toList().indexOf(widget.pageName);
         final showcaseKeys = <GlobalKey>[];
         final Map<String, Widget> widgetMap = {
-          'dobPicker': const DobPicker(),
           'customText': const CustomText(),
-          'scanner': const CustomScanner(),
         };
 
         return ReactiveFormBuilder(

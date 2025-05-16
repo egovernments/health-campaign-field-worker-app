@@ -19,6 +19,7 @@ dependencies:
   digit_ui_components: ^0.2.0
   flutter_bloc: ^8.1.1
   uuid: ^4.5.1
+  digit_scanner: ^1.0.5
 
 dev_dependencies:
   flutter_test:
