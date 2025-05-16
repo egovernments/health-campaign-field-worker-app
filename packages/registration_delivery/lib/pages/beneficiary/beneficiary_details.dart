@@ -165,52 +165,91 @@ class BeneficiaryDetailsPageState
                                                         deliverState.cycle);
                                                 if (selectedCycle != null) {
                                                   final currentCycle =
-                                                      deliverState.cycle >= 0
-                                                          ? deliverState.cycle
-                                                          : 0;
+                                                  deliverState.cycle >= 0
+                                                      ? deliverState.cycle
+                                                      : 0;
 
                                                   // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
                                                   final currentDose =
-                                                      deliverState.dose >= 0
-                                                          ? deliverState.dose
-                                                          : 0;
+                                                  deliverState.dose >= 0
+                                                      ? deliverState.dose
+                                                      : 0;
 
                                                   final items =
-                                                      RegistrationDeliverySingleton()
+                                                  RegistrationDeliverySingleton()
+                                                      .projectType!
+                                                      .cycles?[
+                                                  currentCycle - 1]
+                                                      .deliveries?[
+                                                  currentDose - 1];
+                                                  
+                                                  bloc.add(
+                                                    DeliverInterventionEvent
+                                                        .selectFutureCycleDose(
+                                                      dose: deliverState.dose,
+                                                      cycle:
+                                                          RegistrationDeliverySingleton()
                                                               .projectType!
-                                                              .cycles?[
-                                                                  currentCycle - 1]
-                                                              .deliveries?[
-                                                          currentDose - 1];
-                                                  final matchedDoses =
-                                                      fetchProductVariant(
-                                                              items,
-                                                              state
-                                                                  .selectedIndividual,
-                                                              state
-                                                                  .householdMemberWrapper
-                                                                  .household) ??
-                                                          [];
+                                                              .cycles!
+                                                              .firstWhere((c) =>
+                                                                  c.id ==
+                                                                  deliverState
+                                                                      .cycle),
+                                                      individualModel: state
+                                                          .selectedIndividual,
+                                                    ),
+                                                  );
 
-                                                  if ((matchedDoses != null &&
-                                                      matchedDoses
-                                                          .isNotEmpty)) {
-                                                    bloc.add(
-                                                      DeliverInterventionEvent
-                                                          .selectFutureCycleDose(
-                                                        dose: deliverState.dose,
-                                                        cycle:
-                                                            RegistrationDeliverySingleton()
-                                                                .projectType!
-                                                                .cycles!
-                                                                .firstWhere((c) =>
-                                                                    c.id ==
-                                                                    deliverState
-                                                                        .cycle),
-                                                        individualModel: state
-                                                            .selectedIndividual,
-                                                      ),
+                                                  var productVariants = fetchProductVariant(
+                                                      items,
+                                                      state.selectedIndividual,
+                                                      state
+                                                          .householdMemberWrapper
+                                                          .household,
+                                                      context: context);
+
+                                                  if (productVariants[
+                                                          'criteria'] ==
+                                                      null) {
+                                                    showCustomPopup(
+                                                      context: context,
+                                                      builder: (BuildContext context) => Popup(
+                                                          title: localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .coreCommonError),
+                                                          description: localizations
+                                                                  .translate(
+                                                                      'CONDITION_FAILED') +
+                                                              productVariants[
+                                                                      'errors']
+                                                                  .toString()
+                                                                  .replaceAll(
+                                                                      '[', '')
+                                                                  .replaceAll(
+                                                                      ']', ''),
+                                                          type: PopUpType.alert,
+                                                          actions: [
+                                                            DigitButton(
+                                                                label: localizations
+                                                                    .translate(i18
+                                                                        .common
+                                                                        .corecommonclose),
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true,
+                                                                  ).pop();
+                                                                },
+                                                                type: DigitButtonType
+                                                                    .tertiary,
+                                                                size:
+                                                                    DigitButtonSize
+                                                                        .large)
+                                                          ]),
                                                     );
+                                                  } else {
                                                     showCustomPopup(
                                                       context: context,
                                                       builder: (popUpContext) => Popup(
@@ -257,15 +296,6 @@ class BeneficiaryDetailsPageState
                                                                         .large),
                                                           ]),
                                                     );
-                                                  } else {
-                                                    Toast.showToast(
-                                                      context,
-                                                      type: ToastType.error,
-                                                      message: localizations
-                                                          .translate(i18
-                                                              .beneficiaryDetails
-                                                              .notMeetDeliveryRulesCriteria),
-                                                    );
                                                   }
                                                 }
                                               },
@@ -283,8 +313,79 @@ class BeneficiaryDetailsPageState
                                           size: DigitButtonSize.large,
                                           mainAxisSize: MainAxisSize.max,
                                           onPressed: () {
-                                            context.router.push(
-                                                DeliverInterventionRoute());
+
+                                            final currentCycle =
+                                            deliverState.cycle >= 0
+                                                ? deliverState.cycle
+                                                : 0;
+
+                                            // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
+                                            final currentDose =
+                                            deliverState.dose >= 0
+                                                ? deliverState.dose
+                                                : 0;
+
+                                            final items =
+                                            RegistrationDeliverySingleton()
+                                                .projectType!
+                                                .cycles?[
+                                            currentCycle - 1]
+                                                .deliveries?[
+                                            currentDose - 1];
+                                            
+                                            var productVariants =
+                                                fetchProductVariant(
+                                                    items,
+                                                    state.selectedIndividual,
+                                                    state.householdMemberWrapper
+                                                        .household,
+                                                    context: context);
+
+                                            if (productVariants['criteria'] ==
+                                                null) {
+                                              showCustomPopup(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    Popup(
+                                                        title: localizations
+                                                            .translate(i18
+                                                                .common
+                                                                .coreCommonError),
+                                                        description: localizations
+                                                                .translate(
+                                                                    'CONDITION_FAILED') +
+                                                            productVariants[
+                                                                    'errors']
+                                                                .toString()
+                                                                .replaceAll(
+                                                                    '[', '')
+                                                                .replaceAll(
+                                                                    ']', ''),
+                                                        type: PopUpType.alert,
+                                                        actions: [
+                                                      DigitButton(
+                                                          label: localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .corecommonclose),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                              context,
+                                                              rootNavigator:
+                                                                  true,
+                                                            ).pop();
+                                                          },
+                                                          type: DigitButtonType
+                                                              .tertiary,
+                                                          size: DigitButtonSize
+                                                              .large)
+                                                    ]),
+                                              );
+                                            } else {
+                                              context.router.push(
+                                                  DeliverInterventionRoute());
+                                            }
                                           },
                                         ),
                                       ]);
