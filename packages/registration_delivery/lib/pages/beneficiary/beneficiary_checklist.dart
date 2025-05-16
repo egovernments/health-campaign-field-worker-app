@@ -1364,6 +1364,8 @@ class _BeneficiaryChecklistPageState
   }
 
   void navigateToDecidedFlow(BuildContext ctx, String decidedFlow) {
+    Navigator.of(ctx).pop();
+
     final statusMap = {
       Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
       Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
@@ -1381,12 +1383,10 @@ class _BeneficiaryChecklistPageState
             projectBeneficiaryClientRefId: widget.beneficiaryClientRefId!));
         break;
       case Status.toAdminister:
-        if (selectedServiceDefinition!.code!
-            .contains(RegistrationDeliveryEnums.iec.toValue())) {
-          ctx.router.navigate(DeliverInterventionRoute());
-        } else {
-          ctx.router.navigate(BeneficiaryDetailsRoute());
-        }
+        selectedServiceDefinition!.code!.contains(
+                '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.iec.toValue()}')
+            ? ctx.router.navigate(DeliverInterventionRoute())
+            : ctx.router.navigate(BeneficiaryDetailsRoute());
         break;
       default:
         Navigator.of(ctx).pop();

@@ -49,17 +49,6 @@ Widget buildTableContent(
   final item =
       projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
 
-  final matchedDoses =
-      fetchProductVariant(item, individualModel, householdModel) ?? [];
-  final productVariants =
-      matchedDoses.expand((e) => e.productVariants ?? []).toList();
-  final numRows = productVariants?.length ?? 0;
-  const rowHeight = 84;
-  const paddingHeight = (spacer2 * 2);
-  final containerHeight = (numRows + 1) * rowHeight + (paddingHeight * 2);
-  const columnWidth = 150.0;
-  const cellHeight = 59.5;
-
   return Container(
     padding: const EdgeInsets.only(
       left: spacer2,
@@ -80,12 +69,13 @@ Widget buildTableContent(
             element: {
               localizations.translate(
                 i18.beneficiaryDetails.beneficiaryAge,
-              ): matchedDoses.isNotEmpty
-                  ? matchedDoses
-                      .map((dose) => dose.condition)
-                      .where((condition) => condition != null)
-                      .map((condition) => localizations.translate(condition!))
-                      .join(' `${localizations.translate(i18.beneficiaryDetails.addValueText)}` ')
+              ): getProductVariant(item, individualModel, householdModel,
+                              context)['criteria']
+                          .condition !=
+                      null
+                  ? localizations.translate(getProductVariant(item,
+                          individualModel, householdModel, context)!['criteria']
+                      .condition!)
                   : null,
             },
           ),
@@ -95,7 +85,10 @@ Widget buildTableContent(
           height: spacer4,
         ),
         // Build the DigitTable with the data
-        if (matchedDoses.isNotEmpty && matchedDoses[0].productVariants != null)
+        if (getProductVariant(
+                    item, individualModel, householdModel, context)['criteria']
+                .productVariants !=
+            null)
           DigitTable(
             enableBorder: false,
             withRowDividers: false,
@@ -104,34 +97,55 @@ Widget buildTableContent(
             showPagination: false,
             columns: columnListResource,
             rows: [
-              // for (int i = 0; i < matchedDoses.length; i++) ...[
-              for (int j = 0; j < productVariants.length; j++)
-                DigitTableRow(tableRow: [
-                  // Show dose label only for first row of each dose
-                  j == 0
-                      ? DigitTableData(
-                          '${localizations.translate(i18.deliverIntervention.dose)} ${j + 1}',
-                          cellKey: 'dose',
-                        )
-                      : DigitTableData('', cellKey: ''),
-                  // Show quantity and SKU
-                  DigitTableData(
-                    '${productVariants[j].quantity} - ${localizations.translate(
-                      variant
-                              ?.firstWhereOrNull((v) =>
-                                  v.id == productVariants[j].productVariantId)
-                              ?.sku ??
-                          '',
-                    )}',
-                    cellKey: 'resources',
-                  ),
-                ]),
+              ...getProductVariant(item, individualModel, householdModel,
+                      context)!['criteria']
+                  .productVariants!
+                  .map(
+                (e) {
+                  // Retrieve the SKU value for the product variant.
+                  final value = variant
+                      ?.firstWhereOrNull(
+                        (element) => element.id == e.productVariantId,
+                      )
+                      ?.sku;
+                  final quantity = e.quantity;
+
+                  return DigitTableRow(tableRow: [
+                    // Display the dose information in the first column if it's the first row,
+                    // otherwise, display an empty cell.
+
+                    getProductVariant(item, individualModel, householdModel,
+                                    context)['criteria']
+                                .productVariants
+                                ?.indexOf(e) ==
+                            0
+                        ? DigitTableData(
+                            '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState.dose}',
+                            cellKey: 'dose',
+                          )
+                        : DigitTableData('', cellKey: ''),
+                    // Display the SKU value in the second column.
+                    DigitTableData(
+                      '$quantity - ${localizations.translate(value.toString())}',
+                      cellKey: 'resources',
+                    ),
+                  ]);
+                },
+              ),
             ],
-            //],
           )
         else
-          Text(localizations.translate(i18.common.noProjectSelected))
+          Text(localizations
+              .translate(i18.deliverIntervention.checkForProductVariantsConfig))
       ],
     ),
   );
+}
+
+getProductVariant(ProjectCycleDelivery? item, IndividualModel? individualModel,
+    HouseholdModel? householdModel, BuildContext context) {
+  var result = (fetchProductVariant(item, individualModel, householdModel,
+      context: context));
+
+  return result;
 }

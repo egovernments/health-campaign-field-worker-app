@@ -155,9 +155,72 @@ class _HouseholdOverviewPageState
                                                                       '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                           .toList()
                                                           .isEmpty) {
-                                                        context.router.push(
-                                                          DeliverInterventionRoute(),
-                                                        );
+                                                        var productVariants = fetchProductVariant(
+                                                            RegistrationDeliverySingleton()
+                                                                .selectedProject
+                                                                ?.additionalDetails
+                                                                ?.projectType
+                                                                ?.cycles![
+                                                                    deliverInterventionState
+                                                                            .cycle -
+                                                                        1]
+                                                                .deliveries?[deliverInterventionState
+                                                                    .dose -
+                                                                1],
+                                                            state
+                                                                .selectedIndividual,
+                                                            state
+                                                                .householdMemberWrapper
+                                                                .household,
+                                                            context: context);
+
+                                                        if (productVariants[
+                                                                'criteria'] ==
+                                                            null) {
+                                                          showCustomPopup(
+                                                            context: context,
+                                                            builder: (BuildContext context) => Popup(
+                                                                title: localizations
+                                                                    .translate(i18
+                                                                        .common
+                                                                        .coreCommonError),
+                                                                description: localizations.translate(
+                                                                        'CONDITION_FAILED') +
+                                                                    productVariants['errors']
+                                                                        .toString()
+                                                                        .replaceAll(
+                                                                            '[',
+                                                                            '')
+                                                                        .replaceAll(
+                                                                            ']',
+                                                                            ''),
+                                                                type: PopUpType
+                                                                    .alert,
+                                                                actions: [
+                                                                  DigitButton(
+                                                                      label: localizations.translate(i18
+                                                                          .common
+                                                                          .corecommonclose),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator
+                                                                            .of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true,
+                                                                        ).pop();
+                                                                      },
+                                                                      type: DigitButtonType
+                                                                          .tertiary,
+                                                                      size: DigitButtonSize
+                                                                          .large)
+                                                                ]),
+                                                          );
+                                                        } else {
+                                                          context.router.push(
+                                                            DeliverInterventionRoute(),
+                                                          );
+                                                        }
                                                       } else {
                                                         navigateToChecklist(
                                                             ctx,
@@ -230,9 +293,72 @@ class _HouseholdOverviewPageState
                                                                     '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                         .toList()
                                                         .isEmpty) {
-                                                      context.router.push(
-                                                        DeliverInterventionRoute(),
-                                                      );
+                                                      var productVariants = fetchProductVariant(
+                                                          RegistrationDeliverySingleton()
+                                                              .selectedProject
+                                                              ?.additionalDetails
+                                                              ?.projectType
+                                                              ?.cycles![
+                                                                  deliverInterventionState
+                                                                          .cycle -
+                                                                      1]
+                                                              .deliveries?[deliverInterventionState
+                                                                  .dose -
+                                                              1],
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          context: context);
+
+                                                      if (productVariants[
+                                                              'criteria'] ==
+                                                          null) {
+                                                        showCustomPopup(
+                                                          context: context,
+                                                          builder: (BuildContext context) => Popup(
+                                                              title: localizations
+                                                                  .translate(i18
+                                                                      .common
+                                                                      .coreCommonError),
+                                                              description: localizations.translate(
+                                                                      'CONDITION_FAILED') +
+                                                                  productVariants[
+                                                                          'errors']
+                                                                      .toString()
+                                                                      .replaceAll(
+                                                                          '[', '')
+                                                                      .replaceAll(
+                                                                          ']', ''),
+                                                              type: PopUpType
+                                                                  .alert,
+                                                              actions: [
+                                                                DigitButton(
+                                                                    label: localizations
+                                                                        .translate(i18
+                                                                            .common
+                                                                            .corecommonclose),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator
+                                                                          .of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true,
+                                                                      ).pop();
+                                                                    },
+                                                                    type: DigitButtonType
+                                                                        .tertiary,
+                                                                    size: DigitButtonSize
+                                                                        .large)
+                                                              ]),
+                                                        );
+                                                      } else {
+                                                        context.router.push(
+                                                          DeliverInterventionRoute(),
+                                                        );
+                                                      }
                                                     } else {
                                                       navigateToChecklist(
                                                           ctx,

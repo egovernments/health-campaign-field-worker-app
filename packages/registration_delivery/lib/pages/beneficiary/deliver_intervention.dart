@@ -173,6 +173,43 @@ class DeliverInterventionPageState
                 : BlocBuilder<DeliverInterventionBloc,
                     DeliverInterventionState>(
                     builder: (context, deliveryInterventionState) {
+                      var checkForFormulaErrors =
+                          getProductVariants(deliveryInterventionState, state);
+
+                      if (checkForFormulaErrors['criteria'] == null) {
+                        if (context.mounted) {
+                          SchedulerBinding.instance.addPostFrameCallback((_) {
+                            context.router.maybePop();
+                            showCustomPopup(
+                              context: context,
+                              builder: (BuildContext context) => Popup(
+                                  title: localizations
+                                      .translate(i18.common.coreCommonError),
+                                  description: localizations
+                                          .translate('CONDITION_FAILED') +
+                                      checkForFormulaErrors['errors']
+                                          .toString()
+                                          .replaceAll('[', '')
+                                          .replaceAll(']', ''),
+                                  type: PopUpType.alert,
+                                  actions: [
+                                    DigitButton(
+                                        label: localizations.translate(
+                                            i18.common.corecommonclose),
+                                        onPressed: () {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+                                        },
+                                        type: DigitButtonType.tertiary,
+                                        size: DigitButtonSize.large)
+                                  ]),
+                            );
+                          });
+                        }
+                      }
+
                       List<DeliveryProductVariant>? productVariants =
                           RegistrationDeliverySingleton()
                                       .selectedProject
@@ -181,21 +218,9 @@ class DeliverInterventionPageState
                                       ?.cycles
                                       ?.isNotEmpty ==
                                   true
-                              ? (fetchProductVariant(
-                                      RegistrationDeliverySingleton()
-                                              .selectedProject
-                                              ?.additionalDetails
-                                              ?.projectType
-                                              ?.cycles![
-                                                  deliveryInterventionState
-                                                          .cycle -
-                                                      1]
-                                              .deliveries?[
-                                          deliveryInterventionState.dose - 1],
-                                      state.selectedIndividual,
-                                      state.householdMemberWrapper.household)
-                                  ?.expand((e) => e.productVariants!)
-                                  .toList())
+                              ? getProductVariants(deliveryInterventionState,
+                                      state)['criteria']
+                                  ?.productVariants
                               : RegistrationDeliverySingleton()
                                   .selectedProject
                                   ?.additionalDetails
@@ -467,7 +492,6 @@ class DeliverInterventionPageState
                                                   ),
                                                 ),
                                               ]),
-                                          //TODO
                                           DigitCard(
                                               margin:
                                                   const EdgeInsets.all(spacer2),
@@ -546,8 +570,6 @@ class DeliverInterventionPageState
                                                   ),
                                                 ),
                                               ]),
-
-                                          // end TODO
                                           DigitCard(
                                               margin:
                                                   const EdgeInsets.all(spacer2),
@@ -824,19 +846,11 @@ class DeliverInterventionPageState
                   ?.cycles ==
               null
           ? 1
-          : fetchProductVariant(
-                      RegistrationDeliverySingleton()
-                          .selectedProject
-                          ?.additionalDetails
-                          ?.projectType
-                          ?.cycles![bloc.cycle - 1]
-                          .deliveries?[bloc.dose - 1],
-                      overViewbloc.selectedIndividual,
-                      overViewbloc.householdMemberWrapper.household)
-                  ?.expand((e) => e.productVariants ?? [])
-                  .toList()
-                  ?.length ??
-              0;
+          : getProductVariants(bloc, overViewbloc) != null
+              ? getProductVariants(bloc, overViewbloc)['criteria']
+                  .productVariants
+                  .length
+              : 0;
 
       _controllers.addAll(List.generate(r, (index) => index)
           .mapIndexed((index, element) => index));
@@ -903,5 +917,21 @@ class DeliverInterventionPageState
         ),
       ]),
     });
+  }
+
+  getProductVariants(DeliverInterventionState deliveryInterventionState,
+      HouseholdOverviewState state) {
+    var result = (fetchProductVariant(
+        RegistrationDeliverySingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.projectType
+            ?.cycles![deliveryInterventionState.cycle - 1]
+            .deliveries?[deliveryInterventionState.dose - 1],
+        state.selectedIndividual,
+        state.householdMemberWrapper.household,
+        context: context));
+
+    return result;
   }
 }
