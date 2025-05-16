@@ -12,8 +12,8 @@ import '../../../models/entities/address_type.dart';
 import '../../../models/entities/beneficiary_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
-import '../../../models/entities/pgr_application_status.dart';
 import '../../../models/entities/household_type.dart';
+import '../../../models/entities/pgr_application_status.dart';
 import 'tables/address.dart';
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';
@@ -53,8 +53,8 @@ import 'tables/service.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
 import 'tables/target.dart';
-import 'tables/user.dart';
 import 'tables/unique_id_pool.dart';
+import 'tables/user.dart';
 
 // Part directive for the generated code.
 part 'sql_store.g.dart';
@@ -117,8 +117,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
   int get schemaVersion => 6; // Increment schema version
 
   @override
-  MigrationStrategy get migration =>
-      MigrationStrategy(
+  MigrationStrategy get migration => MigrationStrategy(
         onUpgrade: (migrator, from, to) async {
           if (from < 5) {
             //Add column for projectType in Project Table
@@ -206,6 +205,72 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               await migrator.addColumn(
                   identifier, identifier.individualClientReferenceId);
               await migrator.addColumn(identifier, identifier.individualId);
+              try {
+                // Step 1: Create the new target_temp table
+                await customStatement('''
+    CREATE TABLE target_temp (
+      id TEXT,
+      clientReferenceId TEXT,
+      totalNo REAL,
+      targetNo REAL,
+      auditCreatedBy TEXT,
+      nonRecoverableError BOOLEAN DEFAULT 0,
+      auditCreatedTime INTEGER,
+      clientCreatedTime INTEGER,
+      clientModifiedBy TEXT,
+      clientCreatedBy TEXT,
+      clientModifiedTime INTEGER,
+      auditModifiedBy TEXT,
+      auditModifiedTime INTEGER,
+      tenantId TEXT,
+      isDeleted BOOLEAN DEFAULT 0,
+      rowVersion INTEGER,
+      beneficiaryType TEXT,
+      additionalFields TEXT,
+      PRIMARY KEY (id, auditCreatedBy)
+    );
+  ''');
+
+                // Step 2: Copy + convert beneficiaryType from INT to TEXT (MappableValue)
+                await customStatement('''
+    INSERT INTO target_temp (
+      id, clientReferenceId, totalNo, targetNo, auditCreatedBy,
+      nonRecoverableError, auditCreatedTime, clientCreatedTime,
+      clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+      auditModifiedTime, tenantId, isDeleted, rowVersion,
+      beneficiaryType, additionalFields
+    )
+    SELECT
+      id, clientReferenceId, totalNo, targetNo, auditCreatedBy,
+      nonRecoverableError, auditCreatedTime, clientCreatedTime,
+      clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+      auditModifiedTime, tenantId, isDeleted, rowVersion,
+      CASE beneficiaryType
+        WHEN 0 THEN 'INDIVIDUAL'
+        WHEN 1 THEN 'HOUSEHOLD'
+        WHEN 2 THEN 'PRODUCT'
+        WHEN 3 THEN 'SPECIAL_GROUPS'
+        WHEN 4 THEN 'REFUGEE_CAMPS'
+        WHEN 5 THEN 'SG_PRODUCT'
+        WHEN 6 THEN 'RC_PRODUCT'
+        ELSE NULL
+      END,
+      additionalFields
+    FROM target;
+  ''');
+
+                // Step 3: Drop old table
+                await customStatement('DROP TABLE target;');
+
+                // Step 4: Rename temp to original
+                await customStatement(
+                    'ALTER TABLE target_temp RENAME TO target;');
+              } catch (e) {
+                if (kDebugMode) {
+                  print(
+                      "Migration failed while updating beneficiaryType to TEXT: $e");
+                }
+              }
             } catch (e) {
               if (kDebugMode) {
                 print(
