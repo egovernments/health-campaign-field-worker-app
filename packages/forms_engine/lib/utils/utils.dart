@@ -15,19 +15,6 @@ class Constants {
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
 }
 
-String? getScannerLabel(SchemaObject? schema, String key) {
-  if(schema == null) return null;
-  for (var page in schema.pages.values) {
-    if (page.type == PropertySchemaType.object && page.properties != null) {
-      final scannerSchema = page.properties![key];
-      if (scannerSchema != null) {
-        return scannerSchema.label;
-      }
-    }
-  }
-  return null;
-}
-
 /// `IdGen` is a singleton class that generates unique identifiers.
 /// It uses the `Uuid` package to generate version 1 UUIDs.
 class IdGen {
