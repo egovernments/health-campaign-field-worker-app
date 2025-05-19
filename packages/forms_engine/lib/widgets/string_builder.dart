@@ -22,6 +22,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
 
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
+    final inputFormatter = getPatternFormatter(validations);
 
     return ReactiveFormConsumer(
       builder: (context, formGroup, child) {
@@ -45,6 +46,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
                     value;
               },
               errorMessage: field.errorText,
+              inputFormatters: inputFormatter != null ? [inputFormatter] : null,
             ),
           ),
         );

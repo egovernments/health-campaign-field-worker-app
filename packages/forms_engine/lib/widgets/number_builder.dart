@@ -17,6 +17,7 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
     this.inputType = TextInputType.number,
     super.isRequired,
     super.validations,
+    super.inputFormatter,
   });
 
   @override
@@ -24,6 +25,7 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
 
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
+    final inputFormatter = getPatternFormatter(validations);
 
     return ReactiveFormConsumer(
       builder: (context, formGroup, child) {
@@ -49,6 +51,7 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
                 form.control(formControlName).value = int.parse(value);
               },
               errorMessage: field.errorText,
+              inputFormatters: inputFormatter != null ? [inputFormatter] : null,
             ),
           ),
         );
