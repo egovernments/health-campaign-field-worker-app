@@ -33,8 +33,11 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
+      var identifierIdSelectQuery =
+          await searchByIdentifierId(proximitySelectQuery, params, super.sql);
+
       var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+          await nameSearch(identifierIdSelectQuery, params, super.sql);
 
       var filterSelectQuery = nameSelectQuery;
 
@@ -69,8 +72,11 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
+      var beneficiaryIdSelectQuery =
+          await searchByIdentifierId(proximitySelectQuery, params, super.sql);
+
       var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+          await nameSearch(beneficiaryIdSelectQuery, params, super.sql);
 
       var filterSelectQuery = nameSelectQuery;
 
@@ -141,8 +147,11 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
+      var beneficiaryIdSelectQuery =
+          await searchByIdentifierId(proximitySelectQuery, params, super.sql);
+
       var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+          await nameSearch(beneficiaryIdSelectQuery, params, super.sql);
 
       // Return empty list if no results found
       if (nameSelectQuery == null) {
@@ -232,11 +241,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       return selectQuery;
     } else if (params.nameSearch != null ||
         params.nameSearch!.isNotEmpty && selectQuery == null) {
-      selectQuery = super
-          .sql
-          .individual
-          .select()
-          .join([joinName(sql), joinIndividualAddress(sql)]);
+      selectQuery = super.sql.individual.select().join(
+          [joinName(sql), joinIdentifier(sql), joinIndividualAddress(sql)]);
 
       if (params.householdClientReferenceId != null) {
         await searchByName(selectQuery, params, sql);
@@ -298,13 +304,21 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           params.householdClientReferenceId == null) {
         selectQuery = searchByBuildingName(selectQuery, params, sql);
       } else {
-        selectQuery = selectQuery.join([
-          joinName(sql),
-        ]);
+        selectQuery = selectQuery.join([joinName(sql), joinIdentifier(sql)]);
         selectQuery = searchByName(selectQuery, params, sql);
       }
     }
     return selectQuery;
+  }
+
+  searchByBuildingName(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
+    return selectQuery.where(buildAnd([
+      if (params.nameSearch != null)
+        buildOr([
+          sql.address.buildingName.contains(params.nameSearch!),
+        ]),
+    ]));
   }
 
   searchByName(
@@ -333,12 +347,51 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     ]));
   }
 
-  searchByBuildingName(
+  //Function to get search query from beneficiary Id
+  searchByIdentifierId(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) async {
+    if (params.identifierId == null || params.identifierId!.isEmpty) {
+      return selectQuery;
+    } else if (params.identifierId != null ||
+        params.identifierId!.isNotEmpty && selectQuery == null) {
+      selectQuery = super.sql.individual.select().join([joinIdentifier(sql)]);
+      await searchByBeneficiary(selectQuery, params, sql);
+      selectQuery = selectQuery.join([
+        leftOuterJoin(
+            sql.householdMember,
+            sql.householdMember.individualClientReferenceId
+                .equalsExp(sql.individual.clientReferenceId))
+      ]);
+      selectQuery.join([
+        leftOuterJoin(
+            sql.household,
+            sql.household.clientReferenceId
+                .equalsExp(sql.householdMember.householdClientReferenceId)),
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(sql.household.clientReferenceId))
+      ]);
+    } else if (params.identifierId != null &&
+        params.identifierId!.isNotEmpty &&
+        selectQuery != null) {
+      selectQuery = selectQuery.join([
+        joinIdentifier(sql),
+      ]);
+      selectQuery = searchByBeneficiary(selectQuery, params, sql);
+    }
+
+    return selectQuery;
+  }
+
+  searchByBeneficiary(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
     return selectQuery.where(buildAnd([
-      if (params.nameSearch != null)
+      if (params.identifierId != null)
         buildOr([
-          sql.address.buildingName.contains(params.nameSearch!),
+          sql.identifier.identifierId.contains(
+            params.identifierId!,
+          ),
         ]),
     ]));
   }
@@ -427,7 +480,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       Status.toAdminister.name: Status.toAdminister,
       Status.closeHousehold.name: Status.closeHousehold,
     };
-    var applyFilter = filter;
     var appliedFilter = statusMap[filter]!.toValue();
     if (selectQuery == null) {
       selectQuery = sql.select(sql.task).join([
@@ -477,7 +529,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
   joinIdentifier(LocalSqlDataStore sql) {
     return leftOuterJoin(
       sql.identifier,
-      sql.identifier.clientReferenceId.equalsExp(
+      sql.identifier.individualClientReferenceId.equalsExp(
         sql.individual.clientReferenceId,
       ),
     );
@@ -635,7 +687,10 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               if (identifier != null)
                 IdentifierModel(
                   id: identifier.id,
-                  clientReferenceId: individual.clientReferenceId,
+                  individualId: identifier.individualId,
+                  individualClientReferenceId:
+                      identifier.individualClientReferenceId,
+                  clientReferenceId: identifier.clientReferenceId,
                   identifierType: identifier.identifierType,
                   identifierId: identifier.identifierId,
                   rowVersion: identifier.rowVersion,

@@ -6,6 +6,7 @@ import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:survey_form/models/entities/service.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -29,16 +30,18 @@ class BeneficiaryDownSyncBloc
       downSyncLocalRepository;
   final BandwidthCheckRepository bandwidthCheckRepository;
   final LocalRepository<HouseholdModel, HouseholdSearchModel>
-  householdLocalRepository;
+      householdLocalRepository;
   final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-  householdMemberLocalRepository;
+      householdMemberLocalRepository;
   final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-  projectBeneficiaryLocalRepository;
+      projectBeneficiaryLocalRepository;
   final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
   final LocalRepository<SideEffectModel, SideEffectSearchModel>
-  sideEffectLocalRepository;
+      sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
       referralLocalRepository;
+  final LocalRepository<ServiceModel, ServiceSearchModel>
+      serviceLocalRepository;
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
@@ -50,6 +53,7 @@ class BeneficiaryDownSyncBloc
     required this.taskLocalRepository,
     required this.sideEffectLocalRepository,
     required this.referralLocalRepository,
+    required this.serviceLocalRepository,
   }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
     on(_handleCheckTotalCount);
@@ -121,7 +125,7 @@ class BeneficiaryDownSyncBloc
         DownsyncSearchModel(
           locality: event.boundaryCode,
           offset: existingDownSyncData.firstOrNull?.offset ?? 0,
-          limit: 1,
+          limit: 0,
           isDeleted: true,
           lastSyncedTime: lastSyncedTime,
           tenantId: envConfig.variables.tenantId,
@@ -211,6 +215,7 @@ class BeneficiaryDownSyncBloc
                 taskLocalRepository,
                 sideEffectLocalRepository,
                 referralLocalRepository,
+                serviceLocalRepository,
               ]);
               // Update the local downSync data for the boundary with the new values
               totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
@@ -308,9 +313,11 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int syncedCount,
     int totalCount,
   ) = _DownSyncInProgressState;
+
   const factory BeneficiaryDownSyncState.success(
     DownsyncModel downSyncResult,
   ) = _DownSyncSuccessState;
+
   const factory BeneficiaryDownSyncState.getBatchSize(
     int batchSize,
     String projectId,
@@ -318,21 +325,29 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int pendingSyncCount,
     String boundaryName,
   ) = _DownSyncGetBatchSizeState;
+
   const factory BeneficiaryDownSyncState.loading(bool isPop) =
       _DownSyncLoadingState;
+
   const factory BeneficiaryDownSyncState.insufficientStorage() =
       _DownSyncInsufficientStorageState;
+
   const factory BeneficiaryDownSyncState.dataFound(
     int initialServerCount,
     int batchSize,
   ) = _DownSyncDataFoundState;
+
   const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;
+
   const factory BeneficiaryDownSyncState.totalCountCheckFailed() =
       _DownSynnCountCheckFailedState;
+
   const factory BeneficiaryDownSyncState.failed() = _DownSyncFailureState;
+
   const factory BeneficiaryDownSyncState.report(
     List<DownsyncModel> downsyncCriteriaList,
   ) = _DownSyncReportState;
+
   const factory BeneficiaryDownSyncState.pendingSync() =
       _DownSyncPendingSyncState;
 }

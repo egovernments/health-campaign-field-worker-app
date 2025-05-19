@@ -8,17 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/utils/global_search_parameters.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../data/repositories/local/individual_global_search.dart';
-import '../../models/entities/household.dart';
-import '../../models/entities/household_member.dart';
-import '../../models/entities/project_beneficiary.dart';
-import '../../models/entities/referral.dart';
-import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
-import '../../models/entities/task.dart';
-import '../../utils/typedefs.dart';
-import '../search_households/search_households.dart';
 
 part 'household_overview.freezed.dart';
 
@@ -35,6 +28,7 @@ class HouseholdOverviewBloc
   final SideEffectDataRepository sideEffectDataRepository;
   final ReferralDataRepository referralDataRepository;
   final IndividualGlobalSearchRepository individualGlobalSearchRepository;
+  final ServiceDataRepository serviceDataRepository;
 
   HouseholdOverviewBloc(
     super.initialState, {
@@ -47,6 +41,7 @@ class HouseholdOverviewBloc
     required this.referralDataRepository,
     required this.beneficiaryType,
     required this.individualGlobalSearchRepository,
+    required this.serviceDataRepository,
   }) {
     on(_handleDeleteHousehold);
     on(_handleDeleteIndividual);
@@ -205,6 +200,19 @@ class HouseholdOverviewBloc
             .toList(),
       ));
 
+      final householdChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: [resultHousehold.clientReferenceId],
+      ));
+
+      final memberChecklist =
+          await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: members
+            .map((e) => e.individualClientReferenceId)
+            .whereNotNull()
+            .toList(),
+      ));
+
       individuals.sort((a, b) => (a.clientAuditDetails?.createdTime ?? 0)
           .compareTo(b.clientAuditDetails?.createdTime ?? 0));
 
@@ -248,6 +256,18 @@ class HouseholdOverviewBloc
               ...?state.householdMemberWrapper.referrals,
               ...referrals,
             ],
+            householdMembers: [
+              ...?state.householdMemberWrapper.householdMembers,
+              ...householdMemberList
+            ],
+            householdChecklists: [
+              ...?state.householdMemberWrapper.householdChecklists,
+              ...householdChecklist,
+            ],
+            individualChecklists: [
+              ...?state.householdMemberWrapper.individualChecklists,
+              ...memberChecklist,
+            ],
           ),
         ));
 
@@ -267,6 +287,9 @@ class HouseholdOverviewBloc
             projectBeneficiaries: projectBeneficiaries,
             sideEffects: sideEffects,
             referrals: referrals,
+            householdMembers: householdMemberList,
+            householdChecklists: householdChecklist,
+            individualChecklists: memberChecklist,
           ),
           loading: false,
           offset: members.isNotEmpty
@@ -536,6 +559,14 @@ class HouseholdOverviewBloc
                       ...sideEffects,
                     },
                   ],
+            householdMembers: event.offset == 0
+                ? householdMemberList
+                : [
+              ...{
+                ...?state.householdMemberWrapper.householdMembers,
+                ...householdMemberList,
+              },
+            ],
             referrals: event.offset == 0
                 ? referrals
                 : [
@@ -827,6 +858,17 @@ class HouseholdOverviewBloc
                   lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
                 )
               : null,
+          memberRelationships: i.memberRelationships?.map((e) => e.copyWith(
+            clientAuditDetails: (e.clientAuditDetails?.createdBy != null &&
+                e.clientAuditDetails?.createdTime != null)
+                ? ClientAuditDetails(
+              createdBy: e.clientAuditDetails!.createdBy,
+              createdTime: e.clientAuditDetails!.createdTime,
+              lastModifiedBy: e.clientAuditDetails!.lastModifiedBy,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            ): null,
+            rowVersion: e.rowVersion,
+          )).toList(),
         ),
       );
     }

@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/models/entities/household.dart';
@@ -37,6 +37,8 @@ class MockSideEffectDataRepository extends Mock
 class MockReferralDataRepository extends Mock
     implements ReferralDataRepository {}
 
+class MockServiceDataRepository extends Mock implements ServiceDataRepository {}
+
 class MockIndividualGlobalSearchRepository extends Mock
     implements IndividualGlobalSearchRepository {}
 
@@ -49,6 +51,7 @@ void main() {
   late MockTaskDataRepository mockTaskDataRepository;
   late MockSideEffectDataRepository mockSideEffectDataRepository;
   late MockReferralDataRepository mockReferralDataRepository;
+  late MockServiceDataRepository mockServiceDataRepository;
   late HouseholdOverviewBloc householdOverviewBloc;
   late MockIndividualGlobalSearchRepository
       mockIndividualGlobalSearchRepository;
@@ -64,6 +67,7 @@ void main() {
     mockTaskDataRepository = MockTaskDataRepository();
     mockSideEffectDataRepository = MockSideEffectDataRepository();
     mockReferralDataRepository = MockReferralDataRepository();
+    mockServiceDataRepository = MockServiceDataRepository();
     mockIndividualGlobalSearchRepository =
         MockIndividualGlobalSearchRepository();
     householdOverviewBloc = HouseholdOverviewBloc(
@@ -79,6 +83,7 @@ void main() {
       referralDataRepository: mockReferralDataRepository,
       beneficiaryType: BeneficiaryType.individual,
       individualGlobalSearchRepository: mockIndividualGlobalSearchRepository,
+      serviceDataRepository: mockServiceDataRepository,
     );
   });
 
@@ -94,6 +99,7 @@ void main() {
       offset: null,
       limit: null,
       filter: [],
+      identifierId: '1ce2-3f4g-5h6i',
     ));
     registerFallbackValue(HouseholdSearchModel());
     registerFallbackValue(HouseholdMemberSearchModel());

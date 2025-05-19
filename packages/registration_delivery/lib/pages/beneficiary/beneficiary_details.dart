@@ -164,6 +164,25 @@ class BeneficiaryDetailsPageState
                                                         c.id ==
                                                         deliverState.cycle);
                                                 if (selectedCycle != null) {
+                                                  final currentCycle =
+                                                      deliverState.cycle >= 0
+                                                          ? deliverState.cycle
+                                                          : 0;
+
+                                                  // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
+                                                  final currentDose =
+                                                      deliverState.dose >= 0
+                                                          ? deliverState.dose
+                                                          : 0;
+
+                                                  final items =
+                                                      RegistrationDeliverySingleton()
+                                                              .projectType!
+                                                              .cycles?[
+                                                                  currentCycle - 1]
+                                                              .deliveries?[
+                                                          currentDose - 1];
+
                                                   bloc.add(
                                                     DeliverInterventionEvent
                                                         .selectFutureCycleDose(
@@ -180,51 +199,106 @@ class BeneficiaryDetailsPageState
                                                           .selectedIndividual,
                                                     ),
                                                   );
-                                                  showCustomPopup(
-                                                    context: context,
-                                                    builder: (popUpContext) => Popup(
-                                                        title: localizations
-                                                            .translate(i18
-                                                                .beneficiaryDetails
-                                                                .resourcesTobeDelivered),
-                                                        type: PopUpType.simple,
-                                                        contentPadding:
-                                                            EdgeInsets.zero,
-                                                        additionalWidgets: [
-                                                          buildTableContent(
-                                                              deliverState,
-                                                              context,
-                                                              variant,
-                                                              state
-                                                                  .selectedIndividual,
-                                                              state
-                                                                  .householdMemberWrapper
-                                                                  .household),
-                                                        ],
-                                                        actions: [
-                                                          DigitButton(
-                                                              label: localizations
-                                                                  .translate(i18
-                                                                      .beneficiaryDetails
-                                                                      .ctaProceed),
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                  context,
-                                                                  rootNavigator:
-                                                                      true,
-                                                                ).pop();
-                                                                router.push(
-                                                                  DeliverInterventionRoute(),
-                                                                );
-                                                              },
-                                                              type:
-                                                                  DigitButtonType
-                                                                      .primary,
-                                                              size:
-                                                                  DigitButtonSize
-                                                                      .large),
-                                                        ]),
-                                                  );
+
+                                                  var productVariants =
+                                                      fetchProductVariant(
+                                                          items,
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          context: context);
+
+                                                  if (productVariants[
+                                                          'criteria'] ==
+                                                      null) {
+                                                    showCustomPopup(
+                                                      context: context,
+                                                      builder: (BuildContext context) => Popup(
+                                                          title: localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .coreCommonError),
+                                                          description: localizations
+                                                                  .translate(
+                                                                      'CONDITION_FAILED') +
+                                                              productVariants[
+                                                                      'errors']
+                                                                  .toString()
+                                                                  .replaceAll(
+                                                                      '[', '')
+                                                                  .replaceAll(
+                                                                      ']', ''),
+                                                          type: PopUpType.alert,
+                                                          actions: [
+                                                            DigitButton(
+                                                                label: localizations
+                                                                    .translate(i18
+                                                                        .common
+                                                                        .corecommonclose),
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true,
+                                                                  ).pop();
+                                                                },
+                                                                type: DigitButtonType
+                                                                    .tertiary,
+                                                                size:
+                                                                    DigitButtonSize
+                                                                        .large)
+                                                          ]),
+                                                    );
+                                                  } else {
+                                                    showCustomPopup(
+                                                      context: context,
+                                                      builder: (popUpContext) => Popup(
+                                                          title: localizations
+                                                              .translate(i18
+                                                                  .beneficiaryDetails
+                                                                  .resourcesTobeDelivered),
+                                                          type:
+                                                              PopUpType.simple,
+                                                          contentPadding:
+                                                              EdgeInsets.zero,
+                                                          additionalWidgets: [
+                                                            buildTableContent(
+                                                                deliverState,
+                                                                context,
+                                                                variant,
+                                                                state
+                                                                    .selectedIndividual,
+                                                                state
+                                                                    .householdMemberWrapper
+                                                                    .household),
+                                                          ],
+                                                          actions: [
+                                                            DigitButton(
+                                                                label: localizations
+                                                                    .translate(i18
+                                                                        .beneficiaryDetails
+                                                                        .ctaProceed),
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true,
+                                                                  ).pop();
+                                                                  router.push(
+                                                                    DeliverInterventionRoute(),
+                                                                  );
+                                                                },
+                                                                type:
+                                                                    DigitButtonType
+                                                                        .primary,
+                                                                size:
+                                                                    DigitButtonSize
+                                                                        .large),
+                                                          ]),
+                                                    );
+                                                  }
                                                 }
                                               },
                                             ),
@@ -241,8 +315,76 @@ class BeneficiaryDetailsPageState
                                           size: DigitButtonSize.large,
                                           mainAxisSize: MainAxisSize.max,
                                           onPressed: () {
-                                            context.router.push(
-                                                DeliverInterventionRoute());
+                                            final currentCycle =
+                                                deliverState.cycle >= 0
+                                                    ? deliverState.cycle
+                                                    : 0;
+
+                                            // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
+                                            final currentDose =
+                                                deliverState.dose >= 0
+                                                    ? deliverState.dose
+                                                    : 0;
+
+                                            final items =
+                                                RegistrationDeliverySingleton()
+                                                    .projectType!
+                                                    .cycles?[currentCycle - 1]
+                                                    .deliveries?[currentDose - 1];
+
+                                            var productVariants =
+                                                fetchProductVariant(
+                                                    items,
+                                                    state.selectedIndividual,
+                                                    state.householdMemberWrapper
+                                                        .household,
+                                                    context: context);
+
+                                            if (productVariants['criteria'] ==
+                                                null) {
+                                              showCustomPopup(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    Popup(
+                                                        title: localizations
+                                                            .translate(i18
+                                                                .common
+                                                                .coreCommonError),
+                                                        description: localizations
+                                                                .translate(
+                                                                    'CONDITION_FAILED') +
+                                                            productVariants[
+                                                                    'errors']
+                                                                .toString()
+                                                                .replaceAll(
+                                                                    '[', '')
+                                                                .replaceAll(
+                                                                    ']', ''),
+                                                        type: PopUpType.alert,
+                                                        actions: [
+                                                      DigitButton(
+                                                          label: localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .corecommonclose),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                              context,
+                                                              rootNavigator:
+                                                                  true,
+                                                            ).pop();
+                                                          },
+                                                          type: DigitButtonType
+                                                              .tertiary,
+                                                          size: DigitButtonSize
+                                                              .large)
+                                                    ]),
+                                              );
+                                            } else {
+                                              context.router.push(
+                                                  DeliverInterventionRoute());
+                                            }
                                           },
                                         ),
                                       ]);
@@ -311,9 +453,15 @@ class BeneficiaryDetailsPageState
                                         return '--';
                                       }
 
-                                      return maskString(identifiers
-                                          .first.identifierId
-                                          .toString());
+                                      return identifiers.first.identifierType ==
+                                              IdentifierTypes
+                                                  .uniqueBeneficiaryID
+                                                  .toValue()
+                                          ? identifiers.first.identifierId
+                                              .toString()
+                                          : maskString(identifiers
+                                              .first.identifierId
+                                              .toString());
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonAge,

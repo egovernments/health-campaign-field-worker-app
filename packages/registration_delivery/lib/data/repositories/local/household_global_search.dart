@@ -34,8 +34,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
+      var identifierIdSelectQuery =
+          await searchByIdentifierId(proximitySelectQuery, params, super.sql);
+
       var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+          await nameSearch(identifierIdSelectQuery, params, super.sql);
 
       var filterSelectQuery = nameSelectQuery;
 
@@ -71,8 +74,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
+      var identifierIdSelectQuery =
+          await searchByIdentifierId(proximitySelectQuery, params, super.sql);
+
       var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+          await nameSearch(identifierIdSelectQuery, params, super.sql);
 
       var filterSelectQuery = nameSelectQuery;
 
@@ -143,8 +149,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
+      var identifierIdSelectQuery =
+          await searchByIdentifierId(proximitySelectQuery, params, super.sql);
+
       var nameSelectQuery =
-          await nameSearch(proximitySelectQuery, params, super.sql);
+          await nameSearch(identifierIdSelectQuery, params, super.sql);
 
       // Return empty list if no results found
       if (nameSelectQuery == null) {
@@ -294,6 +303,55 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     ]));
   }
 
+  //Function to get search query from beneficiary Id
+  searchByIdentifierId(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) async {
+    if (params.identifierId == null || params.identifierId!.isEmpty) {
+      return selectQuery;
+    } else if (params.identifierId != null ||
+        params.identifierId!.isNotEmpty && selectQuery == null) {
+      selectQuery = super.sql.individual.select().join([joinIdentifier(sql)]);
+      await searchByIdentifier(selectQuery, params, sql);
+      selectQuery = selectQuery.join([
+        leftOuterJoin(
+            sql.householdMember,
+            sql.householdMember.individualClientReferenceId
+                .equalsExp(sql.individual.clientReferenceId))
+      ]);
+      selectQuery.join([
+        leftOuterJoin(
+            sql.household,
+            sql.household.clientReferenceId
+                .equalsExp(sql.householdMember.householdClientReferenceId)),
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(sql.household.clientReferenceId))
+      ]);
+    } else if (params.identifierId != null &&
+        params.identifierId!.isNotEmpty &&
+        selectQuery != null) {
+      selectQuery = selectQuery.join([
+        joinIdentifier(sql),
+      ]);
+      selectQuery = searchByIdentifier(selectQuery, params, sql);
+    }
+
+    return selectQuery;
+  }
+
+  searchByIdentifier(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
+    return selectQuery.where(buildAnd([
+      if (params.identifierId != null)
+        buildOr([
+          sql.identifier.identifierId.contains(
+            params.identifierId!,
+          ),
+        ]),
+    ]));
+  }
+
   filterSearch(selectQuery, GlobalSearchParameters params, String filter,
       LocalSqlDataStore sql) async {
     var sql = super.sql;
@@ -439,6 +497,13 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         sql.name.individualClientReferenceId,
       ),
     );
+  }
+
+  joinIdentifier(LocalSqlDataStore sql) {
+    return leftOuterJoin(
+        sql.identifier,
+        sql.identifier.individualClientReferenceId
+            .equalsExp(sql.individual.clientReferenceId));
   }
 
   _returnHouseHoldModel(results, totalCount) {
