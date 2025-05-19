@@ -871,7 +871,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
                 "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
                 "fieldName": "phoneNumber",
-                "innerLabel": ""
+                "innerLabel": "",
+                "validations": [
+                  {
+                    "type": "pattern",
+                    "value": '^[0-9]{10}' r'$',
+                    "message": "Enter a valid 10-digit phone number"
+                  }
+                ]
               },
               {
                 "type": "string",

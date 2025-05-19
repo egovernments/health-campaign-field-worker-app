@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 import '../blocs/app_localization.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
@@ -38,3 +40,39 @@ String? translateIfPresent(String? key, FormLocalization localizations) {
   if (key == null) return null;
   return localizations.translate(key);
 }
+
+TextInputFormatter? getPatternFormatter(List<ValidationRule>? validations) {
+  final patternRule = validations?.firstWhere(
+        (rule) => rule.type == 'pattern' && rule.value is String,
+    orElse: () => const ValidationRule(type: '', value: ''),
+  );
+
+  if (patternRule != null && patternRule.type == 'pattern') {
+    final originalPattern = patternRule.value;
+
+    // Try to extract allowed character class from patterns like ^[0-9]{10}$
+    final match = RegExp(r'^\^?\[?([^\]]+)\]?\{\d+\}\$?$').firstMatch(originalPattern);
+
+    if (match != null) {
+      final characterClass = match.group(1); // e.g. 0-9
+
+      if (characterClass != null) {
+        // Allow only individual characters from the class
+        final perCharPattern = RegExp('[$characterClass]');
+        return FilteringTextInputFormatter.allow(perCharPattern);
+      }
+    }
+
+    // Fallback: allow pattern without anchors and braces (not full-string match)
+    final fallbackPattern = originalPattern
+        .replaceAll(RegExp(r'\^|\$'), '') // remove ^ and $
+        .replaceAll(RegExp(r'\{.*?\}'), ''); // remove {n} if present
+
+    final fallbackRegex = RegExp(fallbackPattern);
+    return FilteringTextInputFormatter.allow(fallbackRegex);
+  }
+
+  return null;
+}
+
+

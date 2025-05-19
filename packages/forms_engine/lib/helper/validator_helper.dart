@@ -15,12 +15,6 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
           }
           break;
 
-        case 'pattern':
-          if (rule.value is List && rule.value.isNotEmpty) {
-            validators.add(Validators.pattern(RegExp(rule.value.first)) as Validator<T>);
-          }
-          break;
-
         case 'minLength':
           if (rule.value is int) {
             validators.add(Validators.minLength(rule.value) as Validator<T>);
@@ -44,6 +38,18 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
         case 'maxValue':
           if (rule.value is int) {
             validators.add(Validators.max(rule.value) as Validator<T>);
+          }
+          break;
+
+        case 'pattern':
+          if (rule.value is List && rule.value.isNotEmpty) {
+            validators.add(
+              Validators.pattern(RegExp(rule.value.first)) as Validator<T>,
+            );
+          } else if (rule.value is String && rule.value.isNotEmpty) {
+            validators.add(
+              Validators.pattern(RegExp(rule.value)) as Validator<T>,
+            );
           }
           break;
 
