@@ -9,6 +9,7 @@ class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
     required super.form,
     this.label,
     super.validations,
+    super.helpText,
   });
 
   @override
@@ -18,6 +19,7 @@ class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
       formControlName: formControlName,
       label: label,
       readOnly: readOnly,
+      helpText: helpText,
     );
   }
 }
@@ -27,12 +29,14 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
   final FormGroup form;
   final String? label;
   final bool readOnly;
+  final String? helpText;
 
   const _LatLngBuilderStatefulWrapper({
     required this.form,
     required this.formControlName,
     required this.label,
     required this.readOnly,
+    this.helpText,
   });
 
   @override
@@ -71,6 +75,7 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
                 isRequired: true,
                 capitalizedFirstLetter: false,
                 child: DigitTextFormInput(
+                  helpText: widget.helpText,
                   readOnly: widget.readOnly,
                   initialValue: widget.form.control(widget.formControlName).value,
                   onChange: (value) {

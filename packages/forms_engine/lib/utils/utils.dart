@@ -1,3 +1,4 @@
+import '../blocs/app_localization.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
 import 'package:uuid/uuid.dart';
@@ -31,4 +32,9 @@ class IdGen {
 
   /// Generates a version 1 UUID and returns it as a string.
   String get identifier => uuid.v1();
+}
+
+String? translateIfPresent(String? key, FormLocalization localizations) {
+  if (key == null) return null;
+  return localizations.translate(key);
 }

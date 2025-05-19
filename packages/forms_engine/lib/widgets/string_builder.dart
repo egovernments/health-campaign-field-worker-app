@@ -14,6 +14,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     this.inputType = TextInputType.text,
     super.isRequired,
     super.validations,
+    super.helpText,
   });
 
   @override

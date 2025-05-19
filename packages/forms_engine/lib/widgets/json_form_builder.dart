@@ -74,7 +74,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       case PropertySchemaFormat.select:
         return LabeledField(
           isRequired: hasRequiredValidation(widget.schema.validations),
-          label: localizations.translate(widget.schema.label ?? ''),
+          label: translateIfPresent(widget.schema.label, localizations),
           child: JsonSchemaSelectionBuilder(
             form: form,
             formControlName: widget.formControlName,
@@ -123,6 +123,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           start: widget.schema.firstDate?.dateValue,
           end: widget.schema.lastDate?.dateValue,
           validations: widget.schema.validations,
+          helpText: localizations.translate(widget.schema.helpText ?? ''),
         );
 
       case PropertySchemaFormat.locality:
@@ -134,6 +135,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
             value: widget.schema.value as String?,
             formControlName: widget.formControlName,
             readOnly: true,
+            helpText: localizations.translate(widget.schema.helpText ?? ''),
           ),
         );
 
@@ -145,6 +147,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           form: form,
           label: localizations.translate(widget.schema.label ?? ''),
+          helpText: localizations.translate(widget.schema.helpText ?? ''),
         );
 
       default:
@@ -155,6 +158,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           value: widget.schema.value as String?,
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: localizations.translate(widget.schema.helpText ?? ''),
         );
     }
   }
@@ -172,6 +176,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           inputType: TextInputType.number,
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: localizations.translate(widget.schema.helpText ?? ''),
         );
 
       case PropertySchemaFormat.numeric:
@@ -185,6 +190,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           maxValue: widget.schema.maxValue,
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
+          helpText: localizations.translate(widget.schema.helpText ?? ''),
         );
 
       case PropertySchemaFormat.custom:
@@ -197,6 +203,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           value: widget.schema.value as int?,
           validations: widget.schema.validations,
+          helpText: localizations.translate(widget.schema.helpText ?? ''),
         );
     }
   }
@@ -236,6 +243,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           value: widget.schema.value as String?,
           readOnly: widget.schema.readonly ?? false,
           validations: widget.schema.validations,
+          helpText: localizations.translate(widget.schema.helpText ?? ''),
         );
     }
   }
