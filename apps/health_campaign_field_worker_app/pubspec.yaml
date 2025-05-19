@@ -18,7 +18,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.11+1
   path_provider: ^2.1.3
   path: ^1.9.0
-  digit_ui_components: ^0.2.0
+  digit_ui_components: ^0.2.1+1
   auto_route: ^8.3.0
   flutter_bloc: ^8.1.5
   collection: ^1.18.0
@@ -56,20 +56,21 @@ dependencies:
   digit_showcase: ^1.0.2+1
   qr_flutter: ^4.1.0
   disk_space_update: ^0.0.2
-  sync_service: ^1.0.0
+  sync_service: ^1.0.1-dev.3-enumeration
   attendance_management: ^1.0.4+1
   digit_scanner: ^1.0.5
-  inventory_management: ^1.0.5+1
-  referral_reconciliation: ^1.0.4+2
-  digit_data_model: ^1.0.6+1
-  registration_delivery: ^1.0.6+2
+  inventory_management: ^1.0.6-dev.1-enumeration
+  referral_reconciliation: ^1.0.5-dev.2-enumeration
+  digit_data_model: ^1.0.7-dev.3-enumeration
+  registration_delivery: ^1.0.7-dev.6-enumeration
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.4+1
   closed_household: ^1.0.5+1
   digit_location_tracker: ^1.0.0
   permission_handler: ^11.3.1
-  survey_form: ^1.0.1+3
-  complaints: ^1.0.2+1
+  survey_form: ^1.0.2-dev.4-enumeration
+  complaints: ^1.0.3-dev.1-enumeration
+  curl_logger_dio_interceptor: ^1.0.0
   transit_post:
     path: ../../packages/transit_post
 

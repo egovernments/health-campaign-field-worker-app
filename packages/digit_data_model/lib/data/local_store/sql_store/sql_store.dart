@@ -13,8 +13,8 @@ import '../../../models/entities/address_type.dart';
 import '../../../models/entities/beneficiary_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
-import '../../../models/entities/pgr_application_status.dart';
 import '../../../models/entities/household_type.dart';
+import '../../../models/entities/pgr_application_status.dart';
 import 'tables/address.dart';
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';
@@ -32,6 +32,7 @@ import 'tables/package_tables/attendee.dart';
 import 'tables/package_tables/hf_referral.dart';
 import 'tables/package_tables/household.dart';
 import 'tables/package_tables/household_member.dart';
+import 'tables/package_tables/household_member_relationship.dart';
 import 'tables/package_tables/referral.dart';
 import 'tables/package_tables/side_effect.dart';
 import 'tables/package_tables/staff.dart';
@@ -53,6 +54,7 @@ import 'tables/service.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
 import 'tables/target.dart';
+import 'tables/unique_id_pool.dart';
 import 'tables/user.dart';
 
 // Part directive for the generated code.
@@ -98,12 +100,14 @@ part 'sql_store.g.dart';
   HFReferral,
   Household,
   HouseholdMember,
+  HouseholdMemberRelationShip,
   Task,
   TaskResource,
   SideEffect,
   Referral,
   Localization,
   UserAction,
+  UniqueIdPool
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   /// The constructor for `LocalSqlDataStore`.
@@ -193,6 +197,87 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               if (kDebugMode) {
                 print(
                     "Failed to add columns for householdType, attendance - localityCode, and service - relatedClientReferenceId");
+              }
+            }
+          }
+          if (from < 7) {
+            try {
+              await migrator.addColumn(serviceAttributes, serviceAttributes.id);
+              await migrator.addColumn(serviceAttributes,
+                  serviceAttributes.serviceClientReferenceId);
+              await migrator.addColumn(
+                  identifier, identifier.individualClientReferenceId);
+              await migrator.addColumn(identifier, identifier.individualId);
+              try {
+                // Step 1: Create the new target_temp table
+                await customStatement('''
+    CREATE TABLE target_temp (
+      id TEXT,
+      clientReferenceId TEXT,
+      totalNo REAL,
+      targetNo REAL,
+      auditCreatedBy TEXT,
+      nonRecoverableError BOOLEAN DEFAULT 0,
+      auditCreatedTime INTEGER,
+      clientCreatedTime INTEGER,
+      clientModifiedBy TEXT,
+      clientCreatedBy TEXT,
+      clientModifiedTime INTEGER,
+      auditModifiedBy TEXT,
+      auditModifiedTime INTEGER,
+      tenantId TEXT,
+      isDeleted BOOLEAN DEFAULT 0,
+      rowVersion INTEGER,
+      beneficiaryType TEXT,
+      additionalFields TEXT,
+      PRIMARY KEY (id, auditCreatedBy)
+    );
+  ''');
+
+                // Step 2: Copy + convert beneficiaryType from INT to TEXT (MappableValue)
+                await customStatement('''
+    INSERT INTO target_temp (
+      id, clientReferenceId, totalNo, targetNo, auditCreatedBy,
+      nonRecoverableError, auditCreatedTime, clientCreatedTime,
+      clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+      auditModifiedTime, tenantId, isDeleted, rowVersion,
+      beneficiaryType, additionalFields
+    )
+    SELECT
+      id, clientReferenceId, totalNo, targetNo, auditCreatedBy,
+      nonRecoverableError, auditCreatedTime, clientCreatedTime,
+      clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+      auditModifiedTime, tenantId, isDeleted, rowVersion,
+      CASE beneficiaryType
+        WHEN 0 THEN 'INDIVIDUAL'
+        WHEN 1 THEN 'HOUSEHOLD'
+        WHEN 2 THEN 'PRODUCT'
+        WHEN 3 THEN 'SPECIAL_GROUPS'
+        WHEN 4 THEN 'REFUGEE_CAMPS'
+        WHEN 5 THEN 'SG_PRODUCT'
+        WHEN 6 THEN 'RC_PRODUCT'
+        ELSE NULL
+      END,
+      additionalFields
+    FROM target;
+  ''');
+
+                // Step 3: Drop old table
+                await customStatement('DROP TABLE target;');
+
+                // Step 4: Rename temp to original
+                await customStatement(
+                    'ALTER TABLE target_temp RENAME TO target;');
+              } catch (e) {
+                if (kDebugMode) {
+                  print(
+                      "Migration failed while updating beneficiaryType to TEXT: $e");
+                }
+              }
+            } catch (e) {
+              if (kDebugMode) {
+                print(
+                    "Failed to add columns for serviceAttributes - serviceClientReferenceId, id, identifier - individualClientReferenceId, individualId");
               }
             }
           }

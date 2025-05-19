@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:stream_transform/stream_transform.dart';
+import 'package:survey_form/models/entities/service.dart';
 
 import '../../data/repositories/local/household_global_search.dart';
 import '../../data/repositories/local/individual_global_search.dart';
@@ -45,6 +46,7 @@ class SearchHouseholdsBloc
   final ReferralDataRepository referralDataRepository;
   final IndividualGlobalSearchRepository individualGlobalSearchRepository;
   final HouseHoldGlobalSearchRepository houseHoldGlobalSearchRepository;
+  final ServiceDataRepository serviceDataRepository;
 
   SearchHouseholdsBloc(
       {required this.userUid,
@@ -59,7 +61,9 @@ class SearchHouseholdsBloc
       required this.addressRepository,
       required this.referralDataRepository,
       required this.individualGlobalSearchRepository,
-      required this.houseHoldGlobalSearchRepository})
+      required this.houseHoldGlobalSearchRepository,
+        required this.serviceDataRepository,
+      })
       : super(const SearchHouseholdsState()) {
     on(_handleClear);
     on(_handleSearchByHousehold);
@@ -114,6 +118,17 @@ class SearchHouseholdsBloc
             projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
       ));
 
+      final householdChecklist = await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: [event.householdModel.clientReferenceId],
+      ));
+
+      final memberChecklist = await serviceDataRepository.search(ServiceSearchModel(
+        referenceIds: householdMembers
+            .map((e) => e.individualClientReferenceId)
+            .whereNotNull()
+            .toList(),
+      ));
+
       if (headOfHousehold == null) {
         emit(state.copyWith(
           loading: false,
@@ -124,10 +139,13 @@ class SearchHouseholdsBloc
           household: event.householdModel,
           headOfHousehold: headOfHousehold,
           members: individuals,
+          householdMembers: householdMembers,
           projectBeneficiaries: projectBeneficiaries,
           tasks: tasks.isNotEmpty ? tasks : null,
           sideEffects: sideEffects.isNotEmpty ? sideEffects : null,
           referrals: referrals.isNotEmpty ? referrals : null,
+          householdChecklists: householdChecklist,
+          individualChecklists: memberChecklist,
         );
 
         emit(
@@ -289,6 +307,7 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
     @Default(10) int limit,
     @Default(false) bool loading,
     String? searchQuery,
+    String? beneficiaryIdQuery,
     String? tag,
     @Default([]) List<HouseholdMemberWrapper> householdMembers,
     @Default(0) int totalResults,
@@ -297,7 +316,9 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
   bool get resultsNotFound {
     if (loading) return false;
 
-    if (searchQuery?.isEmpty ?? true && tag == null) return false;
+    if (searchQuery?.isEmpty ??
+        beneficiaryIdQuery?.isEmpty ??
+        true && tag == null) return false;
 
     return householdMembers.isEmpty;
   }
@@ -309,10 +330,13 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     HouseholdModel? household,
     IndividualModel? headOfHousehold,
     List<IndividualModel>? members,
+    List<HouseholdMemberModel>? householdMembers, //household members>
     List<ProjectBeneficiaryModel>? projectBeneficiaries,
     double? distance,
     List<TaskModel>? tasks,
     List<SideEffectModel>? sideEffects,
     List<ReferralModel>? referrals,
+    List<ServiceModel>? householdChecklists,
+List<ServiceModel>? individualChecklists,
   }) = _HouseholdMemberWrapper;
 }

@@ -175,6 +175,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   FutureOr<void> update(
     ProjectBeneficiaryModel entity, {
     bool createOpLog = true,
+        DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final projectBeneficiaryCompanion = entity.companion;

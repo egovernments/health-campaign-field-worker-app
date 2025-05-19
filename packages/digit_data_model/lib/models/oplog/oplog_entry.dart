@@ -114,6 +114,7 @@ enum DataOperation {
   update,
   delete,
   singleCreate,
+  singleUpdate,
 }
 
 @MappableEnum(caseStyle: CaseStyle.snakeCase)
@@ -126,5 +127,6 @@ enum ApiOperation {
   bulkCreate,
   bulkUpdate,
   bulkDelete,
-  singleCreate
+  singleCreate,
+  singleUpdate,
 }

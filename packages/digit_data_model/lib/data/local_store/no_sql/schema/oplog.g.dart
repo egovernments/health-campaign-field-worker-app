@@ -292,6 +292,7 @@ const _OpLogentityTypeEnumValueMap = {
   r'attendance': r'attendance',
   r'userLocation': r'userLocation',
   r'userAction': r'userAction',
+  r'uniqueId': r'uniqueId',
 };
 const _OpLogentityTypeValueEnumMap = {
   r'user': DataModelType.user,
@@ -328,6 +329,7 @@ const _OpLogentityTypeValueEnumMap = {
   r'attendance': DataModelType.attendance,
   r'userLocation': DataModelType.userLocation,
   r'userAction': DataModelType.userAction,
+  r'uniqueId': DataModelType.uniqueId,
 };
 const _OpLogoperationEnumValueMap = {
   r'create': r'create',
@@ -335,6 +337,7 @@ const _OpLogoperationEnumValueMap = {
   r'update': r'update',
   r'delete': r'delete',
   r'singleCreate': r'singleCreate',
+  r'singleUpdate': r'singleUpdate',
 };
 const _OpLogoperationValueEnumMap = {
   r'create': DataOperation.create,
@@ -342,6 +345,7 @@ const _OpLogoperationValueEnumMap = {
   r'update': DataOperation.update,
   r'delete': DataOperation.delete,
   r'singleCreate': DataOperation.singleCreate,
+  r'singleUpdate': DataOperation.singleUpdate,
 };
 
 Id _opLogGetId(OpLog object) {

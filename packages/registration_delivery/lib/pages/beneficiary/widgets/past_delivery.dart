@@ -48,15 +48,6 @@ Widget buildTableContent(
       RegistrationDeliverySingleton().projectType!;
   final item =
       projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
-  final productVariants =
-      fetchProductVariant(item, individualModel, householdModel)
-          ?.productVariants;
-  final numRows = productVariants?.length ?? 0;
-  const rowHeight = 84;
-  const paddingHeight = (spacer2 * 2);
-  final containerHeight = (numRows + 1) * rowHeight + (paddingHeight * 2);
-  const columnWidth = 150.0;
-  const cellHeight = 59.5;
 
   return Container(
     padding: const EdgeInsets.only(
@@ -78,21 +69,25 @@ Widget buildTableContent(
             element: {
               localizations.translate(
                 i18.beneficiaryDetails.beneficiaryAge,
-              ): fetchProductVariant(item, individualModel, householdModel)
-                          ?.condition !=
+              ): getProductVariant(item, individualModel, householdModel,
+                              context)['criteria']
+                          .condition !=
                       null
-                  ? localizations.translate(fetchProductVariant(
-                          item, individualModel, householdModel)!
+                  ? localizations.translate(getProductVariant(item,
+                          individualModel, householdModel, context)!['criteria']
                       .condition!)
                   : null,
             },
           ),
         ),
         const DigitDivider(),
-        const SizedBox(height: spacer4,),
+        const SizedBox(
+          height: spacer4,
+        ),
         // Build the DigitTable with the data
-        if (fetchProductVariant(item, individualModel, householdModel)
-                ?.productVariants !=
+        if (getProductVariant(
+                    item, individualModel, householdModel, context)['criteria']
+                .productVariants !=
             null)
           DigitTable(
             enableBorder: false,
@@ -102,7 +97,8 @@ Widget buildTableContent(
             showPagination: false,
             columns: columnListResource,
             rows: [
-              ...fetchProductVariant(item, individualModel, householdModel)!
+              ...getProductVariant(item, individualModel, householdModel,
+                      context)!['criteria']
                   .productVariants!
                   .map(
                 (e) {
@@ -118,8 +114,9 @@ Widget buildTableContent(
                     // Display the dose information in the first column if it's the first row,
                     // otherwise, display an empty cell.
 
-                    fetchProductVariant(item, individualModel, householdModel)
-                                ?.productVariants
+                    getProductVariant(item, individualModel, householdModel,
+                                    context)['criteria']
+                                .productVariants
                                 ?.indexOf(e) ==
                             0
                         ? DigitTableData(
@@ -138,8 +135,17 @@ Widget buildTableContent(
             ],
           )
         else
-          Text(localizations.translate(i18.common.noProjectSelected))
+          Text(localizations
+              .translate(i18.deliverIntervention.checkForProductVariantsConfig))
       ],
     ),
   );
+}
+
+getProductVariant(ProjectCycleDelivery? item, IndividualModel? individualModel,
+    HouseholdModel? householdModel, BuildContext context) {
+  var result = (fetchProductVariant(item, individualModel, householdModel,
+      context: context));
+
+  return result;
 }

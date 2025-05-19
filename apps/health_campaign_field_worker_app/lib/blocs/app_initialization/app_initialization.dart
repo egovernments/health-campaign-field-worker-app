@@ -94,12 +94,14 @@ class AppInitializationBloc
                     MasterEnums.houseStructureTypes.toValue(),
                     MasterEnums.refusalReasons.toValue(),
                     MasterEnums.bandWidthBatchSize.toValue(),
+                    MasterEnums.beneficiaryIdConfig.toValue(),
                     MasterEnums.downSyncBandwidthBatchSize.toValue(),
                     MasterEnums.hhDelReasons.toValue(),
                     MasterEnums.hhMemberDelReasons.toValue(),
                     MasterEnums.backgroundServiceConfig.toValue(),
                     MasterEnums.checklistTypes.toValue(),
                     MasterEnums.idTypes.toValue(),
+                    MasterEnums.relationShipTypeOptions.toValue(),
                     MasterEnums.deliveryComments.toValue(),
                     MasterEnums.backendInterface.toValue(),
                     MasterEnums.callSupport.toValue(),
@@ -316,7 +318,6 @@ class MdmsConfig {
   final List<AppConfiguration> appConfigs;
   final List<ServiceRegistry> serviceRegistryList;
   final List<DashboardConfigSchema?>? dashboardConfigSchema;
-
 
   const MdmsConfig(
       {required this.appConfigs,

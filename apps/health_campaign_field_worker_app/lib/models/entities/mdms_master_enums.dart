@@ -17,6 +17,8 @@ enum MasterEnums {
   refusalReasons,
   @MappableValue("BANDWIDTH_BATCH_SIZE")
   bandWidthBatchSize,
+  @MappableValue("BENEFICIARY_ID_CONFIG")
+  beneficiaryIdConfig,
   @MappableValue("DOWNSYNC-BANDWIDTH_BATCH_SIZE")
   downSyncBandwidthBatchSize,
   @MappableValue("HOUSEHOLD_DELETION_REASON_OPTIONS")
@@ -29,6 +31,8 @@ enum MasterEnums {
   checklistTypes,
   @MappableValue("ID_TYPE_OPTIONS_POPULATOR")
   idTypes,
+  @MappableValue("HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES")
+  relationShipTypeOptions,
   @MappableValue("DELIVERY_COMMENT_OPTIONS_POPULATOR")
   deliveryComments,
   @MappableValue("BACKEND_INTERFACE")

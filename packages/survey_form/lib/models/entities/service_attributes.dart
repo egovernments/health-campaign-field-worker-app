@@ -1,4 +1,6 @@
 // Generated using mason. Do not modify by hand
+import 'dart:convert';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
@@ -10,10 +12,12 @@ class ServiceAttributesSearchModel extends EntitySearchModel
     with ServiceAttributesSearchModelMappable {
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final String? id;
 
   ServiceAttributesSearchModel({
     this.clientReferenceId,
     this.tenantId,
+    this.id,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -22,6 +26,7 @@ class ServiceAttributesSearchModel extends EntitySearchModel
   ServiceAttributesSearchModel.ignoreDeleted({
     this.clientReferenceId,
     this.tenantId,
+    this.id,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }
@@ -30,19 +35,21 @@ class ServiceAttributesSearchModel extends EntitySearchModel
 class ServiceAttributesModel extends EntityModel
     with ServiceAttributesModelMappable {
   static const schemaName = 'ServiceAttributes';
-
+  final String? id;
   final String? attributeCode;
   final dynamic value;
   final String? dataType;
-  final String? referenceId;
+  final String? referenceId; // Service Client Id
   final dynamic additionalDetails;
   final bool? nonRecoverableError;
-  final String clientReferenceId;
+  final String? clientReferenceId;
+  final String? serviceClientReferenceId;
   final String? tenantId;
   final int? rowVersion;
   final ServiceAttributesAdditionalFields? additionalFields;
 
   ServiceAttributesModel({
+    this.id,
     this.additionalFields,
     this.attributeCode,
     this.value,
@@ -50,7 +57,8 @@ class ServiceAttributesModel extends EntityModel
     this.referenceId,
     this.additionalDetails,
     this.nonRecoverableError = false,
-    required this.clientReferenceId,
+    this.clientReferenceId,
+    this.serviceClientReferenceId,
     this.tenantId,
     this.rowVersion,
     super.auditDetails,
@@ -73,11 +81,13 @@ class ServiceAttributesModel extends EntityModel
       isDeleted: Value(isDeleted),
       attributeCode: Value(attributeCode),
       value: Value(value),
+      id: Value(id),
       dataType: Value(dataType),
       referenceId: Value(referenceId),
-      additionalDetails: Value(additionalDetails),
+      additionalDetails: Value(jsonEncode(additionalDetails)),
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
+      serviceClientReferenceId: Value(serviceClientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
     );
