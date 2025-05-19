@@ -266,10 +266,8 @@ Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
 
           List<bool> expressionParser = [];
           for (var element in conditions) {
-            final expression = FormulaParser(
-              element,
-              {
-                'age': individualAgeInMonths,
+            final expression = CustomFormulaParser.parseCondition(element, {
+              'age': individualAgeInMonths,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,

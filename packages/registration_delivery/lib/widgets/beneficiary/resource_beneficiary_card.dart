@@ -38,6 +38,7 @@ class ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
   DeliverInterventionBloc? bloc;
   HouseholdOverviewBloc? overViewbloc;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -54,7 +55,7 @@ class ResourceBeneficiaryCardState
   }
 
   Future<List<ProductVariantModel>> fetchAndFilterProductVariants() async {
-    final List<DeliveryProductVariant>? data = fetchProductVariant(
+    var data = fetchProductVariant(
       RegistrationDeliverySingleton()
           .selectedProject
           ?.additionalDetails
@@ -63,12 +64,13 @@ class ResourceBeneficiaryCardState
           .deliveries?[bloc!.state.dose - 1],
       overViewbloc!.state.selectedIndividual,
       overViewbloc!.state.householdMemberWrapper.household,
-    )?.expand((e) => e.productVariants!).toList();
+    );
 
     final state = context.read<ProductVariantBloc>().state;
     return state.maybeWhen(
       fetched: (productVariants) {
-        return filterMatchingElements(productVariants, data);
+        return filterMatchingElements(
+            productVariants, data['criteria'].productVariants);
       },
       orElse: () => [],
     );
