@@ -165,24 +165,24 @@ class BeneficiaryDetailsPageState
                                                         deliverState.cycle);
                                                 if (selectedCycle != null) {
                                                   final currentCycle =
-                                                  deliverState.cycle >= 0
-                                                      ? deliverState.cycle
-                                                      : 0;
+                                                      deliverState.cycle >= 0
+                                                          ? deliverState.cycle
+                                                          : 0;
 
                                                   // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
                                                   final currentDose =
-                                                  deliverState.dose >= 0
-                                                      ? deliverState.dose
-                                                      : 0;
+                                                      deliverState.dose >= 0
+                                                          ? deliverState.dose
+                                                          : 0;
 
                                                   final items =
-                                                  RegistrationDeliverySingleton()
-                                                      .projectType!
-                                                      .cycles?[
-                                                  currentCycle - 1]
-                                                      .deliveries?[
-                                                  currentDose - 1];
-                                                  
+                                                      RegistrationDeliverySingleton()
+                                                              .projectType!
+                                                              .cycles?[
+                                                                  currentCycle - 1]
+                                                              .deliveries?[
+                                                          currentDose - 1];
+
                                                   bloc.add(
                                                     DeliverInterventionEvent
                                                         .selectFutureCycleDose(
@@ -200,13 +200,15 @@ class BeneficiaryDetailsPageState
                                                     ),
                                                   );
 
-                                                  var productVariants = fetchProductVariant(
-                                                      items,
-                                                      state.selectedIndividual,
-                                                      state
-                                                          .householdMemberWrapper
-                                                          .household,
-                                                      context: context);
+                                                  var productVariants =
+                                                      fetchProductVariant(
+                                                          items,
+                                                          state
+                                                              .selectedIndividual,
+                                                          state
+                                                              .householdMemberWrapper
+                                                              .household,
+                                                          context: context);
 
                                                   if (productVariants[
                                                           'criteria'] ==
@@ -313,26 +315,23 @@ class BeneficiaryDetailsPageState
                                           size: DigitButtonSize.large,
                                           mainAxisSize: MainAxisSize.max,
                                           onPressed: () {
-
                                             final currentCycle =
-                                            deliverState.cycle >= 0
-                                                ? deliverState.cycle
-                                                : 0;
+                                                deliverState.cycle >= 0
+                                                    ? deliverState.cycle
+                                                    : 0;
 
                                             // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
                                             final currentDose =
-                                            deliverState.dose >= 0
-                                                ? deliverState.dose
-                                                : 0;
+                                                deliverState.dose >= 0
+                                                    ? deliverState.dose
+                                                    : 0;
 
                                             final items =
-                                            RegistrationDeliverySingleton()
-                                                .projectType!
-                                                .cycles?[
-                                            currentCycle - 1]
-                                                .deliveries?[
-                                            currentDose - 1];
-                                            
+                                                RegistrationDeliverySingleton()
+                                                    .projectType!
+                                                    .cycles?[currentCycle - 1]
+                                                    .deliveries?[currentDose - 1];
+
                                             var productVariants =
                                                 fetchProductVariant(
                                                     items,
