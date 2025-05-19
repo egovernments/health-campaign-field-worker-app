@@ -27,7 +27,7 @@ FormControl buildFormControl(
       );
 
     case PropertySchemaType.string:
-      if (format == PropertySchemaFormat.date) {
+      if (format == PropertySchemaFormat.date || format == PropertySchemaFormat.dob) {
         return FormControl<DateTime>(
           value: DateTime.now(),
           validators: validators,

@@ -109,7 +109,7 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     final loc = FormLocalization.of(context);
 
     for (final rule in validations ?? []) {
-      if (control.hasError(rule.type)) {
+      if (control.hasError(rule.type) && control.touched) {
         return loc.translate(rule.message ?? 'Invalid');
       }
     }
