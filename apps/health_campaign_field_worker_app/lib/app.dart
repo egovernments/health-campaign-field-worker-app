@@ -344,22 +344,6 @@ class MainApplicationState extends State<MainApplication>
                           },
                           lazy: false,
                         ),
-                        BlocProvider(
-                          create: (ctx) => EntityCreateBloc(
-                            householdMemberRepository: context.repository<
-                                HouseholdMemberModel,
-                                HouseholdMemberSearchModel>(),
-                            householdRepository: context.repository<
-                                HouseholdModel, HouseholdSearchModel>(),
-                            individualRepository: context.repository<
-                                IndividualModel, IndividualSearchModel>(),
-                            projectBeneficiaryRepository: context.repository<
-                                ProjectBeneficiaryModel,
-                                ProjectBeneficiarySearchModel>(),
-                            taskDataRepository: context.repository<
-                                TaskModel, TaskSearchModel>(),
-                          ),
-                        ),
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {

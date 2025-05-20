@@ -328,8 +328,6 @@ class _HomePageState extends LocalizedState<HomePage> {
     if (state is! AuthAuthenticatedState) {
       return null;
     }
-            final pageName =
-        context.watch<FormsBloc>().state.schema?.pages.entries.first.key;
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
@@ -368,15 +366,17 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            context.read<FormsBloc>().add(const FormsEvent.clearForm());
-            pageName !=null? context.router.push( FormsRoute(pageName: pageName)):null;
-            // RegistrationDeliverySingleton()
-            //     .setHouseholdType(HouseholdType.family);
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJson = prefs.getString('form_schema');
+            context.read<FormsBloc>().add(FormsEvent.load(schema: schemaJson ?? ''));
+            // context.read<FormsBloc>().add(const FormsEvent.clearForm());
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             // if (isTriggerLocalisation) {
             //   triggerLocalization();
             //   isTriggerLocalisation = false;
             // }
-            // await context.router.push(const RegistrationDeliveryWrapperRoute());
+            await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),
@@ -523,7 +523,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               isTriggerLocalisation = false;
             }
             
-            context.router.push( FormsRoute(pageName: pageName!));
+            // context.router.push( FormsRoute(pageName: pageName!));
           },
         ),
       ),
