@@ -24,10 +24,9 @@ class UserActionLocalRepository
         );
       });
 
-      return super.create(
+      await super.create(
         entity,
         createOpLog: createOpLog,
-        dataOperation: dataOperation,
       );
     });
   }

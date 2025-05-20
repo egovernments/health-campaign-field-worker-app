@@ -37,7 +37,6 @@ import 'package:transit_post/data/repositories/local/user_action.dart';
 import 'package:transit_post/data/repositories/remote/user_action.dart';
 import 'package:transit_post/router/transit_post_router.gm.dart';
 import 'package:transit_post/utils/utils.dart';
-import 'package:digit_data_model/models/entities/household_type.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';

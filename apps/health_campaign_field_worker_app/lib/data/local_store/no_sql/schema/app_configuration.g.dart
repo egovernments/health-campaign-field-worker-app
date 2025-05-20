@@ -162,37 +162,37 @@ const AppConfigurationSchema = CollectionSchema(
       target: r'TransitPostType',
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 28,
+      id: 29,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 29,
+      id: 30,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -729,43 +729,43 @@ void _appConfigurationSerialize(
   writer.writeString(offsets[22], object.syncTrigger);
   writer.writeString(offsets[23], object.tenantId);
   writer.writeObjectList<TransitPostType>(
-    offsets[22],
+    offsets[24],
     allOffsets,
     TransitPostTypeSchema.serialize,
     object.transitPostType,
   );
   writer.writeObjectList<TransportTypes>(
-    offsets[24],
+    offsets[25],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[25],
+    offsets[26],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[26],
+    offsets[27],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[27],
+    offsets[28],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[28],
+    offsets[29],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[29],
+    offsets[30],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -895,43 +895,43 @@ AppConfiguration _appConfigurationDeserialize(
   object.syncTrigger = reader.readStringOrNull(offsets[22]);
   object.tenantId = reader.readStringOrNull(offsets[23]);
   object.transitPostType = reader.readObjectList<TransitPostType>(
-    offsets[22],
+    offsets[24],
     TransitPostTypeSchema.deserialize,
     allOffsets,
     TransitPostType(),
   );
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[24],
+    offsets[25],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[25],
+    offsets[26],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[26],
+    offsets[27],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[27],
+    offsets[28],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[28],
+    offsets[29],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[29],
+    offsets[30],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -1088,41 +1088,41 @@ P _appConfigurationDeserializeProp<P>(
         allOffsets,
         TransitPostType(),
       )) as P;
-    case 23:
+    case 25:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 25:
+    case 26:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 26:
+    case 27:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 27:
+    case 28:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 28:
+    case 29:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 29:
+    case 30:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,

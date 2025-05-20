@@ -191,8 +191,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
               await migrator.addColumn(household, household.householdType);
               await migrator.addColumn(
                   attendanceRegister, attendanceRegister.localityCode);
-              await migrator.addColumn(
-                  service, service.relatedClientReferenceId);
+              await migrator.addColumn(service, service.referenceId);
             } catch (e) {
               if (kDebugMode) {
                 print(

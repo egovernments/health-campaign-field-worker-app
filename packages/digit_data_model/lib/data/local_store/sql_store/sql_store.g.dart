@@ -42336,8 +42336,8 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         sideEffect,
         referral,
         localization,
-        uniqueIdPool,
         userAction,
+        uniqueIdPool,
         attendanceClientref,
         attendanceIndividualid,
         projectClinetref,
@@ -58575,246 +58575,6 @@ class $$LocalizationTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $$UniqueIdPoolTableInsertCompanionBuilder = UniqueIdPoolCompanion
-    Function({
-  required String id,
-  Value<String?> deviceUuid,
-  Value<String?> userUuid,
-  Value<String?> status,
-  Value<int?> auditCreatedTime,
-  Value<String?> auditModifiedBy,
-  Value<String?> auditCreatedBy,
-  Value<int?> auditModifiedTime,
-  Value<String?> tenantId,
-  Value<int?> rowVersion,
-  Value<String?> additionalFields,
-  Value<int> rowid,
-});
-typedef $$UniqueIdPoolTableUpdateCompanionBuilder = UniqueIdPoolCompanion
-    Function({
-  Value<String> id,
-  Value<String?> deviceUuid,
-  Value<String?> userUuid,
-  Value<String?> status,
-  Value<int?> auditCreatedTime,
-  Value<String?> auditModifiedBy,
-  Value<String?> auditCreatedBy,
-  Value<int?> auditModifiedTime,
-  Value<String?> tenantId,
-  Value<int?> rowVersion,
-  Value<String?> additionalFields,
-  Value<int> rowid,
-});
-
-class $$UniqueIdPoolTableTableManager extends RootTableManager<
-    _$LocalSqlDataStore,
-    $UniqueIdPoolTable,
-    UniqueIdPoolData,
-    $$UniqueIdPoolTableFilterComposer,
-    $$UniqueIdPoolTableOrderingComposer,
-    $$UniqueIdPoolTableProcessedTableManager,
-    $$UniqueIdPoolTableInsertCompanionBuilder,
-    $$UniqueIdPoolTableUpdateCompanionBuilder> {
-  $$UniqueIdPoolTableTableManager(
-      _$LocalSqlDataStore db, $UniqueIdPoolTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$UniqueIdPoolTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$UniqueIdPoolTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$UniqueIdPoolTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
-            Value<String> id = const Value.absent(),
-            Value<String?> deviceUuid = const Value.absent(),
-            Value<String?> userUuid = const Value.absent(),
-            Value<String?> status = const Value.absent(),
-            Value<int?> auditCreatedTime = const Value.absent(),
-            Value<String?> auditModifiedBy = const Value.absent(),
-            Value<String?> auditCreatedBy = const Value.absent(),
-            Value<int?> auditModifiedTime = const Value.absent(),
-            Value<String?> tenantId = const Value.absent(),
-            Value<int?> rowVersion = const Value.absent(),
-            Value<String?> additionalFields = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              UniqueIdPoolCompanion(
-            id: id,
-            deviceUuid: deviceUuid,
-            userUuid: userUuid,
-            status: status,
-            auditCreatedTime: auditCreatedTime,
-            auditModifiedBy: auditModifiedBy,
-            auditCreatedBy: auditCreatedBy,
-            auditModifiedTime: auditModifiedTime,
-            tenantId: tenantId,
-            rowVersion: rowVersion,
-            additionalFields: additionalFields,
-            rowid: rowid,
-          ),
-          getInsertCompanionBuilder: ({
-            required String id,
-            Value<String?> deviceUuid = const Value.absent(),
-            Value<String?> userUuid = const Value.absent(),
-            Value<String?> status = const Value.absent(),
-            Value<int?> auditCreatedTime = const Value.absent(),
-            Value<String?> auditModifiedBy = const Value.absent(),
-            Value<String?> auditCreatedBy = const Value.absent(),
-            Value<int?> auditModifiedTime = const Value.absent(),
-            Value<String?> tenantId = const Value.absent(),
-            Value<int?> rowVersion = const Value.absent(),
-            Value<String?> additionalFields = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              UniqueIdPoolCompanion.insert(
-            id: id,
-            deviceUuid: deviceUuid,
-            userUuid: userUuid,
-            status: status,
-            auditCreatedTime: auditCreatedTime,
-            auditModifiedBy: auditModifiedBy,
-            auditCreatedBy: auditCreatedBy,
-            auditModifiedTime: auditModifiedTime,
-            tenantId: tenantId,
-            rowVersion: rowVersion,
-            additionalFields: additionalFields,
-            rowid: rowid,
-          ),
-        ));
-}
-
-class $$UniqueIdPoolTableProcessedTableManager extends ProcessedTableManager<
-    _$LocalSqlDataStore,
-    $UniqueIdPoolTable,
-    UniqueIdPoolData,
-    $$UniqueIdPoolTableFilterComposer,
-    $$UniqueIdPoolTableOrderingComposer,
-    $$UniqueIdPoolTableProcessedTableManager,
-    $$UniqueIdPoolTableInsertCompanionBuilder,
-    $$UniqueIdPoolTableUpdateCompanionBuilder> {
-  $$UniqueIdPoolTableProcessedTableManager(super.$state);
-}
-
-class $$UniqueIdPoolTableFilterComposer
-    extends FilterComposer<_$LocalSqlDataStore, $UniqueIdPoolTable> {
-  $$UniqueIdPoolTableFilterComposer(super.$state);
-  ColumnFilters<String> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get deviceUuid => $state.composableBuilder(
-      column: $state.table.deviceUuid,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get userUuid => $state.composableBuilder(
-      column: $state.table.userUuid,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get status => $state.composableBuilder(
-      column: $state.table.status,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
-      column: $state.table.auditCreatedTime,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
-      column: $state.table.auditModifiedBy,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
-      column: $state.table.auditCreatedBy,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
-      column: $state.table.auditModifiedTime,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get tenantId => $state.composableBuilder(
-      column: $state.table.tenantId,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get rowVersion => $state.composableBuilder(
-      column: $state.table.rowVersion,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get additionalFields => $state.composableBuilder(
-      column: $state.table.additionalFields,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-}
-
-class $$UniqueIdPoolTableOrderingComposer
-    extends OrderingComposer<_$LocalSqlDataStore, $UniqueIdPoolTable> {
-  $$UniqueIdPoolTableOrderingComposer(super.$state);
-  ColumnOrderings<String> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get deviceUuid => $state.composableBuilder(
-      column: $state.table.deviceUuid,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get userUuid => $state.composableBuilder(
-      column: $state.table.userUuid,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get status => $state.composableBuilder(
-      column: $state.table.status,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
-      column: $state.table.auditCreatedTime,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
-      column: $state.table.auditModifiedBy,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
-      column: $state.table.auditCreatedBy,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
-      column: $state.table.auditModifiedTime,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get tenantId => $state.composableBuilder(
-      column: $state.table.tenantId,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
-      column: $state.table.rowVersion,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
-      column: $state.table.additionalFields,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-}
-
 typedef $$UserActionTableInsertCompanionBuilder = UserActionCompanion Function({
   required String latitude,
   required String longitude,
@@ -59235,6 +58995,246 @@ class $$UserActionTableOrderingComposer
 
   ColumnOrderings<String> get id => $state.composableBuilder(
       column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$UniqueIdPoolTableInsertCompanionBuilder = UniqueIdPoolCompanion
+    Function({
+  required String id,
+  Value<String?> deviceUuid,
+  Value<String?> userUuid,
+  Value<String?> status,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<String?> auditCreatedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+typedef $$UniqueIdPoolTableUpdateCompanionBuilder = UniqueIdPoolCompanion
+    Function({
+  Value<String> id,
+  Value<String?> deviceUuid,
+  Value<String?> userUuid,
+  Value<String?> status,
+  Value<int?> auditCreatedTime,
+  Value<String?> auditModifiedBy,
+  Value<String?> auditCreatedBy,
+  Value<int?> auditModifiedTime,
+  Value<String?> tenantId,
+  Value<int?> rowVersion,
+  Value<String?> additionalFields,
+  Value<int> rowid,
+});
+
+class $$UniqueIdPoolTableTableManager extends RootTableManager<
+    _$LocalSqlDataStore,
+    $UniqueIdPoolTable,
+    UniqueIdPoolData,
+    $$UniqueIdPoolTableFilterComposer,
+    $$UniqueIdPoolTableOrderingComposer,
+    $$UniqueIdPoolTableProcessedTableManager,
+    $$UniqueIdPoolTableInsertCompanionBuilder,
+    $$UniqueIdPoolTableUpdateCompanionBuilder> {
+  $$UniqueIdPoolTableTableManager(
+      _$LocalSqlDataStore db, $UniqueIdPoolTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$UniqueIdPoolTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$UniqueIdPoolTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$UniqueIdPoolTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> id = const Value.absent(),
+            Value<String?> deviceUuid = const Value.absent(),
+            Value<String?> userUuid = const Value.absent(),
+            Value<String?> status = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UniqueIdPoolCompanion(
+            id: id,
+            deviceUuid: deviceUuid,
+            userUuid: userUuid,
+            status: status,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditCreatedBy: auditCreatedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String id,
+            Value<String?> deviceUuid = const Value.absent(),
+            Value<String?> userUuid = const Value.absent(),
+            Value<String?> status = const Value.absent(),
+            Value<int?> auditCreatedTime = const Value.absent(),
+            Value<String?> auditModifiedBy = const Value.absent(),
+            Value<String?> auditCreatedBy = const Value.absent(),
+            Value<int?> auditModifiedTime = const Value.absent(),
+            Value<String?> tenantId = const Value.absent(),
+            Value<int?> rowVersion = const Value.absent(),
+            Value<String?> additionalFields = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UniqueIdPoolCompanion.insert(
+            id: id,
+            deviceUuid: deviceUuid,
+            userUuid: userUuid,
+            status: status,
+            auditCreatedTime: auditCreatedTime,
+            auditModifiedBy: auditModifiedBy,
+            auditCreatedBy: auditCreatedBy,
+            auditModifiedTime: auditModifiedTime,
+            tenantId: tenantId,
+            rowVersion: rowVersion,
+            additionalFields: additionalFields,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$UniqueIdPoolTableProcessedTableManager extends ProcessedTableManager<
+    _$LocalSqlDataStore,
+    $UniqueIdPoolTable,
+    UniqueIdPoolData,
+    $$UniqueIdPoolTableFilterComposer,
+    $$UniqueIdPoolTableOrderingComposer,
+    $$UniqueIdPoolTableProcessedTableManager,
+    $$UniqueIdPoolTableInsertCompanionBuilder,
+    $$UniqueIdPoolTableUpdateCompanionBuilder> {
+  $$UniqueIdPoolTableProcessedTableManager(super.$state);
+}
+
+class $$UniqueIdPoolTableFilterComposer
+    extends FilterComposer<_$LocalSqlDataStore, $UniqueIdPoolTable> {
+  $$UniqueIdPoolTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get deviceUuid => $state.composableBuilder(
+      column: $state.table.deviceUuid,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get userUuid => $state.composableBuilder(
+      column: $state.table.userUuid,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalFields => $state.composableBuilder(
+      column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$UniqueIdPoolTableOrderingComposer
+    extends OrderingComposer<_$LocalSqlDataStore, $UniqueIdPoolTable> {
+  $$UniqueIdPoolTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get deviceUuid => $state.composableBuilder(
+      column: $state.table.deviceUuid,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get userUuid => $state.composableBuilder(
+      column: $state.table.userUuid,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get status => $state.composableBuilder(
+      column: $state.table.status,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditCreatedTime => $state.composableBuilder(
+      column: $state.table.auditCreatedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditModifiedBy => $state.composableBuilder(
+      column: $state.table.auditModifiedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get auditCreatedBy => $state.composableBuilder(
+      column: $state.table.auditCreatedBy,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get auditModifiedTime => $state.composableBuilder(
+      column: $state.table.auditModifiedTime,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tenantId => $state.composableBuilder(
+      column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rowVersion => $state.composableBuilder(
+      column: $state.table.rowVersion,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
