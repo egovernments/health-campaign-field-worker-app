@@ -547,7 +547,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         "name": "REGISTRATIONFLOW",
         "pages": [
           {
-            "page": "APPONE_REGISTRATION_BENEFICIARY_LOCATION",
+            "page": "beneficiaryLocation",
             "type": "object",
             "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
             "order": 1,
@@ -575,9 +575,28 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               },
               {
                 "type": "string",
+                "enums": ["PERMANENT", "CORRESPONDENCE", "OTHER"],
+                "label": "Address Type",
+                "order": 1,
+                "value": null,
+                "format": "dropdown",
+                "tooltip": "APPONE_REGISTRATION_HOUSEDETAILS_label_structureType_tooltip",
+                "helpText": "address type",
+                "fieldName": "type",
+                "innerLabel": "",
+                "validations":[
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "Please select address type"
+                  }
+                ]
+              },
+              {
+                "type": "string",
                 "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1",
                 "order": 3,
-                "value": "",
+                "value": null,
                 "format": "text",
                 "tooltip": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_tooltip",
                 "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
@@ -588,7 +607,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "type": "string",
                 "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2",
                 "order": 4,
-                "value": "",
+                "value": null,
                 "format": "text",
                 "tooltip": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_tooltip",
                 "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
@@ -599,7 +618,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "type": "string",
                 "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark",
                 "order": 5,
-                "value": "",
+                "value": null,
                 "format": "text",
                 "tooltip": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_tooltip",
                 "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_helpText",
@@ -610,7 +629,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "type": "integer",
                 "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode",
                 "order": 6,
-                "value": "",
+                "value": null,
                 "format": "text",
                 "tooltip": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_tooltip",
                 "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_helpText",
@@ -622,7 +641,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             "description": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION"
           },
           {
-            "page": "APPONE_REGISTRATION_HOUSEDETAILS",
+            "page": "houseDetails",
             "type": "object",
             "label": "APPONE_REGISTRATION_HOUSEDETAILS_SCREEN_HEADING",
             "order": 1,
@@ -633,7 +652,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "schemaCode": "HCM.HOUSE_STRUCTURE_TYPES",
                 "label": "APPONE_REGISTRATION_HOUSEDETAILS_label_structureType",
                 "order": 1,
-                "value": "",
+                "value": null,
                 "format": "select",
                 "tooltip": "APPONE_REGISTRATION_HOUSEDETAILS_label_structureType_tooltip",
                 "helpText": "APPONE_REGISTRATION_HOUSEDETAILS_label_structureType_helpText",
@@ -678,7 +697,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             "description": "APPONE_REGISTRATION_HOUSEDETAILS_SCREEN_DESCRIPTION"
           },
           {
-            "page": "APPONE_REGISTRATION_HOUSEHOLDDETAILS",
+            "page": "householdDetails",
             "type": "object",
             "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
             "order": 2,
@@ -687,7 +706,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "type": "string",
                 "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration",
                 "order": 1,
-                "value": "",
+                "value": null,
                 "format": "date",
                 "tooltip": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_tooltip",
                 "helpText": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_helpText",
@@ -718,7 +737,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "type": "integer",
                 "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount",
                 "order": 4,
-                "value": "",
+                "value": null,
                 "format": "numeric",
                 "tooltip": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_tooltip",
                 "helpText": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_helpText",
@@ -743,7 +762,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             "description": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION"
           },
           {
-            "page": "APPONE_REGISTRATION_BENEFICIARYDETAILS",
+            "page": "beneficiaryDetails",
             "type": "object",
             "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
             "order": 3,
@@ -752,7 +771,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "type": "string",
                 "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
                 "order": 1,
-                "value": "",
+                "value": null,
                 "format": "text",
                 "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_tooltip",
                 "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
@@ -822,7 +841,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "type": "string",
                 "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker",
                 "order": 5,
-                "value": "",
+                "value": null,
                 "format": "dob",
                 "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
                 "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText",
@@ -866,7 +885,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 "type": "integer",
                 "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
                 "order": 7,
-                "value": "",
+                "value": null,
                 "format": "text",
                 "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
                 "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",

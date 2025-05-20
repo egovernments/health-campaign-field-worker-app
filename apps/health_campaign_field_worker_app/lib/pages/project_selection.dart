@@ -233,9 +233,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   void navigateToBoundary(String boundary) async {
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
-    final prefs = await SharedPreferences.getInstance();
-    final schemaJson = prefs.getString('form_schema');
-    context.read<FormsBloc>().add(FormsEvent.load(schema: schemaJson ?? ''));
+
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);

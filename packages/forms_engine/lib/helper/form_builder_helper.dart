@@ -12,46 +12,87 @@ FormControl buildFormControl(
     }) {
   final validators = buildValidators(schema);
   final format = schema.format;
+  final rawValue = schema.value;
 
   switch (schema.type) {
     case PropertySchemaType.integer:
       return FormControl<int>(
-        value: schema.value ,
+        value: _parseIntValue(rawValue),
         validators: validators,
       );
 
     case PropertySchemaType.boolean:
       return FormControl<bool>(
-        value: schema.value,
+        value: _parseBoolValue(rawValue),
         validators: validators,
       );
 
     case PropertySchemaType.string:
-      if (format == PropertySchemaFormat.date || format == PropertySchemaFormat.dob) {
+      if (format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
           value: DateTime.now(),
           validators: validators,
         );
-      } else if (format == PropertySchemaFormat.latLng) {
-        return FormControl<String>(value: defaultLatlng);
+      }else if (format == PropertySchemaFormat.dob) {
+        return FormControl<DateTime>(
+          value: _parseDateValue(rawValue),
+          validators: validators,
+        );
+      }  else if (format == PropertySchemaFormat.latLng) {
+        return FormControl<String>(
+          value: defaultLatlng ?? (rawValue?.toString()),
+          validators: validators,
+        );
       } else if (format == PropertySchemaFormat.locality) {
-        return FormControl<String>(value: defaultValues?['locality']);
+        return FormControl<String>(
+          value: defaultValues?['locality'] ?? rawValue?.toString(),
+          validators: validators,
+        );
       } else if (format == PropertySchemaFormat.numeric) {
         return FormControl<int>(
-          value: schema.value ?? 0,
+          value: _parseIntValue(rawValue),
           validators: validators,
         );
       } else {
         return FormControl<String>(
-          value: schema.value,
+          value: rawValue?.toString(),
           validators: validators,
         );
       }
 
     default:
       return FormControl<String>(
-        value: schema.value,
+        value: rawValue?.toString(),
         validators: validators,
       );
   }
 }
+
+int? _parseIntValue(dynamic value) {
+  if (value == null) return null;
+  if (value is int) return value;
+  if (value is String) return int.tryParse(value);
+  return null;
+}
+
+bool? _parseBoolValue(dynamic value) {
+  if (value == null) return null;
+  if (value is bool) return value;
+  if (value is String) return value.toLowerCase() == 'true';
+  return null;
+}
+
+DateTime? _parseDateValue(dynamic value) {
+  if (value == null) return null;
+  if (value is DateTime) return value;
+  if (value is String) {
+    try {
+      return DateTime.parse(value);
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
+}
+
+

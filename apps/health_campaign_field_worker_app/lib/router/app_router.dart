@@ -1,7 +1,6 @@
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
-import '../pages/forms.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/router/complaints_router.dart';
@@ -21,7 +20,9 @@ import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
-
+import 'package:forms_engine/router/forms_router.dart';
+import 'package:forms_engine/pages/forms_render.dart';
+import 'package:forms_engine/router/forms_router.gm.dart';
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
@@ -50,7 +51,8 @@ part 'app_router.gr.dart';
     ClosedHouseholdPackageRoute,
     DashboardRoute,
     SurveyFormRoute,
-    ComplaintsRoute
+    ComplaintsRoute,
+    FormsRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -76,7 +78,6 @@ class AppRouter extends _$AppRouter {
       page: AuthenticatedRouteWrapper.page,
       path: '/',
       children: [
-        AutoRoute(page: FormsRoute.page, path: 'forms/:pageName'),
         AutoRoute(page: HomeRoute.page, path: 'home'),
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
@@ -204,6 +205,9 @@ class AppRouter extends _$AppRouter {
 
         // Referral Reconciliation Route
         ...ReferralReconciliationRoute().routes,
+
+        // Forms Route
+        ...FormsRoute().routes,
       ],
     )
   ];

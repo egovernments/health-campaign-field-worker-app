@@ -8,7 +8,7 @@ import 'package:registration_delivery/blocs/search_households/household_global_s
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
-
+import '../blocs/entity_create/entity_create.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
@@ -164,6 +164,20 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => LocationBloc(location: Location()),
+          ),
+          BlocProvider(
+            create: (ctx) => EntityCreateBloc(
+              individualRepository: context.repository<IndividualModel, IndividualSearchModel>(
+                  context),
+              householdRepository: context.repository<HouseholdModel, HouseholdSearchModel>(
+                  context),
+              householdMemberRepository: context.repository<HouseholdMemberModel,
+                  HouseholdMemberSearchModel>(context),
+              projectBeneficiaryRepository: context.repository<
+                  ProjectBeneficiaryModel,
+                  ProjectBeneficiarySearchModel>(context),
+              taskDataRepository: context.repository<TaskModel, TaskSearchModel>(context),
+            ),
           ),
         ],
         child: const AutoRouter(),

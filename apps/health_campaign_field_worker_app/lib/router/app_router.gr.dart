@@ -56,19 +56,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    FormsRoute.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<FormsRouteArgs>(
-          orElse: () =>
-              FormsRouteArgs(pageName: pathParams.getString('pageName')));
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: FormsPage(
-          key: args.key,
-          pageName: args.pageName,
-        ),
-      );
-    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -155,6 +142,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...DashboardRoute().pagesMap,
     ...SurveyFormRoute().pagesMap,
     ...ComplaintsRoute().pagesMap,
+    ...FormsRoute().pagesMap,
   };
 }
 
@@ -300,44 +288,6 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [FormsPage]
-class FormsRoute extends PageRouteInfo<FormsRouteArgs> {
-  FormsRoute({
-    Key? key,
-    required String pageName,
-    List<PageRouteInfo>? children,
-  }) : super(
-          FormsRoute.name,
-          args: FormsRouteArgs(
-            key: key,
-            pageName: pageName,
-          ),
-          rawPathParams: {'pageName': pageName},
-          initialChildren: children,
-        );
-
-  static const String name = 'FormsRoute';
-
-  static const PageInfo<FormsRouteArgs> page = PageInfo<FormsRouteArgs>(name);
-}
-
-class FormsRouteArgs {
-  const FormsRouteArgs({
-    this.key,
-    required this.pageName,
-  });
-
-  final Key? key;
-
-  final String pageName;
-
-  @override
-  String toString() {
-    return 'FormsRouteArgs{key: $key, pageName: $pageName}';
   }
 }
 
