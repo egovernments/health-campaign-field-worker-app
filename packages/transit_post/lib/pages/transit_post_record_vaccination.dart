@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:intl/intl.dart';
 import 'package:digit_scanner/digit_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
@@ -14,14 +13,15 @@ import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
-import '../widgets/localized.dart';
-import '../widgets/total_delivery.dart';
-import '../widgets/back_navigation_help_header.dart';
-import '../router/transit_post_router.gm.dart';
 import '../blocs/transit_post.dart';
+import '../router/transit_post_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
+import '../widgets/back_navigation_help_header.dart';
+import '../widgets/localized.dart';
+import '../widgets/total_delivery.dart';
 
 @RoutePage()
 class TransitPostRecordVaccinationPage extends LocalizedStatefulWidget {
@@ -88,7 +88,7 @@ class TransitPostRecordVaccinationPageState
                               context: context,
                               builder: (popUpContext) => Popup(
                                     title: localizations.translate(
-                                      i18.transitPost.alertPopupTitle,
+                                      i18.transitPost.countPopupTitle,
                                     ),
                                     type: PopUpType.alert,
                                     description: localizations.translate(

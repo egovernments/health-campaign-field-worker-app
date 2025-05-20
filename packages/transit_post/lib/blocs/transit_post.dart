@@ -73,7 +73,7 @@ class TransitPostBloc extends Bloc<TransitPostEvent, TransitPostState> {
           locationAccuracy: event.locationAccuracy,
           tenantId: TransitPostSingleton().tenantId,
           clientReferenceId: IdGen.instance.identifier,
-          isSync: true,
+          isSync: false,
           timestamp: DateTime.now().millisecondsSinceEpoch,
           projectId: TransitPostSingleton().projectId!,
           boundaryCode: TransitPostSingleton().boundary!.code!,
