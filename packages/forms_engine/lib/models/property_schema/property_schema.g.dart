@@ -16,8 +16,9 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
         (k, e) =>
             MapEntry(k, PropertySchema.fromJson(e as Map<String, dynamic>)),
       ),
-      enums:
-          (json['enums'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      enums: (json['enums'] as List<dynamic>?)
+          ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
+          .toList(),
       schemaCode: json['schemaCode'] as String?,
       format: $enumDecodeNullable(_$PropertySchemaFormatEnumMap, json['format'],
           unknownValue: PropertySchemaFormat.text),
@@ -65,7 +66,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('displayOnly', instance.displayOnly);
   writeNotNull('properties',
       instance.properties?.map((k, e) => MapEntry(k, e.toJson())));
-  writeNotNull('enums', instance.enums);
+  writeNotNull('enums', instance.enums?.map((e) => e.toJson()).toList());
   writeNotNull('schemaCode', instance.schemaCode);
   writeNotNull('format', _$PropertySchemaFormatEnumMap[instance.format]);
   writeNotNull('firstDate', instance.firstDate?.toJson());
@@ -138,6 +139,17 @@ Map<String, dynamic> _$$ValidationRuleImplToJson(
       'type': instance.type,
       'value': instance.value,
       'message': instance.message,
+    };
+
+_$OptionImpl _$$OptionImplFromJson(Map<String, dynamic> json) => _$OptionImpl(
+      code: json['code'] as String,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$$OptionImplToJson(_$OptionImpl instance) =>
+    <String, dynamic>{
+      'code': instance.code,
+      'name': instance.name,
     };
 
 _$DisplayBehaviorImpl _$$DisplayBehaviorImplFromJson(

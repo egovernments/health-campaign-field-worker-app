@@ -575,7 +575,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               },
               {
                 "type": "string",
-                "enums": ["PERMANENT", "CORRESPONDENCE", "OTHER"],
+                "enums": [{"code": "PERMANENT", "name": "Permanent"}, {"code": "CORRESPONDENCE", "name": "Correspondence"}, {"code": "OTHER", "name": "Other"}],
                 "label": "Address Type",
                 "order": 1,
                 "value": null,
@@ -1085,7 +1085,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
             final enumValues = mdmsResponse[module]?[master];
             if (enumValues != null) {
-              property['enums'] = enumValues.map((e) => e['code']).toList();
+              property['enums'] = enumValues
+                  .map((e) => {
+                'code': e['code'],
+                'name': e['name'] ?? e['code'], // fallback if name is missing
+              })
+                  .toList();
             }
           }
         }

@@ -33,12 +33,7 @@ FormControl buildFormControl(
           value: DateTime.now(),
           validators: validators,
         );
-      }else if (format == PropertySchemaFormat.dob) {
-        return FormControl<DateTime>(
-          value: _parseDateValue(rawValue),
-          validators: validators,
-        );
-      }  else if (format == PropertySchemaFormat.latLng) {
+      } else if (format == PropertySchemaFormat.latLng) {
         return FormControl<String>(
           value: defaultLatlng ?? (rawValue?.toString()),
           validators: validators,

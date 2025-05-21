@@ -26,7 +26,7 @@ mixin _$PropertySchema {
   bool? get displayOnly => throw _privateConstructorUsedError;
   Map<String, PropertySchema>? get properties =>
       throw _privateConstructorUsedError;
-  List<String>? get enums => throw _privateConstructorUsedError;
+  List<Option>? get enums => throw _privateConstructorUsedError;
   String? get schemaCode => throw _privateConstructorUsedError;
   @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   PropertySchemaFormat? get format => throw _privateConstructorUsedError;
@@ -66,7 +66,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
       bool? readonly,
       bool? displayOnly,
       Map<String, PropertySchema>? properties,
-      List<String>? enums,
+      List<Option>? enums,
       String? schemaCode,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       PropertySchemaFormat? format,
@@ -151,7 +151,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       enums: freezed == enums
           ? _value.enums
           : enums // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<Option>?,
       schemaCode: freezed == schemaCode
           ? _value.schemaCode
           : schemaCode // ignore: cast_nullable_to_non_nullable
@@ -282,7 +282,7 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       bool? readonly,
       bool? displayOnly,
       Map<String, PropertySchema>? properties,
-      List<String>? enums,
+      List<Option>? enums,
       String? schemaCode,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       PropertySchemaFormat? format,
@@ -368,7 +368,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
       enums: freezed == enums
           ? _value._enums
           : enums // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<Option>?,
       schemaCode: freezed == schemaCode
           ? _value.schemaCode
           : schemaCode // ignore: cast_nullable_to_non_nullable
@@ -459,7 +459,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.readonly,
       this.displayOnly,
       final Map<String, PropertySchema>? properties,
-      final List<String>? enums,
+      final List<Option>? enums,
       this.schemaCode,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       this.format,
@@ -505,9 +505,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
     return EqualUnmodifiableMapView(value);
   }
 
-  final List<String>? _enums;
+  final List<Option>? _enums;
   @override
-  List<String>? get enums {
+  List<Option>? get enums {
     final value = _enums;
     if (value == null) return null;
     if (_enums is EqualUnmodifiableListView) return _enums;
@@ -676,7 +676,7 @@ abstract class _PropertySchema implements PropertySchema {
       final bool? readonly,
       final bool? displayOnly,
       final Map<String, PropertySchema>? properties,
-      final List<String>? enums,
+      final List<Option>? enums,
       final String? schemaCode,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       final PropertySchemaFormat? format,
@@ -711,7 +711,7 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   Map<String, PropertySchema>? get properties;
   @override
-  List<String>? get enums;
+  List<Option>? get enums;
   @override
   String? get schemaCode;
   @override
@@ -1085,6 +1085,155 @@ abstract class _ValidationRule implements ValidationRule {
   @override
   @JsonKey(ignore: true)
   _$$ValidationRuleImplCopyWith<_$ValidationRuleImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+Option _$OptionFromJson(Map<String, dynamic> json) {
+  return _Option.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Option {
+  String get code => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $OptionCopyWith<Option> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $OptionCopyWith<$Res> {
+  factory $OptionCopyWith(Option value, $Res Function(Option) then) =
+      _$OptionCopyWithImpl<$Res, Option>;
+  @useResult
+  $Res call({String code, String name});
+}
+
+/// @nodoc
+class _$OptionCopyWithImpl<$Res, $Val extends Option>
+    implements $OptionCopyWith<$Res> {
+  _$OptionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? code = null,
+    Object? name = null,
+  }) {
+    return _then(_value.copyWith(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$OptionImplCopyWith<$Res> implements $OptionCopyWith<$Res> {
+  factory _$$OptionImplCopyWith(
+          _$OptionImpl value, $Res Function(_$OptionImpl) then) =
+      __$$OptionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String code, String name});
+}
+
+/// @nodoc
+class __$$OptionImplCopyWithImpl<$Res>
+    extends _$OptionCopyWithImpl<$Res, _$OptionImpl>
+    implements _$$OptionImplCopyWith<$Res> {
+  __$$OptionImplCopyWithImpl(
+      _$OptionImpl _value, $Res Function(_$OptionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? code = null,
+    Object? name = null,
+  }) {
+    return _then(_$OptionImpl(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$OptionImpl implements _Option {
+  const _$OptionImpl({required this.code, required this.name});
+
+  factory _$OptionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$OptionImplFromJson(json);
+
+  @override
+  final String code;
+  @override
+  final String name;
+
+  @override
+  String toString() {
+    return 'Option(code: $code, name: $name)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$OptionImpl &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, code, name);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$OptionImplCopyWith<_$OptionImpl> get copyWith =>
+      __$$OptionImplCopyWithImpl<_$OptionImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$OptionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _Option implements Option {
+  const factory _Option(
+      {required final String code, required final String name}) = _$OptionImpl;
+
+  factory _Option.fromJson(Map<String, dynamic> json) = _$OptionImpl.fromJson;
+
+  @override
+  String get code;
+  @override
+  String get name;
+  @override
+  @JsonKey(ignore: true)
+  _$$OptionImplCopyWith<_$OptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
