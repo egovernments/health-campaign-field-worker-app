@@ -40,7 +40,7 @@ FormControl buildFormControl(
         );
       } else if (format == PropertySchemaFormat.locality) {
         return FormControl<String>(
-          value: defaultValues?['locality'] ?? rawValue?.toString(),
+          value: defaultValues?[name] ?? rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.numeric) {
@@ -50,7 +50,7 @@ FormControl buildFormControl(
         );
       } else {
         return FormControl<String>(
-          value: rawValue?.toString(),
+          value: defaultValues?[name] ?? rawValue?.toString(),
           validators: validators,
         );
       }

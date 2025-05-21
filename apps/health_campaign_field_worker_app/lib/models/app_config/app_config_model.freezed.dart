@@ -519,6 +519,7 @@ MdmsMasterDetailModel _$MdmsMasterDetailModelFromJson(
 /// @nodoc
 mixin _$MdmsMasterDetailModel {
   String get name => throw _privateConstructorUsedError;
+  String? get filter => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -532,7 +533,7 @@ abstract class $MdmsMasterDetailModelCopyWith<$Res> {
           $Res Function(MdmsMasterDetailModel) then) =
       _$MdmsMasterDetailModelCopyWithImpl<$Res, MdmsMasterDetailModel>;
   @useResult
-  $Res call({String name});
+  $Res call({String name, String? filter});
 }
 
 /// @nodoc
@@ -550,12 +551,17 @@ class _$MdmsMasterDetailModelCopyWithImpl<$Res,
   @override
   $Res call({
     Object? name = null,
+    Object? filter = freezed,
   }) {
     return _then(_value.copyWith(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      filter: freezed == filter
+          ? _value.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -569,7 +575,7 @@ abstract class _$$MdmsMasterDetailModelImplCopyWith<$Res>
       __$$MdmsMasterDetailModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name});
+  $Res call({String name, String? filter});
 }
 
 /// @nodoc
@@ -585,12 +591,17 @@ class __$$MdmsMasterDetailModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
+    Object? filter = freezed,
   }) {
     return _then(_$MdmsMasterDetailModelImpl(
       null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      filter: freezed == filter
+          ? _value.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -598,17 +609,19 @@ class __$$MdmsMasterDetailModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$MdmsMasterDetailModelImpl implements _MdmsMasterDetailModel {
-  const _$MdmsMasterDetailModelImpl(this.name);
+  const _$MdmsMasterDetailModelImpl(this.name, {this.filter});
 
   factory _$MdmsMasterDetailModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MdmsMasterDetailModelImplFromJson(json);
 
   @override
   final String name;
+  @override
+  final String? filter;
 
   @override
   String toString() {
-    return 'MdmsMasterDetailModel(name: $name)';
+    return 'MdmsMasterDetailModel(name: $name, filter: $filter)';
   }
 
   @override
@@ -616,12 +629,13 @@ class _$MdmsMasterDetailModelImpl implements _MdmsMasterDetailModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MdmsMasterDetailModelImpl &&
-            (identical(other.name, name) || other.name == name));
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.filter, filter) || other.filter == filter));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name);
+  int get hashCode => Object.hash(runtimeType, name, filter);
 
   @JsonKey(ignore: true)
   @override
@@ -639,14 +653,16 @@ class _$MdmsMasterDetailModelImpl implements _MdmsMasterDetailModel {
 }
 
 abstract class _MdmsMasterDetailModel implements MdmsMasterDetailModel {
-  const factory _MdmsMasterDetailModel(final String name) =
-      _$MdmsMasterDetailModelImpl;
+  const factory _MdmsMasterDetailModel(final String name,
+      {final String? filter}) = _$MdmsMasterDetailModelImpl;
 
   factory _MdmsMasterDetailModel.fromJson(Map<String, dynamic> json) =
       _$MdmsMasterDetailModelImpl.fromJson;
 
   @override
   String get name;
+  @override
+  String? get filter;
   @override
   @JsonKey(ignore: true)
   _$$MdmsMasterDetailModelImplCopyWith<_$MdmsMasterDetailModelImpl>

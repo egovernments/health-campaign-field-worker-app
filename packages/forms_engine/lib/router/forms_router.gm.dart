@@ -27,6 +27,7 @@ abstract class $FormsRoute extends _i2.AutoRouterModule {
           key: args.key,
           appLocalizations: args.appLocalizations,
           pageName: args.pageName,
+          defaultValues: args.defaultValues,
         ),
       );
     }
@@ -40,6 +41,7 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
     _i3.Key? key,
     _i4.FormLocalization? appLocalizations,
     required String pageName,
+    Map<String, dynamic>? defaultValues,
     List<_i2.PageRouteInfo>? children,
   }) : super(
           FormsRenderRoute.name,
@@ -47,6 +49,7 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
             key: key,
             appLocalizations: appLocalizations,
             pageName: pageName,
+            defaultValues: defaultValues,
           ),
           rawPathParams: {'pageName': pageName},
           initialChildren: children,
@@ -63,6 +66,7 @@ class FormsRenderRouteArgs {
     this.key,
     this.appLocalizations,
     required this.pageName,
+    this.defaultValues,
   });
 
   final _i3.Key? key;
@@ -71,8 +75,10 @@ class FormsRenderRouteArgs {
 
   final String pageName;
 
+  final Map<String, dynamic>? defaultValues;
+
   @override
   String toString() {
-    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, pageName: $pageName}';
+    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, pageName: $pageName, defaultValues: $defaultValues}';
   }
 }
