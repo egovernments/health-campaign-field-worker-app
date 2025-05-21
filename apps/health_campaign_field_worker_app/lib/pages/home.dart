@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
@@ -372,10 +373,12 @@ class _HomePageState extends LocalizedState<HomePage> {
             // context.read<FormsBloc>().add(const FormsEvent.clearForm());
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
-            // if (isTriggerLocalisation) {
-            //   triggerLocalization();
-            //   isTriggerLocalisation = false;
-            // }
+            if (isTriggerLocalisation && schemaJson != null) {
+              final decoded = jsonDecode(schemaJson);
+              final moduleName = 'hcm-${decoded['name']}-${context.selectedProject.referenceId}';
+              triggerLocalization(module: moduleName);
+              isTriggerLocalisation = false;
+            }
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -710,7 +713,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
   }
 
-  void triggerLocalization() {
+  void triggerLocalization({String? module}) {
     context.read<AppInitializationBloc>().state.maybeWhen(
           orElse: () {},
           initialized: (
@@ -726,8 +729,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             context
                 .read<LocalizationBloc>()
                 .add(LocalizationEvent.onLoadLocalization(
-                  module:
-                      "hcm-dummy-module-APPTWO,${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                  module: module ??  "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                   tenantId: envConfig.variables.tenantId ?? "default",
                   locale: selectedLocale!,
                   path: Constants.localizationApiPath,

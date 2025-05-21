@@ -14,8 +14,9 @@ import '../../widgets/localized.dart';
 @RoutePage()
 class FormsRenderPage extends LocalizedStatefulWidget {
   final String pageName;
+  final Map<String, dynamic>? defaultValues;
 
-  const FormsRenderPage({super.key, super.appLocalizations, @PathParam() required this.pageName});
+  const FormsRenderPage({super.key, super.appLocalizations, @PathParam() required this.pageName, this.defaultValues,});
 
   @override
   State<FormsRenderPage> createState() => _FormsRenderPageState();
@@ -46,9 +47,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
       return ReactiveFormBuilder(
         form: () => fb.group(
-          JsonForms.getFormControls(schema, defaultValues: {
-          // 'locality': localizations.translate(context.boundary.code ?? ''),
-          },),
+          JsonForms.getFormControls(schema, defaultValues: widget.defaultValues ?? {},),
         ),
         builder: (context, formGroup, child) => ScrollableContent(
           enableFixedDigitButton: true,

@@ -918,7 +918,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         "project": "SMC_2025",
         "version": 1
       };
-      // await mdmsRepository.searchMDMS(
+      // final formConfigResult = await mdmsRepository.searchMDMS(
       //   envConfig.variables.mdmsApiPath,
       //   MdmsRequestModel(
       //     mdmsCriteria: MdmsCriteriaModel(
@@ -927,13 +927,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       //         const MdmsModuleDetailModel(
       //           moduleName: 'HCM-ADMIN-CONSOLE',
       //           masterDetails: [
-      //             MdmsMasterDetailModel('SimplifiedAppConfigTwo'),
+      //             MdmsMasterDetailModel('SimplifiedAppConfig4', filter: "[?(@.project=='CMP-2025-05-21-005933')]"),
       //           ],
       //         ),
       //       ],
       //     ),
       //   ).toJson(),
       // );
+      //
+      // final formConfig = formConfigResult['HCM-ADMIN-CONSOLE']['SimplifiedAppConfig4'][0];
 
       await enrichFormSchemaWithEnums(formConfig);
 
@@ -1052,6 +1054,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           }
         }
       }
+    }
+
+    // ✅ If nothing to enrich, return early
+    if (moduleToMasters.isEmpty) {
+      await storeSchema(formConfig); // still store if needed
+      return;
     }
 
     // Step 3: Prepare MDMS moduleDetails

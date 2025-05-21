@@ -488,6 +488,7 @@ class _SearchBeneficiaryPageState
                           : true,
                       onPressed: () {
                         FocusManager.instance.primaryFocus?.unfocus();
+                        context.read<FormsBloc>().add(const FormsEvent.clearForm());
                         final pageName = context
                             .read<FormsBloc>()
                             .state
@@ -502,7 +503,10 @@ class _SearchBeneficiaryPageState
                               message: 'no form found please check configuration',
                               type: ToastType.error);
                         } else {
-                          context.router.push(FormsRenderRoute(pageName: pageName));
+                          context.router.push(FormsRenderRoute(pageName: pageName, defaultValues: {
+                            'administrativeArea': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? ''),
+                            'nameOfIndividual' : searchHouseholdsState.searchQuery,
+                          }));
                         }
 
                         // context.read<DigitScannerBloc>().add(
