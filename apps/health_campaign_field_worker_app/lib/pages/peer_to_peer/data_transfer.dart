@@ -192,24 +192,36 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                                   children: [
                                     // buildDeviceChip(),
                                     const SizedBox(width: spacer2),
-                                    Container(
-                                      padding: const EdgeInsets.all(spacer2),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: DigitTheme
-                                              .instance.colors.light.primary1Bg,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(spacer2),
-                                      ),
-                                      child: Text(
-                                        widget
-                                            .connectedDevices.first.deviceName,
-                                        style: TextStyle(
-                                          color: DigitTheme
-                                              .instance.colors.light.primary2,
-                                        ),
-                                      ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: widget.connectedDevices
+                                          .map((e) => Container(
+                                                padding: const EdgeInsets.all(
+                                                    spacer2),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: DigitTheme
+                                                        .instance
+                                                        .colors
+                                                        .light
+                                                        .primary1Bg,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          spacer2),
+                                                ),
+                                                child: Text(
+                                                  e.deviceName,
+                                                  style: TextStyle(
+                                                    color: DigitTheme.instance
+                                                        .colors.light.primary2,
+                                                  ),
+                                                ),
+                                              ))
+                                          .toList(),
                                     ),
                                   ]),
                             ],

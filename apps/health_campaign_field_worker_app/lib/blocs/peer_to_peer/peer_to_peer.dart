@@ -121,7 +121,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
                 confirmationType: ConfirmationTypes.handShake.toValue(),
               );
 
-              if (handshakeSuccessful) {
+              if (!handshakeSuccessful) {
                 emit(PeerToPeerState.failedToTransfer(
                     error: i18.dataShare.projectMisMatchError));
                 return;
