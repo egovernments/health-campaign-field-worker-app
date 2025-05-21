@@ -78,9 +78,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           child: JsonSchemaSelectionBuilder(
             form: form,
             formControlName: widget.formControlName,
-            enums: (widget.schema.enums ?? [])
-                .map(localizations.translate)
-                .toList(),
+            enums: widget.schema.enums ?? [],
             validations: widget.schema.validations,
           ),
         );
@@ -92,9 +90,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           child: JsonSchemaDropdownBuilder(
             form: form,
             formControlName: widget.formControlName,
-            enums: (widget.schema.enums ?? [])
-                .map(localizations.translate)
-                .toList(),
+            enums: widget.schema.enums ?? [],
             validations: widget.schema.validations,
           ),
         );

@@ -125,6 +125,7 @@ class _SearchBeneficiaryPageState
                   "tenantId": RegistrationDeliverySingleton().selectedProject?.tenantId,
                   "selectedBoundaryCode": RegistrationDeliverySingleton().boundary?.code, // converting in json format to match nested object value as passing model will cause issue
                   'userUUID': RegistrationDeliverySingleton().loggedInUser?.uuid,
+                  'householdType': RegistrationDeliverySingleton().householdType?.toValue(),
                 },
               );
 
@@ -136,6 +137,7 @@ class _SearchBeneficiaryPageState
                 const FormsEvent.clearForm(), // or create a FormsResetEvent
               );
             } catch (e) {
+              Navigator.of(context, rootNavigator: true).pop();
               print('Error: $e');
             }
           }

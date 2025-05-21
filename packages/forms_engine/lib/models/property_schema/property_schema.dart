@@ -21,7 +21,7 @@ class PropertySchema with _$PropertySchema {
     bool? readonly,
     bool? displayOnly,
     Map<String, PropertySchema>? properties,
-    List<String>? enums,
+    List<Option>? enums,
     String? schemaCode,
     @JsonKey(
       name: 'format',
@@ -84,6 +84,17 @@ class ValidationRule with _$ValidationRule {
 
   factory ValidationRule.fromJson(Map<String, dynamic> json) =>
       _$ValidationRuleFromJson(json);
+}
+
+@freezed
+class Option with _$Option {
+  const factory Option({
+    required String code,
+    required String name,
+  }) = _Option;
+
+  factory Option.fromJson(Map<String, dynamic> json) =>
+      _$OptionFromJson(json);
 }
 
 @freezed

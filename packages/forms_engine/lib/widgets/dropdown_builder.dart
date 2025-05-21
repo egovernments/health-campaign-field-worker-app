@@ -2,7 +2,7 @@ part of 'json_schema_builder.dart';
 
 
 class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
-  final List<String> enums;
+  final List<Option> enums;
 
   const JsonSchemaDropdownBuilder({
     required super.formControlName,
@@ -41,8 +41,8 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
           items: enums
               .map(
                 (e) => DropdownItem(
-                name: e,
-                code: e),
+                code: e.code,
+                name: loc.translate(e.name)),
           )
               .toList(),
           onSelect: (value) {

@@ -102,7 +102,9 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
       }
     }
 
-    control.value = dob;
+    // Store as string in "dd/MM/yyyy" format
+    final formatted = DateFormat('dd/MM/yyyy').format(dob);
+    control.value = formatted;
   }
 
   String? _getDobErrorMessage(AbstractControl<dynamic> control, BuildContext context) {
@@ -115,6 +117,15 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     }
 
     return null;
+  }
+
+  DateTime? _parseDate(String? value) {
+    if (value == null) return null;
+    try {
+      return DateFormat('dd/MM/yyyy').parseStrict(value);
+    } catch (_) {
+      return null;
+    }
   }
 }
 
