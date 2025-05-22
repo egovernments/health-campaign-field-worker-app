@@ -54,8 +54,6 @@ class Common {
 
   String get corecommonclose => 'CORE_COMMON_CLOSE';
 
-  String get coreCommonError => 'CORE_COMMON_ERROR';
-
   String get coreCommonOk => 'CORE_COMMON_OK';
 
   String get coreCommonNA => 'CORE_COMMON_NA';
@@ -203,9 +201,11 @@ class SearchBeneficiary {
 
 class BeneficiaryDetails {
   const BeneficiaryDetails();
-  String get notMeetDeliveryRulesCriteria => 'BENEFICIARY_NOT_MEET_DELIVERY_RULES';
 
-  String get  addValueText => "HCM_ADD";
+  String get notMeetDeliveryRulesCriteria =>
+      'BENEFICIARY_NOT_MEET_DELIVERY_RULES';
+
+  String get addValueText => "HCM_ADD";
 
   String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
 
@@ -366,7 +366,6 @@ class BeneficiaryDetails {
 class IndividualDetails {
   const IndividualDetails();
 
-  
   String get weightLabelText => 'WEIGHT_LABEL_TEXT';
 
   String get clfCheckboxLabelText => 'INDIVIDUAL_CLF_CHECKBOX_LABEL_TEXT';
@@ -1037,9 +1036,11 @@ class IndividualDetailsShowcase {
   String get idType {
     return 'INDIVIDUAL_DETAILS_SHOWCASE_ID_TYPE';
   }
+
   String get height {
     return 'INDIVIDUAL_DETAILS_SHOWCASE_HEIGHT';
   }
+
   String get weight {
     return 'INDIVIDUAL_DETAILS_SHOWCASE_WEIGHT';
   }
