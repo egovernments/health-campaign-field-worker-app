@@ -375,7 +375,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .setHouseholdType(HouseholdType.family);
             if (isTriggerLocalisation && schemaJson != null) {
               final decoded = jsonDecode(schemaJson);
-              final moduleName = 'hcm-${decoded['name']}-${context.selectedProject.referenceId}';
+              final moduleName = 'hcm-${decoded['name']}-${context.selectedProject.referenceID}'.toLowerCase();
               triggerLocalization(module: moduleName);
               isTriggerLocalisation = false;
             }
@@ -729,7 +729,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             context
                 .read<LocalizationBloc>()
                 .add(LocalizationEvent.onLoadLocalization(
-                  module: module ??  "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+              module: "hcm-dummy-module-APPTWO",
+                  // module: module ??  "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                   tenantId: envConfig.variables.tenantId ?? "default",
                   locale: selectedLocale!,
                   path: Constants.localizationApiPath,

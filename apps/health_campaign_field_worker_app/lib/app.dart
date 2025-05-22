@@ -188,7 +188,7 @@ class MainApplicationState extends State<MainApplication>
                                 ..add(
                                   LocalizationEvent.onLoadLocalization(
                                     module:
-                                        "hcm-dummy-module-APPTWO,hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                                        "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                     tenantId: envConfig.variables.tenantId,
                                     locale: firstLanguage,
                                     path: Constants.localizationApiPath,

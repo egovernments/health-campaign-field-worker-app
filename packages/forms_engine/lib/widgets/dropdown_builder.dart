@@ -32,12 +32,16 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
         child: DigitDropdown<String>(
           helpText: helpText,
           errorMessage: field.errorText,
-          selectedOption:
-          (form.control(formControlName).value != null)
+          selectedOption: field.value != null
               ? DropdownItem(
-              name: form.control(formControlName).value,
-              code: form.control(formControlName).value)
-              : null,
+            code: field.value!,
+            name: loc.translate(
+              enums.firstWhere(
+                    (e) => e.code == field.value,
+                orElse: () => Option(code: field.value!, name: field.value!),
+              ).name,
+            ),
+          ) : null,
           items: enums
               .map(
                 (e) => DropdownItem(

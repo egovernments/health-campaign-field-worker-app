@@ -175,6 +175,17 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           helpText: localizations.translate(widget.schema.helpText ?? ''),
         );
 
+      case PropertySchemaFormat.date:
+        return JsonSchemaDatePickerBuilder(
+          label: localizations.translate(widget.schema.label ?? ''),
+          form: form,
+          formControlName: widget.formControlName,
+          start: widget.schema.firstDate?.dateValue,
+          end: widget.schema.lastDate?.dateValue,
+          validations: widget.schema.validations,
+          helpText: localizations.translate(widget.schema.helpText ?? ''),
+        );
+
       case PropertySchemaFormat.numeric:
         return JsonSchemaIntegerBuilder(
           form: form,
