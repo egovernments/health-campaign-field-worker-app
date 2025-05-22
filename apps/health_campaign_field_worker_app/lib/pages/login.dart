@@ -108,7 +108,6 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                             onChange: (value) {
                               form.control(_userId).value = value;
                             },
-                            initialValue: form.control(_userId).value,
                           ),
                         ),
                       ),
@@ -133,7 +132,6 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                               form.control(_password).value = value;
                             },
                             keyboardType: TextInputType.text,
-                            initialValue: form.control(_password).value,
                           ),
                         ),
                       ),
@@ -235,12 +233,12 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: '',
+          value: 'USR-260848',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
-          value: '',
+          value: 'eGov@123',
         ),
         _privacyCheck: FormControl<bool>(
           value: false,
