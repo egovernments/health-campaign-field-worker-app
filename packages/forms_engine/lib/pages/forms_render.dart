@@ -128,6 +128,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         pageName: schemaObject.pages.entries
                             .elementAt(index + 1)
                             .key,
+                        defaultValues: widget.defaultValues,
                       ));
                     } else {
                       context.read<FormsBloc>().add(

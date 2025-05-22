@@ -16,6 +16,12 @@ FormControl buildFormControl(
 
   switch (schema.type) {
     case PropertySchemaType.integer:
+      if(format == PropertySchemaFormat.date) {
+        return FormControl<DateTime>(
+          value: DateTime.now(),
+          validators: validators,
+        );
+      }
       return FormControl<int>(
         value: _parseIntValue(rawValue),
         validators: validators,
