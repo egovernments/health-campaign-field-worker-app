@@ -185,9 +185,16 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
               beneficiaryClientReferenceId:
                   individualsList.map((e) => e.clientReferenceId).toList()));
 
-      finalResults.forEach((element) {
-        taskList.add(element);
-      });
+      if (!event.globalSearchParams.filter!
+          .contains(Status.beneficiaryReferred.name)) {
+        finalResults.forEach((element) {
+          taskList.add(element);
+        });
+      } else {
+        finalResults.forEach((element) {
+          referralsList.add(element);
+        });
+      }
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -387,10 +394,12 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         taskClientReferenceId:
             taskList.map((e) => e.clientReferenceId).toList(),
       ));
-      referralsList = await referralDataRepository.search(ReferralSearchModel(
-        projectBeneficiaryClientReferenceId:
-            projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
-      ));
+      if (referralsList.isEmpty) {
+        referralsList = await referralDataRepository.search(ReferralSearchModel(
+          projectBeneficiaryClientReferenceId:
+              projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
+        ));
+      }
     }
 
     return [taskList, sideEffectsList, referralsList];

@@ -108,6 +108,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                             onChange: (value) {
                               form.control(_userId).value = value;
                             },
+                            initialValue: form.control(_userId).value,
                           ),
                         ),
                       ),
@@ -132,6 +133,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                               form.control(_password).value = value;
                             },
                             keyboardType: TextInputType.text,
+                            initialValue: form.control(_password).value,
                           ),
                         ),
                       ),

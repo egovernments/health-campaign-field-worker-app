@@ -34,6 +34,8 @@ class Common {
 
   String get coreCommonEmailId => 'CORE_COMMON_EMAIL_ID';
 
+  String get coreCommonError => 'CORE_COMMON_ERROR';
+
   String get coreCommonGender => 'CORE_COMMON_GENDER';
 
   String get coreCommonMobileNumber => 'CORE_COMMON_MOBILE_NUMBER';
