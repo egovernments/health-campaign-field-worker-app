@@ -7,6 +7,7 @@ import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/entities/referral.dart';
 import '../../../models/entities/status.dart';
 import '../../../models/entities/task.dart';
 import '../../../models/entities/task_resource.dart';
@@ -83,8 +84,9 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       // Apply filters if present
       if (params.filter != null && params.filter!.isNotEmpty) {
         for (var filter in params.filter!) {
-          filterSelectQuery =
-              await filterSearch(filterSelectQuery, params, filter, super.sql);
+          filterSelectQuery = await filterSearch(
+                  filterSelectQuery, params, filter, super.sql) ??
+              nameSelectQuery;
         }
       } else {
         filterSelectQuery = nameSelectQuery;
@@ -101,47 +103,90 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         }
         await filterSelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
-
+        var data;
         final results = await filterSelectQuery.get();
-        var data = results
-            .map((e) {
-              final task = e.readTableOrNull(sql.task);
-              final resources = e.readTableOrNull(sql.taskResource);
+        if (params.filter!.contains(Status.beneficiaryReferred.name)) {
+          data = results
+              .map((e) {
+                final referral = e.readTableOrNull(sql.referral);
+                if (referral == null) return null;
 
-              return TaskModel(
-                id: task.id,
-                createdBy: task.createdBy,
-                clientReferenceId: task.clientReferenceId,
-                rowVersion: task.rowVersion,
-                tenantId: task.tenantId,
-                isDeleted: task.isDeleted,
-                projectId: task.projectId,
-                projectBeneficiaryId: task.projectBeneficiaryId,
-                projectBeneficiaryClientReferenceId:
-                    task.projectBeneficiaryClientReferenceId,
-                createdDate: task.createdDate,
-                status: task.status,
-                resources: resources == null
-                    ? null
-                    : [
-                        TaskResourceModel(
-                          taskclientReferenceId:
-                              resources.taskclientReferenceId,
-                          clientReferenceId: resources.clientReferenceId,
-                          id: resources.id,
-                          productVariantId: resources.productVariantId,
-                          taskId: resources.taskId,
-                          deliveryComment: resources.deliveryComment,
-                          quantity: resources.quantity,
-                          rowVersion: resources.rowVersion,
+                return ReferralModel(
+                  id: referral.id,
+                  clientReferenceId: referral.clientReferenceId,
+                  rowVersion: referral.rowVersion,
+                  tenantId: referral.tenantId,
+                  isDeleted: referral.isDeleted,
+                  projectBeneficiaryClientReferenceId:
+                      referral.projectBeneficiaryClientReferenceId,
+                  auditDetails: AuditDetails(
+                    createdBy: referral.auditCreatedBy!,
+                    createdTime: referral.auditCreatedTime!,
+                    lastModifiedBy: referral.auditModifiedBy,
+                    lastModifiedTime: referral.auditModifiedTime,
+                  ),
+                  clientAuditDetails: referral.clientCreatedTime == null ||
+                          referral.clientCreatedBy == null
+                      ? null
+                      : ClientAuditDetails(
+                          createdTime: referral.clientCreatedTime!,
+                          createdBy: referral.clientCreatedBy!,
+                          lastModifiedBy: referral.clientModifiedBy,
+                          lastModifiedTime: referral.clientModifiedTime,
                         ),
-                      ],
-              );
-            })
-            .where((element) => element.isDeleted != true)
-            .toList();
+                );
+              })
+              .where((e) => e != null)
+              .where((element) => element!.isDeleted != true)
+              .toList();
+        } else {
+          data = results
+              .map((e) {
+                final task = e.readTableOrNull(sql.task);
+                final resources = e.readTableOrNull(sql.taskResource);
 
-        return {"data": data, "total_count": count};
+                return TaskModel(
+                  id: task.id,
+                  createdBy: task.createdBy,
+                  clientReferenceId: task.clientReferenceId,
+                  rowVersion: task.rowVersion,
+                  tenantId: task.tenantId,
+                  isDeleted: task.isDeleted,
+                  projectId: task.projectId,
+                  projectBeneficiaryId: task.projectBeneficiaryId,
+                  projectBeneficiaryClientReferenceId:
+                      task.projectBeneficiaryClientReferenceId,
+                  createdDate: task.createdDate,
+                  status: task.status,
+                  resources: resources == null
+                      ? null
+                      : [
+                          TaskResourceModel(
+                            taskclientReferenceId:
+                                resources.taskclientReferenceId,
+                            clientReferenceId: resources.clientReferenceId,
+                            id: resources.id,
+                            productVariantId: resources.productVariantId,
+                            taskId: resources.taskId,
+                            deliveryComment: resources.deliveryComment,
+                            quantity: resources.quantity,
+                            rowVersion: resources.rowVersion,
+                          ),
+                        ],
+                );
+              })
+              .where((element) => element.isDeleted != true)
+              .toList();
+        }
+
+        return {
+          "data": data,
+          "total_count": data.isNotEmpty
+              ? count
+              : params.offset! > 0
+                  ? params.totalCount
+                  : 0
+        };
       }
     } else {
       var proximitySelectQuery =
@@ -426,6 +471,14 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               sql.householdMember.householdClientReferenceId
                   .equals(params.householdClientReferenceId ?? '')
           ]));
+      } else if (filter == Status.beneficiaryReferred.name) {
+        selectQuery = sql.referral.select().join([
+          if (params.nameSearch == null || !params.isProximityEnabled)
+            leftOuterJoin(
+                sql.projectBeneficiary,
+                sql.projectBeneficiary.clientReferenceId.equalsExp(
+                    sql.referral.projectBeneficiaryClientReferenceId))
+        ]);
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -456,6 +509,14 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+      } else if (filter == Status.beneficiaryReferred.name) {
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.referral,
+              sql.referral.projectBeneficiaryClientReferenceId
+                  .equalsExp(sql.projectBeneficiary.clientReferenceId))
+        ]).where(sql.referral.projectBeneficiaryClientReferenceId
+            .equalsExp(sql.projectBeneficiary.clientReferenceId));
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -473,7 +534,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       Status.visited.name: Status.visited,
       Status.notVisited.name: Status.notVisited,
       Status.beneficiaryRefused.name: Status.beneficiaryRefused,
-      Status.beneficiaryReferred.name: Status.beneficiaryReferred,
       Status.administeredSuccess.name: Status.administeredSuccess,
       Status.administeredFailed.name: Status.administeredFailed,
       Status.inComplete.name: Status.inComplete,
@@ -544,11 +604,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     );
   }
 
-  joinProjectBeneficiary(LocalSqlDataStore sql) {
-    return leftOuterJoin(sql.projectBeneficiary,
-        sql.projectBeneficiary.clientReferenceId.isNotNull());
-  }
-
   // Executing custom select query on top of filterSelectQuery to get count
   _getTotalCount(filterSelectQuery, GlobalSearchParameters params,
       LocalSqlDataStore sql) async {
@@ -568,7 +623,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                   : [])
           .get();
     } catch (e) {
-      debugPrint('error in total $e');
+      debugPrint('Error in total $e');
     }
     return totalCount == null ? 0 : totalCount.first.data['total_count'];
   }
@@ -713,6 +768,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         .where((element) => element.isDeleted != true)
         .toList();
 
-    return {'total_count': count, 'data': data};
+    return {'total_count': data.isNotEmpty ? count : 0, 'data': data};
   }
 }
