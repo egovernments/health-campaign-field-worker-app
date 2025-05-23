@@ -126,7 +126,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
       case PropertySchemaFormat.locality:
         return LabeledField(
-          isRequired: true,
+          isRequired: hasRequiredValidation(widget.schema.validations),
           label: localizations.translate(widget.schema.label ?? ''),
           child: JsonSchemaStringBuilder(
             form: form,
@@ -144,6 +144,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return JsonSchemaLatLngBuilder(
           formControlName: widget.formControlName,
           form: form,
+          isRequired: hasRequiredValidation(widget.schema.validations),
           label: localizations.translate(widget.schema.label ?? ''),
           helpText: localizations.translate(widget.schema.helpText ?? ''),
         );
