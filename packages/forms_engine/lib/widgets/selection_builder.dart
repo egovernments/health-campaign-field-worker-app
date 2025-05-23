@@ -13,6 +13,7 @@ class JsonSchemaSelectionBuilder extends JsonSchemaBuilder<String> {
     super.readOnly,
     super.onTap,
     super.validations,
+    super.tooltipText,
   });
 
   @override

@@ -18,6 +18,7 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
     super.isRequired,
     super.validations,
     super.inputFormatter,
+    super.tooltipText,
   });
 
   @override
@@ -37,6 +38,8 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
             label: label,
             isRequired: hasRequiredValidation(validations),
             capitalizedFirstLetter: false,
+            infoText: translateIfPresent(tooltipText, loc),
+            tooltipTriggerMode: TooltipTriggerMode.tap,
             child: DigitTextFormInput(
               helpText: helpText,
               innerLabel: innerLabel,

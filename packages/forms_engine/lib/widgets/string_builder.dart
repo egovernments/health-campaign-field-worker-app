@@ -14,7 +14,9 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     this.inputType = TextInputType.text,
     super.isRequired,
     super.validations,
+    super.innerLabel,
     super.helpText,
+    super.tooltipText,
   });
 
   @override
@@ -31,6 +33,8 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
           validationMessages: validationMessages,
           showErrors: (control) => control.invalid && control.touched,
           builder: (field) => LabeledField(
+            infoText: translateIfPresent(tooltipText, loc),
+            tooltipTriggerMode: TooltipTriggerMode.tap,
             label: label,
             capitalizedFirstLetter: false,
             isRequired: isRequired ?? false,
