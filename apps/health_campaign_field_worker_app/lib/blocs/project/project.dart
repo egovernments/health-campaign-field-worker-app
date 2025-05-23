@@ -558,7 +558,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   moduleName: 'HCM-ADMIN-CONSOLE',
                   masterDetails: [
                     MdmsMasterDetailModel('SimpleAppConfiguration',
-                      // filter: "[?(@.project=='CMP-2025-05-21-005936')]"
                       filter: "[?(@.project=='${event.model.referenceID}')]",
                     ),
                   ],
@@ -664,8 +663,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 syncError: ProjectSyncErrorType.boundary,
               ),
             );
+            return;
           }
-          return;
         }
         await boundaryLocalRepository.bulkCreate(boundaries);
         LeastLevelBoundarySingleton()

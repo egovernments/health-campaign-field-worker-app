@@ -12,6 +12,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           unknownValue: PropertySchemaType.string),
       readonly: json['readonly'] as bool?,
       displayOnly: json['displayOnly'] as bool?,
+      hidden: json['hidden'] as bool?,
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
         (k, e) =>
             MapEntry(k, PropertySchema.fromJson(e as Map<String, dynamic>)),
@@ -64,6 +65,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
 
   writeNotNull('readonly', instance.readonly);
   writeNotNull('displayOnly', instance.displayOnly);
+  writeNotNull('hidden', instance.hidden);
   writeNotNull('properties',
       instance.properties?.map((k, e) => MapEntry(k, e.toJson())));
   writeNotNull('enums', instance.enums?.map((e) => e.toJson()).toList());
