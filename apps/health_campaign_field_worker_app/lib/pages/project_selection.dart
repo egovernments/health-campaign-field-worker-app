@@ -76,6 +76,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           BlocConsumer<ProjectBloc, ProjectState>(
             listener: (context, state) {
               final error = state.syncError;
+              final projectSelected = state.selectedProject;
 
               if (syncDialogRoute?.isActive ?? false) {
                 Navigator.of(context).removeRoute(syncDialogRoute!);
@@ -87,23 +88,27 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   barrierDismissible: false,
                   builder: (context) => DigitSyncDialogContent(
                     label: localizations.translate(
-                      i18.projectSelection.syncFailedTitleText,
+                      '${error.name.toUpperCase()}_ERROR',
                     ),
                     type: DialogType.failed,
                     primaryAction: DigitDialogActions(
                       label: localizations.translate(
                         i18.projectSelection.retryButtonText,
                       ),
-                      action: _selectedProject == null
-                          ? null
-                          : (context) {
-                              if (syncDialogRoute?.isActive ?? false) {
-                                Navigator.of(context)
-                                    .removeRoute(syncDialogRoute!);
-                              }
-                              context.read<ProjectBloc>().add(
+                      action: projectSelected == null
+                          ? (cxt) {
+                        if (syncDialogRoute != null && syncDialogRoute!.isActive) {
+                          Navigator.of(cxt).removeRoute(syncDialogRoute!);
+                        }
+                        context.read<ProjectBloc>().add(const ProjectInitializeEvent());
+                      }
+                          : (cxt) {
+                        if (syncDialogRoute != null && syncDialogRoute!.isActive) {
+                          Navigator.of(cxt).removeRoute(syncDialogRoute!);
+                        }
+                              cxt.read<ProjectBloc>().add(
                                     ProjectSelectProjectEvent(
-                                      _selectedProject!,
+                                      projectSelected,
                                     ),
                                   );
                             },
