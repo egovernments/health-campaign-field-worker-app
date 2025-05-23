@@ -20,6 +20,7 @@ class PropertySchema with _$PropertySchema {
     required PropertySchemaType type,
     bool? readonly,
     bool? displayOnly,
+    bool? hidden,
     Map<String, PropertySchema>? properties,
     List<Option>? enums,
     String? schemaCode,

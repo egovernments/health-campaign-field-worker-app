@@ -32,6 +32,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
   /// Conditionally hide based on display behavior
   bool _shouldHideField(FormGroup form) {
+    final hidden = widget.schema.hidden;
+    if( hidden != null && hidden == true) return true;
     final display = widget.schema.displayBehavior;
     if (display == null) return false;
 

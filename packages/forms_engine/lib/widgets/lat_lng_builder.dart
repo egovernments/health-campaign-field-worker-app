@@ -44,19 +44,22 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
 }
 
 class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWrapper> {
-  bool _dialogShown = false;
   bool _valueSet = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Triggered once the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DigitComponentsUtils.showDialog(context, '', DialogType.inProgress);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LocationBloc, LocationState>(
       listener: (context, state) {
-        if (state.loading && !_dialogShown) {
-          _dialogShown = true;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            DigitComponentsUtils.showDialog(context, '', DialogType.inProgress);
-          });
-        } else if (state.longitude != null && !_valueSet) {
+        if (state.longitude != null && !_valueSet) {
           _valueSet = true;
           widget.form.control(widget.formControlName).value = state.latLngString;
 
@@ -91,3 +94,4 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
     );
   }
 }
+

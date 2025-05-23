@@ -24,6 +24,7 @@ mixin _$PropertySchema {
   PropertySchemaType get type => throw _privateConstructorUsedError;
   bool? get readonly => throw _privateConstructorUsedError;
   bool? get displayOnly => throw _privateConstructorUsedError;
+  bool? get hidden => throw _privateConstructorUsedError;
   Map<String, PropertySchema>? get properties =>
       throw _privateConstructorUsedError;
   List<Option>? get enums => throw _privateConstructorUsedError;
@@ -65,6 +66,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
       PropertySchemaType type,
       bool? readonly,
       bool? displayOnly,
+      bool? hidden,
       Map<String, PropertySchema>? properties,
       List<Option>? enums,
       String? schemaCode,
@@ -109,6 +111,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? type = null,
     Object? readonly = freezed,
     Object? displayOnly = freezed,
+    Object? hidden = freezed,
     Object? properties = freezed,
     Object? enums = freezed,
     Object? schemaCode = freezed,
@@ -143,6 +146,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
       displayOnly: freezed == displayOnly
           ? _value.displayOnly
           : displayOnly // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      hidden: freezed == hidden
+          ? _value.hidden
+          : hidden // ignore: cast_nullable_to_non_nullable
               as bool?,
       properties: freezed == properties
           ? _value.properties
@@ -281,6 +288,7 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       PropertySchemaType type,
       bool? readonly,
       bool? displayOnly,
+      bool? hidden,
       Map<String, PropertySchema>? properties,
       List<Option>? enums,
       String? schemaCode,
@@ -326,6 +334,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? type = null,
     Object? readonly = freezed,
     Object? displayOnly = freezed,
+    Object? hidden = freezed,
     Object? properties = freezed,
     Object? enums = freezed,
     Object? schemaCode = freezed,
@@ -360,6 +369,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
       displayOnly: freezed == displayOnly
           ? _value.displayOnly
           : displayOnly // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      hidden: freezed == hidden
+          ? _value.hidden
+          : hidden // ignore: cast_nullable_to_non_nullable
               as bool?,
       properties: freezed == properties
           ? _value._properties
@@ -458,6 +471,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
       required this.type,
       this.readonly,
       this.displayOnly,
+      this.hidden,
       final Map<String, PropertySchema>? properties,
       final List<Option>? enums,
       this.schemaCode,
@@ -495,6 +509,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
   final bool? readonly;
   @override
   final bool? displayOnly;
+  @override
+  final bool? hidden;
   final Map<String, PropertySchema>? _properties;
   @override
   Map<String, PropertySchema>? get properties {
@@ -572,7 +588,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readonly: $readonly, displayOnly: $displayOnly, properties: $properties, enums: $enums, schemaCode: $schemaCode, format: $format, firstDate: $firstDate, lastDate: $lastDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltipText: $tooltipText, innerLabel: $innerLabel, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations)';
+    return 'PropertySchema(type: $type, readonly: $readonly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, format: $format, firstDate: $firstDate, lastDate: $lastDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltipText: $tooltipText, innerLabel: $innerLabel, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations)';
   }
 
   @override
@@ -585,6 +601,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
                 other.readonly == readonly) &&
             (identical(other.displayOnly, displayOnly) ||
                 other.displayOnly == displayOnly) &&
+            (identical(other.hidden, hidden) || other.hidden == hidden) &&
             const DeepCollectionEquality()
                 .equals(other._properties, _properties) &&
             const DeepCollectionEquality().equals(other._enums, _enums) &&
@@ -631,6 +648,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
         type,
         readonly,
         displayOnly,
+        hidden,
         const DeepCollectionEquality().hash(_properties),
         const DeepCollectionEquality().hash(_enums),
         schemaCode,
@@ -675,6 +693,7 @@ abstract class _PropertySchema implements PropertySchema {
       required final PropertySchemaType type,
       final bool? readonly,
       final bool? displayOnly,
+      final bool? hidden,
       final Map<String, PropertySchema>? properties,
       final List<Option>? enums,
       final String? schemaCode,
@@ -708,6 +727,8 @@ abstract class _PropertySchema implements PropertySchema {
   bool? get readonly;
   @override
   bool? get displayOnly;
+  @override
+  bool? get hidden;
   @override
   Map<String, PropertySchema>? get properties;
   @override
