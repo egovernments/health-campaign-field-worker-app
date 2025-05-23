@@ -17,6 +17,7 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
     super.readOnly,
     super.validations,
     super.isRequired,
+    super.tooltipText,
   });
 
   @override
@@ -30,6 +31,8 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
       validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) => LabeledField(
+        infoText: translateIfPresent(tooltipText, loc),
+        tooltipTriggerMode: TooltipTriggerMode.tap,
         label: label,
         isRequired: isRequired ?? false,
         child: DigitNumericFormInput(

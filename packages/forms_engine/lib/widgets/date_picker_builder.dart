@@ -14,6 +14,7 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
     this.start,
     this.end,
     super.validations,
+    super.tooltipText,
   });
 
   @override
@@ -26,6 +27,8 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) =>
           LabeledField(
+            infoText: translateIfPresent(tooltipText, loc),
+            tooltipTriggerMode: TooltipTriggerMode.tap,
             label: label,
             isRequired: true,
             child: DigitDateFormInput(

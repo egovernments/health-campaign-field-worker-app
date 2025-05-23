@@ -11,6 +11,7 @@ class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
     super.validations,
     super.helpText,
     super.isRequired,
+    super.tooltipText
   });
 
   @override
@@ -22,6 +23,7 @@ class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
       readOnly: readOnly,
       helpText: helpText,
       isRequired: isRequired,
+      tooltipText: tooltipText,
     );
   }
 }
@@ -33,6 +35,7 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
   final bool readOnly;
   final String? helpText;
   final bool? isRequired;
+  final String? tooltipText;
 
   const _LatLngBuilderStatefulWrapper({
     required this.form,
@@ -41,6 +44,7 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
     required this.readOnly,
     this.helpText,
     this.isRequired,
+    this.tooltipText,
   });
 
   @override
@@ -61,6 +65,7 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
 
   @override
   Widget build(BuildContext context) {
+    final loc = FormLocalization.of(context);
     return BlocConsumer<LocationBloc, LocationState>(
       listener: (context, state) {
         if (state.longitude != null && !_valueSet) {
@@ -78,6 +83,9 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
             return ReactiveWrapperField(
               formControlName: widget.formControlName,
               builder: (field) => LabeledField(
+
+                infoText: translateIfPresent(widget.tooltipText, loc),
+                tooltipTriggerMode: TooltipTriggerMode.tap,
                 label: widget.label,
                 isRequired: widget.isRequired ?? false,
                 capitalizedFirstLetter: false,
