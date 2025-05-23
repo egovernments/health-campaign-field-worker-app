@@ -10,6 +10,7 @@ class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
     this.label,
     super.validations,
     super.helpText,
+    super.isRequired,
   });
 
   @override
@@ -20,6 +21,7 @@ class JsonSchemaLatLngBuilder extends JsonSchemaBuilder<String> {
       label: label,
       readOnly: readOnly,
       helpText: helpText,
+      isRequired: isRequired,
     );
   }
 }
@@ -30,6 +32,7 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
   final String? label;
   final bool readOnly;
   final String? helpText;
+  final bool? isRequired;
 
   const _LatLngBuilderStatefulWrapper({
     required this.form,
@@ -37,6 +40,7 @@ class _LatLngBuilderStatefulWrapper extends StatefulWidget {
     required this.label,
     required this.readOnly,
     this.helpText,
+    this.isRequired,
   });
 
   @override
@@ -75,7 +79,7 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
               formControlName: widget.formControlName,
               builder: (field) => LabeledField(
                 label: widget.label,
-                isRequired: true,
+                isRequired: widget.isRequired ?? false,
                 capitalizedFirstLetter: false,
                 child: DigitTextFormInput(
                   helpText: widget.helpText,
