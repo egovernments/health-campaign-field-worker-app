@@ -43,6 +43,10 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
         return BeneficiaryType.spaq1;
       case "SPAQ2":
         return BeneficiaryType.spaq2;
+      case "SPAQ-1":
+        return BeneficiaryType.spaq3;
+      case "SPAQ-2":
+        return BeneficiaryType.spaq4;
       case "AZM":
         return BeneficiaryType.azm;
       case "VAS-RED":
@@ -75,6 +79,10 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
         return "SPAQ1";
       case BeneficiaryType.spaq2:
         return "SPAQ2";
+      case BeneficiaryType.spaq3:
+        return "SPAQ-1";
+      case BeneficiaryType.spaq4:
+        return "SPAQ-2";
       case BeneficiaryType.azm:
         return "AZM";
       case BeneficiaryType.vasRed:

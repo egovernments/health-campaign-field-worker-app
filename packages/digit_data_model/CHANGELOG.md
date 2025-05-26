@@ -1,3 +1,7 @@
+## 1.0.6-dev.3
+
+* Added more additional beneficiary_types in BeneficiaryType enum
+
 ## 1.0.6-dev.2
 
 * Added additional beneficiary types in BeneficiaryType enum
