@@ -25,8 +25,13 @@ mixin _$TransitPostEvent {
             String? transitPostType,
             String? transitPostName)
         handleSelection,
-    required TResult Function(double latitude, double longitude,
-            double locationAccuracy, int? curCount, int? totalCount)
+    required TResult Function(
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? scannedResource,
+            int? curCount,
+            int? totalCount)
         handleDelivery,
     required TResult Function(int curCount, int totalCount) handleDeliveryCount,
   }) =>
@@ -40,8 +45,13 @@ mixin _$TransitPostEvent {
             String? transitPostType,
             String? transitPostName)?
         handleSelection,
-    TResult? Function(double latitude, double longitude,
-            double locationAccuracy, int? curCount, int? totalCount)?
+    TResult? Function(
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? scannedResource,
+            int? curCount,
+            int? totalCount)?
         handleDelivery,
     TResult? Function(int curCount, int totalCount)? handleDeliveryCount,
   }) =>
@@ -52,7 +62,7 @@ mixin _$TransitPostEvent {
             String? transitPostType, String? transitPostName)?
         handleSelection,
     TResult Function(double latitude, double longitude, double locationAccuracy,
-            int? curCount, int? totalCount)?
+            String? scannedResource, int? curCount, int? totalCount)?
         handleDelivery,
     TResult Function(int curCount, int totalCount)? handleDeliveryCount,
     required TResult orElse(),
@@ -227,8 +237,13 @@ class _$TransitPostSelectionEventImpl implements TransitPostSelectionEvent {
             String? transitPostType,
             String? transitPostName)
         handleSelection,
-    required TResult Function(double latitude, double longitude,
-            double locationAccuracy, int? curCount, int? totalCount)
+    required TResult Function(
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? scannedResource,
+            int? curCount,
+            int? totalCount)
         handleDelivery,
     required TResult Function(int curCount, int totalCount) handleDeliveryCount,
   }) {
@@ -246,8 +261,13 @@ class _$TransitPostSelectionEventImpl implements TransitPostSelectionEvent {
             String? transitPostType,
             String? transitPostName)?
         handleSelection,
-    TResult? Function(double latitude, double longitude,
-            double locationAccuracy, int? curCount, int? totalCount)?
+    TResult? Function(
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? scannedResource,
+            int? curCount,
+            int? totalCount)?
         handleDelivery,
     TResult? Function(int curCount, int totalCount)? handleDeliveryCount,
   }) {
@@ -262,7 +282,7 @@ class _$TransitPostSelectionEventImpl implements TransitPostSelectionEvent {
             String? transitPostType, String? transitPostName)?
         handleSelection,
     TResult Function(double latitude, double longitude, double locationAccuracy,
-            int? curCount, int? totalCount)?
+            String? scannedResource, int? curCount, int? totalCount)?
         handleDelivery,
     TResult Function(int curCount, int totalCount)? handleDeliveryCount,
     required TResult orElse(),
@@ -339,6 +359,7 @@ abstract class _$$TransitPostDeliveryEventImplCopyWith<$Res> {
       {double latitude,
       double longitude,
       double locationAccuracy,
+      String? scannedResource,
       int? curCount,
       int? totalCount});
 }
@@ -358,6 +379,7 @@ class __$$TransitPostDeliveryEventImplCopyWithImpl<$Res>
     Object? latitude = null,
     Object? longitude = null,
     Object? locationAccuracy = null,
+    Object? scannedResource = freezed,
     Object? curCount = freezed,
     Object? totalCount = freezed,
   }) {
@@ -374,6 +396,10 @@ class __$$TransitPostDeliveryEventImplCopyWithImpl<$Res>
           ? _value.locationAccuracy
           : locationAccuracy // ignore: cast_nullable_to_non_nullable
               as double,
+      scannedResource: freezed == scannedResource
+          ? _value.scannedResource
+          : scannedResource // ignore: cast_nullable_to_non_nullable
+              as String?,
       curCount: freezed == curCount
           ? _value.curCount
           : curCount // ignore: cast_nullable_to_non_nullable
@@ -393,6 +419,7 @@ class _$TransitPostDeliveryEventImpl implements TransitPostDeliveryEvent {
       {this.latitude = 0,
       this.longitude = 0,
       this.locationAccuracy = 0,
+      this.scannedResource,
       this.curCount,
       this.totalCount});
 
@@ -406,13 +433,15 @@ class _$TransitPostDeliveryEventImpl implements TransitPostDeliveryEvent {
   @JsonKey()
   final double locationAccuracy;
   @override
+  final String? scannedResource;
+  @override
   final int? curCount;
   @override
   final int? totalCount;
 
   @override
   String toString() {
-    return 'TransitPostEvent.handleDelivery(latitude: $latitude, longitude: $longitude, locationAccuracy: $locationAccuracy, curCount: $curCount, totalCount: $totalCount)';
+    return 'TransitPostEvent.handleDelivery(latitude: $latitude, longitude: $longitude, locationAccuracy: $locationAccuracy, scannedResource: $scannedResource, curCount: $curCount, totalCount: $totalCount)';
   }
 
   @override
@@ -426,6 +455,8 @@ class _$TransitPostDeliveryEventImpl implements TransitPostDeliveryEvent {
                 other.longitude == longitude) &&
             (identical(other.locationAccuracy, locationAccuracy) ||
                 other.locationAccuracy == locationAccuracy) &&
+            (identical(other.scannedResource, scannedResource) ||
+                other.scannedResource == scannedResource) &&
             (identical(other.curCount, curCount) ||
                 other.curCount == curCount) &&
             (identical(other.totalCount, totalCount) ||
@@ -433,8 +464,8 @@ class _$TransitPostDeliveryEventImpl implements TransitPostDeliveryEvent {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, latitude, longitude, locationAccuracy, curCount, totalCount);
+  int get hashCode => Object.hash(runtimeType, latitude, longitude,
+      locationAccuracy, scannedResource, curCount, totalCount);
 
   @JsonKey(ignore: true)
   @override
@@ -453,13 +484,18 @@ class _$TransitPostDeliveryEventImpl implements TransitPostDeliveryEvent {
             String? transitPostType,
             String? transitPostName)
         handleSelection,
-    required TResult Function(double latitude, double longitude,
-            double locationAccuracy, int? curCount, int? totalCount)
+    required TResult Function(
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? scannedResource,
+            int? curCount,
+            int? totalCount)
         handleDelivery,
     required TResult Function(int curCount, int totalCount) handleDeliveryCount,
   }) {
-    return handleDelivery(
-        latitude, longitude, locationAccuracy, curCount, totalCount);
+    return handleDelivery(latitude, longitude, locationAccuracy,
+        scannedResource, curCount, totalCount);
   }
 
   @override
@@ -472,13 +508,18 @@ class _$TransitPostDeliveryEventImpl implements TransitPostDeliveryEvent {
             String? transitPostType,
             String? transitPostName)?
         handleSelection,
-    TResult? Function(double latitude, double longitude,
-            double locationAccuracy, int? curCount, int? totalCount)?
+    TResult? Function(
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? scannedResource,
+            int? curCount,
+            int? totalCount)?
         handleDelivery,
     TResult? Function(int curCount, int totalCount)? handleDeliveryCount,
   }) {
-    return handleDelivery?.call(
-        latitude, longitude, locationAccuracy, curCount, totalCount);
+    return handleDelivery?.call(latitude, longitude, locationAccuracy,
+        scannedResource, curCount, totalCount);
   }
 
   @override
@@ -488,14 +529,14 @@ class _$TransitPostDeliveryEventImpl implements TransitPostDeliveryEvent {
             String? transitPostType, String? transitPostName)?
         handleSelection,
     TResult Function(double latitude, double longitude, double locationAccuracy,
-            int? curCount, int? totalCount)?
+            String? scannedResource, int? curCount, int? totalCount)?
         handleDelivery,
     TResult Function(int curCount, int totalCount)? handleDeliveryCount,
     required TResult orElse(),
   }) {
     if (handleDelivery != null) {
-      return handleDelivery(
-          latitude, longitude, locationAccuracy, curCount, totalCount);
+      return handleDelivery(latitude, longitude, locationAccuracy,
+          scannedResource, curCount, totalCount);
     }
     return orElse();
   }
@@ -541,12 +582,14 @@ abstract class TransitPostDeliveryEvent implements TransitPostEvent {
       {final double latitude,
       final double longitude,
       final double locationAccuracy,
+      final String? scannedResource,
       final int? curCount,
       final int? totalCount}) = _$TransitPostDeliveryEventImpl;
 
   double get latitude;
   double get longitude;
   double get locationAccuracy;
+  String? get scannedResource;
   int? get curCount;
   int? get totalCount;
   @JsonKey(ignore: true)
@@ -644,8 +687,13 @@ class _$TransitPostDeliveryCountEventImpl
             String? transitPostType,
             String? transitPostName)
         handleSelection,
-    required TResult Function(double latitude, double longitude,
-            double locationAccuracy, int? curCount, int? totalCount)
+    required TResult Function(
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? scannedResource,
+            int? curCount,
+            int? totalCount)
         handleDelivery,
     required TResult Function(int curCount, int totalCount) handleDeliveryCount,
   }) {
@@ -662,8 +710,13 @@ class _$TransitPostDeliveryCountEventImpl
             String? transitPostType,
             String? transitPostName)?
         handleSelection,
-    TResult? Function(double latitude, double longitude,
-            double locationAccuracy, int? curCount, int? totalCount)?
+    TResult? Function(
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? scannedResource,
+            int? curCount,
+            int? totalCount)?
         handleDelivery,
     TResult? Function(int curCount, int totalCount)? handleDeliveryCount,
   }) {
@@ -677,7 +730,7 @@ class _$TransitPostDeliveryCountEventImpl
             String? transitPostType, String? transitPostName)?
         handleSelection,
     TResult Function(double latitude, double longitude, double locationAccuracy,
-            int? curCount, int? totalCount)?
+            String? scannedResource, int? curCount, int? totalCount)?
         handleDelivery,
     TResult Function(int curCount, int totalCount)? handleDeliveryCount,
     required TResult orElse(),

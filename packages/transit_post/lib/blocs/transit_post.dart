@@ -100,6 +100,10 @@ class TransitPostBloc extends Bloc<TransitPostEvent, TransitPostState> {
               'transitPostName',
               state.transitPostName,
             ),
+            AdditionalField(
+              'scannedResource',
+              event.scannedResource,
+            ),
           ])));
       emit(state.copyWith(
         curCount: state.curCount != null ? state.curCount! + 1 : 1,
@@ -125,6 +129,7 @@ class TransitPostEvent with _$TransitPostEvent {
     @Default(0) double latitude,
     @Default(0) double longitude,
     @Default(0) double locationAccuracy,
+    String? scannedResource,
     int? curCount,
     int? totalCount,
   }) = TransitPostDeliveryEvent;
