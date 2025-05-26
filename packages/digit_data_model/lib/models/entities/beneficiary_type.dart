@@ -23,6 +23,10 @@ enum BeneficiaryType {
   spaq1,
   @MappableValue("SPAQ2")
   spaq2,
+  @MappableValue("SPAQ-1")
+  spaq3,
+  @MappableValue("SPAQ-2")
+  spaq4,
   @MappableValue("AZM")
   azm,
   @MappableValue("VAS-RED")
