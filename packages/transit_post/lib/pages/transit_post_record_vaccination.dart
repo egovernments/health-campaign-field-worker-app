@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_scanner/digit_scanner.dart';
+import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -108,25 +109,30 @@ class TransitPostRecordVaccinationPageState
                                     ],
                                   ));
                         }
-                        context
-                            .read<TransitPostBloc>()
-                            .add(TransitPostDeliveryEvent(
-                              latitude: latKey.text.isNotEmpty
-                                  ? double.parse(latKey.text)
-                                  : transitPostState.latitude,
-                              longitude: lngKey.text.isNotEmpty
-                                  ? double.parse(lngKey.text)
-                                  : transitPostState.longitude,
-                              locationAccuracy: accuracyKey.text.isNotEmpty
-                                  ? double.parse(accuracyKey.text)
-                                  : transitPostState.locationAccuracy,
-                              curCount: (transitPostState.curCount == null)
-                                  ? 1
-                                  : transitPostState.curCount! + 1,
-                              totalCount: (transitPostState.totalCount == null)
-                                  ? 1
-                                  : transitPostState.totalCount! + 1,
-                            ));
+
+                        final bloc = context.read<DigitScannerBloc>();
+                        final state = bloc.state.barCodes;
+
+                        context.read<TransitPostBloc>().add(
+                            TransitPostDeliveryEvent(
+                                latitude: latKey.text.isNotEmpty
+                                    ? double.parse(latKey.text)
+                                    : transitPostState.latitude,
+                                longitude: lngKey.text.isNotEmpty
+                                    ? double.parse(lngKey.text)
+                                    : transitPostState.longitude,
+                                locationAccuracy: accuracyKey.text.isNotEmpty
+                                    ? double.parse(accuracyKey.text)
+                                    : transitPostState.locationAccuracy,
+                                curCount: (transitPostState.curCount == null)
+                                    ? 1
+                                    : transitPostState.curCount! + 1,
+                                totalCount:
+                                    (transitPostState.totalCount == null)
+                                        ? 1
+                                        : transitPostState.totalCount! + 1,
+                                scannedResource: DigitScannerUtils()
+                                    .getGs1CodeFormattedString(state)));
                         context.router
                             .push(const TransitPostAcknowledgmentRoute());
                       },
@@ -248,7 +254,10 @@ class TransitPostRecordVaccinationPageState
                                         label: localizations.translate(
                                           i18.transitPost.resourceCodeLabel,
                                         ),
-                                        value: scannerState.qrCodes.first,
+                                        value: DigitScannerUtils()
+                                            .getGs1CodeFormattedString(
+                                                scannerState.barCodes),
+                                        maxLines: 5,
                                       ),
                                     ])
                               ]))

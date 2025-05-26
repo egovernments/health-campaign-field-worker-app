@@ -179,29 +179,34 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: spacer1),
+                                    padding:
+                                        const EdgeInsets.only(top: spacer1),
                                     child: Text(
-                                      localizations.translate(
-                                        i18.scanner.manualScan,
-                                      ),
-                                      style: textTheme.bodyL.copyWith(
-                                        color: theme.colorTheme.paper.primary
-                                      )
-                                    ),
+                                        localizations.translate(
+                                          i18.scanner.manualScan,
+                                        ),
+                                        style: textTheme.bodyL.copyWith(
+                                            color: theme
+                                                .colorTheme.paper.primary)),
                                   ),
-                                  DigitButton(label: localizations.translate(
-                                    i18.scanner.enterManualCode,
-                                  ), onPressed: () {
-                                    context.read<DigitScannerBloc>().add(
-                                      const DigitScannerEvent.handleScanner(
-                                        barCode: [],
-                                        qrCode: [],
+                                  DigitButton(
+                                      label: localizations.translate(
+                                        i18.scanner.enterManualCode,
                                       ),
-                                    );
-                                    setState(() {
-                                      manualCode = true;
-                                    });
-                                  }, type: DigitButtonType.link, size: DigitButtonSize.large)
+                                      onPressed: () {
+                                        context.read<DigitScannerBloc>().add(
+                                              const DigitScannerEvent
+                                                  .handleScanner(
+                                                barCode: [],
+                                                qrCode: [],
+                                              ),
+                                            );
+                                        setState(() {
+                                          manualCode = true;
+                                        });
+                                      },
+                                      type: DigitButtonType.link,
+                                      size: DigitButtonSize.large)
                                 ],
                               ),
                             ),
@@ -287,11 +292,15 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                   child: widget.isGS1code
                                       ? Text(
                                           '${state.barCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
-                                          style: textTheme.headingM.copyWith(color: theme.colorTheme.text.primary),
+                                          style: textTheme.headingM.copyWith(
+                                              color: theme
+                                                  .colorTheme.text.primary),
                                         )
                                       : Text(
                                           '${state.qrCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
-                                    style: textTheme.headingM.copyWith(color: theme.colorTheme.text.primary),
+                                          style: textTheme.headingM.copyWith(
+                                              color: theme
+                                                  .colorTheme.text.primary),
                                         ),
                                 ),
                                 Expanded(
@@ -335,14 +344,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   widget.isGS1code
-                                                      ? state
-                                                          .barCodes[index]
-                                                          .elements
-                                                          .entries
-                                                          .last
-                                                          .value
-                                                          .data
-                                                          .toString()
+                                                      ? getGs1CodeFormattedString(
+                                                          state.barCodes)
                                                       : DigitScannerUtils()
                                                           .trimString(state
                                                               .qrCodes[index]
@@ -633,5 +636,15 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   FormGroup buildForm() {
     return fb
         .group(<String, Object>{_manualCodeFormKey: FormControl<String>()});
+  }
+
+  getGs1CodeFormattedString(List<GS1Barcode> barCodes) {
+    final elements = barCodes.last;
+
+    return {
+      'batch': elements.getAIsData['10'],
+      'serial': elements.getAIsData['21'],
+      'expiry': elements.getAIsData['17'],
+    }.toString();
   }
 }

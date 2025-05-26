@@ -266,7 +266,7 @@ packages:
     source: hosted
     version: "0.11.0+2"
   camera_android_camerax:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: camera_android_camerax
       sha256: "594b40a5ea0e144fdfe49e4036abe4ec9bd578b2ce3aabdb0668a02db376a1e8"
@@ -548,10 +548,9 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: c8f82938906a11c516d445d7e5e27b7e6c6a1d07e0a608c2f90f63dd234241a5
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.5+1"
   digit_showcase:
     dependency: "direct main"

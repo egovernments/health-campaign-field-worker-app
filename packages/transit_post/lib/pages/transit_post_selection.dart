@@ -11,12 +11,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../utils/i18_key_constants.dart' as i18;
-import '../widgets/localized.dart';
 import '../blocs/transit_post.dart';
 import '../router/transit_post_router.gm.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
+import '../widgets/localized.dart';
 import '../widgets/total_delivery.dart';
 
 @RoutePage()
@@ -122,7 +122,7 @@ class TransitPostSelectionPageState
                                   ));
 
                               final bloc = context.read<DigitScannerBloc>();
-                              final state = bloc.state.qrCodes;
+                              final state = bloc.state.barCodes;
 
                               if (state.isNotEmpty) {
                                 await showCustomPopup(
@@ -156,7 +156,7 @@ class TransitPostSelectionPageState
                                 MaterialPageRoute(
                                   builder: (context) => const DigitScannerPage(
                                     quantity: 1,
-                                    isGS1code: false,
+                                    isGS1code: true,
                                     singleValue: true,
                                   ),
                                   settings:
@@ -165,7 +165,7 @@ class TransitPostSelectionPageState
                               );
                               if (context.mounted) {
                                 final bloc = context.read<DigitScannerBloc>();
-                                final state = bloc.state.qrCodes;
+                                final state = bloc.state.barCodes;
                                 if (state.isNotEmpty) {
                                   context.router.push(
                                       const TransitPostRecordVaccinationRoute());
