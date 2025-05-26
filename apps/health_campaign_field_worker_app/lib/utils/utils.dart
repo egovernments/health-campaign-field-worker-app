@@ -25,8 +25,10 @@ import 'package:digit_data_model/data_model.dart' as data_model;
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
-import 'package:registration_delivery/registration_delivery.init.dart'
+import 'package:registration/registration.init.dart'
     as registration_delivery_mappers;
+import 'package:delivery/delivery.init.dart'
+    as delivery_mappers;
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -466,6 +468,7 @@ initializeAllMappers() async {
     Future(() => inventory_mappers.initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
     Future(() => registration_delivery_mappers.initializeMappers()),
+    Future(() => delivery_mappers.initializeMappers()),
     Future(() => dss_mappers.initializeMappers()),
     Future(() => survey_form_mappers.initializeMappers()),
     Future(() => complaints_mappers.initializeMappers())

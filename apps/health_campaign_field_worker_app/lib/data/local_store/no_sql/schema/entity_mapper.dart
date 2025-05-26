@@ -8,12 +8,12 @@ import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:referral_reconciliation/models/entities/hf_referral.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/referral.dart';
-import 'package:registration_delivery/models/entities/side_effect.dart';
-import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration/models/entities/household.dart';
+import 'package:registration/models/entities/household_member.dart';
+import 'package:registration/models/entities/project_beneficiary.dart';
+import 'package:delivery/models/entities/referral.dart';
+import 'package:delivery/models/entities/side_effect.dart';
+import 'package:delivery/models/entities/task.dart';
 
 /// The `EntityMapper` class extends `EntityMapperListener` and provides a concrete implementation
 /// for the `getEntityMappers` method. This method is responsible for mapping a given entity type

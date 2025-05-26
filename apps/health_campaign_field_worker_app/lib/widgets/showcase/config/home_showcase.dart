@@ -94,6 +94,9 @@ class _HomePageShowcaseData {
   final manageAttendance = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.manageAttendanceLabel,
   );
+  final managedelivery = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.deliveryLabel,
+  );
 
   final db = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.db,

@@ -18,8 +18,10 @@ import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
 import 'package:referral_reconciliation/blocs/app_localization.dart'
     as referral_reconciliation_localization;
-import 'package:registration_delivery/blocs/app_localization.dart'
-    as registration_delivery_localization;
+import 'package:registration/blocs/app_localization.dart'
+    as registration_localization;
+import 'package:delivery/blocs/app_localization.dart'
+    as delivery_localization;    
 import 'package:survey_form/blocs/app_localization.dart'
     as survey_form_localization;
 
@@ -60,7 +62,12 @@ getAppLocalizationDelegates({
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
-    registration_delivery_localization.RegistrationDeliveryLocalization
+    registration_localization.RegistrationLocalization
+        .getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+     delivery_localization.DeliveryLocalization
         .getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,

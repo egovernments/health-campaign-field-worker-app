@@ -7,6 +7,11 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:delivery/models/entities/referral.dart';
+import 'package:delivery/models/entities/side_effect.dart';
+import 'package:delivery/models/entities/task.dart';
+import 'package:delivery/router/delivery_router.gm.dart';
+import 'package:delivery/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
@@ -28,8 +33,9 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:recase/recase.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+
+import 'package:registration/registration.dart';
+import 'package:registration/router/registration_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
@@ -362,29 +368,48 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            RegistrationDeliverySingleton()
+            RegistrationSingleton()
                 .setHouseholdType(HouseholdType.family);
             if (isTriggerLocalisation) {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
+            await context.router.push(const RegistrationWrapperRoute());
           },
         ),
       ),
+
+      
+      i18.home.deliveryLabel:
+          homeShowcaseData.managedelivery.buildWith(
+        child: HomeItemCard(
+          icon: Icons.all_inbox,
+          label: i18.home.deliveryLabel,
+          onPressed: () async {
+            DeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
+            if (isTriggerLocalisation) {
+              triggerLocalization();
+              isTriggerLocalisation = false;
+            }
+            await context.router.push(const DeliveryWrapperRoute());
+          },
+        ),
+      ),
+      
 
       i18.home.clfLabel: homeShowcaseData.clf.buildWith(
         child: HomeItemCard(
           icon: Icons.account_balance,
           label: i18.home.clfLabel,
           onPressed: () async {
-            RegistrationDeliverySingleton()
+            RegistrationSingleton()
                 .setHouseholdType(HouseholdType.community);
             if (isTriggerLocalisation) {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
+            await context.router.push(const RegistrationWrapperRoute());
           },
         ),
       ),
@@ -553,6 +578,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       // INFO : Need to add showcase keys of package Here
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
+      i18.home.deliveryLabel:
+          homeShowcaseData.managedelivery.showcaseKey,    
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
@@ -577,6 +604,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
+      i18.home.deliveryLabel,
       i18.home.clfLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
@@ -599,17 +627,16 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .contains(element) ||
             element == i18.home.db)
         .toList();
-
+     filteredLabels.add(i18.home.deliveryLabel);   
+    
     final showcaseKeys = filteredLabels
         .where((f) => f != i18.home.db)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-
-      if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
-        filteredLabels.remove(i18.home.db);
-      }
-
+    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
+      filteredLabels.remove(i18.home.db);
+    }
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -750,7 +777,39 @@ void setPackagesSingleton(BuildContext context) {
           userName: context.loggedInUser.name ?? '',
         );
 
-        RegistrationDeliverySingleton().setInitialData(
+        RegistrationSingleton().setInitialData(
+          loggedInUser: context.loggedInUserModel,
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
+          genderOptions:
+              appConfiguration.genderOptions!.map((e) => e.code).toList(),
+          idTypeOptions:
+              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          householdDeletionReasonOptions: appConfiguration
+              .householdDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          householdMemberDeletionReasonOptions: appConfiguration
+              .householdMemberDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
+              ? appConfiguration.searchHouseHoldFilters!
+                  .map((e) => e.code)
+                  .toList()
+              : [],
+          searchCLFFilters: appConfiguration.searchCLFFilters != null
+              ? appConfiguration.searchCLFFilters!.map((e) => e.code).toList()
+              : [],
+          houseStructureTypes:
+              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
+        );
+
+          DeliverySingleton().setInitialData(
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
