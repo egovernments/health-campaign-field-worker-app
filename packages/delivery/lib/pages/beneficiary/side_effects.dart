@@ -8,7 +8,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:delivery/blocs/household_overview/household_overview.dart';
-import 'package:registration/router/registration_router.gm.dart';
+import 'package:delivery/router/delivery_router.gm.dart';
 import 'package:registration/utils/extensions/extensions.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -377,7 +377,7 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
         );
       },
     ).then((value) => context.router.push(
-          HouseholdAcknowledgementRoute(
+          HouseholdAcknowledgementDeliveryRoute(
             enableViewHousehold: true,
           ),
         ));
