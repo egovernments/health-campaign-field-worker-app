@@ -18,6 +18,7 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
 
         case 'minLength':
           final parsedValue = parseIntValue(rule.value);
+
           if (parsedValue != null) {
             validators.add(Validators.minLength(parsedValue) as Validator<T>);
           }
@@ -120,4 +121,3 @@ int? getMaxLength(List<ValidationRule>? validations) {
   }
   return null;
 }
-

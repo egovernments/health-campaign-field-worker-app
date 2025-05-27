@@ -46,6 +46,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
               initialValue:
               form.control(formControlName).value,
               onChange: (value) {
+                form.control(formControlName).markAsTouched();
                 form.control(formControlName).value =
                     value;
               },

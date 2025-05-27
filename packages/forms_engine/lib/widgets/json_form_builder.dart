@@ -160,7 +160,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
-          value: widget.schema.value as String?,
+          value: widget.schema.value?.toString(),
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
@@ -237,7 +237,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return JsonSchemaCheckboxBuilder(
           form: form,
           formControlName: widget.formControlName,
-          label: localizations.translate(widget.schema.label ?? ''),
+          label: translateIfPresent(widget.schema.label, localizations),
           validations: widget.schema.validations,
         );
 
