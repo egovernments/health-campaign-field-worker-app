@@ -18,6 +18,7 @@ import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
@@ -416,7 +417,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                 );
 
                 String? dynamicModule;
-                final isInRegistrationFlow = context.router.current.name.contains('RegistrationDeliveryWrapperRoute');
+                final isInRegistrationFlow = context.router.current.name.contains(RegistrationDeliveryWrapperRoute.name);
                 if(isInRegistrationFlow){
                   final prefs = await SharedPreferences.getInstance();
                   final schemaJsonRaw = prefs.getString('app_config_schemas');

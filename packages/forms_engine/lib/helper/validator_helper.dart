@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:forms_engine/helper/form_builder_helper.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/property_schema/property_schema.dart';
@@ -16,28 +17,32 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
           break;
 
         case 'minLength':
-          if (rule.value is int) {
-            validators.add(Validators.minLength(rule.value) as Validator<T>);
+          final parsedValue = parseIntValue(rule.value);
+          if (parsedValue != null) {
+            validators.add(Validators.minLength(parsedValue) as Validator<T>);
           }
           break;
 
         case 'maxLength':
-          if (rule.value is int) {
-            validators.add(Validators.maxLength(rule.value) as Validator<T>);
+          final parsedValue = parseIntValue(rule.value);
+          if (parsedValue != null) {
+            validators.add(Validators.maxLength(parsedValue) as Validator<T>);
           }
           break;
 
         case 'min':
         case 'minValue':
-          if (rule.value is int) {
-            validators.add(Validators.min(rule.value) as Validator<T>);
+          final parsedValue = parseIntValue(rule.value);
+          if (parsedValue != null) {
+            validators.add(Validators.min(parsedValue) as Validator<T>);
           }
           break;
 
         case 'max':
         case 'maxValue':
-          if (rule.value is int) {
-            validators.add(Validators.max(rule.value) as Validator<T>);
+          final parsedValue = parseIntValue(rule.value);
+          if (parsedValue != null) {
+            validators.add(Validators.max(parsedValue) as Validator<T>);
           }
           break;
 
@@ -71,3 +76,48 @@ bool hasRequiredValidation(List<ValidationRule>? validations) {
 
   return validations.any((rule) => rule.type == 'required');
 }
+
+int? getMinValue(List<ValidationRule>? validations) {
+  if (validations == null) return null;
+
+  for (final rule in validations) {
+    if (rule.type == 'min' || rule.type == 'minValue') {
+      return parseIntValue(rule.value);
+    }
+  }
+  return null;
+}
+
+int? getMaxValue(List<ValidationRule>? validations) {
+  if (validations == null) return null;
+
+  for (final rule in validations) {
+    if (rule.type == 'max' || rule.type == 'maxValue') {
+      return parseIntValue(rule.value);
+    }
+  }
+  return null;
+}
+
+int? getMinLength(List<ValidationRule>? validations) {
+  if (validations == null) return null;
+
+  for (final rule in validations) {
+    if (rule.type == 'minLength') {
+      return parseIntValue(rule.value);
+    }
+  }
+  return null;
+}
+
+int? getMaxLength(List<ValidationRule>? validations) {
+  if (validations == null) return null;
+
+  for (final rule in validations) {
+    if (rule.type == 'maxLength') {
+      return parseIntValue(rule.value);
+    }
+  }
+  return null;
+}
+
