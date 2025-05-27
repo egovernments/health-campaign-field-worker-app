@@ -1,4 +1,4 @@
-# Registration 
+# Delivery
 
 This package provides a way to deliver the resources to the registered household and individual members.
 
