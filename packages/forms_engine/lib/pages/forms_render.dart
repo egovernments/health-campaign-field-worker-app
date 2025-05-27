@@ -172,10 +172,18 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                   ),
                 JsonForms(
                   propertySchema: schema,
-                  childrens: [],
-                  defaultValues: {
+                  childrens: const [],
+                  defaultValues: const {
                     // 'locality': context.boundary.code,
                   },
+                ),
+                Center(
+                  child: Text(
+                    'Form Version: ${schemaObject.version}',
+                    style: Theme.of(context).digitTextTheme(context).bodyXS.copyWith(
+                      color: Theme.of(context).colorTheme.text.disabled
+                    ),
+                  ),
                 )
               ],
             ),
