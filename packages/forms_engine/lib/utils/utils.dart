@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 import '../blocs/app_localization.dart';
 import '../models/property_schema/property_schema.dart';
@@ -74,6 +75,8 @@ TextInputFormatter? getPatternFormatter(List<ValidationRule>? validations) {
 
   return null;
 }
+
+
 
 
 

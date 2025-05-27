@@ -18,7 +18,7 @@ class PropertySchema with _$PropertySchema {
       unknownEnumValue: PropertySchemaType.string,
     )
     required PropertySchemaType type,
-    bool? readonly,
+    bool? readOnly,
     bool? displayOnly,
     bool? hidden,
     Map<String, PropertySchema>? properties,
@@ -29,14 +29,14 @@ class PropertySchema with _$PropertySchema {
       unknownEnumValue: PropertySchemaFormat.text,
     )
     PropertySchemaFormat? format,
-    DateFormatValue? firstDate,
-    DateFormatValue? lastDate,
+    String? startDate,
+    String? endDate,
     int? minValue,
     int? maxValue,
     int? minLength,
     int? maxLength,
     String? helpText,
-    String? tooltipText,
+    String? tooltip,
     String? innerLabel,
     String? label,
     dynamic value,
@@ -54,26 +54,6 @@ class PropertySchema with _$PropertySchema {
       _$PropertySchemaFromJson(json);
 }
 
-@freezed
-class DateFormatValue with _$DateFormatValue {
-  const DateFormatValue._();
-
-  const factory DateFormatValue({
-    required String value,
-    @Default('yyyy-MM-dd') String format,
-  }) = _DateFormatValue;
-
-  factory DateFormatValue.fromJson(Map<String, dynamic> json) =>
-      _$DateFormatValueFromJson(json);
-
-  factory DateFormatValue.fromDateTime(
-    DateTime dateTime, [
-    String format = 'yyyy-MM-dd',
-  ]) =>
-      DateFormatValue(value: DateFormat(format).format(dateTime));
-
-  DateTime get dateValue => DateFormat(format).parse(value);
-}
 
 @freezed
 class ValidationRule with _$ValidationRule {

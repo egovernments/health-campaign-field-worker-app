@@ -55,7 +55,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     });
 
     final sortedSchema = schemaObject.copyWith(pages: sortedPages);
-    emit(FormsState(schema: sortedSchema));
+    emit(FormsState(schema: sortedSchema, initialSchema: sortedSchema));
   }
 
   void _handleUpdateForm(FormsUpdateEvent event, FormsStateEmitter emit) {
@@ -79,7 +79,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     }
 
     final dataMap = Map.fromEntries(propertiesMap);
-    emit(FormsState(schema: state.schema, formData: dataMap));
+    emit(FormsState(schema: state.schema, formData: dataMap, initialSchema: state.initialSchema));
   }
 
   void _handleUpdateField(FormsUpdateFieldEvent event, FormsStateEmitter emit) {
@@ -101,7 +101,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     };
 
     final updatedSchema = schemaCopy.copyWith(pages: updatedPages);
-    emit(FormsState(schema: updatedSchema));
+    emit(FormsState(schema: updatedSchema, initialSchema: state.initialSchema));
   }
 
   void _handleClearField(FormsClearFieldEvent event, FormsStateEmitter emit) {
@@ -122,7 +122,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         ),
     };
 
-    emit(FormsState(schema: schemaCopy.copyWith(pages: updatedPages)));
+    emit(FormsState(schema: schemaCopy.copyWith(pages: updatedPages), initialSchema: state.initialSchema));
   }
 
   void _handleClearPage(FormsClearPageEvent event, FormsStateEmitter emit) {
@@ -140,30 +140,16 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     final updatedPages = Map.of(schemaCopy.pages);
     updatedPages[event.pageKey] = page.copyWith(properties: clearedProperties);
 
-    emit(FormsState(schema: schemaCopy.copyWith(pages: updatedPages)));
+    emit(FormsState(schema: schemaCopy.copyWith(pages: updatedPages), initialSchema: state.initialSchema));
   }
 
   void _handleClearForm(FormsClearFormEvent event, FormsStateEmitter emit) {
-    final schemaCopy = state.schema;
-    if (schemaCopy == null) return;
+    final schemaJson = state.initialSchema;
+    if (schemaJson == null) return;
 
-    final clearedPages = {
-      for (final page in schemaCopy.pages.entries)
-        page.key: page.value.copyWith(
-          properties: page.value.properties == null
-              ? null
-              : {
-            for (final prop in page.value.properties!.entries)
-              prop.key: prop.value.copyWith(value: null),
-          },
-        ),
-    };
-
-    emit(FormsState(
-      schema: schemaCopy.copyWith(pages: clearedPages),
-      formData: {},
-    ));
+    emit(FormsState(schema: schemaJson, initialSchema: schemaJson));
   }
+
 
   void _handleSubmitForm(FormsSubmitEvent event, FormsStateEmitter emit) {
     final schemaObject = state.schema;
@@ -191,8 +177,8 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       }
     }
 
-    emit(FormsSubmittedState(schema: schemaObject, formData: formData));
-    emit(FormsState(schema: schemaObject)); // Reset after submit
+    emit(FormsSubmittedState(schema: schemaObject, formData: formData, initialSchema: state.initialSchema));
+    emit(FormsState(schema: schemaObject, initialSchema: state.initialSchema)); // Reset after submit
   }
 }
 
@@ -221,10 +207,12 @@ class FormsState with _$FormsState {
   const factory FormsState({
     SchemaObject? schema,
     Map<String, dynamic>? formData,
+    SchemaObject? initialSchema, // Default json to reload the form
   }) = _FormsState;
 
   const factory FormsState.formSubmitted({
     SchemaObject? schema,
     required Map<String, dynamic> formData,
+    SchemaObject? initialSchema,
   }) = FormsSubmittedState;
 }

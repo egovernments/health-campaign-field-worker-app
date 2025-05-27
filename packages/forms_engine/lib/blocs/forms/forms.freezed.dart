@@ -1453,28 +1453,34 @@ abstract class FormsSubmitEvent implements FormsEvent {
 mixin _$FormsState {
   SchemaObject? get schema => throw _privateConstructorUsedError;
   Map<String, dynamic>? get formData => throw _privateConstructorUsedError;
+  SchemaObject? get initialSchema => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData)
+    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData,
+            SchemaObject? initialSchema)
         $default, {
-    required TResult Function(
-            SchemaObject? schema, Map<String, dynamic> formData)
+    required TResult Function(SchemaObject? schema,
+            Map<String, dynamic> formData, SchemaObject? initialSchema)
         formSubmitted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(SchemaObject? schema, Map<String, dynamic>? formData)?
+    TResult? Function(SchemaObject? schema, Map<String, dynamic>? formData,
+            SchemaObject? initialSchema)?
         $default, {
-    TResult? Function(SchemaObject? schema, Map<String, dynamic> formData)?
+    TResult? Function(SchemaObject? schema, Map<String, dynamic> formData,
+            SchemaObject? initialSchema)?
         formSubmitted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData)?
+    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData,
+            SchemaObject? initialSchema)?
         $default, {
-    TResult Function(SchemaObject? schema, Map<String, dynamic> formData)?
+    TResult Function(SchemaObject? schema, Map<String, dynamic> formData,
+            SchemaObject? initialSchema)?
         formSubmitted,
     required TResult orElse(),
   }) =>
@@ -1510,9 +1516,13 @@ abstract class $FormsStateCopyWith<$Res> {
           FormsState value, $Res Function(FormsState) then) =
       _$FormsStateCopyWithImpl<$Res, FormsState>;
   @useResult
-  $Res call({SchemaObject? schema, Map<String, dynamic> formData});
+  $Res call(
+      {SchemaObject? schema,
+      Map<String, dynamic> formData,
+      SchemaObject? initialSchema});
 
   $SchemaObjectCopyWith<$Res>? get schema;
+  $SchemaObjectCopyWith<$Res>? get initialSchema;
 }
 
 /// @nodoc
@@ -1530,6 +1540,7 @@ class _$FormsStateCopyWithImpl<$Res, $Val extends FormsState>
   $Res call({
     Object? schema = freezed,
     Object? formData = null,
+    Object? initialSchema = freezed,
   }) {
     return _then(_value.copyWith(
       schema: freezed == schema
@@ -1540,6 +1551,10 @@ class _$FormsStateCopyWithImpl<$Res, $Val extends FormsState>
           ? _value.formData!
           : formData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
+      initialSchema: freezed == initialSchema
+          ? _value.initialSchema
+          : initialSchema // ignore: cast_nullable_to_non_nullable
+              as SchemaObject?,
     ) as $Val);
   }
 
@@ -1554,6 +1569,18 @@ class _$FormsStateCopyWithImpl<$Res, $Val extends FormsState>
       return _then(_value.copyWith(schema: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $SchemaObjectCopyWith<$Res>? get initialSchema {
+    if (_value.initialSchema == null) {
+      return null;
+    }
+
+    return $SchemaObjectCopyWith<$Res>(_value.initialSchema!, (value) {
+      return _then(_value.copyWith(initialSchema: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -1564,10 +1591,15 @@ abstract class _$$FormsStateImplCopyWith<$Res>
       __$$FormsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({SchemaObject? schema, Map<String, dynamic>? formData});
+  $Res call(
+      {SchemaObject? schema,
+      Map<String, dynamic>? formData,
+      SchemaObject? initialSchema});
 
   @override
   $SchemaObjectCopyWith<$Res>? get schema;
+  @override
+  $SchemaObjectCopyWith<$Res>? get initialSchema;
 }
 
 /// @nodoc
@@ -1583,6 +1615,7 @@ class __$$FormsStateImplCopyWithImpl<$Res>
   $Res call({
     Object? schema = freezed,
     Object? formData = freezed,
+    Object? initialSchema = freezed,
   }) {
     return _then(_$FormsStateImpl(
       schema: freezed == schema
@@ -1593,6 +1626,10 @@ class __$$FormsStateImplCopyWithImpl<$Res>
           ? _value._formData
           : formData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>?,
+      initialSchema: freezed == initialSchema
+          ? _value.initialSchema
+          : initialSchema // ignore: cast_nullable_to_non_nullable
+              as SchemaObject?,
     ));
   }
 }
@@ -1600,7 +1637,8 @@ class __$$FormsStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FormsStateImpl implements _FormsState {
-  const _$FormsStateImpl({this.schema, final Map<String, dynamic>? formData})
+  const _$FormsStateImpl(
+      {this.schema, final Map<String, dynamic>? formData, this.initialSchema})
       : _formData = formData;
 
   @override
@@ -1616,8 +1654,11 @@ class _$FormsStateImpl implements _FormsState {
   }
 
   @override
+  final SchemaObject? initialSchema;
+
+  @override
   String toString() {
-    return 'FormsState(schema: $schema, formData: $formData)';
+    return 'FormsState(schema: $schema, formData: $formData, initialSchema: $initialSchema)';
   }
 
   @override
@@ -1626,12 +1667,14 @@ class _$FormsStateImpl implements _FormsState {
         (other.runtimeType == runtimeType &&
             other is _$FormsStateImpl &&
             (identical(other.schema, schema) || other.schema == schema) &&
-            const DeepCollectionEquality().equals(other._formData, _formData));
+            const DeepCollectionEquality().equals(other._formData, _formData) &&
+            (identical(other.initialSchema, initialSchema) ||
+                other.initialSchema == initialSchema));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, schema, const DeepCollectionEquality().hash(_formData));
+  int get hashCode => Object.hash(runtimeType, schema,
+      const DeepCollectionEquality().hash(_formData), initialSchema);
 
   @JsonKey(ignore: true)
   @override
@@ -1642,37 +1685,42 @@ class _$FormsStateImpl implements _FormsState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData)
+    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData,
+            SchemaObject? initialSchema)
         $default, {
-    required TResult Function(
-            SchemaObject? schema, Map<String, dynamic> formData)
+    required TResult Function(SchemaObject? schema,
+            Map<String, dynamic> formData, SchemaObject? initialSchema)
         formSubmitted,
   }) {
-    return $default(schema, formData);
+    return $default(schema, formData, initialSchema);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(SchemaObject? schema, Map<String, dynamic>? formData)?
+    TResult? Function(SchemaObject? schema, Map<String, dynamic>? formData,
+            SchemaObject? initialSchema)?
         $default, {
-    TResult? Function(SchemaObject? schema, Map<String, dynamic> formData)?
+    TResult? Function(SchemaObject? schema, Map<String, dynamic> formData,
+            SchemaObject? initialSchema)?
         formSubmitted,
   }) {
-    return $default?.call(schema, formData);
+    return $default?.call(schema, formData, initialSchema);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData)?
+    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData,
+            SchemaObject? initialSchema)?
         $default, {
-    TResult Function(SchemaObject? schema, Map<String, dynamic> formData)?
+    TResult Function(SchemaObject? schema, Map<String, dynamic> formData,
+            SchemaObject? initialSchema)?
         formSubmitted,
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(schema, formData);
+      return $default(schema, formData, initialSchema);
     }
     return orElse();
   }
@@ -1712,12 +1760,15 @@ class _$FormsStateImpl implements _FormsState {
 abstract class _FormsState implements FormsState {
   const factory _FormsState(
       {final SchemaObject? schema,
-      final Map<String, dynamic>? formData}) = _$FormsStateImpl;
+      final Map<String, dynamic>? formData,
+      final SchemaObject? initialSchema}) = _$FormsStateImpl;
 
   @override
   SchemaObject? get schema;
   @override
   Map<String, dynamic>? get formData;
+  @override
+  SchemaObject? get initialSchema;
   @override
   @JsonKey(ignore: true)
   _$$FormsStateImplCopyWith<_$FormsStateImpl> get copyWith =>
@@ -1732,10 +1783,15 @@ abstract class _$$FormsSubmittedStateImplCopyWith<$Res>
       __$$FormsSubmittedStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({SchemaObject? schema, Map<String, dynamic> formData});
+  $Res call(
+      {SchemaObject? schema,
+      Map<String, dynamic> formData,
+      SchemaObject? initialSchema});
 
   @override
   $SchemaObjectCopyWith<$Res>? get schema;
+  @override
+  $SchemaObjectCopyWith<$Res>? get initialSchema;
 }
 
 /// @nodoc
@@ -1751,6 +1807,7 @@ class __$$FormsSubmittedStateImplCopyWithImpl<$Res>
   $Res call({
     Object? schema = freezed,
     Object? formData = null,
+    Object? initialSchema = freezed,
   }) {
     return _then(_$FormsSubmittedStateImpl(
       schema: freezed == schema
@@ -1761,6 +1818,10 @@ class __$$FormsSubmittedStateImplCopyWithImpl<$Res>
           ? _value._formData
           : formData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
+      initialSchema: freezed == initialSchema
+          ? _value.initialSchema
+          : initialSchema // ignore: cast_nullable_to_non_nullable
+              as SchemaObject?,
     ));
   }
 }
@@ -1769,7 +1830,9 @@ class __$$FormsSubmittedStateImplCopyWithImpl<$Res>
 
 class _$FormsSubmittedStateImpl implements FormsSubmittedState {
   const _$FormsSubmittedStateImpl(
-      {this.schema, required final Map<String, dynamic> formData})
+      {this.schema,
+      required final Map<String, dynamic> formData,
+      this.initialSchema})
       : _formData = formData;
 
   @override
@@ -1783,8 +1846,11 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
   }
 
   @override
+  final SchemaObject? initialSchema;
+
+  @override
   String toString() {
-    return 'FormsState.formSubmitted(schema: $schema, formData: $formData)';
+    return 'FormsState.formSubmitted(schema: $schema, formData: $formData, initialSchema: $initialSchema)';
   }
 
   @override
@@ -1793,12 +1859,14 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
         (other.runtimeType == runtimeType &&
             other is _$FormsSubmittedStateImpl &&
             (identical(other.schema, schema) || other.schema == schema) &&
-            const DeepCollectionEquality().equals(other._formData, _formData));
+            const DeepCollectionEquality().equals(other._formData, _formData) &&
+            (identical(other.initialSchema, initialSchema) ||
+                other.initialSchema == initialSchema));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, schema, const DeepCollectionEquality().hash(_formData));
+  int get hashCode => Object.hash(runtimeType, schema,
+      const DeepCollectionEquality().hash(_formData), initialSchema);
 
   @JsonKey(ignore: true)
   @override
@@ -1810,37 +1878,42 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData)
+    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData,
+            SchemaObject? initialSchema)
         $default, {
-    required TResult Function(
-            SchemaObject? schema, Map<String, dynamic> formData)
+    required TResult Function(SchemaObject? schema,
+            Map<String, dynamic> formData, SchemaObject? initialSchema)
         formSubmitted,
   }) {
-    return formSubmitted(schema, formData);
+    return formSubmitted(schema, formData, initialSchema);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(SchemaObject? schema, Map<String, dynamic>? formData)?
+    TResult? Function(SchemaObject? schema, Map<String, dynamic>? formData,
+            SchemaObject? initialSchema)?
         $default, {
-    TResult? Function(SchemaObject? schema, Map<String, dynamic> formData)?
+    TResult? Function(SchemaObject? schema, Map<String, dynamic> formData,
+            SchemaObject? initialSchema)?
         formSubmitted,
   }) {
-    return formSubmitted?.call(schema, formData);
+    return formSubmitted?.call(schema, formData, initialSchema);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData)?
+    TResult Function(SchemaObject? schema, Map<String, dynamic>? formData,
+            SchemaObject? initialSchema)?
         $default, {
-    TResult Function(SchemaObject? schema, Map<String, dynamic> formData)?
+    TResult Function(SchemaObject? schema, Map<String, dynamic> formData,
+            SchemaObject? initialSchema)?
         formSubmitted,
     required TResult orElse(),
   }) {
     if (formSubmitted != null) {
-      return formSubmitted(schema, formData);
+      return formSubmitted(schema, formData, initialSchema);
     }
     return orElse();
   }
@@ -1879,14 +1952,16 @@ class _$FormsSubmittedStateImpl implements FormsSubmittedState {
 
 abstract class FormsSubmittedState implements FormsState {
   const factory FormsSubmittedState(
-          {final SchemaObject? schema,
-          required final Map<String, dynamic> formData}) =
-      _$FormsSubmittedStateImpl;
+      {final SchemaObject? schema,
+      required final Map<String, dynamic> formData,
+      final SchemaObject? initialSchema}) = _$FormsSubmittedStateImpl;
 
   @override
   SchemaObject? get schema;
   @override
   Map<String, dynamic> get formData;
+  @override
+  SchemaObject? get initialSchema;
   @override
   @JsonKey(ignore: true)
   _$$FormsSubmittedStateImplCopyWith<_$FormsSubmittedStateImpl> get copyWith =>

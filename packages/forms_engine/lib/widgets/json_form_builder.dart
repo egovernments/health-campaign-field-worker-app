@@ -75,7 +75,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     switch (format) {
       case PropertySchemaFormat.select:
         return LabeledField(
-          infoText: translateIfPresent(widget.schema.tooltipText, localizations),
+          infoText: translateIfPresent(widget.schema.tooltip, localizations),
           tooltipTriggerMode: TooltipTriggerMode.tap,
           isRequired: hasRequiredValidation(widget.schema.validations),
           label: translateIfPresent(widget.schema.label, localizations),
@@ -89,7 +89,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
       case PropertySchemaFormat.dropdown:
         return JsonSchemaDropdownBuilder(
-          tooltipText: translateIfPresent(widget.schema.tooltipText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           isRequired: hasRequiredValidation(widget.schema.validations),
           label: translateIfPresent(widget.schema.label, localizations),
           form: form,
@@ -104,6 +104,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           formControlName: widget.formControlName,
           validations: widget.schema.validations,
+          initialDate: parseDateValue(widget.schema.startDate),
         );
 
       case PropertySchemaFormat.scanner:
@@ -116,12 +117,15 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
       case PropertySchemaFormat.date:
         return JsonSchemaDatePickerBuilder(
-          tooltipText: translateIfPresent(widget.schema.tooltipText, localizations),
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          readOnly: widget.schema.readOnly ?? false,
+          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           form: form,
           formControlName: widget.formControlName,
-          start: widget.schema.firstDate?.dateValue,
-          end: widget.schema.lastDate?.dateValue,
+          start: parseDateValue(widget.schema.startDate),
+          end: parseDateValue(widget.schema.endDate),
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
         );
@@ -134,7 +138,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           readOnly: true,
           label: translateIfPresent(widget.schema.label, localizations),
-          tooltipText: translateIfPresent(widget.schema.tooltipText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
         );
 
@@ -148,7 +152,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           isRequired: hasRequiredValidation(widget.schema.validations),
           label: translateIfPresent(widget.schema.label, localizations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
-          tooltipText: translateIfPresent(widget.schema.tooltipText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
         );
 
       default:
@@ -160,7 +164,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
-          tooltipText: translateIfPresent(widget.schema.tooltipText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
         );
     }
@@ -180,7 +184,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
-          tooltipText: translateIfPresent(widget.schema.tooltipText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
         );
 
@@ -189,19 +193,18 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label:translateIfPresent(widget.schema.label, localizations),
           form: form,
           formControlName: widget.formControlName,
-          start: widget.schema.firstDate?.dateValue,
-          end: widget.schema.lastDate?.dateValue,
+          start: parseDateValue(widget.schema.startDate),
+          end: parseDateValue(widget.schema.endDate),
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
-          tooltipText: translateIfPresent(widget.schema.tooltipText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
         );
 
       case PropertySchemaFormat.numeric:
         return JsonSchemaIntegerBuilder(
           form: form,
-          value: widget.schema.value as int? ?? 0,
+          value: parseIntValue(widget.schema.value) ?? 0,
           formControlName: widget.formControlName,
-          readOnly: true,
           label:translateIfPresent(widget.schema.label, localizations),
           minValue: widget.schema.minValue,
           maxValue: widget.schema.maxValue,
@@ -258,10 +261,10 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           formControlName: widget.formControlName,
           value: widget.schema.value as String?,
-          readOnly: widget.schema.readonly ?? false,
+          readOnly: widget.schema.readOnly ?? false,
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
-          tooltipText: translateIfPresent(widget.schema.tooltipText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
         );
     }

@@ -22,7 +22,7 @@ PropertySchema _$PropertySchemaFromJson(Map<String, dynamic> json) {
 mixin _$PropertySchema {
   @JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
   PropertySchemaType get type => throw _privateConstructorUsedError;
-  bool? get readonly => throw _privateConstructorUsedError;
+  bool? get readOnly => throw _privateConstructorUsedError;
   bool? get displayOnly => throw _privateConstructorUsedError;
   bool? get hidden => throw _privateConstructorUsedError;
   Map<String, PropertySchema>? get properties =>
@@ -31,14 +31,14 @@ mixin _$PropertySchema {
   String? get schemaCode => throw _privateConstructorUsedError;
   @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   PropertySchemaFormat? get format => throw _privateConstructorUsedError;
-  DateFormatValue? get firstDate => throw _privateConstructorUsedError;
-  DateFormatValue? get lastDate => throw _privateConstructorUsedError;
+  String? get startDate => throw _privateConstructorUsedError;
+  String? get endDate => throw _privateConstructorUsedError;
   int? get minValue => throw _privateConstructorUsedError;
   int? get maxValue => throw _privateConstructorUsedError;
   int? get minLength => throw _privateConstructorUsedError;
   int? get maxLength => throw _privateConstructorUsedError;
   String? get helpText => throw _privateConstructorUsedError;
-  String? get tooltipText => throw _privateConstructorUsedError;
+  String? get tooltip => throw _privateConstructorUsedError;
   String? get innerLabel => throw _privateConstructorUsedError;
   String? get label => throw _privateConstructorUsedError;
   dynamic get value => throw _privateConstructorUsedError;
@@ -64,7 +64,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
       PropertySchemaType type,
-      bool? readonly,
+      bool? readOnly,
       bool? displayOnly,
       bool? hidden,
       Map<String, PropertySchema>? properties,
@@ -72,14 +72,14 @@ abstract class $PropertySchemaCopyWith<$Res> {
       String? schemaCode,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       PropertySchemaFormat? format,
-      DateFormatValue? firstDate,
-      DateFormatValue? lastDate,
+      String? startDate,
+      String? endDate,
       int? minValue,
       int? maxValue,
       int? minLength,
       int? maxLength,
       String? helpText,
-      String? tooltipText,
+      String? tooltip,
       String? innerLabel,
       String? label,
       dynamic value,
@@ -90,8 +90,6 @@ abstract class $PropertySchemaCopyWith<$Res> {
       String? description,
       List<ValidationRule>? validations});
 
-  $DateFormatValueCopyWith<$Res>? get firstDate;
-  $DateFormatValueCopyWith<$Res>? get lastDate;
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
 }
 
@@ -109,21 +107,21 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
   @override
   $Res call({
     Object? type = null,
-    Object? readonly = freezed,
+    Object? readOnly = freezed,
     Object? displayOnly = freezed,
     Object? hidden = freezed,
     Object? properties = freezed,
     Object? enums = freezed,
     Object? schemaCode = freezed,
     Object? format = freezed,
-    Object? firstDate = freezed,
-    Object? lastDate = freezed,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
     Object? minValue = freezed,
     Object? maxValue = freezed,
     Object? minLength = freezed,
     Object? maxLength = freezed,
     Object? helpText = freezed,
-    Object? tooltipText = freezed,
+    Object? tooltip = freezed,
     Object? innerLabel = freezed,
     Object? label = freezed,
     Object? value = freezed,
@@ -139,9 +137,9 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as PropertySchemaType,
-      readonly: freezed == readonly
-          ? _value.readonly
-          : readonly // ignore: cast_nullable_to_non_nullable
+      readOnly: freezed == readOnly
+          ? _value.readOnly
+          : readOnly // ignore: cast_nullable_to_non_nullable
               as bool?,
       displayOnly: freezed == displayOnly
           ? _value.displayOnly
@@ -167,14 +165,14 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.format
           : format // ignore: cast_nullable_to_non_nullable
               as PropertySchemaFormat?,
-      firstDate: freezed == firstDate
-          ? _value.firstDate
-          : firstDate // ignore: cast_nullable_to_non_nullable
-              as DateFormatValue?,
-      lastDate: freezed == lastDate
-          ? _value.lastDate
-          : lastDate // ignore: cast_nullable_to_non_nullable
-              as DateFormatValue?,
+      startDate: freezed == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as String?,
       minValue: freezed == minValue
           ? _value.minValue
           : minValue // ignore: cast_nullable_to_non_nullable
@@ -195,9 +193,9 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.helpText
           : helpText // ignore: cast_nullable_to_non_nullable
               as String?,
-      tooltipText: freezed == tooltipText
-          ? _value.tooltipText
-          : tooltipText // ignore: cast_nullable_to_non_nullable
+      tooltip: freezed == tooltip
+          ? _value.tooltip
+          : tooltip // ignore: cast_nullable_to_non_nullable
               as String?,
       innerLabel: freezed == innerLabel
           ? _value.innerLabel
@@ -240,30 +238,6 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
 
   @override
   @pragma('vm:prefer-inline')
-  $DateFormatValueCopyWith<$Res>? get firstDate {
-    if (_value.firstDate == null) {
-      return null;
-    }
-
-    return $DateFormatValueCopyWith<$Res>(_value.firstDate!, (value) {
-      return _then(_value.copyWith(firstDate: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $DateFormatValueCopyWith<$Res>? get lastDate {
-    if (_value.lastDate == null) {
-      return null;
-    }
-
-    return $DateFormatValueCopyWith<$Res>(_value.lastDate!, (value) {
-      return _then(_value.copyWith(lastDate: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior {
     if (_value.displayBehavior == null) {
       return null;
@@ -286,7 +260,7 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
       PropertySchemaType type,
-      bool? readonly,
+      bool? readOnly,
       bool? displayOnly,
       bool? hidden,
       Map<String, PropertySchema>? properties,
@@ -294,14 +268,14 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       String? schemaCode,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       PropertySchemaFormat? format,
-      DateFormatValue? firstDate,
-      DateFormatValue? lastDate,
+      String? startDate,
+      String? endDate,
       int? minValue,
       int? maxValue,
       int? minLength,
       int? maxLength,
       String? helpText,
-      String? tooltipText,
+      String? tooltip,
       String? innerLabel,
       String? label,
       dynamic value,
@@ -312,10 +286,6 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       String? description,
       List<ValidationRule>? validations});
 
-  @override
-  $DateFormatValueCopyWith<$Res>? get firstDate;
-  @override
-  $DateFormatValueCopyWith<$Res>? get lastDate;
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
 }
@@ -332,21 +302,21 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? type = null,
-    Object? readonly = freezed,
+    Object? readOnly = freezed,
     Object? displayOnly = freezed,
     Object? hidden = freezed,
     Object? properties = freezed,
     Object? enums = freezed,
     Object? schemaCode = freezed,
     Object? format = freezed,
-    Object? firstDate = freezed,
-    Object? lastDate = freezed,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
     Object? minValue = freezed,
     Object? maxValue = freezed,
     Object? minLength = freezed,
     Object? maxLength = freezed,
     Object? helpText = freezed,
-    Object? tooltipText = freezed,
+    Object? tooltip = freezed,
     Object? innerLabel = freezed,
     Object? label = freezed,
     Object? value = freezed,
@@ -362,9 +332,9 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as PropertySchemaType,
-      readonly: freezed == readonly
-          ? _value.readonly
-          : readonly // ignore: cast_nullable_to_non_nullable
+      readOnly: freezed == readOnly
+          ? _value.readOnly
+          : readOnly // ignore: cast_nullable_to_non_nullable
               as bool?,
       displayOnly: freezed == displayOnly
           ? _value.displayOnly
@@ -390,14 +360,14 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.format
           : format // ignore: cast_nullable_to_non_nullable
               as PropertySchemaFormat?,
-      firstDate: freezed == firstDate
-          ? _value.firstDate
-          : firstDate // ignore: cast_nullable_to_non_nullable
-              as DateFormatValue?,
-      lastDate: freezed == lastDate
-          ? _value.lastDate
-          : lastDate // ignore: cast_nullable_to_non_nullable
-              as DateFormatValue?,
+      startDate: freezed == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as String?,
       minValue: freezed == minValue
           ? _value.minValue
           : minValue // ignore: cast_nullable_to_non_nullable
@@ -418,9 +388,9 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.helpText
           : helpText // ignore: cast_nullable_to_non_nullable
               as String?,
-      tooltipText: freezed == tooltipText
-          ? _value.tooltipText
-          : tooltipText // ignore: cast_nullable_to_non_nullable
+      tooltip: freezed == tooltip
+          ? _value.tooltip
+          : tooltip // ignore: cast_nullable_to_non_nullable
               as String?,
       innerLabel: freezed == innerLabel
           ? _value.innerLabel
@@ -469,7 +439,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
   const _$PropertySchemaImpl(
       {@JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
       required this.type,
-      this.readonly,
+      this.readOnly,
       this.displayOnly,
       this.hidden,
       final Map<String, PropertySchema>? properties,
@@ -477,14 +447,14 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.schemaCode,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       this.format,
-      this.firstDate,
-      this.lastDate,
+      this.startDate,
+      this.endDate,
       this.minValue,
       this.maxValue,
       this.minLength,
       this.maxLength,
       this.helpText,
-      this.tooltipText,
+      this.tooltip,
       this.innerLabel,
       this.label,
       this.value,
@@ -506,7 +476,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
   final PropertySchemaType type;
   @override
-  final bool? readonly;
+  final bool? readOnly;
   @override
   final bool? displayOnly;
   @override
@@ -537,9 +507,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   final PropertySchemaFormat? format;
   @override
-  final DateFormatValue? firstDate;
+  final String? startDate;
   @override
-  final DateFormatValue? lastDate;
+  final String? endDate;
   @override
   final int? minValue;
   @override
@@ -551,7 +521,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   final String? helpText;
   @override
-  final String? tooltipText;
+  final String? tooltip;
   @override
   final String? innerLabel;
   @override
@@ -588,7 +558,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readonly: $readonly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, format: $format, firstDate: $firstDate, lastDate: $lastDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltipText: $tooltipText, innerLabel: $innerLabel, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations)';
   }
 
   @override
@@ -597,8 +567,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         (other.runtimeType == runtimeType &&
             other is _$PropertySchemaImpl &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.readonly, readonly) ||
-                other.readonly == readonly) &&
+            (identical(other.readOnly, readOnly) ||
+                other.readOnly == readOnly) &&
             (identical(other.displayOnly, displayOnly) ||
                 other.displayOnly == displayOnly) &&
             (identical(other.hidden, hidden) || other.hidden == hidden) &&
@@ -608,10 +578,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.schemaCode, schemaCode) ||
                 other.schemaCode == schemaCode) &&
             (identical(other.format, format) || other.format == format) &&
-            (identical(other.firstDate, firstDate) ||
-                other.firstDate == firstDate) &&
-            (identical(other.lastDate, lastDate) ||
-                other.lastDate == lastDate) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
             (identical(other.minValue, minValue) ||
                 other.minValue == minValue) &&
             (identical(other.maxValue, maxValue) ||
@@ -622,8 +591,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
                 other.maxLength == maxLength) &&
             (identical(other.helpText, helpText) ||
                 other.helpText == helpText) &&
-            (identical(other.tooltipText, tooltipText) ||
-                other.tooltipText == tooltipText) &&
+            (identical(other.tooltip, tooltip) || other.tooltip == tooltip) &&
             (identical(other.innerLabel, innerLabel) ||
                 other.innerLabel == innerLabel) &&
             (identical(other.label, label) || other.label == label) &&
@@ -646,21 +614,21 @@ class _$PropertySchemaImpl implements _PropertySchema {
   int get hashCode => Object.hashAll([
         runtimeType,
         type,
-        readonly,
+        readOnly,
         displayOnly,
         hidden,
         const DeepCollectionEquality().hash(_properties),
         const DeepCollectionEquality().hash(_enums),
         schemaCode,
         format,
-        firstDate,
-        lastDate,
+        startDate,
+        endDate,
         minValue,
         maxValue,
         minLength,
         maxLength,
         helpText,
-        tooltipText,
+        tooltip,
         innerLabel,
         label,
         const DeepCollectionEquality().hash(value),
@@ -691,7 +659,7 @@ abstract class _PropertySchema implements PropertySchema {
   const factory _PropertySchema(
       {@JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
       required final PropertySchemaType type,
-      final bool? readonly,
+      final bool? readOnly,
       final bool? displayOnly,
       final bool? hidden,
       final Map<String, PropertySchema>? properties,
@@ -699,14 +667,14 @@ abstract class _PropertySchema implements PropertySchema {
       final String? schemaCode,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       final PropertySchemaFormat? format,
-      final DateFormatValue? firstDate,
-      final DateFormatValue? lastDate,
+      final String? startDate,
+      final String? endDate,
       final int? minValue,
       final int? maxValue,
       final int? minLength,
       final int? maxLength,
       final String? helpText,
-      final String? tooltipText,
+      final String? tooltip,
       final String? innerLabel,
       final String? label,
       final dynamic value,
@@ -724,7 +692,7 @@ abstract class _PropertySchema implements PropertySchema {
   @JsonKey(name: 'type', unknownEnumValue: PropertySchemaType.string)
   PropertySchemaType get type;
   @override
-  bool? get readonly;
+  bool? get readOnly;
   @override
   bool? get displayOnly;
   @override
@@ -739,9 +707,9 @@ abstract class _PropertySchema implements PropertySchema {
   @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   PropertySchemaFormat? get format;
   @override
-  DateFormatValue? get firstDate;
+  String? get startDate;
   @override
-  DateFormatValue? get lastDate;
+  String? get endDate;
   @override
   int? get minValue;
   @override
@@ -753,7 +721,7 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   String? get helpText;
   @override
-  String? get tooltipText;
+  String? get tooltip;
   @override
   String? get innerLabel;
   @override
@@ -775,164 +743,6 @@ abstract class _PropertySchema implements PropertySchema {
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-DateFormatValue _$DateFormatValueFromJson(Map<String, dynamic> json) {
-  return _DateFormatValue.fromJson(json);
-}
-
-/// @nodoc
-mixin _$DateFormatValue {
-  String get value => throw _privateConstructorUsedError;
-  String get format => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $DateFormatValueCopyWith<DateFormatValue> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $DateFormatValueCopyWith<$Res> {
-  factory $DateFormatValueCopyWith(
-          DateFormatValue value, $Res Function(DateFormatValue) then) =
-      _$DateFormatValueCopyWithImpl<$Res, DateFormatValue>;
-  @useResult
-  $Res call({String value, String format});
-}
-
-/// @nodoc
-class _$DateFormatValueCopyWithImpl<$Res, $Val extends DateFormatValue>
-    implements $DateFormatValueCopyWith<$Res> {
-  _$DateFormatValueCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? value = null,
-    Object? format = null,
-  }) {
-    return _then(_value.copyWith(
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-      format: null == format
-          ? _value.format
-          : format // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$DateFormatValueImplCopyWith<$Res>
-    implements $DateFormatValueCopyWith<$Res> {
-  factory _$$DateFormatValueImplCopyWith(_$DateFormatValueImpl value,
-          $Res Function(_$DateFormatValueImpl) then) =
-      __$$DateFormatValueImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String value, String format});
-}
-
-/// @nodoc
-class __$$DateFormatValueImplCopyWithImpl<$Res>
-    extends _$DateFormatValueCopyWithImpl<$Res, _$DateFormatValueImpl>
-    implements _$$DateFormatValueImplCopyWith<$Res> {
-  __$$DateFormatValueImplCopyWithImpl(
-      _$DateFormatValueImpl _value, $Res Function(_$DateFormatValueImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? value = null,
-    Object? format = null,
-  }) {
-    return _then(_$DateFormatValueImpl(
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-      format: null == format
-          ? _value.format
-          : format // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$DateFormatValueImpl extends _DateFormatValue {
-  const _$DateFormatValueImpl({required this.value, this.format = 'yyyy-MM-dd'})
-      : super._();
-
-  factory _$DateFormatValueImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DateFormatValueImplFromJson(json);
-
-  @override
-  final String value;
-  @override
-  @JsonKey()
-  final String format;
-
-  @override
-  String toString() {
-    return 'DateFormatValue(value: $value, format: $format)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DateFormatValueImpl &&
-            (identical(other.value, value) || other.value == value) &&
-            (identical(other.format, format) || other.format == format));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, value, format);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DateFormatValueImplCopyWith<_$DateFormatValueImpl> get copyWith =>
-      __$$DateFormatValueImplCopyWithImpl<_$DateFormatValueImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DateFormatValueImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _DateFormatValue extends DateFormatValue {
-  const factory _DateFormatValue(
-      {required final String value,
-      final String format}) = _$DateFormatValueImpl;
-  const _DateFormatValue._() : super._();
-
-  factory _DateFormatValue.fromJson(Map<String, dynamic> json) =
-      _$DateFormatValueImpl.fromJson;
-
-  @override
-  String get value;
-  @override
-  String get format;
-  @override
-  @JsonKey(ignore: true)
-  _$$DateFormatValueImplCopyWith<_$DateFormatValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
