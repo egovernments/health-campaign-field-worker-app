@@ -47,6 +47,7 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
               keyboardType: inputType,
               initialValue: form.control(formControlName).value?.toString(),
               onChange: (value) {
+                form.control(formControlName).markAsTouched();
                 if (value.isEmpty) {
                   form.control(formControlName).value = 0;
                   return;
