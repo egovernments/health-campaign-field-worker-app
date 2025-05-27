@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -17,6 +18,7 @@ import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
@@ -408,15 +410,44 @@ class AuthenticatedPageWrapper extends StatelessWidget {
     return languages
         ?.map((e) => SidebarItem(
               title: e.label,
-              onPressed: () {
+              onPressed: () async {
                 int index = languages.indexWhere(
                   (ele) => ele.value.toString() == e.value.toString(),
                 );
+
+                String? dynamicModule;
+                final isInRegistrationFlow = context.router.current.name.contains('RegistrationDeliveryWrapperRoute');
+                if(isInRegistrationFlow){
+                  final prefs = await SharedPreferences.getInstance();
+                  final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+                  if (schemaJsonRaw != null) {
+                    final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+                    final registrationSchemaEntry = allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+                    final schemaData = registrationSchemaEntry?['data'];
+                    if (schemaData != null) {
+                      final flowName = schemaData['name']?.toString().toLowerCase();
+                      final projectId = context.selectedProject.referenceID;
+                      if (flowName != null && projectId != null) {
+                        dynamicModule = 'hcm-$flowName-$projectId';
+                      }
+                    }
+                  }
+                }
+
+                final staticModules = localizationModulesList.interfaces
+                    .where((element) => element.type == Modules.localizationModule)
+                    .map((e) => e.name.toString())
+                    .join(',');
+
+                final combinedModules = dynamicModule != null
+                    ? '$dynamicModule,$staticModules'
+                    : staticModules;
+
                 context
                     .read<LocalizationBloc>()
                     .add(LocalizationEvent.onLoadLocalization(
-                      module:
-                          "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                      module: combinedModules,
                       tenantId: appConfig.tenantId ?? "default",
                       locale: e.value.toString(),
                       path: Constants.localizationApiPath,

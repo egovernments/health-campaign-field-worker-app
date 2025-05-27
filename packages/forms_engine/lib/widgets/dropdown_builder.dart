@@ -61,6 +61,11 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
               //   form.control(formControlName).value = null;
               // }
           },
+          onChange: (value) {
+            if (value.isEmpty) {
+              form.control(formControlName).value = null;
+            }
+          },
         ),
       ),
     );

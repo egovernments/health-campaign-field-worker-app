@@ -273,7 +273,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             syncError: ProjectSyncErrorType.facilities,
           ),
         );
-        // return;
+        return;
       }
 
       try {
@@ -690,26 +690,46 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   Future<void> storeSchema(dynamic schemaJson) async {
     final prefs = await SharedPreferences.getInstance();
-    const schemaKey = 'form_schema';
+    const schemaKey = 'app_config_schemas';
 
     dynamic transformedSchema;
 
     try {
-      // Safely transform the schema
       transformedSchema = transformJson(schemaJson);
     } catch (e, stackTrace) {
-      // Optionally log or handle the error
       debugPrint('Schema transformation failed: $e');
       debugPrint('$stackTrace');
-
-      // Fallback to original if transformation fails
-      transformedSchema = '';
+      transformedSchema = null;
     }
 
-    // Encode and store the schema
-    final schema = json.encode(transformedSchema);
-    await prefs.setString(schemaKey, schema);
+    if (transformedSchema == null) return;
+
+    // Get the unique name and version from schema
+    final schemaName = transformedSchema['name'];
+    final newVersion = transformedSchema['version'];
+
+    // Load existing schemas
+    final existingSchemasRaw = prefs.getString(schemaKey);
+    final Map<String, dynamic> existingSchemas = existingSchemasRaw != null
+        ? json.decode(existingSchemasRaw)
+        : {};
+
+    // Get the existing schema for this name if any
+    final existingEntry = existingSchemas[schemaName] as Map<String, dynamic>?;
+
+    final updatedEntry = {
+      'data': transformedSchema,
+      'currentVersion': newVersion,
+      'previousVersion': existingEntry?['currentVersion']
+    };
+
+    // Update the map
+    existingSchemas[schemaName] = updatedEntry;
+
+    // Save updated schemas
+    await prefs.setString(schemaKey, json.encode(existingSchemas));
   }
+
 
   Future<void> enrichFormSchemaWithEnums(Map<String, dynamic> formConfig) async {
     final Map<String, Set<String>> moduleToMasters = {}; // To collect module: master mapping

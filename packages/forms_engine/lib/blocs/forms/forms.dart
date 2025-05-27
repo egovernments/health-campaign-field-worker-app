@@ -59,7 +59,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   }
 
   void _handleUpdateForm(FormsUpdateEvent event, FormsStateEmitter emit) {
-    emit(FormsState(schema: event.object));
+    emit(FormsState(schema: event.object, initialSchema:state.initialSchema));
   }
 
   void _handleCreateMapping(

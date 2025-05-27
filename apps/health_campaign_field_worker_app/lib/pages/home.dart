@@ -368,17 +368,34 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
             final prefs = await SharedPreferences.getInstance();
-            final schemaJson = prefs.getString('form_schema');
-            context.read<FormsBloc>().add(FormsEvent.load(schema: schemaJson ?? ''));
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            if (schemaJsonRaw != null) {
+              final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final registrationSchemaEntry = allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+              final schemaData = registrationSchemaEntry?['data'];
+              final schemaDateCurrentVersion = registrationSchemaEntry?['currentVersion'];
+              final schemaDatePreviousVersion = registrationSchemaEntry?['previousVersion'];
+
+              if (schemaData != null) {
+                final encodedSchema = json.encode(schemaData);
+                context.read<FormsBloc>().add(FormsEvent.load(schema: encodedSchema));
+              }
+              if (isTriggerLocalisation && schemaData != null) {
+                final moduleName = 'hcm-${schemaData['name'].toLowerCase()}-${context.selectedProject.referenceID}';
+                if(schemaDateCurrentVersion != schemaDatePreviousVersion){
+                  triggerLocalization(module: moduleName, loadOnline: true);
+                }else{
+                  triggerLocalization(module: moduleName);
+                }
+
+                isTriggerLocalisation = false;
+              }
+            }
             // context.read<FormsBloc>().add(const FormsEvent.clearForm());
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
-            if (isTriggerLocalisation && schemaJson != null) {
-              final decoded = jsonDecode(schemaJson);
-              final moduleName = 'hcm-${decoded['name'].toLowerCase()}-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
-              isTriggerLocalisation = false;
-            }
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -713,7 +730,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
   }
 
-  void triggerLocalization({String? module}) {
+  void triggerLocalization({String? module, bool? loadOnline}) {
     context.read<AppInitializationBloc>().state.maybeWhen(
           orElse: () {},
           initialized: (
@@ -726,14 +743,26 @@ class _HomePageState extends LocalizedState<HomePage> {
             final selectedLocale = AppSharedPreferences().getSelectedLocale;
             LocalizationParams()
                 .setCode(LeastLevelBoundarySingleton().boundary);
-            context
-                .read<LocalizationBloc>()
-                .add(LocalizationEvent.onLoadLocalization(
-                   module: module ??  "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                  tenantId: envConfig.variables.tenantId ?? "default",
-                  locale: selectedLocale!,
-                  path: Constants.localizationApiPath,
-                ));
+            if(loadOnline == true){
+              context
+                  .read<LocalizationBloc>()
+                  .add(LocalizationEvent.onRemoteLoadLocalization(
+                module: module ??  "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                tenantId: envConfig.variables.tenantId ?? "default",
+                locale: selectedLocale!,
+                path: Constants.localizationApiPath,
+              ));
+            }else{
+              context
+                  .read<LocalizationBloc>()
+                  .add(LocalizationEvent.onLoadLocalization(
+                module: module ??  "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                tenantId: envConfig.variables.tenantId ?? "default",
+                locale: selectedLocale!,
+                path: Constants.localizationApiPath,
+              ));
+            }
+
           },
         );
   }
