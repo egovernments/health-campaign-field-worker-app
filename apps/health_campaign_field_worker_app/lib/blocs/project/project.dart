@@ -259,7 +259,20 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             syncError: ProjectSyncErrorType.projectFacilities,
           ),
         );
+        return;
       }
+      try {
+        await _loadFacilities(projects, batchSize);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.facilities,
+          ),
+        );
+        return;
+      }
+
       try {
         await _loadProductVariants(projects);
       } catch (_) {
@@ -269,6 +282,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             syncError: ProjectSyncErrorType.productVariants,
           ),
         );
+        return;
       }
       try {
         await _loadServiceDefinition(projects);
@@ -279,6 +293,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             syncError: ProjectSyncErrorType.serviceDefinitions,
           ),
         );
+        return;
       }
     }
 
@@ -330,7 +345,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
+  }
 
+  FutureOr<void> _loadFacilities(
+      List<ProjectModel> projects, int batchSize) async {
     final facilities = await facilityRemoteRepository.search(
       FacilitySearchModel(tenantId: envConfig.variables.tenantId),
       limit: batchSize,
@@ -594,6 +612,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               codes: event.model.address?.boundary,
             ),
           );
+          if (boundaries.isEmpty) {
+            emit(
+              state.copyWith(
+                selectedProject: event.model,
+                loading: false,
+                syncError: ProjectSyncErrorType.boundary,
+              ),
+            );
+            return;
+          }
         }
         await boundaryLocalRepository.bulkCreate(boundaries);
         LeastLevelBoundarySingleton()
@@ -603,9 +631,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       await localSecureStore.setProjectSetUpComplete(event.model.id, true);
     } catch (_) {
       emit(state.copyWith(
+        selectedProject: event.model,
         loading: false,
         syncError: ProjectSyncErrorType.boundary,
       ));
+      return;
     }
 
     emit(state.copyWith(
@@ -665,6 +695,7 @@ enum ProjectSyncErrorType {
   projectStaff,
   project,
   projectFacilities,
+  facilities,
   productVariants,
   serviceDefinitions,
   boundary
