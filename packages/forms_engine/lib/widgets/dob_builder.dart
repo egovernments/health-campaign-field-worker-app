@@ -1,6 +1,8 @@
 part of 'json_schema_builder.dart';
 
 class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
+  final DateTime? initialDate;
+
   const JsonSchemaDOBBuilder({
     required super.formControlName,
     required super.form,
@@ -8,6 +10,7 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     super.key,
     super.value,
     super.helpText,
+    this.initialDate,
     super.validations,
   });
 
@@ -24,6 +27,7 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
       validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) => DigitDobPicker(
+        initialDate: initialDate,
         datePickerFormControl: formControlName,
         datePickerLabel: label ?? 'date of birth',
         ageFieldLabel: 'age',

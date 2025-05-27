@@ -15,6 +15,9 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
     this.end,
     super.validations,
     super.tooltipText,
+    super.readOnly,
+    super.isRequired,
+    super.innerLabel,
   });
 
   @override
@@ -30,10 +33,13 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
             infoText: translateIfPresent(tooltipText, loc),
             tooltipTriggerMode: TooltipTriggerMode.tap,
             label: label,
-            isRequired: true,
+            isRequired: isRequired ?? false,
             child: DigitDateFormInput(
-              readOnly: true,
+              firstDate: parseDateValue(start),
+              lastDate: parseDateValue(end),
+              readOnly: readOnly,
               errorMessage: field.errorText,
+              innerLabel: innerLabel,
               initialValue: DateFormat(
                   Constants().dateMonthYearFormat)
                   .format(form

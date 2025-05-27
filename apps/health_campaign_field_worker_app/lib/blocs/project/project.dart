@@ -273,7 +273,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             syncError: ProjectSyncErrorType.facilities,
           ),
         );
-        return;
+        // return;
       }
 
       try {

@@ -10,7 +10,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
     _$PropertySchemaImpl(
       type: $enumDecode(_$PropertySchemaTypeEnumMap, json['type'],
           unknownValue: PropertySchemaType.string),
-      readonly: json['readonly'] as bool?,
+      readOnly: json['readOnly'] as bool?,
       displayOnly: json['displayOnly'] as bool?,
       hidden: json['hidden'] as bool?,
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
@@ -23,18 +23,14 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       schemaCode: json['schemaCode'] as String?,
       format: $enumDecodeNullable(_$PropertySchemaFormatEnumMap, json['format'],
           unknownValue: PropertySchemaFormat.text),
-      firstDate: json['firstDate'] == null
-          ? null
-          : DateFormatValue.fromJson(json['firstDate'] as Map<String, dynamic>),
-      lastDate: json['lastDate'] == null
-          ? null
-          : DateFormatValue.fromJson(json['lastDate'] as Map<String, dynamic>),
+      startDate: json['startDate'] as String?,
+      endDate: json['endDate'] as String?,
       minValue: json['minValue'] as int?,
       maxValue: json['maxValue'] as int?,
       minLength: json['minLength'] as int?,
       maxLength: json['maxLength'] as int?,
       helpText: json['helpText'] as String?,
-      tooltipText: json['tooltipText'] as String?,
+      tooltip: json['tooltip'] as String?,
       innerLabel: json['innerLabel'] as String?,
       label: json['label'] as String?,
       value: json['value'],
@@ -63,7 +59,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
     }
   }
 
-  writeNotNull('readonly', instance.readonly);
+  writeNotNull('readOnly', instance.readOnly);
   writeNotNull('displayOnly', instance.displayOnly);
   writeNotNull('hidden', instance.hidden);
   writeNotNull('properties',
@@ -71,14 +67,14 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('enums', instance.enums?.map((e) => e.toJson()).toList());
   writeNotNull('schemaCode', instance.schemaCode);
   writeNotNull('format', _$PropertySchemaFormatEnumMap[instance.format]);
-  writeNotNull('firstDate', instance.firstDate?.toJson());
-  writeNotNull('lastDate', instance.lastDate?.toJson());
+  writeNotNull('startDate', instance.startDate);
+  writeNotNull('endDate', instance.endDate);
   writeNotNull('minValue', instance.minValue);
   writeNotNull('maxValue', instance.maxValue);
   writeNotNull('minLength', instance.minLength);
   writeNotNull('maxLength', instance.maxLength);
   writeNotNull('helpText', instance.helpText);
-  writeNotNull('tooltipText', instance.tooltipText);
+  writeNotNull('tooltip', instance.tooltip);
   writeNotNull('innerLabel', instance.innerLabel);
   writeNotNull('label', instance.label);
   writeNotNull('value', instance.value);
@@ -113,20 +109,6 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.scanner: 'scanner',
   PropertySchemaFormat.text: 'text',
 };
-
-_$DateFormatValueImpl _$$DateFormatValueImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DateFormatValueImpl(
-      value: json['value'] as String,
-      format: json['format'] as String? ?? 'yyyy-MM-dd',
-    );
-
-Map<String, dynamic> _$$DateFormatValueImplToJson(
-        _$DateFormatValueImpl instance) =>
-    <String, dynamic>{
-      'value': instance.value,
-      'format': instance.format,
-    };
 
 _$ValidationRuleImpl _$$ValidationRuleImplFromJson(Map<String, dynamic> json) =>
     _$ValidationRuleImpl(

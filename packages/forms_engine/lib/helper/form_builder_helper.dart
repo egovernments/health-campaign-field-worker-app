@@ -1,4 +1,5 @@
 import 'package:forms_engine/helper/validator_helper.dart';
+import 'package:forms_engine/utils/utils.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/property_schema/property_schema.dart';
@@ -18,25 +19,25 @@ FormControl buildFormControl(
     case PropertySchemaType.integer:
       if(format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
-          value: DateTime.now(),
+          value: parseDateValue(rawValue),
           validators: validators,
         );
       }
       return FormControl<int>(
-        value: _parseIntValue(rawValue),
+        value: parseIntValue(rawValue),
         validators: validators,
       );
 
     case PropertySchemaType.boolean:
       return FormControl<bool>(
-        value: _parseBoolValue(rawValue),
+        value: parseBoolValue(rawValue),
         validators: validators,
       );
 
     case PropertySchemaType.string:
       if (format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
-          value: DateTime.now(),
+          value: parseDateValue(rawValue),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.latLng) {
@@ -51,7 +52,7 @@ FormControl buildFormControl(
         );
       } else if (format == PropertySchemaFormat.numeric) {
         return FormControl<int>(
-          value: _parseIntValue(rawValue),
+          value: parseIntValue(rawValue),
           validators: validators,
         );
       } else {
@@ -69,21 +70,23 @@ FormControl buildFormControl(
   }
 }
 
-int? _parseIntValue(dynamic value) {
+int? parseIntValue(dynamic value) {
   if (value == null) return null;
   if (value is int) return value;
+  if (value is String && value.trim().isEmpty) return null;
   if (value is String) return int.tryParse(value);
   return null;
 }
 
-bool? _parseBoolValue(dynamic value) {
+
+bool? parseBoolValue(dynamic value) {
   if (value == null) return null;
   if (value is bool) return value;
   if (value is String) return value.toLowerCase() == 'true';
   return null;
 }
 
-DateTime? _parseDateValue(dynamic value) {
+DateTime? parseDateValue(dynamic value) {
   if (value == null) return null;
   if (value is DateTime) return value;
   if (value is String) {

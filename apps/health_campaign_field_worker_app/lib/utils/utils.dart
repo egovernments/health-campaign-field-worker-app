@@ -550,7 +550,12 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'required': pageMap['required'],
         'hidden': pageMap['hidden'],
         'helpText': pageMap['helpText'],
-        'innerLabel': pageMap['innerLabel']
+        'innerLabel': pageMap['innerLabel'],
+        'validations': pageMap['validations'],
+        'tooltip': pageMap['tooltip'],
+        'startDate': pageMap['startDate'],
+        'endDate': pageMap['endDate'],
+        'readonly': pageMap['readonly'],
       };
 
       (transformed['pages'] as Map<String, dynamic>)[pageKey] = transformedPage;
