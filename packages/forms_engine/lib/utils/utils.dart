@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_localization.dart';
 import '../models/property_schema/property_schema.dart';
@@ -74,6 +75,31 @@ TextInputFormatter? getPatternFormatter(List<ValidationRule>? validations) {
   }
 
   return null;
+}
+
+
+bool shouldHideField(PropertySchema schema, FormGroup form) {
+  final hidden = schema.hidden;
+  if (hidden == true) return true;
+
+  final display = schema.displayBehavior;
+  if (display == null) return false;
+
+  final oneOf = display.oneOf;
+  final allOf = display.allOf;
+
+  final values = (oneOf ?? allOf!).map((e) {
+    final value = form.control(e).value;
+    if (value is bool?) return !(value ?? false);
+    if (value is String?) return value?.isNotEmpty ?? false;
+    return false;
+  }).toList();
+
+  final result = oneOf != null && oneOf.isNotEmpty
+      ? values.fold(true, (prev, curr) => prev && curr)
+      : values.fold(false, (prev, curr) => prev || curr);
+
+  return display.behavior == FormulaBehavior.hide && result;
 }
 
 
