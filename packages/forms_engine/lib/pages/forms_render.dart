@@ -152,24 +152,28 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               margin: const EdgeInsets.symmetric(horizontal: spacer2),
               children: [
                 if (schema.label != null)
-                  Text(
-                    localizations.translate(schema.label!),
-                    style: Theme.of(context)
-                        .digitTextTheme(context)
-                        .headingXl
-                        .copyWith(
-                        color: Theme.of(context)
-                            .colorTheme
-                            .primary
-                            .primary2),
-                  ),
-                if(schema.description != null)
-                  Text(
-                    localizations.translate(schema.description!),
-                    style: Theme.of(context)
-                        .digitTextTheme(context)
-                        .bodyS.copyWith(color: Theme.of(context).colorTheme.text.secondary),
-                  ),
+                  ...[
+                    Text(
+                      localizations.translate(schema.label!),
+                      style: Theme.of(context)
+                          .digitTextTheme(context)
+                          .headingXl
+                          .copyWith(
+                          color: Theme.of(context)
+                              .colorTheme
+                              .primary
+                              .primary2),
+                    ),
+                    if(schema.description != null)
+                      ...[
+                        const SizedBox(height: spacer2,),
+                        Text(
+                        localizations.translate(schema.description!),
+                        style: Theme.of(context)
+                            .digitTextTheme(context)
+                            .bodyS.copyWith(color: Theme.of(context).colorTheme.text.secondary),
+                      ),],
+                  ],
                 JsonForms(
                   propertySchema: schema,
                   childrens: const [],

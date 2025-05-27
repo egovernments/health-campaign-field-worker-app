@@ -24,7 +24,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
     // Handle conditional display logic
     if (_shouldHideField(form)) {
-      return const Offstage();
+      return const SizedBox.shrink();
     }
 
     return _buildByType(form);
@@ -276,10 +276,19 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(entries.length, (index) {
-        final entry = entries[index];
+      children: entries
+          .where((entry) {
         final subSchema = entry.value;
-        final subName = entry.key;
+        return !shouldHideField(subSchema, form);
+      })
+          .toList()
+          .asMap()
+          .entries
+          .map((entry) {
+        final index = entry.key;
+        final mapEntry = entry.value;
+        final subSchema = mapEntry.value;
+        final subName = mapEntry.key;
 
         final field = JsonFormBuilder(
           formControlName: subName,
@@ -287,13 +296,18 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           components: widget.components,
         );
 
-        return index < entries.length - 1
-            ? Padding(
+        final isLast = index == entries
+            .where((e) => !shouldHideField(e.value, form))
+            .length - 1;
+
+        return isLast
+            ? field
+            : Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
           child: field,
-        )
-            : field;
-      }),
+        );
+      })
+          .toList(),
     );
   }
 
