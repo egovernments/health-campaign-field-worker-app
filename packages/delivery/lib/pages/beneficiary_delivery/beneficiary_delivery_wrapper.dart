@@ -104,18 +104,6 @@ class BeneficiaryDeliveryWrapperPage extends StatelessWidget
         ..add(HouseholdOverviewReloadEvent(
             projectId: DeliverySingleton().selectedProject!.id,
             projectBeneficiaryType: DeliverySingleton().beneficiaryType!)),
-      child: BlocProvider(
-        create: (context) => BeneficiaryRegistrationBloc(
-          initialState,
-          individualRepository: individual,
-          householdRepository: household,
-          householdMemberRepository: householdMember,
-          projectBeneficiaryRepository: projectBeneficiary,
-          // taskDataRepository: task,
-          beneficiaryType: beneficiaryType!,
-        ),
-        child: this,
-      ),
     );
   }
 }

@@ -136,8 +136,8 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                               context.read<DeliverInterventionBloc>().add(
                                     DeliverInterventionSubmitEvent(
                                       navigateToSummary: true,
-                                      // householdMemberWrapper: registrationState
-                                      //     .householdMemberWrapper,
+                                      householdMemberWrapper: registrationState
+                                          .householdMemberDeliveryWrapper,
                                       task: _getTaskModel(
                                           oldTask,
                                           projectBeneficiary

@@ -37,8 +37,6 @@ class MemberCard extends StatelessWidget {
   final bool isDelivered;
 
   final VoidCallback setAsHeadAction;
-  // final VoidCallback editMemberAction;
-  // final VoidCallback deleteMemberAction;
   final DeliveryLocalization localizations;
   final List<TaskModel>? tasks;
   final List<SideEffectModel>? sideEffects;
@@ -58,8 +56,6 @@ class MemberCard extends StatelessWidget {
     required this.localizations,
     required this.isDelivered,
     required this.setAsHeadAction,
-    // required this.editMemberAction,
-    // required this.deleteMemberAction,
     this.projectBeneficiaries,
     this.tasks,
     this.isNotEligible = false,

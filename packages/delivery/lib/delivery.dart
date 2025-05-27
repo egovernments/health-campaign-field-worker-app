@@ -50,7 +50,6 @@ export 'pages/beneficiary/record_past_delivery_details.dart';
 export 'pages/beneficiary/refer_beneficiary.dart';
 export 'pages/beneficiary/refused_delivery.dart';
 export 'pages/beneficiary/side_effects.dart';
-export 'pages/beneficiary_registration/beneficiary_delivery_wrapper.dart';
 export 'pages/delivery_wrapper.dart';
 export 'pages/search_beneficiary.dart';
 export 'pages/summary_page.dart';

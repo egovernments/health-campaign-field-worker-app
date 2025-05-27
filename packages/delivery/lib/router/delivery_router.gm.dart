@@ -30,7 +30,7 @@ import 'package:delivery/pages/beneficiary/widgets/household_acknowledgement_del
     as _i10;
 import 'package:delivery/pages/beneficiary/widgets/splash_acknowledgement.dart'
     as _i17;
-import 'package:delivery/pages/beneficiary_registration/beneficiary_delivery_wrapper.dart'
+import 'package:delivery/pages/beneficiary_delivery/beneficiary_delivery_wrapper.dart'
     as _i2;
 import 'package:delivery/pages/delivery_wrapper.dart' as _i7;
 import 'package:delivery/pages/search_beneficiary.dart' as _i15;

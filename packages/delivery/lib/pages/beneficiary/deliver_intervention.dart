@@ -21,12 +21,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration/models/entities/additional_fields_type.dart';
-// import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
 import 'package:registration/registration.dart';
 
 import 'package:registration/utils/extensions/extensions.dart';
 
-// import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/deliver_strategy_type.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
