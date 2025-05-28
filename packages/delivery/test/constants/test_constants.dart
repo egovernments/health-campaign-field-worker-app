@@ -3,6 +3,7 @@ import 'package:delivery/blocs/search_households/search_households.dart';
 import 'package:registration/models/entities/household.dart';
 import 'package:registration/models/entities/household_member.dart';
 import 'package:registration/models/entities/project_beneficiary.dart';
+import 'package:delivery/models/entities/task.dart';
 
 class DeliveryTestConstants {
   static var dateOfRegistration = DateTime.monday;
@@ -56,11 +57,17 @@ class DeliveryTestConstants {
       startDate: DateTime.now().day - 2,
       endDate: DateTime.now().day + 2);
 
-  static HouseholdMemberDeliveryWrapper householdMemberWrapper =
-      HouseholdMemberDeliveryWrapper(
-    household: mockHousehold,
-    headOfHousehold: mockIndividual,
-    members: [individualModel],
-    projectBeneficiaries: [mockProjectBeneficiary],
-  );
+  static TaskModel testTaskModel =
+      TaskModel(clientReferenceId: '12d3-4f5g-6h7i-8j9k-0l');
+  static TaskSearchModel testTaskSearchModel =
+      TaskSearchModel(clientReferenceId: ['12d3-4f5g-6h7i-8j9k-0l']);
+
+  static HouseholdMemberDeliveryWrapper householdMemberWrapper = HouseholdMemberDeliveryWrapper(
+      household: mockHousehold,
+      headOfHousehold: mockIndividual,
+      members: [individualModel],
+      projectBeneficiaries: [mockProjectBeneficiary],
+      tasks: [],
+      sideEffects: [],
+      referrals: []);
 }
