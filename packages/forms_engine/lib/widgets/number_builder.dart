@@ -49,7 +49,7 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
               onChange: (value) {
                 form.control(formControlName).markAsTouched();
                 if (value.isEmpty) {
-                  form.control(formControlName).value = 0;
+                  form.control(formControlName).value = null;
                   return;
                 }
                 form.control(formControlName).value = int.parse(value);

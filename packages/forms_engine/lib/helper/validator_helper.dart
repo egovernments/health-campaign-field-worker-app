@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:forms_engine/helper/form_builder_helper.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
 import '../models/property_schema/property_schema.dart';
 
 List<Validator<T>> buildValidators<T>(PropertySchema schema) {
@@ -20,14 +19,20 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
           final parsedValue = parseIntValue(rule.value);
 
           if (parsedValue != null) {
-            validators.add(Validators.minLength(parsedValue) as Validator<T>);
+            validators.add(Validators.composeOR([
+              Validators.minLength(parsedValue) as Validator<T>,
+              Validators.equals(null),
+            ]) as Validator<T>);
           }
           break;
 
         case 'maxLength':
           final parsedValue = parseIntValue(rule.value);
           if (parsedValue != null) {
-            validators.add(Validators.maxLength(parsedValue) as Validator<T>);
+            validators.add(Validators.composeOR([
+              Validators.maxLength(parsedValue) as Validator<T>,
+              Validators.equals(null),
+            ]) as Validator<T>);
           }
           break;
 
@@ -35,7 +40,10 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
         case 'minValue':
           final parsedValue = parseIntValue(rule.value);
           if (parsedValue != null) {
-            validators.add(Validators.min(parsedValue) as Validator<T>);
+            validators.add(Validators.composeOR([
+              Validators.min(parsedValue) as Validator<T>,
+              Validators.equals(null),
+            ]) as Validator<T>);
           }
           break;
 
@@ -43,19 +51,26 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
         case 'maxValue':
           final parsedValue = parseIntValue(rule.value);
           if (parsedValue != null) {
-            validators.add(Validators.max(parsedValue) as Validator<T>);
+            validators.add(Validators.composeOR([
+              Validators.max(parsedValue) as Validator<T>,
+              Validators.equals(null),
+            ]) as Validator<T>);
           }
           break;
 
         case 'pattern':
           if (rule.value is List && rule.value.isNotEmpty) {
-            validators.add(
+            validators.add(Validators.composeOR([
               Validators.pattern(RegExp(rule.value.first)) as Validator<T>,
-            );
+              Validators.composeOR(
+                  [Validators.equals(''), Validators.equals(null)]),
+            ]) as Validator<T>);
           } else if (rule.value is String && rule.value.isNotEmpty) {
-            validators.add(
+            validators.add(Validators.composeOR([
               Validators.pattern(RegExp(rule.value)) as Validator<T>,
-            );
+              Validators.composeOR(
+                  [Validators.equals(''), Validators.equals(null)]),
+            ]) as Validator<T>);
           }
           break;
 
