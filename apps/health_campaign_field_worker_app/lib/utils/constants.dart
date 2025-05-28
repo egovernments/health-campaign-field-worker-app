@@ -2,6 +2,15 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:complaints/complaints.dart';
+import 'package:delivery/data/repositories/local/referral.dart';
+import 'package:delivery/data/repositories/local/side_effect.dart';
+import 'package:delivery/data/repositories/oplog/oplog_delivery.dart';
+
+import 'package:delivery/data/repositories/local/task.dart';
+import 'package:delivery/data/repositories/remote/referral.dart';
+import 'package:delivery/data/repositories/remote/side_effect.dart';
+import 'package:delivery/data/repositories/remote/task.dart';
+import 'package:delivery/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
@@ -14,7 +23,7 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration/registration.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
 
@@ -282,7 +291,8 @@ class Constants {
         entityMapper: EntityMapper(),
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
         hierarchyType: envConfig.variables.hierarchyType);
-    RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
+    RegistrationSingleton().setTenantId(envConfig.variables.tenantId);
+    DeliverySingleton().setTenantId(envConfig.variables.tenantId);
     ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);

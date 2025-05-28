@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:delivery/models/entities/referral.dart';
+import 'package:delivery/models/entities/side_effect.dart';
+import 'package:delivery/models/entities/task.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_showcase/showcase_widget.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -16,10 +19,9 @@ import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration/registration.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/sync_service_lib.dart';
-
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/app_localization.dart';
@@ -88,7 +90,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                       ]);
                                     },
                                     child: Container(
-                                      padding: const EdgeInsets.only(right: spacer2),
+                                      padding:
+                                          const EdgeInsets.only(right: spacer2),
                                       width: MediaQuery.of(context).size.width -
                                           60,
                                       child: Align(
