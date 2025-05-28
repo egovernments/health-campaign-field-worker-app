@@ -138,9 +138,9 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         defaultValues: widget.defaultValues,
                       ));
                     } else {
-                      context.read<FormsBloc>().add(
-                        FormsSubmitEvent(schemaObject),
-                      );
+                      // context.read<FormsBloc>().add(
+                      //   FormsSubmitEvent(schemaObject),
+                      // );
                       // Pop all form pages (FormsRenderRoute) and return to the caller
                       context.router.popUntil((route) {
                         return route.settings.name != FormsRenderRoute.name;
@@ -193,7 +193,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             const SizedBox(height: spacer2,),
             Center(
               child: Text(
-                'version ${schemaObject.version}',
+                'version ${schemaObject.version}.0.0',
                 style: Theme.of(context).digitTextTheme(context).bodyXS.copyWith(
                     color: Theme.of(context).colorTheme.text.disabled
                 ),
