@@ -180,17 +180,18 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                   defaultValues: const {
                     // 'locality': context.boundary.code,
                   },
-                ),
-                Center(
-                  child: Text(
-                    'Form Version: ${schemaObject.version}',
-                    style: Theme.of(context).digitTextTheme(context).bodyXS.copyWith(
-                      color: Theme.of(context).colorTheme.text.disabled
-                    ),
-                  ),
                 )
               ],
             ),
+            const SizedBox(height: spacer2,),
+            Center(
+              child: Text(
+                'V${schemaObject.version}.0.0',
+                style: Theme.of(context).digitTextTheme(context).bodyXS.copyWith(
+                    color: Theme.of(context).colorTheme.text.disabled
+                ),
+              ),
+            )
           ],
         ),
       );
