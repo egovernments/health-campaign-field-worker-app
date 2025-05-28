@@ -77,7 +77,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                     for (final key in currentKeys) {
                       final control = formGroup.control(key);
                       control.markAsTouched();
-                      control.updateValueAndValidity();
+                      if(control.validators.isNotEmpty && control.value == null && !control.validators.contains(Validators.required)) {
+                        control.removeError('');
+                        control.setValidators([]);
+                        control.updateValueAndValidity();
+                      }else{
+                        control.updateValueAndValidity();
+                      }
+
                     }
 
                     // 3. Check validity of just this page
