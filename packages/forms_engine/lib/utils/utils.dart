@@ -39,7 +39,7 @@ class IdGen {
 }
 
 String? translateIfPresent(String? key, FormLocalization localizations) {
-  if (key == null) return null;
+  if (key == null || key == "") return null;
   return localizations.translate(key);
 }
 

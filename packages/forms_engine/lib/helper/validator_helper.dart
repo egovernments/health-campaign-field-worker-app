@@ -9,12 +9,6 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
   if (schema.validations != null) {
     for (final rule in schema.validations!) {
       switch (rule.type) {
-        case 'required':
-          if (rule.value == true) {
-            validators.add(Validators.required as Validator<T>);
-          }
-          break;
-
         case 'minLength':
           final parsedValue = parseIntValue(rule.value);
 
@@ -71,6 +65,12 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
               Validators.composeOR(
                   [Validators.equals(''), Validators.equals(null)]),
             ]) as Validator<T>);
+          }
+          break;
+
+        case 'required':
+          if (rule.value == true) {
+            validators.add(Validators.required as Validator<T>);
           }
           break;
 

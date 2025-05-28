@@ -202,9 +202,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                 ),
                 Center(
                   child: Text(
-                    schemaObject.version > 1
-                        ? 'version ${schemaObject.version - 1}'
-                        : 'version ${schemaObject.version}',
+                    'version ${schemaObject.version}',
                     style: Theme.of(context)
                         .digitTextTheme(context)
                         .bodyXS

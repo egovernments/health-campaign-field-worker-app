@@ -28,7 +28,6 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) => LabeledField(
         infoText: translateIfPresent(tooltipText, loc),
-        tooltipTriggerMode: TooltipTriggerMode.tap,
         label: label,
         capitalizedFirstLetter: false,
         isRequired: isRequired ?? false,
