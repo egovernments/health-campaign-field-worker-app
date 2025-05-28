@@ -76,7 +76,6 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
       case PropertySchemaFormat.select:
         return LabeledField(
           infoText: translateIfPresent(widget.schema.tooltip, localizations),
-          tooltipTriggerMode: TooltipTriggerMode.tap,
           isRequired: hasRequiredValidation(widget.schema.validations),
           label: translateIfPresent(widget.schema.label, localizations),
           child: JsonSchemaSelectionBuilder(
