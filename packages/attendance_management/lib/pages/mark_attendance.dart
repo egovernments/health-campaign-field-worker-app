@@ -15,6 +15,7 @@ import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_table.dart'
     as table;
+import 'package:digit_ui_components/widgets/molecules/infinite_date_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -25,28 +26,17 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
 import '../router/attendance_router.gm.dart';
+import '../utils/date_util_attendance.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';
 
 @RoutePage()
 class MarkAttendancePage extends LocalizedStatefulWidget {
-  final List<AttendeeModel> attendees;
-  final String registerId;
-  final String tenantId;
-  final DateTime dateTime;
-  final int entryTime;
-  final int exitTime;
-  final int? session;
+  final AttendanceRegisterModel registerModel;
 
   const MarkAttendancePage({
-    required this.attendees,
-    required this.registerId,
-    required this.tenantId,
-    required this.dateTime,
-    required this.entryTime,
-    required this.exitTime,
-    this.session,
+    required this.registerModel,
     super.key,
     super.appLocalizations,
   });
@@ -62,6 +52,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   late TextEditingController controller;
   AttendanceIndividualBloc? individualLogBloc;
   late FormGroup form;
+  var entryTime, exitTime;
+  var currentSelectedDate, selectedSession;
 
   @override
   void initState() {
@@ -75,6 +67,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(),
     );
     form = buildForm(); // Initialize the form using your method
+    setRegisterData();
     super.initState();
   }
 
@@ -112,16 +105,21 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             create: (context) => individualLogBloc!
               ..add(
                 AttendanceIndividualLogSearchEvent(
-                  attendees:
-                      widget.attendees.isNotEmpty ? widget.attendees : [],
+                  attendees: widget.registerModel.attendees!.isNotEmpty
+                      ? widget.registerModel.attendees!
+                      : [],
                   limit: 10,
                   offset: 0,
-                  currentDate: widget.dateTime.millisecondsSinceEpoch,
-                  entryTime: widget.entryTime,
-                  isSingleSession: widget.session == null,
-                  exitTime: widget.exitTime,
-                  registerId: widget.registerId,
-                  tenantId: widget.tenantId.toString(),
+                  currentDate: DateTime.now().isAfter(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              widget.registerModel.endDate!))
+                      ? widget.registerModel.endDate!
+                      : DateTime.now().millisecondsSinceEpoch,
+                  entryTime: entryTime,
+                  isSingleSession: false,
+                  exitTime: exitTime,
+                  registerId: widget.registerModel.id,
+                  tenantId: widget.registerModel.tenantId.toString(),
                 ),
               ),
             child: PopScope(
@@ -218,6 +216,47 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               showHelp: true,
                             ),
                             children: [
+                              InfiniteDateScrollInput(
+                                initialValue: DateTime.now().isAfter(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            widget.registerModel.endDate!))
+                                    ? AttendanceDateTimeManagement
+                                        .getDateFromTimestamp(
+                                            widget.registerModel.endDate!)
+                                    : DateTime.now().getFormattedDate(),
+                                firstDate: DateTime.fromMillisecondsSinceEpoch(
+                                    widget.registerModel.startDate!),
+                                lastDate: DateTime.fromMillisecondsSinceEpoch(
+                                    widget.registerModel.endDate!),
+                                onChange: (String date) {
+                                  setState(() {
+                                    currentSelectedDate = date;
+                                    individualLogBloc!.add(
+                                      AttendanceIndividualLogSearchEvent(
+                                        attendees: widget.registerModel
+                                                .attendees!.isNotEmpty
+                                            ? widget.registerModel.attendees!
+                                            : [],
+                                        limit: 10,
+                                        offset: 0,
+                                        currentDate: AttendanceDateTimeManagement
+                                            .getMillisecondEpoch(
+                                                AttendanceDateTimeManagement
+                                                    .getFormattedDateToDateTime(
+                                                        currentSelectedDate)!,
+                                                selectedSession,
+                                                entryTime.toString()),
+                                        entryTime: entryTime,
+                                        isSingleSession: false,
+                                        exitTime: exitTime,
+                                        registerId: widget.registerModel.id,
+                                        tenantId: widget.registerModel.tenantId
+                                            .toString(),
+                                      ),
+                                    );
+                                  });
+                                },
+                              ),
                               Padding(
                                 padding: EdgeInsets.only(
                                   left: theme.spacerTheme.spacer2 * 2,
@@ -241,11 +280,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
-                                    '${DateFormat("dd MMMM yyyy").format(widget.dateTime)} ${widget.session != null ? widget.session == 0 ? '- ${localizations.translate(
-                                        i18.attendance.morningSession,
-                                      )}' : '- ${localizations.translate(
-                                        i18.attendance.eveningSession,
-                                      )}' : ''}',
+                                    '${DateFormat("dd MMMM yyyy").format(DateTime.now())} ${'- ${localizations.translate(
+                                      i18.attendance.morningSession,
+                                    )}'}',
                                     style: DigitTheme.instance.mobileTheme
                                         .textTheme.headlineSmall
                                         ?.copyWith(
@@ -272,10 +309,17 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   children: [
                                     tableData.isNotEmpty
                                         ? SizedBox(
-                                      height: MediaQuery.of(context).size.height*.525,
-                                          child: table.DigitTable(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .525,
+                                            child: table.DigitTable(
                                               showSelectedState: false,
-                                              tableHeight:MediaQuery.of(context).size.height*.5 ,
+                                              tableHeight:
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .5,
                                               tableWidth: MediaQuery.of(context)
                                                   .size
                                                   .width,
@@ -283,12 +327,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                               showRowsPerPage: false,
                                               withColumnDividers: false,
                                               columns: headerList(
-                                                widget.dateTime,
+                                                DateTime.now(),
                                                 localizations,
                                               ),
                                               rows: tableData,
                                             ),
-                                        )
+                                          )
                                         : NoResultCard(
                                             align: Alignment.center,
                                             label: localizations.translate(
@@ -366,7 +410,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 individualId: tableDataModel.individualId!,
                 registerId: tableDataModel.registerId!,
                 status: tableDataModel.status,
-                isSingleSession: widget.session == null,
+                isSingleSession: false,
               ),
             );
           },
@@ -495,10 +539,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             } else {
               if (type == EnumValues.draft.toValue()) {
                 individualLogBloc?.add(SaveAsDraftEvent(
-                    entryTime: widget.entryTime,
-                    exitTime: widget.exitTime,
-                    selectedDate: widget.dateTime,
-                    isSingleSession: widget.session == null,
+                    entryTime: entryTime,
+                    exitTime: exitTime,
+                    selectedDate:
+                        AttendanceDateTimeManagement.getFormattedDateToDateTime(
+                            currentSelectedDate)!,
+                    isSingleSession: false,
                     createOplog: type != EnumValues.draft.toValue(),
                     latitude: latitude,
                     longitude: longitude,
@@ -528,10 +574,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             size: DigitButtonSize.large,
                             onPressed: () {
                               individualLogBloc?.add(SaveAsDraftEvent(
-                                  entryTime: widget.entryTime,
-                                  exitTime: widget.exitTime,
-                                  selectedDate: widget.dateTime,
-                                  isSingleSession: widget.session == null,
+                                  entryTime: entryTime,
+                                  exitTime: exitTime,
+                                  selectedDate: AttendanceDateTimeManagement
+                                      .getFormattedDateToDateTime(
+                                          currentSelectedDate)!,
+                                  isSingleSession: false,
                                   createOplog:
                                       type != EnumValues.draft.toValue(),
                                   latitude: latitude,
@@ -587,5 +635,33 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     return fb.group(<String, Object>{
       _commentKey: FormControl<String>(value: ""),
     });
+  }
+
+  void setRegisterData() {
+    DateTime dateSession = DateTime.now().isAfter(
+            DateTime.fromMillisecondsSinceEpoch(widget.registerModel.endDate!))
+        ? DateTime.fromMillisecondsSinceEpoch(widget.registerModel.endDate!)
+        : DateTime.now();
+    entryTime = widget.registerModel
+                .additionalDetails?[EnumValues.sessions.toValue()] ==
+            2
+        ? AttendanceDateTimeManagement.getMillisecondEpoch(
+            dateSession,
+            0,
+            "entryTime",
+          )
+        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 9)
+            .millisecondsSinceEpoch);
+
+    exitTime = widget.registerModel
+                .additionalDetails?[EnumValues.sessions.toValue()] ==
+            2
+        ? AttendanceDateTimeManagement.getMillisecondEpoch(
+            dateSession,
+            1,
+            "exitTime",
+          )
+        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
+            .millisecondsSinceEpoch);
   }
 }
