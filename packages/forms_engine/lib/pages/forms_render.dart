@@ -142,9 +142,9 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             defaultValues: widget.defaultValues,
                           ));
                         } else {
-                          // context.read<FormsBloc>().add(
-                          //   FormsSubmitEvent(schemaObject),
-                          // );
+                          context.read<FormsBloc>().add(
+                            FormsSubmitEvent(schemaObject),
+                          );
                           // Pop all form pages (FormsRenderRoute) and return to the caller
                           context.router.popUntil((route) {
                             return route.settings.name != FormsRenderRoute.name;

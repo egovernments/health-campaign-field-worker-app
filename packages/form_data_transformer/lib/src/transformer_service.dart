@@ -5,6 +5,7 @@ import 'model_factory_registory.dart';
 class FormEntityMapper {
   final Map<String, dynamic> config;
   final Map<String, Map<String, dynamic>> generatedValues = {};
+  final Set<String> usedPaths = {};
 
   FormEntityMapper({required this.config});
 
@@ -12,8 +13,10 @@ class FormEntityMapper {
     required Map<String, dynamic> formValues,
     required Map<String, dynamic> modelsConfig,
     required Map<String, dynamic> context,
+    String? fallbackFormDataString,
   }) {
     final List<EntityModel> entities = [];
+    usedPaths.clear();
 
     modelsConfig.forEach((modelName, modelConfig) {
       try {
@@ -24,15 +27,56 @@ class FormEntityMapper {
       }
     });
 
+    // Get unmapped form fields
+    final unmapped = _getUnmappedFields(formValues);
+
+    // Map unmapped fields if fallback string and config present
+    if (fallbackFormDataString != null && unmapped.isNotEmpty) {
+      final fallbackModelName = fallbackFormDataString;
+      final factory = modelFactoryRegistry[fallbackModelName];
+
+      if (factory != null) {
+        try {
+          final existingIndex = entities
+              .indexWhere((e) => e.runtimeType.toString() == fallbackModelName);
+
+          if (existingIndex != -1) {
+            final existingModel = entities[existingIndex];
+
+            final existingModelData = existingModel.toMap();
+
+            final mergedData = mergeAdditionalFields(
+                existingModelData, unmapped, fallbackModelName);
+
+            final updatedModel = factory(mergedData);
+
+            entities[existingIndex] = updatedModel;
+          } else {
+            // TODO: need to write logic if fallback model does not exist in entities
+            final fallbackModel = factory(unmapped);
+            entities.add(fallbackModel);
+          }
+        } catch (e) {
+          throw Exception(
+              'Error mapping fallback model $fallbackModelName: $e');
+        }
+      } else {
+        if (kDebugMode) {
+          print(
+              'Warning: fallback model factory not found for $fallbackModelName');
+        }
+      }
+    }
+
     return entities;
   }
 
   EntityModel _mapModel(
-      String modelName,
-      Map<String, dynamic> formValues,
-      Map<String, dynamic> modelConfig,
-      Map<String, dynamic> context,
-      ) {
+    String modelName,
+    Map<String, dynamic> formValues,
+    Map<String, dynamic> modelConfig,
+    Map<String, dynamic> context,
+  ) {
     final mapped = <String, dynamic>{};
     final mappings = modelConfig['mappings'] as Map<String, dynamic>? ?? {};
 
@@ -40,27 +84,33 @@ class FormEntityMapper {
       final targetKey = entry.key;
       final sourcePath = entry.value;
 
-      if (targetKey == 'additionalFields' && sourcePath is Map<String, dynamic>) {
+      if (targetKey == 'additionalFields' &&
+          sourcePath is Map<String, dynamic>) {
         /// Treat as additional fields
-        mapped[targetKey] = _mapAdditionalFields(sourcePath, formValues, modelName, context);
+        mapped[targetKey] =
+            _mapAdditionalFields(sourcePath, formValues, modelName, context);
         continue;
       }
 
       if (sourcePath is Map<String, dynamic>) {
         /// Treat as nested object mapping
-        mapped[targetKey] = _mapNestedObject(sourcePath, formValues, targetKey, context);
+        mapped[targetKey] =
+            _mapNestedObject(sourcePath, formValues, targetKey, context);
         continue;
       }
 
       if (sourcePath is String && sourcePath.startsWith('list:')) {
         /// Treat as list
-        mapped[targetKey] = _mapListModel(sourcePath, formValues, modelName, modelConfig, context);
+        mapped[targetKey] = _mapListModel(
+            sourcePath, formValues, modelName, modelConfig, context);
         continue;
       }
 
       /// Treat as normal mapping
-      final value = getValueFromMapping(sourcePath, formValues, modelName, context);
-      mapped[targetKey] = value is DateTime ? value.millisecondsSinceEpoch : value;
+      final value =
+          getValueFromMapping(sourcePath, formValues, modelName, context);
+      mapped[targetKey] =
+          value is DateTime ? value.millisecondsSinceEpoch : value;
     }
 
     final factory = modelFactoryRegistry[modelName];
@@ -70,17 +120,18 @@ class FormEntityMapper {
   }
 
   List<Map<String, dynamic>> _mapListModel(
-      String sourcePath,
-      Map<String, dynamic> formValues,
-      String parentModel,
-      Map<String, dynamic> modelConfig,
-      Map<String, dynamic> context,
-      ) {
+    String sourcePath,
+    Map<String, dynamic> formValues,
+    String parentModel,
+    Map<String, dynamic> modelConfig,
+    Map<String, dynamic> context,
+  ) {
     final listModelName = sourcePath.split(':').last;
     final listConfig = modelConfig['listMappings']?[listModelName];
 
     if (listConfig == null) {
-      throw Exception('Missing listMappings config for $listModelName in $parentModel');
+      throw Exception(
+          'Missing listMappings config for $listModelName in $parentModel');
     }
 
     final mappings = listConfig['mappings'] as Map<String, dynamic>;
@@ -91,34 +142,40 @@ class FormEntityMapper {
       final targetKey = entry.key;
       final sourcePath = entry.value;
 
-      if (targetKey == 'additionalFields' && sourcePath is Map<String, dynamic>) {
-        newItem[targetKey] = _mapAdditionalFields(sourcePath, formValues, listModelName, context);
+      if (targetKey == 'additionalFields' &&
+          sourcePath is Map<String, dynamic>) {
+        newItem[targetKey] = _mapAdditionalFields(
+            sourcePath, formValues, listModelName, context);
         continue;
       }
 
       if (sourcePath is Map<String, dynamic>) {
-        newItem[targetKey] = _mapNestedObject(sourcePath, formValues, targetKey, context);
+        newItem[targetKey] =
+            _mapNestedObject(sourcePath, formValues, targetKey, context);
         continue;
       }
 
       if (sourcePath is String && sourcePath.startsWith('list:')) {
-        newItem[targetKey] = _mapListModel(sourcePath, formValues, listModelName, listConfig, context);
+        newItem[targetKey] = _mapListModel(
+            sourcePath, formValues, listModelName, listConfig, context);
         continue;
       }
 
-      final value = getValueFromMapping(sourcePath, formValues, listModelName, context);
-      newItem[targetKey] = value is DateTime ? value.millisecondsSinceEpoch : value;
+      final value =
+          getValueFromMapping(sourcePath, formValues, listModelName, context);
+      newItem[targetKey] =
+          value is DateTime ? value.millisecondsSinceEpoch : value;
     }
 
     return newItem.isNotEmpty ? [newItem] : [];
   }
 
   Map<String, dynamic>? _mapAdditionalFields(
-      Map<String, dynamic> fieldsMap,
-      Map<String, dynamic> formValues,
-      String modelName,
-      Map<String, dynamic> context,
-      ) {
+    Map<String, dynamic> fieldsMap,
+    Map<String, dynamic> formValues,
+    String modelName,
+    Map<String, dynamic> context,
+  ) {
     final fieldsList = <Map<String, dynamic>>[];
 
     fieldsMap.forEach((customKey, path) {
@@ -138,45 +195,56 @@ class FormEntityMapper {
   }
 
   Map<String, dynamic>? _mapNestedObject(
-      Map<String, dynamic> nestedMappings,
-      Map<String, dynamic> formValues,
-      String modelName,
-      Map<String, dynamic> context,
-      ) {
+    Map<String, dynamic> nestedMappings,
+    Map<String, dynamic> formValues,
+    String modelName,
+    Map<String, dynamic> context,
+  ) {
     final result = <String, dynamic>{};
 
     for (final entry in nestedMappings.entries) {
       final targetKey = entry.key;
       final sourcePath = entry.value;
 
-      if (targetKey == 'additionalFields' && sourcePath is Map<String, dynamic>) {
-        result[targetKey] = _mapAdditionalFields(sourcePath, formValues, modelName, context);
+      if (targetKey == 'additionalFields' &&
+          sourcePath is Map<String, dynamic>) {
+        result[targetKey] =
+            _mapAdditionalFields(sourcePath, formValues, modelName, context);
         continue;
       }
 
       if (sourcePath is String && sourcePath.startsWith('list:')) {
-        result[targetKey] = _mapListModel(sourcePath, formValues, modelName, {'listMappings': nestedMappings}, context);
+        result[targetKey] = _mapListModel(sourcePath, formValues, modelName,
+            {'listMappings': nestedMappings}, context);
         continue;
       }
 
       if (sourcePath is Map<String, dynamic>) {
         // Handle deeply nested object
-        result[targetKey] = _mapNestedObject(sourcePath, formValues, targetKey, context);
+        result[targetKey] =
+            _mapNestedObject(sourcePath, formValues, targetKey, context);
         continue;
       }
 
-      final value = getValueFromMapping(sourcePath, formValues, modelName, context);
-      result[targetKey] = value is DateTime ? value.millisecondsSinceEpoch : value;
+      final value =
+          getValueFromMapping(sourcePath, formValues, modelName, context);
+      result[targetKey] =
+          value is DateTime ? value.millisecondsSinceEpoch : value;
     }
 
     return result.isNotEmpty ? result : null;
   }
 
-
-  dynamic getValueFromMapping(String instruction, Map<String, dynamic> data, String currentModel, Map<String, dynamic> context,) {
+  dynamic getValueFromMapping(
+    String instruction,
+    Map<String, dynamic> data,
+    String currentModel,
+    Map<String, dynamic> context,
+  ) {
     if (instruction == '__generate:uuid') {
       final uuid = IdGen.i.identifier;
-      generatedValues.putIfAbsent(currentModel, () => {})['clientReferenceId'] = uuid;
+      generatedValues.putIfAbsent(currentModel, () => {})['clientReferenceId'] =
+          uuid;
       return uuid;
     }
 
@@ -223,6 +291,7 @@ class FormEntityMapper {
   dynamic _getValueFromPath(Map<String, dynamic> data, String path) {
     return path.split('.').fold<dynamic>(data, (value, key) {
       if (value is Map<String, dynamic> && value.containsKey(key)) {
+        usedPaths.add(key);
         return value[key];
       }
       if (kDebugMode) {
@@ -231,5 +300,69 @@ class FormEntityMapper {
       return null;
     });
   }
-}
 
+  Map<String, dynamic> _getUnmappedFields(Map<String, dynamic> formData) {
+    final unmapped = <String, dynamic>{};
+
+    void extractUnmapped(Map<String, dynamic> data) {
+      data.forEach((key, value) {
+        if (value is Map<String, dynamic>) {
+          extractUnmapped(value);
+        } else {
+          if (!usedPaths.contains(key)) {
+            unmapped[key] = value;
+          }
+        }
+      });
+    }
+
+    extractUnmapped(formData);
+    return unmapped;
+  }
+
+  Map<String, dynamic> mergeAdditionalFields(
+    Map<String, dynamic> existingModelData,
+    Map<String, dynamic> newFields,
+    String modelName,
+  ) {
+    // Clone existing data to avoid mutation
+    final mergedData = Map<String, dynamic>.from(existingModelData);
+
+    final existingAdditionalFields =
+        mergedData['additionalFields'] as Map<String, dynamic>?;
+
+    final newAdditionalFieldsList =
+        newFields.entries.map((e) => {'key': e.key, 'value': e.value}).toList();
+
+    if (existingAdditionalFields != null) {
+      // Merge existing additional fields list with new ones, avoid duplicate keys
+      final existingFieldsList =
+          (existingAdditionalFields['fields'] as List<dynamic>? ?? [])
+              .cast<Map<String, dynamic>>();
+
+      // Create a map for quick lookup of existing keys
+      final existingKeys = existingFieldsList.map((f) => f['key']).toSet();
+
+      final mergedFields = [
+        ...existingFieldsList,
+        ...newAdditionalFieldsList
+            .where((nf) => !existingKeys.contains(nf['key'])),
+      ];
+
+      mergedData['additionalFields'] = {
+        'schema': modelName.replaceAll('Model', ''),
+        'version': 1,
+        'fields': mergedFields,
+      };
+    } else {
+      // No existing additionalFields, create new
+      mergedData['additionalFields'] = {
+        'schema': modelName.replaceAll('Model', ''),
+        'version': 1,
+        'fields': newAdditionalFieldsList,
+      };
+    }
+
+    return mergedData;
+  }
+}
