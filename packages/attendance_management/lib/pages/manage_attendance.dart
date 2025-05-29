@@ -307,10 +307,9 @@ class RegisterCard extends StatelessWidget {
                       );
                     } else {
                       await context.router.push(
-                        AttendanceDateSessionSelectionRoute(
-                          registers: registers,
-                          registerID: registerId,
-                        ),
+                        MarkAttendanceRoute(
+                            registerModel: registers
+                                .firstWhere((e) => e.id == registerId)),
                       );
                       attendanceBloc.add(const AttendanceEvents.initial());
                     }
