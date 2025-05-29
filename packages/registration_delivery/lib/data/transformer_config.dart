@@ -1,5 +1,6 @@
 final jsonConfig = {
   "beneficiaryRegistration": {
+    "fallbackModel": "HouseholdModel", // fallback model to map form values which are not mapped to any field
     "models": {
       "HouseholdModel": {
         "mappings": {
@@ -27,7 +28,7 @@ final jsonConfig = {
             "pincode": "address.pincode",
             "buildingName": "address.buildingName",
             "street": "address.street",
-            "type": "beneficiaryLocation.type",
+            "type": "beneficiaryLocation.typeOfAddress",
             "boundaryType": "address.boundaryType",
             "locality": {
               "code": "__context:selectedBoundaryCode",
@@ -110,7 +111,7 @@ final jsonConfig = {
               "addressLine2": "beneficiaryLocation.addressLine2",
               "landmark": "address.landmark",
               "city": "address.city",
-              "type": "beneficiaryLocation.type",
+              "type": "beneficiaryLocation.typeOfAddress",
               "pincode": "address.pincode",
               "buildingName": "address.buildingName",
               "street": "address.street",

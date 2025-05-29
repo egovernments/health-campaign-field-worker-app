@@ -127,6 +127,7 @@ class _SearchBeneficiaryPageState
                   'userUUID': RegistrationDeliverySingleton().loggedInUser?.uuid,
                   'householdType': RegistrationDeliverySingleton().householdType?.toValue(),
                 },
+                fallbackFormDataString: jsonConfig['beneficiaryRegistration']?['fallbackModel'] as String?,
               );
 
               context.read<EntityCreateBloc>().add(
