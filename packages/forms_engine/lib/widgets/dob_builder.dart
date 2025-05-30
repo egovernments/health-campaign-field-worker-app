@@ -30,10 +30,22 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
         initialDate: initialDate,
         datePickerFormControl: formControlName,
         datePickerLabel: label ?? 'date of birth',
-        ageFieldLabel: 'age',
-        yearsHintLabel: 'years',
-        monthsHintLabel: 'months',
-        separatorLabel: 'or',
+        ageFieldLabel: loc.translate('AGE_LABEL_TEXT'),
+        yearsHintLabel: loc.translate(
+          'YEARS_HINT_TEXT',
+        ),
+        monthsHintLabel: loc.translate(
+          'MONTHS_HINT_TEXT',
+        ),
+        separatorLabel: loc.translate(
+          'SEPARATOR_LABEL_TEXT',
+        ),
+        cancelText: loc
+            .translate('CORE_COMMON_CANCEL'),
+        confirmText: loc
+            .translate('CORE_COMMON_OK'),
+        initialValue: form.control(formControlName).value != null && (form.control(formControlName).value as String).trim().isNotEmpty
+            ? form.control(formControlName).value as String : null,
         yearsAndMonthsErrMsg: '',
         errorMessage: _getDobErrorMessage(field.control, context),
         onChangeOfFormControl: (value) {
@@ -57,17 +69,13 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     final value = rule?.value?.toString();
     if (value == null) return null;
 
-    if (value.endsWith('_months') || value.endsWith('_month')) {
-      final m = int.tryParse(value.split('_').first);
-      return (0, m ?? 0);
-    }
+    final totalMonths = int.tryParse(value);
+    if (totalMonths == null) return null;
 
-    if (value.endsWith('_years') || value.endsWith('_year')) {
-      final y = int.tryParse(value.split('_').first);
-      return (y ?? 0, 0);
-    }
+    final years = totalMonths ~/ 12;
+    final months = totalMonths % 12;
 
-    return null;
+    return (years, months);
   }
 
   void _handleDobValidation(
@@ -79,12 +87,16 @@ class JsonSchemaDOBBuilder extends JsonSchemaBuilder<String> {
     control.removeError('required');
     control.removeError('minAge');
     control.removeError('maxAge');
+    control.markAsTouched();
 
-    if (dob == null && control.touched) {
-      control.setErrors({'required': true});
+    final isRequired = validations?.any((v) => v.type == 'required') ?? false;
+
+    if (dob == null) {
+      if (isRequired && control.touched) {
+        control.setErrors({'required': true});
+      }
       return;
     }
-    if(dob == null) return;
 
     final age = DigitDateUtils.calculateAge(dob);
 

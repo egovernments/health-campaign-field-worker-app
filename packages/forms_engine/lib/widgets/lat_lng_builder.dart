@@ -83,9 +83,7 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
             return ReactiveWrapperField(
               formControlName: widget.formControlName,
               builder: (field) => LabeledField(
-
                 infoText: translateIfPresent(widget.tooltipText, loc),
-                tooltipTriggerMode: TooltipTriggerMode.tap,
                 label: widget.label,
                 isRequired: widget.isRequired ?? false,
                 capitalizedFirstLetter: false,
