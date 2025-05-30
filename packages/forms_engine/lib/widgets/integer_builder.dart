@@ -32,7 +32,6 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) => LabeledField(
         infoText: translateIfPresent(tooltipText, loc),
-        tooltipTriggerMode: TooltipTriggerMode.tap,
         label: label,
         isRequired: isRequired ?? false,
         child: DigitNumericFormInput(

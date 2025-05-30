@@ -52,19 +52,19 @@ FormControl buildFormControl(
         );
       } else if (format == PropertySchemaFormat.numeric) {
         return FormControl<int>(
-          value: parseIntValue(rawValue),
+          value: parseIntValue(defaultValues?[name] ?? rawValue),
           validators: validators,
         );
       } else {
         return FormControl<String>(
-          value: defaultValues?[name] ?? rawValue?.toString(),
+          value: defaultValues?[name] ?? (rawValue?.toString().isEmpty ?? true ? null : rawValue.toString()),
           validators: validators,
         );
       }
 
     default:
       return FormControl<String>(
-        value: rawValue?.toString(),
+        value: defaultValues?[name] ?? (rawValue?.toString().isEmpty ?? true ? null : rawValue.toString()),
         validators: validators,
       );
   }

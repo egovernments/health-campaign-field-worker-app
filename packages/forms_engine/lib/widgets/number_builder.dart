@@ -39,7 +39,6 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
             isRequired: hasRequiredValidation(validations),
             capitalizedFirstLetter: false,
             infoText: translateIfPresent(tooltipText, loc),
-            tooltipTriggerMode: TooltipTriggerMode.tap,
             child: DigitTextFormInput(
               helpText: helpText,
               innerLabel: innerLabel,

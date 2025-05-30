@@ -31,21 +31,29 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
       builder: (field) =>
           LabeledField(
             infoText: translateIfPresent(tooltipText, loc),
-            tooltipTriggerMode: TooltipTriggerMode.tap,
             label: label,
             isRequired: isRequired ?? false,
             child: DigitDateFormInput(
               firstDate: parseDateValue(start),
               lastDate: parseDateValue(end),
+              onChange: (value){
+                form.control(formControlName).markAsTouched();
+                DateTime? parsedDate;
+                try {
+                  parsedDate = DateFormat("dd/MM/yyyy").parseStrict(value);
+                } catch (e) {
+                  // Optional: Handle invalid date input
+                  parsedDate = null;
+                }
+                form.control(formControlName).value = parsedDate;
+              },
               readOnly: readOnly,
               errorMessage: field.errorText,
               innerLabel: innerLabel,
-              initialValue: DateFormat(
-                  Constants().dateMonthYearFormat)
-                  .format(form
-                  .control(formControlName)
-                  .value)
-                  .toString(),
+              initialValue: form.control(formControlName).value != null
+                  ? DateFormat(Constants().dateMonthYearFormat)
+                  .format(form.control(formControlName).value as DateTime)
+                  : null,
             ),
           ),
     );

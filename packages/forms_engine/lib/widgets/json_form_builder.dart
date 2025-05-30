@@ -189,6 +189,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
 
       case PropertySchemaFormat.date:
         return JsonSchemaDatePickerBuilder(
+          readOnly: widget.schema.readOnly ?? false,
+          isRequired: hasRequiredValidation(widget.schema.validations),
           label:translateIfPresent(widget.schema.label, localizations),
           form: form,
           formControlName: widget.formControlName,
