@@ -31,6 +31,7 @@ dependencies:
   digit_data_model: ^1.0.6+1
   reactive_forms: ^17.0.0
   carousel_slider: ^4.2.1
+  digit_scanner: ^1.0.5+1
 
 dev_dependencies:
   flutter_test:
