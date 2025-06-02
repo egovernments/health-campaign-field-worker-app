@@ -6,6 +6,7 @@ class CustomAttendanceInfoCard extends StatelessWidget {
   final double? status; // -1: unmarked, 0: absent, 0.5: half, 1: present
   final VoidCallback onMarkPresent;
   final VoidCallback onMarkAbsent;
+  final bool markManualAttendance;
 
   const CustomAttendanceInfoCard({
     super.key,
@@ -14,6 +15,7 @@ class CustomAttendanceInfoCard extends StatelessWidget {
     required this.status,
     required this.onMarkPresent,
     required this.onMarkAbsent,
+    required this.markManualAttendance,
   });
 
   @override
@@ -57,14 +59,16 @@ class CustomAttendanceInfoCard extends StatelessWidget {
             style: theme.textTheme.bodySmall,
           ),
           const SizedBox(height: 4),
-          Text(
-            getStatusText() ?? "Attendance Unmarked",
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w500,
-              color: getStatusColor() ?? Colors.orange,
+          if (markManualAttendance) ...[
+            Text(
+              getStatusText() ?? "Attendance Unmarked",
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: getStatusColor() ?? Colors.orange,
+              ),
             ),
-          ),
-          const SizedBox(height: 6),
+            const SizedBox(height: 6),
+          ],
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
             decoration: BoxDecoration(
@@ -81,48 +85,48 @@ class CustomAttendanceInfoCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          (status == -1 || status == null)
-              ? Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: onMarkPresent,
-                        icon: const Icon(Icons.check, color: Colors.green),
-                        label: const Text("Present"),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(),
+          if (markManualAttendance) ...[
+            const SizedBox(height: 10),
+            (status == -1 || status == null)
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: onMarkPresent,
+                          icon: const Icon(Icons.check, color: Colors.green),
+                          label: const Text("Present"),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(),
+                            ),
+                            side: const BorderSide(color: Colors.green),
+                            foregroundColor: Colors.green,
+                            backgroundColor: Colors.white,
                           ),
-                          side: const BorderSide(color: Colors.green),
-                          foregroundColor: Colors.green, // text color
-                          backgroundColor: Colors.white,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: onMarkAbsent,
-                        icon: const Icon(Icons.cancel, color: Colors.red),
-                        label: const Text("Absent"),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: onMarkAbsent,
+                          icon: const Icon(Icons.cancel, color: Colors.red),
+                          label: const Text("Absent"),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(),
+                            ),
+                            side: const BorderSide(color: Colors.red),
+                            foregroundColor: Colors.red,
+                            backgroundColor: Colors.white,
                           ),
-                          side: const BorderSide(color: Colors.red),
-                          foregroundColor: Colors.red,
-                          backgroundColor: Colors.white,
                         ),
                       ),
-                    ),
-                  ],
-                )
-              : const SizedBox(
-                  width: 400,
-                ),
+                    ],
+                  )
+                : const SizedBox(width: 400),
+          ],
         ],
       ),
     );
