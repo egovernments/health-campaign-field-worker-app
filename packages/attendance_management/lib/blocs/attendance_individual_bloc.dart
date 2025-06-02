@@ -91,42 +91,41 @@ class AttendanceIndividualBloc
     AttendanceMarkEvent event,
     AttendanceIndividualEmitter emit,
   ) async {
-    // Handling attendance marking
     await state.maybeMap(
       loaded: (value) async {
         List<AttendeeModel>? searchList;
-        double status = 0;
+        double newStatus = event.status;
+
         List<AttendeeModel> updatedList =
             value.attendanceCollectionModel!.map((e) {
           if (e.individualId == event.individualId) {
-            if (e.status == -1) {
-              status = 1;
-            } else if (e.status == 1) {
-              if (event.isSingleSession) {
-                status = 0.5;
-              } else {
-                status = 0;
-              }
-            } else if (event.isSingleSession && e.status == 0.5) {
+            // Toggle logic
+            double? status = e.status;
+            if (status == -1) {
+              status = newStatus;
+            } else if (status == 1 && newStatus == 1) {
+              status = event.isSingleSession ? 0.5 : 0;
+            } else if (status == 0.5 && event.isSingleSession) {
               status = 0;
             } else {
-              status = 1;
+              status = newStatus;
             }
             return e.copyWith(status: status);
           }
           return e;
         }).toList();
-        // Updating search list if it's available
+
         if (value.attendanceSearchModelList != null &&
-            (value.attendanceSearchModelList ?? []).isNotEmpty) {
+            value.attendanceSearchModelList!.isNotEmpty) {
           searchList = value.attendanceSearchModelList!.map((e) {
             if (e.individualId == event.individualId) {
-              if (e.status == -1) {
-                status = 1;
-              } else if (e.status == 1) {
+              double? status = e.status;
+              if (status == -1) {
+                status = newStatus;
+              } else if (status == 1 && newStatus == 1) {
                 status = 0;
               } else {
-                status = 1;
+                status = newStatus;
               }
               return e.copyWith(status: status);
             }
@@ -168,18 +167,20 @@ class AttendanceIndividualBloc
                       : EnumValues.active.toValue(),
                   time: event.entryTime,
                   uploadToServer: (event.createOplog ?? false),
-                  additionalDetails: event.latitude != null &&
-                          event.longitude != null
-                      ? {
-                          "latitude": event.latitude,
-                          "longitude": event.longitude,
-                          if (event.comment!.isNotEmpty) "comment": event.comment,
-                        }
-                      : {
-                          EnumValues.boundaryCode.toValue():
-                              AttendanceSingleton().boundary?.code,
-                          if (event.comment!.isNotEmpty) "comment": event.comment,
-                        },
+                  additionalDetails:
+                      event.latitude != null && event.longitude != null
+                          ? {
+                              "latitude": event.latitude,
+                              "longitude": event.longitude,
+                              if (event.comment!.isNotEmpty)
+                                "comment": event.comment,
+                            }
+                          : {
+                              EnumValues.boundaryCode.toValue():
+                                  AttendanceSingleton().boundary?.code,
+                              if (event.comment!.isNotEmpty)
+                                "comment": event.comment,
+                            },
                 ),
                 AttendanceLogModel(
                     individualId: e.individualId,
@@ -195,20 +196,22 @@ class AttendanceIndividualBloc
                             ? halfDay
                             : event.exitTime,
                     uploadToServer: (event.createOplog ?? false),
-                    additionalDetails: event.latitude != null &&
-                            event.longitude != null
-                        ? {
-                            EnumValues.latitude.toValue(): event.latitude,
-                            EnumValues.longitude.toValue(): event.longitude,
-                            EnumValues.boundaryCode.toValue():
-                                AttendanceSingleton().boundary?.code,
-                            if (event.comment!.isNotEmpty) "comment": event.comment,
-                          }
-                        : {
-                            EnumValues.boundaryCode.toValue():
-                                AttendanceSingleton().boundary?.code,
-                            if (event.comment!.isNotEmpty) "comment": event.comment,
-                          })
+                    additionalDetails:
+                        event.latitude != null && event.longitude != null
+                            ? {
+                                EnumValues.latitude.toValue(): event.latitude,
+                                EnumValues.longitude.toValue(): event.longitude,
+                                EnumValues.boundaryCode.toValue():
+                                    AttendanceSingleton().boundary?.code,
+                                if (event.comment!.isNotEmpty)
+                                  "comment": event.comment,
+                              }
+                            : {
+                                EnumValues.boundaryCode.toValue():
+                                    AttendanceSingleton().boundary?.code,
+                                if (event.comment!.isNotEmpty)
+                                  "comment": event.comment,
+                              })
               ]);
             }
           });
