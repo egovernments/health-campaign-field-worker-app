@@ -16,9 +16,9 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_table.dart'
     as table;
 import 'package:digit_ui_components/widgets/molecules/infinite_date_scroll.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -27,6 +27,7 @@ import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
 import '../router/attendance_router.gm.dart';
 import '../utils/date_util_attendance.dart';
+import '../widgets/attendance_qr_scanner.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';
@@ -52,8 +53,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   late TextEditingController controller;
   AttendanceIndividualBloc? individualLogBloc;
   late FormGroup form;
-  var entryTime, exitTime;
-  var currentSelectedDate, selectedSession;
+  var entryTime = 0, exitTime = 0;
+  var currentSelectedDate = DateTime.now().toString(), selectedSession = 0;
+  bool markManualAttendance = false;
 
   @override
   void initState() {
@@ -67,7 +69,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(),
     );
     form = buildForm(); // Initialize the form using your method
-    setRegisterData();
     super.initState();
   }
 
@@ -165,6 +166,46 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     margin: EdgeInsets.only(
                                         top: theme.spacerTheme.spacer4),
                                     children: [
+                                        AttendanceDateTimeManagement.isToday(
+                                                AttendanceDateTimeManagement
+                                                    .getFormattedDateToDateTime(
+                                                        currentSelectedDate)!)
+                                            ? DigitButton(
+                                                size: DigitButtonSize.large,
+                                                type: DigitButtonType.primary,
+                                                mainAxisSize: MainAxisSize.max,
+                                                onPressed: () async {
+                                                  var manualMode =
+                                                      await Navigator.of(
+                                                              context)
+                                                          .push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const AttendanceDigitScannerPage(
+                                                        quantity: 1,
+                                                        isGS1code: false,
+                                                        singleValue: false,
+                                                      ),
+                                                      settings:
+                                                          const RouteSettings(
+                                                              name:
+                                                                  '/qr-scanner'),
+                                                    ),
+                                                  );
+                                                  if (manualMode != null) {
+                                                    setState(() {
+                                                      markManualAttendance =
+                                                          manualMode;
+                                                    });
+                                                  }
+                                                },
+                                                prefixIcon: Icons
+                                                    .document_scanner_outlined,
+                                                label: localizations.translate(
+                                                  i18.attendance.markAttendance,
+                                                ),
+                                              )
+                                            : const Offstage(),
                                         DigitButton(
                                           size: DigitButtonSize.large,
                                           type: DigitButtonType.secondary,
@@ -226,70 +267,89 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     : DateTime.now().getFormattedDate(),
                                 firstDate: DateTime.fromMillisecondsSinceEpoch(
                                     widget.registerModel.startDate!),
-                                lastDate: DateTime.fromMillisecondsSinceEpoch(
-                                    widget.registerModel.endDate!),
+                                lastDate: DateTime.now().isAfter(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                widget
+                                                    .registerModel.endDate!)) ||
+                                        DateTime.now().isAtSameMomentAs(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                widget.registerModel.endDate!))
+                                    ? DateTime.fromMillisecondsSinceEpoch(
+                                        widget.registerModel.endDate!)
+                                    : DateTime.now(),
                                 onChange: (String date) {
-                                  setState(() {
-                                    currentSelectedDate = date;
-                                    individualLogBloc!.add(
-                                      AttendanceIndividualLogSearchEvent(
-                                        attendees: widget.registerModel
-                                                .attendees!.isNotEmpty
-                                            ? widget.registerModel.attendees!
-                                            : [],
-                                        limit: 10,
-                                        offset: 0,
-                                        currentDate: AttendanceDateTimeManagement
-                                            .getMillisecondEpoch(
-                                                AttendanceDateTimeManagement
-                                                    .getFormattedDateToDateTime(
-                                                        currentSelectedDate)!,
-                                                selectedSession,
-                                                entryTime.toString()),
-                                        entryTime: entryTime,
-                                        isSingleSession: false,
-                                        exitTime: exitTime,
-                                        registerId: widget.registerModel.id,
-                                        tenantId: widget.registerModel.tenantId
-                                            .toString(),
-                                      ),
-                                    );
-                                  });
+                                  currentSelectedDate = date;
+                                  individualLogBloc!.add(
+                                    AttendanceIndividualLogSearchEvent(
+                                      attendees: widget.registerModel.attendees!
+                                              .isNotEmpty
+                                          ? widget.registerModel.attendees!
+                                          : [],
+                                      limit: 10,
+                                      offset: 0,
+                                      currentDate: AttendanceDateTimeManagement
+                                          .getMillisecondEpoch(
+                                              AttendanceDateTimeManagement
+                                                  .getFormattedDateToDateTime(
+                                                      currentSelectedDate)!,
+                                              selectedSession,
+                                              entryTime.toString()),
+                                      entryTime: entryTime,
+                                      isSingleSession: false,
+                                      exitTime: exitTime,
+                                      registerId: widget.registerModel.id,
+                                      tenantId: widget.registerModel.tenantId
+                                          .toString(),
+                                    ),
+                                  );
+                                  setRegisterData();
+                                  if (showInfoCard(
+                                      widget.registerModel,
+                                      AttendanceDateTimeManagement
+                                          .getFormattedDateToDateTime(
+                                              currentSelectedDate)!)) {
+                                    showCustomPopup(
+                                        context: context,
+                                        builder: (ctx) {
+                                          return Popup(
+                                            type: PopUpType.alert,
+                                            onCrossTap: () {
+                                              Navigator.of(ctx).pop();
+                                            },
+                                            actions: [
+                                              DigitButton(
+                                                capitalizeLetters: false,
+                                                type: DigitButtonType.primary,
+                                                size: DigitButtonSize.large,
+                                                mainAxisSize: MainAxisSize.max,
+                                                onPressed: () {
+                                                  Navigator.of(ctx).pop();
+                                                },
+                                                label: localizations.translate(
+                                                  i18.attendance
+                                                      .ctaDateChangeProceed,
+                                                ),
+                                              ),
+                                              DigitButton(
+                                                capitalizeLetters: false,
+                                                type: DigitButtonType.tertiary,
+                                                size: DigitButtonSize.large,
+                                                mainAxisSize: MainAxisSize.max,
+                                                onPressed: () {
+                                                  Navigator.of(ctx).pop();
+                                                },
+                                                label: localizations.translate(
+                                                  i18.common.coreCommonCancel,
+                                                ),
+                                              ),
+                                            ],
+                                            title: localizations.translate(
+                                                i18.attendance.actionRequired),
+                                            description: getMissedDays(context),
+                                          );
+                                        });
+                                  }
                                 },
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: theme.spacerTheme.spacer2 * 2,
-                                ),
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Text(
-                                    localizations.translate(
-                                      i18.attendance.markAttendanceLabel,
-                                    ),
-                                    style: DigitTheme.instance.mobileTheme
-                                        .textTheme.displayMedium,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: theme.spacerTheme.spacer2 * 2,
-                                    top: theme.spacerTheme.spacer1,
-                                    bottom: theme.spacerTheme.spacer4),
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Text(
-                                    '${DateFormat("dd MMMM yyyy").format(DateTime.now())} ${'- ${localizations.translate(
-                                      i18.attendance.morningSession,
-                                    )}'}',
-                                    style: DigitTheme.instance.mobileTheme
-                                        .textTheme.headlineSmall
-                                        ?.copyWith(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
                               ),
                               Padding(
                                 padding:
@@ -641,7 +701,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     DateTime dateSession = DateTime.now().isAfter(
             DateTime.fromMillisecondsSinceEpoch(widget.registerModel.endDate!))
         ? DateTime.fromMillisecondsSinceEpoch(widget.registerModel.endDate!)
-        : DateTime.now();
+        : AttendanceDateTimeManagement.getFormattedDateToDateTime(
+            currentSelectedDate)!;
     entryTime = widget.registerModel
                 .additionalDetails?[EnumValues.sessions.toValue()] ==
             2
@@ -663,5 +724,77 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           )
         : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
             .millisecondsSinceEpoch);
+  }
+
+  bool showInfoCard(
+      AttendanceRegisterModel selectedRegister, DateTime selectedDate) {
+    final selectedFormattedDate = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+    );
+    final nowTime = DateTime.now();
+    final todayTime = DateTime(
+      nowTime.year,
+      nowTime.month,
+      nowTime.day,
+    );
+
+    // Check if attendance log is available
+    if (selectedRegister.attendanceLog != null) {
+      for (var log in selectedRegister.attendanceLog!) {
+        for (var entry in log.entries) {
+          final logDate = entry.key;
+          final isAttendanceMarked = entry.value;
+
+          // If logDate is before or equal to selectedDate
+          if (logDate.isBefore(selectedFormattedDate)) {
+            // If selectedDate is not today
+            if (selectedFormattedDate != todayTime) {
+              // If attendance is not marked for any date before or on selectedDate
+              if (!isAttendanceMarked) {
+                return true;
+              }
+            }
+            // If selectedDate is today
+            else {
+              // If today's attendance is not marked, show info card
+              if (!isAttendanceMarked) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // If attendance log is null or all logs are marked
+    return false;
+  }
+
+  // Method to get missed attendance days
+  String getMissedDays(BuildContext context) {
+    String missedDays = ""; // Initialize the missedDays string
+
+    // Get current date
+    DateTime nowTime = DateTime.now();
+    DateTime currentDate = DateTime(nowTime.year, nowTime.month, nowTime.day);
+
+    // Check if attendance log exists
+    if (widget.registerModel.attendanceLog != null) {
+      // Iterate through attendance log entries
+      for (var entry in widget.registerModel.attendanceLog!) {
+        // Check each entry for missed attendance
+        entry.forEach((key, value) {
+          if (value == false && key.isBefore(currentDate)) {
+            // Add missed day to missedDays string
+            missedDays += "${key.day}/${key.month}/${key.year} \n";
+          }
+        });
+      }
+    }
+
+    // Return missed attendance days with description
+    return "$missedDays${AttendanceLocalization.of(context).translate(i18.attendance.missedAttendanceDescription)}";
   }
 }
