@@ -14,7 +14,7 @@ Map<String, String Function(Object)> buildValidationMessages(
     if (rule.message == null) continue;
 
     // first translate the message
-    final translated = localize.translate(rule.message ?? "");
+    final translated = localize.translate(rule.message ?? "FIELD_VALIDATION_ERROR");
 
     switch (rule.type) {
       case 'required':

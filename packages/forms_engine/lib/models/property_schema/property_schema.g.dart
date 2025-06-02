@@ -21,6 +21,8 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
           ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
           .toList(),
       schemaCode: json['schemaCode'] as String?,
+      systemDate: json['systemDate'] as bool?,
+      charCount: json['charCount'] as bool?,
       format: $enumDecodeNullable(_$PropertySchemaFormatEnumMap, json['format'],
           unknownValue: PropertySchemaFormat.text),
       startDate: json['startDate'] as String?,
@@ -66,6 +68,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
       instance.properties?.map((k, e) => MapEntry(k, e.toJson())));
   writeNotNull('enums', instance.enums?.map((e) => e.toJson()).toList());
   writeNotNull('schemaCode', instance.schemaCode);
+  writeNotNull('systemDate', instance.systemDate);
+  writeNotNull('charCount', instance.charCount);
   writeNotNull('format', _$PropertySchemaFormatEnumMap[instance.format]);
   writeNotNull('startDate', instance.startDate);
   writeNotNull('endDate', instance.endDate);

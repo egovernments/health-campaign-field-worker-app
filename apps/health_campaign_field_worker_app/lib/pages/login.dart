@@ -233,8 +233,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                             mainAxisSize: MainAxisSize.max,
                           ),
                           DigitButton(
+                            capitalizeLetters: false,
                             size: DigitButtonSize.large,
-                            label: 'QR Login',
+                            label: localizations.translate(
+                              i18.login.qrLogin,
+                            ),
                             onPressed: () async {
                               context.read<DigitScannerBloc>().add(
                                     const DigitScannerEvent.handleScanner(

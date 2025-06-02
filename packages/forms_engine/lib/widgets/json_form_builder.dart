@@ -14,6 +14,7 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
   });
 
   @override
+
   State<JsonFormBuilder> createState() => _JsonFormBuilderState();
 }
 
@@ -217,6 +218,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           value: parseIntValue(widget.schema.value) ?? 0,
           formControlName: widget.formControlName,
           label:translateIfPresent(widget.schema.label, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           minValue: widget.schema.minValue,
           maxValue: widget.schema.maxValue,
           validations: widget.schema.validations,

@@ -5,6 +5,8 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 
+import '../../blocs/app_localization.dart';
+
 class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showHelp;
   final bool showBackNavigation;
@@ -35,7 +37,9 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                 if (showBackNavigation)
                   DigitBackButton(
                     label:
-                    'back',
+                    FormLocalization.of(context).translate(
+                      'CORE_COMMON_BACK',
+                    ),
                     digitBackButtonThemeData:
                     const DigitBackButtonThemeData().copyWith(
                       context: context,

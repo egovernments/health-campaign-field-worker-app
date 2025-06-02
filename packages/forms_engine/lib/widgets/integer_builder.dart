@@ -40,12 +40,13 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
             FilteringTextInputFormatter.digitsOnly
           ],
           errorMessage: field.errorText,
-          minValue: minValue ?? 0,
-          maxValue: maxValue ?? 100,
+          minValue: 0,
+          maxValue: 10000,
           maxLength: 5,
           step: 1,
           initialValue: (form.control(formControlName).value ?? 0).toString(),
           onChange: (value) {
+            form.control(formControlName).markAsTouched();
             if (value.isEmpty) {
               form.control(formControlName).value = 0;
               return;

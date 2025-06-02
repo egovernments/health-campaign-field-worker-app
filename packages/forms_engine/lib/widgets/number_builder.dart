@@ -40,6 +40,7 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
             capitalizedFirstLetter: false,
             infoText: translateIfPresent(tooltipText, loc),
             child: DigitTextFormInput(
+              maxLength: getMaxLength(validations),
               helpText: helpText,
               innerLabel: innerLabel,
               readOnly: readOnly,

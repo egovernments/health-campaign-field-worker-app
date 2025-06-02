@@ -24,6 +24,8 @@ class PropertySchema with _$PropertySchema {
     Map<String, PropertySchema>? properties,
     List<Option>? enums,
     String? schemaCode,
+    bool? systemDate,
+    bool? charCount,
     @JsonKey(
       name: 'format',
       unknownEnumValue: PropertySchemaFormat.text,

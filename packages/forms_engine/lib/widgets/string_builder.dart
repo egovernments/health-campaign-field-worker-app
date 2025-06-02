@@ -17,6 +17,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     super.innerLabel,
     super.helpText,
     super.tooltipText,
+    super.charCount,
   });
 
   @override
@@ -38,6 +39,8 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
             capitalizedFirstLetter: false,
             isRequired: isRequired ?? false,
             child: DigitTextFormInput(
+              maxLength: getMaxLength(validations),
+              charCount: charCount ?? false,
               helpText: helpText,
               innerLabel: innerLabel,
               readOnly: readOnly,

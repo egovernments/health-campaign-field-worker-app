@@ -104,6 +104,8 @@ int? getMinValue(List<ValidationRule>? validations) {
   return null;
 }
 
+
+
 int? getMaxValue(List<ValidationRule>? validations) {
   if (validations == null) return null;
 

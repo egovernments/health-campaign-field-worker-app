@@ -55,6 +55,7 @@ abstract class JsonSchemaBuilder<T> extends StatelessWidget {
   final bool? isRequired;
   final List<ValidationRule>? validations;
   final List<TextInputFormatter>? inputFormatter;
+  final bool? charCount;
 
   const JsonSchemaBuilder({
     Key? key,
@@ -71,5 +72,6 @@ abstract class JsonSchemaBuilder<T> extends StatelessWidget {
     this.isRequired = false,
     this.validations,
     this.inputFormatter,
+    this.charCount,
   }) : super(key: key);
 }

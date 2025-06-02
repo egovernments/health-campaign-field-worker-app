@@ -350,6 +350,7 @@ class Login {
   String get actionLabel => 'LOGIN_ACTION_LABEL';
 
   String get unableToLoginText => 'UNABLE_TO_LOGIN';
+  String get qrLogin => 'QR_LOGIN';
 }
 
 class SelectSurveyFormShowcase {
