@@ -141,6 +141,16 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           helpText: translateIfPresent(widget.schema.helpText, localizations),
         );
 
+      case PropertySchemaFormat.radio:
+        return JsonSchemaRadioBuilder(
+          form: form,
+          formControlName: widget.formControlName,
+          validations: widget.schema.validations,
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          label: translateIfPresent(widget.schema.label, localizations),
+          enums: widget.schema.enums ?? [],
+        );
+
       case PropertySchemaFormat.custom:
         return _buildCustomComponent() ?? const SizedBox.shrink();
 
@@ -240,16 +250,19 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           formControlName: widget.formControlName,
           label: translateIfPresent(widget.schema.label, localizations),
           validations: widget.schema.validations,
+          readOnly: widget.schema.readOnly ?? false,
         );
 
       case PropertySchemaFormat.radio:
-        return LabeledField(
-          label: localizations.translate(widget.schema.label ?? ''),
-          child: JsonSchemaRadioBuilder(
-            form: form,
-            formControlName: widget.formControlName,
-            validations: widget.schema.validations,
-          ),
+        return JsonSchemaRadioBuilder(
+          form: form,
+          isBoolean: true,
+          formControlName: widget.formControlName,
+          validations: widget.schema.validations,
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          label: translateIfPresent(widget.schema.label, localizations),
+          enums: widget.schema.enums ?? [],
+          readOnly: widget.schema.readOnly ?? false,
         );
 
       case PropertySchemaFormat.custom:
