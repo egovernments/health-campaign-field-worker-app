@@ -8,6 +8,7 @@ class JsonSchemaCheckboxBuilder extends JsonSchemaBuilder<bool> {
     super.value,
     super.label,
     super.validations,
+    super.readOnly,
   });
 
   @override
@@ -20,6 +21,7 @@ class JsonSchemaCheckboxBuilder extends JsonSchemaBuilder<bool> {
       validationMessages: validationMessages,
       builder: (field){
         return DigitCheckbox(
+          readOnly: readOnly,
           label: label ?? 'checkbox label',
           value: (field.value ?? false) as bool,
           onChanged: (value) => field.control.value = value,

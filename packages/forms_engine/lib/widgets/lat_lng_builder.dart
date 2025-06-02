@@ -89,7 +89,7 @@ class _LatLngBuilderStatefulWrapperState extends State<_LatLngBuilderStatefulWra
                 capitalizedFirstLetter: false,
                 child: DigitTextFormInput(
                   helpText: widget.helpText,
-                  readOnly: widget.readOnly,
+                  readOnly: true,
                   initialValue: widget.form.control(widget.formControlName).value,
                   onChange: (value) {
                     widget.form.control(widget.formControlName).value = value;
