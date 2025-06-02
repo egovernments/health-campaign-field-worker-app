@@ -150,9 +150,6 @@ class AttendanceIndividualBloc
     final List<AttendanceLogModel> list = [];
     await state.maybeMap(
       loaded: (value) async {
-        DateTime twelvePM = DateTime(event.selectedDate.year,
-            event.selectedDate.month, event.selectedDate.day, 11, 58);
-        int halfDay = twelvePM.millisecondsSinceEpoch;
         if (value.attendanceCollectionModel != null) {
           value.attendanceCollectionModel?.forEach((e) {
             if (e.status != -1) {
@@ -190,11 +187,7 @@ class AttendanceIndividualBloc
                     status: e.status == 0
                         ? EnumValues.inactive.toValue()
                         : EnumValues.active.toValue(),
-                    time: e.status == 0
-                        ? event.exitTime
-                        : e.status == 0.5
-                            ? halfDay
-                            : event.exitTime,
+                    time: e.status == 0 ? event.exitTime : event.exitTime,
                     uploadToServer: (event.createOplog ?? false),
                     additionalDetails:
                         event.latitude != null && event.longitude != null

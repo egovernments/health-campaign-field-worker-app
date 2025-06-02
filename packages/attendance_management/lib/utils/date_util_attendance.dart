@@ -80,4 +80,11 @@ class AttendanceDateTimeManagement {
     DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     return DateFormat(dateFormat ?? "dd/MM/yyyy").format(date);
   }
+
+  static bool isToday(DateTime date) {
+    final now = DateTime.now();
+    return now.year == date.year &&
+        now.month == date.month &&
+        now.day == date.day;
+  }
 }

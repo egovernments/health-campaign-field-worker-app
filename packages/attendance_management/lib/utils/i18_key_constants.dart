@@ -68,6 +68,7 @@ class Common {
   String get coreCommonYes => 'CORE_COMMON_YES';
 
   String get coreCommonNo => 'CORE_COMMON_NO';
+
   String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
 
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
@@ -77,6 +78,7 @@ class Common {
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
   String get maxValue => 'MAX_VALUE_ALLOWED';
+
   String get minValue => 'MIN_VALUE_ALLOWED';
 
   String get noResultsFound => 'NO_RESULTS_FOUND';
@@ -86,6 +88,7 @@ class Common {
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
   String get projectFacilitySearchHeaderLabel =>
       'PROJECT_FACILITY_SEARCH_HEADER_LABEL';
 
@@ -96,12 +99,15 @@ class Common {
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
+
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
 
   String get inactive => 'INACTIVE';
 
   String get locationCapturing => 'CAPTURING_LOCATION';
+
   String get locationCaptured => 'LOCATION_CAPTURED';
+
   String get ctaProceed => 'PROCEED';
 }
 
@@ -116,7 +122,9 @@ class AcknowledgementSuccess {
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 
   String get goToHome => 'GO_TO_HOME_SCREEN';
+
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
+
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
@@ -221,6 +229,12 @@ class Attendance {
   String get missedAttendanceDescription => "MISSED_ATTENDANCE_DESCRIPTION";
 
   String get halfDay => 'HALF_DAY';
+
   String get present => 'PRESENT';
+
   String get absent => 'ABSENT';
+
+  String get actionRequired => "ACTION_REQUIRED";
+
+  String get ctaDateChangeProceed => 'DATE_CHANGE_PROCEED';
 }
