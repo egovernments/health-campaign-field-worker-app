@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
+import 'package:attendance_management/widgets/custom_attendance_info_card.dart';
+import 'package:attendance_management/widgets/labeledtoggle.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -48,6 +50,7 @@ class MarkAttendancePage extends LocalizedStatefulWidget {
 
 class _MarkAttendancePageState extends State<MarkAttendancePage> {
   bool isDialogOpen = false;
+  bool isMorning = true;
   static const _commentKey = 'comment';
   Timer? _debounce;
   late TextEditingController controller;
@@ -134,6 +137,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                       body: BlocBuilder<AttendanceIndividualBloc,
                           AttendanceIndividualState>(
                     buildWhen: (p, c) {
+                      print('BlocBuilder rebuild triggered!');
                       return p != c ? true : false;
                     },
                     builder: (context, state) {
@@ -150,13 +154,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                           limitData,
                           viewOnly,
                         ) {
-                          List<DigitTableRow> tableData = [];
-
-                          tableData = attendanceSearchModelList != null
-                              ? getAttendanceData(
-                                  attendanceSearchModelList, viewOnly)
-                              : getAttendanceData(
-                                  attendanceCollectionModel!, viewOnly);
+                          final attendees =
+                              attendanceSearchModelList?.isNotEmpty == true
+                                  ? attendanceSearchModelList!
+                                  : attendanceCollectionModel ?? [];
 
                           return ScrollableContent(
                             enableFixedDigitButton: true,
@@ -257,6 +258,16 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               showHelp: true,
                             ),
                             children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  localizations.translate(
+                                    i18.attendance.markAttendanceLabel,
+                                  ),
+                                  style: DigitTheme.instance.mobileTheme
+                                      .textTheme.displayMedium,
+                                ),
+                              ),
                               InfiniteDateScrollInput(
                                 initialValue: DateTime.now().isAfter(
                                         DateTime.fromMillisecondsSinceEpoch(
@@ -351,55 +362,134 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   }
                                 },
                               ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.all(theme.spacerTheme.spacer3),
-                                child: DigitSearchBar(
-                                  controller: controller,
-                                  hintText: localizations
-                                      .translate(i18.common.searchByName),
-                                  borderRadius: 0,
-                                  margin: const EdgeInsets.all(0),
-                                  textCapitalization: TextCapitalization.words,
-                                ),
-                              ),
+                             
                               DigitCard(
-                                  margin:
-                                      EdgeInsets.all(theme.spacerTheme.spacer3),
-                                  children: [
-                                    tableData.isNotEmpty
-                                        ? SizedBox(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                .525,
-                                            child: table.DigitTable(
-                                              showSelectedState: false,
-                                              tableHeight:
-                                                  MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      .5,
-                                              tableWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              showPagination: false,
-                                              showRowsPerPage: false,
-                                              withColumnDividers: false,
-                                              columns: headerList(
-                                                DateTime.now(),
-                                                localizations,
-                                              ),
-                                              rows: tableData,
-                                            ),
-                                          )
-                                        : NoResultCard(
-                                            align: Alignment.center,
-                                            label: localizations.translate(
-                                              i18.common.noResultsFound,
-                                            ),
-                                          ),
-                                  ]),
+                                margin: EdgeInsets.only(
+                                    top: theme.spacerTheme.spacer4,
+                                    bottom: theme.spacerTheme.spacer4),
+                                children: [
+                                  DigitSearchBar(
+                                    controller: controller,
+                                    hintText: localizations
+                                        .translate(i18.common.searchByName),
+                                    borderRadius: 0,
+                                    margin: const EdgeInsets.all(0),
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                  ),
+                                  DigitLabeledToggle(
+                                    value: isMorning,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        isMorning = val;
+                                      });
+
+                                      final now = DateTime.now();
+                                      final currentDate =
+                                          DateTime(now.year, now.month, now.day)
+                                              .millisecondsSinceEpoch;
+
+                                      entryTime = isMorning
+                                          ? DateTime(now.year, now.month,
+                                                  now.day, 9, 0)
+                                              .millisecondsSinceEpoch
+                                          : DateTime(now.year, now.month,
+                                                  now.day, 14, 0)
+                                              .millisecondsSinceEpoch;
+
+                                      exitTime = isMorning
+                                          ? DateTime(now.year, now.month,
+                                                  now.day, 11, 58)
+                                              .millisecondsSinceEpoch
+                                          : DateTime(now.year, now.month,
+                                                  now.day, 17, 0)
+                                              .millisecondsSinceEpoch;
+
+                                      final isSingleSession = (widget
+                                                      .registerModel
+                                                      .additionalDetails?[
+                                                  'sessions'] ??
+                                              1) ==
+                                          1;
+
+                                      individualLogBloc?.add(
+                                        AttendanceIndividualLogSearchEvent(
+                                          attendees:
+                                              widget.registerModel.attendees ??
+                                                  [],
+                                          limit: 100,
+                                          offset: 0,
+                                          currentDate: currentDate,
+                                          entryTime: entryTime,
+                                          exitTime: exitTime,
+                                          isSingleSession: isSingleSession,
+                                          registerId: widget.registerModel.id!,
+                                          tenantId:
+                                              widget.registerModel.tenantId!,
+                                        ),
+                                      );
+                                    },
+                                    activeLabel: localizations.translate(
+                                        i18.attendance.morningSession),
+                                    inactiveLabel: localizations.translate(
+                                        i18.attendance.eveningSession),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                margin:
+                                    EdgeInsets.all(theme.spacerTheme.spacer3),
+                                child: (attendees.isNotEmpty)
+                                    ? Column(
+                                        children: attendees.map((individual) {
+                                          return CustomAttendanceInfoCard(
+                                            name: individual.name ?? "Unnamed",
+                                            individualNumber:
+                                                individual.individualNumber ??
+                                                    "Unknown ID",
+                                            status: individual.status,
+                                            markManualAttendance:
+                                                markManualAttendance, 
+                                            onMarkPresent: () {
+                                              context
+                                                  .read<
+                                                      AttendanceIndividualBloc>()
+                                                  .add(
+                                                    AttendanceMarkEvent(
+                                                      individualId: individual
+                                                          .individualId!,
+                                                      registerId: individual
+                                                          .registerId!,
+                                                      status: 1.0,
+                                                      isSingleSession: false,
+                                                    ),
+                                                  );
+                                            },
+                                            onMarkAbsent: () {
+                                              context
+                                                  .read<
+                                                      AttendanceIndividualBloc>()
+                                                  .add(
+                                                    AttendanceMarkEvent(
+                                                      individualId: individual
+                                                          .individualId!,
+                                                      registerId: individual
+                                                          .registerId!,
+                                                      status: 0.0,
+                                                      isSingleSession: false,
+                                                    ),
+                                                  );
+                                            },
+                                          );
+                                        }).toList(),
+                                      )
+                                    : NoResultCard(
+                                        align: Alignment.center,
+                                        label: localizations.translate(
+                                          i18.common.noResultsFound,
+                                        ),
+                                      ),
+                              ),
                               DigitCard(
                                 margin:
                                     EdgeInsets.all(theme.spacerTheme.spacer3),
@@ -439,65 +529,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 }),
               ),
             )));
-  }
-
-  List<DigitTableRow> getAttendanceData(
-    List<AttendeeModel>? list,
-    bool viewOnly,
-  ) {
-    return list!.map((e) => getAttendanceRow(e, viewOnly)).toList();
-  }
-
-  DigitTableRow getAttendanceRow(AttendeeModel tableDataModel, bool viewOnly) {
-    return DigitTableRow(tableRow: [
-      DigitTableData(
-        tableDataModel.name.toString(),
-        cellKey: tableDataModel.name ?? '',
-      ),
-      DigitTableData(
-        '',
-        cellKey: tableDataModel.status.toString(),
-        widget: CircularButton(
-          icon: Icons.circle_rounded,
-          size: 15,
-          viewOnly: viewOnly,
-          color: const Color.fromRGBO(0, 100, 0, 1),
-          index: double.parse(tableDataModel.status.toString()),
-          isNotGreyed: false,
-          onTap: () {
-            individualLogBloc!.add(
-              AttendanceMarkEvent(
-                individualId: tableDataModel.individualId!,
-                registerId: tableDataModel.registerId!,
-                status: tableDataModel.status,
-                isSingleSession: false,
-              ),
-            );
-          },
-        ),
-      ),
-      DigitTableData(
-        tableDataModel.individualNumber.toString(),
-        cellKey: tableDataModel.individualNumber ?? "",
-      ),
-    ]);
-  }
-
-  List<DigitTableColumn> headerList(DateTime s, dynamic localizations) {
-    return [
-      DigitTableColumn(
-        header: localizations.translate(i18.attendance.tableHeaderName),
-        cellValue: 'name',
-      ),
-      DigitTableColumn(
-        header: localizations.translate(i18.attendance.tableHeaderAttendance),
-        cellValue: 'date',
-      ),
-      DigitTableColumn(
-        header: localizations.translate(i18.attendance.tableHeaderUserId),
-        cellValue: "userId",
-      ),
-    ];
   }
 
   Future<dynamic> showWarningDialog(BuildContext context, dynamic k) {
@@ -615,6 +646,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                       localizations.translate(i18.attendance.draftSavedMessage),
                   type: ToastType.success,
                 );
+                return;
               } else {
                 showDialog(
                     context: context,
