@@ -10,6 +10,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:forms_engine/json_forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/localized.dart';
+import '../utils/utils.dart';
 
 @RoutePage()
 class FormsRenderPage extends LocalizedStatefulWidget {
@@ -79,17 +80,20 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           : localizations
                               .translate(schema.actionLabel ?? 'Submit'),
                       onPressed: () {
-                        // 1. Get current page controls (keys)
-                        final currentKeys = schema.properties?.keys ?? [];
+                        // 1. Get visible keys only (skip hidden fields)
+                        final currentKeys = schema.properties?.entries
+                            .where((entry) => !isHidden(entry.value))
+                            .map((entry) => entry.key)
+                            .toList() ?? [];
 
-                        // 2. Mark all current page controls as touched
+// 2. Mark all visible controls as touched and revalidate
                         for (final key in currentKeys) {
                           final control = formGroup.control(key);
                           control.markAsTouched();
                           control.updateValueAndValidity();
                         }
 
-                        // 3. Check validity of just this page
+// 3. Check validity of just the visible controls
                         final isCurrentPageValid = currentKeys
                             .every((key) => formGroup.control(key).valid);
 

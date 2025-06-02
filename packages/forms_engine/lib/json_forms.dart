@@ -1,6 +1,7 @@
 library json_forms;
 
 import 'package:flutter/material.dart';
+import 'package:forms_engine/utils/utils.dart';
 import 'package:forms_engine/widgets/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -28,13 +29,14 @@ class JsonForms extends StatelessWidget {
 
     final Map<String, AbstractControl<dynamic>> controls = {
       for (final entry in schema.properties!.entries)
-        entry.key: buildFormControl(
-          entry.key,
-          entry.value,
-          schema,
-          defaultLatlng: defaultLatlng,
-          defaultValues: defaultValues,
-        ),
+        if (!isHidden(entry.value))
+          entry.key: buildFormControl(
+            entry.key,
+            entry.value,
+            schema,
+            defaultLatlng: defaultLatlng,
+            defaultValues: defaultValues,
+          ),
     };
 
     return controls;
@@ -45,10 +47,12 @@ class JsonForms extends StatelessWidget {
       PropertySchema schema,
       ) {
     final values = schema.properties!.entries
+        .where((entry) => !isHidden(entry.value)) // Skip hidden fields
         .map((e) => _getParsedValues(form, e.key, e.value))
+        .whereType<MapEntry<String, dynamic>>()
         .toList();
 
-    return Map.fromEntries(values.whereType<MapEntry<String, dynamic>>());
+    return Map.fromEntries(values);
   }
 
   static MapEntry<String, dynamic>? _getParsedValues(
@@ -79,4 +83,6 @@ class JsonForms extends StatelessWidget {
     components: childrens,
   );
 }
+
+
 

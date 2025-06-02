@@ -556,6 +556,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'startDate': pageMap['startDate'],
         'endDate': pageMap['endDate'],
         'readonly': pageMap['readonly'],
+        'charCount': pageMap['charCount'],
+        'systemDate': pageMap['systemDate'],
       };
 
       (transformed['pages'] as Map<String, dynamic>)[pageKey] = transformedPage;

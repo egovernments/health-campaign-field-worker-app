@@ -102,6 +102,10 @@ bool shouldHideField(PropertySchema schema, FormGroup form) {
   return display.behavior == FormulaBehavior.hide && result;
 }
 
+bool isHidden(PropertySchema property) {
+  return property.hidden == true;
+}
+
 
 
 

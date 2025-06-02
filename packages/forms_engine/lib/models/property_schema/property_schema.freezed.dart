@@ -29,6 +29,8 @@ mixin _$PropertySchema {
       throw _privateConstructorUsedError;
   List<Option>? get enums => throw _privateConstructorUsedError;
   String? get schemaCode => throw _privateConstructorUsedError;
+  bool? get systemDate => throw _privateConstructorUsedError;
+  bool? get charCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   PropertySchemaFormat? get format => throw _privateConstructorUsedError;
   String? get startDate => throw _privateConstructorUsedError;
@@ -70,6 +72,8 @@ abstract class $PropertySchemaCopyWith<$Res> {
       Map<String, PropertySchema>? properties,
       List<Option>? enums,
       String? schemaCode,
+      bool? systemDate,
+      bool? charCount,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       PropertySchemaFormat? format,
       String? startDate,
@@ -113,6 +117,8 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? properties = freezed,
     Object? enums = freezed,
     Object? schemaCode = freezed,
+    Object? systemDate = freezed,
+    Object? charCount = freezed,
     Object? format = freezed,
     Object? startDate = freezed,
     Object? endDate = freezed,
@@ -161,6 +167,14 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.schemaCode
           : schemaCode // ignore: cast_nullable_to_non_nullable
               as String?,
+      systemDate: freezed == systemDate
+          ? _value.systemDate
+          : systemDate // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      charCount: freezed == charCount
+          ? _value.charCount
+          : charCount // ignore: cast_nullable_to_non_nullable
+              as bool?,
       format: freezed == format
           ? _value.format
           : format // ignore: cast_nullable_to_non_nullable
@@ -266,6 +280,8 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       Map<String, PropertySchema>? properties,
       List<Option>? enums,
       String? schemaCode,
+      bool? systemDate,
+      bool? charCount,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       PropertySchemaFormat? format,
       String? startDate,
@@ -308,6 +324,8 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? properties = freezed,
     Object? enums = freezed,
     Object? schemaCode = freezed,
+    Object? systemDate = freezed,
+    Object? charCount = freezed,
     Object? format = freezed,
     Object? startDate = freezed,
     Object? endDate = freezed,
@@ -356,6 +374,14 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.schemaCode
           : schemaCode // ignore: cast_nullable_to_non_nullable
               as String?,
+      systemDate: freezed == systemDate
+          ? _value.systemDate
+          : systemDate // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      charCount: freezed == charCount
+          ? _value.charCount
+          : charCount // ignore: cast_nullable_to_non_nullable
+              as bool?,
       format: freezed == format
           ? _value.format
           : format // ignore: cast_nullable_to_non_nullable
@@ -445,6 +471,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
       final Map<String, PropertySchema>? properties,
       final List<Option>? enums,
       this.schemaCode,
+      this.systemDate,
+      this.charCount,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       this.format,
       this.startDate,
@@ -504,6 +532,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   final String? schemaCode;
   @override
+  final bool? systemDate;
+  @override
+  final bool? charCount;
+  @override
   @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   final PropertySchemaFormat? format;
   @override
@@ -558,7 +590,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations)';
   }
 
   @override
@@ -577,6 +609,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
             const DeepCollectionEquality().equals(other._enums, _enums) &&
             (identical(other.schemaCode, schemaCode) ||
                 other.schemaCode == schemaCode) &&
+            (identical(other.systemDate, systemDate) ||
+                other.systemDate == systemDate) &&
+            (identical(other.charCount, charCount) ||
+                other.charCount == charCount) &&
             (identical(other.format, format) || other.format == format) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
@@ -620,6 +656,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
         const DeepCollectionEquality().hash(_properties),
         const DeepCollectionEquality().hash(_enums),
         schemaCode,
+        systemDate,
+        charCount,
         format,
         startDate,
         endDate,
@@ -665,6 +703,8 @@ abstract class _PropertySchema implements PropertySchema {
       final Map<String, PropertySchema>? properties,
       final List<Option>? enums,
       final String? schemaCode,
+      final bool? systemDate,
+      final bool? charCount,
       @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
       final PropertySchemaFormat? format,
       final String? startDate,
@@ -703,6 +743,10 @@ abstract class _PropertySchema implements PropertySchema {
   List<Option>? get enums;
   @override
   String? get schemaCode;
+  @override
+  bool? get systemDate;
+  @override
+  bool? get charCount;
   @override
   @JsonKey(name: 'format', unknownEnumValue: PropertySchemaFormat.text)
   PropertySchemaFormat? get format;
