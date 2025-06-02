@@ -362,21 +362,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   }
                                 },
                               ),
-<<<<<<< HEAD
-=======
-                              Padding(
-                                padding:
-                                    EdgeInsets.all(theme.spacerTheme.spacer3),
-                                child: DigitSearchBar(
-                                  controller: controller,
-                                  hintText: localizations
-                                      .translate(i18.common.searchByName),
-                                  borderRadius: 0,
-                                  margin: const EdgeInsets.all(0),
-                                  textCapitalization: TextCapitalization.words,
-                                ),
-                              ),
->>>>>>> 43b3d7342be78996ad3b11805a98247db8b891eb
+                             
                               DigitCard(
                                 margin: EdgeInsets.only(
                                     top: theme.spacerTheme.spacer4,
@@ -391,7 +377,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     textCapitalization:
                                         TextCapitalization.words,
                                   ),
-                                 DigitLabeledToggle(
+                                  DigitLabeledToggle(
                                     value: isMorning,
                                     onChanged: (val) {
                                       setState(() {
@@ -462,6 +448,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                 individual.individualNumber ??
                                                     "Unknown ID",
                                             status: individual.status,
+                                            markManualAttendance:
+                                                markManualAttendance, 
                                             onMarkPresent: () {
                                               context
                                                   .read<
