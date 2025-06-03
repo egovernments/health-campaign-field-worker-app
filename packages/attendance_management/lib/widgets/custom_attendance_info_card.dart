@@ -59,7 +59,7 @@ class CustomAttendanceInfoCard extends StatelessWidget {
             style: theme.textTheme.bodySmall,
           ),
           const SizedBox(height: 4),
-          if (markManualAttendance) ...[
+          if (markManualAttendance || status != null) ...[
             Text(
               getStatusText() ?? "Attendance Unmarked",
               style: theme.textTheme.bodySmall?.copyWith(

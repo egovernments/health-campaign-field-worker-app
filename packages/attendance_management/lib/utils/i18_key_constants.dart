@@ -27,11 +27,15 @@ class Common {
 
   String get searchByName => 'CORE_COMMON_SEARCH_BY_NAME';
 
+  String get searchByNameOrID => 'CORE_COMMON_SEARCH_BY_NAME_OR_ID';
+
   String get coreCommonReasonRequired => 'CORE_COMMON_REASON_REQUIRED';
 
   String get corecommonclose => 'CORE_COMMON_CLOSE';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
+
+  String get coreCommonOr => 'CORE_COMMON_OR';
 
   String get coreCommonNA => 'CORE_COMMON_NA';
 
@@ -237,4 +241,15 @@ class Attendance {
   String get actionRequired => "ACTION_REQUIRED";
 
   String get ctaDateChangeProceed => 'DATE_CHANGE_PROCEED';
+
+  String get scannerNotAvailableTitle => 'SCANNER_NOT_AVAILABLE_TITLE';
+
+  String get scannerNotAvailableDescription =>
+      'SCANNER_NOT_AVAILABLE_DESCRIPTION';
+
+  String get enterUniqueCode => 'ENTER_UNIQUE_CODE';
+
+  String get uniqueCodeLabel => 'UNIQUE_CODE_LABEL';
+
+  String get markAttendanceManually => 'MARK_ATTENDANCE_MANUALLY';
 }
