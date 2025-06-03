@@ -344,8 +344,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   widget.isGS1code
-                                                      ? getGs1CodeFormattedString(
-                                                          state.barCodes)
+                                                      ? DigitScannerUtils().getGs1CodeFormattedString(
+                                                          state.barCodes).entries.first.value
                                                       : DigitScannerUtils()
                                                           .trimString(state
                                                               .qrCodes[index]
@@ -636,15 +636,5 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   FormGroup buildForm() {
     return fb
         .group(<String, Object>{_manualCodeFormKey: FormControl<String>()});
-  }
-
-  getGs1CodeFormattedString(List<GS1Barcode> barCodes) {
-    final elements = barCodes.last;
-
-    return {
-      'batch': elements.getAIsData['10'],
-      'serial': elements.getAIsData['21'],
-      'expiry': elements.getAIsData['17'],
-    }.toString();
   }
 }
