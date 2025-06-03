@@ -260,11 +260,9 @@ class TransitPostRecordVaccinationPageState
                                           return LabelValueItem(
                                             labelFlex: 5,
                                             label: localizations.translate(
-                                              entry.key,
+                                              "GS1_${entry.key}",
                                             ),
-                                            value: entry.key ==
-                                                    i18_digit_scanner
-                                                        .scanner.barCodeExpiry
+                                            value: entry.value is DateTime
                                                 ? DateFormat('dd,MMM yyyy')
                                                     .format(entry.value)
                                                     .toString()
