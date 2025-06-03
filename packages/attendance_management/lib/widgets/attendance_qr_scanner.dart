@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/utils/i18_key_constants.dart' as scanner_i18;
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_scanner/widgets/vision_detector_views/detector_view.dart';
@@ -55,7 +56,6 @@ class _DigitScannerPageState
   List<String> codes = [];
   bool manualCode = false;
   bool flashStatus = false;
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   static const _manualCodeFormKey = 'manualCode';
 
   @override
@@ -180,7 +180,7 @@ class _DigitScannerPageState
                                         const EdgeInsets.only(top: spacer1),
                                     child: Text(
                                         localizations.translate(
-                                          "Couldn't scan the qr code",
+                                          scanner_i18.scanner.manualScan,
                                         ),
                                         style: textTheme.bodyL.copyWith(
                                             color: theme
@@ -188,7 +188,7 @@ class _DigitScannerPageState
                                   ),
                                   DigitButton(
                                       label: localizations.translate(
-                                        'Enter Unique Code',
+                                        i18.attendance.enterUniqueCode,
                                       ),
                                       onPressed: () {
                                         context.read<DigitScannerBloc>().add(
@@ -206,15 +206,16 @@ class _DigitScannerPageState
                                       size: DigitButtonSize.large),
                                   Text(
                                       localizations.translate(
-                                        "Or",
+                                        i18.common.coreCommonOr,
                                       ),
                                       style: textTheme.bodyL.copyWith(
                                           color:
                                               theme.colorTheme.paper.primary)),
                                   DigitButton(
                                       label: localizations.translate(
-                                        'Mark Attendance Manually',
+                                        i18.attendance.markAttendanceManually,
                                       ),
+                                      capitalizeLetters: false,
                                       onPressed: () {
                                         Navigator.pop(context, true);
                                       },
@@ -262,172 +263,6 @@ class _DigitScannerPageState
                             ],
                           ),
                         ),
-                        Positioned(
-                          bottom: (spacer1 * 10),
-                          height: widget.isGS1code
-                              ? state.barCodes.length < 3
-                                  ? (state.barCodes.length * 60) + 80
-                                  : MediaQuery.of(context).size.height / 3
-                              : state.qrCodes.length < 2
-                                  ? ((state.qrCodes.length + 1) * 60)
-                                  : MediaQuery.of(context).size.height / 4,
-                          width: MediaQuery.of(context).size.width,
-                          child: Container(
-                            width: 100,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.onError,
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(spacer1 + 4),
-                                topRight: Radius.circular(spacer1 + 4),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.onError,
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(spacer2),
-                                      topRight: Radius.circular(spacer2),
-                                    ),
-                                  ),
-                                  padding: const EdgeInsets.only(
-                                    bottom: spacer2,
-                                    top: spacer2,
-                                    left: spacer3,
-                                  ),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: widget.isGS1code
-                                      ? Text(
-                                          '${state.barCodes.length.toString()} ${localizations.translate('resourcesScanned')}',
-                                          style: textTheme.headingM.copyWith(
-                                              color: theme
-                                                  .colorTheme.text.primary),
-                                        )
-                                      : Text(
-                                          '${state.qrCodes.length.toString()} ${localizations.translate('resourcesScanned')}',
-                                          style: textTheme.headingM.copyWith(
-                                              color: theme
-                                                  .colorTheme.text.primary),
-                                        ),
-                                ),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: widget.isGS1code
-                                        ? state.barCodes.length
-                                        : state.qrCodes.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return ListTile(
-                                        shape: const Border(),
-                                        title: Container(
-                                          margin: const EdgeInsets.only(
-                                            left: spacer1,
-                                            right: spacer1,
-                                          ),
-                                          height: spacer9,
-                                          decoration: BoxDecoration(
-                                            color: DigitTheme
-                                                .instance.colorScheme.surface,
-                                            border: Border.all(
-                                              color: DigitTheme
-                                                  .instance.colorScheme.outline,
-                                              width: 1,
-                                            ),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                              Radius.circular(4.0),
-                                            ),
-                                          ),
-                                          padding:
-                                              const EdgeInsets.all(spacer2),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  widget.isGS1code
-                                                      ? state
-                                                          .barCodes[index]
-                                                          .elements
-                                                          .entries
-                                                          .last
-                                                          .value
-                                                          .data
-                                                          .toString()
-                                                      : DigitScannerUtils()
-                                                          .trimString(state
-                                                              .qrCodes[index]
-                                                              .toString()),
-                                                ),
-                                              ),
-                                              IconButton(
-                                                padding: const EdgeInsets.only(
-                                                  bottom: spacer2,
-                                                ),
-                                                icon: Icon(
-                                                  Icons.delete,
-                                                  color:
-                                                      theme.colorScheme.error,
-                                                  size: 24,
-                                                ),
-                                                onPressed: () {
-                                                  final bloc = context
-                                                      .read<DigitScannerBloc>();
-                                                  if (widget.isGS1code) {
-                                                    result = List.from(
-                                                      state.barCodes,
-                                                    );
-                                                    result.removeAt(index);
-                                                    setState(() {
-                                                      result = result;
-                                                    });
-
-                                                    bloc.add(
-                                                      DigitScannerEvent
-                                                          .handleScanner(
-                                                        barCode: result,
-                                                        qrCode: state.qrCodes,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    codes = List.from(
-                                                      state.qrCodes,
-                                                    );
-                                                    codes.removeAt(index);
-                                                    setState(() {
-                                                      codes = codes;
-                                                    });
-
-                                                    bloc.add(
-                                                      DigitScannerEvent
-                                                          .handleScanner(
-                                                        barCode: state.barCodes,
-                                                        qrCode: codes,
-                                                      ),
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
                       ],
                     )
                   : BlocBuilder<DigitScannerBloc, DigitScannerState>(
@@ -473,8 +308,8 @@ class _DigitScannerPageState
                                       Toast.showToast(
                                         context,
                                         type: ToastType.error,
-                                        message: localizations
-                                            .translate('Enter Unique ID'),
+                                        message: localizations.translate(
+                                            i18.attendance.enterUniqueCode),
                                       );
                                     } else {
                                       final bloc =
@@ -501,6 +336,7 @@ class _DigitScannerPageState
                                         manualCode = false;
                                         initializeCameras();
                                       });
+                                      Navigator.pop(context, true);
                                     }
                                   },
                                   type: DigitButtonType.primary,
@@ -516,7 +352,7 @@ class _DigitScannerPageState
                                     alignment: Alignment.topLeft,
                                     child: Text(
                                       localizations.translate(
-                                        'Enter Unique ID',
+                                        i18.attendance.enterUniqueCode,
                                       ),
                                       style: textTheme.headingL.copyWith(
                                         color: theme.colorTheme.text.primary,
@@ -528,8 +364,7 @@ class _DigitScannerPageState
                                     builder: (field) {
                                       return InputField(
                                           label: localizations.translate(
-                                            'Unique Id',
-                                          ),
+                                              i18.attendance.uniqueCodeLabel),
                                           errorMessage: field.errorText,
                                           isRequired: true,
                                           type: InputType.text,

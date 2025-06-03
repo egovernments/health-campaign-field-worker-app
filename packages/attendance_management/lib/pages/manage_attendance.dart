@@ -55,6 +55,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
   @override
   void dispose() {
+    attendanceBloc?.close();
     super.dispose();
   }
 

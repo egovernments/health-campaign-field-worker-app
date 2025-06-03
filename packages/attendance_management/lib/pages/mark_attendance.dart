@@ -13,10 +13,7 @@ import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
-import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:digit_ui_components/widgets/molecules/digit_table.dart'
-    as table;
 import 'package:digit_ui_components/widgets/molecules/infinite_date_scroll.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +28,6 @@ import '../router/attendance_router.gm.dart';
 import '../utils/date_util_attendance.dart';
 import '../widgets/attendance_qr_scanner.dart';
 import '../widgets/back_navigation_help_header.dart';
-import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';
 
 @RoutePage()
@@ -137,7 +133,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                       body: BlocBuilder<AttendanceIndividualBloc,
                           AttendanceIndividualState>(
                     buildWhen: (p, c) {
-                      print('BlocBuilder rebuild triggered!');
                       return p != c ? true : false;
                     },
                     builder: (context, state) {
@@ -362,7 +357,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   }
                                 },
                               ),
-                             
                               DigitCard(
                                 margin: EdgeInsets.only(
                                     top: theme.spacerTheme.spacer4,
@@ -371,7 +365,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   DigitSearchBar(
                                     controller: controller,
                                     hintText: localizations
-                                        .translate(i18.common.searchByName),
+                                        .translate(i18.common.searchByNameOrID),
                                     borderRadius: 0,
                                     margin: const EdgeInsets.all(0),
                                     textCapitalization:
@@ -383,51 +377,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                       setState(() {
                                         isMorning = val;
                                       });
-
-                                      final now = DateTime.now();
-                                      final currentDate =
-                                          DateTime(now.year, now.month, now.day)
-                                              .millisecondsSinceEpoch;
-
-                                      entryTime = isMorning
-                                          ? DateTime(now.year, now.month,
-                                                  now.day, 9, 0)
-                                              .millisecondsSinceEpoch
-                                          : DateTime(now.year, now.month,
-                                                  now.day, 14, 0)
-                                              .millisecondsSinceEpoch;
-
-                                      exitTime = isMorning
-                                          ? DateTime(now.year, now.month,
-                                                  now.day, 11, 58)
-                                              .millisecondsSinceEpoch
-                                          : DateTime(now.year, now.month,
-                                                  now.day, 17, 0)
-                                              .millisecondsSinceEpoch;
-
-                                      final isSingleSession = (widget
-                                                      .registerModel
-                                                      .additionalDetails?[
-                                                  'sessions'] ??
-                                              1) ==
-                                          1;
-
-                                      individualLogBloc?.add(
-                                        AttendanceIndividualLogSearchEvent(
-                                          attendees:
-                                              widget.registerModel.attendees ??
-                                                  [],
-                                          limit: 100,
-                                          offset: 0,
-                                          currentDate: currentDate,
-                                          entryTime: entryTime,
-                                          exitTime: exitTime,
-                                          isSingleSession: isSingleSession,
-                                          registerId: widget.registerModel.id!,
-                                          tenantId:
-                                              widget.registerModel.tenantId!,
-                                        ),
-                                      );
+                                      setRegisterData();
                                     },
                                     activeLabel: localizations.translate(
                                         i18.attendance.morningSession),
@@ -436,6 +386,21 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   ),
                                 ],
                               ),
+                              if (!AttendanceDateTimeManagement.isToday(
+                                  AttendanceDateTimeManagement
+                                      .getFormattedDateToDateTime(
+                                          currentSelectedDate)!))
+                                Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: InfoCard(
+                                      title: localizations.translate(i18
+                                          .attendance.scannerNotAvailableTitle),
+                                      type: InfoType.info,
+                                      capitalizedLetter: false,
+                                      description: localizations.translate(i18
+                                          .attendance
+                                          .scannerNotAvailableDescription)),
+                                ),
                               Container(
                                 margin:
                                     EdgeInsets.all(theme.spacerTheme.spacer3),
@@ -449,7 +414,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                     "Unknown ID",
                                             status: individual.status,
                                             markManualAttendance:
-                                                markManualAttendance, 
+                                                AttendanceDateTimeManagement.isToday(
+                                                            AttendanceDateTimeManagement
+                                                                .getFormattedDateToDateTime(
+                                                                    currentSelectedDate)!) &&
+                                                        !markManualAttendance
+                                                    ? false
+                                                    : true,
                                             onMarkPresent: () {
                                               context
                                                   .read<
@@ -489,31 +460,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                           i18.common.noResultsFound,
                                         ),
                                       ),
-                              ),
-                              DigitCard(
-                                margin:
-                                    EdgeInsets.all(theme.spacerTheme.spacer3),
-                                children: [
-                                  ReactiveForm(
-                                    formGroup: form,
-                                    child: ReactiveWrapperField(
-                                      formControlName: _commentKey,
-                                      builder: (field) => LabeledField(
-                                        label: localizations
-                                            .translate(i18.common.commentKey),
-                                        child: DigitTextFormInput(
-                                          errorMessage: field.errorText,
-                                          onChange: (value) {
-                                            form.control(_commentKey).value =
-                                                value;
-                                          },
-                                          initialValue:
-                                              form.control(_commentKey).value,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
                               ),
                             ],
                           );
@@ -657,6 +603,26 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                         ),
                         description:
                             '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
+                        additionalWidgets: [
+                          ReactiveForm(
+                            formGroup: form,
+                            child: ReactiveWrapperField(
+                              formControlName: _commentKey,
+                              builder: (field) => LabeledField(
+                                label: localizations
+                                    .translate(i18.common.commentKey),
+                                isRequired: true,
+                                child: DigitTextFormInput(
+                                  errorMessage: field.errorText,
+                                  onChange: (value) {
+                                    form.control(_commentKey).value = value;
+                                  },
+                                  initialValue: form.control(_commentKey).value,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                         actions: [
                           DigitButton(
                             label: localizations.translate(
@@ -740,7 +706,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             2
         ? AttendanceDateTimeManagement.getMillisecondEpoch(
             dateSession,
-            0,
+            isMorning ? 0 : 1,
             "entryTime",
           )
         : (DateTime(dateSession.year, dateSession.month, dateSession.day, 9)
@@ -751,11 +717,31 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             2
         ? AttendanceDateTimeManagement.getMillisecondEpoch(
             dateSession,
-            1,
+            isMorning ? 0 : 1,
             "exitTime",
           )
         : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
             .millisecondsSinceEpoch);
+
+    individualLogBloc!.add(
+      AttendanceIndividualLogSearchEvent(
+        attendees: widget.registerModel.attendees!.isNotEmpty
+            ? widget.registerModel.attendees!
+            : [],
+        limit: 10,
+        offset: 0,
+        currentDate: AttendanceDateTimeManagement.getMillisecondEpoch(
+            AttendanceDateTimeManagement.getFormattedDateToDateTime(
+                currentSelectedDate)!,
+            isMorning ? 0 : 1,
+            entryTime.toString()),
+        entryTime: entryTime,
+        isSingleSession: false,
+        exitTime: exitTime,
+        registerId: widget.registerModel.id,
+        tenantId: widget.registerModel.tenantId.toString(),
+      ),
+    );
   }
 
   bool showInfoCard(
