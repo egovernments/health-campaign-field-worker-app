@@ -306,13 +306,13 @@ class DigitScannerUtils {
     await Future.delayed(const Duration(seconds: 5));
   }
 
- Map<String,dynamic> getGs1CodeFormattedString(List<GS1Barcode> barCodes) {
+  getGs1CodeFormattedString(List<GS1Barcode> barCodes) {
     final elements = barCodes.last;
 
     return {
-      i18.scanner.barCodeBatch: elements.getAIsData['10'],
-      i18.scanner.barCodeSerial: elements.getAIsData['21'],
-      i18.scanner.barCodeExpiry: elements.getAIsData['17'],
-    };
+      'Batch': elements.getAIsData['10'],
+      'Serial': elements.getAIsData['21'],
+      'Expiry': elements.getAIsData['17'],
+    }.toString();
   }
 }
