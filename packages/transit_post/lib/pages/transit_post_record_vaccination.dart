@@ -1,7 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_scanner/digit_scanner.dart';
-import 'package:digit_scanner/utils/i18_key_constants.dart'
-    as i18_digit_scanner;
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
@@ -134,8 +132,7 @@ class TransitPostRecordVaccinationPageState
                                         ? 1
                                         : transitPostState.totalCount! + 1,
                                 scannedResource: DigitScannerUtils()
-                                    .getGs1CodeFormattedString(state)
-                                    .toString()));
+                                    .getGs1CodeFormattedString(state)));
                         context.router
                             .push(const TransitPostAcknowledgmentRoute());
                       },
@@ -248,41 +245,21 @@ class TransitPostRecordVaccinationPageState
                               margin: const EdgeInsets.all(spacer2),
                               children: [
                                 LabelValueSummary(
-                                  heading: localizations.translate(
-                                    i18.transitPost.resourceScannedLabel,
-                                  ),
-                                  items: scannerState.barCodes.isNotEmpty
-                                      ? (DigitScannerUtils()
-                                              .getGs1CodeFormattedString(
-                                                  scannerState.barCodes))
-                                          .entries
-                                          .map((entry) {
-                                          return LabelValueItem(
-                                            labelFlex: 5,
-                                            label: localizations.translate(
-                                              entry.key,
-                                            ),
-                                            value: entry.key ==
-                                                    i18_digit_scanner
-                                                        .scanner.barCodeExpiry
-                                                ? DateFormat('dd,MMM yyyy')
-                                                    .format(entry.value)
-                                                    .toString()
-                                                : entry.value,
-                                            maxLines: 5,
-                                          );
-                                        }).toList()
-                                      : [
-                                          LabelValueItem(
-                                            labelFlex: 5,
-                                            label: localizations.translate(
-                                              i18.transitPost.resourceCodeLabel,
-                                            ),
-                                            value: scannerState.qrCodes.first,
-                                            maxLines: 5,
-                                          )
-                                        ],
-                                )
+                                    heading: localizations.translate(
+                                      i18.transitPost.resourceScannedLabel,
+                                    ),
+                                    items: [
+                                      LabelValueItem(
+                                        labelFlex: 5,
+                                        label: localizations.translate(
+                                          i18.transitPost.resourceCodeLabel,
+                                        ),
+                                        value: DigitScannerUtils()
+                                            .getGs1CodeFormattedString(
+                                                scannerState.barCodes),
+                                        maxLines: 5,
+                                      ),
+                                    ])
                               ]))
                 ],
               ));
