@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:attendance_management/widgets/custom_attendance_info_card.dart';
-import 'package:attendance_management/widgets/labeledtoggle.dart';
+import 'package:attendance_management/widgets/labelled_toggle.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -98,6 +98,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     var localizations = AttendanceLocalization.of(context);
+    bool markManualAttendance = true;
 
     return BlocProvider<LocationBloc>(
         create: (_) {
@@ -443,10 +444,15 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     ? Column(
                                         children: attendees.map((individual) {
                                           return CustomAttendanceInfoCard(
-                                            name: individual.name ?? "Unnamed",
+                                            name: individual.name ??
+                                                localizations.translate(
+                                                  i18.attendance.name,
+                                                ),
                                             individualNumber:
                                                 individual.individualNumber ??
-                                                    "Unknown ID",
+                                                    localizations.translate(
+                                                      i18.attendance.userId,
+                                                    ),
                                             status: individual.status,
                                             markManualAttendance:
                                                 markManualAttendance, 
