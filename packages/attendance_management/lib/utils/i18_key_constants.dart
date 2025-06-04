@@ -248,5 +248,6 @@ class Attendance {
   String get uniqueCodeLabel => 'UNIQUE_CODE_LABEL';
 
   String get markAttendanceManually => 'MARK_ATTENDANCE_MANUALLY';
+  
 }
 
