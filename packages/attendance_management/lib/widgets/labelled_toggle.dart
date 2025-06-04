@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/digit_components.dart';
+
+const kPadding = 8.0;
 
 class DigitLabeledToggle extends StatelessWidget {
   final bool value;
@@ -9,23 +10,27 @@ class DigitLabeledToggle extends StatelessWidget {
   final String inactiveLabel;
 
   const DigitLabeledToggle({
-    Key? key,
+    super.key,
     required this.value,
     required this.onChanged,
     required this.activeLabel,
     required this.inactiveLabel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      width: 2000,
+      width: screenWidth,
       height: 40,
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        border: Border.all(color: Colors.grey.shade400),
+        border: Border.all(
+          color: const DigitColors().light.textPrimary,
+           
+        ),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Row(
@@ -47,25 +52,30 @@ class DigitLabeledToggle extends StatelessWidget {
     );
   }
 
-  Widget _buildOption(BuildContext context,
-      {required String label,
-      required bool isSelected,
-      required VoidCallback onTap}) {
+  Widget _buildOption(
+    BuildContext context, {
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            color:
-                isSelected ? DigitColors().light.primary1 : Colors.transparent,
+            color: isSelected
+                ? const DigitColors().light.primary1
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(24),
           ),
           alignment: Alignment.center,
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected ? Colors.white : DigitColors().light.primary2,
+              color: isSelected
+                  ? Colors.white
+                  : const DigitColors().light.primary2,
               fontWeight: FontWeight.w600,
             ),
           ),
