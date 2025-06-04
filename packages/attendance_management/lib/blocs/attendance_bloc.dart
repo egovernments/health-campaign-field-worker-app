@@ -21,6 +21,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
   final AttendanceDataRepository? attendanceDataRepository;
   final AttendanceLogDataRepository? attendanceLogDataRepository;
   final IndividualDataRepository? individualDataRepository;
+
   // Constructor initializing the initial state and setting up event handlers
   AttendanceBloc(
     super.initialState, {
@@ -176,20 +177,15 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
         ?.where((att) => (att.denrollmentDate == null ||
             (att.denrollmentDate ?? DateTime.now().millisecondsSinceEpoch) >=
                 DateTime.now().millisecondsSinceEpoch))
-        .map(
-          (a) => a.copyWith(
-            name: individualList
-                .where((i) => i.id == a.individualId)
-                .firstOrNull
-                ?.name
-                ?.givenName,
-            individualNumber: individualList
-                .where((i) => i.id == a.individualId)
-                .firstOrNull
-                ?.individualId,
-          ),
-        )
-        .toList();
+        .map((a) {
+      var ind = individualList.where((i) => i.id == a.individualId).firstOrNull;
+      return a.copyWith(
+        name: ind?.name?.givenName,
+        individualId: ind?.individualId,
+        identifierID: ind?.identifiers?.firstOrNull?.identifierId,
+        individualNumber: ind?.individualId,
+      );
+    }).toList();
 
     return register.copyWith(
       attendees: attendeeList,
@@ -260,13 +256,16 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 @freezed
 class AttendanceEvents with _$AttendanceEvents {
   const factory AttendanceEvents.initial() = InitialAttendance;
+
   const factory AttendanceEvents.loadAttendanceRegisters(
       {required List<AttendanceRegisterModel> registers,
       required int limit,
       required int offset}) = LoadAttendanceRegisterData;
+
   const factory AttendanceEvents.loadSelectedRegister(
       {required final List<AttendanceRegisterModel> registers,
       required final String registerID}) = LoadSelectedAttendanceRegisterData;
+
   const factory AttendanceEvents.loadMoreAttendanceRegisters(
       {int? limit, int? offset}) = LoadMoreAttendanceRegisterData;
 }
@@ -275,11 +274,13 @@ class AttendanceEvents with _$AttendanceEvents {
 @freezed
 class AttendanceStates with _$AttendanceStates {
   const factory AttendanceStates.registerLoading() = RegisterLoading;
+
   const factory AttendanceStates.registerLoaded({
     required final List<AttendanceRegisterModel> registers,
     @Default(0) int offset,
     @Default(10) int limit,
   }) = RegisterLoaded;
+
   const factory AttendanceStates.selectedRegisterLoaded({
     final AttendanceRegisterModel? selectedRegister,
   }) = SelectedRegisterLoaded;
