@@ -167,40 +167,40 @@ class BeneficiaryRegistrationBloc
             : LocalityModel(code: code, name: name);
 
         emit(BeneficiaryRegistrationSummaryState(
-            navigateToRoot: false,
-            householdModel: household?.copyWith(
-                address: address?.copyWith(
-              relatedClientReferenceId: household.clientReferenceId,
-              auditDetails: individual?.auditDetails,
-              clientAuditDetails: individual?.clientAuditDetails,
-              locality: locality,
-            )),
-            individualModel: individual,
-            projectBeneficiaryModel: ProjectBeneficiaryModel(
-              tag: event.tag,
-              rowVersion: 1,
-              tenantId: RegistrationDeliverySingleton().tenantId,
-              clientReferenceId: IdGen.i.identifier,
-              dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
-              projectId: event.projectId,
-              beneficiaryClientReferenceId:
-                  beneficiaryType == BeneficiaryType.individual
-                      ? individual?.clientReferenceId
-                      : household?.clientReferenceId,
-              clientAuditDetails: ClientAuditDetails(
-                createdTime: DateTime.now().millisecondsSinceEpoch,
-                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                lastModifiedBy: event.userUuid,
-                createdBy: event.userUuid,
-              ),
-              auditDetails: AuditDetails(
-                createdBy: event.userUuid,
-                createdTime: DateTime.now().millisecondsSinceEpoch,
-              ),
+          navigateToRoot: false,
+          householdModel: household?.copyWith(
+              address: address?.copyWith(
+            relatedClientReferenceId: household.clientReferenceId,
+            auditDetails: individual?.auditDetails,
+            clientAuditDetails: individual?.clientAuditDetails,
+            locality: locality,
+          )),
+          individualModel: individual,
+          projectBeneficiaryModel: ProjectBeneficiaryModel(
+            tag: event.tag,
+            rowVersion: 1,
+            tenantId: RegistrationDeliverySingleton().tenantId,
+            clientReferenceId: IdGen.i.identifier,
+            dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
+            projectId: event.projectId,
+            beneficiaryClientReferenceId:
+                beneficiaryType == BeneficiaryType.individual
+                    ? individual?.clientReferenceId
+                    : household?.clientReferenceId,
+            clientAuditDetails: ClientAuditDetails(
+              createdTime: DateTime.now().millisecondsSinceEpoch,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+              lastModifiedBy: event.userUuid,
+              createdBy: event.userUuid,
             ),
-            isHeadOfHousehold: value.isHeadOfHousehold,
-            parentClientReferenceId: event.parentClientReferenceId,
-            relationshipType: event.relationshipType,
+            auditDetails: AuditDetails(
+              createdBy: event.userUuid,
+              createdTime: DateTime.now().millisecondsSinceEpoch,
+            ),
+          ),
+          isHeadOfHousehold: value.isHeadOfHousehold,
+          parentClientReferenceId: event.parentClientReferenceId,
+          relationshipType: event.relationshipType,
         ));
       },
     );
@@ -218,12 +218,12 @@ class BeneficiaryRegistrationBloc
       summary: (value) async {
         if (event.navigateToSummary) {
           emit(BeneficiaryRegistrationState.create(
-              addressModel: value.householdModel?.address,
-              householdModel: value.householdModel,
-              individualModel: value.individualModel,
-              projectBeneficiaryModel: value.projectBeneficiaryModel,
-              parentClientReferenceId: event.parentClientReferenceId,
-              relationshipType: event.relationshipType,
+            addressModel: value.householdModel?.address,
+            householdModel: value.householdModel,
+            individualModel: value.individualModel,
+            projectBeneficiaryModel: value.projectBeneficiaryModel,
+            parentClientReferenceId: event.parentClientReferenceId,
+            relationshipType: event.relationshipType,
           ));
         } else {
           final individual = value.individualModel;
@@ -459,8 +459,7 @@ class BeneficiaryRegistrationBloc
                 addressModel: address,
                 individualModel: individual,
                 parentClientReferenceId: event.parentClientReferenceId,
-                relationshipType: event.relationshipType
-            ),
+                relationshipType: event.relationshipType),
           );
         }
       },
@@ -618,14 +617,6 @@ class BeneficiaryRegistrationBloc
       editIndividual: (value) async {
         emit(value.copyWith(loading: true));
         try {
-          final individual = event.model.copyWith(
-            address: [
-              event.addressModel.copyWith(
-                relatedClientReferenceId: event.model.clientReferenceId,
-              ),
-            ],
-          );
-
           final projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
               beneficiaryClientReferenceId: [
@@ -637,10 +628,10 @@ class BeneficiaryRegistrationBloc
           );
           final IndividualModel? existingIndividual =
               (await individualRepository.search(IndividualSearchModel(
-            clientReferenceId: [individual.clientReferenceId],
+            clientReferenceId: [event.model.clientReferenceId],
           )))
                   .firstOrNull;
-          await individualRepository.update(individual.copyWith(
+          await individualRepository.update(event.model.copyWith(
             id: existingIndividual?.id,
             rowVersion: existingIndividual?.rowVersion ?? 1,
             nonRecoverableError:
@@ -882,7 +873,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
           required String projectId,
           required BoundaryModel boundary,
           final String? parentClientReferenceId,
-            final String? relationshipType,
+          final String? relationshipType,
           String? tag,
           @Default(true) bool navigateToSummary}) =
       BeneficiaryRegistrationCreateEvent;
@@ -892,7 +883,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
           required String projectId,
           required BoundaryModel boundary,
           final String? parentClientReferenceId,
-            final String? relationshipType,
+          final String? relationshipType,
           String? tag,
           @Default(true) bool navigateToSummary}) =
       BeneficiaryRegistrationSummaryEvent;
