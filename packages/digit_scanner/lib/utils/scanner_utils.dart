@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:intl/intl.dart';
 
 import '../blocs/scanner.dart';
 import '../widgets/vision_detector_views/painters/barcode_detector_painter.dart';
@@ -311,4 +312,18 @@ class DigitScannerUtils {
 
     return elements.getAIsData;
   }
+
+  String generateGS1Barcode({
+  required String batchNumber,
+  required DateTime expiryDate,
+  required String serialNumber,
+}) {
+  const groupSeparator = '\u001d'; // ASCII 29
+  final formattedDate = DateFormat('yyMMdd').format(expiryDate);
+
+  return '10$batchNumber${groupSeparator}17${formattedDate}21$serialNumber$groupSeparator';
+}
+
+  
+
 }
