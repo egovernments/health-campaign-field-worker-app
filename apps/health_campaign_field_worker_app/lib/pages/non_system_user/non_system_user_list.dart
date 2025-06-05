@@ -1,5 +1,6 @@
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import '../../widgets/localized.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../router/app_router.dart';
 import '../../widgets/non_system_user/non_system_user_card.dart';
+import '../../widgets/non_system_user/show_qr_code_non_system_user.dart';
 
 @RoutePage()
 class NonSystemUserListPage extends LocalizedStatefulWidget {
@@ -25,6 +27,20 @@ class _NonSystemUserListPageState
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
     return Scaffold(
+      bottomNavigationBar:
+          DigitCard(margin: const EdgeInsets.only(top: spacer2), children: [
+        DigitButton(
+          mainAxisSize: MainAxisSize.max,
+          label: localizations.translate(
+            i18.common.coreCommonGoback,
+          ),
+          type: DigitButtonType.primary,
+          size: DigitButtonSize.large,
+          onPressed: () {
+            context.router.replace(HomeRoute());
+          },
+        ),
+      ]),
       body: BlocBuilder<AppInitializationBloc, AppInitializationState>(
         builder: (context, state) {
           return state.maybeWhen(
@@ -35,21 +51,21 @@ class _NonSystemUserListPageState
               __,
             ) =>
                 ScrollableContent(
-              footer: DigitCard(
-                  margin: const EdgeInsets.only(top: spacer2),
-                  children: [
-                    DigitButton(
-                      mainAxisSize: MainAxisSize.max,
-                      label: localizations.translate(
-                        i18.acknowledgementSuccess.goToHome,
-                      ),
-                      type: DigitButtonType.primary,
-                      size: DigitButtonSize.large,
-                      onPressed: () {
-                        context.router.replace(HomeRoute());
-                      },
-                    ),
-                  ]),
+              // footer: DigitCard(
+              //     margin: const EdgeInsets.only(top: spacer2),
+              //     children: [
+              //       DigitButton(
+              //         mainAxisSize: MainAxisSize.max,
+              //         label: localizations.translate(
+              //           i18.acknowledgementSuccess.goToHome,
+              //         ),
+              //         type: DigitButtonType.primary,
+              //         size: DigitButtonSize.large,
+              //         onPressed: () {
+              //           context.router.replace(HomeRoute());
+              //         },
+              //       ),
+              //     ]),
               header: const BackNavigationHelpHeaderWidget(
                 showHelp: false,
               ),
@@ -68,7 +84,16 @@ class _NonSystemUserListPageState
                   ),
                 ),
                 ...List.generate(5, (x) {
-                  return const NonSystemUserCard();
+                  return NonSystemUserCard(
+                    userName: 'Pitabash ${x}',
+                    role: 'distributor ${x}',
+                    age: (x + 1).toString(),
+                    onScanMe: (value) {
+                      showQRForNonSystemUser(context: context, localizations: localizations,textTheme: textTheme);
+                    },
+                    gender: "male",
+                    mobilenumber: "+98 9898989890",
+                  );
                 })
               ],
             ),
