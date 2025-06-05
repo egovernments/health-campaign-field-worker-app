@@ -39,6 +39,10 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                     path: 'beneficiary-acknowledgement',
                   ),
                   AutoRoute(
+                    page: BeneficiaryErrorRoute.page,
+                    path: 'beneficiary-error',
+                  ),
+                  AutoRoute(
                     page: SummaryRoute.page,
                     path: 'beneficiary-summary',
                   ),

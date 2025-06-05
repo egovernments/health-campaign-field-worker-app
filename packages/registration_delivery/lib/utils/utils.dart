@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -438,6 +439,7 @@ class RegistrationDeliverySingleton {
   List<String>? _houseStructureTypes;
   List<String>? _refusalReasons;
   HouseholdType? _householdType;
+  Map<String, TemplateConfig>? _templateConfigs;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -497,6 +499,10 @@ class RegistrationDeliverySingleton {
     _householdType = householdType;
   }
 
+  void setTemplateConfigs(Map<String, TemplateConfig> templateConfigs) {
+    _templateConfigs = templateConfigs;
+  }
+
   String? get tenantId => _tenantId;
 
   String? get loggedInUserUuid => _loggedInUserUuid;
@@ -543,6 +549,8 @@ class RegistrationDeliverySingleton {
   UserModel? get loggedInUser => _loggedInUser;
 
   HouseholdType? get householdType => _householdType;
+
+  Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
 }
 
 bool allDosesDelivered(

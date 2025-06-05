@@ -19,7 +19,7 @@ FormControl buildFormControl(
     case PropertySchemaType.integer:
       if(format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
-          value: parseDateValue(rawValue),
+          value: schema.systemDate==true ? DateTime.now() : parseDateValue(rawValue),
           validators: validators,
         );
       }
@@ -37,7 +37,7 @@ FormControl buildFormControl(
     case PropertySchemaType.string:
       if (format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
-          value: parseDateValue(rawValue),
+          value: schema.systemDate==true ? DateTime.now() : parseDateValue(rawValue),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.latLng) {
@@ -82,7 +82,7 @@ int? parseIntValue(dynamic value) {
 bool? parseBoolValue(dynamic value) {
   if (value == null) return null;
   if (value is bool) return value;
-  if (value is String) return value.toLowerCase() == 'true';
+  if (value is String) return value.toLowerCase() == 'true' ? true : value.toLowerCase() == 'false' ? false : null;
   return null;
 }
 

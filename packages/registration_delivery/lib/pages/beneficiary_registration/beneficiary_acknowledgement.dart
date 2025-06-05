@@ -36,6 +36,7 @@ class BeneficiaryAcknowledgementPageState
           title: localizations
               .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
           actions: [
+            if(widget.enableViewHousehold ?? false)
             DigitButton(
                 label: localizations.translate(
                   i18.householdDetails.viewHouseHoldDetailsAction,

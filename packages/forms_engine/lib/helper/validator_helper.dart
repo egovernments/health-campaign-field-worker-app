@@ -90,7 +90,7 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
 bool hasRequiredValidation(List<ValidationRule>? validations) {
   if (validations == null) return false;
 
-  return validations.any((rule) => rule.type == 'required');
+  return validations.any((rule) => rule.type == 'required' && rule.value == true);
 }
 
 int? getMinValue(List<ValidationRule>? validations) {

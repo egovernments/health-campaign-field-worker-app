@@ -171,16 +171,16 @@ class FormEntityMapper {
   }
 
   Map<String, dynamic>? _mapAdditionalFields(
-    Map<String, dynamic> fieldsMap,
-    Map<String, dynamic> formValues,
-    String modelName,
-    Map<String, dynamic> context,
-  ) {
+      Map<String, dynamic> fieldsMap,
+      Map<String, dynamic> formValues,
+      String modelName,
+      Map<String, dynamic> context,
+      ) {
     final fieldsList = <Map<String, dynamic>>[];
 
     fieldsMap.forEach((customKey, path) {
       final value = getValueFromMapping(path, formValues, path, context);
-      if (value != null) {
+      if (value != null && value.toString().trim().isNotEmpty) {
         fieldsList.add({'key': customKey, 'value': value});
       }
     });
@@ -289,16 +289,36 @@ class FormEntityMapper {
   }
 
   dynamic _getValueFromPath(Map<String, dynamic> data, String path) {
-    return path.split('.').fold<dynamic>(data, (value, key) {
-      if (value is Map<String, dynamic> && value.containsKey(key)) {
-        usedPaths.add(key);
-        return value[key];
+    final regex = RegExp(r'([^\[\].]+)(?:\[(\d+)\])?');
+
+    dynamic current = data;
+    for (final match in regex.allMatches(path)) {
+      final key = match.group(1);
+      final indexStr = match.group(2);
+
+      if (current is Map<String, dynamic> && key != null && current.containsKey(key)) {
+        current = current[key];
+      } else {
+        if (kDebugMode) {
+          print('Warning: Key "$key" not found while resolving path "$path".');
+        }
+        return null;
       }
-      if (kDebugMode) {
-        print('Warning: Key "$key" not found while resolving path "$path".');
+
+      // Handle [0], [1] if current is a string with comma separation
+      if (indexStr != null && current is String) {
+        final index = int.tryParse(indexStr);
+        final parts = current.split(',');
+        if (index != null && index >= 0 && index < parts.length) {
+          current = parts[index].trim();
+        } else {
+          return null;
+        }
       }
-      return null;
-    });
+    }
+
+    usedPaths.add(path.split('.').last.split('[').first); // to track used path
+    return current;
   }
 
   Map<String, dynamic> _getUnmappedFields(Map<String, dynamic> formData) {
@@ -321,26 +341,31 @@ class FormEntityMapper {
   }
 
   Map<String, dynamic> mergeAdditionalFields(
-    Map<String, dynamic> existingModelData,
-    Map<String, dynamic> newFields,
-    String modelName,
-  ) {
+      Map<String, dynamic> existingModelData,
+      Map<String, dynamic> newFields,
+      String modelName,
+      ) {
     // Clone existing data to avoid mutation
     final mergedData = Map<String, dynamic>.from(existingModelData);
 
     final existingAdditionalFields =
-        mergedData['additionalFields'] as Map<String, dynamic>?;
+    mergedData['additionalFields'] as Map<String, dynamic>?;
 
-    final newAdditionalFieldsList =
-        newFields.entries.map((e) => {'key': e.key, 'value': e.value}).toList();
+    // Filter out empty string values
+    final filteredNewFields = newFields.entries
+        .where((e) => e.value != null && e.value.toString().trim().isNotEmpty)
+        .toList();
+
+    final newAdditionalFieldsList = filteredNewFields
+        .map((e) => {'key': e.key, 'value': e.value})
+        .toList();
 
     if (existingAdditionalFields != null) {
       // Merge existing additional fields list with new ones, avoid duplicate keys
       final existingFieldsList =
-          (existingAdditionalFields['fields'] as List<dynamic>? ?? [])
-              .cast<Map<String, dynamic>>();
+      (existingAdditionalFields['fields'] as List<dynamic>? ?? [])
+          .cast<Map<String, dynamic>>();
 
-      // Create a map for quick lookup of existing keys
       final existingKeys = existingFieldsList.map((f) => f['key']).toSet();
 
       final mergedFields = [
