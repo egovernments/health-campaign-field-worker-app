@@ -212,7 +212,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               LocalRepository<ReferralModel,
                                   ReferralSearchModel>>(),
                           serviceLocalRepository: ctx.read<
-                              LocalRepository<ServiceModel, ServiceSearchModel>>(),
+                              LocalRepository<ServiceModel,
+                                  ServiceSearchModel>>(),
                         ),
                       ),
                       BlocProvider(
@@ -388,7 +389,20 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                       Navigator.of(context, rootNavigator: true).pop();
                       context.router.push(const BeneficiariesReportRoute());
                     },
-                  )
+                  ),
+
+                  // TODO: Non system user
+
+                  SidebarItem(
+                    title: AppLocalizations.of(context).translate(
+                      "View Non System Users(5)",
+                    ),
+                    icon: Icons.group,
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.push(const NonSystemUserListRoute());
+                    },
+                  ),
                 ],
               ],
               logOutDigitButtonLabel: AppLocalizations.of(context)
