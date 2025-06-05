@@ -518,15 +518,17 @@ class LocalizationParams {
 // are keyed by their fieldName and the main structure is flattened for use.
 Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
   try {
-    final transformed = <String, dynamic>{};
-
-    transformed['name'] = inputJson['name'];
-    transformed['pages'] = <String, dynamic>{};
-    transformed['version'] = inputJson['version'];
+    final transformed = <String, dynamic>{
+      'name': inputJson['name'],
+      'version': inputJson['version'],
+      'pages': <String, dynamic>{},
+      'templates': <String, dynamic>{},
+    };
 
     for (final page in inputJson['pages'] as List<dynamic>) {
       final pageMap = page as Map<String, dynamic>;
       final pageKey = pageMap['page'];
+      final type = pageMap['type'];
 
       final Map<String, dynamic> properties = {};
 
@@ -555,12 +557,16 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'tooltip': pageMap['tooltip'],
         'startDate': pageMap['startDate'],
         'endDate': pageMap['endDate'],
-        'readonly': pageMap['readonly'],
+        'readOnly': pageMap['readOnly'],
         'charCount': pageMap['charCount'],
         'systemDate': pageMap['systemDate'],
       };
 
-      (transformed['pages'] as Map<String, dynamic>)[pageKey] = transformedPage;
+      if (type == 'template') {
+        (transformed['templates'] as Map<String, dynamic>)[pageKey] = transformedPage;
+      } else {
+        (transformed['pages'] as Map<String, dynamic>)[pageKey] = transformedPage;
+      }
     }
 
     return transformed;

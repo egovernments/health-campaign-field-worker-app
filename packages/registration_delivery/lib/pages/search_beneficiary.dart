@@ -50,6 +50,7 @@ class _SearchBeneficiaryPageState
   int offset = 0;
   int limit = 10;
 
+
   double lat = 0.0;
   double long = 0.0;
   List<String> selectedFilters = [];
@@ -85,6 +86,8 @@ class _SearchBeneficiaryPageState
 
   @override
   Widget build(BuildContext context) {
+    final pageKey = SearchBeneficiaryRoute.name.replaceAll('Route', '');
+    final searchTemplate = RegistrationDeliverySingleton().templateConfigs?[pageKey];
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
@@ -96,6 +99,7 @@ class _SearchBeneficiaryPageState
           context.router.push( BeneficiaryAcknowledgementRoute(enableViewHousehold: false));
         }else if(createState is EntityCreateErrorState){
           Navigator.of(context, rootNavigator: true).pop();
+          context.router.push( BeneficiaryErrorRoute(enableViewHousehold: false));
           if (kDebugMode) {
             print(createState.message);
           }
@@ -177,13 +181,13 @@ class _SearchBeneficiaryPageState
                                           .householdType ==
                                           HouseholdType.community
                                       ? i18.searchBeneficiary.searchCLFLabel
-                                      : RegistrationDeliverySingleton()
+                                      : searchTemplate?.label!= null ? localizations.translate(searchTemplate!.label) : (RegistrationDeliverySingleton()
                                       .beneficiaryType !=
                                       BeneficiaryType.individual
                                       ? i18
                                       .searchBeneficiary.statisticsLabelText
                                       : i18.searchBeneficiary
-                                      .searchIndividualLabelText,
+                                      .searchIndividualLabelText),
                                 ),
                                 style: textTheme.headingXl.copyWith(
                                   color: theme.colorTheme.primary.primary2,
@@ -194,10 +198,15 @@ class _SearchBeneficiaryPageState
                           ),
                           BlocBuilder<LocationBloc, LocationState>(
                             builder: (context, locationState) {
+
                               return Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  if(searchTemplate
+                                      ?.properties?['searchByProximity']
+                                      ?.hidden !=
+                                      false )
                                   locationState.latitude != null
                                       ? Padding(
                                     padding: const EdgeInsets.all(spacer2),
@@ -211,7 +220,9 @@ class _SearchBeneficiaryPageState
                                         i18.searchBeneficiary
                                             .communityProximityLabel,
                                       )
-                                          : localizations.translate(
+                                          : searchTemplate
+                                          ?.properties?['searchByProximity']?.label != null ? localizations.translate(searchTemplate
+                                          !.properties!['searchByProximity']!.label) : localizations.translate(
                                         i18.searchBeneficiary
                                             .proximityLabel,
                                       ),
@@ -263,6 +274,10 @@ class _SearchBeneficiaryPageState
                                       },
                                     ),
                                   ),
+                                  if(searchTemplate
+                                      ?.properties?['filters']
+                                      ?.hidden !=
+                                      true )
                                   RegistrationDeliverySingleton()
                                       .searchHouseHoldFilter !=
                                       null &&
@@ -510,9 +525,9 @@ class _SearchBeneficiaryPageState
                           }));
                         }
 
-                        // context.read<DigitScannerBloc>().add(
-                        //       const DigitScannerEvent.handleScanner(),
-                        //     );
+                        context.read<DigitScannerBloc>().add(
+                              const DigitScannerEvent.handleScanner(),
+                            );
                         // context.router.push(BeneficiaryRegistrationWrapperRoute(
                         //   initialState: BeneficiaryRegistrationCreateState(
                         //     searchQuery: searchHouseholdsState.searchQuery,

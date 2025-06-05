@@ -11,6 +11,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/entities/user_action.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -101,7 +102,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     final theme = Theme.of(context);
     final state = context.read<AuthBloc>().state;
     final localSecureStore = LocalSecureStore.instance;
@@ -371,22 +371,37 @@ class _HomePageState extends LocalizedState<HomePage> {
             final schemaJsonRaw = prefs.getString('app_config_schemas');
 
             if (schemaJsonRaw != null) {
-              final allSchemas = json.decode(schemaJsonRaw) as Map<String, dynamic>;
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
 
-              final registrationSchemaEntry = allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+              final registrationSchemaEntry =
+                  allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
               final schemaData = registrationSchemaEntry?['data'];
-              final schemaDateCurrentVersion = registrationSchemaEntry?['currentVersion'];
-              final schemaDatePreviousVersion = registrationSchemaEntry?['previousVersion'];
+              final schemaDateCurrentVersion =
+                  registrationSchemaEntry?['currentVersion'];
+              final schemaDatePreviousVersion =
+                  registrationSchemaEntry?['previousVersion'];
 
               if (schemaData != null) {
                 final encodedSchema = json.encode(schemaData);
-                context.read<FormsBloc>().add(FormsEvent.load(schema: encodedSchema));
+                context
+                    .read<FormsBloc>()
+                    .add(FormsEvent.load(schema: encodedSchema));
+                final Map<String, dynamic> rawTemplateMap = schemaData['templates'];
+                final templates = {
+                  for (final entry in rawTemplateMap.entries)
+                    entry.key: TemplateConfig.fromJson(entry.value as Map<String, dynamic>)
+                };
+
+                RegistrationDeliverySingleton()
+                    .setTemplateConfigs(templates);
               }
               if (isTriggerLocalisation && schemaData != null) {
-                final moduleName = 'hcm-${schemaData['name'].toLowerCase()}-${context.selectedProject.referenceID}';
-                if(schemaDateCurrentVersion != schemaDatePreviousVersion){
+                final moduleName =
+                    'hcm-${schemaData['name'].toLowerCase()}-${context.selectedProject.referenceID}';
+                if (schemaDateCurrentVersion != schemaDatePreviousVersion) {
                   triggerLocalization(module: moduleName, loadOnline: true);
-                }else{
+                } else {
                   triggerLocalization(module: moduleName);
                 }
 
@@ -396,6 +411,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             // context.read<FormsBloc>().add(const FormsEvent.clearForm());
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
+
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
@@ -535,7 +551,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
-          
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
@@ -543,7 +558,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            
+
             // context.router.push( FormsRoute(pageName: pageName!));
           },
         ),
@@ -635,11 +650,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
-
-      if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
-        filteredLabels.remove(i18.home.db);
-      }
-
+    if (envConfig.variables.envType == EnvType.demo && kReleaseMode) {
+      filteredLabels.remove(i18.home.db);
+    }
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -743,26 +756,27 @@ class _HomePageState extends LocalizedState<HomePage> {
             final selectedLocale = AppSharedPreferences().getSelectedLocale;
             LocalizationParams()
                 .setCode(LeastLevelBoundarySingleton().boundary);
-            if(loadOnline == true){
+            if (loadOnline == true) {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onRemoteLoadLocalization(
-                module: module ??  "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                tenantId: envConfig.variables.tenantId ?? "default",
-                locale: selectedLocale!,
-                path: Constants.localizationApiPath,
-              ));
-            }else{
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId ?? "default",
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
+            } else {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                module: module ??  "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                tenantId: envConfig.variables.tenantId ?? "default",
-                locale: selectedLocale!,
-                path: Constants.localizationApiPath,
-              ));
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId ?? "default",
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
             }
-
           },
         );
   }
