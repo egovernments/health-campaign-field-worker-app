@@ -83,6 +83,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    NonSystemUserListRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NonSystemUserListPage(),
+      );
+    },
     ProfileRoute.name: (routeData) {
       final args = routeData.argsAs<ProfileRouteArgs>(
           orElse: () => const ProfileRouteArgs());
@@ -370,6 +376,20 @@ class LoginRouteArgs {
   String toString() {
     return 'LoginRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [NonSystemUserListPage]
+class NonSystemUserListRoute extends PageRouteInfo<void> {
+  const NonSystemUserListRoute({List<PageRouteInfo>? children})
+      : super(
+          NonSystemUserListRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NonSystemUserListRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
