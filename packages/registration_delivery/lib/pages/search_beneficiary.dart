@@ -206,7 +206,7 @@ class _SearchBeneficiaryPageState
                                   if(searchTemplate
                                       ?.properties?['searchByProximity']
                                       ?.hidden !=
-                                      false )
+                                      true )
                                   locationState.latitude != null
                                       ? Padding(
                                     padding: const EdgeInsets.all(spacer2),
@@ -275,7 +275,7 @@ class _SearchBeneficiaryPageState
                                     ),
                                   ),
                                   if(searchTemplate
-                                      ?.properties?['filters']
+                                      ?.properties?['filter']
                                       ?.hidden !=
                                       true )
                                   RegistrationDeliverySingleton()
@@ -292,7 +292,9 @@ class _SearchBeneficiaryPageState
                                     child: Padding(
                                       padding: const EdgeInsets.all(spacer2),
                                       child: DigitButton(
-                                        label: getFilterIconNLabel()['label'],
+                                        label: searchTemplate
+                                          ?.properties?['filters']?.label !=null ? localizations.translate(searchTemplate
+                                            !.properties!['filters']!.label): getFilterIconNLabel()['label'],
                                         size: DigitButtonSize.medium,
                                         type: DigitButtonType.tertiary,
                                         suffixIcon:
@@ -501,7 +503,10 @@ class _SearchBeneficiaryPageState
                       isDisabled: searchHouseholdsState.searchQuery != null &&
                           searchHouseholdsState.searchQuery!.isNotEmpty
                           ? false
-                          : true,
+                          : searchTemplate
+                  ?.properties?['BeneficiaryRegistrationButton']
+                  ?.autoEnable ==
+                  true ? false : true,
                       onPressed: () {
                         FocusManager.instance.primaryFocus?.unfocus();
                         context.read<FormsBloc>().add(const FormsEvent.clearForm());
@@ -538,6 +543,9 @@ class _SearchBeneficiaryPageState
                         blocWrapper.clearEvent();
                       },
                     ),
+                    if(searchTemplate
+                        ?.properties?['QRSearch']
+                        ?.hidden != true)
                     DigitButton(
                       capitalizeLetters: false,
                       type: DigitButtonType.secondary,
@@ -559,7 +567,9 @@ class _SearchBeneficiaryPageState
                         );
                       },
                       prefixIcon: Icons.qr_code,
-                      label: localizations.translate(
+                      label: searchTemplate
+                          ?.properties?['QRSearch']
+                          ?.label != null ? localizations.translate(searchTemplate!.properties!['QRSearch']!.label):localizations.translate(
                         i18.deliverIntervention.scannerLabel,
                       ),
                     ),
