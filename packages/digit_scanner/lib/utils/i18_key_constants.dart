@@ -122,7 +122,6 @@ class AcknowledgementSuccess {
 
 class Scanner {
   const Scanner();
-  
 
   String get scannedQtyExceed => 'SCANNED_QTY_EXCEED_THAN_REQUIRED';
 
@@ -171,5 +170,8 @@ class Scanner {
   String get barCodeSerial => 'BARCODE_SERIAL_NUMBER';
 
   String get barCodeExpiry => 'BARCODE_EXPIRY_DATE';
-}
 
+  String get batchNoRequired => 'BARCODE_BATCH_NO_REQUIRED';
+  String get serialNoRequired => 'BARCODE_SERIAL_NO_REQUIRED';
+  String get expiryDateRequired => 'BARCODE_EXPIRY_DATE_REQUIRED';
+}
