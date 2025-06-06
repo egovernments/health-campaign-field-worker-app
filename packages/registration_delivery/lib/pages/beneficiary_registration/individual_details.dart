@@ -932,8 +932,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         identifier.identifierId != form.control(_idNumberKey).value) {
       setState(() {
         identifier = identifier!.copyWith(
-          identifierId: form.control(_idNumberKey).value,
-        );
+            identifierId: form.control(_idNumberKey).value,
+            clientAuditDetails: identifier?.clientAuditDetails?.copyWith(
+              lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
+              lastModifiedTime: context.millisecondsSinceEpoch(),
+            ));
       });
     }
 
@@ -961,16 +964,18 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
     String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
-      name: name.copyWith(
-        givenName: individualName?.trim(),
-      ),
-      gender: form.control(_genderKey).value == null
-          ? null
-          : Gender.values
-              .byName(form.control(_genderKey).value.toString().toLowerCase()),
-      mobileNumber: form.control(_mobileNumberKey).value,
-      dateOfBirth: dobString,
-    );
+        name: name.copyWith(
+          givenName: individualName?.trim(),
+        ),
+        gender: form.control(_genderKey).value == null
+            ? null
+            : Gender.values.byName(
+                form.control(_genderKey).value.toString().toLowerCase()),
+        mobileNumber: form.control(_mobileNumberKey).value,
+        dateOfBirth: dobString,
+        additionalFields: IndividualAdditionalFields(version: 1, fields: [
+          AdditionalField("primaryIdType", form.control(_idTypeKey).value),
+        ]));
     if (individual.identifiers != null) {
       final idType = form.control(_idTypeKey).value;
 
@@ -982,8 +987,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         individual.identifiers!.add(identifier!);
       } else {
         final updatedIdentifier = existingIdentifier.copyWith(
-          identifierId: identifier!.identifierId,
-        );
+            identifierId: identifier!.identifierId,
+            clientAuditDetails: identifier?.clientAuditDetails?.copyWith(
+              lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
+              lastModifiedTime: context.millisecondsSinceEpoch(),
+            ));
 
         final index = individual.identifiers!.indexOf(existingIdentifier);
         individual.identifiers![index] = updatedIdentifier;
@@ -1078,6 +1086,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       },
     );
 
+    String? primaryIdType = individual?.additionalFields?.fields
+        .firstWhereOrNull((idType) => idType.key == 'primaryIdType')
+        ?.value;
+
     final searchQuery = state.mapOrNull<String>(
       create: (value) {
         return value.searchQuery;
@@ -1099,11 +1111,21 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 : searchQuery?.trim()),
       ),
       _idTypeKey: FormControl<String>(
-        value: individual?.identifiers?.lastOrNull?.identifierType,
+        value: primaryIdType != null
+            ? individual?.identifiers
+                ?.firstWhereOrNull(
+                    (type) => type.identifierType == primaryIdType)
+                ?.identifierType
+            : individual?.identifiers?.firstOrNull?.identifierType,
       ),
       _idNumberKey: FormControl<String>(
         validators: [Validators.required],
-        value: individual?.identifiers?.lastOrNull?.identifierId,
+        value: primaryIdType != null
+            ? individual?.identifiers
+                ?.firstWhereOrNull(
+                    (type) => type.identifierType == primaryIdType)
+                ?.identifierId
+            : individual?.identifiers?.firstOrNull?.identifierId,
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
@@ -1200,12 +1222,18 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             form.control(_idNumberKey).value = uniqueId.id;
           });
     } else {
-      if (individual.identifiers!
-          .contains(IdentifierTypes.uniqueBeneficiaryID.toValue())) {
-        form.control(_idTypeKey).value =
-            individual.identifiers?.firstOrNull?.identifierType;
-        form.control(_idNumberKey).value =
-            individual.identifiers?.firstOrNull?.identifierId;
+      var uniqueIdType = individual.identifiers
+          ?.firstWhereOrNull((type) =>
+              type.identifierType ==
+              IdentifierTypes.uniqueBeneficiaryID.toValue())
+          ?.identifierType;
+
+      var uniqueId = individual.identifiers?.firstWhereOrNull((type) =>
+          type.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue());
+
+      if (uniqueIdType == form.control(_idTypeKey).value) {
+        form.control(_idTypeKey).value = uniqueId!.identifierType;
+        form.control(_idNumberKey).value = uniqueId.identifierId;
       } else {
         context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
         final uniqueId = context.read<UniqueIdBloc>().state;
@@ -1245,14 +1273,16 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                     shouldProceedFurther: (bool proceed) {});
               } else if (availableIdCount <= 0) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  showNoIdsAlert(
-                      context: context,
-                      showSkip: form.control(_idTypeKey).value ==
-                              IdentifierTypes.uniqueBeneficiaryID.toValue()
-                          ? false
-                          : true,
-                      localizations: localizations,
-                      shouldProceedFurther: (bool skip) {});
+                  if (form.control(_idNumberKey).value == null) {
+                    showNoIdsAlert(
+                        context: context,
+                        showSkip: form.control(_idTypeKey).value ==
+                                IdentifierTypes.uniqueBeneficiaryID.toValue()
+                            ? false
+                            : true,
+                        localizations: localizations,
+                        shouldProceedFurther: (bool skip) {});
+                  }
                 });
                 setState(() {
                   if (form.control(_idTypeKey).value ==
