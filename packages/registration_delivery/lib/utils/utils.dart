@@ -6,6 +6,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/household.dart';
@@ -194,40 +195,41 @@ bool checkIfBeneficiaryReferred(
   }
 }
 
-DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
-    IndividualModel? individualModel, HouseholdModel? householdModel) {
+Map<String, dynamic> fetchProductVariant(ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel, HouseholdModel? householdModel,
+    {BuildContext? context}) {
+  List<String> errorMessages = [];
+  DeliveryDoseCriteria? deliveryDoseCriteria;
+
   if (currentDelivery != null) {
     var individualAgeInMonths = 0;
     var gender;
     var roomCount;
     var memberCount;
     String? structureType;
+    var weight = 0.0;
+    var height = 0.0;
 
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
         DigitDateUtils.getFormattedDateToDateTime(
-              individualModel.dateOfBirth!,
-            ) ??
+          individualModel.dateOfBirth!,
+        ) ??
             DateTime.now(),
       );
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
 
-      gender = individualModel.gender?.index;
+      gender = individualModel.gender?.toValue();
+
     }
     if (householdModel != null && householdModel.additionalFields != null) {
       memberCount = householdModel.memberCount;
       roomCount = int.tryParse(householdModel.additionalFields?.fields
-              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
-              .firstOrNull
-              ?.value
-              .toString() ??
-          '1')!;
-      structureType = householdModel.additionalFields?.fields
-          .where((h) =>
-              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+          .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
           .firstOrNull
           ?.value
-          .toString();
+          .toString() ??
+          '1')!;
     }
 
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
@@ -236,19 +238,25 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
         if (condition.contains('and')) {
           final conditions = condition.split('and');
 
-          List expressionParser = [];
+          List<bool> expressionParser = [];
           for (var element in conditions) {
-            final expression = FormulaParser(
-              element,
-              {
-                'age': individualAgeInMonths,
-                if (gender != null) 'gender': gender,
-                if (memberCount != null) 'memberCount': memberCount,
-                if (roomCount != null) 'roomCount': roomCount
-              },
-            );
-            final error = expression.parse;
-            expressionParser.add(error["value"]);
+            final expression = CustomFormulaParser.parseCondition(element, {
+              'age': individualAgeInMonths,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount,
+            }, stringKeys: [
+              'gender'
+            ]);
+            final error = expression;
+            if (error["value"] == null || !error["value"]) {
+              errorMessages.add(condition);
+            }
+            if(error["value"] == null){
+              expressionParser.add(false);
+            }else{
+              expressionParser.add(error["value"]);
+            }
           }
 
           return expressionParser.where((element) => element == true).length ==
@@ -256,7 +264,7 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
         } else if (condition.contains('or')) {
           final conditions = condition.split('or');
 
-          List expressionParser = [];
+          List<bool> expressionParser = [];
           for (var element in conditions) {
             final expression = CustomFormulaParser.parseCondition(element, {
               if (individualModel != null && individualAgeInMonths != 0)
@@ -264,22 +272,28 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
             }, stringKeys: [
-              'type_of_structure'
+              'gender'
             ]);
             final error = expression;
-            expressionParser.add(error["value"]);
+            if (error["value"] == null || !error["value"]) {
+              errorMessages.add(condition);
+            }
+            if(error["value"] == null){
+              expressionParser.add(false);
+            }else{
+              expressionParser.add(error["value"]);
+            }
           }
 
-          return expressionParser.where((element) => element == true).isNotEmpty
-              ? true
-              : false;
+          return expressionParser
+              .where((element) => element == true)
+              .isNotEmpty;
         } else {
           final conditions = condition.split(
               'and'); // Assuming there's only one condition since we have contain for and check above and split with and will return the first condition so this is valid
 
-          List expressionParser = [];
+          List<bool> expressionParser = [];
           for (var element in conditions) {
             final expression = CustomFormulaParser.parseCondition(element, {
               if (individualModel != null && individualAgeInMonths != 0)
@@ -287,12 +301,19 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
               if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'type_of_structure': structureType
             }, stringKeys: [
-              'type_of_structure'
+              'gender'
             ]);
             final error = expression;
-            expressionParser.add(error["value"]);
+            if (error["value"] == null || !error["value"]) {
+              errorMessages.add(condition);
+            }
+            if(error["value"] == null){
+              expressionParser.add(false);
+            }else{
+              expressionParser.add(error["value"]);
+            }
+
           }
 
           return expressionParser.where((element) => element == true).length ==
@@ -303,10 +324,17 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       return false;
     }).toList();
 
-    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+    deliveryDoseCriteria =
+    (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
   }
 
-  return null;
+  // Remove duplicate error messages
+  errorMessages = errorMessages.toSet().toList();
+
+  return {
+    'criteria': deliveryDoseCriteria,
+    'errors': errorMessages,
+  };
 }
 
 String maskString(String input) {
@@ -323,10 +351,10 @@ String maskString(String input) {
 class CustomFormulaParser {
   // Modify the function to accept stringKeys as nullable
   static Map<String, dynamic> parseCondition(
-    String condition,
-    Map<String, dynamic> variables, {
-    List<String>? stringKeys,
-  } // Accept stringKeys as nullable
+      String condition,
+      Map<String, dynamic> variables, {
+        List<String>? stringKeys,
+      } // Accept stringKeys as nullable
       ) {
     // If stringKeys is null or empty, default to FormulaParser for all conditions
     if (stringKeys == null || stringKeys.isEmpty) {

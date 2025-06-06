@@ -15,6 +15,10 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                   initial: true,
                   page: SearchBeneficiaryRoute.page,
                   path: 'search-beneficiary'),
+              AutoRoute(
+                page: BeneficiaryErrorRoute.page,
+                path: 'beneficiary-error',
+              ),
 
               /// Beneficiary Registration
               AutoRoute(
@@ -37,10 +41,6 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                   AutoRoute(
                     page: BeneficiaryAcknowledgementRoute.page,
                     path: 'beneficiary-acknowledgement',
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryErrorRoute.page,
-                    path: 'beneficiary-error',
                   ),
                   AutoRoute(
                     page: SummaryRoute.page,

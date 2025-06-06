@@ -27,16 +27,16 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     final rawSchema = json.decode(event.schema);
     final schemaObject = SchemaObject.fromJson(rawSchema);
 
-    // Sort pages by order
-    final sortedPages = Map.fromEntries(
-      schemaObject.pages.entries.toList()
+    // Step 1: Sort and filter pages
+    final sortedFilteredPages = Map.fromEntries(
+      schemaObject.pages.entries
+          .toList()
         ..sort((a, b) {
-          // If either order is null, keep the original order (do not sort)
           if (a.value.order == null || b.value.order == null) return 0;
           return a.value.order!.compareTo(b.value.order!);
         }),
     ).map((pageKey, pageValue) {
-      // Sort properties inside the page
+      // Step 2: Sort properties within each page
       final sortedProperties = pageValue.properties == null
           ? null
           : Map.fromEntries(
@@ -47,14 +47,21 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
           }),
       );
 
-      // Return updated page
       return MapEntry(
         pageKey,
         pageValue.copyWith(properties: sortedProperties),
       );
-    });
+    })
+    // Step 3: Remove pages where all properties are hidden
+      ..removeWhere((key, page) {
+        final properties = page.properties;
+        if (properties == null || properties.isEmpty) return true;
+        final allHidden = properties.values.every((prop) => prop.hidden == true);
+        return allHidden;
+      });
 
-    final sortedSchema = schemaObject.copyWith(pages: sortedPages);
+    // Step 4: Build final schema and emit
+    final sortedSchema = schemaObject.copyWith(pages: sortedFilteredPages);
     emit(FormsState(schema: sortedSchema, initialSchema: sortedSchema));
   }
 
