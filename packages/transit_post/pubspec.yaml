@@ -1,6 +1,6 @@
 name: transit_post
-description: "A new Flutter package project."
-version: 0.0.1
+description: This package enables transit post vaccinator to deliver vaccines to the beneficiaries who visits the transit post
+version: 1.0.0
 homepage:
 
 environment:
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_ui_components: ^0.2.0
+  digit_ui_components: ^0.2.1+7
   flutter_bloc: ^8.1.5
   freezed_annotation: ^2.4.1
   reactive_forms: ^17.0.0
