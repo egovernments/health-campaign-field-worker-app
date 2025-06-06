@@ -63,11 +63,7 @@ class TransitPost {
 
   String get alertPopupTitle => 'TRANSIT_POST_ALERT_POPUP_TITLE';
 
-  String get countPopupTitle => 'TRANSIT_POST_ALERT_POPUP_TITLE';
-
   String get alertPopupDescription => 'TRANSIT_POST_ALERT_POPUP_DESCRIPTION';
-
-  String get countPopupDescription => 'TRANSIT_POST_ALERT_POPUP_DESCRIPTION';
 
   String get beneficiaryAgeLabel => 'TRANSIT_POST_BENEFICIARY_AGE_LABEL';
 

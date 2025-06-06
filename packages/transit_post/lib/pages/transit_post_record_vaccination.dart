@@ -1,19 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_scanner/digit_scanner.dart';
-import 'package:digit_scanner/utils/i18_key_constants.dart'
-    as i18_digit_scanner;
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
-import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -86,32 +82,6 @@ class TransitPostRecordVaccinationPageState
                         i18.transitPost.recordDeliveryLabel,
                       ),
                       onPressed: () {
-                        if (transitPostState.curCount! > 25) {
-                          showCustomPopup(
-                              context: context,
-                              builder: (popUpContext) => Popup(
-                                    title: localizations.translate(
-                                      i18.transitPost.countPopupTitle,
-                                    ),
-                                    type: PopUpType.alert,
-                                    description: localizations.translate(
-                                      i18.transitPost.countPopupDescription,
-                                    ),
-                                    actions: [
-                                      DigitButton(
-                                        label: localizations.translate(
-                                          i18.common.coreCommonOk,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(popUpContext).pop();
-                                        },
-                                        type: DigitButtonType.primary,
-                                        size: DigitButtonSize.large,
-                                      )
-                                    ],
-                                  ));
-                        }
-
                         final bloc = context.read<DigitScannerBloc>();
                         final state = bloc.state.barCodes;
 
@@ -209,6 +179,7 @@ class TransitPostRecordVaccinationPageState
                       LabelValueSummary(items: [
                         LabelValueItem(
                           labelFlex: 5,
+                          maxLines: 4,
                           label: localizations.translate(
                             i18.transitPost.beneficiaryAgeLabel,
                           ),
