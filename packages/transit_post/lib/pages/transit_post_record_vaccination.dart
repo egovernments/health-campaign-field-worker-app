@@ -234,7 +234,7 @@ class TransitPostRecordVaccinationPageState
                                               "GS1_${entry.key}",
                                             ),
                                             value: entry.value is DateTime
-                                                ? DateFormat('dd MMM yyyy')
+                                                ? DateFormat('d MMMM yyyy')
                                                     .format(entry.value)
                                                     .toString()
                                                 : entry.value,
