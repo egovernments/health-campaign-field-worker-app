@@ -143,6 +143,7 @@ class _SearchBeneficiaryPageState
               );
             } catch (e) {
               Navigator.of(context, rootNavigator: true).pop();
+              context.router.push( BeneficiaryErrorRoute(enableViewHousehold: false));
               print('Error: $e');
             }
           }
