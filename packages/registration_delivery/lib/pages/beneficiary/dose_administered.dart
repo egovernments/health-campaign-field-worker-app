@@ -125,7 +125,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                       .read<DeliverInterventionBloc>()
                                       .state;
                                   final event =
-                                      context.read<DeliverInterventionBloc>();
+                                  context.read<DeliverInterventionBloc>();
 
                                   if (doseAdministered == true &&
                                       context.mounted) {
@@ -140,11 +140,11 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                       event.add(DeliverInterventionSubmitEvent(
                                         task: TaskModel(
                                           projectId:
-                                              RegistrationDeliverySingleton()
-                                                  .projectId,
+                                          RegistrationDeliverySingleton()
+                                              .projectId,
                                           address: address?.copyWith(
                                             relatedClientReferenceId:
-                                                clientReferenceId,
+                                            clientReferenceId,
                                             id: null,
                                           ),
                                           status: Status.delivered.toValue(),
@@ -153,65 +153,66 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                               .oldTask
                                               ?.projectBeneficiaryClientReferenceId,
                                           tenantId:
-                                              RegistrationDeliverySingleton()
-                                                  .tenantId,
+                                          RegistrationDeliverySingleton()
+                                              .tenantId,
                                           rowVersion: 1,
                                           auditDetails: AuditDetails(
                                             createdBy:
-                                                RegistrationDeliverySingleton()
-                                                    .loggedInUserUuid!,
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid!,
                                             createdTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
                                           clientAuditDetails:
-                                              ClientAuditDetails(
+                                          ClientAuditDetails(
                                             createdBy:
-                                                RegistrationDeliverySingleton()
-                                                    .loggedInUserUuid!,
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid!,
                                             createdTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
                                           resources: fetchProductVariant(
-                                                  e,
-                                                  overViewBloc
-                                                      .selectedIndividual,
-                                                  overViewBloc
-                                                      .householdMemberWrapper
-                                                      .household)
-                                              ?.productVariants
+                                              e,
+                                              overViewBloc
+                                                  .selectedIndividual,
+                                              overViewBloc
+                                                  .householdMemberWrapper
+                                                  .household,
+                                              context: context)?['criteria']
+                                              .productVariants
                                               ?.map((variant) =>
-                                                  TaskResourceModel(
-                                                    clientReferenceId:
-                                                        IdGen.i.identifier,
-                                                    tenantId:
-                                                        RegistrationDeliverySingleton()
-                                                            .tenantId,
-                                                    taskclientReferenceId:
-                                                        clientReferenceId,
-                                                    quantity: variant.quantity
-                                                        .toString(),
-                                                    productVariantId: variant
-                                                        .productVariantId,
-                                                    isDelivered: true,
-                                                    auditDetails: AuditDetails(
-                                                      createdBy:
-                                                          RegistrationDeliverySingleton()
-                                                              .loggedInUserUuid!,
-                                                      createdTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                    ),
-                                                    clientAuditDetails:
-                                                        ClientAuditDetails(
-                                                      createdBy:
-                                                          RegistrationDeliverySingleton()
-                                                              .loggedInUserUuid!,
-                                                      createdTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                    ),
-                                                  ))
+                                              TaskResourceModel(
+                                                clientReferenceId:
+                                                IdGen.i.identifier,
+                                                tenantId:
+                                                RegistrationDeliverySingleton()
+                                                    .tenantId,
+                                                taskclientReferenceId:
+                                                clientReferenceId,
+                                                quantity: variant.quantity
+                                                    .toString(),
+                                                productVariantId: variant
+                                                    .productVariantId,
+                                                isDelivered: true,
+                                                auditDetails: AuditDetails(
+                                                  createdBy:
+                                                  RegistrationDeliverySingleton()
+                                                      .loggedInUserUuid!,
+                                                  createdTime: context
+                                                      .millisecondsSinceEpoch(),
+                                                ),
+                                                clientAuditDetails:
+                                                ClientAuditDetails(
+                                                  createdBy:
+                                                  RegistrationDeliverySingleton()
+                                                      .loggedInUserUuid!,
+                                                  createdTime: context
+                                                      .millisecondsSinceEpoch(),
+                                                ),
+                                              ))
                                               .toList(),
                                           additionalFields:
-                                              TaskAdditionalFields(
+                                          TaskAdditionalFields(
                                             version: 1,
                                             fields: [
                                               AdditionalField(
@@ -271,33 +272,33 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         ),
                                         isEditing: false,
                                         boundaryModel:
-                                            RegistrationDeliverySingleton()
-                                                .boundary!,
+                                        RegistrationDeliverySingleton()
+                                            .boundary!,
                                       ));
                                     }
                                   }
 
                                   final reloadState =
-                                      context.read<HouseholdOverviewBloc>();
+                                  context.read<HouseholdOverviewBloc>();
 
                                   Future.delayed(
                                     const Duration(milliseconds: 1000),
-                                    () {
+                                        () {
                                       reloadState
                                           .add(HouseholdOverviewReloadEvent(
                                         projectId:
-                                            RegistrationDeliverySingleton()
-                                                .projectId!,
+                                        RegistrationDeliverySingleton()
+                                            .projectId!,
                                         projectBeneficiaryType:
-                                            RegistrationDeliverySingleton()
-                                                .beneficiaryType!,
+                                        RegistrationDeliverySingleton()
+                                            .beneficiaryType!,
                                       ));
                                     },
                                   ).then((value) => context.router.popAndPush(
-                                        HouseholdAcknowledgementRoute(
-                                          enableViewHousehold: true,
-                                        ),
-                                      ));
+                                    HouseholdAcknowledgementRoute(
+                                      enableViewHousehold: true,
+                                    ),
+                                  ));
                                 }
                               },
                             );
@@ -320,24 +321,24 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                             builder: (field) => RadioList(
                               radioDigitButtons: Constants.yesNo
                                   .map((e) => RadioButtonModel(
-                                        code: e.key.toString(),
-                                        name: localizations.translate(e.label),
-                                      ))
+                                code: e.key.toString(),
+                                name: localizations.translate(e.label),
+                              ))
                                   .toList(),
                               errorMessage:
-                                  form.control(_doseAdministeredKey).hasErrors
-                                      ? localizations.translate(
-                                          i18.common.corecommonRequired,
-                                        )
-                                      : null,
+                              form.control(_doseAdministeredKey).hasErrors
+                                  ? localizations.translate(
+                                i18.common.corecommonRequired,
+                              )
+                                  : null,
                               groupValue: form
-                                      .control(_doseAdministeredKey)
-                                      .value
-                                      .toString() ??
+                                  .control(_doseAdministeredKey)
+                                  .value
+                                  .toString() ??
                                   '',
                               onChanged: (val) {
                                 form.control(_doseAdministeredKey).value =
-                                    val.code == 'true' ? true : false;
+                                val.code == 'true' ? true : false;
                               },
                             ),
                           ),
@@ -361,24 +362,25 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                       DeliverInterventionState>(
                                     builder: (context, deliveryState) {
                                       List<DigitTableRow> tableDataRows =
-                                          deliveryState.futureDeliveries!
-                                              .map((e) {
+                                      deliveryState.futureDeliveries!
+                                          .map((e) {
                                         int doseIndex = deliveryState
-                                                .futureDeliveries!
-                                                .indexOf(e) +
+                                            .futureDeliveries!
+                                            .indexOf(e) +
                                             deliveryState.dose +
                                             1;
                                         List<String> skus = fetchProductVariant(
-                                                e,
-                                                overViewBloc.selectedIndividual,
-                                                overViewBloc
-                                                    .householdMemberWrapper
-                                                    .household)!
+                                            e,
+                                            overViewBloc.selectedIndividual,
+                                            overViewBloc
+                                                .householdMemberWrapper
+                                                .household,
+                                            context: context)!['criteria']
                                             .productVariants!
                                             .map((ele) {
                                           final pv = variant!.firstWhere(
-                                            (element) =>
-                                                element.id ==
+                                                (element) =>
+                                            element.id ==
                                                 ele.productVariantId,
                                           );
 
@@ -421,14 +423,16 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                     .beneficiaryAge,
                                               ): localizations.translate(
                                                   fetchProductVariant(
-                                                          deliveryState
-                                                              .futureDeliveries
-                                                              ?.first,
-                                                          overViewBloc
-                                                              .selectedIndividual,
-                                                          overViewBloc
-                                                              .householdMemberWrapper
-                                                              .household)!
+                                                      deliveryState
+                                                          .futureDeliveries
+                                                          ?.first,
+                                                      overViewBloc
+                                                          .selectedIndividual,
+                                                      overViewBloc
+                                                          .householdMemberWrapper
+                                                          .household,
+                                                      context:
+                                                      context)!['criteria']
                                                       .condition!),
                                             },
                                           ),
