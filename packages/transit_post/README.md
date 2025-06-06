@@ -39,3 +39,7 @@ List<ProjectProductVariantModel>? _resources;
   int? _minAge;
   int? _maxAge;
 ```
+
+Flow:
+
+![transit_post_flow](https://github.com/user-attachments/assets/718919dd-a0b8-4aff-af72-15386031c11d)
