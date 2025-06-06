@@ -78,18 +78,22 @@ class _NonSystemUserListPageState
                       localizations.translate(
                         "Non system users (5)",
                       ),
-                      style: textTheme.headingXl,
+                      style: textTheme.headingXl
+                          ?.copyWith(color: theme.colorScheme.primary),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
                 ...List.generate(5, (x) {
                   return NonSystemUserCard(
-                    userName: 'Pitabash ${x}',
-                    role: 'distributor ${x}',
+                    userName: 'Pitabash $x',
+                    role: 'distributor $x',
                     age: (x + 1).toString(),
                     onScanMe: (value) {
-                      showQRForNonSystemUser(context: context, localizations: localizations,textTheme: textTheme);
+                      showQRForNonSystemUser(
+                          context: context,
+                          localizations: localizations,
+                          textTheme: textTheme);
                     },
                     gender: "male",
                     mobilenumber: "+98 9898989890",
