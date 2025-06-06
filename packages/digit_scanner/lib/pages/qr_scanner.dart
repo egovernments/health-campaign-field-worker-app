@@ -623,6 +623,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                           },
                                           builder: (field) {
                                             return InputField(
+                                              firstDate: DateTime.now(),
                                               isRequired: true,
                                               type: InputType.date,
                                               label: localizations.translate(
