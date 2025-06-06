@@ -324,10 +324,19 @@ class IndividualLocalRepository
           .map((e) => e.identifiers
               ?.map((a) => a
                   .copyWith(
-                    individualClientReferenceId: e.clientReferenceId,
-                    clientAuditDetails: e.clientAuditDetails,
-                    auditDetails: e.auditDetails,
-                  )
+                      individualId: e.id ?? e.clientReferenceId,
+                      individualClientReferenceId: e.clientReferenceId,
+                      // TODO: need to fetch from server response of identifier
+                      clientAuditDetails: e
+                              .clientAuditDetails ?? // NOTE: Using auditDetails as clientAuditDetails as it is null from backend
+                          (a.auditDetails != null
+                              ? ClientAuditDetails(
+                                  createdBy: a.auditDetails!.createdBy,
+                                  createdTime: a.auditDetails!.createdTime,
+                                  lastModifiedBy: a.auditDetails!.createdBy,
+                                  lastModifiedTime:
+                                      a.auditDetails!.lastModifiedTime)
+                              : null))
                   .companion)
               .toList())
           .toList();
@@ -417,7 +426,20 @@ class IndividualLocalRepository
 
       final identifierCompanions = entity.identifiers?.map((e) {
             return e
-                .copyWith(clientAuditDetails: entity.clientAuditDetails)
+                .copyWith(
+                    individualId: entity.id ?? entity.clientReferenceId,
+                    individualClientReferenceId: entity.clientReferenceId,
+                    // TODO: need to fetch from server response of identifier
+                    clientAuditDetails: e
+                            .clientAuditDetails ?? // NOTE: Using auditDetails as clientAuditDetails as it is null from backend
+                        (e.auditDetails != null
+                            ? ClientAuditDetails(
+                                createdBy: e.auditDetails!.createdBy,
+                                createdTime: e.auditDetails!.createdTime,
+                                lastModifiedBy: e.auditDetails!.createdBy,
+                                lastModifiedTime:
+                                    e.auditDetails!.lastModifiedTime)
+                            : null))
                 .companion;
           }).toList() ??
           [];

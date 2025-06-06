@@ -1087,7 +1087,7 @@ class _HouseholdOverviewPageState
                                             },
                                             deleteMemberAction: () {
                                               showCustomPopup(
-                                                context: context,
+                                                context: ctx,
                                                 builder: (BuildContext
                                                         context) =>
                                                     Popup(
@@ -1110,7 +1110,7 @@ class _HouseholdOverviewPageState
                                                             )
                                                               ..pop()
                                                               ..pop();
-                                                            context
+                                                            ctx
                                                                 .read<
                                                                     HouseholdOverviewBloc>()
                                                                 .add(
