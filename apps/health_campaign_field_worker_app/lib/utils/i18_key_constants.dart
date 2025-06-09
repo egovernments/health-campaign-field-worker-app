@@ -1099,4 +1099,5 @@ class NonMobileUser {
   String get nonMobileUserLabel => 'NON_MOBILE_USER_LABEL';
   String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
   String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
+  String get nonSystemUserDrawerLabel => 'NON_SYSTEM_USER_DRAWER_LABEL';
 }

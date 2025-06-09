@@ -11,6 +11,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/localization/app_localization.dart';
 
+//TODO: TO user details to generate the qrcode, after API integration
 void showQRForNonSystemUser(
     {required BuildContext context,
     required AppLocalizations localizations,
@@ -28,6 +29,7 @@ void showQRForNonSystemUser(
           additionalWidgets: [
             const Center(
                 child: DigitTextBlock(
+                  //TODO: TO show the selected user name
               subHeading: "Pitabash Choudhdry",
             )),
             Container(
@@ -56,7 +58,7 @@ void showQRForNonSystemUser(
                   width: 2,
                 )),
                 child: QrImageView(
-                  data: "PitabshChoudjdhr23/03/2025",
+                  data: "PitabashChoudhry23/03/2025",
                   version: QrVersions.auto,
                   size: 220.0,
                 ),
@@ -77,7 +79,7 @@ void showQRForNonSystemUser(
               ),
             ),
           ],
-          title: localizations.translate("QR Code"),
+          title: localizations.translate(i18.nonMobileUser.showQrCodeLabel),
         );
       });
 }

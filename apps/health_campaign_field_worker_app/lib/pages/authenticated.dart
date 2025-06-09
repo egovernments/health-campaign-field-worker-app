@@ -395,7 +395,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                   SidebarItem(
                     title: AppLocalizations.of(context).translate(
-                      "View Non System Users(5)",
+                      //TODO: TO append the total count of non- system users
+                      i18.nonMobileUser.nonSystemUserDrawerLabel,
                     ),
                     icon: Icons.group,
                     onPressed: () {
