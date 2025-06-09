@@ -107,6 +107,10 @@ class Common {
   String get locationCapturing => 'CAPTURING_LOCATION';
   String get locationCaptured => 'LOCATION_CAPTURED';
   String get ctaProceed => 'PROCEED';
+  String get clearFilter =>'CLEAR_FILTER';
+  String get applyFilter => 'APPLY';
+  String get filterByStatus=> 'FILTER_BY_STATUS';
+  
 }
 
 class AcknowledgementSuccess {

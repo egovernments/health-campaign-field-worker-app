@@ -70,26 +70,7 @@ class CustomAttendanceInfoCard extends StatelessWidget {
               color: getStatusColor() ?? theme.colorTheme.alert.warning,
             ),
           ),
-<<<<<<< HEAD
-          Offstage(),
-=======
-          const SizedBox(height: 2),
-          Text(
-            "Distributor",
-            style: theme.textTheme.bodySmall,
-          ),
-          const SizedBox(height: 4),
-          if (markManualAttendance || status != null) ...[
-            Text(
-              getStatusText() ?? "Attendance Unmarked",
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w500,
-                color: getStatusColor() ?? Colors.orange,
-              ),
-            ),
-            const SizedBox(height: 6),
-          ],
->>>>>>> ffdc662e42c5dcf57c4863455239890597cccc57
+         
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
             decoration: BoxDecoration(
@@ -129,7 +110,7 @@ class CustomAttendanceInfoCard extends StatelessWidget {
                               theme.colorTheme.alert.success.withOpacity(0.1),
                           blurRadius: 2,
                           spreadRadius: 0.5,
-                          offset: const Offset(),
+                          offset: const Offset(0,0),
                         )
                       ],
                     ),
@@ -160,7 +141,7 @@ class CustomAttendanceInfoCard extends StatelessWidget {
                           color: theme.colorTheme.alert.error.withOpacity(0.1),
                           blurRadius: 2,
                           spreadRadius: 0.5,
-                          offset: const Offset(),
+                          offset: const Offset(0,0),
                         )
                       ],
                     ),
