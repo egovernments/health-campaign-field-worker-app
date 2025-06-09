@@ -183,7 +183,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 individualModel,
                                 projectBeneficiaryModel,
                                 parentClientReferenceId,
-                                  relationshipType,
+                                relationshipType,
                                 registrationDate,
                                 searchQuery,
                                 loading,
@@ -324,7 +324,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 individuals,
                                 registrationDate,
                                 parentClientReferenceId,
-                                  relationshipType,
+                                relationshipType,
                                 projectBeneficiaryModel,
                                 loading,
                                 isHeadOfHousehold,
@@ -384,10 +384,18 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                           )
                                         ]));
 
-                                checklistKey.currentState?.updateSurvey(
-                                  latitude: addressModel.latitude,
-                                  longitude: addressModel.longitude,
-                                );
+                                if (householdChecklists?.firstOrNull != null) {
+                                  checklistKey.currentState?.updateSurvey(
+                                    latitude: addressModel.latitude,
+                                    longitude: addressModel.longitude,
+                                  );
+                                } else {
+                                  checklistKey.currentState?.submitSurvey(
+                                      latitude: addressModel.latitude,
+                                      longitude: addressModel.longitude,
+                                      relatedReferenceId:
+                                          householdModel.clientReferenceId);
+                                }
 
                                 bloc.add(
                                   BeneficiaryRegistrationUpdateHouseholdDetailsEvent(

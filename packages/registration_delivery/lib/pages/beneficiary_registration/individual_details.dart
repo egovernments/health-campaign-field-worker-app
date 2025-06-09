@@ -296,11 +296,19 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               type: ToastType.error);
                         } else {
                           if (RegistrationDeliverySingleton().householdType ==
-                                  HouseholdType.family &&
-                              state.individualChecklists?.firstOrNull != null) {
-                            checklistKey.currentState?.updateSurvey(
-                                latitude: addressModel.latitude,
-                                longitude: addressModel.longitude);
+                              HouseholdType.family) {
+                            if (state.individualChecklists?.firstOrNull !=
+                                null) {
+                              checklistKey.currentState?.updateSurvey(
+                                  latitude: addressModel.latitude,
+                                  longitude: addressModel.longitude);
+                            } else {
+                              checklistKey.currentState?.submitSurvey(
+                                  latitude: addressModel.latitude,
+                                  longitude: addressModel.longitude,
+                                  relatedReferenceId:
+                                      individual.clientReferenceId);
+                            }
                           }
                           bloc.add(
                             BeneficiaryRegistrationUpdateIndividualDetailsEvent(
