@@ -174,26 +174,42 @@ class _SearchBeneficiaryPageState
                             padding: const EdgeInsets.all(spacer2),
                             child: Align(
                               alignment: Alignment.topLeft,
-                              child: Text(
-                                localizations.translate(
-                                  RegistrationDeliverySingleton().householdType !=
-                                      null &&
-                                      RegistrationDeliverySingleton()
-                                          .householdType ==
-                                          HouseholdType.community
-                                      ? i18.searchBeneficiary.searchCLFLabel
-                                      : searchTemplate?.label!= null ? localizations.translate(searchTemplate!.label) : (RegistrationDeliverySingleton()
-                                      .beneficiaryType !=
-                                      BeneficiaryType.individual
-                                      ? i18
-                                      .searchBeneficiary.statisticsLabelText
-                                      : i18.searchBeneficiary
-                                      .searchIndividualLabelText),
-                                ),
-                                style: textTheme.headingXl.copyWith(
-                                  color: theme.colorTheme.primary.primary2,
-                                ),
-                                textAlign: TextAlign.left,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    localizations.translate(
+                                      RegistrationDeliverySingleton().householdType !=
+                                          null &&
+                                          RegistrationDeliverySingleton()
+                                              .householdType ==
+                                              HouseholdType.community
+                                          ? i18.searchBeneficiary.searchCLFLabel
+                                          : searchTemplate?.label!= null ? localizations.translate(searchTemplate!.label) : (RegistrationDeliverySingleton()
+                                          .beneficiaryType !=
+                                          BeneficiaryType.individual
+                                          ? i18
+                                          .searchBeneficiary.statisticsLabelText
+                                          : i18.searchBeneficiary
+                                          .searchIndividualLabelText),
+                                    ),
+                                    style: textTheme.headingXl.copyWith(
+                                      color: theme.colorTheme.primary.primary2,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  if(searchTemplate?.description!= null && searchTemplate!.description!.isNotEmpty)
+                                  Text(
+                                    localizations.translate(
+                                        searchTemplate.description!
+                                    ),
+                                    style: textTheme.bodyS.copyWith(
+                                      color: theme.colorTheme.text.secondary,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -262,7 +278,9 @@ class _SearchBeneficiaryPageState
                                           HouseholdType.community)
                                           ? localizations.translate(i18
                                           .searchBeneficiary.clfSearchHintText)
-                                          : localizations.translate(
+                                          : searchTemplate
+                                          ?.properties?['searchBar']?.label != null ? localizations.translate(searchTemplate
+                                      !.properties!['searchBar']!.label) : localizations.translate(
                                         i18.searchBeneficiary
                                             .beneficiarySearchHintText,
                                       ),
@@ -294,8 +312,8 @@ class _SearchBeneficiaryPageState
                                       padding: const EdgeInsets.all(spacer2),
                                       child: DigitButton(
                                         label: searchTemplate
-                                          ?.properties?['filters']?.label !=null ? localizations.translate(searchTemplate
-                                            !.properties!['filters']!.label): getFilterIconNLabel()['label'],
+                                          ?.properties?['filter']?.label !=null ? localizations.translate(searchTemplate
+                                            !.properties!['filter']!.label): getFilterIconNLabel()['label'],
                                         size: DigitButtonSize.medium,
                                         type: DigitButtonType.tertiary,
                                         suffixIcon:
@@ -545,7 +563,7 @@ class _SearchBeneficiaryPageState
                       },
                     ),
                     if(searchTemplate
-                        ?.properties?['QRSearch']
+                        ?.properties?['qrscanner']
                         ?.hidden != true)
                     DigitButton(
                       capitalizeLetters: false,
@@ -569,8 +587,8 @@ class _SearchBeneficiaryPageState
                       },
                       prefixIcon: Icons.qr_code,
                       label: searchTemplate
-                          ?.properties?['QRSearch']
-                          ?.label != null ? localizations.translate(searchTemplate!.properties!['QRSearch']!.label):localizations.translate(
+                          ?.properties?['qrscanner']
+                          ?.label != null ? localizations.translate(searchTemplate!.properties!['qrscanner']!.label):localizations.translate(
                         i18.deliverIntervention.scannerLabel,
                       ),
                     ),
