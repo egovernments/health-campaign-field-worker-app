@@ -6,6 +6,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 
 import '../localized.dart';
+import '../../../utils/i18_key_constants.dart' as i18;
 
 class NonSystemUserCard extends LocalizedStatefulWidget {
   final String userName;
@@ -42,9 +43,11 @@ class _NonSystemUserCardState extends LocalizedState<NonSystemUserCard> {
       children: [
         _buildCenteredTextBlock(widget.userName, textTheme.headingM),
         _buildCenteredTextBlock(widget.role, textTheme.bodyL),
-        _buildCenteredTextBlock("${widget.gender}, ${widget.age}", textTheme.bodyL),
+        _buildCenteredTextBlock(
+            "${widget.gender}, ${widget.age}", textTheme.bodyL),
         if (widget.mobilenumber != null)
-          _buildCenteredTextBlock("+91 ${widget.mobilenumber}", textTheme.bodyL),
+          _buildCenteredTextBlock(
+              "+91 ${widget.mobilenumber}", textTheme.bodyL),
         _buildIdContainer(context, textTheme),
         _buildQRButton(context),
       ],
@@ -93,7 +96,7 @@ class _NonSystemUserCardState extends LocalizedState<NonSystemUserCard> {
       mainAxisSize: MainAxisSize.max,
       onPressed: () => widget.onScanMe("data to be sent"),
       prefixIcon: Icons.qr_code,
-      label: localizations.translate("Show QR Code"),
+      label: localizations.translate(i18.nonMobileUser.showQrCodeBtnLabel),
     );
   }
 }

@@ -51,21 +51,7 @@ class _NonSystemUserListPageState
               __,
             ) =>
                 ScrollableContent(
-              // footer: DigitCard(
-              //     margin: const EdgeInsets.only(top: spacer2),
-              //     children: [
-              //       DigitButton(
-              //         mainAxisSize: MainAxisSize.max,
-              //         label: localizations.translate(
-              //           i18.acknowledgementSuccess.goToHome,
-              //         ),
-              //         type: DigitButtonType.primary,
-              //         size: DigitButtonSize.large,
-              //         onPressed: () {
-              //           context.router.replace(HomeRoute());
-              //         },
-              //       ),
-              //     ]),
+              
               header: const BackNavigationHelpHeaderWidget(
                 showHelp: false,
               ),
@@ -76,7 +62,8 @@ class _NonSystemUserListPageState
                     alignment: Alignment.centerLeft,
                     child: Text(
                       localizations.translate(
-                        "Non system users (5)",
+                        //TODO: TO append the total count of non- system users
+                        i18.nonMobileUser.nonMobileUserLabel,
                       ),
                       style: textTheme.headingXl
                           ?.copyWith(color: theme.colorScheme.primary),
