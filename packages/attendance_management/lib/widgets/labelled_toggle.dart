@@ -27,10 +27,6 @@ class DigitLabeledToggle extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        border: Border.all(
-          color: const DigitColors().light.textPrimary,
-           
-        ),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Row(

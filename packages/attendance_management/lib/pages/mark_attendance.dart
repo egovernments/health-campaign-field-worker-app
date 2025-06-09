@@ -8,6 +8,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
@@ -55,6 +56,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   var entryTime = 0, exitTime = 0;
   var currentSelectedDate = DateTime.now().toString(), selectedSession = 0;
   bool markManualAttendance = false;
+  bool sortByStatus = false;
+  late List<dynamic> displayedAttendees;
 
   @override
   void initState() {
@@ -154,6 +157,21 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               attendanceSearchModelList?.isNotEmpty == true
                                   ? attendanceSearchModelList!
                                   : attendanceCollectionModel ?? [];
+
+                          if (sortByStatus) {
+                            displayedAttendees = [...attendees];
+                            displayedAttendees.sort((a, b) {
+                              double getSortValue(dynamic individual) {
+                                if (individual.status == 1) return 0;
+                                if (individual.status == 0) return 1;
+                                return 2;
+                              }
+
+                              return getSortValue(a).compareTo(getSortValue(b));
+                            });
+                          } else {
+                            displayedAttendees = attendees;
+                          }
 
                           return ScrollableContent(
                             enableFixedDigitButton: true,
@@ -360,17 +378,39 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               ),
                               DigitCard(
                                 margin: EdgeInsets.only(
-                                    top: theme.spacerTheme.spacer4,
-                                    bottom: theme.spacerTheme.spacer4),
+                                  top: theme.spacerTheme.spacer4,
+                                  bottom: theme.spacerTheme.spacer4,
+                                ),
                                 children: [
-                                  DigitSearchBar(
-                                    controller: controller,
-                                    hintText: localizations
-                                        .translate(i18.common.searchByNameOrID),
-                                    borderRadius: 0,
-                                    margin: const EdgeInsets.all(0),
-                                    textCapitalization:
-                                        TextCapitalization.words,
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: DigitSearchBar(
+                                          controller: controller,
+                                          hintText: localizations.translate(
+                                              i18.common.searchByNameOrID),
+                                          borderRadius: 0,
+                                          margin: const EdgeInsets.all(0),
+                                          textCapitalization:
+                                              TextCapitalization.words,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      DigitButton(
+                                        label: '',
+                                        onPressed: () {
+                                          setState(() {
+                                            sortByStatus = !sortByStatus;
+                                          });
+                                        },
+                                        type: sortByStatus
+                                            ? DigitButtonType.primary
+                                            : DigitButtonType.secondary,
+                                        size: DigitButtonSize.medium,
+                                        prefixIcon: Icons.swap_vert,
+                                        
+                                      ),
+                                    ],
                                   ),
                                   DigitLabeledToggle(
                                     value: isMorning,
@@ -407,7 +447,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     EdgeInsets.all(theme.spacerTheme.spacer3),
                                 child: (attendees.isNotEmpty)
                                     ? Column(
-                                        children: attendees.map((individual) {
+                                        children: displayedAttendees
+                                            .map((individual) {
                                           return CustomAttendanceInfoCard(
                                             name: individual.name ??
                                                 localizations.translate(
