@@ -69,7 +69,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
               idCount: (availableCount, totalCount) {
                 _progressDialog.closeProgressDialog();
                 _isProgressDialogVisible = false;
-                // beneficiaryIdCount = availableCount;
+                beneficiaryIdCount = availableCount;
                 beneficiaryIdTotalCount = totalCount;
               },
               ids: (ids) {
