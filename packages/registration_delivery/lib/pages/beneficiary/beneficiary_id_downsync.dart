@@ -69,7 +69,7 @@ class _BeneficiaryIdDownSyncState extends State<BeneficiaryIdDownSyncPage> {
               idCount: (availableCount, totalCount) {
                 _progressDialog.closeProgressDialog();
                 _isProgressDialogVisible = false;
-                beneficiaryIdCount = availableCount;
+                // beneficiaryIdCount = availableCount;
                 beneficiaryIdTotalCount = totalCount;
               },
               ids: (ids) {
@@ -339,7 +339,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                             style: textTheme.headingL.copyWith(
                                 fontSize: 50,
                                 color:
-                                    widget.idCount < widget.beneficiaryMinCount
+                                    widget.idCount <= widget.beneficiaryMinCount
                                         ? theme.colorTheme.alert.error
                                         : theme.colorTheme.primary.primary2)),
                         Text(
@@ -348,7 +348,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
                             style: textTheme.bodyS.copyWith(
                                 fontSize: 14,
                                 color:
-                                    widget.idCount < widget.beneficiaryMinCount
+                                    widget.idCount <= widget.beneficiaryMinCount
                                         ? theme.colorTheme.alert.error
                                         : theme.colorTheme.primary.primary2)),
                       ],
@@ -358,7 +358,7 @@ class _BeneficiaryIDGaugeState extends State<BeneficiaryIDGauge>
               },
             ),
           ),
-          if (widget.idCount < widget.beneficiaryMinCount)
+          if (widget.idCount <= widget.beneficiaryMinCount)
             InfoCard(
                 title: localizations
                     .translate(i18.beneficiaryDetails.lowBeneficiaryIdsLabel),
@@ -431,7 +431,7 @@ class GaugePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     Paint progressPaint = Paint()
-      ..color = currentValue < minValue
+      ..color = currentValue <= minValue
           ? theme.colorTheme.alert.error
           : theme.colorTheme.alert.success
       ..strokeWidth = strokeWidth
@@ -469,7 +469,7 @@ class GaugePainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     Paint borderPaint = Paint()
-      ..color = currentValue < minValue
+      ..color = currentValue <= minValue
           ? theme.colorTheme.alert.error
           : theme.colorTheme.alert.success
       ..strokeWidth = 4
