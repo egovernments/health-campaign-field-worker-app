@@ -19,6 +19,7 @@ void initializeMappers() {
   p2.AttendeeModelMapper.ensureInitialized();
   p2.AttendeeAdditionalFieldsMapper.ensureInitialized();
   p3.EnumValuesMapper.ensureInitialized();
+  p3.AttendanceSortTypeMapper.ensureInitialized();
   p4.RegisterStatusMapper.ensureInitialized();
   p5.StaffSearchModelMapper.ensureInitialized();
   p5.StaffModelMapper.ensureInitialized();

@@ -43,6 +43,7 @@ mixin _$AttendanceIndividualEvent {
             String? comment)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
+    required TResult Function(AttendanceSortType sortType) toggleSort,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -72,6 +73,7 @@ mixin _$AttendanceIndividualEvent {
             String? comment)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
+    TResult? Function(AttendanceSortType sortType)? toggleSort,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -101,6 +103,7 @@ mixin _$AttendanceIndividualEvent {
             String? comment)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
+    TResult Function(AttendanceSortType sortType)? toggleSort,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -112,6 +115,7 @@ mixin _$AttendanceIndividualEvent {
         individualAttendanceMark,
     required TResult Function(SaveAsDraftEvent value) saveAsDraft,
     required TResult Function(SearchAttendeesEvent value) searchAttendees,
+    required TResult Function(ToggleSortTypeEvent value) toggleSort,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -121,6 +125,7 @@ mixin _$AttendanceIndividualEvent {
     TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
     TResult? Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult? Function(ToggleSortTypeEvent value)? toggleSort,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -130,6 +135,7 @@ mixin _$AttendanceIndividualEvent {
     TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult Function(SaveAsDraftEvent value)? saveAsDraft,
     TResult Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult Function(ToggleSortTypeEvent value)? toggleSort,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -356,6 +362,7 @@ class _$AttendanceIndividualLogSearchEventImpl
             String? comment)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
+    required TResult Function(AttendanceSortType sortType) toggleSort,
   }) {
     return individualAttendanceLogSearch(registerId, tenantId, entryTime,
         exitTime, currentDate, attendees, offset, limit, isSingleSession);
@@ -389,6 +396,7 @@ class _$AttendanceIndividualLogSearchEventImpl
             String? comment)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
+    TResult? Function(AttendanceSortType sortType)? toggleSort,
   }) {
     return individualAttendanceLogSearch?.call(registerId, tenantId, entryTime,
         exitTime, currentDate, attendees, offset, limit, isSingleSession);
@@ -422,6 +430,7 @@ class _$AttendanceIndividualLogSearchEventImpl
             String? comment)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
+    TResult Function(AttendanceSortType sortType)? toggleSort,
     required TResult orElse(),
   }) {
     if (individualAttendanceLogSearch != null) {
@@ -440,6 +449,7 @@ class _$AttendanceIndividualLogSearchEventImpl
         individualAttendanceMark,
     required TResult Function(SaveAsDraftEvent value) saveAsDraft,
     required TResult Function(SearchAttendeesEvent value) searchAttendees,
+    required TResult Function(ToggleSortTypeEvent value) toggleSort,
   }) {
     return individualAttendanceLogSearch(this);
   }
@@ -452,6 +462,7 @@ class _$AttendanceIndividualLogSearchEventImpl
     TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
     TResult? Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult? Function(ToggleSortTypeEvent value)? toggleSort,
   }) {
     return individualAttendanceLogSearch?.call(this);
   }
@@ -464,6 +475,7 @@ class _$AttendanceIndividualLogSearchEventImpl
     TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult Function(SaveAsDraftEvent value)? saveAsDraft,
     TResult Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult Function(ToggleSortTypeEvent value)? toggleSort,
     required TResult orElse(),
   }) {
     if (individualAttendanceLogSearch != null) {
@@ -657,6 +669,7 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
             String? comment)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
+    required TResult Function(AttendanceSortType sortType) toggleSort,
   }) {
     return individualAttendanceMark(
         entryTime, exitTime, status, isSingleSession, individualId, registerId);
@@ -690,6 +703,7 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
             String? comment)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
+    TResult? Function(AttendanceSortType sortType)? toggleSort,
   }) {
     return individualAttendanceMark?.call(
         entryTime, exitTime, status, isSingleSession, individualId, registerId);
@@ -723,6 +737,7 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
             String? comment)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
+    TResult Function(AttendanceSortType sortType)? toggleSort,
     required TResult orElse(),
   }) {
     if (individualAttendanceMark != null) {
@@ -741,6 +756,7 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
         individualAttendanceMark,
     required TResult Function(SaveAsDraftEvent value) saveAsDraft,
     required TResult Function(SearchAttendeesEvent value) searchAttendees,
+    required TResult Function(ToggleSortTypeEvent value) toggleSort,
   }) {
     return individualAttendanceMark(this);
   }
@@ -753,6 +769,7 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
     TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
     TResult? Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult? Function(ToggleSortTypeEvent value)? toggleSort,
   }) {
     return individualAttendanceMark?.call(this);
   }
@@ -765,6 +782,7 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
     TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult Function(SaveAsDraftEvent value)? saveAsDraft,
     TResult Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult Function(ToggleSortTypeEvent value)? toggleSort,
     required TResult orElse(),
   }) {
     if (individualAttendanceMark != null) {
@@ -967,6 +985,7 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             String? comment)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
+    required TResult Function(AttendanceSortType sortType) toggleSort,
   }) {
     return saveAsDraft(entryTime, exitTime, selectedDate, isSingleSession,
         createOplog, latitude, longitude, comment);
@@ -1000,6 +1019,7 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             String? comment)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
+    TResult? Function(AttendanceSortType sortType)? toggleSort,
   }) {
     return saveAsDraft?.call(entryTime, exitTime, selectedDate, isSingleSession,
         createOplog, latitude, longitude, comment);
@@ -1033,6 +1053,7 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             String? comment)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
+    TResult Function(AttendanceSortType sortType)? toggleSort,
     required TResult orElse(),
   }) {
     if (saveAsDraft != null) {
@@ -1051,6 +1072,7 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
         individualAttendanceMark,
     required TResult Function(SaveAsDraftEvent value) saveAsDraft,
     required TResult Function(SearchAttendeesEvent value) searchAttendees,
+    required TResult Function(ToggleSortTypeEvent value) toggleSort,
   }) {
     return saveAsDraft(this);
   }
@@ -1063,6 +1085,7 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
     TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
     TResult? Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult? Function(ToggleSortTypeEvent value)? toggleSort,
   }) {
     return saveAsDraft?.call(this);
   }
@@ -1075,6 +1098,7 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
     TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult Function(SaveAsDraftEvent value)? saveAsDraft,
     TResult Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult Function(ToggleSortTypeEvent value)? toggleSort,
     required TResult orElse(),
   }) {
     if (saveAsDraft != null) {
@@ -1200,6 +1224,7 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
             String? comment)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
+    required TResult Function(AttendanceSortType sortType) toggleSort,
   }) {
     return searchAttendees(name);
   }
@@ -1232,6 +1257,7 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
             String? comment)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
+    TResult? Function(AttendanceSortType sortType)? toggleSort,
   }) {
     return searchAttendees?.call(name);
   }
@@ -1264,6 +1290,7 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
             String? comment)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
+    TResult Function(AttendanceSortType sortType)? toggleSort,
     required TResult orElse(),
   }) {
     if (searchAttendees != null) {
@@ -1281,6 +1308,7 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
         individualAttendanceMark,
     required TResult Function(SaveAsDraftEvent value) saveAsDraft,
     required TResult Function(SearchAttendeesEvent value) searchAttendees,
+    required TResult Function(ToggleSortTypeEvent value) toggleSort,
   }) {
     return searchAttendees(this);
   }
@@ -1293,6 +1321,7 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
     TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
     TResult? Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult? Function(ToggleSortTypeEvent value)? toggleSort,
   }) {
     return searchAttendees?.call(this);
   }
@@ -1305,6 +1334,7 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
     TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult Function(SaveAsDraftEvent value)? saveAsDraft,
     TResult Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult Function(ToggleSortTypeEvent value)? toggleSort,
     required TResult orElse(),
   }) {
     if (searchAttendees != null) {
@@ -1325,6 +1355,228 @@ abstract class SearchAttendeesEvent implements AttendanceIndividualEvent {
 }
 
 /// @nodoc
+abstract class _$$ToggleSortTypeEventImplCopyWith<$Res> {
+  factory _$$ToggleSortTypeEventImplCopyWith(_$ToggleSortTypeEventImpl value,
+          $Res Function(_$ToggleSortTypeEventImpl) then) =
+      __$$ToggleSortTypeEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({AttendanceSortType sortType});
+}
+
+/// @nodoc
+class __$$ToggleSortTypeEventImplCopyWithImpl<$Res>
+    extends _$AttendanceIndividualEventCopyWithImpl<$Res,
+        _$ToggleSortTypeEventImpl>
+    implements _$$ToggleSortTypeEventImplCopyWith<$Res> {
+  __$$ToggleSortTypeEventImplCopyWithImpl(_$ToggleSortTypeEventImpl _value,
+      $Res Function(_$ToggleSortTypeEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? sortType = null,
+  }) {
+    return _then(_$ToggleSortTypeEventImpl(
+      sortType: null == sortType
+          ? _value.sortType
+          : sortType // ignore: cast_nullable_to_non_nullable
+              as AttendanceSortType,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ToggleSortTypeEventImpl implements ToggleSortTypeEvent {
+  const _$ToggleSortTypeEventImpl({required this.sortType});
+
+  @override
+  final AttendanceSortType sortType;
+
+  @override
+  String toString() {
+    return 'AttendanceIndividualEvent.toggleSort(sortType: $sortType)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ToggleSortTypeEventImpl &&
+            (identical(other.sortType, sortType) ||
+                other.sortType == sortType));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, sortType);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ToggleSortTypeEventImplCopyWith<_$ToggleSortTypeEventImpl> get copyWith =>
+      __$$ToggleSortTypeEventImplCopyWithImpl<_$ToggleSortTypeEventImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            String registerId,
+            String tenantId,
+            int entryTime,
+            int exitTime,
+            int currentDate,
+            List<AttendeeModel> attendees,
+            int offset,
+            int limit,
+            bool isSingleSession)
+        individualAttendanceLogSearch,
+    required TResult Function(int entryTime, int exitTime, dynamic status,
+            bool isSingleSession, String individualId, String registerId)
+        individualAttendanceMark,
+    required TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude,
+            String? comment)
+        saveAsDraft,
+    required TResult Function(String name) searchAttendees,
+    required TResult Function(AttendanceSortType sortType) toggleSort,
+  }) {
+    return toggleSort(sortType);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            String registerId,
+            String tenantId,
+            int entryTime,
+            int exitTime,
+            int currentDate,
+            List<AttendeeModel> attendees,
+            int offset,
+            int limit,
+            bool isSingleSession)?
+        individualAttendanceLogSearch,
+    TResult? Function(int entryTime, int exitTime, dynamic status,
+            bool isSingleSession, String individualId, String registerId)?
+        individualAttendanceMark,
+    TResult? Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude,
+            String? comment)?
+        saveAsDraft,
+    TResult? Function(String name)? searchAttendees,
+    TResult? Function(AttendanceSortType sortType)? toggleSort,
+  }) {
+    return toggleSort?.call(sortType);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            String registerId,
+            String tenantId,
+            int entryTime,
+            int exitTime,
+            int currentDate,
+            List<AttendeeModel> attendees,
+            int offset,
+            int limit,
+            bool isSingleSession)?
+        individualAttendanceLogSearch,
+    TResult Function(int entryTime, int exitTime, dynamic status,
+            bool isSingleSession, String individualId, String registerId)?
+        individualAttendanceMark,
+    TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude,
+            String? comment)?
+        saveAsDraft,
+    TResult Function(String name)? searchAttendees,
+    TResult Function(AttendanceSortType sortType)? toggleSort,
+    required TResult orElse(),
+  }) {
+    if (toggleSort != null) {
+      return toggleSort(sortType);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AttendanceIndividualLogSearchEvent value)
+        individualAttendanceLogSearch,
+    required TResult Function(AttendanceMarkEvent value)
+        individualAttendanceMark,
+    required TResult Function(SaveAsDraftEvent value) saveAsDraft,
+    required TResult Function(SearchAttendeesEvent value) searchAttendees,
+    required TResult Function(ToggleSortTypeEvent value) toggleSort,
+  }) {
+    return toggleSort(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AttendanceIndividualLogSearchEvent value)?
+        individualAttendanceLogSearch,
+    TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
+    TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult? Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult? Function(ToggleSortTypeEvent value)? toggleSort,
+  }) {
+    return toggleSort?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AttendanceIndividualLogSearchEvent value)?
+        individualAttendanceLogSearch,
+    TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
+    TResult Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult Function(SearchAttendeesEvent value)? searchAttendees,
+    TResult Function(ToggleSortTypeEvent value)? toggleSort,
+    required TResult orElse(),
+  }) {
+    if (toggleSort != null) {
+      return toggleSort(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ToggleSortTypeEvent implements AttendanceIndividualEvent {
+  const factory ToggleSortTypeEvent(
+      {required final AttendanceSortType sortType}) = _$ToggleSortTypeEventImpl;
+
+  AttendanceSortType get sortType;
+  @JsonKey(ignore: true)
+  _$$ToggleSortTypeEventImplCopyWith<_$ToggleSortTypeEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$AttendanceIndividualState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
@@ -1337,7 +1589,8 @@ mixin _$AttendanceIndividualState {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)
+            bool viewOnly,
+            AttendanceSortType sortType)
         loaded,
     required TResult Function(String? error) error,
   }) =>
@@ -1353,7 +1606,8 @@ mixin _$AttendanceIndividualState {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)?
+            bool viewOnly,
+            AttendanceSortType sortType)?
         loaded,
     TResult? Function(String? error)? error,
   }) =>
@@ -1369,7 +1623,8 @@ mixin _$AttendanceIndividualState {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)?
+            bool viewOnly,
+            AttendanceSortType sortType)?
         loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -1468,7 +1723,8 @@ class _$InitialImpl extends _Initial {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)
+            bool viewOnly,
+            AttendanceSortType sortType)
         loaded,
     required TResult Function(String? error) error,
   }) {
@@ -1487,7 +1743,8 @@ class _$InitialImpl extends _Initial {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)?
+            bool viewOnly,
+            AttendanceSortType sortType)?
         loaded,
     TResult? Function(String? error)? error,
   }) {
@@ -1506,7 +1763,8 @@ class _$InitialImpl extends _Initial {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)?
+            bool viewOnly,
+            AttendanceSortType sortType)?
         loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -1607,7 +1865,8 @@ class _$LoadingImpl extends _Loading {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)
+            bool viewOnly,
+            AttendanceSortType sortType)
         loaded,
     required TResult Function(String? error) error,
   }) {
@@ -1626,7 +1885,8 @@ class _$LoadingImpl extends _Loading {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)?
+            bool viewOnly,
+            AttendanceSortType sortType)?
         loaded,
     TResult? Function(String? error)? error,
   }) {
@@ -1645,7 +1905,8 @@ class _$LoadingImpl extends _Loading {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)?
+            bool viewOnly,
+            AttendanceSortType sortType)?
         loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -1713,7 +1974,8 @@ abstract class _$$AttendanceRowModelLoadedImplCopyWith<$Res> {
       int currentOffset,
       int countData,
       int limitData,
-      bool viewOnly});
+      bool viewOnly,
+      AttendanceSortType sortType});
 }
 
 /// @nodoc
@@ -1736,6 +1998,7 @@ class __$$AttendanceRowModelLoadedImplCopyWithImpl<$Res>
     Object? countData = null,
     Object? limitData = null,
     Object? viewOnly = null,
+    Object? sortType = null,
   }) {
     return _then(_$AttendanceRowModelLoadedImpl(
       attendanceSearchModelList: freezed == attendanceSearchModelList
@@ -1766,6 +2029,10 @@ class __$$AttendanceRowModelLoadedImplCopyWithImpl<$Res>
           ? _value.viewOnly
           : viewOnly // ignore: cast_nullable_to_non_nullable
               as bool,
+      sortType: null == sortType
+          ? _value.sortType
+          : sortType // ignore: cast_nullable_to_non_nullable
+              as AttendanceSortType,
     ));
   }
 }
@@ -1780,7 +2047,8 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
       this.currentOffset = 0,
       this.countData = 0,
       this.limitData = 10,
-      this.viewOnly = false})
+      this.viewOnly = false,
+      this.sortType = AttendanceSortType.none})
       : _attendanceSearchModelList = attendanceSearchModelList,
         _attendanceCollectionModel = attendanceCollectionModel,
         super._();
@@ -1822,10 +2090,13 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
   @override
   @JsonKey()
   final bool viewOnly;
+  @override
+  @JsonKey()
+  final AttendanceSortType sortType;
 
   @override
   String toString() {
-    return 'AttendanceIndividualState.loaded(attendanceSearchModelList: $attendanceSearchModelList, attendanceCollectionModel: $attendanceCollectionModel, offsetData: $offsetData, currentOffset: $currentOffset, countData: $countData, limitData: $limitData, viewOnly: $viewOnly)';
+    return 'AttendanceIndividualState.loaded(attendanceSearchModelList: $attendanceSearchModelList, attendanceCollectionModel: $attendanceCollectionModel, offsetData: $offsetData, currentOffset: $currentOffset, countData: $countData, limitData: $limitData, viewOnly: $viewOnly, sortType: $sortType)';
   }
 
   @override
@@ -1846,7 +2117,9 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
             (identical(other.limitData, limitData) ||
                 other.limitData == limitData) &&
             (identical(other.viewOnly, viewOnly) ||
-                other.viewOnly == viewOnly));
+                other.viewOnly == viewOnly) &&
+            (identical(other.sortType, sortType) ||
+                other.sortType == sortType));
   }
 
   @override
@@ -1858,7 +2131,8 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
       currentOffset,
       countData,
       limitData,
-      viewOnly);
+      viewOnly,
+      sortType);
 
   @JsonKey(ignore: true)
   @override
@@ -1879,12 +2153,13 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)
+            bool viewOnly,
+            AttendanceSortType sortType)
         loaded,
     required TResult Function(String? error) error,
   }) {
     return loaded(attendanceSearchModelList, attendanceCollectionModel,
-        offsetData, currentOffset, countData, limitData, viewOnly);
+        offsetData, currentOffset, countData, limitData, viewOnly, sortType);
   }
 
   @override
@@ -1899,12 +2174,13 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)?
+            bool viewOnly,
+            AttendanceSortType sortType)?
         loaded,
     TResult? Function(String? error)? error,
   }) {
     return loaded?.call(attendanceSearchModelList, attendanceCollectionModel,
-        offsetData, currentOffset, countData, limitData, viewOnly);
+        offsetData, currentOffset, countData, limitData, viewOnly, sortType);
   }
 
   @override
@@ -1919,14 +2195,15 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)?
+            bool viewOnly,
+            AttendanceSortType sortType)?
         loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
       return loaded(attendanceSearchModelList, attendanceCollectionModel,
-          offsetData, currentOffset, countData, limitData, viewOnly);
+          offsetData, currentOffset, countData, limitData, viewOnly, sortType);
     }
     return orElse();
   }
@@ -1977,7 +2254,8 @@ abstract class _AttendanceRowModelLoaded extends AttendanceIndividualState {
       final int currentOffset,
       final int countData,
       final int limitData,
-      final bool viewOnly}) = _$AttendanceRowModelLoadedImpl;
+      final bool viewOnly,
+      final AttendanceSortType sortType}) = _$AttendanceRowModelLoadedImpl;
   _AttendanceRowModelLoaded._() : super._();
 
   List<AttendeeModel>? get attendanceSearchModelList;
@@ -1987,6 +2265,7 @@ abstract class _AttendanceRowModelLoaded extends AttendanceIndividualState {
   int get countData;
   int get limitData;
   bool get viewOnly;
+  AttendanceSortType get sortType;
   @JsonKey(ignore: true)
   _$$AttendanceRowModelLoadedImplCopyWith<_$AttendanceRowModelLoadedImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -2065,7 +2344,8 @@ class _$ErrorImpl extends _Error {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)
+            bool viewOnly,
+            AttendanceSortType sortType)
         loaded,
     required TResult Function(String? error) error,
   }) {
@@ -2084,7 +2364,8 @@ class _$ErrorImpl extends _Error {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)?
+            bool viewOnly,
+            AttendanceSortType sortType)?
         loaded,
     TResult? Function(String? error)? error,
   }) {
@@ -2103,7 +2384,8 @@ class _$ErrorImpl extends _Error {
             int currentOffset,
             int countData,
             int limitData,
-            bool viewOnly)?
+            bool viewOnly,
+            AttendanceSortType sortType)?
         loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
