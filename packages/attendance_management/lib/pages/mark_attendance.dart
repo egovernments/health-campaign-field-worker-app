@@ -434,25 +434,38 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                         offset.dx + size.width,
                                                         offset.dy,
                                                       ),
-                                                      color: colors.light.paperPrimary,
+                                                      color: colors
+                                                          .light.paperPrimary,
                                                       items: [
                                                         PopupMenuItem(
-                                                          value: 'present',
+                                                          value:
+                                                              AttendanceSortType
+                                                                  .presentFirst
+                                                                  .name,
                                                           child: Row(
                                                             children: [
                                                               const SizedBox(
                                                                   width: 8),
-                                                              Text(localizations.translate(i18.attendance.present)),
+                                                              Text(localizations
+                                                                  .translate(i18
+                                                                      .attendance
+                                                                      .present)),
                                                             ],
                                                           ),
                                                         ),
-                                                         PopupMenuItem(
-                                                          value: 'absent',
+                                                        PopupMenuItem(
+                                                          value:
+                                                              AttendanceSortType
+                                                                  .absentFirst
+                                                                  .name,
                                                           child: Row(
                                                             children: [
                                                               const SizedBox(
                                                                   width: 8),
-                                                              Text(localizations.translate(i18.attendance.absent)),
+                                                              Text(localizations
+                                                                  .translate(i18
+                                                                      .attendance
+                                                                      .absent)),
                                                             ],
                                                           ),
                                                         ),
@@ -460,17 +473,19 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                     );
 
                                                     if (selected != null) {
+                                                      final sortType =
+                                                          AttendanceSortType
+                                                              .values
+                                                              .firstWhere((e) =>
+                                                                  e.name ==
+                                                                  selected);
                                                       context
                                                           .read<
                                                               AttendanceIndividualBloc>()
                                                           .add(
                                                             ToggleSortTypeEvent(
-                                                              sortType: selected == 'present'
-                                                                  ? AttendanceSortType
-                                                                      .presentFirst
-                                                                  : AttendanceSortType
-                                                                      .absentFirst,
-                                                            ),
+                                                                sortType:
+                                                                    sortType),
                                                           );
                                                     }
                                                   },
