@@ -14,6 +14,7 @@ part 'attendance_individual_bloc.freezed.dart';
 // Type definition for emitter used in the AttendanceIndividualBloc
 typedef AttendanceIndividualEmitter = Emitter<AttendanceIndividualState>;
 
+
 /*
   @author  Ramkrishna-egov
   */
@@ -31,6 +32,7 @@ class AttendanceIndividualBloc
     on<AttendanceMarkEvent>(_onIndividualAttendanceMark);
     on<SaveAsDraftEvent>(_onSaveAsDraft);
     on<SearchAttendeesEvent>(_onSearchAttendeeByName);
+    on<ToggleSortTypeEvent>(_onToggleSortTypeEvent);
   }
 
   // Event handler for attendance log of Individual
@@ -249,6 +251,43 @@ class AttendanceIndividualBloc
     );
   }
 
+  FutureOr<void> _onToggleSortTypeEvent(
+      ToggleSortTypeEvent event, AttendanceIndividualEmitter emit) {
+    state.maybeMap(
+      loaded: (loadedState) {
+        final original = loadedState.attendanceCollectionModel ?? [];
+        List<AttendeeModel> updatedList = [...original];
+
+        if (event.sortType == AttendanceSortType.presentFirst) {
+          updatedList.sort((a, b) => _getSortValue(a, event.sortType)
+              .compareTo(_getSortValue(b, event.sortType)));
+        } else if (event.sortType == AttendanceSortType.absentFirst) {
+          updatedList.sort((a, b) => _getSortValue(a, event.sortType)
+              .compareTo(_getSortValue(b, event.sortType)));
+        } // else: no sorting (keep order)
+
+        emit(loadedState.copyWith(
+          attendanceCollectionModel: updatedList,
+          sortType: event.sortType,
+        ));
+      },
+      orElse: () {},
+    );
+  }
+
+  int _getSortValue(AttendeeModel model, AttendanceSortType type) {
+    if (type == AttendanceSortType.presentFirst) {
+      if (model.status == 1) return 0;
+      if (model.status == 0) return 1;
+      return 2;
+    } else if (type == AttendanceSortType.absentFirst) {
+      if (model.status == 0) return 0;
+      if (model.status == 1) return 1;
+      return 2;
+    }
+    return 2;
+  }
+
   // Function to process response after searching attendance log
   checkResponse(
       List<AttendanceLogModel> logResponse,
@@ -301,7 +340,11 @@ class AttendanceIndividualBloc
     }).toList();
 
     emit(AttendanceIndividualState.loaded(
-        attendanceCollectionModel: attendees, viewOnly: anyLogPresent));
+      attendanceCollectionModel: attendees,
+      attendanceSearchModelList: null,
+      viewOnly: anyLogPresent,
+      sortType: AttendanceSortType.none,
+    ));
   }
 
   void submitAttendanceDetails(
@@ -437,6 +480,11 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
   const factory AttendanceIndividualEvent.searchAttendees({
     required String name,
   }) = SearchAttendeesEvent;
+
+// Event for sorting attendees by status
+  const factory AttendanceIndividualEvent.toggleSort({
+    required AttendanceSortType sortType,
+  }) = ToggleSortTypeEvent;
 }
 
 // Freezed class for defining individual attendance-related states
@@ -459,6 +507,7 @@ class AttendanceIndividualState with _$AttendanceIndividualState {
     @Default(0) int countData,
     @Default(10) int limitData,
     @Default(false) bool viewOnly,
+    @Default(AttendanceSortType.none) AttendanceSortType sortType,
   }) = _AttendanceRowModelLoaded;
 
   // Error state
