@@ -280,12 +280,67 @@ class FormEntityMapper {
       return refValue;
     }
 
+    if (instruction.startsWith('__switch:')) {
+      final switchContent = instruction.replaceFirst('__switch:', '');
+
+      // Correct way: split before the first `{`
+      final braceIndex = switchContent.indexOf('{');
+      if (braceIndex == -1) {
+        throw Exception('Invalid __switch format, missing "{" for mapping block.');
+      }
+
+      final rawKeyInstruction = switchContent.substring(0, braceIndex).trim();
+      final keyInstruction = rawKeyInstruction.endsWith(':')
+          ? rawKeyInstruction.substring(0, rawKeyInstruction.length - 1)
+          : rawKeyInstruction;
+      final mappingString = switchContent.substring(braceIndex).trim();
+
+      // Recursively resolve key — handles __context:, __ref:, etc.
+      final keyValue = getValueFromMapping(keyInstruction, data, currentModel, context);
+      if (keyValue == null) {
+        throw Exception('Key value "$keyInstruction" resolved to null in __switch');
+      }
+
+      final mapping = _parseSwitchMapping(mappingString);
+      final resolvedInstruction = mapping[keyValue.toString()] ?? mapping['default'];
+
+      if (resolvedInstruction == null) {
+        throw Exception('No switch case found for "$keyValue" in instruction "$instruction"');
+      }
+
+      return getValueFromMapping(resolvedInstruction, data, currentModel, context);
+    }
+
     if (instruction.startsWith('__context:')) {
       final path = instruction.replaceFirst('__context:', '');
       return _getValueFromPath(context, path);
     }
 
     return _getValueFromPath(data, instruction);
+  }
+
+  Map<String, String> _parseSwitchMapping(String raw) {
+    final map = <String, String>{};
+    final pattern = RegExp(r'(\w+):([^,{}]+)');
+    for (final match in pattern.allMatches(raw)) {
+      final key = match.group(1)?.trim();
+      final value = match.group(2)?.trim();
+      if (key != null && value != null) {
+        map[key] = value;
+      }
+    }
+    return map;
+  }
+
+  dynamic resolveDynamicPath(String path, Map<String, dynamic> data, Map<String, dynamic> context) {
+    if (path.startsWith('__context:')) {
+      return _getValueFromPath(context, path.replaceFirst('__context:', ''));
+    } else if (path.startsWith('formData:')) {
+      return _getValueFromPath(data, path.replaceFirst('formData:', ''));
+    } else {
+      // Default to context for backward compatibility
+      return _getValueFromPath(context, path);
+    }
   }
 
   dynamic _getValueFromPath(Map<String, dynamic> data, String path) {

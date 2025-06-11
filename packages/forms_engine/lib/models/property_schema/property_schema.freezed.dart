@@ -43,6 +43,7 @@ mixin _$PropertySchema {
   String? get tooltip => throw _privateConstructorUsedError;
   String? get innerLabel => throw _privateConstructorUsedError;
   String? get label => throw _privateConstructorUsedError;
+  bool? get isMultiSelect => throw _privateConstructorUsedError;
   dynamic get value => throw _privateConstructorUsedError;
   DisplayBehavior? get displayBehavior => throw _privateConstructorUsedError;
   Map<String, dynamic>? get conditions => throw _privateConstructorUsedError;
@@ -86,6 +87,7 @@ abstract class $PropertySchemaCopyWith<$Res> {
       String? tooltip,
       String? innerLabel,
       String? label,
+      bool? isMultiSelect,
       dynamic value,
       DisplayBehavior? displayBehavior,
       Map<String, dynamic>? conditions,
@@ -130,6 +132,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? tooltip = freezed,
     Object? innerLabel = freezed,
     Object? label = freezed,
+    Object? isMultiSelect = freezed,
     Object? value = freezed,
     Object? displayBehavior = freezed,
     Object? conditions = freezed,
@@ -219,6 +222,10 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
               as String?,
+      isMultiSelect: freezed == isMultiSelect
+          ? _value.isMultiSelect
+          : isMultiSelect // ignore: cast_nullable_to_non_nullable
+              as bool?,
       value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -294,6 +301,7 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       String? tooltip,
       String? innerLabel,
       String? label,
+      bool? isMultiSelect,
       dynamic value,
       DisplayBehavior? displayBehavior,
       Map<String, dynamic>? conditions,
@@ -337,6 +345,7 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? tooltip = freezed,
     Object? innerLabel = freezed,
     Object? label = freezed,
+    Object? isMultiSelect = freezed,
     Object? value = freezed,
     Object? displayBehavior = freezed,
     Object? conditions = freezed,
@@ -426,6 +435,10 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
               as String?,
+      isMultiSelect: freezed == isMultiSelect
+          ? _value.isMultiSelect
+          : isMultiSelect // ignore: cast_nullable_to_non_nullable
+              as bool?,
       value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -485,6 +498,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.tooltip,
       this.innerLabel,
       this.label,
+      this.isMultiSelect,
       this.value,
       this.displayBehavior,
       final Map<String, dynamic>? conditions,
@@ -559,6 +573,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
   @override
   final String? label;
   @override
+  final bool? isMultiSelect;
+  @override
   final dynamic value;
   @override
   final DisplayBehavior? displayBehavior;
@@ -590,7 +606,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
 
   @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations)';
   }
 
   @override
@@ -631,6 +647,8 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.innerLabel, innerLabel) ||
                 other.innerLabel == innerLabel) &&
             (identical(other.label, label) || other.label == label) &&
+            (identical(other.isMultiSelect, isMultiSelect) ||
+                other.isMultiSelect == isMultiSelect) &&
             const DeepCollectionEquality().equals(other.value, value) &&
             (identical(other.displayBehavior, displayBehavior) ||
                 other.displayBehavior == displayBehavior) &&
@@ -669,6 +687,7 @@ class _$PropertySchemaImpl implements _PropertySchema {
         tooltip,
         innerLabel,
         label,
+        isMultiSelect,
         const DeepCollectionEquality().hash(value),
         displayBehavior,
         const DeepCollectionEquality().hash(_conditions),
@@ -717,6 +736,7 @@ abstract class _PropertySchema implements PropertySchema {
       final String? tooltip,
       final String? innerLabel,
       final String? label,
+      final bool? isMultiSelect,
       final dynamic value,
       final DisplayBehavior? displayBehavior,
       final Map<String, dynamic>? conditions,
@@ -770,6 +790,8 @@ abstract class _PropertySchema implements PropertySchema {
   String? get innerLabel;
   @override
   String? get label;
+  @override
+  bool? get isMultiSelect;
   @override
   dynamic get value;
   @override

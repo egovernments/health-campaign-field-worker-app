@@ -130,6 +130,7 @@ class _SearchBeneficiaryPageState
                   "selectedBoundaryCode": RegistrationDeliverySingleton().boundary?.code, // converting in json format to match nested object value as passing model will cause issue
                   'userUUID': RegistrationDeliverySingleton().loggedInUser?.uuid,
                   'householdType': RegistrationDeliverySingleton().householdType?.toValue(),
+                  "beneficiaryType": RegistrationDeliverySingleton().beneficiaryType?.toValue(),
                 },
                 fallbackFormDataString: jsonConfig['beneficiaryRegistration']?['fallbackModel'] as String?,
               );

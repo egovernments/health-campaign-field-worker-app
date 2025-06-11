@@ -1,25 +1,29 @@
 final jsonConfig = {
   "beneficiaryRegistration": {
-    "fallbackModel": "HouseholdModel", // fallback model to map form values which are not mapped to any field
+    "fallbackModel": "HouseholdModel",
+    // fallback model to map form values which are not mapped to any field
     "models": {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
           "boundaryCode": "__context:selectedBoundaryCode",
           "memberCount": "householdDetails.memberCount",
-"latitude": "beneficiaryLocation.latLong[0]",
-"longitude": "beneficiaryLocation.latLong[1]",
+          "latitude": "beneficiaryLocation.latLong[0]",
+          "longitude": "beneficiaryLocation.latLong[1]",
           "nonRecoverableError": "errors.nonRecoverable",
-          "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
+          "clientReferenceId": "__generate:uuid",
+
+          /// Note: Generate uuid
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "address": {
             "id": "address.id",
             "boundaryCode": "__context:selectedBoundaryCode",
-            "relatedClientReferenceId": "__ref:HouseholdModel.clientReferenceId",
+            "relatedClientReferenceId":
+                "__ref:HouseholdModel.clientReferenceId",
             "doorNo": "address.doorNo",
-"latitude": "beneficiaryLocation.latLong[0]",
-"longitude": "beneficiaryLocation.latLong[1]",
+            "latitude": "beneficiaryLocation.latLong[0]",
+            "longitude": "beneficiaryLocation.latLong[1]",
             "locationAccuracy": "address.locationAccuracy",
             "addressLine1": "beneficiaryLocation.addressLine1",
             "addressLine2": "addressLine2",
@@ -68,11 +72,14 @@ final jsonConfig = {
           "husbandName": "family.husbandName",
           "photo": "personalDetails.photo",
           "nonRecoverableError": "errors.nonRecoverable",
-          "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
+          "clientReferenceId": "__generate:uuid",
+
+          /// Note: Generate uuid
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "name": {
-            "individualClientReferenceId": "__ref:IndividualModel.clientReferenceId",
+            "individualClientReferenceId":
+                "__ref:IndividualModel.clientReferenceId",
             "givenName": "beneficiaryDetails.nameOfIndividual",
           },
           "bloodGroup": "health.bloodGroup",
@@ -102,10 +109,11 @@ final jsonConfig = {
             "mappings": {
               "id": "address.id",
               "boundaryCode": "__context:selectedBoundaryCode",
-              "relatedClientReferenceId": "__ref:IndividualModel.clientReferenceId",
+              "relatedClientReferenceId":
+                  "__ref:IndividualModel.clientReferenceId",
               "doorNo": "address.doorNo",
-"latitude": "beneficiaryLocation.latLong[0]",
-"longitude": "beneficiaryLocation.latLong[1]",
+              "latitude": "beneficiaryLocation.latLong[0]",
+              "longitude": "beneficiaryLocation.latLong[1]",
               "locationAccuracy": "address.locationAccuracy",
               "addressLine1": "beneficiaryLocation.addressLine1",
               "addressLine2": "addressLine2",
@@ -140,9 +148,12 @@ final jsonConfig = {
           "tenantId": "__context:tenantId",
           "beneficiaryId": "beneficiaryDetails.beneficiaryId",
           "tag": "beneficiaryDetails.tag",
-          "beneficiaryClientReferenceId": "__ref:IndividualModel.clientReferenceId",
+          "beneficiaryClientReferenceId":
+              "__switch:__context:beneficiaryType:{INDIVIDUAL:__ref:IndividualModel.clientReferenceId,HOUSEHOLD:__ref:HouseholdModel.clientReferenceId}",
           "nonRecoverableError": "errors.nonRecoverable",
-          "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
+          "clientReferenceId": "__generate:uuid",
+
+          /// Note: Generate uuid
           "rowVersion": "meta.rowVersion",
           "dateOfRegistration": "householdDetails.dateOfRegistration",
           "additionalFields": "additionalInfo.fields",
@@ -154,12 +165,16 @@ final jsonConfig = {
         "mappings": {
           "id": "members.id",
           "householdId": "members.householdId",
-          "householdClientReferenceId": "__ref:HouseholdModel.clientReferenceId",
+          "householdClientReferenceId":
+              "__ref:HouseholdModel.clientReferenceId",
           "individualId": "members.individualId",
-          "individualClientReferenceId": "__ref:IndividualModel.clientReferenceId",
+          "individualClientReferenceId":
+              "__ref:IndividualModel.clientReferenceId",
           "isHeadOfHousehold": "beneficiaryDetails.isHeadOfFamily",
           "nonRecoverableError": "errors.nonRecoverable",
-          "clientReferenceId": "__generate:uuid",   /// Note: Generate uuid
+          "clientReferenceId": "__generate:uuid",
+
+          /// Note: Generate uuid
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "additionalFields": "additionalInfo.fields",

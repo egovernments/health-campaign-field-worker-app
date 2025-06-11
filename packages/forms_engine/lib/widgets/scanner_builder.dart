@@ -46,6 +46,7 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
                   ],
                 )
                     : DigitButton(
+                  capitalizeLetters: false,
                   size: DigitButtonSize.large,
                   label: label ?? 'scanner',
                   onPressed: () async {

@@ -29,8 +29,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 
     // Step 1: Sort and filter pages
     final sortedFilteredPages = Map.fromEntries(
-      schemaObject.pages.entries
-          .toList()
+      schemaObject.pages.entries.toList()
         ..sort((a, b) {
           if (a.value.order == null || b.value.order == null) return 0;
           return a.value.order!.compareTo(b.value.order!);
@@ -40,23 +39,24 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       final sortedProperties = pageValue.properties == null
           ? null
           : Map.fromEntries(
-        pageValue.properties!.entries.toList()
-          ..sort((a, b) {
-            if (a.value.order == null || b.value.order == null) return 0;
-            return a.value.order!.compareTo(b.value.order!);
-          }),
-      );
+              pageValue.properties!.entries.toList()
+                ..sort((a, b) {
+                  if (a.value.order == null || b.value.order == null) return 0;
+                  return a.value.order!.compareTo(b.value.order!);
+                }),
+            );
 
       return MapEntry(
         pageKey,
         pageValue.copyWith(properties: sortedProperties),
       );
     })
-    // Step 3: Remove pages where all properties are hidden
+      // Step 3: Remove pages where all properties are hidden
       ..removeWhere((key, page) {
         final properties = page.properties;
         if (properties == null || properties.isEmpty) return true;
-        final allHidden = properties.values.every((prop) => prop.hidden == true);
+        final allHidden =
+            properties.values.every((prop) => prop.hidden == true);
         return allHidden;
       });
 
@@ -66,27 +66,31 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   }
 
   void _handleUpdateForm(FormsUpdateEvent event, FormsStateEmitter emit) {
-    emit(FormsState(schema: event.object, initialSchema:state.initialSchema));
+    emit(FormsState(schema: event.object, initialSchema: state.initialSchema));
   }
 
   void _handleCreateMapping(
-      FormsCreateMappingEvent event,
-      FormsStateEmitter emit,
-      ) {
+    FormsCreateMappingEvent event,
+    FormsStateEmitter emit,
+  ) {
     final propertiesMap = state.schema?.pages.entries
         .map((e) => e.value)
         .map((e) => e.properties)
         .whereNotNull()
         .expand(
-          (element) => element.entries.map((e) => MapEntry(e.key, e.value.value)),
-    );
+          (element) =>
+              element.entries.map((e) => MapEntry(e.key, e.value.value)),
+        );
 
     if (propertiesMap == null || propertiesMap.isEmpty) {
       throw Exception('Invalid schema output. Data should not be empty');
     }
 
     final dataMap = Map.fromEntries(propertiesMap);
-    emit(FormsState(schema: state.schema, formData: dataMap, initialSchema: state.initialSchema));
+    emit(FormsState(
+        schema: state.schema,
+        formData: dataMap,
+        initialSchema: state.initialSchema));
   }
 
   void _handleUpdateField(FormsUpdateFieldEvent event, FormsStateEmitter emit) {
@@ -99,11 +103,11 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
           properties: page.value.properties == null
               ? null
               : {
-            for (final prop in page.value.properties!.entries)
-              prop.key: prop.key == event.key
-                  ? prop.value.copyWith(value: event.value)
-                  : prop.value,
-          },
+                  for (final prop in page.value.properties!.entries)
+                    prop.key: prop.key == event.key
+                        ? prop.value.copyWith(value: event.value)
+                        : prop.value,
+                },
         ),
     };
 
@@ -121,15 +125,17 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
           properties: page.value.properties == null
               ? null
               : {
-            for (final prop in page.value.properties!.entries)
-              prop.key: prop.key == event.key
-                  ? prop.value.copyWith(value: null)
-                  : prop.value,
-          },
+                  for (final prop in page.value.properties!.entries)
+                    prop.key: prop.key == event.key
+                        ? prop.value.copyWith(value: null)
+                        : prop.value,
+                },
         ),
     };
 
-    emit(FormsState(schema: schemaCopy.copyWith(pages: updatedPages), initialSchema: state.initialSchema));
+    emit(FormsState(
+        schema: schemaCopy.copyWith(pages: updatedPages),
+        initialSchema: state.initialSchema));
   }
 
   void _handleClearPage(FormsClearPageEvent event, FormsStateEmitter emit) {
@@ -147,7 +153,9 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     final updatedPages = Map.of(schemaCopy.pages);
     updatedPages[event.pageKey] = page.copyWith(properties: clearedProperties);
 
-    emit(FormsState(schema: schemaCopy.copyWith(pages: updatedPages), initialSchema: state.initialSchema));
+    emit(FormsState(
+        schema: schemaCopy.copyWith(pages: updatedPages),
+        initialSchema: state.initialSchema));
   }
 
   void _handleClearForm(FormsClearFormEvent event, FormsStateEmitter emit) {
@@ -156,7 +164,6 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 
     emit(FormsState(schema: schemaJson, initialSchema: schemaJson));
   }
-
 
   void _handleSubmitForm(FormsSubmitEvent event, FormsStateEmitter emit) {
     final schemaObject = state.schema;
@@ -176,7 +183,14 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         final key = propEntry.key;
         final value = propEntry.value.value;
 
-        pageValues[key] = value;
+        // Skip field if it's hidden
+        if (propEntry.value.hidden == true) continue;
+
+        /// Normalize empty string to null
+        final normalizedValue =
+            (value is String && value.trim().isEmpty) ? null : value;
+
+        pageValues[key] = normalizedValue;
       }
 
       if (pageValues.isNotEmpty) {
@@ -184,11 +198,15 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       }
     }
 
-    emit(FormsSubmittedState(schema: schemaObject, formData: formData, initialSchema: state.initialSchema));
-    emit(FormsState(schema: schemaObject, initialSchema: state.initialSchema)); // Reset after submit
+    emit(FormsSubmittedState(
+        schema: schemaObject,
+        formData: formData,
+        initialSchema: state.initialSchema));
+    emit(FormsState(
+        schema: schemaObject,
+        initialSchema: state.initialSchema)); // Reset after submit
   }
 }
-
 
 @freezed
 class FormsEvent with _$FormsEvent {
@@ -198,11 +216,14 @@ class FormsEvent with _$FormsEvent {
 
   const factory FormsEvent.update(SchemaObject object) = FormsUpdateEvent;
 
-  const factory FormsEvent.updateField({required String key, required dynamic value}) = FormsUpdateFieldEvent;
+  const factory FormsEvent.updateField(
+      {required String key, required dynamic value}) = FormsUpdateFieldEvent;
 
-  const factory FormsEvent.clearField({required String key}) = FormsClearFieldEvent;
+  const factory FormsEvent.clearField({required String key}) =
+      FormsClearFieldEvent;
 
-  const factory FormsEvent.clearPage({required String pageKey}) = FormsClearPageEvent;
+  const factory FormsEvent.clearPage({required String pageKey}) =
+      FormsClearPageEvent;
 
   const factory FormsEvent.clearForm() = FormsClearFormEvent;
 
