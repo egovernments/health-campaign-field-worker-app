@@ -41,6 +41,7 @@ class PropertySchema with _$PropertySchema {
     String? tooltip,
     String? innerLabel,
     String? label,
+    bool? isMultiSelect,
     dynamic value,
     DisplayBehavior? displayBehavior,
     Map<String, dynamic>? conditions,
@@ -106,6 +107,7 @@ enum PropertySchemaFormat {
   radio,
   dob,
   scanner,
+  idPopulator,
   text;
 }
 

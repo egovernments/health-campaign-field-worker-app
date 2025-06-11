@@ -560,6 +560,7 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'readOnly': pageMap['readOnly'],
         'charCount': pageMap['charCount'],
         'systemDate': pageMap['systemDate'],
+        'isMultiSelect': pageMap['isMultiSelect'],
       };
 
       if (type == 'template') {

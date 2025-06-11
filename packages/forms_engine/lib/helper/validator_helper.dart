@@ -9,16 +9,16 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
   if (schema.validations != null) {
     for (final rule in schema.validations!) {
       switch (rule.type) {
-        case 'minLength':
-          final parsedValue = parseIntValue(rule.value);
-
-          if (parsedValue != null) {
-            validators.add(Validators.composeOR([
-              Validators.minLength(parsedValue) as Validator<T>,
-              Validators.equals(null),
-            ]) as Validator<T>);
-          }
-          break;
+        // case 'minLength':
+        //   final parsedValue = parseIntValue(rule.value);
+        //
+        //   if (parsedValue != null) {
+        //     validators.add(Validators.composeOR([
+        //       Validators.minLength(parsedValue) as Validator<T>,
+        //       Validators.equals(null),
+        //     ]) as Validator<T>);
+        //   }
+        //   break;
 
         case 'maxLength':
           final parsedValue = parseIntValue(rule.value);

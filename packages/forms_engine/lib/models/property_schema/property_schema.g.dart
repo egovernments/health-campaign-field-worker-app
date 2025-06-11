@@ -35,6 +35,7 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       tooltip: json['tooltip'] as String?,
       innerLabel: json['innerLabel'] as String?,
       label: json['label'] as String?,
+      isMultiSelect: json['isMultiSelect'] as bool?,
       value: json['value'],
       displayBehavior: json['displayBehavior'] == null
           ? null
@@ -81,6 +82,7 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('tooltip', instance.tooltip);
   writeNotNull('innerLabel', instance.innerLabel);
   writeNotNull('label', instance.label);
+  writeNotNull('isMultiSelect', instance.isMultiSelect);
   writeNotNull('value', instance.value);
   writeNotNull('displayBehavior', instance.displayBehavior?.toJson());
   writeNotNull('conditions', instance.conditions);
@@ -111,6 +113,7 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.radio: 'radio',
   PropertySchemaFormat.dob: 'dob',
   PropertySchemaFormat.scanner: 'scanner',
+  PropertySchemaFormat.idPopulator: 'idPopulator',
   PropertySchemaFormat.text: 'text',
 };
 
