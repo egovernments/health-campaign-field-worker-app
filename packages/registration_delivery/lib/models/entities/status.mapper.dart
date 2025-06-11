@@ -35,8 +35,8 @@ class StatusMapper extends EnumMapper<Status> {
         return Status.notVisited;
       case "BENEFICIARY_REFUSED":
         return Status.beneficiaryRefused;
-      case "BENEFICIARY_INELIGIBLE":
-        return Status.beneficiaryInEligible;
+      case "INELIGIBLE":
+        return Status.ineligible;
       case "BENEFICIARY_REFERRED":
         return Status.beneficiaryReferred;
       case "ADMINISTRATION_SUCCESS":
@@ -71,8 +71,8 @@ class StatusMapper extends EnumMapper<Status> {
         return "NOT_VISITED";
       case Status.beneficiaryRefused:
         return "BENEFICIARY_REFUSED";
-      case Status.beneficiaryInEligible:
-        return "BENEFICIARY_INELIGIBLE";
+      case Status.ineligible:
+        return "INELIGIBLE";
       case Status.beneficiaryReferred:
         return "BENEFICIARY_REFERRED";
       case Status.administeredSuccess:
