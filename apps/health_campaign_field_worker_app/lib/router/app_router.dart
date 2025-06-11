@@ -28,6 +28,7 @@ import '../pages/boundary_selection.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
+import '../pages/non_system_user/non_system_user_list.dart';
 import '../pages/profile.dart';
 import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
@@ -81,6 +82,12 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
+        ),
+        // NonSystem User
+
+        AutoRoute(
+          page: NonSystemUserListRoute.page,
+          path: 'non-systems-users',
         ),
         // DSS Dashboard Routes
         AutoRoute(

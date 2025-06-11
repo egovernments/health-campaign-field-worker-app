@@ -34,6 +34,8 @@ const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
+const nonMobileUser = NonMobileUser();
+
 class Common {
   const Common();
 
@@ -1089,4 +1091,13 @@ class Dashboard {
   const Dashboard();
 
   String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
+}
+
+class NonMobileUser {
+  const NonMobileUser();
+
+  String get nonMobileUserLabel => 'NON_MOBILE_USER_LABEL';
+  String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
+  String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
+  String get nonSystemUserDrawerLabel => 'NON_SYSTEM_USER_DRAWER_LABEL';
 }
