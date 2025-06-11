@@ -20,12 +20,10 @@ class BeneficiaryErrorPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<BeneficiaryErrorPage> createState() =>
-      BeneficiaryErrorPageState();
+  State<BeneficiaryErrorPage> createState() => BeneficiaryErrorPageState();
 }
 
-class BeneficiaryErrorPageState
-    extends LocalizedState<BeneficiaryErrorPage> {
+class BeneficiaryErrorPageState extends LocalizedState<BeneficiaryErrorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +31,7 @@ class BeneficiaryErrorPageState
         padding: const EdgeInsets.all(spacer2),
         child: PanelCard(
           type: PanelType.error,
-          title: localizations
-              .translate('FAILED_TO_REGISTER_BENEFICIARY'),
+          title: localizations.translate('FAILED_TO_REGISTER_BENEFICIARY'),
           actions: [
             DigitButton(
                 label: localizations
