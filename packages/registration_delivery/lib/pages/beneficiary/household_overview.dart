@@ -1372,8 +1372,7 @@ class _HouseholdOverviewPageState
   void navigateToChecklist(BuildContext ctx, String beneficiaryClientRefId,
       AddressModel? address) async {
     await context.router.push(BeneficiaryChecklistRoute(
-        beneficiaryClientRefId: beneficiaryClientRefId,
-        beneficiaryAddress: address));
+        beneficiaryClientRefId: beneficiaryClientRefId));
   }
 
   void callReloadEvent({

@@ -355,10 +355,9 @@ class _BeneficiaryChecklistPageState
                                           isRequired: e.required ?? false,
                                           capitalizedFirstLetter: false,
                                           labelStyle: textTheme.headingM
-                                              
                                               .copyWith(
-                                                  color: theme.colorTheme.text
-                                                      .primary),
+                                                  color: theme
+                                                      .colorTheme.text.primary),
                                           descriptionStyle: textTheme.bodyS
                                               .copyWith(
                                                   color: theme.colorTheme.text
