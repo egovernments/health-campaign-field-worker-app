@@ -1,27 +1,27 @@
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/app_initialization/app_initialization.dart';
+import '../../router/app_router.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
-import '../../router/app_router.dart';
-import '../../widgets/non_system_user/non_system_user_card.dart';
-import '../../widgets/non_system_user/show_qr_code_non_system_user.dart';
+import '../../widgets/non_mobile_user/non_mobile_user_card.dart';
+import '../../widgets/non_mobile_user/show_qr_code_non_system_user.dart';
 
 @RoutePage()
-class NonSystemUserListPage extends LocalizedStatefulWidget {
-  const NonSystemUserListPage({super.key});
+class NonMobileUserListPage extends LocalizedStatefulWidget {
+  const NonMobileUserListPage({super.key});
 
   @override
-  State<NonSystemUserListPage> createState() => _NonSystemUserListPageState();
+  State<NonMobileUserListPage> createState() => _NonMobileUserListPageState();
 }
 
-class _NonSystemUserListPageState
-    extends LocalizedState<NonSystemUserListPage> {
+class _NonMobileUserListPageState
+    extends LocalizedState<NonMobileUserListPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -51,7 +51,6 @@ class _NonSystemUserListPageState
               __,
             ) =>
                 ScrollableContent(
-              
               header: const BackNavigationHelpHeaderWidget(
                 showHelp: false,
               ),
@@ -72,12 +71,12 @@ class _NonSystemUserListPageState
                   ),
                 ),
                 ...List.generate(5, (x) {
-                  return NonSystemUserCard(
+                  return NonMobileUserCard(
                     userName: 'Pitabash $x',
                     role: 'distributor $x',
                     age: (x + 1).toString(),
                     onScanMe: (value) {
-                      showQRForNonSystemUser(
+                      showQRForNonMobileUser(
                           context: context,
                           localizations: localizations,
                           textTheme: textTheme);

@@ -5,10 +5,10 @@ import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 
-import '../localized.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../localized.dart';
 
-class NonSystemUserCard extends LocalizedStatefulWidget {
+class NonMobileUserCard extends LocalizedStatefulWidget {
   final String userName;
   final String role;
   final String gender;
@@ -16,7 +16,7 @@ class NonSystemUserCard extends LocalizedStatefulWidget {
   final String? mobilenumber;
   final void Function(dynamic value) onScanMe;
 
-  const NonSystemUserCard({
+  const NonMobileUserCard({
     super.key,
     required this.userName,
     required this.role,
@@ -27,10 +27,10 @@ class NonSystemUserCard extends LocalizedStatefulWidget {
   });
 
   @override
-  State<NonSystemUserCard> createState() => _NonSystemUserCardState();
+  State<NonMobileUserCard> createState() => _NonMobileUserCardState();
 }
 
-class _NonSystemUserCardState extends LocalizedState<NonSystemUserCard> {
+class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

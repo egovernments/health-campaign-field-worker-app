@@ -8,7 +8,7 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:attendance_management/attendance_management.dart' as _i11;
+import 'package:attendance_management/attendance_management.dart' as _i10;
 import 'package:attendance_management/blocs/app_localization.dart' as _i8;
 import 'package:attendance_management/models/entities/attendance_register.dart'
     as _i9;
@@ -20,7 +20,6 @@ import 'package:attendance_management/widgets/attendance_acknowledgement.dart'
 import 'package:attendance_management/widgets/attendance_qr_scanner.dart'
     as _i3;
 import 'package:auto_route/auto_route.dart' as _i6;
-import 'package:digit_scanner/blocs/app_localization.dart' as _i10;
 import 'package:flutter/material.dart' as _i7;
 
 abstract class $AttendanceRoute extends _i6.AutoRouterModule {
@@ -63,11 +62,10 @@ abstract class $AttendanceRoute extends _i6.AutoRouterModule {
         routeData: routeData,
         child: _i3.AttendanceDigitScannerPage(
           key: args.key,
-          appLocalizations: args.appLocalizations,
+          registerModel: args.registerModel,
           quantity: args.quantity,
-          isGS1code: args.isGS1code,
           singleValue: args.singleValue,
-          isEditEnabled: args.isEditEnabled,
+          isGS1code: args.isGS1code,
         ),
       );
     },
@@ -230,21 +228,19 @@ class AttendanceDigitScannerRoute
     extends _i6.PageRouteInfo<AttendanceDigitScannerRouteArgs> {
   AttendanceDigitScannerRoute({
     _i7.Key? key,
-    _i10.ScannerLocalization? appLocalizations,
+    required _i9.AttendanceRegisterModel registerModel,
     required int quantity,
-    required bool isGS1code,
     bool singleValue = false,
-    bool isEditEnabled = false,
+    required bool isGS1code,
     List<_i6.PageRouteInfo>? children,
   }) : super(
           AttendanceDigitScannerRoute.name,
           args: AttendanceDigitScannerRouteArgs(
             key: key,
-            appLocalizations: appLocalizations,
+            registerModel: registerModel,
             quantity: quantity,
-            isGS1code: isGS1code,
             singleValue: singleValue,
-            isEditEnabled: isEditEnabled,
+            isGS1code: isGS1code,
           ),
           initialChildren: children,
         );
@@ -258,28 +254,25 @@ class AttendanceDigitScannerRoute
 class AttendanceDigitScannerRouteArgs {
   const AttendanceDigitScannerRouteArgs({
     this.key,
-    this.appLocalizations,
+    required this.registerModel,
     required this.quantity,
-    required this.isGS1code,
     this.singleValue = false,
-    this.isEditEnabled = false,
+    required this.isGS1code,
   });
 
   final _i7.Key? key;
 
-  final _i10.ScannerLocalization? appLocalizations;
+  final _i9.AttendanceRegisterModel registerModel;
 
   final int quantity;
 
-  final bool isGS1code;
-
   final bool singleValue;
 
-  final bool isEditEnabled;
+  final bool isGS1code;
 
   @override
   String toString() {
-    return 'AttendanceDigitScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, singleValue: $singleValue, isEditEnabled: $isEditEnabled}';
+    return 'AttendanceDigitScannerRouteArgs{key: $key, registerModel: $registerModel, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code}';
   }
 }
 
@@ -301,9 +294,9 @@ class ManageAttendanceRoute extends _i6.PageRouteInfo<void> {
 /// [_i5.MarkAttendancePage]
 class MarkAttendanceRoute extends _i6.PageRouteInfo<MarkAttendanceRouteArgs> {
   MarkAttendanceRoute({
-    required _i11.AttendanceRegisterModel registerModel,
+    required _i10.AttendanceRegisterModel registerModel,
     _i7.Key? key,
-    _i11.AttendanceLocalization? appLocalizations,
+    _i10.AttendanceLocalization? appLocalizations,
     List<_i6.PageRouteInfo>? children,
   }) : super(
           MarkAttendanceRoute.name,
@@ -328,11 +321,11 @@ class MarkAttendanceRouteArgs {
     this.appLocalizations,
   });
 
-  final _i11.AttendanceRegisterModel registerModel;
+  final _i10.AttendanceRegisterModel registerModel;
 
   final _i7.Key? key;
 
-  final _i11.AttendanceLocalization? appLocalizations;
+  final _i10.AttendanceLocalization? appLocalizations;
 
   @override
   String toString() {

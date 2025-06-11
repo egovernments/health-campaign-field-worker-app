@@ -8,11 +8,12 @@ import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/localization/app_localization.dart';
 
 //TODO: TO user details to generate the qrcode, after API integration
-void showQRForNonSystemUser(
+void showQRForNonMobileUser(
     {required BuildContext context,
     required AppLocalizations localizations,
     required DigitTextTheme textTheme}) {
@@ -29,7 +30,7 @@ void showQRForNonSystemUser(
           additionalWidgets: [
             const Center(
                 child: DigitTextBlock(
-                  //TODO: TO show the selected user name
+              //TODO: TO show the selected user name
               subHeading: "Pitabash Choudhdry",
             )),
             Container(

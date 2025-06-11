@@ -83,10 +83,10 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    NonSystemUserListRoute.name: (routeData) {
+    NonMobileUserListRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const NonSystemUserListPage(),
+        child: const NonMobileUserListPage(),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -379,15 +379,15 @@ class LoginRouteArgs {
 }
 
 /// generated route for
-/// [NonSystemUserListPage]
-class NonSystemUserListRoute extends PageRouteInfo<void> {
-  const NonSystemUserListRoute({List<PageRouteInfo>? children})
+/// [NonMobileUserListPage]
+class NonMobileUserListRoute extends PageRouteInfo<void> {
+  const NonMobileUserListRoute({List<PageRouteInfo>? children})
       : super(
-          NonSystemUserListRoute.name,
+          NonMobileUserListRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'NonSystemUserListRoute';
+  static const String name = 'NonMobileUserListRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
