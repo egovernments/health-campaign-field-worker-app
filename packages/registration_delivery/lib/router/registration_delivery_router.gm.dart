@@ -9,12 +9,12 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i27;
-import 'package:digit_data_model/data_model.dart' as _i33;
+import 'package:digit_data_model/data_model.dart' as _i31;
 import 'package:flutter/foundation.dart' as _i30;
 import 'package:flutter/material.dart' as _i28;
 import 'package:registration_delivery/blocs/app_localization.dart' as _i29;
 import 'package:registration_delivery/blocs/search_households/search_households.dart'
-    as _i32;
+    as _i33;
 import 'package:registration_delivery/models/entities/task.dart' as _i34;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_checklist.dart'
     as _i2;
@@ -65,7 +65,7 @@ import 'package:registration_delivery/pages/registration_delivery_wrapper.dart'
     as _i22;
 import 'package:registration_delivery/pages/search_beneficiary.dart' as _i23;
 import 'package:registration_delivery/pages/summary_page.dart' as _i26;
-import 'package:registration_delivery/registration_delivery.dart' as _i31;
+import 'package:registration_delivery/registration_delivery.dart' as _i32;
 
 abstract class $RegistrationDeliveryRoute extends _i27.AutoRouterModule {
   @override
@@ -90,6 +90,7 @@ abstract class $RegistrationDeliveryRoute extends _i27.AutoRouterModule {
         child: _i2.BeneficiaryChecklistPage(
           key: args.key,
           beneficiaryClientRefId: args.beneficiaryClientRefId,
+          beneficiaryAddress: args.beneficiaryAddress,
           appLocalizations: args.appLocalizations,
         ),
       );
@@ -415,6 +416,7 @@ class BeneficiaryChecklistRoute
   BeneficiaryChecklistRoute({
     _i30.Key? key,
     String? beneficiaryClientRefId,
+    _i31.AddressModel? beneficiaryAddress,
     _i29.RegistrationDeliveryLocalization? appLocalizations,
     List<_i27.PageRouteInfo>? children,
   }) : super(
@@ -422,6 +424,7 @@ class BeneficiaryChecklistRoute
           args: BeneficiaryChecklistRouteArgs(
             key: key,
             beneficiaryClientRefId: beneficiaryClientRefId,
+            beneficiaryAddress: beneficiaryAddress,
             appLocalizations: appLocalizations,
           ),
           initialChildren: children,
@@ -437,6 +440,7 @@ class BeneficiaryChecklistRouteArgs {
   const BeneficiaryChecklistRouteArgs({
     this.key,
     this.beneficiaryClientRefId,
+    this.beneficiaryAddress,
     this.appLocalizations,
   });
 
@@ -444,11 +448,13 @@ class BeneficiaryChecklistRouteArgs {
 
   final String? beneficiaryClientRefId;
 
+  final _i31.AddressModel? beneficiaryAddress;
+
   final _i29.RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
-    return 'BeneficiaryChecklistRouteArgs{key: $key, beneficiaryClientRefId: $beneficiaryClientRefId, appLocalizations: $appLocalizations}';
+    return 'BeneficiaryChecklistRouteArgs{key: $key, beneficiaryClientRefId: $beneficiaryClientRefId, beneficiaryAddress: $beneficiaryAddress, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -536,7 +542,7 @@ class BeneficiaryRegistrationWrapperRoute
     extends _i27.PageRouteInfo<BeneficiaryRegistrationWrapperRouteArgs> {
   BeneficiaryRegistrationWrapperRoute({
     _i28.Key? key,
-    required _i31.BeneficiaryRegistrationState initialState,
+    required _i32.BeneficiaryRegistrationState initialState,
     List<_i27.PageRouteInfo>? children,
   }) : super(
           BeneficiaryRegistrationWrapperRoute.name,
@@ -561,7 +567,7 @@ class BeneficiaryRegistrationWrapperRouteArgs {
 
   final _i28.Key? key;
 
-  final _i31.BeneficiaryRegistrationState initialState;
+  final _i32.BeneficiaryRegistrationState initialState;
 
   @override
   String toString() {
@@ -575,7 +581,7 @@ class BeneficiaryWrapperRoute
     extends _i27.PageRouteInfo<BeneficiaryWrapperRouteArgs> {
   BeneficiaryWrapperRoute({
     _i28.Key? key,
-    required _i32.HouseholdMemberWrapper wrapper,
+    required _i33.HouseholdMemberWrapper wrapper,
     bool isEditing = false,
     List<_i27.PageRouteInfo>? children,
   }) : super(
@@ -603,7 +609,7 @@ class BeneficiaryWrapperRouteArgs {
 
   final _i28.Key? key;
 
-  final _i32.HouseholdMemberWrapper wrapper;
+  final _i33.HouseholdMemberWrapper wrapper;
 
   final bool isEditing;
 
@@ -741,7 +747,7 @@ class FacilitySelectionRoute
     extends _i27.PageRouteInfo<FacilitySelectionRouteArgs> {
   FacilitySelectionRoute({
     _i28.Key? key,
-    required List<_i33.FacilityModel> facilities,
+    required List<_i31.FacilityModel> facilities,
     List<_i27.PageRouteInfo>? children,
   }) : super(
           FacilitySelectionRoute.name,
@@ -766,7 +772,7 @@ class FacilitySelectionRouteArgs {
 
   final _i28.Key? key;
 
-  final List<_i33.FacilityModel> facilities;
+  final List<_i31.FacilityModel> facilities;
 
   @override
   String toString() {
