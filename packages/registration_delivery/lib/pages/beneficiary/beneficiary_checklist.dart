@@ -18,9 +18,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
+import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:survey_form/survey_form.dart';
 
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
+import '../../blocs/household_overview/household_overview.dart';
 import '../../models/entities/status.dart';
+import '../../models/entities/task.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -31,10 +35,12 @@ import '../../widgets/localized.dart';
 @RoutePage()
 class BeneficiaryChecklistPage extends LocalizedStatefulWidget {
   final String? beneficiaryClientRefId;
+  final AddressModel? beneficiaryAddress;
 
   const BeneficiaryChecklistPage({
     super.key,
     this.beneficiaryClientRefId,
+    this.beneficiaryAddress,
     super.appLocalizations,
   });
 
@@ -349,9 +355,10 @@ class _BeneficiaryChecklistPageState
                                           isRequired: e.required ?? false,
                                           capitalizedFirstLetter: false,
                                           labelStyle: textTheme.headingM
+                                              
                                               .copyWith(
-                                                  color: theme
-                                                      .colorTheme.text.primary),
+                                                  color: theme.colorTheme.text
+                                                      .primary),
                                           descriptionStyle: textTheme.bodyS
                                               .copyWith(
                                                   color: theme.colorTheme.text
@@ -1370,6 +1377,7 @@ class _BeneficiaryChecklistPageState
       Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
       Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
       Status.toAdminister.toValue(): Status.toAdminister,
+      Status.ineligible.toValue(): Status.ineligible,
     };
 
     final status = statusMap[decidedFlow];
@@ -1388,9 +1396,68 @@ class _BeneficiaryChecklistPageState
             ? ctx.router.navigate(DeliverInterventionRoute())
             : ctx.router.navigate(BeneficiaryDetailsRoute());
         break;
+      case Status.ineligible:
+        createIneligibleTask(ctx);
+        ctx.router.maybePop();
+        break;
       default:
         Navigator.of(ctx).pop();
         break;
     }
+  }
+
+  void createIneligibleTask(BuildContext ctx) {
+    context.read<DeliverInterventionBloc>().add(
+          DeliverInterventionSubmitEvent(
+            task: TaskModel(
+              projectBeneficiaryClientReferenceId:
+                  widget.beneficiaryClientRefId,
+              clientReferenceId: IdGen.i.identifier,
+              tenantId: RegistrationDeliverySingleton().tenantId,
+              rowVersion: 1,
+              auditDetails: AuditDetails(
+                createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+                createdTime: context.millisecondsSinceEpoch(),
+              ),
+              projectId: RegistrationDeliverySingleton().projectId,
+              status: Status.ineligible.toValue(),
+              clientAuditDetails: ClientAuditDetails(
+                createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+                createdTime: context.millisecondsSinceEpoch(),
+                lastModifiedBy:
+                    RegistrationDeliverySingleton().loggedInUserUuid,
+                lastModifiedTime: context.millisecondsSinceEpoch(),
+              ),
+              additionalFields: TaskAdditionalFields(
+                version: 1,
+                fields: [
+                  AdditionalField(
+                    'taskStatus',
+                    Status.ineligible.toValue(),
+                  ),
+                ],
+              ),
+              address: widget.beneficiaryAddress,
+            ),
+            isEditing: false,
+            boundaryModel: RegistrationDeliverySingleton().boundary!,
+          ),
+        );
+    final reloadState = context.read<HouseholdOverviewBloc>();
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () {
+        reloadState.add(
+          HouseholdOverviewReloadEvent(
+            projectId: RegistrationDeliverySingleton().projectId!,
+            projectBeneficiaryType:
+                RegistrationDeliverySingleton().beneficiaryType!,
+          ),
+        );
+      },
+    ).then(
+      (value) => context.router.popAndPush(BeneficiaryWrapperRoute(
+          wrapper: reloadState.state.householdMemberWrapper)),
+    );
   }
 }
