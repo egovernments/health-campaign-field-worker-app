@@ -389,7 +389,21 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                       Navigator.of(context, rootNavigator: true).pop();
                       context.router.push(const BeneficiariesReportRoute());
                     },
-                  )
+                  ),
+
+                  // TODO: Non system user
+
+                  SidebarItem(
+                    title: AppLocalizations.of(context).translate(
+                      //TODO: TO append the total count of non- system users
+                      i18.nonMobileUser.nonSystemUserDrawerLabel,
+                    ),
+                    icon: Icons.group,
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.push(const NonSystemUserListRoute());
+                    },
+                  ),
                 ],
               ],
               logOutDigitButtonLabel: AppLocalizations.of(context)
