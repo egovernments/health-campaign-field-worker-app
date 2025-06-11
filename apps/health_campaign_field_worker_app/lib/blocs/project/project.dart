@@ -425,6 +425,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           .where(
             (role) =>
                 role.code == RolesType.districtSupervisor.toValue() ||
+                role.code == RolesType.distributor.toValue() ||
                 role.code == RolesType.teamSupervisor.toValue(),
           )
           .toList()
@@ -448,16 +449,25 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 ),
               );
               await individualLocalRepository.bulkCreate(individuals);
-              final logs = await attendanceLogRemoteRepository.search(
-                AttendanceLogSearchModel(
-                  registerId: register.id,
-                ),
-              );
-              await attendanceLogLocalRepository.bulkCreate(logs);
+              if (context.loggedInUserRoles
+                  .where(
+                    (role) =>
+                        role.code == RolesType.districtSupervisor.toValue() ||
+                        role.code == RolesType.teamSupervisor.toValue(),
+                  )
+                  .toList()
+                  .isNotEmpty) {
+                final logs = await attendanceLogRemoteRepository.search(
+                  AttendanceLogSearchModel(
+                    registerId: register.id,
+                  ),
+                );
+                await attendanceLogLocalRepository.bulkCreate(logs);
+              }
             } catch (_) {
               emit(state.copyWith(
                 loading: false,
-                syncError: ProjectSyncErrorType.project,
+                syncError: ProjectSyncErrorType.attendance,
               ));
 
               return;
@@ -698,5 +708,6 @@ enum ProjectSyncErrorType {
   facilities,
   productVariants,
   serviceDefinitions,
-  boundary
+  boundary,
+  attendance
 }

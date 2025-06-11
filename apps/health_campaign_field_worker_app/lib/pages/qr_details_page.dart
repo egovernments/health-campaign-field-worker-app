@@ -1,4 +1,6 @@
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_tab.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +25,8 @@ class UserQRDetailsPage extends LocalizedStatefulWidget {
 }
 
 class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
+  int selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -42,8 +46,8 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
               header: Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showHelp: false,
-                  handleback: (){
-                     context.router.replaceAll([HomeRoute()]);
+                  handleback: () {
+                    context.router.replaceAll([HomeRoute()]);
                   },
                   defaultPopRoute: false,
                 ),
@@ -63,40 +67,83 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                     ),
                   ]),
               children: [
-                state.maybeMap(
-                  authenticated: (value) => Column(
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.25,
-                        height: MediaQuery.of(context).size.width / 1.25,
-                        child: Padding(
-                          padding: const EdgeInsets.all(spacer2),
-                          child: Card(
-                            child: QrImageView(
-                              data: context.loggedInUserUuid,
-                              version: QrVersions.auto,
-                              size: MediaQuery.of(context).size.width / 1.25,
+                DigitTabBar(
+                    initialIndex: selectedIndex,
+                    tabs: ['INVENTORY', 'ATTENDANCE'],
+                    onTabSelected: (index) {
+                      setState(() {
+                        selectedIndex = index;
+                      });
+                    }),
+                selectedIndex == 0
+                    ? state.maybeMap(
+                        authenticated: (value) => Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 1.25,
+                              height: MediaQuery.of(context).size.width / 1.25,
+                              child: Padding(
+                                padding: const EdgeInsets.all(spacer2),
+                                child: Card(
+                                  child: QrImageView(
+                                    data: context.loggedInUserUuid,
+                                    version: QrVersions.auto,
+                                    size: MediaQuery.of(context).size.width /
+                                        1.25,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            Center(
+                              child: Text(
+                                value.userModel.name.toString(),
+                                style: DigitTheme.instance.mobileTheme.textTheme
+                                    .headlineMedium
+                                    ?.apply(
+                                  color: DigitTheme.instance.colorScheme.shadow,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        orElse: () => const Offstage(),
+                      )
+                    : Column(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 1.25,
+                            height: MediaQuery.of(context).size.width / 1.25,
+                            child: Padding(
+                              padding: const EdgeInsets.all(spacer2),
+                              child: Card(
+                                child: QrImageView(
+                                  data: DataMapEncryptor().encryptWithRandomKey(
+                                      context.loggedInIndividualId!),
+                                  version: QrVersions.auto,
+                                  size:
+                                      MediaQuery.of(context).size.width / 1.25,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Center(
-                        child: Text(
-                          value.userModel.name.toString(),
-                          style: DigitTheme
-                              .instance.mobileTheme.textTheme.headlineMedium
-                              ?.apply(
-                            color: DigitTheme.instance.colorScheme.shadow,
+                          const SizedBox(
+                            height: 16,
                           ),
-                        ),
+                          Center(
+                            child: Text(
+                              context.loggedInUser.name!,
+                              style: DigitTheme
+                                  .instance.mobileTheme.textTheme.headlineMedium
+                                  ?.apply(
+                                color: DigitTheme.instance.colorScheme.shadow,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  orElse: () => const Offstage(),
-                ),
               ],
             );
           },

@@ -401,7 +401,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                     icon: Icons.group,
                     onPressed: () {
                       Navigator.of(context, rootNavigator: true).pop();
-                      context.router.push(const NonSystemUserListRoute());
+                      context.router.push(const NonMobileUserListRoute());
                     },
                   ),
                 ],

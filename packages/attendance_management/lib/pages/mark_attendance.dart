@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
@@ -6,6 +7,7 @@ import 'package:attendance_management/widgets/custom_attendance_info_card.dart';
 import 'package:attendance_management/widgets/labelled_toggle.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -96,7 +98,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     var localizations = AttendanceLocalization.of(context);
-    bool markManualAttendance = true;
 
     return BlocProvider<LocationBloc>(
         create: (_) {
@@ -159,95 +160,181 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             enableFixedDigitButton: true,
                             footer: viewOnly
                                 ? const SizedBox.shrink()
-                                : DigitCard(
-                                    margin: EdgeInsets.only(
-                                        top: theme.spacerTheme.spacer4),
-                                    children: [
-                                        AttendanceDateTimeManagement.isToday(
-                                                AttendanceDateTimeManagement
-                                                    .getFormattedDateToDateTime(
-                                                        currentSelectedDate)!)
-                                            ? DigitButton(
-                                                size: DigitButtonSize.large,
-                                                type: DigitButtonType.primary,
-                                                mainAxisSize: MainAxisSize.max,
-                                                onPressed: () async {
-                                                  var manualMode =
-                                                      await Navigator.of(
-                                                              context)
-                                                          .push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const AttendanceDigitScannerPage(
-                                                        quantity: 1,
-                                                        isGS1code: false,
-                                                        singleValue: false,
-                                                      ),
-                                                      settings:
-                                                          const RouteSettings(
-                                                              name:
-                                                                  '/qr-scanner'),
-                                                    ),
-                                                  );
-                                                  if (manualMode != null) {
-                                                    setState(() {
-                                                      markManualAttendance =
-                                                          manualMode;
-                                                    });
-                                                  }
-                                                },
-                                                prefixIcon: Icons
-                                                    .document_scanner_outlined,
-                                                label: localizations.translate(
-                                                  i18.attendance.markAttendance,
+                                : BlocListener<DigitScannerBloc,
+                                    DigitScannerState>(
+                                    listener: (bloc, state) {
+                                      if (state.qrCodes.isNotEmpty) {
+                                        for (var scannedUsers
+                                            in state.qrCodes) {
+                                          if (AttendanceScannerPageState()
+                                              .validateIndividualAttendance(
+                                                  jsonDecode(scannedUsers),
+                                                  widget.registerModel)) {
+                                            var user = jsonDecode(scannedUsers);
+                                            context
+                                                .read<
+                                                    AttendanceIndividualBloc>()
+                                                .add(
+                                                  AttendanceMarkEvent(
+                                                    individualId:
+                                                        user['individualId'],
+                                                    registerId:
+                                                        widget.registerModel.id,
+                                                    status: 1.0,
+                                                    isSingleSession: false,
+                                                  ),
+                                                );
+                                          } else {
+                                            Toast.showToast(context,
+                                                message:
+                                                    localizations.translate(
+                                                  i18.attendance
+                                                      .attendeeNotFound,
                                                 ),
-                                              )
-                                            : const Offstage(),
-                                        DigitButton(
-                                          size: DigitButtonSize.large,
-                                          type: DigitButtonType.secondary,
-                                          mainAxisSize: MainAxisSize.max,
-                                          onPressed: () {
-                                            checkIfAllAttendeesMarked(
-                                              state,
-                                              localizations,
-                                              theme,
-                                              EnumValues.draft.toValue(),
-                                              locationState.latitude,
-                                              locationState.longitude,
-                                              context,
-                                            );
-                                          },
-                                          prefixIcon: Icons.drafts_outlined,
-                                          label: localizations.translate(
-                                            i18.attendance
-                                                .saveAndMarkLaterLabel,
+                                                type: ToastType.error);
+                                          }
+                                          context.read<DigitScannerBloc>().add(
+                                                const DigitScannerEvent
+                                                    .handleScanner(
+                                                  barCode: [],
+                                                  qrCode: [],
+                                                ),
+                                              );
+                                        }
+                                      }
+                                    },
+                                    child: DigitCard(
+                                        margin: EdgeInsets.only(
+                                            top: theme.spacerTheme.spacer4),
+                                        children: [
+                                          AttendanceDateTimeManagement.isToday(
+                                                  AttendanceDateTimeManagement
+                                                      .getFormattedDateToDateTime(
+                                                          currentSelectedDate)!)
+                                              ? DigitButton(
+                                                  size: DigitButtonSize.large,
+                                                  type: DigitButtonType.primary,
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  onPressed: () async {
+                                                    final scannerBloc =
+                                                        context.read<
+                                                            DigitScannerBloc>();
+
+                                                    context
+                                                        .read<
+                                                            DigitScannerBloc>()
+                                                        .add(
+                                                          const DigitScannerEvent
+                                                              .handleScanner(
+                                                            barCode: [],
+                                                            qrCode: [],
+                                                          ),
+                                                        );
+
+                                                    var manualMode =
+                                                        await Navigator.of(
+                                                                context)
+                                                            .push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AttendanceDigitScannerPage(
+                                                          quantity: widget
+                                                              .registerModel
+                                                              .attendees!
+                                                              .length,
+                                                          isGS1code: false,
+                                                          singleValue: false,
+                                                          registerModel: widget
+                                                              .registerModel,
+                                                        ),
+                                                        settings:
+                                                            const RouteSettings(
+                                                                name:
+                                                                    '/qr-scanner'),
+                                                      ),
+                                                    );
+                                                    if (manualMode != null) {
+                                                      setState(() {
+                                                        markManualAttendance =
+                                                            manualMode;
+                                                      });
+                                                    }
+                                                  },
+                                                  prefixIcon: Icons
+                                                      .document_scanner_outlined,
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.attendance
+                                                        .markAttendance,
+                                                  ),
+                                                )
+                                              : const Offstage(),
+                                          DigitButton(
+                                            size: DigitButtonSize.large,
+                                            type: DigitButtonType.secondary,
+                                            mainAxisSize: MainAxisSize.max,
+                                            onPressed: () {
+                                              checkIfAllAttendeesMarked(
+                                                state,
+                                                localizations,
+                                                theme,
+                                                EnumValues.draft.toValue(),
+                                                locationState.latitude,
+                                                locationState.longitude,
+                                                context,
+                                              );
+                                            },
+                                            prefixIcon: Icons.drafts_outlined,
+                                            label: localizations.translate(
+                                              i18.attendance
+                                                  .saveAndMarkLaterLabel,
+                                            ),
                                           ),
-                                        ),
-                                        DigitButton(
-                                          size: DigitButtonSize.large,
-                                          type: DigitButtonType.primary,
-                                          mainAxisSize: MainAxisSize.max,
-                                          onPressed: !viewOnly
-                                              ? () {
-                                                  checkIfAllAttendeesMarked(
-                                                    state,
-                                                    localizations,
-                                                    theme,
-                                                    EnumValues.submit.toValue(),
-                                                    locationState.latitude,
-                                                    locationState.longitude,
-                                                    context,
-                                                  );
-                                                }
-                                              : () {},
-                                          label: localizations.translate(
-                                            (!viewOnly)
-                                                ? i18.common.coreCommonSubmit
-                                                : i18.attendance.closeButton,
+                                          DigitButton(
+                                            size: DigitButtonSize.large,
+                                            type: DigitButtonType.primary,
+                                            mainAxisSize: MainAxisSize.max,
+                                            isDisabled: (((attendanceCollectionModel ??
+                                                            [])
+                                                        .any((a) =>
+                                                            a.status == -1 ||
+                                                            a.status == null) &&
+                                                    EnumValues.submit
+                                                            .toValue() !=
+                                                        EnumValues.draft
+                                                            .toValue()) ||
+                                                ((attendanceCollectionModel ??
+                                                            [])
+                                                        .every((a) =>
+                                                            a.status == -1 ||
+                                                            a.status == null) &&
+                                                    EnumValues.submit
+                                                            .toValue() ==
+                                                        EnumValues.draft
+                                                            .toValue())),
+                                            onPressed: !viewOnly
+                                                ? () {
+                                                    checkIfAllAttendeesMarked(
+                                                      state,
+                                                      localizations,
+                                                      theme,
+                                                      EnumValues.submit
+                                                          .toValue(),
+                                                      locationState.latitude,
+                                                      locationState.longitude,
+                                                      context,
+                                                    );
+                                                  }
+                                                : () {},
+                                            label: localizations.translate(
+                                              (!viewOnly)
+                                                  ? i18.common.coreCommonSubmit
+                                                  : i18.attendance.closeButton,
+                                            ),
                                           ),
-                                        ),
-                                      ]),
+                                        ]),
+                                  ),
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             header: const BackNavigationHelpHeaderWidget(
@@ -582,6 +669,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                     ),
                                                   );
                                             },
+                                            viewOnly: viewOnly,
                                           );
                                         }).toList(),
                                       )
@@ -726,6 +814,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 );
                 return;
               } else {
+                final dialogForm =
+                    buildForm(); // Call it once — outside the showDialog
+
                 showDialog(
                     context: context,
                     builder: (BuildContext ctx) {
@@ -737,9 +828,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
                         additionalWidgets: [
                           ReactiveForm(
-                            formGroup: form,
+                            formGroup: dialogForm,
                             child: ReactiveWrapperField(
                               formControlName: _commentKey,
+                              validationMessages: {
+                                'required': (object) => localizations.translate(
+                                    i18.attendance.validationRequiredError),
+                              },
                               builder: (field) => LabeledField(
                                 label: localizations
                                     .translate(i18.common.commentKey),
@@ -747,9 +842,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 child: DigitTextFormInput(
                                   errorMessage: field.errorText,
                                   onChange: (value) {
-                                    form.control(_commentKey).value = value;
+                                    dialogForm.control(_commentKey).value =
+                                        value;
                                   },
-                                  initialValue: form.control(_commentKey).value,
+                                  initialValue:
+                                      dialogForm.control(_commentKey).value,
                                 ),
                               ),
                             ),
@@ -763,23 +860,32 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             type: DigitButtonType.primary,
                             size: DigitButtonSize.large,
                             onPressed: () {
-                              individualLogBloc?.add(SaveAsDraftEvent(
-                                  entryTime: entryTime,
-                                  exitTime: exitTime,
-                                  selectedDate: AttendanceDateTimeManagement
-                                      .getFormattedDateToDateTime(
-                                          currentSelectedDate)!,
-                                  isSingleSession: false,
-                                  createOplog:
-                                      type != EnumValues.draft.toValue(),
-                                  latitude: latitude,
-                                  longitude: longitude,
-                                  comment: form.control(_commentKey).value));
-                              Navigator.of(
-                                context,
-                                rootNavigator: true,
-                              ).pop(true);
-                              navigateToAcknowledgement(localizations);
+                              dialogForm.markAllAsTouched();
+
+                              if (dialogForm.valid) {
+                                individualLogBloc?.add(SaveAsDraftEvent(
+                                    entryTime: entryTime,
+                                    exitTime: exitTime,
+                                    selectedDate: AttendanceDateTimeManagement
+                                        .getFormattedDateToDateTime(
+                                            currentSelectedDate)!,
+                                    isSingleSession: false,
+                                    createOplog:
+                                        type != EnumValues.draft.toValue(),
+                                    latitude: latitude,
+                                    longitude: longitude,
+                                    comment:
+                                        dialogForm.control(_commentKey).value));
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(true);
+                                navigateToAcknowledgement(localizations);
+                              } else {
+                                dialogForm
+                                    .control(_commentKey)
+                                    .markAllAsTouched();
+                              }
                             },
                           ),
                           DigitButton(
@@ -823,7 +929,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
 
   FormGroup buildForm() {
     return fb.group(<String, Object>{
-      _commentKey: FormControl<String>(value: ""),
+      _commentKey: FormControl<String>(
+        validators: [Validators.required],
+      ),
     });
   }
 

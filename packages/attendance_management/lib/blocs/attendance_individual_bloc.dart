@@ -14,7 +14,6 @@ part 'attendance_individual_bloc.freezed.dart';
 // Type definition for emitter used in the AttendanceIndividualBloc
 typedef AttendanceIndividualEmitter = Emitter<AttendanceIndividualState>;
 
-
 /*
   @author  Ramkrishna-egov
   */
@@ -106,7 +105,7 @@ class AttendanceIndividualBloc
             if (status == -1) {
               status = newStatus;
             } else if (status == 1 && newStatus == 1) {
-              status = event.isSingleSession ? 0.5 : 0;
+              status = 1;
             } else if (status == 0.5 && event.isSingleSession) {
               status = 0;
             } else {
@@ -171,7 +170,8 @@ class AttendanceIndividualBloc
                           ? {
                               "latitude": event.latitude,
                               "longitude": event.longitude,
-                              if (event.comment!.isNotEmpty)
+                              if (event.comment != null &&
+                                  event.comment!.isNotEmpty)
                                 "comment": event.comment,
                             }
                           : {
@@ -198,13 +198,15 @@ class AttendanceIndividualBloc
                                 EnumValues.longitude.toValue(): event.longitude,
                                 EnumValues.boundaryCode.toValue():
                                     AttendanceSingleton().boundary?.code,
-                                if (event.comment!.isNotEmpty)
+                                if (event.comment != null &&
+                                    event.comment!.isNotEmpty)
                                   "comment": event.comment,
                               }
                             : {
                                 EnumValues.boundaryCode.toValue():
                                     AttendanceSingleton().boundary?.code,
-                                if (event.comment!.isNotEmpty)
+                                if (event.comment != null &&
+                                    event.comment!.isNotEmpty)
                                   "comment": event.comment,
                               })
               ]);
