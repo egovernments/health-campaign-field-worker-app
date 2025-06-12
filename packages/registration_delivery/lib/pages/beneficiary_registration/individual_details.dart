@@ -1217,6 +1217,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     );
 
     if (individual == null) {
+      form.control(_idNumberKey).value = null;
       context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
       final uniqueId = context.read<UniqueIdBloc>().state;
       uniqueId.maybeWhen(
@@ -1245,6 +1246,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         form.control(_idTypeKey).value = uniqueId!.identifierType;
         form.control(_idNumberKey).value = uniqueId.identifierId;
       } else {
+        form.control(_idNumberKey).value = null;
         context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
         final uniqueId = context.read<UniqueIdBloc>().state;
         uniqueId.maybeWhen(
