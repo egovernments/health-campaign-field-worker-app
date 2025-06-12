@@ -37,7 +37,7 @@ class AttendeeModel extends EntityModel with AttendeeModelMappable {
   final bool? nonRecoverableError;
   final String? name;
   final int? rowVersion;
-  late final double? status;
+  final double? status;
   final String? identifierID;
   final String? individualNumber;
   final AttendeeAdditionalFields? additionalFields;
