@@ -34,16 +34,39 @@ class JsonSchemaScannerBuilder extends JsonSchemaBuilder<String> {
               builder: (context, state) {
 
                 return state.qrCodes.isNotEmpty ?
-                LabelValueSummary(
-                  withDivider: false,
-                  items: [
-                    LabelValueItem(
-                      label: label ?? 'Voucher code',
-                      value: state.qrCodes.first,
-                      labelFlex: 5,
-                      padding: EdgeInsets.zero,
-                    ),
-                  ],
+                Container(
+                  padding: EdgeInsets.zero,
+                  width: MediaQuery.of(context).size.width  ,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width* .78,
+                        child: LabelValueSummary(
+                          padding: EdgeInsets.zero,
+                          withDivider: false,
+                          items: [
+                            LabelValueItem(
+                              label: label ?? 'Voucher code',
+                              value: state.qrCodes.first,
+                              labelFlex: 5,
+                              maxLines: 5,
+                              padding: EdgeInsets.zero,
+                            ),
+                          ],
+                        ),
+                      ),
+                      DigitButton(label: '', onPressed: (){
+                        context.router.push(DigitScannerRoute(
+                          quantity: 1,
+                          isGS1code: false,
+                          singleValue: true,
+                        ));
+                      }, type: DigitButtonType.tertiary, size: DigitButtonSize.medium, prefixIcon: Icons.edit,)
+                    ],
+                  ),
                 )
                     : DigitButton(
                   capitalizeLetters: false,

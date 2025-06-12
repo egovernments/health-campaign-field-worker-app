@@ -88,6 +88,19 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           ),
         );
 
+      case PropertySchemaFormat.idPopulator:
+        return JsonSchemaIdPopulatorBuilder(
+          form: form,
+          label: translateIfPresent(widget.schema.label, localizations),
+          isRequired: hasRequiredValidation(widget.schema.validations),
+          formControlName: widget.formControlName,
+          enums: widget.schema.enums ?? [],
+          validations: widget.schema.validations,
+          helpText: translateIfPresent(widget.schema.helpText, localizations),
+          tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
+          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+        );
+
       case PropertySchemaFormat.dropdown:
         return JsonSchemaDropdownBuilder(
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),

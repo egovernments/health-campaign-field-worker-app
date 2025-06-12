@@ -86,6 +86,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             .map((entry) => entry.key)
                             .toList() ?? [];
 
+
+
 // 2. Mark all visible controls as touched and revalidate
                         for (final key in currentKeys) {
                           final control = formGroup.control(key);
@@ -93,11 +95,20 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           control.updateValueAndValidity();
                         }
 
+                        final hasErrors = currentKeys.any((key) {
+                          final control = formGroup.control(key);
+                          return control.errors.isNotEmpty;
+                        });
+
+                        if (hasErrors) return;
+
 // 3. Check validity of just the visible controls
                         final isCurrentPageValid = currentKeys
                             .every((key) => formGroup.control(key).valid);
 
                         if (!isCurrentPageValid) return;
+
+
 
                         // 4. Proceed with value extraction and state update
                         final values = JsonForms.getFormValues(

@@ -4,6 +4,7 @@ import 'dart:ffi';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
@@ -16,6 +17,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_dob_picker.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/tooltip_2.dart';
 import 'package:forms_engine/helper/form_builder_helper.dart';
+import '../blocs/forms/forms.dart';
 import 'localized.dart';
 import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +44,7 @@ part 'checkbox_builder.dart';
 part 'radio_builder.dart';
 part 'dob_builder.dart';
 part 'scanner_builder.dart';
+part 'id_populator_builder.dart';
 
 abstract class JsonSchemaBuilder<T> extends StatelessWidget {
   final FormGroup form;
