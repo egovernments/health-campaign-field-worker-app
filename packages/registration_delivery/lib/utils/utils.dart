@@ -703,6 +703,7 @@ String getStatus(String selectedFilter) {
     Status.closeHousehold.toValue(): Status.closeHousehold,
     Status.registered.toValue(): Status.registered,
     Status.notRegistered.toValue(): Status.notRegistered,
+    Status.ineligible.toValue(): Status.ineligible,
   };
 
   var mappedStatus = statusMap.entries
