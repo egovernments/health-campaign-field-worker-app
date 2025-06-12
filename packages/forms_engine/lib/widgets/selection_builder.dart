@@ -2,11 +2,13 @@ part of 'json_schema_builder.dart';
 
 class JsonSchemaSelectionBuilder extends JsonSchemaBuilder<String> {
   final List<Option> enums;
+  final bool? isMultiSelect;
 
   const JsonSchemaSelectionBuilder({
     required super.formControlName,
     required super.form,
     required this.enums,
+    this.isMultiSelect = false,
     super.key,
     super.value,
     super.helpText,
@@ -31,25 +33,29 @@ class JsonSchemaSelectionBuilder extends JsonSchemaBuilder<String> {
       validationMessages: validationMessages,
       showErrors: (control) => control.invalid && control.touched,
       builder: (field) {
-        return SelectionCard<String>(
-          options: localizedOptions.map((e) => e.name).toList(),
-          valueMapper: (name) => name,
-          allowMultipleSelection: false,
+        return SelectionCard<Option>(
+          options: localizedOptions,
+          valueMapper: (val) => val.name,
+          allowMultipleSelection: isMultiSelect ?? false,
           equalWidthOptions: true,
           showParentContainer: true,
           initialSelection: field.value != null
-              ? [localizedOptions.firstWhere((e) => e.code == field.value,
-              orElse: () => Option(code: field.value!, name: field.value!))
-              .name]
+              ? field.value!.split('.').map((code) {
+            return localizedOptions.firstWhere(
+                  (e) => e.code == code,
+              orElse: () => Option(code: code, name: code),
+            );
+          }).toList()
               : [],
           onSelectionChanged: (selected) {
             field.control.markAsTouched();
-            final selectedName = selected.isNotEmpty ? selected.first : null;
-            final selectedCode = localizedOptions
-                .firstWhere((e) => e.name == selectedName,
-                orElse: () => Option(code: selectedName ?? '', name: selectedName ?? ''))
-                .code;
-            field.didChange(selectedCode);
+
+            final selectedCodes = (isMultiSelect ?? false)
+                ? selected.map((e) => e.code).toList()
+                : [selected.first.code];
+
+            final joinedCodeString = selectedCodes.join('.');
+            field.didChange(joinedCodeString);
           },
           errorMessage: field.errorText,
         );
