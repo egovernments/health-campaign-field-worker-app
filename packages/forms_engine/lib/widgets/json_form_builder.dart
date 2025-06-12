@@ -81,6 +81,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           child: JsonSchemaSelectionBuilder(
             form: form,
+            isMultiSelect: widget.schema.isMultiSelect,
             formControlName: widget.formControlName,
             enums: widget.schema.enums ?? [],
             validations: widget.schema.validations,
