@@ -9,20 +9,23 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
   if (schema.validations != null) {
     for (final rule in schema.validations!) {
       switch (rule.type) {
-        // case 'minLength':
-        //   final parsedValue = parseIntValue(rule.value);
-        //
-        //   if (parsedValue != null) {
-        //     validators.add(Validators.composeOR([
-        //       Validators.minLength(parsedValue) as Validator<T>,
-        //       Validators.equals(null),
-        //     ]) as Validator<T>);
-        //   }
-        //   break;
+        case 'minLength':
+          final parsedValue = parseIntValue(rule.value);
+
+          if(schema.type != PropertySchemaType.integer) {
+            if (parsedValue != null) {
+              validators.add(Validators.composeOR([
+                Validators.minLength(parsedValue) as Validator<T>,
+                Validators.equals(null),
+              ]) as Validator<T>);
+            }
+          }
+
+          break;
 
         case 'maxLength':
           final parsedValue = parseIntValue(rule.value);
-          if (parsedValue != null) {
+          if (parsedValue != null && schema.type != PropertySchemaType.integer) {
             validators.add(Validators.composeOR([
               Validators.maxLength(parsedValue) as Validator<T>,
               Validators.equals(null),
@@ -90,7 +93,8 @@ List<Validator<T>> buildValidators<T>(PropertySchema schema) {
 bool hasRequiredValidation(List<ValidationRule>? validations) {
   if (validations == null) return false;
 
-  return validations.any((rule) => rule.type == 'required' && rule.value == true);
+  return validations
+      .any((rule) => rule.type == 'required' && rule.value == true);
 }
 
 int? getMinValue(List<ValidationRule>? validations) {
@@ -103,8 +107,6 @@ int? getMinValue(List<ValidationRule>? validations) {
   }
   return null;
 }
-
-
 
 int? getMaxValue(List<ValidationRule>? validations) {
   if (validations == null) return null;

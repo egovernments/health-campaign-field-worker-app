@@ -53,13 +53,29 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<int> {
                   return;
                 }
                 form.control(formControlName).value = int.parse(value);
+                if(getMinLength(validations) != null && value.length < getMinLength(validations)!) {
+                  form.control(formControlName).setErrors({'minLength': true});
+                }else{
+                  form.control(formControlName).removeError('minLength');
+                }
               },
-              errorMessage: field.errorText,
+              errorMessage: _getNumberErrorMessage(field.control, context),
               inputFormatters: inputFormatter != null ? [inputFormatter] : null,
             ),
           ),
         );
       },
     );
+  }
+  String? _getNumberErrorMessage(AbstractControl<dynamic> control, BuildContext context) {
+    final loc = FormLocalization.of(context);
+
+    for (final rule in validations ?? []) {
+      if (control.hasError(rule.type) && control.touched) {
+        return loc.translate(rule.message ?? 'Invalid');
+      }
+    }
+
+    return null;
   }
 }
