@@ -144,7 +144,6 @@ class AttendanceScannerPageState extends DigitScannerPageState {
       final scannedData = ScannedIndividualDataModelMapper.fromJson(code);
 
       if (validateIndividualAttendance(scannedData, registerModel)) {
-        
         showAttendanceSuccessPopup(scannedData);
       } else {
         if (mounted) {
@@ -166,83 +165,78 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   }
 
   bool validateIndividualAttendance(
-  ScannedIndividualDataModel scannedData,
-  AttendanceRegisterModel registerModel, {
-  int allowedIntervalInMinutes = 2, 
-}) {
-  // 1. Extract required IDs from scanned data
-  final String? scannedIndividualId = scannedData.individualId;
+    ScannedIndividualDataModel scannedData,
+    AttendanceRegisterModel registerModel, {
+    int allowedIntervalInMinutes = 2,
+  }) {
+    // 1. Extract required IDs from scanned data
+    final String? scannedIndividualId = scannedData.individualId;
 
-  // final int? qrCreatedTimeMillis =
-  //     scannedData.qrCreatedTime; // Get QR creation time
-  final int? qrCreatedTime = scannedData.qrCreatedTime;
-  final int? qrCreatedTimeMillis =
-      qrCreatedTime != null ? qrCreatedTime * 1000 : null;
+    final int? qrCreatedTime = scannedData.qrCreatedTime;
+    final int? qrCreatedTimeMillis =
+        qrCreatedTime != null ? qrCreatedTime * 1000 : null;
 
-  // 2. Basic validation: Ensure both IDs are present in scanned data
-  if (scannedIndividualId == null || scannedIndividualId.isEmpty) {
-    if (kDebugMode) {
-      print("Scanned data missing 'individualId' or 'registerId'.");
-    }
-    return false;
-  }
-
-  final currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
-
-  if (qrCreatedTimeMillis != null) {
-    final timeDifference = (currentTimeMillis - qrCreatedTimeMillis).abs();
-    final allowedTimeInMillis = allowedIntervalInMinutes * 60 * 1000;
-
-    if (timeDifference > allowedTimeInMillis) {
-      if (mounted) {
-        Toast.showToast(
-          context,
-          type: ToastType.error,
-          message:
-              localizations.translate(i18.attendance.userQRTimeExpiredError),
-        );
+    // 2. Basic validation: Ensure both IDs are present in scanned data
+    if (scannedIndividualId == null || scannedIndividualId.isEmpty) {
+      if (kDebugMode) {
+        print("Scanned data missing 'individualId' or 'registerId'.");
       }
       return false;
     }
-  }
 
-  // 4. Check if the registerModel has an attendees list and it's not empty
-  if (registerModel.attendees == null || registerModel.attendees!.isEmpty) {
+    final currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
+
+    if (qrCreatedTimeMillis != null) {
+      final timeDifference = (currentTimeMillis - qrCreatedTimeMillis).abs();
+      final allowedTimeInMillis = allowedIntervalInMinutes * 60 * 1000;
+
+      if (timeDifference > allowedTimeInMillis) {
+        if (mounted) {
+          Toast.showToast(
+            context,
+            type: ToastType.error,
+            message:
+                localizations.translate(i18.attendance.userQRTimeExpiredError),
+          );
+        }
+        return false;
+      }
+    }
+
+    // 4. Check if the registerModel has an attendees list and it's not empty
+    if (registerModel.attendees == null || registerModel.attendees!.isEmpty) {
+      if (kDebugMode) {
+        print(
+            "AttendanceRegisterModel has no attendees or attendees list is empty.");
+      }
+      return false;
+    }
+
+    // 5. Iterate through the attendees list to find a match
+    for (AttendeeModel attendee in registerModel.attendees!) {
+      if (attendee.individualId == scannedIndividualId) {
+        if (kDebugMode) {
+          print("Individual (ID: $scannedIndividualId) found in register .");
+        }
+        return true; // Match found
+      }
+    }
+
     if (kDebugMode) {
       print(
-          "AttendanceRegisterModel has no attendees or attendees list is empty.");
+          "Individual (ID: $scannedIndividualId) not found in register  attendees.");
     }
-    return false;
+    return false; // No match found after checking all attendees
   }
 
-  // 5. Iterate through the attendees list to find a match
-  for (AttendeeModel attendee in registerModel.attendees!) {
-    if (attendee.individualId == scannedIndividualId) {
-      if (kDebugMode) {
-        print("Individual (ID: $scannedIndividualId) found in register .");
-      }
-      return true; // Match found
-    }
-  }
-
-  if (kDebugMode) {
-    print(
-        "Individual (ID: $scannedIndividualId) not found in register  attendees.");
-  }
-  return false; // No match found after checking all attendees
-  
-}
-
-
-
-    
   void showAttendanceSuccessPopup(ScannedIndividualDataModel scannedData) {
     final dataMap = scannedData.toMap();
     final formattedTime = scannedData.qrCreatedTime != null
-    ? DateFormat('dd-MM-yyyy hh:mm a').format(
-        DateTime.fromMillisecondsSinceEpoch(scannedData.qrCreatedTime! * 1000).toLocal())
-    : '-';
-    
+        ? DateFormat('dd-MM-yyyy hh:mm a').format(
+            DateTime.fromMillisecondsSinceEpoch(
+                    scannedData.qrCreatedTime! * 1000)
+                .toLocal())
+        : '-';
 
     showCustomPopup(
       context: context,
@@ -267,7 +261,8 @@ class AttendanceScannerPageState extends DigitScannerPageState {
               ),
               LabelValueItem(
                 label: localizations.translate(i18.attendance.qrCreatedTime),
-value: formattedTime,              ),
+                value: formattedTime,
+              ),
               LabelValueItem(
                 label: localizations.translate(i18.attendance.individualId),
                 value: scannedData.individualId,
