@@ -92,7 +92,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         for (final key in currentKeys) {
                           final control = formGroup.control(key);
                           control.markAsTouched();
-                          control.updateValueAndValidity();
+                          // control.updateValueAndValidity();
                         }
 
                         final hasErrors = currentKeys.any((key) {
