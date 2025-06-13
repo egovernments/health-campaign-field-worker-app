@@ -1,3 +1,7 @@
+## 1.0.7-dev.3-idGen
+
+* Added more enum types in beneficiaryType
+
 ## 1.0.7-dev.2-idGen
 
 * Modified Identifier table and model
