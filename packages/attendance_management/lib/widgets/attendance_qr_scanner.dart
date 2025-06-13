@@ -16,11 +16,13 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../models/entities/attendance_register.dart';
 import '../models/entities/attendee.dart';
+import '../models/entities/scanned_individual_data.dart';
 
 @RoutePage()
 class AttendanceDigitScannerPage extends DigitScannerPage {
@@ -137,62 +139,69 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   }
 
   @override
-  Future<void> storeCodeWrapper(String code) {
-    Map<String, dynamic> decodedData = jsonDecode(code) as Map<String, dynamic>;
-    if (validateIndividualAttendance(decodedData, registerModel)) {
-      showAttendanceSuccessPopup(jsonDecode(code));
-    } else {
-      if (mounted) {
-        context.read<DigitScannerBloc>().add(
-              const DigitScannerEvent.handleScanner(
-                barCode: [],
-                qrCode: [],
-              ),
-            );
+  Future<void> storeCodeWrapper(String code) async {
+    try {
+      final scannedData = ScannedIndividualDataModelMapper.fromJson(code);
+
+      if (validateIndividualAttendance(scannedData, registerModel)) {
+        showAttendanceSuccessPopup(scannedData);
+      } else {
+        if (mounted) {
+          context.read<DigitScannerBloc>().add(
+                const DigitScannerEvent.handleScanner(
+                  barCode: [],
+                  qrCode: [],
+                ),
+              );
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error decoding QR code: $e");
       }
     }
+
     return super.storeCodeWrapper(code);
   }
 
   bool validateIndividualAttendance(
-    Map<String, dynamic> scannedData,
-    AttendanceRegisterModel registerModel,
-  ) {
+    ScannedIndividualDataModel scannedData,
+    AttendanceRegisterModel registerModel, {
+    int allowedIntervalInMinutes = 2,
+  }) {
     // 1. Extract required IDs from scanned data
-    final String? scannedIndividualId = scannedData['individualId'];
-    final String? scannedRegisterId = scannedData['registerId'];
+    final String? scannedIndividualId = scannedData.individualId;
+
+    final int? qrCreatedTime = scannedData.qrCreatedTime;
     final int? qrCreatedTimeMillis =
-        scannedData['qrCreatedTime']; // Get QR creation time
+        qrCreatedTime != null ? qrCreatedTime * 1000 : null;
 
     // 2. Basic validation: Ensure both IDs are present in scanned data
-    if (scannedIndividualId == null ||
-        scannedIndividualId.isEmpty ||
-        scannedRegisterId == null ||
-        scannedRegisterId.isEmpty) {
+    if (scannedIndividualId == null || scannedIndividualId.isEmpty) {
       if (kDebugMode) {
         print("Scanned data missing 'individualId' or 'registerId'.");
       }
       return false;
     }
 
-    // // 3. Validate QR creation time
-    // final currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
-    // final timeDifference =
-    //     (currentTimeMillis - qrCreatedTimeMillis!).abs(); // Absolute difference
-    //
-    // const oneMinuteInMillis = 2 * 60 * 1000; // 2 minute in milliseconds
-    //
-    // if (timeDifference > oneMinuteInMillis) {
-    //   if (mounted) {
-    //     Toast.showToast(
-    //       context,
-    //       type: ToastType.error,
-    //       message:
-    //           localizations.translate(i18.attendance.userQRTimeExpiredError),
-    //     );
-    //   }
-    //   return false;
-    // } else {}
+    final currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
+
+    if (qrCreatedTimeMillis != null) {
+      final timeDifference = (currentTimeMillis - qrCreatedTimeMillis).abs();
+      final allowedTimeInMillis = allowedIntervalInMinutes * 60 * 1000;
+
+      if (timeDifference > allowedTimeInMillis) {
+        if (mounted) {
+          Toast.showToast(
+            context,
+            type: ToastType.error,
+            message:
+                localizations.translate(i18.attendance.userQRTimeExpiredError),
+          );
+        }
+        return false;
+      }
+    }
 
     // 4. Check if the registerModel has an attendees list and it's not empty
     if (registerModel.attendees == null || registerModel.attendees!.isEmpty) {
@@ -205,11 +214,9 @@ class AttendanceScannerPageState extends DigitScannerPageState {
 
     // 5. Iterate through the attendees list to find a match
     for (AttendeeModel attendee in registerModel.attendees!) {
-      if (attendee.individualId == scannedIndividualId &&
-          attendee.registerId == scannedRegisterId) {
+      if (attendee.individualId == scannedIndividualId) {
         if (kDebugMode) {
-          print(
-              "Individual (ID: $scannedIndividualId) found in register (ID: $scannedRegisterId).");
+          print("Individual (ID: $scannedIndividualId) found in register .");
         }
         return true; // Match found
       }
@@ -217,12 +224,20 @@ class AttendanceScannerPageState extends DigitScannerPageState {
 
     if (kDebugMode) {
       print(
-          "Individual (ID: $scannedIndividualId) not found in register (ID: $scannedRegisterId) attendees.");
+          "Individual (ID: $scannedIndividualId) not found in register  attendees.");
     }
     return false; // No match found after checking all attendees
   }
 
-  void showAttendanceSuccessPopup(Map<String, dynamic> code) {
+  void showAttendanceSuccessPopup(ScannedIndividualDataModel scannedData) {
+    final dataMap = scannedData.toMap();
+    final formattedTime = scannedData.qrCreatedTime != null
+        ? DateFormat('dd-MM-yyyy hh:mm a').format(
+            DateTime.fromMillisecondsSinceEpoch(
+                    scannedData.qrCreatedTime! * 1000)
+                .toLocal())
+        : '-';
+
     showCustomPopup(
       context: context,
       builder: (ctx) => Popup(
@@ -235,11 +250,28 @@ class AttendanceScannerPageState extends DigitScannerPageState {
         title: i18.attendance.markedAsPresent,
         additionalWidgets: [
           LabelValueSummary(
-            heading: "",
-            items: code.entries
-                .map((e) =>
-                    LabelValueItem(label: e.key, value: e.value.toString()))
-                .toList(),
+            items: [
+              LabelValueItem(
+                label: localizations.translate(i18.common.coreCommonName),
+                value: scannedData.name,
+              ),
+              LabelValueItem(
+                label: localizations.translate(i18.common.coreCommonAge),
+                value: scannedData.age?.toString() ?? '-',
+              ),
+              LabelValueItem(
+                label: localizations.translate(i18.attendance.qrCreatedTime),
+                value: formattedTime,
+              ),
+              LabelValueItem(
+                label: localizations.translate(i18.attendance.individualId),
+                value: scannedData.individualId,
+              ),
+              LabelValueItem(
+                label: localizations.translate(i18.common.locationLabel),
+                value: scannedData.locality,
+              ),
+            ],
           ),
         ],
         actions: [

@@ -8,7 +8,7 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:attendance_management/attendance_management.dart' as _i10;
+import 'package:attendance_management/attendance_management.dart' as _i11;
 import 'package:attendance_management/blocs/app_localization.dart' as _i8;
 import 'package:attendance_management/models/entities/attendance_register.dart'
     as _i9;
@@ -20,6 +20,7 @@ import 'package:attendance_management/widgets/attendance_acknowledgement.dart'
 import 'package:attendance_management/widgets/attendance_qr_scanner.dart'
     as _i3;
 import 'package:auto_route/auto_route.dart' as _i6;
+import 'package:flutter/foundation.dart' as _i10;
 import 'package:flutter/material.dart' as _i7;
 
 abstract class $AttendanceRoute extends _i6.AutoRouterModule {
@@ -227,7 +228,7 @@ class AttendanceDateSessionSelectionRouteArgs {
 class AttendanceDigitScannerRoute
     extends _i6.PageRouteInfo<AttendanceDigitScannerRouteArgs> {
   AttendanceDigitScannerRoute({
-    _i7.Key? key,
+    _i10.Key? key,
     required _i9.AttendanceRegisterModel registerModel,
     required int quantity,
     bool singleValue = false,
@@ -260,7 +261,7 @@ class AttendanceDigitScannerRouteArgs {
     required this.isGS1code,
   });
 
-  final _i7.Key? key;
+  final _i10.Key? key;
 
   final _i9.AttendanceRegisterModel registerModel;
 
@@ -294,9 +295,9 @@ class ManageAttendanceRoute extends _i6.PageRouteInfo<void> {
 /// [_i5.MarkAttendancePage]
 class MarkAttendanceRoute extends _i6.PageRouteInfo<MarkAttendanceRouteArgs> {
   MarkAttendanceRoute({
-    required _i10.AttendanceRegisterModel registerModel,
+    required _i11.AttendanceRegisterModel registerModel,
     _i7.Key? key,
-    _i10.AttendanceLocalization? appLocalizations,
+    _i11.AttendanceLocalization? appLocalizations,
     List<_i6.PageRouteInfo>? children,
   }) : super(
           MarkAttendanceRoute.name,
@@ -321,11 +322,11 @@ class MarkAttendanceRouteArgs {
     this.appLocalizations,
   });
 
-  final _i10.AttendanceRegisterModel registerModel;
+  final _i11.AttendanceRegisterModel registerModel;
 
   final _i7.Key? key;
 
-  final _i10.AttendanceLocalization? appLocalizations;
+  final _i11.AttendanceLocalization? appLocalizations;
 
   @override
   String toString() {

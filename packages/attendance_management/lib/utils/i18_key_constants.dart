@@ -112,6 +112,8 @@ class Common {
 
   String get locationCaptured => 'LOCATION_CAPTURED';
 
+  String get locationLabel => 'LOCATION_LABEL';
+
   String get ctaProceed => 'PROCEED';
 
   String get clearFilter => 'CLEAR_FILTER';
@@ -196,6 +198,8 @@ class Attendance {
 
   String get userId => 'TABLE_HEADER_USERID';
 
+  String get individualId => 'INDIVIDUAL_ID_NUMBER';
+
   String get markAttendanceLabel => "LABEL_MARK_ATTENDANCE";
 
   String get markedAsPresent => "MARKED_AS_PRESENT";
@@ -255,6 +259,8 @@ class Attendance {
   String get scanAnotherQR => 'SCAN_ANOTHER_QR';
 
   String get actionRequired => "ACTION_REQUIRED";
+
+  String get qrCreatedTime => 'QR_CREATED_TIME';
 
   String get scannerNotAvailableTitle => 'SCANNER_NOT_AVAILABLE_TITLE';
 
