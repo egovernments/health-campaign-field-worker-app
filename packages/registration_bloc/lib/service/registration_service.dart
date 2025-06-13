@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
+import 'package:registration_delivery/utils/typedefs.dart';
+import 'package:registration_bloc/repositories/local/search_entity_repository.dart';
 
 import '../models/entities/household.dart';
 import '../models/entities/household_member.dart';
@@ -12,36 +14,89 @@ import '../models/entities/task.dart';
 import '../models/global_search_params.dart';
 import '../repositories/local/household_global_search.dart';
 import '../repositories/local/individual_global_search.dart';
-import '../utils/typedefs.dart';
+// import '../utils/typedefs.dart';
 
 class RegistrationService {
+  final List<RelationshipMapping> relationshipMap;
+  late final Map<String, List<RelationshipMapping>> _relationshipGraph;
+
+  final SearchEntityRepository searchEntityRepository;
+
   final IndividualDataRepository individualRepository;
-
   final HouseholdDataRepository householdRepository;
-
   final HouseholdMemberDataRepository householdMemberRepository;
-
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
-
   final TaskDataRepository taskDataRepository;
 
-  final BeneficiaryType beneficiaryType;
+  RegistrationService({
+    required this.relationshipMap,
+    required this.individualRepository,
+    required this.householdRepository,
+    required this.householdMemberRepository,
+    required this.projectBeneficiaryRepository,
+    required this.taskDataRepository,
+    required this.searchEntityRepository,
+  });
 
-  final IndividualGlobalSearchRepository individualGlobalSearchRepository;
+  void init() {
+    _buildRelationshipGraph();
+  }
 
-  final HouseHoldGlobalSearchRepository householdGlobalSearchRepository;
+  void _buildRelationshipGraph() {
+    _relationshipGraph = {};
 
-  RegistrationService(
-    this.individualRepository,
-    this.householdRepository,
-    this.householdMemberRepository,
-    this.projectBeneficiaryRepository,
-    this.taskDataRepository,
-    this.beneficiaryType,
-    this.householdGlobalSearchRepository,
-    this.individualGlobalSearchRepository,
-  );
+    for (final mapping in relationshipMap) {
+      // Forward mapping
+      _relationshipGraph.putIfAbsent(mapping.from, () => []);
+      _relationshipGraph[mapping.from]!.add(mapping);
 
+      // Reverse mapping
+      final reverseMapping = RelationshipMapping(
+        from: mapping.to,
+        to: mapping.from,
+        localKey: mapping.foreignKey,
+        foreignKey: mapping.localKey,
+      );
+
+      _relationshipGraph.putIfAbsent(reverseMapping.from, () => []);
+      _relationshipGraph[reverseMapping.from]!.add(reverseMapping);
+    }
+  }
+
+  List<RelationshipMapping> resolveAllRelationshipsDFS(String root) {
+    final visited = <String>{};
+    final result = <RelationshipMapping>[];
+
+    void dfs(String entity) {
+      if (visited.contains(entity)) return;
+      visited.add(entity);
+
+      final mappings = _relationshipGraph[entity];
+      if (mappings == null) return;
+
+      for (final mapping in mappings) {
+        result.add(mapping);
+        dfs(mapping.to);
+      }
+    }
+
+    dfs(root);
+    return result;
+  }
+
+  Future<List<EntityModel>> searchHouseholds({
+    required GlobalSearchParameters query,
+  }) async {
+    final root = query.filters.first.root;
+    final resolvedRelationships = resolveAllRelationshipsDFS(root);
+
+    return searchEntityRepository.searchEntities(
+      filters: query.filters,
+      relationships: resolvedRelationships,
+      select: query.select,
+      pagination: query.pagination,
+    );
+  }
 
   Future<void> registerEntities(List<EntityModel> entities) async {
     for (final entity in entities) {
@@ -61,16 +116,6 @@ class RegistrationService {
     for (final entity in entities) {
       final repository = getRepositoryForEntity(entity);
       await repository.delete(entity);
-    }
-  }
-
-  Future<FutureOr<List<EntityModel>>> searchHouseholds(
-      {GlobalSearchParameters? query}) async {
-    if (beneficiaryType == BeneficiaryType.individual) {
-      return individualGlobalSearchRepository
-          .individualGlobalSearch(query ?? const GlobalSearchParameters());
-    } else {
-      return householdGlobalSearchRepository.houseHoldGlobalSearch(query ?? const GlobalSearchParameters());
     }
   }
 

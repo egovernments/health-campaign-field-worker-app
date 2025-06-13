@@ -21,18 +21,11 @@ GlobalSearchParameters _$GlobalSearchParametersFromJson(
 
 /// @nodoc
 mixin _$GlobalSearchParameters {
-  String? get householdClientReferenceId => throw _privateConstructorUsedError;
-  bool? get isProximityEnabled => throw _privateConstructorUsedError;
-  double? get latitude => throw _privateConstructorUsedError;
-  double? get longitude => throw _privateConstructorUsedError;
-  double? get maxRadius => throw _privateConstructorUsedError;
-  String? get projectId => throw _privateConstructorUsedError;
-  String? get nameSearch => throw _privateConstructorUsedError;
-  int? get offset => throw _privateConstructorUsedError;
-  int? get limit => throw _privateConstructorUsedError;
-  List<String>? get filter => throw _privateConstructorUsedError;
-  int? get totalCount => throw _privateConstructorUsedError;
-  HouseholdType? get householdType => throw _privateConstructorUsedError;
+  List<SearchFilter> get filters => throw _privateConstructorUsedError;
+  List<String> get select => throw _privateConstructorUsedError;
+  PaginationParams? get pagination => throw _privateConstructorUsedError;
+  Map<String, RelationshipMapping> get relationshipMap =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,18 +40,12 @@ abstract class $GlobalSearchParametersCopyWith<$Res> {
       _$GlobalSearchParametersCopyWithImpl<$Res, GlobalSearchParameters>;
   @useResult
   $Res call(
-      {String? householdClientReferenceId,
-      bool? isProximityEnabled,
-      double? latitude,
-      double? longitude,
-      double? maxRadius,
-      String? projectId,
-      String? nameSearch,
-      int? offset,
-      int? limit,
-      List<String>? filter,
-      int? totalCount,
-      HouseholdType? householdType});
+      {List<SearchFilter> filters,
+      List<String> select,
+      PaginationParams? pagination,
+      Map<String, RelationshipMapping> relationshipMap});
+
+  $PaginationParamsCopyWith<$Res>? get pagination;
 }
 
 /// @nodoc
@@ -75,69 +62,41 @@ class _$GlobalSearchParametersCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? householdClientReferenceId = freezed,
-    Object? isProximityEnabled = freezed,
-    Object? latitude = freezed,
-    Object? longitude = freezed,
-    Object? maxRadius = freezed,
-    Object? projectId = freezed,
-    Object? nameSearch = freezed,
-    Object? offset = freezed,
-    Object? limit = freezed,
-    Object? filter = freezed,
-    Object? totalCount = freezed,
-    Object? householdType = freezed,
+    Object? filters = null,
+    Object? select = null,
+    Object? pagination = freezed,
+    Object? relationshipMap = null,
   }) {
     return _then(_value.copyWith(
-      householdClientReferenceId: freezed == householdClientReferenceId
-          ? _value.householdClientReferenceId
-          : householdClientReferenceId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isProximityEnabled: freezed == isProximityEnabled
-          ? _value.isProximityEnabled
-          : isProximityEnabled // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      latitude: freezed == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxRadius: freezed == maxRadius
-          ? _value.maxRadius
-          : maxRadius // ignore: cast_nullable_to_non_nullable
-              as double?,
-      projectId: freezed == projectId
-          ? _value.projectId
-          : projectId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nameSearch: freezed == nameSearch
-          ? _value.nameSearch
-          : nameSearch // ignore: cast_nullable_to_non_nullable
-              as String?,
-      offset: freezed == offset
-          ? _value.offset
-          : offset // ignore: cast_nullable_to_non_nullable
-              as int?,
-      limit: freezed == limit
-          ? _value.limit
-          : limit // ignore: cast_nullable_to_non_nullable
-              as int?,
-      filter: freezed == filter
-          ? _value.filter
-          : filter // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      totalCount: freezed == totalCount
-          ? _value.totalCount
-          : totalCount // ignore: cast_nullable_to_non_nullable
-              as int?,
-      householdType: freezed == householdType
-          ? _value.householdType
-          : householdType // ignore: cast_nullable_to_non_nullable
-              as HouseholdType?,
+      filters: null == filters
+          ? _value.filters
+          : filters // ignore: cast_nullable_to_non_nullable
+              as List<SearchFilter>,
+      select: null == select
+          ? _value.select
+          : select // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      pagination: freezed == pagination
+          ? _value.pagination
+          : pagination // ignore: cast_nullable_to_non_nullable
+              as PaginationParams?,
+      relationshipMap: null == relationshipMap
+          ? _value.relationshipMap
+          : relationshipMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, RelationshipMapping>,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PaginationParamsCopyWith<$Res>? get pagination {
+    if (_value.pagination == null) {
+      return null;
+    }
+
+    return $PaginationParamsCopyWith<$Res>(_value.pagination!, (value) {
+      return _then(_value.copyWith(pagination: value) as $Val);
+    });
   }
 }
 
@@ -151,18 +110,13 @@ abstract class _$$GlobalSearchParametersImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? householdClientReferenceId,
-      bool? isProximityEnabled,
-      double? latitude,
-      double? longitude,
-      double? maxRadius,
-      String? projectId,
-      String? nameSearch,
-      int? offset,
-      int? limit,
-      List<String>? filter,
-      int? totalCount,
-      HouseholdType? householdType});
+      {List<SearchFilter> filters,
+      List<String> select,
+      PaginationParams? pagination,
+      Map<String, RelationshipMapping> relationshipMap});
+
+  @override
+  $PaginationParamsCopyWith<$Res>? get pagination;
 }
 
 /// @nodoc
@@ -178,68 +132,28 @@ class __$$GlobalSearchParametersImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? householdClientReferenceId = freezed,
-    Object? isProximityEnabled = freezed,
-    Object? latitude = freezed,
-    Object? longitude = freezed,
-    Object? maxRadius = freezed,
-    Object? projectId = freezed,
-    Object? nameSearch = freezed,
-    Object? offset = freezed,
-    Object? limit = freezed,
-    Object? filter = freezed,
-    Object? totalCount = freezed,
-    Object? householdType = freezed,
+    Object? filters = null,
+    Object? select = null,
+    Object? pagination = freezed,
+    Object? relationshipMap = null,
   }) {
     return _then(_$GlobalSearchParametersImpl(
-      householdClientReferenceId: freezed == householdClientReferenceId
-          ? _value.householdClientReferenceId
-          : householdClientReferenceId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isProximityEnabled: freezed == isProximityEnabled
-          ? _value.isProximityEnabled
-          : isProximityEnabled // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      latitude: freezed == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxRadius: freezed == maxRadius
-          ? _value.maxRadius
-          : maxRadius // ignore: cast_nullable_to_non_nullable
-              as double?,
-      projectId: freezed == projectId
-          ? _value.projectId
-          : projectId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nameSearch: freezed == nameSearch
-          ? _value.nameSearch
-          : nameSearch // ignore: cast_nullable_to_non_nullable
-              as String?,
-      offset: freezed == offset
-          ? _value.offset
-          : offset // ignore: cast_nullable_to_non_nullable
-              as int?,
-      limit: freezed == limit
-          ? _value.limit
-          : limit // ignore: cast_nullable_to_non_nullable
-              as int?,
-      filter: freezed == filter
-          ? _value._filter
-          : filter // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      totalCount: freezed == totalCount
-          ? _value.totalCount
-          : totalCount // ignore: cast_nullable_to_non_nullable
-              as int?,
-      householdType: freezed == householdType
-          ? _value.householdType
-          : householdType // ignore: cast_nullable_to_non_nullable
-              as HouseholdType?,
+      filters: null == filters
+          ? _value._filters
+          : filters // ignore: cast_nullable_to_non_nullable
+              as List<SearchFilter>,
+      select: null == select
+          ? _value._select
+          : select // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      pagination: freezed == pagination
+          ? _value.pagination
+          : pagination // ignore: cast_nullable_to_non_nullable
+              as PaginationParams?,
+      relationshipMap: null == relationshipMap
+          ? _value._relationshipMap
+          : relationshipMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, RelationshipMapping>,
     ));
   }
 }
@@ -248,59 +162,47 @@ class __$$GlobalSearchParametersImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
   const _$GlobalSearchParametersImpl(
-      {this.householdClientReferenceId,
-      this.isProximityEnabled,
-      this.latitude,
-      this.longitude,
-      this.maxRadius,
-      this.projectId,
-      this.nameSearch,
-      this.offset,
-      this.limit,
-      final List<String>? filter,
-      this.totalCount,
-      this.householdType})
-      : _filter = filter;
+      {required final List<SearchFilter> filters,
+      required final List<String> select,
+      this.pagination,
+      final Map<String, RelationshipMapping> relationshipMap = const {}})
+      : _filters = filters,
+        _select = select,
+        _relationshipMap = relationshipMap;
 
   factory _$GlobalSearchParametersImpl.fromJson(Map<String, dynamic> json) =>
       _$$GlobalSearchParametersImplFromJson(json);
 
+  final List<SearchFilter> _filters;
   @override
-  final String? householdClientReferenceId;
-  @override
-  final bool? isProximityEnabled;
-  @override
-  final double? latitude;
-  @override
-  final double? longitude;
-  @override
-  final double? maxRadius;
-  @override
-  final String? projectId;
-  @override
-  final String? nameSearch;
-  @override
-  final int? offset;
-  @override
-  final int? limit;
-  final List<String>? _filter;
-  @override
-  List<String>? get filter {
-    final value = _filter;
-    if (value == null) return null;
-    if (_filter is EqualUnmodifiableListView) return _filter;
+  List<SearchFilter> get filters {
+    if (_filters is EqualUnmodifiableListView) return _filters;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_filters);
+  }
+
+  final List<String> _select;
+  @override
+  List<String> get select {
+    if (_select is EqualUnmodifiableListView) return _select;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_select);
   }
 
   @override
-  final int? totalCount;
+  final PaginationParams? pagination;
+  final Map<String, RelationshipMapping> _relationshipMap;
   @override
-  final HouseholdType? householdType;
+  @JsonKey()
+  Map<String, RelationshipMapping> get relationshipMap {
+    if (_relationshipMap is EqualUnmodifiableMapView) return _relationshipMap;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_relationshipMap);
+  }
 
   @override
   String toString() {
-    return 'GlobalSearchParameters(householdClientReferenceId: $householdClientReferenceId, isProximityEnabled: $isProximityEnabled, latitude: $latitude, longitude: $longitude, maxRadius: $maxRadius, projectId: $projectId, nameSearch: $nameSearch, offset: $offset, limit: $limit, filter: $filter, totalCount: $totalCount, householdType: $householdType)';
+    return 'GlobalSearchParameters(filters: $filters, select: $select, pagination: $pagination, relationshipMap: $relationshipMap)';
   }
 
   @override
@@ -308,47 +210,22 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GlobalSearchParametersImpl &&
-            (identical(other.householdClientReferenceId,
-                    householdClientReferenceId) ||
-                other.householdClientReferenceId ==
-                    householdClientReferenceId) &&
-            (identical(other.isProximityEnabled, isProximityEnabled) ||
-                other.isProximityEnabled == isProximityEnabled) &&
-            (identical(other.latitude, latitude) ||
-                other.latitude == latitude) &&
-            (identical(other.longitude, longitude) ||
-                other.longitude == longitude) &&
-            (identical(other.maxRadius, maxRadius) ||
-                other.maxRadius == maxRadius) &&
-            (identical(other.projectId, projectId) ||
-                other.projectId == projectId) &&
-            (identical(other.nameSearch, nameSearch) ||
-                other.nameSearch == nameSearch) &&
-            (identical(other.offset, offset) || other.offset == offset) &&
-            (identical(other.limit, limit) || other.limit == limit) &&
-            const DeepCollectionEquality().equals(other._filter, _filter) &&
-            (identical(other.totalCount, totalCount) ||
-                other.totalCount == totalCount) &&
-            (identical(other.householdType, householdType) ||
-                other.householdType == householdType));
+            const DeepCollectionEquality().equals(other._filters, _filters) &&
+            const DeepCollectionEquality().equals(other._select, _select) &&
+            (identical(other.pagination, pagination) ||
+                other.pagination == pagination) &&
+            const DeepCollectionEquality()
+                .equals(other._relationshipMap, _relationshipMap));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      householdClientReferenceId,
-      isProximityEnabled,
-      latitude,
-      longitude,
-      maxRadius,
-      projectId,
-      nameSearch,
-      offset,
-      limit,
-      const DeepCollectionEquality().hash(_filter),
-      totalCount,
-      householdType);
+      const DeepCollectionEquality().hash(_filters),
+      const DeepCollectionEquality().hash(_select),
+      pagination,
+      const DeepCollectionEquality().hash(_relationshipMap));
 
   @JsonKey(ignore: true)
   @override
@@ -367,48 +244,611 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
 
 abstract class _GlobalSearchParameters implements GlobalSearchParameters {
   const factory _GlobalSearchParameters(
-      {final String? householdClientReferenceId,
-      final bool? isProximityEnabled,
-      final double? latitude,
-      final double? longitude,
-      final double? maxRadius,
-      final String? projectId,
-      final String? nameSearch,
-      final int? offset,
-      final int? limit,
-      final List<String>? filter,
-      final int? totalCount,
-      final HouseholdType? householdType}) = _$GlobalSearchParametersImpl;
+          {required final List<SearchFilter> filters,
+          required final List<String> select,
+          final PaginationParams? pagination,
+          final Map<String, RelationshipMapping> relationshipMap}) =
+      _$GlobalSearchParametersImpl;
 
   factory _GlobalSearchParameters.fromJson(Map<String, dynamic> json) =
       _$GlobalSearchParametersImpl.fromJson;
 
   @override
-  String? get householdClientReferenceId;
+  List<SearchFilter> get filters;
   @override
-  bool? get isProximityEnabled;
+  List<String> get select;
   @override
-  double? get latitude;
+  PaginationParams? get pagination;
   @override
-  double? get longitude;
-  @override
-  double? get maxRadius;
-  @override
-  String? get projectId;
-  @override
-  String? get nameSearch;
-  @override
-  int? get offset;
-  @override
-  int? get limit;
-  @override
-  List<String>? get filter;
-  @override
-  int? get totalCount;
-  @override
-  HouseholdType? get householdType;
+  Map<String, RelationshipMapping> get relationshipMap;
   @override
   @JsonKey(ignore: true)
   _$$GlobalSearchParametersImplCopyWith<_$GlobalSearchParametersImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+SearchFilter _$SearchFilterFromJson(Map<String, dynamic> json) {
+  return _SearchFilter.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SearchFilter {
+  String get field => throw _privateConstructorUsedError;
+  String get operator => throw _privateConstructorUsedError;
+  dynamic get value => throw _privateConstructorUsedError;
+  String get root => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get coordinates => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SearchFilterCopyWith<SearchFilter> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SearchFilterCopyWith<$Res> {
+  factory $SearchFilterCopyWith(
+          SearchFilter value, $Res Function(SearchFilter) then) =
+      _$SearchFilterCopyWithImpl<$Res, SearchFilter>;
+  @useResult
+  $Res call(
+      {String field,
+      String operator,
+      dynamic value,
+      String root,
+      Map<String, dynamic>? coordinates});
+}
+
+/// @nodoc
+class _$SearchFilterCopyWithImpl<$Res, $Val extends SearchFilter>
+    implements $SearchFilterCopyWith<$Res> {
+  _$SearchFilterCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field = null,
+    Object? operator = null,
+    Object? value = freezed,
+    Object? root = null,
+    Object? coordinates = freezed,
+  }) {
+    return _then(_value.copyWith(
+      field: null == field
+          ? _value.field
+          : field // ignore: cast_nullable_to_non_nullable
+              as String,
+      operator: null == operator
+          ? _value.operator
+          : operator // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      root: null == root
+          ? _value.root
+          : root // ignore: cast_nullable_to_non_nullable
+              as String,
+      coordinates: freezed == coordinates
+          ? _value.coordinates
+          : coordinates // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SearchFilterImplCopyWith<$Res>
+    implements $SearchFilterCopyWith<$Res> {
+  factory _$$SearchFilterImplCopyWith(
+          _$SearchFilterImpl value, $Res Function(_$SearchFilterImpl) then) =
+      __$$SearchFilterImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String field,
+      String operator,
+      dynamic value,
+      String root,
+      Map<String, dynamic>? coordinates});
+}
+
+/// @nodoc
+class __$$SearchFilterImplCopyWithImpl<$Res>
+    extends _$SearchFilterCopyWithImpl<$Res, _$SearchFilterImpl>
+    implements _$$SearchFilterImplCopyWith<$Res> {
+  __$$SearchFilterImplCopyWithImpl(
+      _$SearchFilterImpl _value, $Res Function(_$SearchFilterImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field = null,
+    Object? operator = null,
+    Object? value = freezed,
+    Object? root = null,
+    Object? coordinates = freezed,
+  }) {
+    return _then(_$SearchFilterImpl(
+      field: null == field
+          ? _value.field
+          : field // ignore: cast_nullable_to_non_nullable
+              as String,
+      operator: null == operator
+          ? _value.operator
+          : operator // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      root: null == root
+          ? _value.root
+          : root // ignore: cast_nullable_to_non_nullable
+              as String,
+      coordinates: freezed == coordinates
+          ? _value._coordinates
+          : coordinates // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SearchFilterImpl implements _SearchFilter {
+  const _$SearchFilterImpl(
+      {required this.field,
+      required this.operator,
+      required this.value,
+      required this.root,
+      final Map<String, dynamic>? coordinates})
+      : _coordinates = coordinates;
+
+  factory _$SearchFilterImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SearchFilterImplFromJson(json);
+
+  @override
+  final String field;
+  @override
+  final String operator;
+  @override
+  final dynamic value;
+  @override
+  final String root;
+  final Map<String, dynamic>? _coordinates;
+  @override
+  Map<String, dynamic>? get coordinates {
+    final value = _coordinates;
+    if (value == null) return null;
+    if (_coordinates is EqualUnmodifiableMapView) return _coordinates;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  @override
+  String toString() {
+    return 'SearchFilter(field: $field, operator: $operator, value: $value, root: $root, coordinates: $coordinates)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchFilterImpl &&
+            (identical(other.field, field) || other.field == field) &&
+            (identical(other.operator, operator) ||
+                other.operator == operator) &&
+            const DeepCollectionEquality().equals(other.value, value) &&
+            (identical(other.root, root) || other.root == root) &&
+            const DeepCollectionEquality()
+                .equals(other._coordinates, _coordinates));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      field,
+      operator,
+      const DeepCollectionEquality().hash(value),
+      root,
+      const DeepCollectionEquality().hash(_coordinates));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchFilterImplCopyWith<_$SearchFilterImpl> get copyWith =>
+      __$$SearchFilterImplCopyWithImpl<_$SearchFilterImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SearchFilterImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SearchFilter implements SearchFilter {
+  const factory _SearchFilter(
+      {required final String field,
+      required final String operator,
+      required final dynamic value,
+      required final String root,
+      final Map<String, dynamic>? coordinates}) = _$SearchFilterImpl;
+
+  factory _SearchFilter.fromJson(Map<String, dynamic> json) =
+      _$SearchFilterImpl.fromJson;
+
+  @override
+  String get field;
+  @override
+  String get operator;
+  @override
+  dynamic get value;
+  @override
+  String get root;
+  @override
+  Map<String, dynamic>? get coordinates;
+  @override
+  @JsonKey(ignore: true)
+  _$$SearchFilterImplCopyWith<_$SearchFilterImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PaginationParams _$PaginationParamsFromJson(Map<String, dynamic> json) {
+  return _PaginationParams.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PaginationParams {
+  int get limit => throw _privateConstructorUsedError;
+  int get offset => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PaginationParamsCopyWith<PaginationParams> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PaginationParamsCopyWith<$Res> {
+  factory $PaginationParamsCopyWith(
+          PaginationParams value, $Res Function(PaginationParams) then) =
+      _$PaginationParamsCopyWithImpl<$Res, PaginationParams>;
+  @useResult
+  $Res call({int limit, int offset});
+}
+
+/// @nodoc
+class _$PaginationParamsCopyWithImpl<$Res, $Val extends PaginationParams>
+    implements $PaginationParamsCopyWith<$Res> {
+  _$PaginationParamsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? limit = null,
+    Object? offset = null,
+  }) {
+    return _then(_value.copyWith(
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PaginationParamsImplCopyWith<$Res>
+    implements $PaginationParamsCopyWith<$Res> {
+  factory _$$PaginationParamsImplCopyWith(_$PaginationParamsImpl value,
+          $Res Function(_$PaginationParamsImpl) then) =
+      __$$PaginationParamsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int limit, int offset});
+}
+
+/// @nodoc
+class __$$PaginationParamsImplCopyWithImpl<$Res>
+    extends _$PaginationParamsCopyWithImpl<$Res, _$PaginationParamsImpl>
+    implements _$$PaginationParamsImplCopyWith<$Res> {
+  __$$PaginationParamsImplCopyWithImpl(_$PaginationParamsImpl _value,
+      $Res Function(_$PaginationParamsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? limit = null,
+    Object? offset = null,
+  }) {
+    return _then(_$PaginationParamsImpl(
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PaginationParamsImpl implements _PaginationParams {
+  const _$PaginationParamsImpl({required this.limit, required this.offset});
+
+  factory _$PaginationParamsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PaginationParamsImplFromJson(json);
+
+  @override
+  final int limit;
+  @override
+  final int offset;
+
+  @override
+  String toString() {
+    return 'PaginationParams(limit: $limit, offset: $offset)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PaginationParamsImpl &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.offset, offset) || other.offset == offset));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, limit, offset);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PaginationParamsImplCopyWith<_$PaginationParamsImpl> get copyWith =>
+      __$$PaginationParamsImplCopyWithImpl<_$PaginationParamsImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PaginationParamsImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PaginationParams implements PaginationParams {
+  const factory _PaginationParams(
+      {required final int limit,
+      required final int offset}) = _$PaginationParamsImpl;
+
+  factory _PaginationParams.fromJson(Map<String, dynamic> json) =
+      _$PaginationParamsImpl.fromJson;
+
+  @override
+  int get limit;
+  @override
+  int get offset;
+  @override
+  @JsonKey(ignore: true)
+  _$$PaginationParamsImplCopyWith<_$PaginationParamsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+RelationshipMapping _$RelationshipMappingFromJson(Map<String, dynamic> json) {
+  return _RelationshipMapping.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RelationshipMapping {
+  String get from => throw _privateConstructorUsedError;
+  String get to => throw _privateConstructorUsedError;
+  String get localKey => throw _privateConstructorUsedError;
+  String get foreignKey => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RelationshipMappingCopyWith<RelationshipMapping> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RelationshipMappingCopyWith<$Res> {
+  factory $RelationshipMappingCopyWith(
+          RelationshipMapping value, $Res Function(RelationshipMapping) then) =
+      _$RelationshipMappingCopyWithImpl<$Res, RelationshipMapping>;
+  @useResult
+  $Res call({String from, String to, String localKey, String foreignKey});
+}
+
+/// @nodoc
+class _$RelationshipMappingCopyWithImpl<$Res, $Val extends RelationshipMapping>
+    implements $RelationshipMappingCopyWith<$Res> {
+  _$RelationshipMappingCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? from = null,
+    Object? to = null,
+    Object? localKey = null,
+    Object? foreignKey = null,
+  }) {
+    return _then(_value.copyWith(
+      from: null == from
+          ? _value.from
+          : from // ignore: cast_nullable_to_non_nullable
+              as String,
+      to: null == to
+          ? _value.to
+          : to // ignore: cast_nullable_to_non_nullable
+              as String,
+      localKey: null == localKey
+          ? _value.localKey
+          : localKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      foreignKey: null == foreignKey
+          ? _value.foreignKey
+          : foreignKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$RelationshipMappingImplCopyWith<$Res>
+    implements $RelationshipMappingCopyWith<$Res> {
+  factory _$$RelationshipMappingImplCopyWith(_$RelationshipMappingImpl value,
+          $Res Function(_$RelationshipMappingImpl) then) =
+      __$$RelationshipMappingImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String from, String to, String localKey, String foreignKey});
+}
+
+/// @nodoc
+class __$$RelationshipMappingImplCopyWithImpl<$Res>
+    extends _$RelationshipMappingCopyWithImpl<$Res, _$RelationshipMappingImpl>
+    implements _$$RelationshipMappingImplCopyWith<$Res> {
+  __$$RelationshipMappingImplCopyWithImpl(_$RelationshipMappingImpl _value,
+      $Res Function(_$RelationshipMappingImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? from = null,
+    Object? to = null,
+    Object? localKey = null,
+    Object? foreignKey = null,
+  }) {
+    return _then(_$RelationshipMappingImpl(
+      from: null == from
+          ? _value.from
+          : from // ignore: cast_nullable_to_non_nullable
+              as String,
+      to: null == to
+          ? _value.to
+          : to // ignore: cast_nullable_to_non_nullable
+              as String,
+      localKey: null == localKey
+          ? _value.localKey
+          : localKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      foreignKey: null == foreignKey
+          ? _value.foreignKey
+          : foreignKey // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RelationshipMappingImpl implements _RelationshipMapping {
+  const _$RelationshipMappingImpl(
+      {required this.from,
+      required this.to,
+      required this.localKey,
+      required this.foreignKey});
+
+  factory _$RelationshipMappingImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RelationshipMappingImplFromJson(json);
+
+  @override
+  final String from;
+  @override
+  final String to;
+  @override
+  final String localKey;
+  @override
+  final String foreignKey;
+
+  @override
+  String toString() {
+    return 'RelationshipMapping(from: $from, to: $to, localKey: $localKey, foreignKey: $foreignKey)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RelationshipMappingImpl &&
+            (identical(other.from, from) || other.from == from) &&
+            (identical(other.to, to) || other.to == to) &&
+            (identical(other.localKey, localKey) ||
+                other.localKey == localKey) &&
+            (identical(other.foreignKey, foreignKey) ||
+                other.foreignKey == foreignKey));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, from, to, localKey, foreignKey);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RelationshipMappingImplCopyWith<_$RelationshipMappingImpl> get copyWith =>
+      __$$RelationshipMappingImplCopyWithImpl<_$RelationshipMappingImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RelationshipMappingImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RelationshipMapping implements RelationshipMapping {
+  const factory _RelationshipMapping(
+      {required final String from,
+      required final String to,
+      required final String localKey,
+      required final String foreignKey}) = _$RelationshipMappingImpl;
+
+  factory _RelationshipMapping.fromJson(Map<String, dynamic> json) =
+      _$RelationshipMappingImpl.fromJson;
+
+  @override
+  String get from;
+  @override
+  String get to;
+  @override
+  String get localKey;
+  @override
+  String get foreignKey;
+  @override
+  @JsonKey(ignore: true)
+  _$$RelationshipMappingImplCopyWith<_$RelationshipMappingImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

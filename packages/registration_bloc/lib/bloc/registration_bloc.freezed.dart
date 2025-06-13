@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$RegistrationEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
     required TResult Function(GlobalSearchParameters searchParams) search,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
@@ -26,6 +27,7 @@ mixin _$RegistrationEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
     TResult? Function(GlobalSearchParameters searchParams)? search,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
@@ -34,6 +36,7 @@ mixin _$RegistrationEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
     TResult Function(GlobalSearchParameters searchParams)? search,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
@@ -43,6 +46,7 @@ mixin _$RegistrationEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationEventInitialize value) initialize,
     required TResult Function(RegistrationEventSearch value) search,
     required TResult Function(RegistrationEventCreate value) create,
     required TResult Function(RegistrationEventUpdate value) update,
@@ -51,6 +55,7 @@ mixin _$RegistrationEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationEventInitialize value)? initialize,
     TResult? Function(RegistrationEventSearch value)? search,
     TResult? Function(RegistrationEventCreate value)? create,
     TResult? Function(RegistrationEventUpdate value)? update,
@@ -59,6 +64,7 @@ mixin _$RegistrationEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationEventInitialize value)? initialize,
     TResult Function(RegistrationEventSearch value)? search,
     TResult Function(RegistrationEventCreate value)? create,
     TResult Function(RegistrationEventUpdate value)? update,
@@ -84,6 +90,131 @@ class _$RegistrationEventCopyWithImpl<$Res, $Val extends RegistrationEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+}
+
+/// @nodoc
+abstract class _$$RegistrationEventInitializeImplCopyWith<$Res> {
+  factory _$$RegistrationEventInitializeImplCopyWith(
+          _$RegistrationEventInitializeImpl value,
+          $Res Function(_$RegistrationEventInitializeImpl) then) =
+      __$$RegistrationEventInitializeImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$RegistrationEventInitializeImplCopyWithImpl<$Res>
+    extends _$RegistrationEventCopyWithImpl<$Res,
+        _$RegistrationEventInitializeImpl>
+    implements _$$RegistrationEventInitializeImplCopyWith<$Res> {
+  __$$RegistrationEventInitializeImplCopyWithImpl(
+      _$RegistrationEventInitializeImpl _value,
+      $Res Function(_$RegistrationEventInitializeImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$RegistrationEventInitializeImpl implements RegistrationEventInitialize {
+  const _$RegistrationEventInitializeImpl();
+
+  @override
+  String toString() {
+    return 'RegistrationEvent.initialize()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RegistrationEventInitializeImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
+    required TResult Function(GlobalSearchParameters searchParams) search,
+    required TResult Function(List<EntityModel> entities) create,
+    required TResult Function(List<EntityModel> entities) update,
+    required TResult Function(List<EntityModel> entities) delete,
+  }) {
+    return initialize();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
+    TResult? Function(GlobalSearchParameters searchParams)? search,
+    TResult? Function(List<EntityModel> entities)? create,
+    TResult? Function(List<EntityModel> entities)? update,
+    TResult? Function(List<EntityModel> entities)? delete,
+  }) {
+    return initialize?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
+    TResult Function(GlobalSearchParameters searchParams)? search,
+    TResult Function(List<EntityModel> entities)? create,
+    TResult Function(List<EntityModel> entities)? update,
+    TResult Function(List<EntityModel> entities)? delete,
+    required TResult orElse(),
+  }) {
+    if (initialize != null) {
+      return initialize();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationEventInitialize value) initialize,
+    required TResult Function(RegistrationEventSearch value) search,
+    required TResult Function(RegistrationEventCreate value) create,
+    required TResult Function(RegistrationEventUpdate value) update,
+    required TResult Function(RegistrationEventDelete value) delete,
+  }) {
+    return initialize(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationEventInitialize value)? initialize,
+    TResult? Function(RegistrationEventSearch value)? search,
+    TResult? Function(RegistrationEventCreate value)? create,
+    TResult? Function(RegistrationEventUpdate value)? update,
+    TResult? Function(RegistrationEventDelete value)? delete,
+  }) {
+    return initialize?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationEventInitialize value)? initialize,
+    TResult Function(RegistrationEventSearch value)? search,
+    TResult Function(RegistrationEventCreate value)? create,
+    TResult Function(RegistrationEventUpdate value)? update,
+    TResult Function(RegistrationEventDelete value)? delete,
+    required TResult orElse(),
+  }) {
+    if (initialize != null) {
+      return initialize(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class RegistrationEventInitialize implements RegistrationEvent {
+  const factory RegistrationEventInitialize() =
+      _$RegistrationEventInitializeImpl;
 }
 
 /// @nodoc
@@ -164,6 +295,7 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
     required TResult Function(GlobalSearchParameters searchParams) search,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
@@ -175,6 +307,7 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
     TResult? Function(GlobalSearchParameters searchParams)? search,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
@@ -186,6 +319,7 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
     TResult Function(GlobalSearchParameters searchParams)? search,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
@@ -201,6 +335,7 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationEventInitialize value) initialize,
     required TResult Function(RegistrationEventSearch value) search,
     required TResult Function(RegistrationEventCreate value) create,
     required TResult Function(RegistrationEventUpdate value) update,
@@ -212,6 +347,7 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationEventInitialize value)? initialize,
     TResult? Function(RegistrationEventSearch value)? search,
     TResult? Function(RegistrationEventCreate value)? create,
     TResult? Function(RegistrationEventUpdate value)? update,
@@ -223,6 +359,7 @@ class _$RegistrationEventSearchImpl implements RegistrationEventSearch {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationEventInitialize value)? initialize,
     TResult Function(RegistrationEventSearch value)? search,
     TResult Function(RegistrationEventCreate value)? create,
     TResult Function(RegistrationEventUpdate value)? update,
@@ -322,6 +459,7 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
     required TResult Function(GlobalSearchParameters searchParams) search,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
@@ -333,6 +471,7 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
     TResult? Function(GlobalSearchParameters searchParams)? search,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
@@ -344,6 +483,7 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
     TResult Function(GlobalSearchParameters searchParams)? search,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
@@ -359,6 +499,7 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationEventInitialize value) initialize,
     required TResult Function(RegistrationEventSearch value) search,
     required TResult Function(RegistrationEventCreate value) create,
     required TResult Function(RegistrationEventUpdate value) update,
@@ -370,6 +511,7 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationEventInitialize value)? initialize,
     TResult? Function(RegistrationEventSearch value)? search,
     TResult? Function(RegistrationEventCreate value)? create,
     TResult? Function(RegistrationEventUpdate value)? update,
@@ -381,6 +523,7 @@ class _$RegistrationEventCreateImpl implements RegistrationEventCreate {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationEventInitialize value)? initialize,
     TResult Function(RegistrationEventSearch value)? search,
     TResult Function(RegistrationEventCreate value)? create,
     TResult Function(RegistrationEventUpdate value)? update,
@@ -480,6 +623,7 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
     required TResult Function(GlobalSearchParameters searchParams) search,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
@@ -491,6 +635,7 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
     TResult? Function(GlobalSearchParameters searchParams)? search,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
@@ -502,6 +647,7 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
     TResult Function(GlobalSearchParameters searchParams)? search,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
@@ -517,6 +663,7 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationEventInitialize value) initialize,
     required TResult Function(RegistrationEventSearch value) search,
     required TResult Function(RegistrationEventCreate value) create,
     required TResult Function(RegistrationEventUpdate value) update,
@@ -528,6 +675,7 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationEventInitialize value)? initialize,
     TResult? Function(RegistrationEventSearch value)? search,
     TResult? Function(RegistrationEventCreate value)? create,
     TResult? Function(RegistrationEventUpdate value)? update,
@@ -539,6 +687,7 @@ class _$RegistrationEventUpdateImpl implements RegistrationEventUpdate {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationEventInitialize value)? initialize,
     TResult Function(RegistrationEventSearch value)? search,
     TResult Function(RegistrationEventCreate value)? create,
     TResult Function(RegistrationEventUpdate value)? update,
@@ -638,6 +787,7 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
     required TResult Function(GlobalSearchParameters searchParams) search,
     required TResult Function(List<EntityModel> entities) create,
     required TResult Function(List<EntityModel> entities) update,
@@ -649,6 +799,7 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
     TResult? Function(GlobalSearchParameters searchParams)? search,
     TResult? Function(List<EntityModel> entities)? create,
     TResult? Function(List<EntityModel> entities)? update,
@@ -660,6 +811,7 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
     TResult Function(GlobalSearchParameters searchParams)? search,
     TResult Function(List<EntityModel> entities)? create,
     TResult Function(List<EntityModel> entities)? update,
@@ -675,6 +827,7 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationEventInitialize value) initialize,
     required TResult Function(RegistrationEventSearch value) search,
     required TResult Function(RegistrationEventCreate value) create,
     required TResult Function(RegistrationEventUpdate value) update,
@@ -686,6 +839,7 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationEventInitialize value)? initialize,
     TResult? Function(RegistrationEventSearch value)? search,
     TResult? Function(RegistrationEventCreate value)? create,
     TResult? Function(RegistrationEventUpdate value)? update,
@@ -697,6 +851,7 @@ class _$RegistrationEventDeleteImpl implements RegistrationEventDelete {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationEventInitialize value)? initialize,
     TResult Function(RegistrationEventSearch value)? search,
     TResult Function(RegistrationEventCreate value)? create,
     TResult Function(RegistrationEventUpdate value)? update,

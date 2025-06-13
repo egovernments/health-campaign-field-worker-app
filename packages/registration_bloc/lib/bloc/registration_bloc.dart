@@ -6,6 +6,7 @@ import 'package:registration_bloc/models/global_search_params.dart';
 
 import '../models/entities/household.dart';
 import '../service/registration_service.dart';
+import '../utils/typedefs.dart';
 
 part 'registration_bloc.freezed.dart';
 
@@ -14,13 +15,22 @@ typedef RegistrationEmitter = Emitter<RegistrationState>;
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   final RegistrationService service;
 
+
   RegistrationBloc({
     required this.service,
   }) : super(const RegistrationState.initial()) {
+    on<RegistrationEventInitialize>(_handleInitialize);
     on<RegistrationEventSearch>(_handleSearch);
     on<RegistrationEventCreate>(_handleCreate);
     on<RegistrationEventDelete>(_handleDelete);
     on<RegistrationEventUpdate>(_handleUpdate);
+  }
+
+  FutureOr<void> _handleInitialize(
+      RegistrationEventInitialize event,
+      RegistrationEmitter emit,
+      ) async {
+    service.init(); // Call your init logic here
   }
 
   /// Handles the search event for households
@@ -29,6 +39,12 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       RegistrationEmitter emit,
       ) async {
     emit(const RegistrationState.loading());
+
+    if (event.searchParams.filters.isEmpty) {
+      emit(const RegistrationState.error('Search failed: No filters provided.'));
+      return;
+    }
+
     try {
       final results = await service.searchHouseholds(query: event.searchParams);
       emit(RegistrationState.loaded(results));
@@ -83,6 +99,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
 @freezed
 class RegistrationEvent with _$RegistrationEvent {
+  const factory RegistrationEvent.initialize() = RegistrationEventInitialize;
   const factory RegistrationEvent.search(final GlobalSearchParameters searchParams) = RegistrationEventSearch;
   const factory RegistrationEvent.create({
     required List<EntityModel> entities,

@@ -8,6 +8,10 @@ import 'package:registration_delivery/blocs/search_households/household_global_s
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:registration_bloc/bloc/registration_bloc.dart';
+import 'package:registration_bloc/service/registration_service.dart';
+import 'package:registration_bloc/repositories/local/search_entity_repository.dart';
+import 'package:registration_bloc/models/global_search_params.dart';
 import '../blocs/entity_create/entity_create.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
@@ -32,6 +36,25 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (context) {
+              return RegistrationBloc(
+                service: RegistrationService(
+                  relationshipMap: [
+                    const RelationshipMapping(from: 'name', to: 'individual', localKey: 'individualClientReferenceId', foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(from: 'householdMember', to: 'individual', localKey: 'individualClientReferenceId', foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(from: 'householdMember', to: 'household', localKey: 'householdClientReferenceId', foreignKey: 'clientReferenceId'),
+                  ],
+                  projectBeneficiaryRepository: context.repository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(context),
+                  householdMemberRepository: context.repository<HouseholdMemberModel, HouseholdMemberSearchModel>(context),
+                  householdRepository: context.repository<HouseholdModel, HouseholdSearchModel>(context),
+                  individualRepository: context.repository<IndividualModel, IndividualSearchModel>(context),
+                  taskDataRepository: context.repository<TaskModel, TaskSearchModel>(context),
+                  searchEntityRepository: context.read<SearchEntityRepository>(),
+                ),
+              );
+            },
+          ),
           BlocProvider(
             create: (context) {
               return SearchHouseholdsBloc(

@@ -13,6 +13,9 @@ import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/foundation.dart';
+import 'package:registration_bloc/bloc/registration_bloc.dart';
+import 'package:registration_bloc/service/registration_service.dart';
+import 'package:registration_bloc/models/global_search_params.dart' as reg_params;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -65,6 +68,10 @@ class _SearchBeneficiaryPageState
   @override
   void initState() {
     // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
+
+    Future.microtask(() {
+      context.read<RegistrationBloc>().add(const RegistrationEvent.initialize());
+    });
     blocWrapper = context.read<SearchBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
     // Listen to state changes
@@ -656,51 +663,69 @@ class _SearchBeneficiaryPageState
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
           searchController.text.isNotEmpty) {
-        blocWrapper.individualGlobalSearchBloc
-            .add(SearchHouseholdsEvent.individualGlobalSearch(
-                globalSearchParams: GlobalSearchParameters(
-          isProximityEnabled: isProximityEnabled,
-          latitude: lat,
-          projectId: RegistrationDeliverySingleton().projectId!,
-          longitude: long,
-          maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-          filter: selectedFilters,
-          offset: isPagination
-              ? blocWrapper.individualGlobalSearchBloc.state.offset
-              : offset,
-          limit: isPagination
-              ? blocWrapper.individualGlobalSearchBloc.state.limit
-              : limit,
-          householdType: RegistrationDeliverySingleton().householdType,
-        )));
+        const params = reg_params.GlobalSearchParameters(
+          filters: [
+            reg_params.SearchFilter(
+              root: 'name',  // or 'individual', based on what you're searching
+              field: 'givenName',
+              operator: 'contains',
+              value: 'rach', // Replace with the actual name value
+            ),
+          ], // Optional: if you're resolving linked entities
+          select: ['individual'],  // Optional: which fields to return
+          pagination: reg_params.PaginationParams(limit: 20, offset: 0),
+
+        );
+
+        context.read<RegistrationBloc>().add(
+          const RegistrationEvent.search(params),
+        );
+
+        // blocWrapper.individualGlobalSearchBloc
+        //     .add(SearchHouseholdsEvent.individualGlobalSearch(
+        //         globalSearchParams: GlobalSearchParameters(
+        //   isProximityEnabled: isProximityEnabled,
+        //   latitude: lat,
+        //   projectId: RegistrationDeliverySingleton().projectId!,
+        //   longitude: long,
+        //   maxRadius: RegistrationDeliverySingleton().maxRadius,
+        //   nameSearch: searchController.text.trim().length > 2
+        //       ? searchController.text.trim()
+        //       : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+        //   filter: selectedFilters,
+        //   offset: isPagination
+        //       ? blocWrapper.individualGlobalSearchBloc.state.offset
+        //       : offset,
+        //   limit: isPagination
+        //       ? blocWrapper.individualGlobalSearchBloc.state.limit
+        //       : limit,
+        //   householdType: RegistrationDeliverySingleton().householdType,
+        // )));
       }
     } else {
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
           searchController.text.isNotEmpty) {
-        blocWrapper.houseHoldGlobalSearchBloc
-            .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
-                globalSearchParams: GlobalSearchParameters(
-          isProximityEnabled: isProximityEnabled,
-          latitude: lat,
-          longitude: long,
-          projectId: RegistrationDeliverySingleton().projectId!,
-          maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-          filter: selectedFilters,
-          offset: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
-              : offset,
-          limit: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
-              : limit,
-          householdType: RegistrationDeliverySingleton().householdType,
-        )));
+        // blocWrapper.houseHoldGlobalSearchBloc
+        //     .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
+        //         globalSearchParams: GlobalSearchParameters(
+        //   isProximityEnabled: isProximityEnabled,
+        //   latitude: lat,
+        //   longitude: long,
+        //   projectId: RegistrationDeliverySingleton().projectId!,
+        //   maxRadius: RegistrationDeliverySingleton().maxRadius,
+        //   nameSearch: searchController.text.trim().length > 2
+        //       ? searchController.text.trim()
+        //       : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+        //   filter: selectedFilters,
+        //   offset: isPagination
+        //       ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+        //       : offset,
+        //   limit: isPagination
+        //       ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+        //       : limit,
+        //   householdType: RegistrationDeliverySingleton().householdType,
+        // )));
       }
     }
   }

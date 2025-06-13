@@ -23,6 +23,7 @@ dependencies:
   recase: ^4.1.0
   pluto_grid: ^8.0.0
   stream_transform: ^2.1.0
+  registration_delivery: 1.0.6+2
   async: ^2.11.0
 
 dev_dependencies:

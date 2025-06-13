@@ -9,41 +9,77 @@ part of 'global_search_params.dart';
 _$GlobalSearchParametersImpl _$$GlobalSearchParametersImplFromJson(
         Map<String, dynamic> json) =>
     _$GlobalSearchParametersImpl(
-      householdClientReferenceId: json['householdClientReferenceId'] as String?,
-      isProximityEnabled: json['isProximityEnabled'] as bool?,
-      latitude: (json['latitude'] as num?)?.toDouble(),
-      longitude: (json['longitude'] as num?)?.toDouble(),
-      maxRadius: (json['maxRadius'] as num?)?.toDouble(),
-      projectId: json['projectId'] as String?,
-      nameSearch: json['nameSearch'] as String?,
-      offset: (json['offset'] as num?)?.toInt(),
-      limit: (json['limit'] as num?)?.toInt(),
-      filter:
-          (json['filter'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      totalCount: (json['totalCount'] as num?)?.toInt(),
-      householdType:
-          $enumDecodeNullable(_$HouseholdTypeEnumMap, json['householdType']),
+      filters: (json['filters'] as List<dynamic>)
+          .map((e) => SearchFilter.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      select:
+          (json['select'] as List<dynamic>).map((e) => e as String).toList(),
+      pagination: json['pagination'] == null
+          ? null
+          : PaginationParams.fromJson(
+              json['pagination'] as Map<String, dynamic>),
+      relationshipMap: (json['relationshipMap'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(
+                k, RelationshipMapping.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
     );
 
 Map<String, dynamic> _$$GlobalSearchParametersImplToJson(
         _$GlobalSearchParametersImpl instance) =>
     <String, dynamic>{
-      'householdClientReferenceId': instance.householdClientReferenceId,
-      'isProximityEnabled': instance.isProximityEnabled,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
-      'maxRadius': instance.maxRadius,
-      'projectId': instance.projectId,
-      'nameSearch': instance.nameSearch,
-      'offset': instance.offset,
-      'limit': instance.limit,
-      'filter': instance.filter,
-      'totalCount': instance.totalCount,
-      'householdType': _$HouseholdTypeEnumMap[instance.householdType],
+      'filters': instance.filters,
+      'select': instance.select,
+      'pagination': instance.pagination,
+      'relationshipMap': instance.relationshipMap,
     };
 
-const _$HouseholdTypeEnumMap = {
-  HouseholdType.family: 'family',
-  HouseholdType.community: 'community',
-  HouseholdType.other: 'other',
-};
+_$SearchFilterImpl _$$SearchFilterImplFromJson(Map<String, dynamic> json) =>
+    _$SearchFilterImpl(
+      field: json['field'] as String,
+      operator: json['operator'] as String,
+      value: json['value'],
+      root: json['root'] as String,
+      coordinates: json['coordinates'] as Map<String, dynamic>?,
+    );
+
+Map<String, dynamic> _$$SearchFilterImplToJson(_$SearchFilterImpl instance) =>
+    <String, dynamic>{
+      'field': instance.field,
+      'operator': instance.operator,
+      'value': instance.value,
+      'root': instance.root,
+      'coordinates': instance.coordinates,
+    };
+
+_$PaginationParamsImpl _$$PaginationParamsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$PaginationParamsImpl(
+      limit: (json['limit'] as num).toInt(),
+      offset: (json['offset'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$PaginationParamsImplToJson(
+        _$PaginationParamsImpl instance) =>
+    <String, dynamic>{
+      'limit': instance.limit,
+      'offset': instance.offset,
+    };
+
+_$RelationshipMappingImpl _$$RelationshipMappingImplFromJson(
+        Map<String, dynamic> json) =>
+    _$RelationshipMappingImpl(
+      from: json['from'] as String,
+      to: json['to'] as String,
+      localKey: json['localKey'] as String,
+      foreignKey: json['foreignKey'] as String,
+    );
+
+Map<String, dynamic> _$$RelationshipMappingImplToJson(
+        _$RelationshipMappingImpl instance) =>
+    <String, dynamic>{
+      'from': instance.from,
+      'to': instance.to,
+      'localKey': instance.localKey,
+      'foreignKey': instance.foreignKey,
+    };
