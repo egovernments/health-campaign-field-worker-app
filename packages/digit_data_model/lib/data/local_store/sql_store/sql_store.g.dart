@@ -2154,6 +2154,11 @@ class $AttendeeTable extends Attendee
   late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
       'additional_fields', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _tagMeta = const VerificationMeta('tag');
+  @override
+  late final GeneratedColumn<String> tag = GeneratedColumn<String>(
+      'tag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -2174,7 +2179,8 @@ class $AttendeeTable extends Attendee
         denrollmentDate,
         isDeleted,
         rowVersion,
-        additionalFields
+        additionalFields,
+        tag
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2297,6 +2303,10 @@ class $AttendeeTable extends Attendee
           additionalFields.isAcceptableOrUnknown(
               data['additional_fields']!, _additionalFieldsMeta));
     }
+    if (data.containsKey('tag')) {
+      context.handle(
+          _tagMeta, tag.isAcceptableOrUnknown(data['tag']!, _tagMeta));
+    }
     return context;
   }
 
@@ -2344,6 +2354,8 @@ class $AttendeeTable extends Attendee
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+      tag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tag']),
     );
   }
 
@@ -2373,6 +2385,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
   final bool? isDeleted;
   final int? rowVersion;
   final String? additionalFields;
+  final String? tag;
   const AttendeeData(
       {this.id,
       required this.tenantId,
@@ -2392,7 +2405,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       this.denrollmentDate,
       this.isDeleted,
       this.rowVersion,
-      this.additionalFields});
+      this.additionalFields,
+      this.tag});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2447,6 +2461,9 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
     }
+    if (!nullToAbsent || tag != null) {
+      map['tag'] = Variable<String>(tag);
+    }
     return map;
   }
 
@@ -2500,6 +2517,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
+      tag: tag == null && nullToAbsent ? const Value.absent() : Value(tag),
     );
   }
 
@@ -2527,6 +2545,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+      tag: serializer.fromJson<String?>(json['tag']),
     );
   }
   @override
@@ -2552,6 +2571,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
       'additionalFields': serializer.toJson<String?>(additionalFields),
+      'tag': serializer.toJson<String?>(tag),
     };
   }
 
@@ -2574,7 +2594,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           Value<int?> denrollmentDate = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> additionalFields = const Value.absent()}) =>
+          Value<String?> additionalFields = const Value.absent(),
+          Value<String?> tag = const Value.absent()}) =>
       AttendeeData(
         id: id.present ? id.value : this.id,
         tenantId: tenantId ?? this.tenantId,
@@ -2617,6 +2638,7 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
+        tag: tag.present ? tag.value : this.tag,
       );
   @override
   String toString() {
@@ -2639,7 +2661,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           ..write('denrollmentDate: $denrollmentDate, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('additionalFields: $additionalFields')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('tag: $tag')
           ..write(')'))
         .toString();
   }
@@ -2664,7 +2687,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
       denrollmentDate,
       isDeleted,
       rowVersion,
-      additionalFields);
+      additionalFields,
+      tag);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2687,7 +2711,8 @@ class AttendeeData extends DataClass implements Insertable<AttendeeData> {
           other.denrollmentDate == this.denrollmentDate &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
-          other.additionalFields == this.additionalFields);
+          other.additionalFields == this.additionalFields &&
+          other.tag == this.tag);
 }
 
 class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
@@ -2710,6 +2735,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
+  final Value<String?> tag;
   final Value<int> rowid;
   const AttendeeCompanion({
     this.id = const Value.absent(),
@@ -2731,6 +2757,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.tag = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttendeeCompanion.insert({
@@ -2753,6 +2780,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.tag = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : tenantId = Value(tenantId),
         registerId = Value(registerId),
@@ -2777,6 +2805,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
     Expression<String>? additionalFields,
+    Expression<String>? tag,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2801,6 +2830,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
       if (additionalFields != null) 'additional_fields': additionalFields,
+      if (tag != null) 'tag': tag,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2825,6 +2855,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
       Value<String?>? additionalFields,
+      Value<String?>? tag,
       Value<int>? rowid}) {
     return AttendeeCompanion(
       id: id ?? this.id,
@@ -2846,6 +2877,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
       additionalFields: additionalFields ?? this.additionalFields,
+      tag: tag ?? this.tag,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2910,6 +2942,9 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
+    if (tag.present) {
+      map['tag'] = Variable<String>(tag.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2938,6 +2973,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields, ')
+          ..write('tag: $tag, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -42104,6 +42140,7 @@ typedef $$AttendeeTableInsertCompanionBuilder = AttendeeCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> tag,
   Value<int> rowid,
 });
 typedef $$AttendeeTableUpdateCompanionBuilder = AttendeeCompanion Function({
@@ -42126,6 +42163,7 @@ typedef $$AttendeeTableUpdateCompanionBuilder = AttendeeCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> tag,
   Value<int> rowid,
 });
 
@@ -42168,6 +42206,7 @@ class $$AttendeeTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> tag = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               AttendeeCompanion(
@@ -42190,6 +42229,7 @@ class $$AttendeeTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            tag: tag,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
@@ -42212,6 +42252,7 @@ class $$AttendeeTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> tag = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               AttendeeCompanion.insert(
@@ -42234,6 +42275,7 @@ class $$AttendeeTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            tag: tag,
             rowid: rowid,
           ),
         ));
@@ -42348,6 +42390,11 @@ class $$AttendeeTableFilterComposer
       column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get tag => $state.composableBuilder(
+      column: $state.table.tag,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$AttendeeTableOrderingComposer
@@ -42445,6 +42492,11 @@ class $$AttendeeTableOrderingComposer
 
   ColumnOrderings<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get tag => $state.composableBuilder(
+      column: $state.table.tag,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }

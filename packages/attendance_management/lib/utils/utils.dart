@@ -10,7 +10,7 @@ class AttendanceSingleton {
 
   AttendanceSingleton._internal();
 
-  String _projectId = '';
+  ProjectModel? _project;
   String _loggedInIndividualId = '';
   String _loggedInUserUuid = '';
   String _appVersion = '';
@@ -21,23 +21,29 @@ class AttendanceSingleton {
 
   // Method to set attendance listeners and other information
   void setInitialData({
-    required String projectId,
+    required ProjectModel project,
     required String loggedInIndividualId,
     required String loggedInUserUuid,
     required String appVersion,
   }) {
-    _projectId = projectId;
+    _project = project;
     _loggedInIndividualId = loggedInIndividualId;
     _loggedInUserUuid = loggedInUserUuid;
     _appVersion = appVersion;
   }
 
-  get projectId => _projectId;
+  ProjectModel? get project => _project;
+
   get loggedInIndividualId => _loggedInIndividualId;
+
   get loggedInUserUuid => _loggedInUserUuid;
+
   get appVersion => _appVersion;
+
   get tenantId => _tenantId;
+
   get persistenceConfiguration => _persistenceConfiguration;
+
   BoundaryModel? get boundary => _boundaryModel;
 
   void setTenantId(String tenantId) {

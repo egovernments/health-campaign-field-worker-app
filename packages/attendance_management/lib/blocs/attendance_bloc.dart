@@ -30,6 +30,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     required this.individualDataRepository,
   }) {
     on(_onInitial);
+    on(_onFetchNonMobileUsers);
     on(_onLoadAttendanceRegisterData);
     on(_onLoadSelectedRegisterData);
     on(_onLoadMoreAttendanceRegisters);
@@ -43,6 +44,18 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     emit(const RegisterLoading());
     // Getting attendance registers using a singleton instance
     final registers = await fetchRegisters(offSet: 0, limit: 10);
+    add(AttendanceEvents.loadAttendanceRegisters(
+        registers: registers!, limit: 10, offset: 0));
+  }
+
+  // Event handler for InitialAttendance event
+  void _onFetchNonMobileUsers(
+    FetchNonMobileUsers event,
+    Emitter<AttendanceStates> emit,
+  ) async {
+    emit(const RegisterLoading());
+    // Getting attendance registers using a singleton instance
+    final registers = await fetchNonMobileUsers(offSet: 0, limit: 10);
     add(AttendanceEvents.loadAttendanceRegisters(
         registers: registers!, limit: 10, offset: 0));
   }
@@ -120,7 +133,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
         limit: limit,
         offSet: offSet,
         staffId: AttendanceSingleton().loggedInIndividualId,
-        referenceId: AttendanceSingleton().projectId,
+        referenceId: AttendanceSingleton().project!.id,
       ),
     );
 
@@ -188,6 +201,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     }).toList();
 
     return register.copyWith(
+      individualList: individualList,
       attendees: attendeeList,
       attendanceLog: list,
       completedDays: completedDaysCount,
@@ -250,12 +264,62 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     return logs
         .any((element) => element.time == logTime && element.type == type);
   }
+
+  fetchNonMobileUsers({required int offSet, required int limit}) async {
+    final registers = await attendanceDataRepository?.search(
+      AttendanceRegisterSearchModel(
+        limit: limit,
+        offSet: offSet,
+        attendeeId: AttendanceSingleton().loggedInIndividualId,
+      ),
+    );
+
+    final List<AttendanceRegisterModel> nonMobileUserRegister = [];
+
+    for (var register in registers!) {
+      final individualList = await individualDataRepository?.search(
+            IndividualSearchModel(
+              id: register.attendees
+                  ?.where((att) => (att.denrollmentDate == null ||
+                      (att.denrollmentDate ??
+                              DateTime.now().millisecondsSinceEpoch) >=
+                          DateTime.now().millisecondsSinceEpoch))
+                  .map((a) => a.individualId!)
+                  .toList(),
+            ),
+          ) ??
+          [];
+
+      // Map attendees
+      final attendeeList = register.attendees
+          ?.where((att) => (att.denrollmentDate == null ||
+              (att.denrollmentDate ?? DateTime.now().millisecondsSinceEpoch) >=
+                  DateTime.now().millisecondsSinceEpoch))
+          .map((a) {
+        var ind =
+            individualList.where((i) => i.id == a.individualId).firstOrNull;
+        return a.copyWith(
+          name: ind?.name?.givenName,
+          individualId: ind?.id,
+          identifierID: ind?.identifiers?.firstOrNull?.identifierId,
+          individualNumber: ind?.individualId,
+        );
+      }).toList();
+
+      nonMobileUserRegister.add(register.copyWith(
+          attendees: attendeeList, individualList: individualList));
+    }
+
+    return nonMobileUserRegister ?? [];
+  }
 }
 
 // Freezed class for defining attendance-related events
 @freezed
 class AttendanceEvents with _$AttendanceEvents {
   const factory AttendanceEvents.initial() = InitialAttendance;
+
+  const factory AttendanceEvents.fetchNonMobileUsers() = FetchNonMobileUsers;
 
   const factory AttendanceEvents.loadAttendanceRegisters(
       {required List<AttendanceRegisterModel> registers,

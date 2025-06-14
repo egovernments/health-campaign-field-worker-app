@@ -421,59 +421,88 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     List<BoundaryModel> boundaries;
     try {
-      if (context.loggedInUserRoles
-          .where(
-            (role) =>
-                role.code == RolesType.districtSupervisor.toValue() ||
-                role.code == RolesType.distributor.toValue() ||
-                role.code == RolesType.teamSupervisor.toValue(),
-          )
-          .toList()
-          .isNotEmpty) {
-        final attendanceRegisters = await attendanceRemoteRepository.search(
-          AttendanceRegisterSearchModel(
-            staffId: context.loggedInIndividualId,
-            referenceId: event.model.id,
-            localityCode: event.model.address?.boundary,
-          ),
-        );
-        await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+      try {
+        if (context.loggedInUserRoles
+            .where(
+              (role) =>
+                  role.code == RolesType.districtSupervisor.toValue() ||
+                  role.code ==
+                      RolesType.distributor
+                          .toValue() || // NOTE: Distributor also fetches registers for getting his team members (Non-Mobile users)
+                  role.code == RolesType.teamSupervisor.toValue(),
+            )
+            .toList()
+            .isNotEmpty) {
+          final loggedInIndividualId = await localSecureStore.userIndividualId;
+          late final List<AttendanceRegisterModel> attendanceRegisters;
 
-        for (final register in attendanceRegisters) {
-          if (register.attendees != null &&
-              (register.attendees ?? []).isNotEmpty) {
-            try {
-              final individuals = await individualRemoteRepository.search(
-                IndividualSearchModel(
-                  id: register.attendees!.map((e) => e.individualId!).toList(),
-                ),
-              );
-              await individualLocalRepository.bulkCreate(individuals);
-              if (context.loggedInUserRoles
-                  .where(
-                    (role) =>
-                        role.code == RolesType.districtSupervisor.toValue() ||
-                        role.code == RolesType.teamSupervisor.toValue(),
-                  )
-                  .toList()
-                  .isNotEmpty) {
-                final logs = await attendanceLogRemoteRepository.search(
-                  AttendanceLogSearchModel(
-                    registerId: register.id,
+          if (context.loggedInUserRoles
+              .where(
+                (role) =>
+                    role.code == RolesType.districtSupervisor.toValue() ||
+                    role.code == RolesType.teamSupervisor.toValue(),
+              )
+              .toList()
+              .isNotEmpty) {
+            attendanceRegisters = await attendanceRemoteRepository.search(
+              AttendanceRegisterSearchModel(
+                staffId: loggedInIndividualId,
+                referenceId: event.model.id,
+                localityCode: event.model.address?.boundary,
+              ),
+            );
+          } else {
+            attendanceRegisters = await attendanceRemoteRepository.search(
+              AttendanceRegisterSearchModel(
+                  attendeeId: loggedInIndividualId,
+                  // Modified attendance search to fetch tagged attendees for non-mobile users
+                  includeTaggedAttendees: true),
+            );
+          }
+          await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+          for (final register in attendanceRegisters) {
+            if (register.attendees != null &&
+                (register.attendees ?? []).isNotEmpty) {
+              try {
+                final individuals = await individualRemoteRepository.search(
+                  IndividualSearchModel(
+                    id: register.attendees!
+                        .map((e) => e.individualId!)
+                        .toList(),
                   ),
                 );
-                await attendanceLogLocalRepository.bulkCreate(logs);
+                await individualLocalRepository.bulkCreate(individuals);
+                if (context.loggedInUserRoles
+                    .where(
+                      (role) =>
+                          role.code == RolesType.districtSupervisor.toValue() ||
+                          role.code == RolesType.teamSupervisor.toValue(),
+                    )
+                    .toList()
+                    .isNotEmpty) {
+                  final logs = await attendanceLogRemoteRepository.search(
+                    AttendanceLogSearchModel(
+                      registerId: register.id,
+                    ),
+                  );
+                  await attendanceLogLocalRepository.bulkCreate(logs);
+                }
+              } catch (_) {
+                emit(state.copyWith(
+                  loading: false,
+                  syncError: ProjectSyncErrorType.attendance,
+                ));
+                return;
               }
-            } catch (_) {
-              emit(state.copyWith(
-                loading: false,
-                syncError: ProjectSyncErrorType.attendance,
-              ));
-
-              return;
             }
           }
         }
+      } catch (_) {
+        emit(state.copyWith(
+          loading: false,
+          syncError: ProjectSyncErrorType.attendance,
+        ));
+        return;
       }
       try {
         final startDate = DateTime(
