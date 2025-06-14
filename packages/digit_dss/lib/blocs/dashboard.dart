@@ -76,7 +76,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             final registers = await attendanceDataRepository.search(
               AttendanceRegisterSearchModel(
                 staffId: AttendanceSingleton().loggedInIndividualId,
-                referenceId: AttendanceSingleton().projectId,
+                referenceId: AttendanceSingleton().project!.id,
               ),
             );
             List<String> attendeesIndividualIds = [];
@@ -287,6 +287,7 @@ class MetricWrapper {
   final String value; // Value of the metric
   final Insight? insight; // Insight related to the metric
   final bool? isHorizontal;
+
   MetricWrapper({
     required this.header,
     required this.value,

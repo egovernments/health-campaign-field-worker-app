@@ -23,7 +23,7 @@ import '../pages/boundary_selection.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
-import '../pages/non_system_user/non_system_user_list.dart';
+import '../pages/non_mobile_user/non_mobile_user_list.dart';
 import '../pages/profile.dart';
 import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';

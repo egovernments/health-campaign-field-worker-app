@@ -1,3 +1,5 @@
+import 'package:attendance_management/models/entities/scanned_individual_data.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/TextTheme/digit_text_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -12,9 +14,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/localization/app_localization.dart';
 
-//TODO: TO user details to generate the qrcode, after API integration
 void showQRForNonMobileUser(
     {required BuildContext context,
+    required ScannedIndividualDataModel individualScannerData,
     required AppLocalizations localizations,
     required DigitTextTheme textTheme}) {
   final theme = Theme.of(context);
@@ -28,10 +30,9 @@ void showQRForNonMobileUser(
             Navigator.of(ctx).pop();
           },
           additionalWidgets: [
-            const Center(
+            Center(
                 child: DigitTextBlock(
-              //TODO: TO show the selected user name
-              subHeading: "Pitabash Choudhdry",
+              subHeading: localizations.translate(individualScannerData.name!),
             )),
             Container(
               alignment: Alignment.center,
@@ -47,7 +48,7 @@ void showQRForNonMobileUser(
               child: DigitTextBlock(
                 spacing: 0,
                 padding: const EdgeInsets.all(spacer1),
-                description: "ID 56565656",
+                description: individualScannerData.individualId,
                 descriptionStyle: textTheme.label,
               ),
             ),
@@ -59,7 +60,8 @@ void showQRForNonMobileUser(
                   width: 2,
                 )),
                 child: QrImageView(
-                  data: "PitabashChoudhry23/03/2025",
+                  data: DataMapEncryptor()
+                      .encryptWithRandomKey(individualScannerData.toMap()),
                   version: QrVersions.auto,
                   size: 220.0,
                 ),

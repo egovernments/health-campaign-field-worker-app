@@ -7,8 +7,8 @@ class ScannedIndividualDataModel with ScannedIndividualDataModelMappable {
   final String? individualId;
   final int? qrCreatedTime;
   final String? name;
-  final String? locality; 
-  final int? age;
+  final String? locality;
+  final String? age;
 
   ScannedIndividualDataModel({
     this.individualId,

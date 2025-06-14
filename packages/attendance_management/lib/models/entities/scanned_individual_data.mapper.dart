@@ -34,8 +34,8 @@ class ScannedIndividualDataModelMapper
   static String? _$locality(ScannedIndividualDataModel v) => v.locality;
   static const Field<ScannedIndividualDataModel, String> _f$locality =
       Field('locality', _$locality, opt: true);
-  static int? _$age(ScannedIndividualDataModel v) => v.age;
-  static const Field<ScannedIndividualDataModel, int> _f$age =
+  static String? _$age(ScannedIndividualDataModel v) => v.age;
+  static const Field<ScannedIndividualDataModel, String> _f$age =
       Field('age', _$age, opt: true);
 
   @override
@@ -120,7 +120,7 @@ abstract class ScannedIndividualDataModelCopyWith<
       int? qrCreatedTime,
       String? name,
       String? locality,
-      int? age});
+      String? age});
   ScannedIndividualDataModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }

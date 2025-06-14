@@ -10,19 +10,17 @@ import '../localized.dart';
 
 class NonMobileUserCard extends LocalizedStatefulWidget {
   final String userName;
-  final String role;
+  final String individualId;
   final String gender;
   final String age;
-  final String? mobilenumber;
-  final void Function(dynamic value) onScanMe;
+  final void Function() onScanMe;
 
   const NonMobileUserCard({
     super.key,
     required this.userName,
-    required this.role,
+    required this.individualId,
     required this.gender,
     required this.age,
-    this.mobilenumber,
     required this.onScanMe,
   });
 
@@ -42,12 +40,8 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
       padding: const EdgeInsets.all(spacer3),
       children: [
         _buildCenteredTextBlock(widget.userName, textTheme.headingM),
-        _buildCenteredTextBlock(widget.role, textTheme.bodyL),
         _buildCenteredTextBlock(
             "${widget.gender}, ${widget.age}", textTheme.bodyL),
-        if (widget.mobilenumber != null)
-          _buildCenteredTextBlock(
-              "+91 ${widget.mobilenumber}", textTheme.bodyL),
         _buildIdContainer(context, textTheme),
         _buildQRButton(context),
       ],
@@ -82,7 +76,7 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
       child: DigitTextBlock(
         spacing: 0,
         padding: const EdgeInsets.all(spacer1),
-        description: "ID 56565656",
+        description: widget.individualId,
         descriptionStyle: textTheme.label,
       ),
     );
@@ -94,7 +88,7 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
       type: DigitButtonType.secondary,
       size: DigitButtonSize.large,
       mainAxisSize: MainAxisSize.max,
-      onPressed: () => widget.onScanMe("data to be sent"),
+      onPressed: () => widget.onScanMe(),
       prefixIcon: Icons.qr_code,
       label: localizations.translate(i18.nonMobileUser.showQrCodeBtnLabel),
     );

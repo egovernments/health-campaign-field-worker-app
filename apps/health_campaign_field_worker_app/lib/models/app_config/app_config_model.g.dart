@@ -7,20 +7,20 @@ part of 'app_config_model.dart';
 // **************************************************************************
 
 _$MdmsRequestModelImpl _$$MdmsRequestModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$MdmsRequestModelImpl(
       mdmsCriteria: MdmsCriteriaModel.fromJson(
           json['MdmsCriteria'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$MdmsRequestModelImplToJson(
-        _$MdmsRequestModelImpl instance) =>
+    _$MdmsRequestModelImpl instance) =>
     <String, dynamic>{
       'MdmsCriteria': instance.mdmsCriteria,
     };
 
 _$MdmsCriteriaModelImpl _$$MdmsCriteriaModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$MdmsCriteriaModelImpl(
       tenantId: json['tenantId'] as String,
       moduleDetails: (json['moduleDetails'] as List<dynamic>)
@@ -29,14 +29,14 @@ _$MdmsCriteriaModelImpl _$$MdmsCriteriaModelImplFromJson(
     );
 
 Map<String, dynamic> _$$MdmsCriteriaModelImplToJson(
-        _$MdmsCriteriaModelImpl instance) =>
+    _$MdmsCriteriaModelImpl instance) =>
     <String, dynamic>{
       'tenantId': instance.tenantId,
       'moduleDetails': instance.moduleDetails,
     };
 
 _$MdmsModuleDetailModelImpl _$$MdmsModuleDetailModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$MdmsModuleDetailModelImpl(
       moduleName: json['moduleName'] as String,
       masterDetails: (json['masterDetails'] as List<dynamic>)
@@ -45,26 +45,26 @@ _$MdmsModuleDetailModelImpl _$$MdmsModuleDetailModelImplFromJson(
     );
 
 Map<String, dynamic> _$$MdmsModuleDetailModelImplToJson(
-        _$MdmsModuleDetailModelImpl instance) =>
+    _$MdmsModuleDetailModelImpl instance) =>
     <String, dynamic>{
       'moduleName': instance.moduleName,
       'masterDetails': instance.masterDetails,
     };
 
 _$MdmsMasterDetailModelImpl _$$MdmsMasterDetailModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$MdmsMasterDetailModelImpl(
       json['name'] as String,
     );
 
 Map<String, dynamic> _$$MdmsMasterDetailModelImplToJson(
-        _$MdmsMasterDetailModelImpl instance) =>
+    _$MdmsMasterDetailModelImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
     };
 
 _$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$AppConfigPrimaryWrapperModelImpl(
       hcmWrapperModel: json['HCM'] == null
           ? null
@@ -72,15 +72,15 @@ _$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(
       commonMasters: json['common-masters'] == null
           ? null
           : CommonMastersWrapperModel.fromJson(
-              json['common-masters'] as Map<String, dynamic>),
+          json['common-masters'] as Map<String, dynamic>),
       rowVersions: json['module-version'] == null
           ? null
           : RowVersionWrapperModel.fromJson(
-              json['module-version'] as Map<String, dynamic>),
+          json['module-version'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$AppConfigPrimaryWrapperModelImplToJson(
-        _$AppConfigPrimaryWrapperModelImpl instance) =>
+    _$AppConfigPrimaryWrapperModelImpl instance) =>
     <String, dynamic>{
       'HCM': instance.hcmWrapperModel,
       'common-masters': instance.commonMasters,
@@ -88,7 +88,7 @@ Map<String, dynamic> _$$AppConfigPrimaryWrapperModelImplToJson(
     };
 
 _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$HCMWrapperModelImpl(
       appConfig: (json['APP_CONFIG'] as List<dynamic>)
           .map((e) => AppConfig.fromJson(e as Map<String, dynamic>))
@@ -100,22 +100,22 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .map((e) => BeneficiaryIdConfig.fromJson(e as Map<String, dynamic>))
           .toList(),
       downSyncBandWidthBatchSize: (json['DOWNSYNC-BANDWIDTH_BATCH_SIZE']
-              as List<dynamic>)
+      as List<dynamic>)
           .map((e) => BandWidthBatchSize.fromJson(e as Map<String, dynamic>))
           .toList(),
       householdDeletionReasonOptions: (json['HOUSEHOLD_DELETION_REASON_OPTIONS']
-              as List<dynamic>)
+      as List<dynamic>)
           .map((e) => DeletionReasonOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
       householdMemberDeletionReasonOptions: (json[
-              'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS'] as List<dynamic>)
+      'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS'] as List<dynamic>)
           .map((e) => DeletionReasonOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
       backgroundServiceConfig:
-          (json['BACKGROUND_SERVICE_CONFIG'] as List<dynamic>?)
-              ?.map((e) =>
-                  BackgroundServiceConfig.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      (json['BACKGROUND_SERVICE_CONFIG'] as List<dynamic>?)
+          ?.map((e) =>
+          BackgroundServiceConfig.fromJson(e as Map<String, dynamic>))
+          .toList(),
       checklistTypes: (json['CHECKLIST_TYPES'] as List<dynamic>)
           .map((e) => CheckListTypes.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -123,12 +123,12 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .map((e) => IdTypeOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
       relationShipTypeOptions:
-          (json['HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES'] as List<dynamic>)
-              .map((e) =>
-                  RelationShipTypeOptions.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      (json['HOUSEHOLD_MEMBER_RELATIONSHIP_TYPES'] as List<dynamic>)
+          .map((e) =>
+          RelationShipTypeOptions.fromJson(e as Map<String, dynamic>))
+          .toList(),
       deliveryCommentOptions: (json['DELIVERY_COMMENT_OPTIONS_POPULATOR']
-              as List<dynamic>)
+      as List<dynamic>)
           .map(
               (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -145,7 +145,7 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           ?.map((e) => SymptomsType.fromJson(e as Map<String, dynamic>))
           .toList(),
       searchHouseHoldFilters: (json['SEARCH_HOUSEHOLD_FILTERS']
-              as List<dynamic>?)
+      as List<dynamic>?)
           ?.map(
               (e) => SearchHouseHoldFilters.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -167,16 +167,16 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
     );
 
 Map<String, dynamic> _$$HCMWrapperModelImplToJson(
-        _$HCMWrapperModelImpl instance) =>
+    _$HCMWrapperModelImpl instance) =>
     <String, dynamic>{
       'APP_CONFIG': instance.appConfig,
       'BANDWIDTH_BATCH_SIZE': instance.bandWidthBatchSize,
       'BENEFICIARY_ID_CONFIG': instance.beneficiaryIdConfig,
       'DOWNSYNC-BANDWIDTH_BATCH_SIZE': instance.downSyncBandWidthBatchSize,
       'HOUSEHOLD_DELETION_REASON_OPTIONS':
-          instance.householdDeletionReasonOptions,
+      instance.householdDeletionReasonOptions,
       'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS':
-          instance.householdMemberDeletionReasonOptions,
+      instance.householdMemberDeletionReasonOptions,
       'BACKGROUND_SERVICE_CONFIG': instance.backgroundServiceConfig,
       'CHECKLIST_TYPES': instance.checklistTypes,
       'ID_TYPE_OPTIONS_POPULATOR': instance.idTypeOptions,
@@ -195,21 +195,21 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
     };
 
 _$AppConfigSecondaryWrapperModelImpl
-    _$$AppConfigSecondaryWrapperModelImplFromJson(Map<String, dynamic> json) =>
-        _$AppConfigSecondaryWrapperModelImpl(
-          appConfiglist: (json['appConfig'] as List<dynamic>?)
-              ?.map((e) => AppConfig.fromJson(e as Map<String, dynamic>))
-              .toList(),
-        );
+_$$AppConfigSecondaryWrapperModelImplFromJson(Map<String, dynamic> json) =>
+    _$AppConfigSecondaryWrapperModelImpl(
+      appConfiglist: (json['appConfig'] as List<dynamic>?)
+          ?.map((e) => AppConfig.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$$AppConfigSecondaryWrapperModelImplToJson(
-        _$AppConfigSecondaryWrapperModelImpl instance) =>
+    _$AppConfigSecondaryWrapperModelImpl instance) =>
     <String, dynamic>{
       'appConfig': instance.appConfiglist,
     };
 
 _$CommonMastersWrapperModelImpl _$$CommonMastersWrapperModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$CommonMastersWrapperModelImpl(
       genderType: (json['GenderType'] as List<dynamic>)
           .map((e) => CommonMasterModel.fromJson(e as Map<String, dynamic>))
@@ -223,7 +223,7 @@ _$CommonMastersWrapperModelImpl _$$CommonMastersWrapperModelImplFromJson(
     );
 
 Map<String, dynamic> _$$CommonMastersWrapperModelImplToJson(
-        _$CommonMastersWrapperModelImpl instance) =>
+    _$CommonMastersWrapperModelImpl instance) =>
     <String, dynamic>{
       'GenderType': instance.genderType,
       'StateInfo': instance.stateInfo,
@@ -231,7 +231,7 @@ Map<String, dynamic> _$$CommonMastersWrapperModelImplToJson(
     };
 
 _$CommonMasterModelImpl _$$CommonMasterModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$CommonMasterModelImpl(
       code: json['code'] as String,
       name: json['name'] as String?,
@@ -239,7 +239,7 @@ _$CommonMasterModelImpl _$$CommonMasterModelImplFromJson(
     );
 
 Map<String, dynamic> _$$CommonMasterModelImplToJson(
-        _$CommonMasterModelImpl instance) =>
+    _$CommonMasterModelImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,
@@ -258,7 +258,7 @@ _$StateInfoModelImpl _$$StateInfoModelImplFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$$StateInfoModelImplToJson(
-        _$StateInfoModelImpl instance) =>
+    _$StateInfoModelImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'languages': instance.languages,
@@ -266,7 +266,7 @@ Map<String, dynamic> _$$StateInfoModelImplToJson(
     };
 
 _$RowVersionWrapperModelImpl _$$RowVersionWrapperModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$RowVersionWrapperModelImpl(
       rowVersionslist: (json['ROW_VERSIONS'] as List<dynamic>?)
           ?.map((e) => RowVersions.fromJson(e as Map<String, dynamic>))
@@ -274,7 +274,7 @@ _$RowVersionWrapperModelImpl _$$RowVersionWrapperModelImplFromJson(
     );
 
 Map<String, dynamic> _$$RowVersionWrapperModelImplToJson(
-        _$RowVersionWrapperModelImpl instance) =>
+    _$RowVersionWrapperModelImpl instance) =>
     <String, dynamic>{
       'ROW_VERSIONS': instance.rowVersionslist,
     };
@@ -312,7 +312,7 @@ Map<String, dynamic> _$$IdTypeOptionsImplToJson(_$IdTypeOptionsImpl instance) =>
     };
 
 _$RelationShipTypeOptionsImpl _$$RelationShipTypeOptionsImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$RelationShipTypeOptionsImpl(
       name: json['name'] as String,
       code: json['code'] as String,
@@ -320,7 +320,7 @@ _$RelationShipTypeOptionsImpl _$$RelationShipTypeOptionsImplFromJson(
     );
 
 Map<String, dynamic> _$$RelationShipTypeOptionsImplToJson(
-        _$RelationShipTypeOptionsImpl instance) =>
+    _$RelationShipTypeOptionsImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
@@ -328,7 +328,7 @@ Map<String, dynamic> _$$RelationShipTypeOptionsImplToJson(
     };
 
 _$BandWidthBatchSizeImpl _$$BandWidthBatchSizeImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$BandWidthBatchSizeImpl(
       minRange: (json['MIN_RANGE'] as num).toDouble(),
       maxRange: (json['MAX_RANGE'] as num).toDouble(),
@@ -336,7 +336,7 @@ _$BandWidthBatchSizeImpl _$$BandWidthBatchSizeImplFromJson(
     );
 
 Map<String, dynamic> _$$BandWidthBatchSizeImplToJson(
-        _$BandWidthBatchSizeImpl instance) =>
+    _$BandWidthBatchSizeImpl instance) =>
     <String, dynamic>{
       'MIN_RANGE': instance.minRange,
       'MAX_RANGE': instance.maxRange,
@@ -344,42 +344,42 @@ Map<String, dynamic> _$$BandWidthBatchSizeImplToJson(
     };
 
 _$BeneficiaryIdConfigImpl _$$BeneficiaryIdConfigImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$BeneficiaryIdConfigImpl(
       minCount: (json['MIN_COUNT'] as num).toDouble(),
       batchSize: (json['BATCH_SIZE'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$BeneficiaryIdConfigImplToJson(
-        _$BeneficiaryIdConfigImpl instance) =>
+    _$BeneficiaryIdConfigImpl instance) =>
     <String, dynamic>{
       'MIN_COUNT': instance.minCount,
       'BATCH_SIZE': instance.batchSize,
     };
 
 _$DeliveryCommentOptionsImpl _$$DeliveryCommentOptionsImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$DeliveryCommentOptionsImpl(
       name: json['name'] as String,
       code: json['code'] as String,
     );
 
 Map<String, dynamic> _$$DeliveryCommentOptionsImplToJson(
-        _$DeliveryCommentOptionsImpl instance) =>
+    _$DeliveryCommentOptionsImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
     };
 
 _$DeletionReasonOptionsImpl _$$DeletionReasonOptionsImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$DeletionReasonOptionsImpl(
       value: json['value'] as String,
       code: json['code'] as String,
     );
 
 Map<String, dynamic> _$$DeletionReasonOptionsImplToJson(
-        _$DeletionReasonOptionsImpl instance) =>
+    _$DeletionReasonOptionsImpl instance) =>
     <String, dynamic>{
       'value': instance.value,
       'code': instance.code,
@@ -398,7 +398,7 @@ Map<String, dynamic> _$$GenderOptionsImplToJson(_$GenderOptionsImpl instance) =>
     };
 
 _$BackgroundServiceConfigImpl _$$BackgroundServiceConfigImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$BackgroundServiceConfigImpl(
       batteryPercentCutOff: (json['BATTERY_PERCENT_CUT_OFF'] as num).toInt(),
       serviceInterval: (json['SERVICE_INTERVAL'] as num).toInt(),
@@ -406,7 +406,7 @@ _$BackgroundServiceConfigImpl _$$BackgroundServiceConfigImplFromJson(
     );
 
 Map<String, dynamic> _$$BackgroundServiceConfigImplToJson(
-        _$BackgroundServiceConfigImpl instance) =>
+    _$BackgroundServiceConfigImpl instance) =>
     <String, dynamic>{
       'BATTERY_PERCENT_CUT_OFF': instance.batteryPercentCutOff,
       'SERVICE_INTERVAL': instance.serviceInterval,
@@ -414,7 +414,7 @@ Map<String, dynamic> _$$BackgroundServiceConfigImplToJson(
     };
 
 _$BackendInterfaceImpl _$$BackendInterfaceImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$BackendInterfaceImpl(
       interface: (json['interfaces'] as List<dynamic>)
           .map((e) => Interfaces.fromJson(e as Map<String, dynamic>))
@@ -422,13 +422,13 @@ _$BackendInterfaceImpl _$$BackendInterfaceImplFromJson(
     );
 
 Map<String, dynamic> _$$BackendInterfaceImplToJson(
-        _$BackendInterfaceImpl instance) =>
+    _$BackendInterfaceImpl instance) =>
     <String, dynamic>{
       'interfaces': instance.interface,
     };
 
 _$InterfacesWrapperImpl _$$InterfacesWrapperImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$InterfacesWrapperImpl(
       interface: (json['interface'] as List<dynamic>)
           .map((e) => Interfaces.fromJson(e as Map<String, dynamic>))
@@ -436,7 +436,7 @@ _$InterfacesWrapperImpl _$$InterfacesWrapperImplFromJson(
     );
 
 Map<String, dynamic> _$$InterfacesWrapperImplToJson(
-        _$InterfacesWrapperImpl instance) =>
+    _$InterfacesWrapperImpl instance) =>
     <String, dynamic>{
       'interface': instance.interface,
     };
@@ -455,7 +455,8 @@ Map<String, dynamic> _$$InterfacesImplToJson(_$InterfacesImpl instance) =>
       'config': instance.config,
     };
 
-_$ConfigImpl _$$ConfigImplFromJson(Map<String, dynamic> json) => _$ConfigImpl(
+_$ConfigImpl _$$ConfigImplFromJson(Map<String, dynamic> json) =>
+    _$ConfigImpl(
       localStoreTTL: (json['localStoreTTL'] as num).toInt(),
     );
 
@@ -485,28 +486,28 @@ _$CheckListTypesImpl _$$CheckListTypesImplFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$$CheckListTypesImplToJson(
-        _$CheckListTypesImpl instance) =>
+    _$CheckListTypesImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
     };
 
 _$CallSupportListImpl _$$CallSupportListImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$CallSupportListImpl(
       name: json['name'] as String,
       code: json['code'] as String,
     );
 
 Map<String, dynamic> _$$CallSupportListImplToJson(
-        _$CallSupportListImpl instance) =>
+    _$CallSupportListImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
     };
 
 _$SearchHouseHoldFiltersImpl _$$SearchHouseHoldFiltersImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$SearchHouseHoldFiltersImpl(
       name: json['name'] as String,
       code: json['code'] as String,
@@ -514,7 +515,7 @@ _$SearchHouseHoldFiltersImpl _$$SearchHouseHoldFiltersImplFromJson(
     );
 
 Map<String, dynamic> _$$SearchHouseHoldFiltersImplToJson(
-        _$SearchHouseHoldFiltersImpl instance) =>
+    _$SearchHouseHoldFiltersImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
@@ -522,7 +523,7 @@ Map<String, dynamic> _$$SearchHouseHoldFiltersImplToJson(
     };
 
 _$SearchCLFFiltersImpl _$$SearchCLFFiltersImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$SearchCLFFiltersImpl(
       name: json['name'] as String,
       code: json['code'] as String,
@@ -530,7 +531,7 @@ _$SearchCLFFiltersImpl _$$SearchCLFFiltersImplFromJson(
     );
 
 Map<String, dynamic> _$$SearchCLFFiltersImplToJson(
-        _$SearchCLFFiltersImpl instance) =>
+    _$SearchCLFFiltersImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
@@ -544,7 +545,7 @@ _$TransportTypesImpl _$$TransportTypesImplFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$$TransportTypesImplToJson(
-        _$TransportTypesImpl instance) =>
+    _$TransportTypesImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
@@ -569,7 +570,7 @@ _$FirebaseConfigImpl _$$FirebaseConfigImplFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$$FirebaseConfigImplToJson(
-        _$FirebaseConfigImpl instance) =>
+    _$FirebaseConfigImpl instance) =>
     <String, dynamic>{
       'enableCrashlytics': instance.enableCrashlytics,
       'enableAnalytics': instance.enableAnalytics,

@@ -839,7 +839,7 @@ void setPackagesSingleton(BuildContext context) {
         );
 
         AttendanceSingleton().setInitialData(
-          projectId: context.projectId,
+          project: context.selectedProject,
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
