@@ -526,13 +526,10 @@ class _SearchBeneficiaryPageState
                       mainAxisSize: MainAxisSize.max,
                       type: DigitButtonType.primary,
                       size: DigitButtonSize.large,
-                      isDisabled: searchHouseholdsState.searchQuery != null &&
-                          searchHouseholdsState.searchQuery!.isNotEmpty
-                          ? false
-                          : searchTemplate
-                  ?.properties?['BeneficiaryRegistrationButton']
-                  ?.autoEnable ==
-                  true ? false : true,
+                      // isDisabled: searchHouseholdsState.searchQuery != null &&
+                      //     searchHouseholdsState.searchQuery!.isNotEmpty
+                      //     ? false
+                      //     : true,
                       onPressed: () {
                         FocusManager.instance.primaryFocus?.unfocus();
                         context.read<FormsBloc>().add(const FormsEvent.clearForm());

@@ -18,11 +18,16 @@ _$GlobalSearchParametersImpl _$$GlobalSearchParametersImplFromJson(
           ? null
           : PaginationParams.fromJson(
               json['pagination'] as Map<String, dynamic>),
-      relationshipMap: (json['relationshipMap'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(
-                k, RelationshipMapping.fromJson(e as Map<String, dynamic>)),
-          ) ??
-          const {},
+      relationshipMappings: (json['relationshipMappings'] as List<dynamic>?)
+              ?.map((e) =>
+                  RelationshipMapping.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      nestedMappings: (json['nestedMappings'] as List<dynamic>?)
+              ?.map(
+                  (e) => NestedModelMapping.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$GlobalSearchParametersImplToJson(
@@ -31,7 +36,8 @@ Map<String, dynamic> _$$GlobalSearchParametersImplToJson(
       'filters': instance.filters,
       'select': instance.select,
       'pagination': instance.pagination,
-      'relationshipMap': instance.relationshipMap,
+      'relationshipMappings': instance.relationshipMappings,
+      'nestedMappings': instance.nestedMappings,
     };
 
 _$SearchFilterImpl _$$SearchFilterImplFromJson(Map<String, dynamic> json) =>
@@ -82,4 +88,44 @@ Map<String, dynamic> _$$RelationshipMappingImplToJson(
       'to': instance.to,
       'localKey': instance.localKey,
       'foreignKey': instance.foreignKey,
+    };
+
+_$NestedFieldMappingImpl _$$NestedFieldMappingImplFromJson(
+        Map<String, dynamic> json) =>
+    _$NestedFieldMappingImpl(
+      table: json['table'] as String,
+      localKey: json['localKey'] as String,
+      foreignKey: json['foreignKey'] as String,
+      type: $enumDecode(_$NestedMappingTypeEnumMap, json['type']),
+    );
+
+Map<String, dynamic> _$$NestedFieldMappingImplToJson(
+        _$NestedFieldMappingImpl instance) =>
+    <String, dynamic>{
+      'table': instance.table,
+      'localKey': instance.localKey,
+      'foreignKey': instance.foreignKey,
+      'type': _$NestedMappingTypeEnumMap[instance.type]!,
+    };
+
+const _$NestedMappingTypeEnumMap = {
+  NestedMappingType.one: 'one',
+  NestedMappingType.many: 'many',
+};
+
+_$NestedModelMappingImpl _$$NestedModelMappingImplFromJson(
+        Map<String, dynamic> json) =>
+    _$NestedModelMappingImpl(
+      rootModel: json['rootModel'] as String,
+      fields: (json['fields'] as Map<String, dynamic>).map(
+        (k, e) =>
+            MapEntry(k, NestedFieldMapping.fromJson(e as Map<String, dynamic>)),
+      ),
+    );
+
+Map<String, dynamic> _$$NestedModelMappingImplToJson(
+        _$NestedModelMappingImpl instance) =>
+    <String, dynamic>{
+      'rootModel': instance.rootModel,
+      'fields': instance.fields,
     };

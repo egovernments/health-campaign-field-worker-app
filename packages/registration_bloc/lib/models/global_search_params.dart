@@ -10,7 +10,8 @@ class GlobalSearchParameters with _$GlobalSearchParameters {
     required List<SearchFilter> filters,
     required List<String> select,
     PaginationParams? pagination,
-    @Default({}) Map<String, RelationshipMapping> relationshipMap,
+    @Default([]) List<RelationshipMapping> relationshipMappings,
+    @Default([]) List<NestedModelMapping> nestedMappings,
   }) = _GlobalSearchParameters;
 
   factory GlobalSearchParameters.fromJson(Map<String, dynamic> json) =>
@@ -53,5 +54,34 @@ class RelationshipMapping with _$RelationshipMapping {
 
   factory RelationshipMapping.fromJson(Map<String, dynamic> json) =>
       _$RelationshipMappingFromJson(json);
+}
+
+enum NestedMappingType {
+  @JsonValue('one') one,
+  @JsonValue('many') many,
+}
+
+@freezed
+class NestedFieldMapping with _$NestedFieldMapping {
+  const factory NestedFieldMapping({
+    required String table, // actual SQL table name
+    required String localKey,
+    required String foreignKey,
+    required NestedMappingType type,
+  }) = _NestedFieldMapping;
+
+  factory NestedFieldMapping.fromJson(Map<String, dynamic> json) =>
+      _$NestedFieldMappingFromJson(json);
+}
+
+@freezed
+class NestedModelMapping with _$NestedModelMapping {
+  const factory NestedModelMapping({
+    required String rootModel, // e.g., 'Individual'
+    required Map<String, NestedFieldMapping> fields, // e.g., 'name' → mapping
+  }) = _NestedModelMapping;
+
+  factory NestedModelMapping.fromJson(Map<String, dynamic> json) =>
+      _$NestedModelMappingFromJson(json);
 }
 

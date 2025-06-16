@@ -18,10 +18,13 @@ import '../repositories/local/individual_global_search.dart';
 
 class RegistrationService {
   final List<RelationshipMapping> relationshipMap;
+  final List<NestedModelMapping> nestedModelMappings;
+
+
   late final Map<String, List<RelationshipMapping>> _relationshipGraph;
+  late final Map<String, Map<String, NestedFieldMapping> > _nestedMappingLookup;
 
   final SearchEntityRepository searchEntityRepository;
-
   final IndividualDataRepository individualRepository;
   final HouseholdDataRepository householdRepository;
   final HouseholdMemberDataRepository householdMemberRepository;
@@ -30,6 +33,7 @@ class RegistrationService {
 
   RegistrationService({
     required this.relationshipMap,
+    required this.nestedModelMappings,
     required this.individualRepository,
     required this.householdRepository,
     required this.householdMemberRepository,
@@ -40,6 +44,7 @@ class RegistrationService {
 
   void init() {
     _buildRelationshipGraph();
+    _initNestedMappings();
   }
 
   void _buildRelationshipGraph() {
@@ -61,6 +66,12 @@ class RegistrationService {
       _relationshipGraph.putIfAbsent(reverseMapping.from, () => []);
       _relationshipGraph[reverseMapping.from]!.add(reverseMapping);
     }
+  }
+
+  void _initNestedMappings() {
+    _nestedMappingLookup = {
+      for (final mapping in nestedModelMappings) mapping.rootModel: mapping.fields,
+    };
   }
 
   List<RelationshipMapping> resolveAllRelationshipsDFS(String root) {
@@ -93,6 +104,7 @@ class RegistrationService {
     return searchEntityRepository.searchEntities(
       filters: query.filters,
       relationships: resolvedRelationships,
+      nestedModelMapping: _nestedMappingLookup,
       select: query.select,
       pagination: query.pagination,
     );

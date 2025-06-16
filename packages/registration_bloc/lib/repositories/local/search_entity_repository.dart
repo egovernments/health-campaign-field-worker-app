@@ -21,6 +21,7 @@ class SearchEntityRepository extends LocalRepository{
   Future<List<EntityModel>> searchEntities({
     required List<SearchFilter> filters,
     required List<RelationshipMapping> relationships,
+    required Map<String, Map<String, NestedFieldMapping> > nestedModelMapping,
     required List<String> select,
     PaginationParams? pagination,
   }) async {
@@ -29,12 +30,14 @@ class SearchEntityRepository extends LocalRepository{
       relationships: relationships,
       select: select,
       pagination: pagination,
+      nestedModelMapping: nestedModelMapping,
     );
   }
 
   Future<List<EntityModel>> _buildAndExecuteSearchQuery({
     required List<SearchFilter> filters,
     required List<RelationshipMapping> relationships,
+    required Map<String, Map<String, NestedFieldMapping> > nestedModelMapping,
     required List<String> select,
     PaginationParams? pagination,
   }) async {
@@ -87,14 +90,76 @@ class SearchEntityRepository extends LocalRepository{
         pagination: pagination,
       );
 
-      joinedResults.addAll(targetResults);
+      // Final joinedResults from primary + relationship joins
+      final enrichedRawRows = await _hydrateRawRows(targetResults, nestedModelMapping, targetTable);
+
+      joinedResults.addAll(enrichedRawRows);
     }
 
+
+
+    // Convert raw enriched rows into typed EntityModel instances
     final results = joinedResults
-        .map((row) => dynamicEntityModelFromMap(select.first, row))
+        .map((row) => dynamicEntityModelFromMap(
+      select.first,
+      snakeToCamelDeep(row),
+    ))
         .toList();
 
     return results;
+  }
+
+  Future<List<Map<String, dynamic>>> _hydrateRawRows(
+      List<Map<String, dynamic>> rawRows,
+      Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
+      String currentModelName,
+      ) async {
+    final enrichedRows = <Map<String, dynamic>>[];
+
+    final modelNestedMapping = nestedModelMapping[currentModelName];
+    if (modelNestedMapping == null) return rawRows;
+
+    // Deep copy raw rows
+    enrichedRows.addAll(rawRows.map((e) => Map<String, dynamic>.from(e)));
+
+    for (final entry in modelNestedMapping.entries) {
+      final targetTable = entry.value.table;
+      final field = entry.value;
+
+      final localKeySnake = camelToSnake(field.localKey);
+
+      // Collect all non-null local key values from enriched rows
+      final localValues = enrichedRows
+          .map((row) => row[localKeySnake])
+          .where((v) => v != null)
+          .toSet();
+
+      if (localValues.isEmpty) continue;
+
+      // Query related table
+      final targetResults = await _queryRawTable(
+        table: targetTable,
+        filters: [
+          SearchFilter(
+            root: targetTable,
+            field: camelToSnake(field.foreignKey),
+            operator: 'in',
+            value: localValues.toList(),
+          ),
+        ],
+        select: ['*'],
+      );
+
+
+      // Attach hydrated data to each enriched row
+      for (final row in enrichedRows) {
+        row[entry.key] = field.type == NestedMappingType.one
+            ? (targetResults.isNotEmpty ? targetResults.first : null)
+            : targetResults;
+      }
+    }
+
+    return enrichedRows;
   }
 
   Future<List<Map<String, dynamic>>> _queryRawTable({
@@ -206,6 +271,33 @@ String camelToSnake(String input) {
     RegExp(r'[A-Z]'),
         (match) => '_${match.group(0)!.toLowerCase()}',
   );
+}
+
+Map<String, dynamic> snakeToCamelDeep(Map<String, dynamic> input) {
+  return input.map((key, value) {
+    final newKey = _snakeToCamel(key);
+    final newValue = _transformValue(value);
+    return MapEntry(newKey, newValue);
+  });
+}
+
+dynamic _transformValue(dynamic value) {
+  if (value is Map<String, dynamic>) {
+    return snakeToCamelDeep(value);
+  } else if (value is List) {
+    return value.map((item) {
+      if (item is Map<String, dynamic>) {
+        return snakeToCamelDeep(item);
+      }
+      return item;
+    }).toList();
+  }
+  return value;
+}
+
+String _snakeToCamel(String input) {
+  final parts = input.split('_');
+  return parts.first + parts.skip(1).map((p) => p[0].toUpperCase() + p.substring(1)).join();
 }
 
 Expression<bool> buildDynamicExpression({

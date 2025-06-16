@@ -45,6 +45,31 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                     const RelationshipMapping(from: 'householdMember', to: 'individual', localKey: 'individualClientReferenceId', foreignKey: 'clientReferenceId'),
                     const RelationshipMapping(from: 'householdMember', to: 'household', localKey: 'householdClientReferenceId', foreignKey: 'clientReferenceId'),
                   ],
+                  nestedModelMappings: [
+                    const NestedModelMapping(
+                      rootModel: 'individual',
+                      fields: {
+                        'name': NestedFieldMapping(
+                          table: 'name',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'individualClientReferenceId',
+                          type: NestedMappingType.one,
+                        ),
+                        'address': NestedFieldMapping(
+                          table: 'address',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'relatedClientReferenceId',
+                          type: NestedMappingType.many,
+                        ),
+                        'identifiers': NestedFieldMapping(
+                          table: 'identifier',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'clientReferenceId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
                   projectBeneficiaryRepository: context.repository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(context),
                   householdMemberRepository: context.repository<HouseholdMemberModel, HouseholdMemberSearchModel>(context),
                   householdRepository: context.repository<HouseholdModel, HouseholdSearchModel>(context),
