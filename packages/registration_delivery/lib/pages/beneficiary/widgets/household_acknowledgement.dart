@@ -7,6 +7,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../../router/registration_delivery_router.gm.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/registration_component_keys.dart' as registration_keys;
 import '../../../widgets/localized.dart';
 
 @RoutePage()
@@ -28,6 +29,8 @@ class HouseholdAcknowledgementPageState
     extends LocalizedState<HouseholdAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
+    final pageKey = HouseholdAcknowledgementRoute.name.replaceAll('Route', '');
+    final householdAcknowledgementTemplate = RegistrationDeliverySingleton().templateConfigs?[pageKey];
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -37,15 +40,26 @@ class HouseholdAcknowledgementPageState
               padding: const EdgeInsets.all(spacer2),
               child: PanelCard(
                 type: PanelType.success,
-                description: localizations.translate(
+                description: householdAcknowledgementTemplate
+                    ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.hidden == true ?
+                "" : localizations.translate(
+                  householdAcknowledgementTemplate
+                      ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentDescriptionKey]?.label ??
                   i18.acknowledgementSuccess.acknowledgementDescriptionText,
                 ),
                 title: localizations.translate(
+                  householdAcknowledgementTemplate
+                      ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.label
+                      ??
                   i18.acknowledgementSuccess.acknowledgementLabelText,
                 ),
                 actions: [
-                  DigitButton(
+                  if((householdAcknowledgementTemplate
+                      ?.properties?[registration_keys.commonKeys.primaryButtonKey]?.hidden ?? false == false))
+                    DigitButton(
                       label: localizations.translate(
+                        householdAcknowledgementTemplate
+                            ?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ??
                         i18.householdDetails.viewHouseHoldDetailsAction,
                       ),
                       isDisabled: !(widget.enableViewHousehold ?? false),
@@ -61,9 +75,14 @@ class HouseholdAcknowledgementPageState
                       },
                       type: DigitButtonType.primary,
                       size: DigitButtonSize.large),
-                  DigitButton(
+                  if((householdAcknowledgementTemplate
+                      ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.hidden ?? false == false))
+                    DigitButton(
                       label: localizations
-                          .translate(i18.acknowledgementSuccess.actionLabelText),
+                          .translate(
+                          householdAcknowledgementTemplate
+                              ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.label ??
+                          i18.acknowledgementSuccess.actionLabelText),
                       onPressed: () {
                         context
                             .read<SearchHouseholdsBloc>()
