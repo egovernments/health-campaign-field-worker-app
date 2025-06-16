@@ -1397,7 +1397,6 @@ class _BeneficiaryChecklistPageState
         break;
       case Status.ineligible:
         createIneligibleTask(ctx);
-        ctx.router.maybePop();
         break;
       default:
         Navigator.of(ctx).pop();
