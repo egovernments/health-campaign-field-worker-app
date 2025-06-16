@@ -98,7 +98,7 @@ final jsonConfig = {
               "identifierId": "beneficiaryDetails.identifiers[1]",
               "boundaryCode": "__context:selectedBoundaryCode",
               "nonRecoverableError": "error.nonRecoverable",
-              "clientReferenceId": "__generate:uuid",
+              "clientReferenceId": "__ref:IndividualModel.clientReferenceId",
               "tenantId": "__context:tenantId",
               "rowVersion": "meta.rowVersion",
               "clientAuditDetails": "__generate:clientAudit",
