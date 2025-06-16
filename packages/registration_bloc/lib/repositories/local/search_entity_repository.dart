@@ -247,7 +247,9 @@ class SearchEntityRepository extends LocalRepository{
     return rows.map((row) {
       return {
         for (final column in dynamicTable.$columns)
-          column.$name: row.read(column),
+          column.$name: column is GeneratedColumnWithTypeConverter
+              ? row.readWithConverter(column)
+              : row.read(column),
       };
     }).toList();
   }
@@ -256,11 +258,11 @@ class SearchEntityRepository extends LocalRepository{
 EntityModel dynamicEntityModelFromMap(String modelName, Map<String, dynamic> map) {
   switch (modelName) {
     case 'individual':
-      return IndividualModelMapper.fromJson(jsonEncode(map));
+      return IndividualModelMapper.fromMap(map);
     case 'household':
-      return HouseholdModelMapper.fromJson(jsonEncode(map));
+      return HouseholdModelMapper.fromMap(map);
     case 'projectBeneficiary':
-      return ProjectBeneficiaryModelMapper.fromJson(jsonEncode(map));
+      return ProjectBeneficiaryModelMapper.fromMap(map);
     default:
       throw Exception('Unknown model: $modelName');
   }
