@@ -669,7 +669,7 @@ class _SearchBeneficiaryPageState
               value: 'rach', // Replace with the actual name value
             ),
           ], // Optional: if you're resolving linked entities
-          select: ['individual'],  // Optional: which fields to return
+          select: ['individual', 'household', 'member', 'projectBeneficiary'],  // Optional: which fields to return
           pagination: reg_params.PaginationParams(limit: 20, offset: 0),
 
         );

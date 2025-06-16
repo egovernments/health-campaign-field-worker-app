@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_bloc/models/global_search_params.dart';
-
 import '../../models/entities/household.dart';
 import '../../models/entities/project_beneficiary.dart';
 
