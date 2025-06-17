@@ -201,7 +201,6 @@ class SearchBeneficiary {
 
 class BeneficiaryDetails {
   const BeneficiaryDetails();
-
   String get notMeetDeliveryRulesCriteria =>
       'BENEFICIARY_NOT_MEET_DELIVERY_RULES';
 
