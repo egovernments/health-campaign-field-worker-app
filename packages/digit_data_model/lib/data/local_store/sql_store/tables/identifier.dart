@@ -7,7 +7,7 @@ class Identifier extends Table {
 
   TextColumn get individualId => text().nullable()();
 
-  TextColumn get individualClientReferenceId => text().nullable()();
+  TextColumn get individualClientReferenceId => text()();
 
   TextColumn get identifierType => text().nullable()();
 

@@ -80,7 +80,7 @@ class IdentifierModel extends EntityModel with IdentifierModelMappable {
       isDeleted: Value(isDeleted),
       id: Value(id),
       individualId: Value(individualId),
-      individualClientReferenceId: Value(individualClientReferenceId),
+      individualClientReferenceId: Value(individualClientReferenceId!),
       identifierType: Value(identifierType),
       identifierId: Value(identifierId),
       nonRecoverableError: Value(nonRecoverableError),
