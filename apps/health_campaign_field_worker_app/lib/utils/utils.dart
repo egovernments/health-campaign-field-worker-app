@@ -1,6 +1,7 @@
 library app_utils;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
@@ -27,9 +28,11 @@ import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.init.dart' as survey_form_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
@@ -41,6 +44,7 @@ import '../models/tenant_boundary/tenant_boundary_model.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
+import 'environment_config.dart';
 import 'extensions/extensions.dart';
 
 export 'app_exception.dart';
@@ -576,6 +580,48 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
     debugPrint('Error inside transformJson: $e');
     debugPrint('$stackTrace');
     rethrow;
+  }
+}
+
+Future<void> triggerLocalizationIfUpdated({
+  required BuildContext context,
+  required String moduleKey, // e.g., 'REGISTRATIONFLOW'
+  required String projectReferenceId,
+  required String locale,
+}) async {
+
+  final prefs = await SharedPreferences.getInstance();
+  final rawSchemas = prefs.getString('app_config_schemas');
+  if (rawSchemas == null) return;
+
+  final allSchemas = json.decode(rawSchemas) as Map<String, dynamic>;
+  final schemaEntry = allSchemas[moduleKey] as Map<String, dynamic>?;
+
+  if (schemaEntry == null) return;
+
+  final currentVersion = schemaEntry['currentVersion'] ;
+  final previousVersion = schemaEntry['previousVersion'] ;
+  final schemaData = schemaEntry['data'] as Map<String, dynamic>?;
+
+  if (schemaData == null) return;
+
+  final moduleName = 'hcm-${schemaData['name'].toLowerCase()}-$projectReferenceId';
+
+  if (currentVersion != previousVersion) {
+     context
+        .read<LocalizationBloc>()
+        .add(LocalizationEvent.onRemoteLoadLocalization(
+      module: moduleName,
+      tenantId: envConfig.variables.tenantId,
+      locale: AppSharedPreferences()
+          .getSelectedLocale!,
+      path: Constants.localizationApiPath,
+    ));
+
+    // Update stored previous version
+    schemaEntry['previousVersion'] = currentVersion;
+    allSchemas[moduleKey] = schemaEntry;
+    await prefs.setString('app_config_schemas', json.encode(allSchemas));
   }
 }
 

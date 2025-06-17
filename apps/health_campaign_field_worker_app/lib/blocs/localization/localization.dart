@@ -121,7 +121,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
             module: allModules.join(','),
             tenantId: event.tenantId,
           );
-          localizationList = LocalizationLocalRepository().create(results, sql);
+          localizationList = await LocalizationLocalRepository().create(results, sql);
 
       } catch (error) {
         debugPrint('error in fetching modules localization $error');
