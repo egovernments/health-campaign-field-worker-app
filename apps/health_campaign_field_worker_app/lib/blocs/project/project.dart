@@ -557,7 +557,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 MdmsModuleDetailModel(
                   moduleName: 'HCM-ADMIN-CONSOLE',
                   masterDetails: [
-                    MdmsMasterDetailModel('SimpleAppConfiguration',
+                    MdmsMasterDetailModel('FormConfig',
                       filter: "[?(@.project=='${event.model.referenceID}')]",
                     ),
                   ],
@@ -567,7 +567,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ).toJson(),
         );
 
-        final formConfig = formConfigResult['HCM-ADMIN-CONSOLE']['SimpleAppConfiguration'][0];
+        final formConfig = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'][0];
 
         await enrichFormSchemaWithEnums(formConfig);
       } catch (e) {

@@ -10,6 +10,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -490,6 +491,15 @@ class _BoundarySelectionPageState
                                                     await getIsConnected();
 
                                                 if (context.mounted) {
+                                                  if(isOnline){
+                                                    await triggerLocalizationIfUpdated(
+                                                      context: context,
+                                                      locale: AppSharedPreferences()
+                                                          .getSelectedLocale!,
+                                                      moduleKey: 'REGISTRATIONFLOW',
+                                                      projectReferenceId: context.selectedProject.referenceID ?? '',
+                                                    );
+                                                  }
                                                   if (isOnline &&
                                                       isDistributor) {
                                                     context

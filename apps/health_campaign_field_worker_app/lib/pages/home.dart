@@ -377,10 +377,6 @@ class _HomePageState extends LocalizedState<HomePage> {
               final registrationSchemaEntry =
                   allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
               final schemaData = registrationSchemaEntry?['data'];
-              final schemaDateCurrentVersion =
-                  registrationSchemaEntry?['currentVersion'];
-              final schemaDatePreviousVersion =
-                  registrationSchemaEntry?['previousVersion'];
 
               if (schemaData != null) {
                 final encodedSchema = json.encode(schemaData);
@@ -399,16 +395,10 @@ class _HomePageState extends LocalizedState<HomePage> {
               if (isTriggerLocalisation && schemaData != null) {
                 final moduleName =
                     'hcm-${schemaData['name'].toLowerCase()}-${context.selectedProject.referenceID}';
-                if (schemaDateCurrentVersion != schemaDatePreviousVersion) {
-                  triggerLocalization(module: moduleName, loadOnline: true);
-                } else {
-                  triggerLocalization(module: moduleName);
-                }
-
+                triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
               }
             }
-            // context.read<FormsBloc>().add(const FormsEvent.clearForm());
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
 
@@ -762,7 +752,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   .add(LocalizationEvent.onRemoteLoadLocalization(
                     module: module ??
                         "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                    tenantId: envConfig.variables.tenantId ?? "default",
+                    tenantId: envConfig.variables.tenantId,
                     locale: selectedLocale!,
                     path: Constants.localizationApiPath,
                   ));
@@ -770,12 +760,12 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                    module: module ??
-                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                    tenantId: envConfig.variables.tenantId ?? "default",
-                    locale: selectedLocale!,
-                    path: Constants.localizationApiPath,
-                  ));
+                module: module ??
+                    "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                tenantId: envConfig.variables.tenantId,
+                locale: selectedLocale!,
+                path: Constants.localizationApiPath,
+              ));
             }
           },
         );
