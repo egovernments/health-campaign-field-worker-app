@@ -1,3 +1,11 @@
+## 1.1.0
+
+* Merged Enumeration and IdGen
+* Updated target type to string from enum
+* Updated serviceAttribute with id and serviceClientReferenceId
+* Updated identifier with individualId and individualClientReferenceId
+* Modified migration scripts
+
 ## 1.0.7-dev.3-enumeration
 
 * Updated service attribute table with serviceClientReferenceId

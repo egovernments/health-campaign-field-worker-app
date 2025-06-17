@@ -539,6 +539,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       Status.inComplete.name: Status.inComplete,
       Status.toAdminister.name: Status.toAdminister,
       Status.closeHousehold.name: Status.closeHousehold,
+      Status.ineligible.name: Status.ineligible
     };
     var appliedFilter = statusMap[filter]!.toValue();
     if (selectQuery == null) {
