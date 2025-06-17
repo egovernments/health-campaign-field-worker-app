@@ -1,7 +1,8 @@
 name: transit_post
 description: This package enables transit post vaccinator to deliver vaccines to the beneficiaries who visits the transit post
 version: 1.0.0
-homepage:
+homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/transit_post
+repository: https://github.com/egovernments/health-campaign-field-worker-app
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -17,9 +18,9 @@ dependencies:
   dart_mappable: ^4.2.2
   drift: ^2.18.0
   auto_route: ^8.1.3
-  digit_data_model: ^1.0.5
+  digit_data_model: ^1.1.1
   dio: ^5.4.3+1
-  digit_scanner: ^1.0.4
+  digit_scanner: ^1.0.6
   location: ^6.0.2
   package_info_plus: ^8.0.0
   isar: ^3.1.0+1

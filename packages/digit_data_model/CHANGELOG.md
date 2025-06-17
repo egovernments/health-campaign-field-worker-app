@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Added name field in projectProductVariant
+
 ## 1.1.0
 
 * Merged Enumeration and IdGen
