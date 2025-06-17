@@ -74,36 +74,14 @@ class RegistrationService {
     };
   }
 
-  List<RelationshipMapping> resolveAllRelationshipsDFS(String root) {
-    final visited = <String>{};
-    final result = <RelationshipMapping>[];
-
-    void dfs(String entity) {
-      if (visited.contains(entity)) return;
-      visited.add(entity);
-
-      final mappings = _relationshipGraph[entity];
-      if (mappings == null) return;
-
-      for (final mapping in mappings) {
-        result.add(mapping);
-        dfs(mapping.to);
-      }
-    }
-
-    dfs(root);
-    return result;
-  }
 
   Future<List<EntityModel>> searchHouseholds({
     required GlobalSearchParameters query,
   }) async {
-    final root = query.filters.first.root;
-    final resolvedRelationships = resolveAllRelationshipsDFS(root);
 
     return searchEntityRepository.searchEntities(
       filters: query.filters,
-      relationships: resolvedRelationships,
+      relationshipGraph: _relationshipGraph,
       nestedModelMapping: _nestedMappingLookup,
       select: query.select,
       pagination: query.pagination,

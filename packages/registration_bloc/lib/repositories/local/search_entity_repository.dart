@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:registration_bloc/models/entities/household_member.dart';
 import 'package:registration_bloc/models/global_search_params.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/project_beneficiary.dart';
@@ -17,14 +20,14 @@ class SearchEntityRepository extends LocalRepository{
   DataModelType get type => throw UnimplementedError();
   Future<List<EntityModel>> searchEntities({
     required List<SearchFilter> filters,
-    required List<RelationshipMapping> relationships,
+    required Map<String, List<RelationshipMapping>> relationshipGraph,
     required Map<String, Map<String, NestedFieldMapping> > nestedModelMapping,
     required List<String> select,
     PaginationParams? pagination,
   }) async {
     return _buildAndExecuteSearchQuery(
       filters: filters,
-      relationships: relationships,
+      relationshipGraph: relationshipGraph,
       select: select,
       pagination: pagination,
       nestedModelMapping: nestedModelMapping,
@@ -33,74 +36,79 @@ class SearchEntityRepository extends LocalRepository{
 
   Future<List<EntityModel>> _buildAndExecuteSearchQuery({
     required List<SearchFilter> filters,
-    required List<RelationshipMapping> relationships,
-    required Map<String, Map<String, NestedFieldMapping> > nestedModelMapping,
+    required Map<String, List<RelationshipMapping>> relationshipGraph,
+    required Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
     required List<String> select,
-    PaginationParams? pagination,
+    required PaginationParams? pagination,
   }) async {
-    if (filters.isEmpty) return [];
+    final rootTable = filters.first.root;
+    final queriedModels = <String>{rootTable};
+    final allResults = <Map<String, dynamic>>[];
+    final modelToResults = <String, List<Map<String, dynamic>>>{};
 
-    final rootFilter = filters.first;
-    final rootTable = rootFilter.root;
-
-    // Step 1: Query the root table with the root filter
+    // Query root model
     final rootResults = await _queryRawTable(
       table: rootTable,
-      filters: [rootFilter],
-      select: [rootFilter.field], // only needed fields for join
+      filters: filters,
+      select: select,
+      pagination: pagination,
     );
 
-    if (rootResults.isEmpty) return [];
+    final hydratedRoot = await _hydrateRawRows(rootResults, nestedModelMapping, rootTable);
+    modelToResults[rootTable] = hydratedRoot;
+    allResults.addAll(hydratedRoot);
 
-    // Step 2: Find the relationship path to final target table
-    final rootToTargetMapping = relationships.where((rel) => rel.from == rootTable).toList();
+    // Step 2: For each selected model, find shortest path and query
+    for (final model in select) {
+      if (queriedModels.contains(model)) continue;
 
-    if (rootToTargetMapping.isEmpty) {
-      throw Exception("No relationship mapping found from $rootTable");
-    }
-
-    // Step 3: Use relationship to extract join key values from rootResults
-    final joinedResults = <Map<String, dynamic>>[];
-    for (final rel in rootToTargetMapping) {
-      final targetTable = rel.to;
-
-      final joinValues = rootResults
-          .map((row) => row[camelToSnake(rel.localKey)])
-          .where((val) => val != null)
-          .toSet()
-          .toList();
-
-      if (joinValues.isEmpty) continue;
-
-      // Step 4: Construct a dynamic filter to get results from target table
-      final targetFilter = SearchFilter(
-        root: targetTable,
-        field: rel.foreignKey,
-        operator: 'in',
-        value: joinValues,
+      final path = await _findShortestPath(
+        fromModels: queriedModels,
+        toModel: model,
+        graph: relationshipGraph,
       );
 
-      final targetResults = await _queryRawTable(
-        table: targetTable,
-        filters: [targetFilter],
-        select: select,
-        pagination: pagination,
-      );
+      if (path.isEmpty) {
+        debugPrint("No path found to model $model");
+        continue;
+      }
 
-      // Final joinedResults from primary + relationship joins
-      final enrichedRawRows = await _hydrateRawRows(targetResults, nestedModelMapping, targetTable);
+      final origin = path.first.from;
+      var currentRows = modelToResults[origin] ?? [];
 
-      joinedResults.addAll(enrichedRawRows);
+      for (final rel in path) {
+        final fromKey = camelToSnake(rel.localKey);
+        final toTable = camelToSnake(rel.to);
+        final toKey = camelToSnake(rel.foreignKey);
+
+        final joinValues = currentRows.map((row) => row[fromKey]).whereType().toSet().toList();
+        if (joinValues.isEmpty) break;
+
+        final filter = SearchFilter(
+          root: toTable,
+          field: toKey,
+          operator: 'in',
+          value: joinValues,
+        );
+
+        currentRows = await _queryRawTable(
+          table: toTable,
+          filters: [filter],
+          select: select,
+          pagination: pagination,
+        );
+      }
+
+      final enriched = await _hydrateRawRows(currentRows, nestedModelMapping, model);
+      modelToResults[model] = enriched;
+      allResults.addAll(enriched);
+      queriedModels.add(model);
     }
 
-
-
-    // Convert raw enriched rows into typed EntityModel instances
-    final results = joinedResults
-        .map((row) => dynamicEntityModelFromMap(
-      select.first,
-      snakeToCamelDeep(row),
-    ))
+    // Step 3: Map to EntityModel
+    final results = allResults
+        .where((row) => select.contains(row['modelName']))
+        .map((row) => dynamicEntityModelFromMap(row['modelName'], snakeToCamelDeep(row)))
         .toList();
 
     return results;
@@ -242,12 +250,14 @@ class SearchEntityRepository extends LocalRepository{
     final rows = await query.get();
 
     return rows.map((row) {
-      return {
+      final rowMap = {
         for (final column in dynamicTable.$columns)
           column.$name: column is GeneratedColumnWithTypeConverter
               ? row.readWithConverter(column)
               : row.read(column),
       };
+      rowMap['modelName'] = table; // add model name to help filter later
+      return rowMap;
     }).toList();
   }
 }
@@ -260,6 +270,8 @@ EntityModel dynamicEntityModelFromMap(String modelName, Map<String, dynamic> map
       return HouseholdModelMapper.fromMap(map);
     case 'projectBeneficiary':
       return ProjectBeneficiaryModelMapper.fromMap(map);
+    case 'householdMember':
+      return HouseholdMemberModelMapper.fromMap(map);
     default:
       throw Exception('Unknown model: $modelName');
   }
@@ -322,5 +334,37 @@ Expression<bool> buildDynamicExpression({
   } catch (e) {
     throw Exception("Failed to apply operator '$operator' on column: $e");
   }
+}
+
+Future<List<RelationshipMapping>> _findShortestPath({
+  required Set<String> fromModels,
+  required String toModel,
+  required Map<String, List<RelationshipMapping>> graph,
+}) async {
+  final queue = Queue<List<RelationshipMapping>>();
+  final visited = <String>{};
+
+  for (final model in fromModels) {
+    visited.add(model);
+    for (final next in graph[model] ?? []) {
+      queue.add([next]);
+    }
+  }
+
+  while (queue.isNotEmpty) {
+    final path = queue.removeFirst();
+    final current = path.last.to;
+
+    if (current == toModel) return path;
+
+    for (final next in graph[current] ?? []) {
+      if (!visited.contains(next.to)) {
+        visited.add(next.to);
+        queue.add([...path, next]);
+      }
+    }
+  }
+
+  return [];
 }
 

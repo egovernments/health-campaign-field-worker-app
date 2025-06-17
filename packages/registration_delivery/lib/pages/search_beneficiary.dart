@@ -660,22 +660,22 @@ class _SearchBeneficiaryPageState
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
           searchController.text.isNotEmpty) {
-        const params = reg_params.GlobalSearchParameters(
+        final params = reg_params.GlobalSearchParameters(
           filters: [
             reg_params.SearchFilter(
               root: 'name',  // or 'individual', based on what you're searching
               field: 'givenName',
               operator: 'contains',
-              value: 'rach', // Replace with the actual name value
+              value: searchController.text,
             ),
           ], // Optional: if you're resolving linked entities
-          select: ['individual', 'household', 'member', 'projectBeneficiary'],  // Optional: which fields to return
-          pagination: reg_params.PaginationParams(limit: 20, offset: 0),
+          select: ['individual', 'household', 'householdMember', 'projectBeneficiary'],  // Optional: which fields to return
+          pagination: const reg_params.PaginationParams(limit: 10, offset: 0),
 
         );
 
         context.read<RegistrationBloc>().add(
-          const RegistrationEvent.search(params),
+           RegistrationEvent.search(params),
         );
 
         // blocWrapper.individualGlobalSearchBloc
