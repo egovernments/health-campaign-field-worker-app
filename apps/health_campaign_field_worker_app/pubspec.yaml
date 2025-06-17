@@ -71,8 +71,7 @@ dependencies:
   survey_form: ^1.0.2-dev.4-enumeration
   complaints: ^1.0.3-dev.1-enumeration
   curl_logger_dio_interceptor: ^1.0.0
-  transit_post:
-    path: ../../packages/transit_post
+  transit_post: ^1.0.0
 
 dev_dependencies:
   flutter_test:
