@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
@@ -32,6 +33,7 @@ class MemberCard extends StatelessWidget {
   final IndividualModel individual;
   final List<ProjectBeneficiaryModel>? projectBeneficiaries;
   final bool isDelivered;
+  final TemplateProperty? editMemberActionProperties;
 
   final VoidCallback setAsHeadAction;
   final VoidCallback editMemberAction;
@@ -64,6 +66,7 @@ class MemberCard extends StatelessWidget {
     this.isBeneficiaryRefused = false,
     this.isBeneficiaryReferred = false,
     this.sideEffects,
+    this.editMemberActionProperties,
   });
 
   @override
@@ -98,62 +101,65 @@ class MemberCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Positioned(
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: DigitButton(
-                          isDisabled: (projectBeneficiaries ?? []).isEmpty,
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (ctx) => DigitActionCard(
-                              onOutsideTap: () {
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
-                              },
-                              actions: [
-                                DigitButton(
-                                  prefixIcon: Icons.person,
-                                  label: (RegistrationDeliverySingleton()
-                                              .householdType ==
-                                          HouseholdType.community)
-                                      ? localizations.translate(
-                                          i18.memberCard.assignAsClfhead)
-                                      : localizations.translate(
-                                          i18.memberCard.assignAsHouseholdhead,
-                                        ),
-                                  isDisabled: isHead ? true : false,
-                                  onPressed: setAsHeadAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                ),
-                                DigitButton(
-                                  prefixIcon: Icons.edit,
-                                  label: localizations.translate(
-                                    i18.memberCard.editIndividualDetails,
+                    Offstage(
+                    offstage: editMemberActionProperties?.hidden ?? true,
+                      child: Positioned(
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: DigitButton(
+                            isDisabled: (projectBeneficiaries ?? []).isEmpty,
+                            onPressed: () => showDialog(
+                              context: context,
+                              builder: (ctx) => DigitActionCard(
+                                onOutsideTap: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                },
+                                actions: [
+                                  DigitButton(
+                                    prefixIcon: Icons.person,
+                                    label: (RegistrationDeliverySingleton()
+                                                .householdType ==
+                                            HouseholdType.community)
+                                        ? localizations.translate(
+                                            i18.memberCard.assignAsClfhead)
+                                        : localizations.translate(
+                                            i18.memberCard.assignAsHouseholdhead,
+                                          ),
+                                    isDisabled: isHead ? true : false,
+                                    onPressed: setAsHeadAction,
+                                    type: DigitButtonType.secondary,
+                                    size: DigitButtonSize.large,
                                   ),
-                                  onPressed: editMemberAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                ),
-                                DigitButton(
-                                  prefixIcon: Icons.delete,
-                                  label: localizations.translate(
-                                    i18.memberCard.deleteIndividualActionText,
+                                  DigitButton(
+                                    prefixIcon: Icons.edit,
+                                    label: localizations.translate(
+                                      i18.memberCard.editIndividualDetails,
+                                    ),
+                                    onPressed: editMemberAction,
+                                    type: DigitButtonType.secondary,
+                                    size: DigitButtonSize.large,
                                   ),
-                                  isDisabled: isHead ? true : false,
-                                  onPressed: deleteMemberAction,
-                                  type: DigitButtonType.secondary,
-                                  size: DigitButtonSize.large,
-                                ),
-                              ],
+                                  DigitButton(
+                                    prefixIcon: Icons.delete,
+                                    label: localizations.translate(
+                                      i18.memberCard.deleteIndividualActionText,
+                                    ),
+                                    isDisabled: isHead ? true : false,
+                                    onPressed: deleteMemberAction,
+                                    type: DigitButtonType.secondary,
+                                    size: DigitButtonSize.large,
+                                  ),
+                                ],
+                              ),
                             ),
+                            label: localizations.translate(
+                              editMemberActionProperties?.label ?? i18.memberCard.editDetails,
+                            ),
+                            prefixIcon: Icons.edit,
+                            type: DigitButtonType.tertiary,
+                            size: DigitButtonSize.medium,
                           ),
-                          label: localizations.translate(
-                            i18.memberCard.editDetails,
-                          ),
-                          prefixIcon: Icons.edit,
-                          type: DigitButtonType.tertiary,
-                          size: DigitButtonSize.medium,
                         ),
                       ),
                     ),
