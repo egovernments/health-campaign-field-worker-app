@@ -733,8 +733,9 @@ class _SearchBeneficiaryPageState
               ),
             ),
           ], // Optional: if you're resolving linked entities
+          primaryModel: 'household',
           select: ['individual', 'household', 'householdMember', 'projectBeneficiary'],  // Optional: which fields to return
-          pagination: const reg_params.PaginationParams(limit: 10, offset: 0),
+          pagination: const reg_params.PaginationParams(limit: 2, offset: 0),
         );
 
         context.read<RegistrationBloc>().add(

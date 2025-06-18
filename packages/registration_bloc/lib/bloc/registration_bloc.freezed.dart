@@ -882,7 +882,9 @@ mixin _$RegistrationState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Map<String, List<EntityModel>> results) loaded,
+    required TResult Function(
+            Map<String, List<EntityModel>> results, int? totalCount)
+        loaded,
     required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) =>
@@ -891,7 +893,8 @@ mixin _$RegistrationState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult? Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) =>
@@ -900,7 +903,8 @@ mixin _$RegistrationState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -998,7 +1002,9 @@ class _$RegistrationStateInitialImpl implements RegistrationStateInitial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Map<String, List<EntityModel>> results) loaded,
+    required TResult Function(
+            Map<String, List<EntityModel>> results, int? totalCount)
+        loaded,
     required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) {
@@ -1010,7 +1016,8 @@ class _$RegistrationStateInitialImpl implements RegistrationStateInitial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult? Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) {
@@ -1022,7 +1029,8 @@ class _$RegistrationStateInitialImpl implements RegistrationStateInitial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -1122,7 +1130,9 @@ class _$RegistrationStateLoadingImpl implements RegistrationStateLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Map<String, List<EntityModel>> results) loaded,
+    required TResult Function(
+            Map<String, List<EntityModel>> results, int? totalCount)
+        loaded,
     required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) {
@@ -1134,7 +1144,8 @@ class _$RegistrationStateLoadingImpl implements RegistrationStateLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult? Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) {
@@ -1146,7 +1157,8 @@ class _$RegistrationStateLoadingImpl implements RegistrationStateLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -1209,7 +1221,7 @@ abstract class _$$RegistrationStateLoadedImplCopyWith<$Res> {
           $Res Function(_$RegistrationStateLoadedImpl) then) =
       __$$RegistrationStateLoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Map<String, List<EntityModel>> results});
+  $Res call({Map<String, List<EntityModel>> results, int? totalCount});
 }
 
 /// @nodoc
@@ -1225,12 +1237,17 @@ class __$$RegistrationStateLoadedImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? results = null,
+    Object? totalCount = freezed,
   }) {
     return _then(_$RegistrationStateLoadedImpl(
-      null == results
+      results: null == results
           ? _value._results
           : results // ignore: cast_nullable_to_non_nullable
               as Map<String, List<EntityModel>>,
+      totalCount: freezed == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -1239,7 +1256,7 @@ class __$$RegistrationStateLoadedImplCopyWithImpl<$Res>
 
 class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
   const _$RegistrationStateLoadedImpl(
-      final Map<String, List<EntityModel>> results)
+      {required final Map<String, List<EntityModel>> results, this.totalCount})
       : _results = results;
 
   final Map<String, List<EntityModel>> _results;
@@ -1251,8 +1268,11 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
   }
 
   @override
+  final int? totalCount;
+
+  @override
   String toString() {
-    return 'RegistrationState.loaded(results: $results)';
+    return 'RegistrationState.loaded(results: $results, totalCount: $totalCount)';
   }
 
   @override
@@ -1260,12 +1280,14 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RegistrationStateLoadedImpl &&
-            const DeepCollectionEquality().equals(other._results, _results));
+            const DeepCollectionEquality().equals(other._results, _results) &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_results));
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_results), totalCount);
 
   @JsonKey(ignore: true)
   @override
@@ -1279,11 +1301,13 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Map<String, List<EntityModel>> results) loaded,
+    required TResult Function(
+            Map<String, List<EntityModel>> results, int? totalCount)
+        loaded,
     required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) {
-    return loaded(results);
+    return loaded(results, totalCount);
   }
 
   @override
@@ -1291,11 +1315,12 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult? Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) {
-    return loaded?.call(results);
+    return loaded?.call(results, totalCount);
   }
 
   @override
@@ -1303,13 +1328,14 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(results);
+      return loaded(results, totalCount);
     }
     return orElse();
   }
@@ -1357,10 +1383,11 @@ class _$RegistrationStateLoadedImpl implements RegistrationStateLoaded {
 
 abstract class RegistrationStateLoaded implements RegistrationState {
   const factory RegistrationStateLoaded(
-          final Map<String, List<EntityModel>> results) =
-      _$RegistrationStateLoadedImpl;
+      {required final Map<String, List<EntityModel>> results,
+      final int? totalCount}) = _$RegistrationStateLoadedImpl;
 
   Map<String, List<EntityModel>> get results;
+  int? get totalCount;
   @JsonKey(ignore: true)
   _$$RegistrationStateLoadedImplCopyWith<_$RegistrationStateLoadedImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -1443,7 +1470,9 @@ class _$RegistrationStatePersistedImpl implements RegistrationStatePersisted {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Map<String, List<EntityModel>> results) loaded,
+    required TResult Function(
+            Map<String, List<EntityModel>> results, int? totalCount)
+        loaded,
     required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) {
@@ -1455,7 +1484,8 @@ class _$RegistrationStatePersistedImpl implements RegistrationStatePersisted {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult? Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) {
@@ -1467,7 +1497,8 @@ class _$RegistrationStatePersistedImpl implements RegistrationStatePersisted {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -1598,7 +1629,9 @@ class _$RegistrationStateErrorImpl implements RegistrationStateError {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Map<String, List<EntityModel>> results) loaded,
+    required TResult Function(
+            Map<String, List<EntityModel>> results, int? totalCount)
+        loaded,
     required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) {
@@ -1610,7 +1643,8 @@ class _$RegistrationStateErrorImpl implements RegistrationStateError {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult? Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) {
@@ -1622,7 +1656,8 @@ class _$RegistrationStateErrorImpl implements RegistrationStateError {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Map<String, List<EntityModel>> results)? loaded,
+    TResult Function(Map<String, List<EntityModel>> results, int? totalCount)?
+        loaded,
     TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),

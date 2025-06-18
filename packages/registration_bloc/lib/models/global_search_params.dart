@@ -12,6 +12,8 @@ class GlobalSearchParameters with _$GlobalSearchParameters {
     PaginationParams? pagination,
     @Default([]) List<RelationshipMapping> relationshipMappings,
     @Default([]) List<NestedModelMapping> nestedMappings,
+    /// Optional: If set, pagination and count are applied only for this model.
+    String? primaryModel,
   }) = _GlobalSearchParameters;
 
   factory GlobalSearchParameters.fromJson(Map<String, dynamic> json) =>

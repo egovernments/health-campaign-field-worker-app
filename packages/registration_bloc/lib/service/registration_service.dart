@@ -75,7 +75,7 @@ class RegistrationService {
   }
 
 
-  Future<Map<String, List<EntityModel>>> searchHouseholds({
+  Future<(Map<String, List<EntityModel>>, int)>  searchHouseholds({
     required GlobalSearchParameters query,
   }) async {
 
@@ -84,6 +84,7 @@ class RegistrationService {
       relationshipGraph: _relationshipGraph,
       nestedModelMapping: _nestedMappingLookup,
       select: query.select,
+      primaryTable: query.primaryModel,
       pagination: query.pagination,
     );
   }

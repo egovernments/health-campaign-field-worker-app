@@ -29,6 +29,9 @@ mixin _$GlobalSearchParameters {
   List<NestedModelMapping> get nestedMappings =>
       throw _privateConstructorUsedError;
 
+  /// Optional: If set, pagination and count are applied only for this model.
+  String? get primaryModel => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GlobalSearchParametersCopyWith<GlobalSearchParameters> get copyWith =>
@@ -46,7 +49,8 @@ abstract class $GlobalSearchParametersCopyWith<$Res> {
       List<String> select,
       PaginationParams? pagination,
       List<RelationshipMapping> relationshipMappings,
-      List<NestedModelMapping> nestedMappings});
+      List<NestedModelMapping> nestedMappings,
+      String? primaryModel});
 
   $PaginationParamsCopyWith<$Res>? get pagination;
 }
@@ -70,6 +74,7 @@ class _$GlobalSearchParametersCopyWithImpl<$Res,
     Object? pagination = freezed,
     Object? relationshipMappings = null,
     Object? nestedMappings = null,
+    Object? primaryModel = freezed,
   }) {
     return _then(_value.copyWith(
       filters: null == filters
@@ -92,6 +97,10 @@ class _$GlobalSearchParametersCopyWithImpl<$Res,
           ? _value.nestedMappings
           : nestedMappings // ignore: cast_nullable_to_non_nullable
               as List<NestedModelMapping>,
+      primaryModel: freezed == primaryModel
+          ? _value.primaryModel
+          : primaryModel // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -122,7 +131,8 @@ abstract class _$$GlobalSearchParametersImplCopyWith<$Res>
       List<String> select,
       PaginationParams? pagination,
       List<RelationshipMapping> relationshipMappings,
-      List<NestedModelMapping> nestedMappings});
+      List<NestedModelMapping> nestedMappings,
+      String? primaryModel});
 
   @override
   $PaginationParamsCopyWith<$Res>? get pagination;
@@ -146,6 +156,7 @@ class __$$GlobalSearchParametersImplCopyWithImpl<$Res>
     Object? pagination = freezed,
     Object? relationshipMappings = null,
     Object? nestedMappings = null,
+    Object? primaryModel = freezed,
   }) {
     return _then(_$GlobalSearchParametersImpl(
       filters: null == filters
@@ -168,6 +179,10 @@ class __$$GlobalSearchParametersImplCopyWithImpl<$Res>
           ? _value._nestedMappings
           : nestedMappings // ignore: cast_nullable_to_non_nullable
               as List<NestedModelMapping>,
+      primaryModel: freezed == primaryModel
+          ? _value.primaryModel
+          : primaryModel // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -180,7 +195,8 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
       required final List<String> select,
       this.pagination,
       final List<RelationshipMapping> relationshipMappings = const [],
-      final List<NestedModelMapping> nestedMappings = const []})
+      final List<NestedModelMapping> nestedMappings = const [],
+      this.primaryModel})
       : _filters = filters,
         _select = select,
         _relationshipMappings = relationshipMappings,
@@ -226,9 +242,13 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
     return EqualUnmodifiableListView(_nestedMappings);
   }
 
+  /// Optional: If set, pagination and count are applied only for this model.
+  @override
+  final String? primaryModel;
+
   @override
   String toString() {
-    return 'GlobalSearchParameters(filters: $filters, select: $select, pagination: $pagination, relationshipMappings: $relationshipMappings, nestedMappings: $nestedMappings)';
+    return 'GlobalSearchParameters(filters: $filters, select: $select, pagination: $pagination, relationshipMappings: $relationshipMappings, nestedMappings: $nestedMappings, primaryModel: $primaryModel)';
   }
 
   @override
@@ -243,7 +263,9 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
             const DeepCollectionEquality()
                 .equals(other._relationshipMappings, _relationshipMappings) &&
             const DeepCollectionEquality()
-                .equals(other._nestedMappings, _nestedMappings));
+                .equals(other._nestedMappings, _nestedMappings) &&
+            (identical(other.primaryModel, primaryModel) ||
+                other.primaryModel == primaryModel));
   }
 
   @JsonKey(ignore: true)
@@ -254,7 +276,8 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
       const DeepCollectionEquality().hash(_select),
       pagination,
       const DeepCollectionEquality().hash(_relationshipMappings),
-      const DeepCollectionEquality().hash(_nestedMappings));
+      const DeepCollectionEquality().hash(_nestedMappings),
+      primaryModel);
 
   @JsonKey(ignore: true)
   @override
@@ -273,12 +296,12 @@ class _$GlobalSearchParametersImpl implements _GlobalSearchParameters {
 
 abstract class _GlobalSearchParameters implements GlobalSearchParameters {
   const factory _GlobalSearchParameters(
-          {required final List<SearchFilter> filters,
-          required final List<String> select,
-          final PaginationParams? pagination,
-          final List<RelationshipMapping> relationshipMappings,
-          final List<NestedModelMapping> nestedMappings}) =
-      _$GlobalSearchParametersImpl;
+      {required final List<SearchFilter> filters,
+      required final List<String> select,
+      final PaginationParams? pagination,
+      final List<RelationshipMapping> relationshipMappings,
+      final List<NestedModelMapping> nestedMappings,
+      final String? primaryModel}) = _$GlobalSearchParametersImpl;
 
   factory _GlobalSearchParameters.fromJson(Map<String, dynamic> json) =
       _$GlobalSearchParametersImpl.fromJson;
@@ -293,6 +316,10 @@ abstract class _GlobalSearchParameters implements GlobalSearchParameters {
   List<RelationshipMapping> get relationshipMappings;
   @override
   List<NestedModelMapping> get nestedMappings;
+  @override
+
+  /// Optional: If set, pagination and count are applied only for this model.
+  String? get primaryModel;
   @override
   @JsonKey(ignore: true)
   _$$GlobalSearchParametersImplCopyWith<_$GlobalSearchParametersImpl>

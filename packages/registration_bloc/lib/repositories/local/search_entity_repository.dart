@@ -22,32 +22,36 @@ class SearchEntityRepository extends LocalRepository {
   @override
   DataModelType get type => throw UnimplementedError();
 
-  Future<Map<String, List<EntityModel>>> searchEntities({
+  Future<(Map<String, List<EntityModel>>, int)> searchEntities({
     required List<SearchFilter> filters,
     required Map<String, List<RelationshipMapping>> relationshipGraph,
     required Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
     required List<String> select,
+    String? primaryTable,
     PaginationParams? pagination,
   }) async {
     return _buildAndExecuteSearchQuery(
       filters: filters,
       relationshipGraph: relationshipGraph,
       select: select,
+      primaryTable: primaryTable,
       pagination: pagination,
       nestedModelMapping: nestedModelMapping,
     );
   }
 
-  Future<Map<String, List<EntityModel>>> _buildAndExecuteSearchQuery({
+  Future<(Map<String, List<EntityModel>>, int)> _buildAndExecuteSearchQuery({
     required List<SearchFilter> filters,
     required Map<String, List<RelationshipMapping>> relationshipGraph,
     required Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
     required List<String> select,
+    String? primaryTable,
     required PaginationParams? pagination,
   }) async {
     final rootTable = filters.first.root;
     final queriedModels = <String>{rootTable};
     final allResults = <Map<String, dynamic>>[];
+    var totalCount = 0;
     final modelToResults = <String, List<Map<String, dynamic>>>{};
 
     final rootResults = await _queryRawTable(
@@ -55,6 +59,10 @@ class SearchEntityRepository extends LocalRepository {
       filters: filters,
       select: select,
       pagination: pagination,
+      isPrimaryTable: primaryTable == rootTable,
+      onCountFetched: (count) {
+        totalCount = count;
+      },
     );
 
     final hydratedRoot =
@@ -99,7 +107,11 @@ class SearchEntityRepository extends LocalRepository {
           table: toTable,
           filters: [filter],
           select: select,
+          isPrimaryTable: primaryTable == toTable,
           pagination: pagination,
+          onCountFetched: (count) {
+            totalCount = count;
+          },
         );
       }
 
@@ -122,7 +134,7 @@ class SearchEntityRepository extends LocalRepository {
       groupedResults.putIfAbsent(modelName, () => []).add(entity);
     }
 
-    return groupedResults;
+    return (groupedResults, totalCount);
   }
 
   Future<List<Map<String, dynamic>>> _hydrateRawRows(
@@ -190,144 +202,175 @@ class SearchEntityRepository extends LocalRepository {
     required List<SearchFilter> filters,
     required List<String> select,
     PaginationParams? pagination,
+    bool isPrimaryTable = false,
+    void Function(int count)? onCountFetched,
   }) async {
     final dynamicTable = sql.allTables.firstWhere(
-      (t) => t.actualTableName == table,
+          (t) => t.actualTableName == table,
       orElse: () => throw Exception('Table $table not found'),
     );
 
-    final query = sql.selectOnly(dynamicTable, distinct: true);
     final List<Expression<bool>> whereClauses = [];
 
-    // Bounding box filter for 'within'
-    double? centerLat;
-    double? centerLon;
-    double? radiusInKm;
+    double? centerLat, centerLon, radiusInKm;
 
     for (final filter in filters.where((f) => f.root == table)) {
+      // Handle 'within' filter separately
+      if (filter.operator == 'within') {
+        if (filter.coordinates == null || filter.value == null) {
+          throw Exception("Missing coordinates or radius for 'within' operator");
+        }
+
+        // TODO: Avoid hardcoded column names 'latitude' and 'longitude' in future
+        final latField = dynamicTable.$columns.firstWhere(
+              (c) => c.$name == 'latitude',
+          orElse: () => throw Exception('Latitude column not found in $table'),
+        );
+        final lonField = dynamicTable.$columns.firstWhere(
+              (c) => c.$name == 'longitude',
+          orElse: () => throw Exception('Longitude column not found in $table'),
+        );
+
+        centerLat = filter.coordinates!.latitude;
+        centerLon = filter.coordinates!.longitude;
+        radiusInKm = (filter.value as num).toDouble();
+
+        const earthRadius = 6371.0;
+        const degToRad = math.pi / 180.0;
+
+        final deltaLat = radiusInKm / earthRadius;
+        final deltaLon = radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+
+        final minLat = centerLat - deltaLat;
+        final maxLat = centerLat + deltaLat;
+        final minLon = centerLon - deltaLon;
+        final maxLon = centerLon + deltaLon;
+
+        final latExpr = latField as Expression<double>;
+        final lonExpr = lonField as Expression<double>;
+
+        final boundingBox = latExpr.isBetweenValues(minLat, maxLat) &
+        lonExpr.isBetweenValues(minLon, maxLon);
+
+        whereClauses.add(boundingBox);
+        continue;
+      }
+
       final columnName = camelToSnake(filter.field);
+      final col = dynamicTable.$columns.firstWhere(
+            (c) => c.$name == columnName,
+        orElse: () => throw Exception('Column $columnName not found in $table'),
+      );
 
       switch (filter.operator) {
         case 'equals':
+          whereClauses.add(col.equals(filter.value));
+          break;
         case 'contains':
+          whereClauses.add((col as Expression<String>).like('%${filter.value}%'));
+          break;
         case 'isNotNull':
+          whereClauses.add(col.isNotNull());
+          break;
         case 'isNull':
+          whereClauses.add(col.isNull());
+          break;
         case 'in':
+          final list = (filter.value as List);
+          if (col is GeneratedColumn<int>) {
+            whereClauses.add(col.isIn(list.cast<int>()));
+          } else if (col is GeneratedColumn<String>) {
+            whereClauses.add(col.isIn(list.cast<String>()));
+          }
+          break;
         case 'notIn':
-          {
-            final col = dynamicTable.$columns.firstWhere(
-              (c) => c.$name == columnName,
-              orElse: () =>
-                  throw Exception('Column $columnName not found in $table'),
-            );
-
-            switch (filter.operator) {
-              case 'equals':
-                whereClauses.add(col.equals(filter.value));
-                break;
-              case 'contains':
-                whereClauses
-                    .add((col as Expression<String>).like('%${filter.value}%'));
-                break;
-              case 'isNotNull':
-                whereClauses.add(col.isNotNull());
-                break;
-              case 'isNull':
-                whereClauses.add(col.isNull());
-                break;
-              case 'in':
-                if (filter.value is! List)
-                  throw Exception("'in' expects a list");
-                final list = filter.value as List;
-                if (col is GeneratedColumn<int>) {
-                  whereClauses.add(col.isIn(list.cast<int>()));
-                } else if (col is GeneratedColumn<String>) {
-                  whereClauses.add(col.isIn(list.cast<String>()));
-                } else {
-                  throw Exception("Unsupported column type for 'in'");
-                }
-                break;
-              case 'notIn':
-                if (filter.value is! List)
-                  throw Exception("'notIn' expects a list");
-                final list = filter.value as List;
-                if (col is GeneratedColumn<int>) {
-                  whereClauses.add(col.isNotIn(list.cast<int>()));
-                } else if (col is GeneratedColumn<String>) {
-                  whereClauses.add(col.isNotIn(list.cast<String>()));
-                } else {
-                  throw Exception("Unsupported column type for 'notIn'");
-                }
-                break;
-            }
-            break;
+          final list = (filter.value as List);
+          if (col is GeneratedColumn<int>) {
+            whereClauses.add(col.isNotIn(list.cast<int>()));
+          } else if (col is GeneratedColumn<String>) {
+            whereClauses.add(col.isNotIn(list.cast<String>()));
           }
-
-        case 'within':
-          {
-            if (filter.coordinates == null || filter.value == null) {
-              throw Exception(
-                  "Missing coordinates or radius for 'within' operator");
-            }
-
-            final latField = dynamicTable.$columns.firstWhere(
-              (c) => c.$name == 'latitude',
-              orElse: () =>
-                  throw Exception('Latitude column not found in $table'),
-            );
-            final lonField = dynamicTable.$columns.firstWhere(
-              (c) => c.$name == 'longitude',
-              orElse: () =>
-                  throw Exception('Longitude column not found in $table'),
-            );
-
-            centerLat = filter.coordinates!.latitude;
-            centerLon = filter.coordinates!.longitude;
-            radiusInKm = (filter.value as num).toDouble();
-
-            const earthRadius = 6371.0;
-            const degToRad = math.pi / 180.0;
-
-            final deltaLat = radiusInKm / earthRadius;
-            final deltaLon =
-                radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
-
-            final minLat = centerLat - deltaLat;
-            final maxLat = centerLat + deltaLat;
-            final minLon = centerLon - deltaLon;
-            final maxLon = centerLon + deltaLon;
-
-            final latExpr = latField as Expression<double>;
-            final lonExpr = lonField as Expression<double>;
-
-            // SQL bounding box
-            final boundingBox = latExpr.isBetweenValues(minLat, maxLat) &
-                lonExpr.isBetweenValues(minLon, maxLon);
-
-            whereClauses.add(boundingBox);
-            break;
-          }
-
+          break;
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
       }
     }
 
-    if (whereClauses.isNotEmpty) {
-      query.where(buildAnd(whereClauses));
+    // Primary count query
+    if (isPrimaryTable && onCountFetched != null) {
+      // Run same query without pagination, only filters
+      final dataQueryForCount = buildSelectQuery(
+        table: table,
+        filters: filters,
+        whereClauses: whereClauses,
+      );
+
+      final rawResults = await dataQueryForCount.get();
+
+      int finalCount;
+
+      // Apply final Haversine filter if needed
+      if (centerLat != null && centerLon != null && radiusInKm != null) {
+        const earthRadius = 6371.0;
+        const degToRad = math.pi / 180.0;
+
+        double haversine(double lat1, double lon1, double lat2, double lon2) {
+          final dLat = (lat2 - lat1) * degToRad;
+          final dLon = (lon2 - lon1) * degToRad;
+          final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+              math.cos(lat1 * degToRad) *
+                  math.cos(lat2 * degToRad) *
+                  math.sin(dLon / 2) *
+                  math.sin(dLon / 2);
+          final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+          return earthRadius * c;
+        }
+
+        finalCount = rawResults.where((row) {
+          final latColumn = dynamicTable.$columns.firstWhere(
+                (c) => c.$name == 'latitude',
+            orElse: () => throw Exception('latitude column missing'),
+          ) as GeneratedColumn<double>;
+
+          final lonColumn = dynamicTable.$columns.firstWhere(
+                (c) => c.$name == 'longitude',
+            orElse: () => throw Exception('longitude column missing'),
+          ) as GeneratedColumn<double>;
+
+          double? lat;
+          double? lon;
+
+          try {
+            lat = row.read<double>(latColumn);
+          } catch (_) {
+            lat = null;
+          }
+          try {
+            lon = row.read<double>(lonColumn);
+          } catch (_) {
+            lon = null;
+          }
+          if (lat == null || lon == null) return false;
+          return haversine(centerLat!, centerLon!, lat, lon) <= radiusInKm!;
+        }).length;
+      } else {
+        finalCount = rawResults.length;
+      }
+
+      onCountFetched(finalCount);
     }
 
-    // Select all columns from the table
-    query.addColumns(dynamicTable.$columns);
+    // Data fetch query
+    final dataQuery = buildSelectQuery(
+      table: table,
+      filters: filters,
+      pagination: pagination,
+      whereClauses: whereClauses,
+    );
 
-    // Pagination
-    if (pagination != null) {
-      query.limit(pagination.limit, offset: pagination.offset);
-    }
+    final results = await dataQuery.get();
 
-    final results = await query.get();
-
-    // Manual haversine filtering for 'within'
+    // Map result rows
     List<Map<String, dynamic>> rows = results.map((row) {
       final rowMap = {
         for (final column in dynamicTable.$columns)
@@ -335,6 +378,7 @@ class SearchEntityRepository extends LocalRepository {
               ? row.readWithConverter(column)
               : row.read(column),
       };
+
       rowMap['modelName'] = _snakeToCamel(table);
 
       if (rowMap.containsKey('additional_fields')) {
@@ -354,7 +398,7 @@ class SearchEntityRepository extends LocalRepository {
       return rowMap;
     }).toList();
 
-    // Final precise radius filter
+    // Final filtering using actual haversine distance
     if (centerLat != null && centerLon != null && radiusInKm != null) {
       const earthRadius = 6371.0;
       const degToRad = math.pi / 180.0;
@@ -381,6 +425,90 @@ class SearchEntityRepository extends LocalRepository {
 
     return rows;
   }
+
+  Selectable<TypedResult> buildSelectQuery({
+    required String table,
+    required List<SearchFilter> filters,
+    PaginationParams? pagination,
+    required List<Expression<bool>> whereClauses,
+  }) {
+    final dynamicTable = sql.allTables.firstWhere(
+          (t) => t.actualTableName == table,
+      orElse: () => throw Exception('Table $table not found'),
+    );
+
+    final query = sql.selectOnly(dynamicTable, distinct: true);
+
+    if (whereClauses.isNotEmpty) {
+      query.where(buildAnd(whereClauses));
+    }
+
+    query.addColumns(dynamicTable.$columns);
+
+    if (pagination != null) {
+      query.limit(pagination.limit, offset: pagination.offset);
+    }
+
+    return query;
+  }
+
+  String _buildWhereClauseRaw(List<SearchFilter> filters) {
+    return filters.map((filter) {
+      final column = camelToSnake(filter.field);
+      switch (filter.operator) {
+        case 'equals':
+          return '$column = ?';
+        case 'contains':
+          return '$column LIKE ?';
+        case 'isNotNull':
+          return '$column IS NOT NULL';
+        case 'isNull':
+          return '$column IS NULL';
+        case 'in':
+          final values = filter.value as List;
+          return '$column IN (${List.filled(values.length, '?').join(', ')})';
+        case 'notIn':
+          final values = filter.value as List;
+          return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
+        case 'within':
+        // We'll handle bounding box manually; skip for raw SQL
+          return '1 = 1'; // dummy true condition
+        default:
+          throw Exception('Unsupported operator: ${filter.operator}');
+      }
+    }).join(' AND ');
+  }
+
+  List<Variable> _buildWhereArgs(List<SearchFilter> filters) {
+    final args = <Variable>[];
+
+    for (final filter in filters) {
+      switch (filter.operator) {
+        case 'equals':
+          args.add(Variable.withString(filter.value.toString()));
+          break;
+        case 'contains':
+          args.add(Variable.withString('%${filter.value}%'));
+          break;
+        case 'in':
+        case 'notIn':
+          final list = filter.value as List;
+          args.addAll(list.map((v) => Variable.withString(v.toString())));
+          break;
+        case 'isNotNull':
+        case 'isNull':
+        case 'within':
+        // No variable needed
+          break;
+        default:
+          throw Exception('Unsupported operator: ${filter.operator}');
+      }
+    }
+
+    return args;
+  }
+
+
 }
 
 EntityModel dynamicEntityModelFromMap(

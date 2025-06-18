@@ -46,8 +46,11 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     }
 
     try {
-      final results = await service.searchHouseholds(query: event.searchParams);
-      emit(RegistrationState.loaded(results));
+      final (results, totalCount) = await service.searchHouseholds(query: event.searchParams);
+      emit(RegistrationState.loaded(
+        results: results,
+        totalCount: totalCount > -1 ? totalCount : null, // or just totalCount if it's already nullable
+      ));
     } catch (e) {
       emit(RegistrationState.error('Search failed: ${e.toString()}'));
     }
@@ -117,7 +120,11 @@ class RegistrationEvent with _$RegistrationEvent {
 class RegistrationState with _$RegistrationState {
   const factory RegistrationState.initial() = RegistrationStateInitial;
   const factory RegistrationState.loading() = RegistrationStateLoading;
-  const factory RegistrationState.loaded(Map<String, List<EntityModel>> results) = RegistrationStateLoaded;
+  /// Updated: totalCount is optional, returned only when requested (e.g., when primaryModel is used)
+  const factory RegistrationState.loaded({
+    required Map<String, List<EntityModel>> results,
+    int? totalCount,
+  }) = RegistrationStateLoaded;
   const factory RegistrationState.persisted(List<EntityModel> entities) = RegistrationStatePersisted;
   const factory RegistrationState.error(String message) = RegistrationStateError;
 }

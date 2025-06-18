@@ -28,6 +28,7 @@ _$GlobalSearchParametersImpl _$$GlobalSearchParametersImplFromJson(
                   (e) => NestedModelMapping.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      primaryModel: json['primaryModel'] as String?,
     );
 
 Map<String, dynamic> _$$GlobalSearchParametersImplToJson(
@@ -38,6 +39,7 @@ Map<String, dynamic> _$$GlobalSearchParametersImplToJson(
       'pagination': instance.pagination,
       'relationshipMappings': instance.relationshipMappings,
       'nestedMappings': instance.nestedMappings,
+      'primaryModel': instance.primaryModel,
     };
 
 _$SearchFilterImpl _$$SearchFilterImplFromJson(Map<String, dynamic> json) =>
