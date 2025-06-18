@@ -6,24 +6,20 @@ final jsonConfig = {
       "HouseholdModel": {
         "mappings": {
           "id": "housing.id",
-          "boundaryCode": "__context:selectedBoundaryCode",
           "memberCount": "householdDetails.memberCount",
-          "latitude": "beneficiaryLocation.latLong[0]",
-          "longitude": "beneficiaryLocation.latLong[1]",
+          "latitude": "beneficiaryLocation.latLng[0]",
+          "longitude": "beneficiaryLocation.latLng[1]",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
-
-          /// Note: Generate uuid
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "address": {
             "id": "address.id",
-            "boundaryCode": "__context:selectedBoundaryCode",
             "relatedClientReferenceId":
                 "__ref:HouseholdModel.clientReferenceId",
             "doorNo": "address.doorNo",
-            "latitude": "beneficiaryLocation.latLong[0]",
-            "longitude": "beneficiaryLocation.latLong[1]",
+            "latitude": "beneficiaryLocation.latLng[0]",
+            "longitude": "beneficiaryLocation.latLng[1]",
             "locationAccuracy": "address.locationAccuracy",
             "addressLine1": "beneficiaryLocation.addressLine1",
             "addressLine2": "addressLine2",
@@ -112,8 +108,8 @@ final jsonConfig = {
               "relatedClientReferenceId":
                   "__ref:IndividualModel.clientReferenceId",
               "doorNo": "address.doorNo",
-              "latitude": "beneficiaryLocation.latLong[0]",
-              "longitude": "beneficiaryLocation.latLong[1]",
+              "latitude": "beneficiaryLocation.latLng[0]",
+              "longitude": "beneficiaryLocation.latLng[1]",
               "locationAccuracy": "address.locationAccuracy",
               "addressLine1": "beneficiaryLocation.addressLine1",
               "addressLine2": "addressLine2",
