@@ -309,7 +309,7 @@ mixin _$SearchFilter {
   String get operator => throw _privateConstructorUsedError;
   dynamic get value => throw _privateConstructorUsedError;
   String get root => throw _privateConstructorUsedError;
-  Map<String, dynamic>? get coordinates => throw _privateConstructorUsedError;
+  LatLng? get coordinates => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -328,7 +328,9 @@ abstract class $SearchFilterCopyWith<$Res> {
       String operator,
       dynamic value,
       String root,
-      Map<String, dynamic>? coordinates});
+      LatLng? coordinates});
+
+  $LatLngCopyWith<$Res>? get coordinates;
 }
 
 /// @nodoc
@@ -370,8 +372,20 @@ class _$SearchFilterCopyWithImpl<$Res, $Val extends SearchFilter>
       coordinates: freezed == coordinates
           ? _value.coordinates
           : coordinates // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
+              as LatLng?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $LatLngCopyWith<$Res>? get coordinates {
+    if (_value.coordinates == null) {
+      return null;
+    }
+
+    return $LatLngCopyWith<$Res>(_value.coordinates!, (value) {
+      return _then(_value.copyWith(coordinates: value) as $Val);
+    });
   }
 }
 
@@ -388,7 +402,10 @@ abstract class _$$SearchFilterImplCopyWith<$Res>
       String operator,
       dynamic value,
       String root,
-      Map<String, dynamic>? coordinates});
+      LatLng? coordinates});
+
+  @override
+  $LatLngCopyWith<$Res>? get coordinates;
 }
 
 /// @nodoc
@@ -426,9 +443,9 @@ class __$$SearchFilterImplCopyWithImpl<$Res>
           : root // ignore: cast_nullable_to_non_nullable
               as String,
       coordinates: freezed == coordinates
-          ? _value._coordinates
+          ? _value.coordinates
           : coordinates // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
+              as LatLng?,
     ));
   }
 }
@@ -441,8 +458,7 @@ class _$SearchFilterImpl implements _SearchFilter {
       required this.operator,
       required this.value,
       required this.root,
-      final Map<String, dynamic>? coordinates})
-      : _coordinates = coordinates;
+      this.coordinates});
 
   factory _$SearchFilterImpl.fromJson(Map<String, dynamic> json) =>
       _$$SearchFilterImplFromJson(json);
@@ -455,15 +471,8 @@ class _$SearchFilterImpl implements _SearchFilter {
   final dynamic value;
   @override
   final String root;
-  final Map<String, dynamic>? _coordinates;
   @override
-  Map<String, dynamic>? get coordinates {
-    final value = _coordinates;
-    if (value == null) return null;
-    if (_coordinates is EqualUnmodifiableMapView) return _coordinates;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
+  final LatLng? coordinates;
 
   @override
   String toString() {
@@ -480,19 +489,14 @@ class _$SearchFilterImpl implements _SearchFilter {
                 other.operator == operator) &&
             const DeepCollectionEquality().equals(other.value, value) &&
             (identical(other.root, root) || other.root == root) &&
-            const DeepCollectionEquality()
-                .equals(other._coordinates, _coordinates));
+            (identical(other.coordinates, coordinates) ||
+                other.coordinates == coordinates));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      field,
-      operator,
-      const DeepCollectionEquality().hash(value),
-      root,
-      const DeepCollectionEquality().hash(_coordinates));
+  int get hashCode => Object.hash(runtimeType, field, operator,
+      const DeepCollectionEquality().hash(value), root, coordinates);
 
   @JsonKey(ignore: true)
   @override
@@ -514,7 +518,7 @@ abstract class _SearchFilter implements SearchFilter {
       required final String operator,
       required final dynamic value,
       required final String root,
-      final Map<String, dynamic>? coordinates}) = _$SearchFilterImpl;
+      final LatLng? coordinates}) = _$SearchFilterImpl;
 
   factory _SearchFilter.fromJson(Map<String, dynamic> json) =
       _$SearchFilterImpl.fromJson;
@@ -528,10 +532,162 @@ abstract class _SearchFilter implements SearchFilter {
   @override
   String get root;
   @override
-  Map<String, dynamic>? get coordinates;
+  LatLng? get coordinates;
   @override
   @JsonKey(ignore: true)
   _$$SearchFilterImplCopyWith<_$SearchFilterImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+LatLng _$LatLngFromJson(Map<String, dynamic> json) {
+  return _LatLng.fromJson(json);
+}
+
+/// @nodoc
+mixin _$LatLng {
+  double get latitude => throw _privateConstructorUsedError;
+  double get longitude => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $LatLngCopyWith<LatLng> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $LatLngCopyWith<$Res> {
+  factory $LatLngCopyWith(LatLng value, $Res Function(LatLng) then) =
+      _$LatLngCopyWithImpl<$Res, LatLng>;
+  @useResult
+  $Res call({double latitude, double longitude});
+}
+
+/// @nodoc
+class _$LatLngCopyWithImpl<$Res, $Val extends LatLng>
+    implements $LatLngCopyWith<$Res> {
+  _$LatLngCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? latitude = null,
+    Object? longitude = null,
+  }) {
+    return _then(_value.copyWith(
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$LatLngImplCopyWith<$Res> implements $LatLngCopyWith<$Res> {
+  factory _$$LatLngImplCopyWith(
+          _$LatLngImpl value, $Res Function(_$LatLngImpl) then) =
+      __$$LatLngImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({double latitude, double longitude});
+}
+
+/// @nodoc
+class __$$LatLngImplCopyWithImpl<$Res>
+    extends _$LatLngCopyWithImpl<$Res, _$LatLngImpl>
+    implements _$$LatLngImplCopyWith<$Res> {
+  __$$LatLngImplCopyWithImpl(
+      _$LatLngImpl _value, $Res Function(_$LatLngImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? latitude = null,
+    Object? longitude = null,
+  }) {
+    return _then(_$LatLngImpl(
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$LatLngImpl implements _LatLng {
+  const _$LatLngImpl({required this.latitude, required this.longitude});
+
+  factory _$LatLngImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LatLngImplFromJson(json);
+
+  @override
+  final double latitude;
+  @override
+  final double longitude;
+
+  @override
+  String toString() {
+    return 'LatLng(latitude: $latitude, longitude: $longitude)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LatLngImpl &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, latitude, longitude);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LatLngImplCopyWith<_$LatLngImpl> get copyWith =>
+      __$$LatLngImplCopyWithImpl<_$LatLngImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$LatLngImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _LatLng implements LatLng {
+  const factory _LatLng(
+      {required final double latitude,
+      required final double longitude}) = _$LatLngImpl;
+
+  factory _LatLng.fromJson(Map<String, dynamic> json) = _$LatLngImpl.fromJson;
+
+  @override
+  double get latitude;
+  @override
+  double get longitude;
+  @override
+  @JsonKey(ignore: true)
+  _$$LatLngImplCopyWith<_$LatLngImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

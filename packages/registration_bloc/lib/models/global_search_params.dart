@@ -25,11 +25,22 @@ class SearchFilter with _$SearchFilter {
     required String operator,
     required dynamic value,
     required String root,
-    Map<String, dynamic>? coordinates,
+    LatLng? coordinates,
   }) = _SearchFilter;
 
   factory SearchFilter.fromJson(Map<String, dynamic> json) =>
       _$SearchFilterFromJson(json);
+}
+
+@freezed
+class LatLng with _$LatLng {
+  const factory LatLng({
+    required double latitude,
+    required double longitude,
+  }) = _LatLng;
+
+  factory LatLng.fromJson(Map<String, dynamic> json) =>
+      _$LatLngFromJson(json);
 }
 
 @freezed

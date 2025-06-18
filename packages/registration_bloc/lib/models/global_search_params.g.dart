@@ -46,7 +46,9 @@ _$SearchFilterImpl _$$SearchFilterImplFromJson(Map<String, dynamic> json) =>
       operator: json['operator'] as String,
       value: json['value'],
       root: json['root'] as String,
-      coordinates: json['coordinates'] as Map<String, dynamic>?,
+      coordinates: json['coordinates'] == null
+          ? null
+          : LatLng.fromJson(json['coordinates'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$SearchFilterImplToJson(_$SearchFilterImpl instance) =>
@@ -56,6 +58,17 @@ Map<String, dynamic> _$$SearchFilterImplToJson(_$SearchFilterImpl instance) =>
       'value': instance.value,
       'root': instance.root,
       'coordinates': instance.coordinates,
+    };
+
+_$LatLngImpl _$$LatLngImplFromJson(Map<String, dynamic> json) => _$LatLngImpl(
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$$LatLngImplToJson(_$LatLngImpl instance) =>
+    <String, dynamic>{
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
     };
 
 _$PaginationParamsImpl _$$PaginationParamsImplFromJson(

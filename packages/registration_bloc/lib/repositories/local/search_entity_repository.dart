@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:math' as math;
+
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +11,7 @@ import 'package:registration_bloc/models/global_search_params.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import '../../models/entities/project_beneficiary.dart';
 
-class SearchEntityRepository extends LocalRepository{
+class SearchEntityRepository extends LocalRepository {
   SearchEntityRepository(super.sql, super.opLogManager);
 
   @override
@@ -19,10 +21,11 @@ class SearchEntityRepository extends LocalRepository{
 
   @override
   DataModelType get type => throw UnimplementedError();
+
   Future<Map<String, List<EntityModel>>> searchEntities({
     required List<SearchFilter> filters,
     required Map<String, List<RelationshipMapping>> relationshipGraph,
-    required Map<String, Map<String, NestedFieldMapping> > nestedModelMapping,
+    required Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
     required List<String> select,
     PaginationParams? pagination,
   }) async {
@@ -54,7 +57,8 @@ class SearchEntityRepository extends LocalRepository{
       pagination: pagination,
     );
 
-    final hydratedRoot = await _hydrateRawRows(rootResults, nestedModelMapping, rootTable);
+    final hydratedRoot =
+        await _hydrateRawRows(rootResults, nestedModelMapping, rootTable);
     modelToResults[rootTable] = hydratedRoot;
     allResults.addAll(hydratedRoot);
 
@@ -80,7 +84,8 @@ class SearchEntityRepository extends LocalRepository{
         final toTable = camelToSnake(rel.to);
         final toKey = camelToSnake(rel.foreignKey);
 
-        final joinValues = currentRows.map((row) => row[fromKey]).whereType().toSet().toList();
+        final joinValues =
+            currentRows.map((row) => row[fromKey]).whereType().toSet().toList();
         if (joinValues.isEmpty) break;
 
         final filter = SearchFilter(
@@ -98,7 +103,8 @@ class SearchEntityRepository extends LocalRepository{
         );
       }
 
-      final enriched = await _hydrateRawRows(currentRows, nestedModelMapping, model);
+      final enriched =
+          await _hydrateRawRows(currentRows, nestedModelMapping, model);
       modelToResults[model] = enriched;
       allResults.addAll(enriched);
       queriedModels.add(model);
@@ -111,7 +117,8 @@ class SearchEntityRepository extends LocalRepository{
       final modelName = row['modelName'] as String;
       if (!select.contains(modelName)) continue;
 
-      final entity = dynamicEntityModelFromMap(modelName, snakeToCamelDeep(row));
+      final entity =
+          dynamicEntityModelFromMap(modelName, snakeToCamelDeep(row));
       groupedResults.putIfAbsent(modelName, () => []).add(entity);
     }
 
@@ -119,10 +126,10 @@ class SearchEntityRepository extends LocalRepository{
   }
 
   Future<List<Map<String, dynamic>>> _hydrateRawRows(
-      List<Map<String, dynamic>> rawRows,
-      Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
-      String currentModelName,
-      ) async {
+    List<Map<String, dynamic>> rawRows,
+    Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
+    String currentModelName,
+  ) async {
     final enrichedRows = <Map<String, dynamic>>[];
 
     final modelNestedMapping = nestedModelMapping[currentModelName];
@@ -159,7 +166,6 @@ class SearchEntityRepository extends LocalRepository{
         select: ['*'],
       );
 
-
       // Attach hydrated data to each enriched row
       for (final row in enrichedRows) {
         final localValue = row[localKeySnake];
@@ -185,91 +191,152 @@ class SearchEntityRepository extends LocalRepository{
     required List<String> select,
     PaginationParams? pagination,
   }) async {
-
-    // Dynamically build the table reference
     final dynamicTable = sql.allTables.firstWhere(
-          (t) => t.actualTableName == table,
+      (t) => t.actualTableName == table,
       orElse: () => throw Exception('Table $table not found'),
     );
 
     final query = sql.selectOnly(dynamicTable, distinct: true);
+    final List<Expression<bool>> whereClauses = [];
 
-    // Build WHERE clause from filters
-    final whereClauses = filters
-        .where((f) => f.root == table)
-        .map((filter) {
+    // Bounding box filter for 'within'
+    double? centerLat;
+    double? centerLon;
+    double? radiusInKm;
+
+    for (final filter in filters.where((f) => f.root == table)) {
       final columnName = camelToSnake(filter.field);
-      final col = dynamicTable.$columns.firstWhere(
-            (c) => c.$name == columnName,
-        orElse: () => throw Exception('Column $columnName not found in $table'),
-      );
 
       switch (filter.operator) {
         case 'equals':
-          return col.equals(filter.value);
         case 'contains':
-          return (col as Expression<String>).like('%${filter.value}%');
         case 'isNotNull':
-          return col.isNotNull();
         case 'isNull':
-          return col.isNull();
         case 'in':
-          if (filter.value is! List) {
-            throw Exception("Operator 'in' expects a list value, got ${filter.value.runtimeType}");
-          }
-          final list = filter.value as List;
-
-          if (col is GeneratedColumn<int>) {
-            return (col as GeneratedColumn<int>).isIn(list.cast<int>());
-          } else if (col is GeneratedColumn<String>) {
-            return (col as GeneratedColumn<String>).isIn(list.cast<String>());
-          } else {
-            throw Exception("Unsupported column type for 'in' operator on column ${col.$name}");
-          }
-
         case 'notIn':
-          if (filter.value is! List) {
-            throw Exception("Operator 'notIn' expects a list value, got ${filter.value.runtimeType}");
-          }
-          final list = filter.value as List;
+          {
+            final col = dynamicTable.$columns.firstWhere(
+              (c) => c.$name == columnName,
+              orElse: () =>
+                  throw Exception('Column $columnName not found in $table'),
+            );
 
-          if (col is GeneratedColumn<int>) {
-            return (col as GeneratedColumn<int>).isNotIn(list.cast<int>());
-          } else if (col is GeneratedColumn<String>) {
-            return (col as GeneratedColumn<String>).isNotIn(list.cast<String>());
-          } else {
-            throw Exception("Unsupported column type for 'notIn' operator on column ${col.$name}");
+            switch (filter.operator) {
+              case 'equals':
+                whereClauses.add(col.equals(filter.value));
+                break;
+              case 'contains':
+                whereClauses
+                    .add((col as Expression<String>).like('%${filter.value}%'));
+                break;
+              case 'isNotNull':
+                whereClauses.add(col.isNotNull());
+                break;
+              case 'isNull':
+                whereClauses.add(col.isNull());
+                break;
+              case 'in':
+                if (filter.value is! List)
+                  throw Exception("'in' expects a list");
+                final list = filter.value as List;
+                if (col is GeneratedColumn<int>) {
+                  whereClauses.add(col.isIn(list.cast<int>()));
+                } else if (col is GeneratedColumn<String>) {
+                  whereClauses.add(col.isIn(list.cast<String>()));
+                } else {
+                  throw Exception("Unsupported column type for 'in'");
+                }
+                break;
+              case 'notIn':
+                if (filter.value is! List)
+                  throw Exception("'notIn' expects a list");
+                final list = filter.value as List;
+                if (col is GeneratedColumn<int>) {
+                  whereClauses.add(col.isNotIn(list.cast<int>()));
+                } else if (col is GeneratedColumn<String>) {
+                  whereClauses.add(col.isNotIn(list.cast<String>()));
+                } else {
+                  throw Exception("Unsupported column type for 'notIn'");
+                }
+                break;
+            }
+            break;
           }
+
+        case 'within':
+          {
+            if (filter.coordinates == null || filter.value == null) {
+              throw Exception(
+                  "Missing coordinates or radius for 'within' operator");
+            }
+
+            final latField = dynamicTable.$columns.firstWhere(
+              (c) => c.$name == 'latitude',
+              orElse: () =>
+                  throw Exception('Latitude column not found in $table'),
+            );
+            final lonField = dynamicTable.$columns.firstWhere(
+              (c) => c.$name == 'longitude',
+              orElse: () =>
+                  throw Exception('Longitude column not found in $table'),
+            );
+
+            centerLat = filter.coordinates!.latitude;
+            centerLon = filter.coordinates!.longitude;
+            radiusInKm = (filter.value as num).toDouble();
+
+            const earthRadius = 6371.0;
+            const degToRad = math.pi / 180.0;
+
+            final deltaLat = radiusInKm / earthRadius;
+            final deltaLon =
+                radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+
+            final minLat = centerLat - deltaLat;
+            final maxLat = centerLat + deltaLat;
+            final minLon = centerLon - deltaLon;
+            final maxLon = centerLon + deltaLon;
+
+            final latExpr = latField as Expression<double>;
+            final lonExpr = lonField as Expression<double>;
+
+            // SQL bounding box
+            final boundingBox = latExpr.isBetweenValues(minLat, maxLat) &
+                lonExpr.isBetweenValues(minLon, maxLon);
+
+            whereClauses.add(boundingBox);
+            break;
+          }
+
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
       }
-    }).toList();
+    }
 
     if (whereClauses.isNotEmpty) {
       query.where(buildAnd(whereClauses));
     }
 
-    // Apply pagination
+    // Select all columns from the table
+    query.addColumns(dynamicTable.$columns);
+
+    // Pagination
     if (pagination != null) {
       query.limit(pagination.limit, offset: pagination.offset);
     }
 
-    final List<Expression> selectedExpressions = [];
+    final results = await query.get();
 
-    query.addColumns(dynamicTable.$columns);
-    selectedExpressions.addAll(dynamicTable.$columns);
-
-    final rows = await query.get();
-
-    return rows.map((row) {
+    // Manual haversine filtering for 'within'
+    List<Map<String, dynamic>> rows = results.map((row) {
       final rowMap = {
         for (final column in dynamicTable.$columns)
           column.$name: column is GeneratedColumnWithTypeConverter
               ? row.readWithConverter(column)
               : row.read(column),
       };
-      rowMap['modelName'] = _snakeToCamel(table); // add model name to help filter later
-      // ✅ Decode JSON for additionalFields if it exists
+      rowMap['modelName'] = _snakeToCamel(table);
+
       if (rowMap.containsKey('additional_fields')) {
         final raw = rowMap['additional_fields'];
         if (raw is String && raw.trim().isNotEmpty) {
@@ -283,12 +350,41 @@ class SearchEntityRepository extends LocalRepository{
           }
         }
       }
+
       return rowMap;
     }).toList();
+
+    // Final precise radius filter
+    if (centerLat != null && centerLon != null && radiusInKm != null) {
+      const earthRadius = 6371.0;
+      const degToRad = math.pi / 180.0;
+
+      double haversine(double lat1, double lon1, double lat2, double lon2) {
+        final dLat = (lat2 - lat1) * degToRad;
+        final dLon = (lon2 - lon1) * degToRad;
+        final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+            math.cos(lat1 * degToRad) *
+                math.cos(lat2 * degToRad) *
+                math.sin(dLon / 2) *
+                math.sin(dLon / 2);
+        final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+        return earthRadius * c;
+      }
+
+      rows = rows.where((row) {
+        final lat = row['latitude'] as double?;
+        final lon = row['longitude'] as double?;
+        if (lat == null || lon == null) return false;
+        return haversine(centerLat!, centerLon!, lat, lon) <= radiusInKm!;
+      }).toList();
+    }
+
+    return rows;
   }
 }
 
-EntityModel dynamicEntityModelFromMap(String modelName, Map<String, dynamic> map) {
+EntityModel dynamicEntityModelFromMap(
+    String modelName, Map<String, dynamic> map) {
   switch (modelName) {
     case 'individual':
       return IndividualModelMapper.fromMap(map);
@@ -306,7 +402,7 @@ EntityModel dynamicEntityModelFromMap(String modelName, Map<String, dynamic> map
 String camelToSnake(String input) {
   return input.replaceAllMapped(
     RegExp(r'[A-Z]'),
-        (match) => '_${match.group(0)!.toLowerCase()}',
+    (match) => '_${match.group(0)!.toLowerCase()}',
   );
 }
 
@@ -334,7 +430,8 @@ dynamic _transformValue(dynamic value) {
 
 String _snakeToCamel(String input) {
   final parts = input.split('_');
-  return parts.first + parts.skip(1).map((p) => p[0].toUpperCase() + p.substring(1)).join();
+  return parts.first +
+      parts.skip(1).map((p) => p[0].toUpperCase() + p.substring(1)).join();
 }
 
 Expression<bool> buildDynamicExpression({
@@ -347,7 +444,8 @@ Expression<bool> buildDynamicExpression({
   try {
     // For null-based methods like isNull(), isNotNull()
     if (operator == 'isNull' || operator == 'isNotNull') {
-      return Function.apply(col.noSuchMethod, [Invocation.method(symbol, [])]) as Expression<bool>;
+      return Function.apply(col.noSuchMethod, [Invocation.method(symbol, [])])
+          as Expression<bool>;
     }
 
     // For list-based methods like isIn(), isNotIn()
@@ -356,7 +454,9 @@ Expression<bool> buildDynamicExpression({
     }
 
     // Normal method with one argument
-    return Function.apply(col.noSuchMethod, [Invocation.method(symbol, [value])]) as Expression<bool>;
+    return Function.apply(col.noSuchMethod, [
+      Invocation.method(symbol, [value])
+    ]) as Expression<bool>;
   } catch (e) {
     throw Exception("Failed to apply operator '$operator' on column: $e");
   }
@@ -393,4 +493,3 @@ Future<List<RelationshipMapping>> _findShortestPath({
 
   return [];
 }
-
