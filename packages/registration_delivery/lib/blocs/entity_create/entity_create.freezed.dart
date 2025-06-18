@@ -236,7 +236,7 @@ mixin _$EntityCreateState {
   TResult when<TResult extends Object?>({
     required TResult Function() create,
     required TResult Function() loading,
-    required TResult Function() persisted,
+    required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -244,7 +244,7 @@ mixin _$EntityCreateState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? create,
     TResult? Function()? loading,
-    TResult? Function()? persisted,
+    TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -252,7 +252,7 @@ mixin _$EntityCreateState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? create,
     TResult Function()? loading,
-    TResult Function()? persisted,
+    TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
@@ -346,7 +346,7 @@ class _$EntityCreateInitialStateImpl implements EntityCreateInitialState {
   TResult when<TResult extends Object?>({
     required TResult Function() create,
     required TResult Function() loading,
-    required TResult Function() persisted,
+    required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) {
     return create();
@@ -357,7 +357,7 @@ class _$EntityCreateInitialStateImpl implements EntityCreateInitialState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? create,
     TResult? Function()? loading,
-    TResult? Function()? persisted,
+    TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) {
     return create?.call();
@@ -368,7 +368,7 @@ class _$EntityCreateInitialStateImpl implements EntityCreateInitialState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? create,
     TResult Function()? loading,
-    TResult Function()? persisted,
+    TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -464,7 +464,7 @@ class _$EntityCreateLoadingStateImpl implements EntityCreateLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() create,
     required TResult Function() loading,
-    required TResult Function() persisted,
+    required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -475,7 +475,7 @@ class _$EntityCreateLoadingStateImpl implements EntityCreateLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? create,
     TResult? Function()? loading,
-    TResult? Function()? persisted,
+    TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -486,7 +486,7 @@ class _$EntityCreateLoadingStateImpl implements EntityCreateLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? create,
     TResult Function()? loading,
-    TResult Function()? persisted,
+    TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -544,6 +544,8 @@ abstract class _$$EntityCreatePersistedStateImplCopyWith<$Res> {
           _$EntityCreatePersistedStateImpl value,
           $Res Function(_$EntityCreatePersistedStateImpl) then) =
       __$$EntityCreatePersistedStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<EntityModel> entities});
 }
 
 /// @nodoc
@@ -555,37 +557,69 @@ class __$$EntityCreatePersistedStateImplCopyWithImpl<$Res>
       _$EntityCreatePersistedStateImpl _value,
       $Res Function(_$EntityCreatePersistedStateImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? entities = null,
+  }) {
+    return _then(_$EntityCreatePersistedStateImpl(
+      entities: null == entities
+          ? _value._entities
+          : entities // ignore: cast_nullable_to_non_nullable
+              as List<EntityModel>,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$EntityCreatePersistedStateImpl implements EntityCreatePersistedState {
-  const _$EntityCreatePersistedStateImpl();
+  const _$EntityCreatePersistedStateImpl(
+      {required final List<EntityModel> entities})
+      : _entities = entities;
+
+  final List<EntityModel> _entities;
+  @override
+  List<EntityModel> get entities {
+    if (_entities is EqualUnmodifiableListView) return _entities;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_entities);
+  }
 
   @override
   String toString() {
-    return 'EntityCreateState.persisted()';
+    return 'EntityCreateState.persisted(entities: $entities)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$EntityCreatePersistedStateImpl);
+            other is _$EntityCreatePersistedStateImpl &&
+            const DeepCollectionEquality().equals(other._entities, _entities));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_entities));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$EntityCreatePersistedStateImplCopyWith<_$EntityCreatePersistedStateImpl>
+      get copyWith => __$$EntityCreatePersistedStateImplCopyWithImpl<
+          _$EntityCreatePersistedStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() create,
     required TResult Function() loading,
-    required TResult Function() persisted,
+    required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) {
-    return persisted();
+    return persisted(entities);
   }
 
   @override
@@ -593,10 +627,10 @@ class _$EntityCreatePersistedStateImpl implements EntityCreatePersistedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? create,
     TResult? Function()? loading,
-    TResult? Function()? persisted,
+    TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) {
-    return persisted?.call();
+    return persisted?.call(entities);
   }
 
   @override
@@ -604,12 +638,12 @@ class _$EntityCreatePersistedStateImpl implements EntityCreatePersistedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? create,
     TResult Function()? loading,
-    TResult Function()? persisted,
+    TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (persisted != null) {
-      return persisted();
+      return persisted(entities);
     }
     return orElse();
   }
@@ -653,7 +687,14 @@ class _$EntityCreatePersistedStateImpl implements EntityCreatePersistedState {
 }
 
 abstract class EntityCreatePersistedState implements EntityCreateState {
-  const factory EntityCreatePersistedState() = _$EntityCreatePersistedStateImpl;
+  const factory EntityCreatePersistedState(
+          {required final List<EntityModel> entities}) =
+      _$EntityCreatePersistedStateImpl;
+
+  List<EntityModel> get entities;
+  @JsonKey(ignore: true)
+  _$$EntityCreatePersistedStateImplCopyWith<_$EntityCreatePersistedStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -725,7 +766,7 @@ class _$EntityCreateErrorStateImpl implements EntityCreateErrorState {
   TResult when<TResult extends Object?>({
     required TResult Function() create,
     required TResult Function() loading,
-    required TResult Function() persisted,
+    required TResult Function(List<EntityModel> entities) persisted,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -736,7 +777,7 @@ class _$EntityCreateErrorStateImpl implements EntityCreateErrorState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? create,
     TResult? Function()? loading,
-    TResult? Function()? persisted,
+    TResult? Function(List<EntityModel> entities)? persisted,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -747,7 +788,7 @@ class _$EntityCreateErrorStateImpl implements EntityCreateErrorState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? create,
     TResult Function()? loading,
-    TResult Function()? persisted,
+    TResult Function(List<EntityModel> entities)? persisted,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {

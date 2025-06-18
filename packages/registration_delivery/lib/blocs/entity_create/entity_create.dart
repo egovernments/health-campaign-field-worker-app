@@ -39,15 +39,12 @@ class EntityCreateBloc extends Bloc<EntityCreateEvent, EntityCreateState> {
     emit(const EntityCreateState.loading());
 
     try {
-        for (final entity in event.entities) {
-          // Use the getDataRepositoryFromModel function to get the repository
-          final repository = getDataRepositoryFromModel(entity as EntityModel);
+      for (final entity in event.entities) {
+        final repository = getDataRepositoryFromModel(entity as EntityModel);
+        await repository.create(entity);
+      }
 
-          // Now you can call create on the appropriate repository
-          await repository.create(entity);
-        }
-
-      emit(const EntityCreateState.persisted());
+      emit(EntityCreateState.persisted(entities: event.entities.cast<EntityModel>()));
     } catch (e) {
       emit(EntityCreateState.error(e.toString()));
     }
@@ -83,7 +80,9 @@ class EntityCreateEvent with _$EntityCreateEvent {
 class EntityCreateState with _$EntityCreateState {
   const factory EntityCreateState.create() = EntityCreateInitialState;
   const factory EntityCreateState.loading() = EntityCreateLoadingState;
-  const factory EntityCreateState.persisted() = EntityCreatePersistedState;
+  const factory EntityCreateState.persisted({
+    required List<EntityModel> entities,
+  }) = EntityCreatePersistedState;
   const factory EntityCreateState.error(String message) = EntityCreateErrorState;
 }
 

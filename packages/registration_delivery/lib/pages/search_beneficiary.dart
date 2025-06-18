@@ -96,7 +96,19 @@ class _SearchBeneficiaryPageState
         if (createState is EntityCreateLoadingState) {
         }else if (createState is EntityCreatePersistedState ) {
           Navigator.of(context, rootNavigator: true).pop();
-          context.router.push( BeneficiaryAcknowledgementRoute(enableViewHousehold: false));
+          final householdModel = createState.entities
+              .whereType<HouseholdModel>()
+              .firstOrNull;
+          if (householdModel != null) {
+            context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
+              SearchHouseholdsEvent.searchByHousehold(
+                householdModel: householdModel,
+                projectId: RegistrationDeliverySingleton().projectId!,
+                isProximityEnabled: false,
+              ),
+            );
+          }
+          context.router.push( BeneficiaryAcknowledgementRoute(enableViewHousehold: true));
         }else if(createState is EntityCreateErrorState){
           Navigator.of(context, rootNavigator: true).pop();
           context.router.push( BeneficiaryErrorRoute(enableViewHousehold: false));
