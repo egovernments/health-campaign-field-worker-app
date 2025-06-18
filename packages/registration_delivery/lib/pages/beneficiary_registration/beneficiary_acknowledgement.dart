@@ -43,7 +43,7 @@ class BeneficiaryAcknowledgementPageState
               ?? i18.acknowledgementSuccess.acknowledgementLabelText),
           actions: [
             if((widget.enableViewHousehold ?? false) && (beneficiaryAcknowledgementTemplate
-                ?.properties?[registration_keys.commonKeys.primaryButtonKey]?.hidden ?? false == false))
+                ?.properties?[registration_keys.commonKeys.primaryButtonKey]?.hidden !=true))
               DigitButton(
                 label: localizations.translate(
                   beneficiaryAcknowledgementTemplate
@@ -62,7 +62,7 @@ class BeneficiaryAcknowledgementPageState
                 type: DigitButtonType.primary,
                 size: DigitButtonSize.large),
             if((beneficiaryAcknowledgementTemplate
-                ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.hidden ?? false == false))
+                ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.hidden !=true))
               DigitButton(
                 label: localizations
                     .translate(beneficiaryAcknowledgementTemplate
