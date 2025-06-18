@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:registration_bloc/models/entities/household_member.dart';
 import 'package:registration_bloc/models/global_search_params.dart';
-import '../../models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household.dart';
 import '../../models/entities/project_beneficiary.dart';
 
 class SearchEntityRepository extends LocalRepository{
@@ -18,7 +19,7 @@ class SearchEntityRepository extends LocalRepository{
 
   @override
   DataModelType get type => throw UnimplementedError();
-  Future<List<EntityModel>> searchEntities({
+  Future<Map<String, List<EntityModel>>> searchEntities({
     required List<SearchFilter> filters,
     required Map<String, List<RelationshipMapping>> relationshipGraph,
     required Map<String, Map<String, NestedFieldMapping> > nestedModelMapping,
@@ -34,7 +35,7 @@ class SearchEntityRepository extends LocalRepository{
     );
   }
 
-  Future<List<EntityModel>> _buildAndExecuteSearchQuery({
+  Future<Map<String, List<EntityModel>>> _buildAndExecuteSearchQuery({
     required List<SearchFilter> filters,
     required Map<String, List<RelationshipMapping>> relationshipGraph,
     required Map<String, Map<String, NestedFieldMapping>> nestedModelMapping,
@@ -46,7 +47,6 @@ class SearchEntityRepository extends LocalRepository{
     final allResults = <Map<String, dynamic>>[];
     final modelToResults = <String, List<Map<String, dynamic>>>{};
 
-    // Query root model
     final rootResults = await _queryRawTable(
       table: rootTable,
       filters: filters,
@@ -58,7 +58,6 @@ class SearchEntityRepository extends LocalRepository{
     modelToResults[rootTable] = hydratedRoot;
     allResults.addAll(hydratedRoot);
 
-    // Step 2: For each selected model, find shortest path and query
     for (final model in select) {
       if (queriedModels.contains(model)) continue;
 
@@ -105,13 +104,18 @@ class SearchEntityRepository extends LocalRepository{
       queriedModels.add(model);
     }
 
-    // Step 3: Map to EntityModel
-    final results = allResults
-        .where((row) => select.contains(row['modelName']))
-        .map((row) => dynamicEntityModelFromMap(row['modelName'], snakeToCamelDeep(row)))
-        .toList();
+    // Group results by model name
+    final Map<String, List<EntityModel>> groupedResults = {};
 
-    return results;
+    for (final row in allResults) {
+      final modelName = row['modelName'] as String;
+      if (!select.contains(modelName)) continue;
+
+      final entity = dynamicEntityModelFromMap(modelName, snakeToCamelDeep(row));
+      groupedResults.putIfAbsent(modelName, () => []).add(entity);
+    }
+
+    return groupedResults;
   }
 
   Future<List<Map<String, dynamic>>> _hydrateRawRows(
@@ -158,9 +162,17 @@ class SearchEntityRepository extends LocalRepository{
 
       // Attach hydrated data to each enriched row
       for (final row in enrichedRows) {
+        final localValue = row[localKeySnake];
+        if (localValue == null) continue;
+
+        // Match related rows based on foreign key
+        final relatedRows = targetResults.where((targetRow) {
+          return targetRow[camelToSnake(field.foreignKey)] == localValue;
+        }).toList();
+
         row[entry.key] = field.type == NestedMappingType.one
-            ? (targetResults.isNotEmpty ? targetResults.first : null)
-            : targetResults;
+            ? (relatedRows.isNotEmpty ? relatedRows.first : null)
+            : relatedRows;
       }
     }
 
@@ -256,7 +268,21 @@ class SearchEntityRepository extends LocalRepository{
               ? row.readWithConverter(column)
               : row.read(column),
       };
-      rowMap['modelName'] = table; // add model name to help filter later
+      rowMap['modelName'] = _snakeToCamel(table); // add model name to help filter later
+      // ✅ Decode JSON for additionalFields if it exists
+      if (rowMap.containsKey('additional_fields')) {
+        final raw = rowMap['additional_fields'];
+        if (raw is String && raw.trim().isNotEmpty) {
+          try {
+            final decoded = jsonDecode(raw);
+            if (decoded is Map<String, dynamic>) {
+              rowMap['additional_fields'] = decoded;
+            }
+          } catch (e) {
+            debugPrint('Failed to decode additional_fields JSON: $e');
+          }
+        }
+      }
       return rowMap;
     }).toList();
   }

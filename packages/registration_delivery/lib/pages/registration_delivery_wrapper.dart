@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,21 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                     const RelationshipMapping(from: 'name', to: 'individual', localKey: 'individualClientReferenceId', foreignKey: 'clientReferenceId'),
                     const RelationshipMapping(from: 'householdMember', to: 'individual', localKey: 'individualClientReferenceId', foreignKey: 'clientReferenceId'),
                     const RelationshipMapping(from: 'householdMember', to: 'household', localKey: 'householdClientReferenceId', foreignKey: 'clientReferenceId'),
+                    // Conditional mapping
+                    if (RegistrationDeliverySingleton().beneficiaryType == BeneficiaryType.household)
+                      const RelationshipMapping(
+                        from: 'projectBeneficiary',
+                        to: 'household',
+                        localKey: 'beneficiaryClientReferenceId',
+                        foreignKey: 'clientReferenceId',
+                      )
+                    else
+                      const RelationshipMapping(
+                        from: 'projectBeneficiary',
+                        to: 'individual',
+                        localKey: 'beneficiaryClientReferenceId',
+                        foreignKey: 'clientReferenceId',
+                      ),
                   ],
                   nestedModelMappings: [
                     const NestedModelMapping(

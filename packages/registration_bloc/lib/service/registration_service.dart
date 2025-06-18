@@ -75,7 +75,7 @@ class RegistrationService {
   }
 
 
-  Future<List<EntityModel>> searchHouseholds({
+  Future<Map<String, List<EntityModel>>> searchHouseholds({
     required GlobalSearchParameters query,
   }) async {
 

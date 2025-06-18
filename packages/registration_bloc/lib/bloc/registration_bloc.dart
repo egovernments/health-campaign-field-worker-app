@@ -117,7 +117,7 @@ class RegistrationEvent with _$RegistrationEvent {
 class RegistrationState with _$RegistrationState {
   const factory RegistrationState.initial() = RegistrationStateInitial;
   const factory RegistrationState.loading() = RegistrationStateLoading;
-  const factory RegistrationState.loaded(FutureOr<List<EntityModel>> results) = RegistrationStateLoaded;
+  const factory RegistrationState.loaded(Map<String, List<EntityModel>> results) = RegistrationStateLoaded;
   const factory RegistrationState.persisted(List<EntityModel> entities) = RegistrationStatePersisted;
   const factory RegistrationState.error(String message) = RegistrationStateError;
 }
