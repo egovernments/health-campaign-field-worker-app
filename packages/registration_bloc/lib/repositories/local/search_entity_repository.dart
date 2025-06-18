@@ -206,7 +206,7 @@ class SearchEntityRepository extends LocalRepository {
     void Function(int count)? onCountFetched,
   }) async {
     final dynamicTable = sql.allTables.firstWhere(
-          (t) => t.actualTableName == table,
+      (t) => t.actualTableName == table,
       orElse: () => throw Exception('Table $table not found'),
     );
 
@@ -218,16 +218,17 @@ class SearchEntityRepository extends LocalRepository {
       // Handle 'within' filter separately
       if (filter.operator == 'within') {
         if (filter.coordinates == null || filter.value == null) {
-          throw Exception("Missing coordinates or radius for 'within' operator");
+          throw Exception(
+              "Missing coordinates or radius for 'within' operator");
         }
 
         // TODO: Avoid hardcoded column names 'latitude' and 'longitude' in future
         final latField = dynamicTable.$columns.firstWhere(
-              (c) => c.$name == 'latitude',
+          (c) => c.$name == 'latitude',
           orElse: () => throw Exception('Latitude column not found in $table'),
         );
         final lonField = dynamicTable.$columns.firstWhere(
-              (c) => c.$name == 'longitude',
+          (c) => c.$name == 'longitude',
           orElse: () => throw Exception('Longitude column not found in $table'),
         );
 
@@ -239,7 +240,8 @@ class SearchEntityRepository extends LocalRepository {
         const degToRad = math.pi / 180.0;
 
         final deltaLat = radiusInKm / earthRadius;
-        final deltaLon = radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
+        final deltaLon =
+            radiusInKm / (earthRadius * math.cos(centerLat * degToRad));
 
         final minLat = centerLat - deltaLat;
         final maxLat = centerLat + deltaLat;
@@ -250,7 +252,7 @@ class SearchEntityRepository extends LocalRepository {
         final lonExpr = lonField as Expression<double>;
 
         final boundingBox = latExpr.isBetweenValues(minLat, maxLat) &
-        lonExpr.isBetweenValues(minLon, maxLon);
+            lonExpr.isBetweenValues(minLon, maxLon);
 
         whereClauses.add(boundingBox);
         continue;
@@ -258,7 +260,7 @@ class SearchEntityRepository extends LocalRepository {
 
       final columnName = camelToSnake(filter.field);
       final col = dynamicTable.$columns.firstWhere(
-            (c) => c.$name == columnName,
+        (c) => c.$name == columnName,
         orElse: () => throw Exception('Column $columnName not found in $table'),
       );
 
@@ -267,7 +269,8 @@ class SearchEntityRepository extends LocalRepository {
           whereClauses.add(col.equals(filter.value));
           break;
         case 'contains':
-          whereClauses.add((col as Expression<String>).like('%${filter.value}%'));
+          whereClauses
+              .add((col as Expression<String>).like('%${filter.value}%'));
           break;
         case 'isNotNull':
           whereClauses.add(col.isNotNull());
@@ -299,18 +302,22 @@ class SearchEntityRepository extends LocalRepository {
     // Primary count query
     if (isPrimaryTable && onCountFetched != null) {
       // Run same query without pagination, only filters
-      final dataQueryForCount = buildSelectQuery(
-        table: table,
-        filters: filters,
-        whereClauses: whereClauses,
-      );
-
-      final rawResults = await dataQueryForCount.get();
+      final whereClause =
+          _buildWhereClauseRaw(filters.where((f) => f.root == table).toList());
+      final whereArgs =
+          _buildWhereArgs(filters.where((f) => f.root == table).toList());
 
       int finalCount;
 
-      // Apply final Haversine filter if needed
       if (centerLat != null && centerLon != null && radiusInKm != null) {
+        // Need lat/lon values for Haversine filtering
+        final countQuery = sql.customSelect(
+          'SELECT latitude, longitude FROM $table WHERE $whereClause',
+          variables: whereArgs,
+        );
+
+        final rawResults = await countQuery.get();
+
         const earthRadius = 6371.0;
         const degToRad = math.pi / 180.0;
 
@@ -327,34 +334,43 @@ class SearchEntityRepository extends LocalRepository {
         }
 
         finalCount = rawResults.where((row) {
-          final latColumn = dynamicTable.$columns.firstWhere(
-                (c) => c.$name == 'latitude',
-            orElse: () => throw Exception('latitude column missing'),
-          ) as GeneratedColumn<double>;
-
-          final lonColumn = dynamicTable.$columns.firstWhere(
-                (c) => c.$name == 'longitude',
-            orElse: () => throw Exception('longitude column missing'),
-          ) as GeneratedColumn<double>;
-
           double? lat;
           double? lon;
 
           try {
-            lat = row.read<double>(latColumn);
-          } catch (_) {
+            final latVal = row.read<double>('latitude');
+            lat = (latVal is int) ? latVal.toDouble() : latVal as double?;
+          } catch (e) {
+            print('Failed to read latitude: $e');
             lat = null;
           }
+
           try {
-            lon = row.read<double>(lonColumn);
-          } catch (_) {
+            final lonVal = row.read<double>('longitude');
+            lon = (lonVal is int) ? lonVal.toDouble() : lonVal as double?;
+          } catch (e) {
+            print('Failed to read longitude: $e');
             lon = null;
           }
-          if (lat == null || lon == null) return false;
-          return haversine(centerLat!, centerLon!, lat, lon) <= radiusInKm!;
+
+          if (lat == null || lon == null) {
+            print('Skipping row due to null lat/lon');
+            return false;
+          }
+
+          final distance = haversine(centerLat!, centerLon!, lat, lon);
+          print('Lat: $lat, Lon: $lon → Distance: $distance km');
+          return distance <= radiusInKm!;
         }).length;
       } else {
-        finalCount = rawResults.length;
+        // Original optimized COUNT query
+        final countQuery = sql.customSelect(
+          'SELECT COUNT(*) AS total FROM $table WHERE $whereClause',
+          variables: whereArgs,
+        );
+
+        final rawResults = await countQuery.get();
+        finalCount = rawResults.first.read<int>('total');
       }
 
       onCountFetched(finalCount);
@@ -433,7 +449,7 @@ class SearchEntityRepository extends LocalRepository {
     required List<Expression<bool>> whereClauses,
   }) {
     final dynamicTable = sql.allTables.firstWhere(
-          (t) => t.actualTableName == table,
+      (t) => t.actualTableName == table,
       orElse: () => throw Exception('Table $table not found'),
     );
 
@@ -471,7 +487,7 @@ class SearchEntityRepository extends LocalRepository {
           final values = filter.value as List;
           return '$column NOT IN (${List.filled(values.length, '?').join(', ')})';
         case 'within':
-        // We'll handle bounding box manually; skip for raw SQL
+          // We'll handle bounding box manually; skip for raw SQL
           return '1 = 1'; // dummy true condition
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
@@ -498,7 +514,7 @@ class SearchEntityRepository extends LocalRepository {
         case 'isNotNull':
         case 'isNull':
         case 'within':
-        // No variable needed
+          // No variable needed
           break;
         default:
           throw Exception('Unsupported operator: ${filter.operator}');
@@ -507,8 +523,6 @@ class SearchEntityRepository extends LocalRepository {
 
     return args;
   }
-
-
 }
 
 EntityModel dynamicEntityModelFromMap(
