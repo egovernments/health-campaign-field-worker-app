@@ -6,10 +6,10 @@ import 'dart:math' as math;
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:registration_bloc/models/entities/household_member.dart';
 import 'package:registration_bloc/models/global_search_params.dart';
 import 'package:registration_delivery/models/entities/household.dart';
-import '../../models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
 class SearchEntityRepository extends LocalRepository {
   SearchEntityRepository(super.sql, super.opLogManager);
@@ -378,6 +378,7 @@ class SearchEntityRepository extends LocalRepository {
 
     // Data fetch query
     final dataQuery = buildSelectQuery(
+      isPrimaryTable: isPrimaryTable,
       table: table,
       filters: filters,
       pagination: pagination,
@@ -443,6 +444,7 @@ class SearchEntityRepository extends LocalRepository {
   }
 
   Selectable<TypedResult> buildSelectQuery({
+    required bool isPrimaryTable,
     required String table,
     required List<SearchFilter> filters,
     PaginationParams? pagination,
@@ -461,7 +463,7 @@ class SearchEntityRepository extends LocalRepository {
 
     query.addColumns(dynamicTable.$columns);
 
-    if (pagination != null) {
+    if (pagination != null && isPrimaryTable) {
       query.limit(pagination.limit, offset: pagination.offset);
     }
 

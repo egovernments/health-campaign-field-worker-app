@@ -99,6 +99,17 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                         ),
                       },
                     ),
+                    const NestedModelMapping(
+                      rootModel: 'household',
+                      fields: {
+                        'address': NestedFieldMapping(
+                          table: 'address',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'relatedClientReferenceId',
+                          type: NestedMappingType.one,
+                        ),
+                      },
+                    ),
                   ],
                   projectBeneficiaryRepository: context.repository<
                       ProjectBeneficiaryModel,

@@ -31,52 +31,70 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
       RegistrationWrapperLoadFromGlobal event,
       RegistrationWrapperEmitter emit,
       ) async {
-    final currentGlobalState = globalRegistrationBloc.state;
+    emit(state.copyWith(loading: true));
 
-    if (currentGlobalState is RegistrationStateLoaded) {
+    final completer = Completer<RegistrationStateLoaded>();
+
+    late final StreamSubscription subscription;
+    subscription = globalRegistrationBloc.stream.listen((globalState) {
+      if (globalState is RegistrationStateLoaded) {
+        subscription.cancel();
+        if (!completer.isCompleted) completer.complete(globalState);
+      } else if (globalState is RegistrationStateError) {
+        subscription.cancel();
+        if (!completer.isCompleted) {
+          completer.completeError(globalState.message ?? 'Unknown error');
+        }
+      }
+    });
+
+    // Trigger the global load
+    globalRegistrationBloc.add(RegistrationEvent.search(event.searchParams));
+
+    try {
+      final globalState = await completer.future;
+
+      // ✅ Now you are still within async handler scope, so this is safe
       final wrappers = <HouseholdWrapper>[];
 
-      final allHouseholds = (currentGlobalState.results['household'] ?? []).whereType<HouseholdModel>().toList();
-      final allMembers = (currentGlobalState.results['householdMember'] ?? []).whereType<HouseholdMemberModel>().toList();
-      final allIndividuals = (currentGlobalState.results['individual'] ?? []).whereType<IndividualModel>().toList();
-      final allBeneficiaries = (currentGlobalState.results['projectBeneficiary'] ?? []).whereType<ProjectBeneficiaryModel>().toList();
-      final allTasks = (currentGlobalState.results['task'] ?? []).whereType<TaskModel>().toList();
-      final allSideEffects = (currentGlobalState.results['sideEffect'] ?? []).whereType<SideEffectModel>().toList();
-      final allReferrals = (currentGlobalState.results['referral'] ?? []).whereType<ReferralModel>().toList();
+      final allHouseholds = (globalState.results['household'] ?? []).whereType<HouseholdModel>().toList();
+      final allMembers = (globalState.results['householdMember'] ?? []).whereType<HouseholdMemberModel>().toList();
+      final allIndividuals = (globalState.results['individual'] ?? []).whereType<IndividualModel>().toList();
+      final allBeneficiaries = (globalState.results['projectBeneficiary'] ?? []).whereType<ProjectBeneficiaryModel>().toList();
+      final allTasks = (globalState.results['task'] ?? []).whereType<TaskModel>().toList();
+      final allSideEffects = (globalState.results['sideEffect'] ?? []).whereType<SideEffectModel>().toList();
+      final allReferrals = (globalState.results['referral'] ?? []).whereType<ReferralModel>().toList();
 
       for (final headMember in allMembers.where((m) => m.isHeadOfHousehold == true)) {
         final household = allHouseholds.firstWhereOrNull(
-              (h) => h.clientReferenceId == headMember.householdClientReferenceId,
-        );
+                (h) => h.clientReferenceId == headMember.householdClientReferenceId);
 
         if (household == null) continue;
 
-        // Get all members of this household
         final householdMembers = allMembers
             .where((m) => m.householdClientReferenceId == household.clientReferenceId)
             .toList();
 
-        // Get all individuals for these members
         final householdIndividuals = allIndividuals
             .where((i) => householdMembers.any((m) => m.individualClientReferenceId == i.clientReferenceId))
             .toList();
 
-        // Determine beneficiaries based on beneficiary type
         final householdBeneficiaries = event.beneficiaryType == 'individual'
-            ? allBeneficiaries.where((b) => householdIndividuals.any((i) => i.clientReferenceId == b.beneficiaryClientReferenceId)).toList()
-            : allBeneficiaries.where((b) => b.beneficiaryClientReferenceId == household.clientReferenceId).toList();
+            ? allBeneficiaries
+            .where((b) => householdIndividuals.any((i) => i.clientReferenceId == b.beneficiaryClientReferenceId))
+            .toList()
+            : allBeneficiaries
+            .where((b) => b.beneficiaryClientReferenceId == household.clientReferenceId)
+            .toList();
 
-        // Tasks, side effects, referrals linked to household
         final tasks = allTasks.where((t) => t.clientReferenceId == household.clientReferenceId).toList();
         final sideEffects = allSideEffects.where((s) => s.clientReferenceId == household.clientReferenceId).toList();
         final referrals = allReferrals.where((r) => r.clientReferenceId == household.clientReferenceId).toList();
 
-        // Build wrapper
         wrappers.add(HouseholdWrapper(
           household: household,
           headOfHousehold: householdIndividuals.firstWhereOrNull(
-                (i) => i.clientReferenceId == headMember.individualClientReferenceId,
-          ),
+                  (i) => i.clientReferenceId == headMember.individualClientReferenceId),
           members: householdMembers,
           individuals: householdIndividuals,
           projectBeneficiaries: householdBeneficiaries,
@@ -86,9 +104,15 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
         ));
       }
 
-      emit(state.copyWith(householdMembers: wrappers, loading: false, totalCount: currentGlobalState.totalCount ?? 0, ));
-    } else {
-      emit(const RegistrationWrapperState(error: 'Global state not loaded or invalid.'));
+      emit(state.copyWith(
+        householdMembers: [...state.householdMembers, ...wrappers],
+        loading: false,
+        totalCount: globalState.totalCount ?? 0,
+        limit: event.searchParams.pagination?.limit,
+        offset: event.searchParams.pagination?.offset,
+      ));
+    } catch (e) {
+      emit(state.copyWith(householdMembers : [], loading: false, error: e.toString()));
     }
   }
 

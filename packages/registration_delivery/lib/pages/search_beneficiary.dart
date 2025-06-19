@@ -52,7 +52,7 @@ class _SearchBeneficiaryPageState
   final TextEditingController searchController = TextEditingController();
   bool isProximityEnabled = false;
   int offset = 0;
-  int limit = 10;
+  int limit = 2;
 
 
   double lat = 0.0;
@@ -250,6 +250,7 @@ class _SearchBeneficiaryPageState
                                       value: isProximityEnabled,
                                       onChanged: (value) {
                                         searchController.clear();
+                                        blocWrapper.add(const RegistrationWrapperEvent.clear());
                                         setState(() {
                                           isProximityEnabled = value;
                                           lat = locationState.latitude!;
@@ -652,113 +653,38 @@ class _SearchBeneficiaryPageState
     if (!isPagination) {
       blocWrapper.add(const RegistrationWrapperEvent.clear());
     }
-    if (RegistrationDeliverySingleton().beneficiaryType ==
-        BeneficiaryType.individual) {
-      if (isProximityEnabled ||
-          selectedFilters.isNotEmpty ||
-          searchController.text.isNotEmpty) {
-        final params = reg_params.GlobalSearchParameters(
-          filters: [
-            // reg_params.SearchFilter(
-            //   root: 'name',  // or 'individual', based on what you're searching
-            //   field: 'givenName',
-            //   operator: 'contains',
-            //   value: searchController.text,
-            // ),
-            // Location (radius-based) filter
+
+    if (isProximityEnabled ||
+        selectedFilters.isNotEmpty ||
+        searchController.text.isNotEmpty) {
+      final params = reg_params.GlobalSearchParameters(
+        filters: [
+          if(searchController.text.isNotEmpty && searchController.text.length> 2)
+          reg_params.SearchFilter(
+            root: 'name',  // or 'individual', based on what you're searching
+            field: 'givenName',
+            operator: 'contains',
+            value: searchController.text,
+          ),
+          if(isProximityEnabled)
             reg_params.SearchFilter(
               root: 'household',
-              field: 'location', // or whichever spatial field you're filtering
+              field: '',
               operator: 'within',
-              value: 5, // radius in kilometers
+              value: RegistrationDeliverySingleton().maxRadius,
               coordinates: reg_params.LatLng(
                 latitude: lat,
                 longitude: long,
               ),
             ),
-          ], // Optional: if you're resolving linked entities
-          select: ['individual', 'household', 'householdMember', 'projectBeneficiary'],  // Optional: which fields to return
-          pagination: const reg_params.PaginationParams(limit: 2, offset: 0),
-        );
-
-        context.read<RegistrationBloc>().add(
-           RegistrationEvent.search(params),
-        );
-
-        // blocWrapper.individualGlobalSearchBloc
-        //     .add(SearchHouseholdsEvent.individualGlobalSearch(
-        //         globalSearchParams: GlobalSearchParameters(
-        //   isProximityEnabled: isProximityEnabled,
-        //   latitude: lat,
-        //   projectId: RegistrationDeliverySingleton().projectId!,
-        //   longitude: long,
-        //   maxRadius: RegistrationDeliverySingleton().maxRadius,
-        //   nameSearch: searchController.text.trim().length > 2
-        //       ? searchController.text.trim()
-        //       : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-        //   filter: selectedFilters,
-        //   offset: isPagination
-        //       ? blocWrapper.individualGlobalSearchBloc.state.offset
-        //       : offset,
-        //   limit: isPagination
-        //       ? blocWrapper.individualGlobalSearchBloc.state.limit
-        //       : limit,
-        //   householdType: RegistrationDeliverySingleton().householdType,
-        // )));
-      }
-    } else {
-      if (isProximityEnabled ||
-          selectedFilters.isNotEmpty ||
-          searchController.text.isNotEmpty) {
-        final params = reg_params.GlobalSearchParameters(
-          filters: [
-            // reg_params.SearchFilter(
-            //   root: 'name',  // or 'individual', based on what you're searching
-            //   field: 'givenName',
-            //   operator: 'contains',
-            //   value: searchController.text,
-            // ),
-            // Location (radius-based) filter
-            reg_params.SearchFilter(
-              root: 'household',
-              field: '', // or whichever spatial field you're filtering
-              operator: 'within',
-              value: 5, // radius in kilometers
-              coordinates: reg_params.LatLng(
-                latitude: lat,
-                longitude: long,
-              ),
-            ),
-          ], // Optional: if you're resolving linked entities
-          primaryModel: 'household',
-          select: ['individual', 'household', 'householdMember', 'projectBeneficiary'],  // Optional: which fields to return
-          pagination: const reg_params.PaginationParams(limit: 2, offset: 0),
-        );
-
-        context.read<RegistrationBloc>().add(
-          RegistrationEvent.search(params),
-        );
-        // blocWrapper.houseHoldGlobalSearchBloc
-        //     .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
-        //         globalSearchParams: GlobalSearchParameters(
-        //   isProximityEnabled: isProximityEnabled,
-        //   latitude: lat,
-        //   longitude: long,
-        //   projectId: RegistrationDeliverySingleton().projectId!,
-        //   maxRadius: RegistrationDeliverySingleton().maxRadius,
-        //   nameSearch: searchController.text.trim().length > 2
-        //       ? searchController.text.trim()
-        //       : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-        //   filter: selectedFilters,
-        //   offset: isPagination
-        //       ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
-        //       : offset,
-        //   limit: isPagination
-        //       ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
-        //       : limit,
-        //   householdType: RegistrationDeliverySingleton().householdType,
-        // )));
-      }
+        ], // Optional: if you're resolving linked entities
+        primaryModel: 'individual',
+        select: ['individual', 'household', 'householdMember', 'projectBeneficiary'],  // Optional: which fields to return
+        pagination: isPagination ?  reg_params.PaginationParams(limit: blocWrapper.state.limit ?? limit, offset: (blocWrapper.state.offset ?? offset) + (blocWrapper.state.limit ?? limit)) : reg_params.PaginationParams(limit: limit, offset: offset),
+      );
+      blocWrapper.add(
+          RegistrationWrapperEvent.loadFromGlobal(searchParams: params, beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue())
+      );
     }
   }
 }
