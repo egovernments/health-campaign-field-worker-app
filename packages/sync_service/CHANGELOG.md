@@ -1,3 +1,8 @@
+## 1.0.2
+
+* Updated data_model version to latest
+* Published new version
+
 ## 1.0.1-dev.3-enumeration
 
 * Added singleUpdate based on the operationType SingleUpdate

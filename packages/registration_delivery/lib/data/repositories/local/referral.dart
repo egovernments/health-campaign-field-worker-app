@@ -153,7 +153,7 @@ class ReferralLocalRepository
   FutureOr<void> update(
     ReferralModel entity, {
     bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.update,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final referralCompanion = entity.companion;
@@ -168,7 +168,8 @@ class ReferralLocalRepository
         );
       });
 
-      await super.update(entity, createOpLog: createOpLog);
+      await super.update(entity,
+          createOpLog: createOpLog, dataOperation: dataOperation);
     });
   }
 

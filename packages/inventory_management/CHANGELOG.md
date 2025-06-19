@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Updated with latest packages data_model and digit_ui_components
+
 ## 1.0.6-dev.1-enumeration
 
 * Updated with data_model changes

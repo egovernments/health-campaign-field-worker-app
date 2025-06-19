@@ -143,13 +143,12 @@ class DigitScannerUtils {
             } else if (quantity > result.length) {
               // Store the parsed result if the quantity is greater than result length
               await storeValue(parsedResult);
-            } else if(quantity <= result.length) {
+            } else if (quantity <= result.length) {
               // Handle error if there is a mismatch in the scanned resource count
               await handleError(
                   localizations.translate(i18.scanner.scannedQtyExceed));
-            }
-            else{
-               // Handle error if there is a mismatch in the scanned resource
+            } else {
+              // Handle error if there is a mismatch in the scanned resource
               await handleError(
                   localizations.translate(i18.scanner.invalidBarcode));
             }

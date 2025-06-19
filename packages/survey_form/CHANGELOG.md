@@ -1,3 +1,8 @@
+## 1.0.3
+
+* Updated with latest packages data_model and digit_ui_components
+* Updating enumeration changes
+
 ## 1.0.2-dev.4-enumeration
 
 * Removed unwanted type check in attributes for local
