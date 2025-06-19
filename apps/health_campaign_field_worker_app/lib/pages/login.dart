@@ -103,6 +103,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           isRequired: true,
                           child: DigitTextFormInput(
                             keyboardType: TextInputType.text,
+                            initialValue: form.control(_userId).value,
                             errorMessage: field.errorText,
                             onChange: (value) {
                               form.control(_userId).value = value;
@@ -125,6 +126,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           ),
                           isRequired: true,
                           child: DigitPasswordFormInput(
+                            initialValue: form.control(_password).value,
                             errorMessage: field.errorText,
                             onChange: (value) {
                               form.control(_password).value = value;

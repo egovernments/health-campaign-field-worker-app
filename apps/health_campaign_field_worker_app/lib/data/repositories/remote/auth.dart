@@ -18,6 +18,7 @@ class AuthRepository {
     };
 
     final formData = FormData.fromMap(loginModel.toJson());
+
     final response = await _client.post(
       loginPath,
       data: formData,

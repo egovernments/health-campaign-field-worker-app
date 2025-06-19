@@ -36,6 +36,16 @@ abstract class OpLogManager<T extends EntityModel> {
         .createdByEqualTo(createdBy)
         .findAllSync();
 
+    final singleUpdateOpLogs = isar.opLogs
+        .filter()
+        .entityTypeEqualTo(type)
+        .operationEqualTo(DataOperation.singleUpdate)
+        .serverGeneratedIdIsNotNull()
+        .syncedUpEqualTo(false)
+        .syncedDownEqualTo(false)
+        .createdByEqualTo(createdBy)
+        .findAllSync();
+
     final updateOpLogs = isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
@@ -82,6 +92,7 @@ abstract class OpLogManager<T extends EntityModel> {
       updateOpLogs,
       deleteOpLogs,
       singleCreateOpLogs,
+      singleUpdateOpLogs,
       errorOpLogs,
       nonRecoverableOpLogs,
     ].expand((element) => element);
@@ -122,10 +133,8 @@ abstract class OpLogManager<T extends EntityModel> {
         .sortedBy((element) => element.createdAt)
         .where(
           (element) =>
-              element.entityType != DataModelType.service &&
               element.entityType != DataModelType.userLocation &&
               element.entityType != DataModelType.complaints,
-          // Added service so that we don't get the response from the server
         )
         .toList();
 
@@ -222,11 +231,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .clientReferenceIdEqualTo(model.clientReferenceId)
         .findAllSync();
 
-    for (final oplog in opLogs
-        .where(
-          (element) => element.entityType.name != DataModelType.service.name,
-        )
-        .toList()) {
+    for (final oplog in opLogs) {
       final entry = OpLogEntry.fromOpLog<T>(oplog);
 
       OpLogEntry updatedEntry = entry.copyWith(
@@ -332,6 +337,7 @@ abstract class OpLogManager<T extends EntityModel> {
   String getClientReferenceId(T entity);
 
   bool? getNonRecoverableError(T entity);
+
   T applyServerGeneratedIdToEntity(
     T entity,
     String serverGeneratedId,

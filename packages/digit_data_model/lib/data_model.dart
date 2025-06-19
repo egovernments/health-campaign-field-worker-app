@@ -64,6 +64,7 @@ export 'models/entities/document.dart';
 export 'models/entities/facility.dart';
 export 'models/entities/gender.dart';
 export 'models/entities/identifier.dart';
+export 'models/entities/identifier_types.dart';
 export 'models/entities/individual.dart';
 export 'models/entities/locality.dart';
 export 'models/entities/name.dart';
@@ -110,6 +111,7 @@ abstract class DataModel {
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
   final ClientAuditDetails? clientAuditDetails;
+
   const EntityModel({
     this.auditDetails,
     this.clientAuditDetails,
@@ -260,5 +262,6 @@ enum DataModelType {
   hFReferral,
   attendanceRegister,
   attendance,
-  userLocation
+  userLocation,
+  uniqueId,
 }

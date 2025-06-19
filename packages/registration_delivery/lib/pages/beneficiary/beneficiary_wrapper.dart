@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/parent_overview/parent_overview.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:survey_form/survey_form.dart';
 
@@ -105,6 +106,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               referralDataRepository: referral,
               individualGlobalSearchRepository:
                   individualGlobalSearchRepository,
+              serviceDataRepository: service,
               beneficiaryType:
                   RegistrationDeliverySingleton().beneficiaryType!),
         ),
@@ -130,6 +132,25 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               isEditing: isEditing,
             ),
             sideEffectRepository: sideEffect,
+          ),
+        ),
+        BlocProvider(
+          create: (_) => ParentOverviewBloc(
+            ParentOverviewState(
+              householdMemberWrapper: wrapper,
+            ),
+            individualRepository: individual,
+            householdRepository: household,
+            householdMemberRepository: householdMember,
+            projectBeneficiaryRepository: projectBeneficiary,
+            taskDataRepository: task,
+            sideEffectDataRepository: sideEffect,
+            referralDataRepository: referral,
+            individualGlobalSearchRepository:
+            individualGlobalSearchRepository,
+            serviceDataRepository: service,
+            beneficiaryType:
+            RegistrationDeliverySingleton().beneficiaryType!,
           ),
         ),
       ],

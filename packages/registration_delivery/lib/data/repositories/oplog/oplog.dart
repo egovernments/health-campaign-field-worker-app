@@ -1,4 +1,5 @@
 import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 
 import '../../../models/entities/household.dart';
 import '../../../models/entities/household_member.dart';
@@ -12,10 +13,10 @@ class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {
 
   @override
   HouseholdModel applyServerGeneratedIdToEntity(
-      HouseholdModel entity,
-      String serverGeneratedId,
-      int rowVersion,
-      ) =>
+    HouseholdModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
       entity.copyWith(
         id: serverGeneratedId,
         rowVersion: rowVersion,
@@ -41,10 +42,10 @@ class HouseholdMemberOpLogManager extends OpLogManager<HouseholdMemberModel> {
 
   @override
   HouseholdMemberModel applyServerGeneratedIdToEntity(
-      HouseholdMemberModel entity,
-      String serverGeneratedId,
-      int rowVersion,
-      ) =>
+    HouseholdMemberModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -68,10 +69,10 @@ class ProjectBeneficiaryOpLogManager
 
   @override
   ProjectBeneficiaryModel applyServerGeneratedIdToEntity(
-      ProjectBeneficiaryModel entity,
-      String serverGeneratedId,
-      int rowVersion,
-      ) =>
+    ProjectBeneficiaryModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -94,10 +95,10 @@ class TaskOpLogManager extends OpLogManager<TaskModel> {
 
   @override
   TaskModel applyServerGeneratedIdToEntity(
-      TaskModel entity,
-      String serverGeneratedId,
-      int rowVersion,
-      ) =>
+    TaskModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -118,10 +119,10 @@ class SideEffectOpLogManager extends OpLogManager<SideEffectModel> {
 
   @override
   SideEffectModel applyServerGeneratedIdToEntity(
-      SideEffectModel entity,
-      String serverGeneratedId,
-      int rowVersion,
-      ) =>
+    SideEffectModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -144,10 +145,10 @@ class ReferralOpLogManager extends OpLogManager<ReferralModel> {
 
   @override
   ReferralModel applyServerGeneratedIdToEntity(
-      ReferralModel entity,
-      String serverGeneratedId,
-      int rowVersion,
-      ) =>
+    ReferralModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -162,4 +163,39 @@ class ReferralOpLogManager extends OpLogManager<ReferralModel> {
   @override
   bool? getNonRecoverableError(ReferralModel entity) =>
       entity.nonRecoverableError;
+}
+
+class UniqueIdOpLogManager extends OpLogManager<UniqueIdPoolModel> {
+  UniqueIdOpLogManager(super.isar);
+
+  @override
+  UniqueIdPoolModel applyServerGeneratedIdToEntity(
+      UniqueIdPoolModel entity, String serverGeneratedId, int rowVersion) {
+    // TODO: implement applyServerGeneratedIdToEntity
+    throw UnimplementedError();
+  }
+
+  @override
+  String getClientReferenceId(UniqueIdPoolModel entity) {
+    // TODO: implement getClientReferenceId
+    throw UnimplementedError();
+  }
+
+  @override
+  bool? getNonRecoverableError(UniqueIdPoolModel entity) {
+    // TODO: implement getNonRecoverableError
+    throw UnimplementedError();
+  }
+
+  @override
+  int? getRowVersion(UniqueIdPoolModel entity) {
+    // TODO: implement getRowVersion
+    throw UnimplementedError();
+  }
+
+  @override
+  String? getServerGeneratedId(UniqueIdPoolModel entity) {
+    // TODO: implement getServerGeneratedId
+    throw UnimplementedError();
+  }
 }

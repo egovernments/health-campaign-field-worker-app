@@ -58,6 +58,8 @@ class DataModels {
         return DataModelType.referral;
       case 'HFReferrals':
         return DataModelType.hFReferral;
+      case 'Services':
+        return DataModelType.service;
       default:
         return DataModelType.householdMember;
     }

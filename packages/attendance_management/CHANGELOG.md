@@ -1,3 +1,7 @@
+## 1.0.4+2
+
+* Updated latest package versions
+
 ## 1.0.4+1
 
 * Updated data_model package path to pub version

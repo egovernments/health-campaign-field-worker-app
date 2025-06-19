@@ -16,6 +16,9 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:registration_delivery/data/repositories/local/unique_id_pool.dart';
+import 'package:registration_delivery/data/repositories/remote/unique_id_pool.dart';
+import 'package:registration_delivery/models/entities/unique_id_pool.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:survey_form/survey_form.dart';
 
@@ -234,6 +237,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => RegistrationDeliveryAddressRepo(
           sql,
           AddressOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>(
+        create: (_) => UniqueIdPoolLocalRepository(
+          sql,
+          UniqueIdOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -458,6 +468,19 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               dio,
               actionMap: actions,
             ),
+          ),
+        if (value == DataModelType.uniqueId)
+          RepositoryProvider<
+              RemoteRepository<UniqueIdPoolModel, UniqueIdPoolSearchModel>>(
+            create: (_) => UniqueIdPoolRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.uniqueId)
+          RepositoryProvider<UniqueIdPoolRemoteRepository>(
+            create: (context) =>
+                UniqueIdPoolRemoteRepository(dio, actionMap: actions),
           ),
         if (value == DataModelType.hFReferral)
           RepositoryProvider<

@@ -95,6 +95,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "actionMaster": "actions-test",
         "enabled": true,
       });
+
       await localSecureStore.setBoundaryRefetch(true);
 
       await localSecureStore.setRoleActions(actionsWrapper);

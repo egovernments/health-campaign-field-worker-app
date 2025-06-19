@@ -177,8 +177,9 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                       .selectedIndividual,
                                                   overViewBloc
                                                       .householdMemberWrapper
-                                                      .household)
-                                              ?.productVariants
+                                                      .household,
+                                                  context: context)?['criteria']
+                                              .productVariants
                                               ?.map((variant) =>
                                                   TaskResourceModel(
                                                     clientReferenceId:
@@ -373,7 +374,8 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                 overViewBloc.selectedIndividual,
                                                 overViewBloc
                                                     .householdMemberWrapper
-                                                    .household)!
+                                                    .household,
+                                                context: context)!['criteria']
                                             .productVariants!
                                             .map((ele) {
                                           final pv = variant!.firstWhere(
@@ -428,7 +430,9 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                               .selectedIndividual,
                                                           overViewBloc
                                                               .householdMemberWrapper
-                                                              .household)!
+                                                              .household,
+                                                          context:
+                                                              context)!['criteria']
                                                       .condition!),
                                             },
                                           ),
