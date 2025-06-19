@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:sync_service/utils/utils.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
@@ -122,11 +121,6 @@ class PerformSyncUp {
         final registry = SyncServiceSingleton()
             .registries
             ?.getSyncRegistries(typeGroupedEntity.key, remote);
-        if (registry == null) {
-          if (kDebugMode) {
-            print('no custom sync registry found for ${typeGroupedEntity.key}');
-          }
-        }
 
         // Handle non-recoverable errors
         if (listOfBatchedNonRecoverableErrorList.isNotEmpty) {
@@ -175,12 +169,7 @@ class PerformSyncUp {
           final registry = SyncServiceSingleton()
               .registries
               ?.getSyncRegistries(typeGroupedEntity.key, remote);
-          if (registry == null) {
-            if (kDebugMode) {
-              print(
-                  'no custom sync registry found for ${typeGroupedEntity.key}');
-            }
-          }
+
           for (final sublist in listOfBatchedOpLogList) {
             final entities = getEntityModel(sublist, local);
             if (operationGroupedEntity.key == DataOperation.create) {
@@ -192,21 +181,21 @@ class PerformSyncUp {
                     operationGroupedEntity: operationGroupedEntity,
                     typeGroupedEntity: typeGroupedEntity);
               } else {
-                remote.bulkCreate(entities);
+                await remote.bulkCreate(entities);
               }
             } else if (operationGroupedEntity.key == DataOperation.update) {
               await Future.delayed(const Duration(seconds: 1));
               if (registry != null) {
                 await registry.update(entities, local);
               } else {
-                remote.bulkUpdate(entities);
+                await remote.bulkUpdate(entities);
               }
             } else if (operationGroupedEntity.key == DataOperation.delete) {
               await Future.delayed(const Duration(seconds: 1));
               if (registry != null) {
                 await registry.delete(entities, local);
               } else {
-                remote.bulkDelete(entities);
+                await remote.bulkDelete(entities);
               }
             }
             if (operationGroupedEntity.key == DataOperation.singleCreate) {
@@ -214,12 +203,21 @@ class PerformSyncUp {
                 if (registry != null) {
                   await registry.singleCreate(element, local);
                 } else {
-                  remote.singleCreate(element);
+                  await remote.singleCreate(element);
+                }
+              }
+            }
+            if (operationGroupedEntity.key == DataOperation.singleUpdate) {
+              for (var element in entities) {
+                if (registry != null) {
+                  await registry.singleUpdate(element, local);
+                } else {
+                  await remote.singleUpdate(element);
                 }
               }
             }
             if (registry != null) {
-              registry.localMarkSyncUp(sublist, local);
+              await registry.localMarkSyncUp(sublist, local);
             } else {
               for (final syncedEntity in sublist) {
                 await local.markSyncedUp(
@@ -246,9 +244,15 @@ abstract class SyncUpOperation {
           operationGroupedEntity,
       required MapEntry<DataModelType, List<OpLogEntry<EntityModel>>>
           typeGroupedEntity});
+
   Future<void> update(List<EntityModel> entities, LocalRepository local);
+
   Future<void> delete(List<EntityModel> entities, LocalRepository local);
+
   Future<void> singleCreate(EntityModel entity, LocalRepository local);
+
+  Future<void> singleUpdate(EntityModel entity, LocalRepository local);
+
   Future<void> localMarkSyncUp(
       List<OpLogEntry<EntityModel>> entity, LocalRepository local);
 }

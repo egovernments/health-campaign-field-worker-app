@@ -130,7 +130,7 @@ packages:
     source: hosted
     version: "2.4.2"
   build_runner:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: build_runner
       sha256: "644dc98a0f179b872f612d3eb627924b578897c629788e858157fa5e704ca0c7"
@@ -201,6 +201,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.5"
+  carousel_slider:
+    dependency: transitive
+    description:
+      name: carousel_slider
+      sha256: "9c695cc963bf1d04a47bd6021f68befce8970bcd61d24938e1fb0918cf5d9c42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.1"
   characters:
     dependency: transitive
     description:
@@ -334,18 +342,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: bcb6c328a75df1442672e39c0dbae32bc9cb067a07a581bded672d2b748957b9
+      sha256: "85764601509108706433e241a838982b37fcce6d35abd9e9ceb4b6c712f768fc"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "1.1.1"
   digit_ui_components:
     dependency: "direct main"
     description:
       name: digit_ui_components
-      sha256: "687906c379faedf72f97277a2d0a844bbfa41c908a46fd998332d888694cbe78"
+      sha256: "861cf54ff775e854a3a620c13b6bc381fac97ac899f611115204fe48fa5b3eac"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2-dev.14"
+    version: "0.2.1+7"
   dio:
     dependency: "direct main"
     description:

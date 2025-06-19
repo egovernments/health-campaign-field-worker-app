@@ -190,6 +190,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     } catch (error) {
       emit(
         state.copyWith(
+          projects: [],
           loading: false,
           syncError: ProjectSyncErrorType.projectStaff,
         ),
@@ -255,40 +256,48 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       } catch (_) {
         emit(
           state.copyWith(
+            projects: [],
             loading: false,
             syncError: ProjectSyncErrorType.projectFacilities,
           ),
         );
+        return;
       }
+      try {
+        await _loadFacilities(projects, batchSize);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.facilities,
+          ),
+        );
+        return;
+      }
+
       try {
         await _loadProductVariants(projects);
       } catch (_) {
         emit(
           state.copyWith(
+            projects: [],
             loading: false,
             syncError: ProjectSyncErrorType.productVariants,
           ),
         );
+        return;
       }
       try {
         await _loadServiceDefinition(projects);
       } catch (_) {
         emit(
           state.copyWith(
+            projects: [],
             loading: false,
             syncError: ProjectSyncErrorType.serviceDefinitions,
           ),
         );
-      }
-      try {
-        await _loadServiceDefinition(projects);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            loading: false,
-            syncError: ProjectSyncErrorType.serviceDefinitions,
-          ),
-        );
+        return;
       }
     }
 
@@ -340,7 +349,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
 
     await projectFacilityLocalRepository.bulkCreate(projectFacilities);
+  }
 
+  FutureOr<void> _loadFacilities(
+      List<ProjectModel> projects, int batchSize) async {
     final facilities = await facilityRemoteRepository.search(
       FacilitySearchModel(tenantId: envConfig.variables.tenantId),
       limit: batchSize,
@@ -448,6 +460,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               await attendanceLogLocalRepository.bulkCreate(logs);
             } catch (_) {
               emit(state.copyWith(
+                projects: [],
                 loading: false,
                 syncError: ProjectSyncErrorType.project,
               ));
@@ -479,7 +492,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             action: ApiOperation.search.toValue(),
             entityName: DashboardResponseModel.schemaName);
 
-        final filteredDashboardConfig = filterDashboardConfig(dashboardConfig.isNotEmpty ? dashboardConfig.first.dashboardConfigs : null,
+        final filteredDashboardConfig = filterDashboardConfig(
+            dashboardConfig.isNotEmpty
+                ? dashboardConfig.first.dashboardConfigs
+                : null,
             event.model.additionalDetails?.projectType?.code ?? "");
 
         if (filteredDashboardConfig.isNotEmpty &&
@@ -507,8 +523,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               .map((i) => i.userUuid.toString())
               .toList();
           await processDashboardConfig(
-            dashboardConfig.first.dashboardConfigs?.where(
-                    (config) => config.projectTypeId == event.model.projectTypeId || config.projectTypeCode == event.model.projectType).first.charts  ?? [],
+            dashboardConfig.first.dashboardConfigs
+                    ?.where((config) =>
+                        config.projectTypeId == event.model.projectTypeId ||
+                        config.projectTypeCode == event.model.projectType)
+                    .first
+                    .charts ??
+                [],
             startDate,
             endDate,
             isar,
@@ -596,6 +617,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               codes: event.model.address?.boundary,
             ),
           );
+          if (boundaries.isEmpty) {
+            emit(
+              state.copyWith(
+                selectedProject: event.model,
+                loading: false,
+                syncError: ProjectSyncErrorType.boundary,
+              ),
+            );
+            return;
+          }
         }
         await boundaryLocalRepository.bulkCreate(boundaries);
         LeastLevelBoundarySingleton()
@@ -605,12 +636,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       await localSecureStore.setProjectSetUpComplete(event.model.id, true);
     } catch (_) {
       emit(state.copyWith(
+        projects: [],
         loading: false,
         syncError: ProjectSyncErrorType.boundary,
       ));
+      return;
     }
 
     emit(state.copyWith(
+      projects: [],
       selectedProject: event.model,
       loading: false,
       syncError: null,
@@ -667,6 +701,7 @@ enum ProjectSyncErrorType {
   projectStaff,
   project,
   projectFacilities,
+  facilities,
   productVariants,
   serviceDefinitions,
   boundary

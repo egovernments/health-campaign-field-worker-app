@@ -55,7 +55,7 @@ class FacilityRemoteRepository
           },
         );
       } catch (error) {
-        break; // Break out of the loop if an error occurs
+        rethrow;
       }
 
       final responseMap = response.data;

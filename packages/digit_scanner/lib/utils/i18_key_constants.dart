@@ -123,6 +123,8 @@ class AcknowledgementSuccess {
 class Scanner {
   const Scanner();
 
+  String get scannedQtyExceed => 'SCANNED_QTY_EXCEED_THAN_REQUIRED';
+
   String get changingCameraLens => 'CHANGING_CAMERA_LENS';
 
   String get flashOn => 'FLASH_ON';

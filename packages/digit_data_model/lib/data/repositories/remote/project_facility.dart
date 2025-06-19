@@ -17,10 +17,10 @@ class ProjectFacilityRemoteRepository
 
   @override
   FutureOr<List<ProjectFacilityModel>> search(
-      ProjectFacilitySearchModel query, {
-        int? offSet,
-        int? limit,
-      }) async {
+    ProjectFacilitySearchModel query, {
+    int? offSet,
+    int? limit,
+  }) async {
     int defaultBatchSize = limit ?? 100;
     int currentOffset = offSet ?? 0;
 
@@ -45,20 +45,20 @@ class ProjectFacilityRemoteRepository
               data: entityName == 'User'
                   ? query.toMap()
                   : {
-                isPlural
-                    ? entityNamePlural
-                    : entityName == 'ServiceDefinition'
-                    ? 'ServiceDefinitionCriteria'
-                    : entityName == 'Downsync'
-                    ? 'DownsyncCriteria'
-                    : entityName:
-                isPlural ? [query.toMap()] : query.toMap(),
-              },
+                      isPlural
+                              ? entityNamePlural
+                              : entityName == 'ServiceDefinition'
+                                  ? 'ServiceDefinitionCriteria'
+                                  : entityName == 'Downsync'
+                                      ? 'DownsyncCriteria'
+                                      : entityName:
+                          isPlural ? [query.toMap()] : query.toMap(),
+                    },
             );
           },
         );
       } catch (error) {
-        break; // Break out of the loop if an error occurs
+        rethrow;
       }
 
       final responseMap = response.data;
@@ -93,9 +93,11 @@ class ProjectFacilityRemoteRepository
         );
       }
 
-      final entityList = entityResponse.whereType<Map<String, dynamic>>().toList();
+      final entityList =
+          entityResponse.whereType<Map<String, dynamic>>().toList();
 
-      if (lastResponse != null && lastResponse.toString() == entityList.toString()) {
+      if (lastResponse != null &&
+          lastResponse.toString() == entityList.toString()) {
         // If the last response is equal to the current response, stop fetching more data
         break;
       }
@@ -103,7 +105,10 @@ class ProjectFacilityRemoteRepository
       List<ProjectFacilityModel> currentBatch;
 
       try {
-        currentBatch = entityList.map((e) => MapperContainer.globals.fromMap<ProjectFacilityModel>(e)).toList();
+        currentBatch = entityList
+            .map(
+                (e) => MapperContainer.globals.fromMap<ProjectFacilityModel>(e))
+            .toList();
       } catch (e) {
         rethrow;
       }
@@ -113,7 +118,8 @@ class ProjectFacilityRemoteRepository
       } else {
         allResults.addAll(currentBatch);
         currentOffset += defaultBatchSize;
-        lastResponse = entityList; // Update lastResponse to the current response
+        lastResponse =
+            entityList; // Update lastResponse to the current response
       }
     }
 

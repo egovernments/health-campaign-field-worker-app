@@ -367,6 +367,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   FutureOr<void> update(
     TaskModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.update,
   }) async {
     return retryLocalCallOperation(() async {
       final taskCompanion = entity.companion;
@@ -411,7 +412,8 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         batch.insertAllOnConflictUpdate(sql.taskResource, resourcesCompanions);
       });
 
-      await super.update(entity, createOpLog: createOpLog);
+      await super.update(entity,
+          createOpLog: createOpLog, dataOperation: dataOperation);
     });
   }
 
