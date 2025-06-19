@@ -57,8 +57,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   var entryTime = 0, exitTime = 0;
   var currentSelectedDate = DateTime.now().toString(), selectedSession = 0;
   bool markManualAttendance = false;
-  final GlobalKey _sortButtonKey = GlobalKey();
-  final colors = DigitColors();
+  final colors = const DigitColors();
 
   @override
   void initState() {
@@ -387,7 +386,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                   .getFormattedDateToDateTime(
                                                       currentSelectedDate)!,
                                               selectedSession,
-                                              entryTime.toString()),
+                                              'entryTime'),
                                       entryTime: entryTime,
                                       isSingleSession: false,
                                       exitTime: exitTime,
@@ -941,27 +940,17 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         ? DateTime.fromMillisecondsSinceEpoch(widget.registerModel.endDate!)
         : AttendanceDateTimeManagement.getFormattedDateToDateTime(
             currentSelectedDate)!;
-    entryTime = widget.registerModel
-                .additionalDetails?[EnumValues.sessions.toValue()] ==
-            2
-        ? AttendanceDateTimeManagement.getMillisecondEpoch(
-            dateSession,
-            isMorning ? 0 : 1,
-            "entryTime",
-          )
-        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 9)
-            .millisecondsSinceEpoch);
+    entryTime = AttendanceDateTimeManagement.getMillisecondEpoch(
+      dateSession,
+      isMorning ? 0 : 1,
+      "entryTime",
+    );
 
-    exitTime = widget.registerModel
-                .additionalDetails?[EnumValues.sessions.toValue()] ==
-            2
-        ? AttendanceDateTimeManagement.getMillisecondEpoch(
-            dateSession,
-            isMorning ? 0 : 1,
-            "exitTime",
-          )
-        : (DateTime(dateSession.year, dateSession.month, dateSession.day, 18)
-            .millisecondsSinceEpoch);
+    exitTime = AttendanceDateTimeManagement.getMillisecondEpoch(
+      dateSession,
+      isMorning ? 0 : 1,
+      "exitTime",
+    );
 
     individualLogBloc!.add(
       AttendanceIndividualLogSearchEvent(
@@ -974,7 +963,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             AttendanceDateTimeManagement.getFormattedDateToDateTime(
                 currentSelectedDate)!,
             isMorning ? 0 : 1,
-            entryTime.toString()),
+            'entryTime'),
         entryTime: entryTime,
         isSingleSession: false,
         exitTime: exitTime,
