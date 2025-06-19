@@ -24,6 +24,7 @@ class _HomePageShowcaseData {
         supervisorSyncData,
         deleteAll,
         db,
+        beneficiaryId,
         closedHouseHold,
       ];
 

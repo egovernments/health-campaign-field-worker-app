@@ -70,7 +70,8 @@ class _RecordReferralDetailsPageState
         ReferralReconServiceDefinitionState>(
       builder: (context, state) {
         return state.map(
-          empty: (value) => const Text('No Checklist'),
+          empty: (value) =>
+              Text(localizations.translate(i18.common.noResultsFound)),
           isloading: (value) => const Center(
             child: CircularProgressIndicator(),
           ),
@@ -182,12 +183,14 @@ class _RecordReferralDetailsPageState
                                                               referenceIds:
                                                                   recordState
                                                                       .mapOrNull(
-                                                                create: (value) => value
-                                                                        .viewOnly
-                                                                    ? [value
-                                                                    .hfReferralModel
-                                                                    ?.clientReferenceId ?? '']
-                                                                    : null,
+                                                                create: (value) =>
+                                                                    value.viewOnly &&
+                                                                            value.hfReferralModel?.clientReferenceId !=
+                                                                                null
+                                                                        ? [
+                                                                            value.hfReferralModel!.clientReferenceId
+                                                                          ]
+                                                                        : null,
                                                               ),
                                                             ),
                                                           ),
@@ -506,12 +509,12 @@ class _RecordReferralDetailsPageState
                                                                   referenceIds:
                                                                       recordState
                                                                           .mapOrNull(
-                                                                    create: (value) => value
-                                                                            .viewOnly
-                                                                        ? [value
-                                                                        .hfReferralModel
-                                                                        ?.clientReferenceId ?? '']
-                                                                        : null,
+                                                                    create: (value) =>
+                                                                        value.viewOnly
+                                                                            ? [
+                                                                                value.hfReferralModel?.clientReferenceId ?? ''
+                                                                              ]
+                                                                            : null,
                                                                   ),
                                                                 ),
                                                               ),
