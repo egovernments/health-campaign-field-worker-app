@@ -44,8 +44,8 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
 
             final List<String> tabs = isDistributor
                 ? [
-                    localizations.translate(i18.common.inventory),
-                    localizations.translate(i18.common.attendance),
+                    localizations.translate(i18.common.qrInventory),
+                    localizations.translate(i18.common.qrAttendance),
                   ]
                 : [];
 

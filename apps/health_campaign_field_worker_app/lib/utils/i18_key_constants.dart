@@ -140,9 +140,9 @@ class Common {
 
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
 
-  String get inventory => 'COMMON_INVENTORY';
+  String get qrInventory => 'QR_INVENTORY';
 
-   String get attendance => 'COMMON_ATTENDANCE';
+   String get qrAttendance => 'QR_ATTENDANCE';
 }
 
 class HomeShowcase {
