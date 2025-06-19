@@ -139,6 +139,10 @@ class Common {
   String get locationCapturing => 'CAPTURING_LOCATION';
 
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
+
+  String get inventory => 'COMMON_INVENTORY';
+
+   String get attendance => 'COMMON_ATTENDANCE';
 }
 
 class HomeShowcase {
