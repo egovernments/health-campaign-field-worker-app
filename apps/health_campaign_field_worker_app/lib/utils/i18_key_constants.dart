@@ -139,6 +139,10 @@ class Common {
   String get locationCapturing => 'CAPTURING_LOCATION';
 
   String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
+
+  String get qrInventory => 'QR_INVENTORY';
+
+   String get qrAttendance => 'QR_ATTENDANCE';
 }
 
 class HomeShowcase {
