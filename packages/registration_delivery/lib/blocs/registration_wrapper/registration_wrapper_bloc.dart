@@ -24,6 +24,7 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
   RegistrationWrapperBloc({required this.globalRegistrationBloc})
       : super(const RegistrationWrapperState()) {
     on<RegistrationWrapperLoadFromGlobal>(_handleLoadFromGlobal);
+    on<RegistrationWrapperClear>(_handleClear);
   }
 
   FutureOr<void> _handleLoadFromGlobal(
@@ -85,11 +86,19 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
         ));
       }
 
-      emit(state.copyWith(householdMembers: wrappers, loading: false));
+      emit(state.copyWith(householdMembers: wrappers, loading: false, totalCount: currentGlobalState.totalCount ?? 0, ));
     } else {
       emit(const RegistrationWrapperState(error: 'Global state not loaded or invalid.'));
     }
   }
+
+  FutureOr<void> _handleClear(
+      RegistrationWrapperClear event,
+      RegistrationWrapperEmitter emit,
+      ) async {
+    emit(const RegistrationWrapperState()); // Reset to initial default state
+  }
+
 }
 
 @freezed
@@ -98,6 +107,9 @@ class RegistrationWrapperEvent with _$RegistrationWrapperEvent {
     required GlobalSearchParameters searchParams,
     String? beneficiaryType,
   }) = RegistrationWrapperLoadFromGlobal;
+
+  const factory RegistrationWrapperEvent.clear() = RegistrationWrapperClear;
+
 }
 
 @freezed
@@ -109,7 +121,9 @@ class RegistrationWrapperState with _$RegistrationWrapperState {
     int? offset,
     int? limit,
     String? error,
+    @Default(0) int totalCount,
   }) = _RegistrationWrapperState;
+
 }
 
 @freezed

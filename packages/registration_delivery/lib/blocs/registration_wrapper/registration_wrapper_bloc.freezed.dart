@@ -16,13 +16,12 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$RegistrationWrapperEvent {
-  GlobalSearchParameters get searchParams => throw _privateConstructorUsedError;
-  String? get beneficiaryType => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)
         loadFromGlobal,
+    required TResult Function() clear,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -30,6 +29,7 @@ mixin _$RegistrationWrapperEvent {
     TResult? Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)?
         loadFromGlobal,
+    TResult? Function()? clear,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -37,6 +37,7 @@ mixin _$RegistrationWrapperEvent {
     TResult Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)?
         loadFromGlobal,
+    TResult Function()? clear,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -44,22 +45,21 @@ mixin _$RegistrationWrapperEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(RegistrationWrapperLoadFromGlobal value)
         loadFromGlobal,
+    required TResult Function(RegistrationWrapperClear value) clear,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(RegistrationWrapperClear value)? clear,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $RegistrationWrapperEventCopyWith<RegistrationWrapperEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -68,10 +68,6 @@ abstract class $RegistrationWrapperEventCopyWith<$Res> {
   factory $RegistrationWrapperEventCopyWith(RegistrationWrapperEvent value,
           $Res Function(RegistrationWrapperEvent) then) =
       _$RegistrationWrapperEventCopyWithImpl<$Res, RegistrationWrapperEvent>;
-  @useResult
-  $Res call({GlobalSearchParameters searchParams, String? beneficiaryType});
-
-  $GlobalSearchParametersCopyWith<$Res> get searchParams;
 }
 
 /// @nodoc
@@ -84,46 +80,17 @@ class _$RegistrationWrapperEventCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? searchParams = null,
-    Object? beneficiaryType = freezed,
-  }) {
-    return _then(_value.copyWith(
-      searchParams: null == searchParams
-          ? _value.searchParams
-          : searchParams // ignore: cast_nullable_to_non_nullable
-              as GlobalSearchParameters,
-      beneficiaryType: freezed == beneficiaryType
-          ? _value.beneficiaryType
-          : beneficiaryType // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $GlobalSearchParametersCopyWith<$Res> get searchParams {
-    return $GlobalSearchParametersCopyWith<$Res>(_value.searchParams, (value) {
-      return _then(_value.copyWith(searchParams: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
-abstract class _$$RegistrationWrapperLoadFromGlobalImplCopyWith<$Res>
-    implements $RegistrationWrapperEventCopyWith<$Res> {
+abstract class _$$RegistrationWrapperLoadFromGlobalImplCopyWith<$Res> {
   factory _$$RegistrationWrapperLoadFromGlobalImplCopyWith(
           _$RegistrationWrapperLoadFromGlobalImpl value,
           $Res Function(_$RegistrationWrapperLoadFromGlobalImpl) then) =
       __$$RegistrationWrapperLoadFromGlobalImplCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({GlobalSearchParameters searchParams, String? beneficiaryType});
 
-  @override
   $GlobalSearchParametersCopyWith<$Res> get searchParams;
 }
 
@@ -153,6 +120,14 @@ class __$$RegistrationWrapperLoadFromGlobalImplCopyWithImpl<$Res>
           : beneficiaryType // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $GlobalSearchParametersCopyWith<$Res> get searchParams {
+    return $GlobalSearchParametersCopyWith<$Res>(_value.searchParams, (value) {
+      return _then(_value.copyWith(searchParams: value));
+    });
   }
 }
 
@@ -201,6 +176,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     required TResult Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)
         loadFromGlobal,
+    required TResult Function() clear,
   }) {
     return loadFromGlobal(searchParams, beneficiaryType);
   }
@@ -211,6 +187,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult? Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)?
         loadFromGlobal,
+    TResult? Function()? clear,
   }) {
     return loadFromGlobal?.call(searchParams, beneficiaryType);
   }
@@ -221,6 +198,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)?
         loadFromGlobal,
+    TResult Function()? clear,
     required TResult orElse(),
   }) {
     if (loadFromGlobal != null) {
@@ -234,6 +212,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
   TResult map<TResult extends Object?>({
     required TResult Function(RegistrationWrapperLoadFromGlobal value)
         loadFromGlobal,
+    required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return loadFromGlobal(this);
   }
@@ -242,6 +221,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return loadFromGlobal?.call(this);
   }
@@ -250,6 +230,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
     if (loadFromGlobal != null) {
@@ -265,15 +246,125 @@ abstract class RegistrationWrapperLoadFromGlobal
       {required final GlobalSearchParameters searchParams,
       final String? beneficiaryType}) = _$RegistrationWrapperLoadFromGlobalImpl;
 
-  @override
   GlobalSearchParameters get searchParams;
-  @override
   String? get beneficiaryType;
-  @override
   @JsonKey(ignore: true)
   _$$RegistrationWrapperLoadFromGlobalImplCopyWith<
           _$RegistrationWrapperLoadFromGlobalImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$RegistrationWrapperClearImplCopyWith<$Res> {
+  factory _$$RegistrationWrapperClearImplCopyWith(
+          _$RegistrationWrapperClearImpl value,
+          $Res Function(_$RegistrationWrapperClearImpl) then) =
+      __$$RegistrationWrapperClearImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$RegistrationWrapperClearImplCopyWithImpl<$Res>
+    extends _$RegistrationWrapperEventCopyWithImpl<$Res,
+        _$RegistrationWrapperClearImpl>
+    implements _$$RegistrationWrapperClearImplCopyWith<$Res> {
+  __$$RegistrationWrapperClearImplCopyWithImpl(
+      _$RegistrationWrapperClearImpl _value,
+      $Res Function(_$RegistrationWrapperClearImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
+  const _$RegistrationWrapperClearImpl();
+
+  @override
+  String toString() {
+    return 'RegistrationWrapperEvent.clear()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RegistrationWrapperClearImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)
+        loadFromGlobal,
+    required TResult Function() clear,
+  }) {
+    return clear();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult? Function()? clear,
+  }) {
+    return clear?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    if (clear != null) {
+      return clear();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationWrapperLoadFromGlobal value)
+        loadFromGlobal,
+    required TResult Function(RegistrationWrapperClear value) clear,
+  }) {
+    return clear(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(RegistrationWrapperClear value)? clear,
+  }) {
+    return clear?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(RegistrationWrapperClear value)? clear,
+    required TResult orElse(),
+  }) {
+    if (clear != null) {
+      return clear(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class RegistrationWrapperClear implements RegistrationWrapperEvent {
+  const factory RegistrationWrapperClear() = _$RegistrationWrapperClearImpl;
 }
 
 /// @nodoc
@@ -285,6 +376,7 @@ mixin _$RegistrationWrapperState {
   int? get offset => throw _privateConstructorUsedError;
   int? get limit => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
+  int get totalCount => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RegistrationWrapperStateCopyWith<RegistrationWrapperState> get copyWith =>
@@ -303,7 +395,8 @@ abstract class $RegistrationWrapperStateCopyWith<$Res> {
       IndividualModel? selectedIndividual,
       int? offset,
       int? limit,
-      String? error});
+      String? error,
+      int totalCount});
 }
 
 /// @nodoc
@@ -326,6 +419,7 @@ class _$RegistrationWrapperStateCopyWithImpl<$Res,
     Object? offset = freezed,
     Object? limit = freezed,
     Object? error = freezed,
+    Object? totalCount = null,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -352,6 +446,10 @@ class _$RegistrationWrapperStateCopyWithImpl<$Res,
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
+      totalCount: null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -371,7 +469,8 @@ abstract class _$$RegistrationWrapperStateImplCopyWith<$Res>
       IndividualModel? selectedIndividual,
       int? offset,
       int? limit,
-      String? error});
+      String? error,
+      int totalCount});
 }
 
 /// @nodoc
@@ -393,6 +492,7 @@ class __$$RegistrationWrapperStateImplCopyWithImpl<$Res>
     Object? offset = freezed,
     Object? limit = freezed,
     Object? error = freezed,
+    Object? totalCount = null,
   }) {
     return _then(_$RegistrationWrapperStateImpl(
       loading: null == loading
@@ -419,6 +519,10 @@ class __$$RegistrationWrapperStateImplCopyWithImpl<$Res>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
+      totalCount: null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -432,7 +536,8 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
       this.selectedIndividual,
       this.offset,
       this.limit,
-      this.error})
+      this.error,
+      this.totalCount = 0})
       : _householdMembers = householdMembers;
 
   @override
@@ -456,10 +561,13 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
   final int? limit;
   @override
   final String? error;
+  @override
+  @JsonKey()
+  final int totalCount;
 
   @override
   String toString() {
-    return 'RegistrationWrapperState(loading: $loading, householdMembers: $householdMembers, selectedIndividual: $selectedIndividual, offset: $offset, limit: $limit, error: $error)';
+    return 'RegistrationWrapperState(loading: $loading, householdMembers: $householdMembers, selectedIndividual: $selectedIndividual, offset: $offset, limit: $limit, error: $error, totalCount: $totalCount)';
   }
 
   @override
@@ -474,7 +582,9 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
                 other.selectedIndividual == selectedIndividual) &&
             (identical(other.offset, offset) || other.offset == offset) &&
             (identical(other.limit, limit) || other.limit == limit) &&
-            (identical(other.error, error) || other.error == error));
+            (identical(other.error, error) || other.error == error) &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount));
   }
 
   @override
@@ -485,7 +595,8 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
       selectedIndividual,
       offset,
       limit,
-      error);
+      error,
+      totalCount);
 
   @JsonKey(ignore: true)
   @override
@@ -502,7 +613,8 @@ abstract class _RegistrationWrapperState implements RegistrationWrapperState {
       final IndividualModel? selectedIndividual,
       final int? offset,
       final int? limit,
-      final String? error}) = _$RegistrationWrapperStateImpl;
+      final String? error,
+      final int totalCount}) = _$RegistrationWrapperStateImpl;
 
   @override
   bool get loading;
@@ -516,6 +628,8 @@ abstract class _RegistrationWrapperState implements RegistrationWrapperState {
   int? get limit;
   @override
   String? get error;
+  @override
+  int get totalCount;
   @override
   @JsonKey(ignore: true)
   _$$RegistrationWrapperStateImplCopyWith<_$RegistrationWrapperStateImpl>

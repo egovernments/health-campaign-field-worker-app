@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/blocs/entity_create/entity_create.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/data/transformer_config.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
@@ -58,12 +59,8 @@ class _SearchBeneficiaryPageState
   double long = 0.0;
   List<String> selectedFilters = [];
 
-  SearchHouseholdsState searchHouseholdsState = const SearchHouseholdsState(
-    loading: false,
-    householdMembers: [],
-  );
 
-  late final SearchBlocWrapper blocWrapper; // Declare BlocWrapper
+  late final RegistrationWrapperBloc blocWrapper; // Declare BlocWrapper
 
   @override
   void initState() {
@@ -72,16 +69,16 @@ class _SearchBeneficiaryPageState
     Future.microtask(() {
       context.read<RegistrationBloc>().add(const RegistrationEvent.initialize());
     });
-    blocWrapper = context.read<SearchBlocWrapper>();
+    blocWrapper = context.read<RegistrationWrapperBloc>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
     // Listen to state changes
-    blocWrapper.stateChanges.listen((state) {
-      if (mounted) {
-        setState(() {
-          searchHouseholdsState = state;
-        });
-      }
-    });
+    // blocWrapper.stateChanges.listen((state) {
+    //   if (mounted) {
+    //     setState(() {
+    //       searchHouseholdsState = state;
+    //     });
+    //   }
+    // });
 
     super.initState();
   }
@@ -269,8 +266,8 @@ class _SearchBeneficiaryPageState
                                             isProximityEnabled) {
                                           triggerGlobalSearchEvent();
                                         } else {
-                                          blocWrapper.clearEvent();
-                                          triggerGlobalSearchEvent();
+                                          blocWrapper.add(const RegistrationWrapperEvent.clear());
+                                          // triggerGlobalSearchEvent();
                                         }
                                       },
                                     ),
@@ -348,7 +345,7 @@ class _SearchBeneficiaryPageState
                                               child: DigitChip(
                                                 label:
                                                 '${localizations.translate(getStatus(selectedFilters[index]))}'
-                                                    ' (${searchHouseholdsState.totalResults})',
+                                                    ' (${blocWrapper.state.totalCount})',
                                                 capitalizedFirstLetter: false,
                                                 onItemDelete: () {
                                                   setState(() {
@@ -356,8 +353,8 @@ class _SearchBeneficiaryPageState
                                                         selectedFilters[
                                                         index]);
                                                   });
-                                                  blocWrapper.clearEvent();
-                                                  triggerGlobalSearchEvent();
+                                                  blocWrapper.add(const RegistrationWrapperEvent.clear());
+                                                  // triggerGlobalSearchEvent();
                                                 },
                                               ),
                                             );
@@ -369,8 +366,8 @@ class _SearchBeneficiaryPageState
                               );
                             },
                           ),
-                          if (searchHouseholdsState.resultsNotFound &&
-                              !searchHouseholdsState.loading)
+                          if (blocWrapper.state.householdMembers.isEmpty &&
+                              !blocWrapper.state.loading)
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: spacer2, top: spacer2, right: spacer2),
@@ -394,7 +391,7 @@ class _SearchBeneficiaryPageState
                       ),
                     ),
                   ),
-                  if (searchHouseholdsState.loading)
+                  if (blocWrapper.state.loading)
                     const SliverFillRemaining(
                       child: Center(
                         child: CircularProgressIndicator(),
@@ -419,7 +416,7 @@ class _SearchBeneficiaryPageState
                         return SliverList(
                           delegate: SliverChildBuilderDelegate(
                                 (ctx, index) {
-                              final i = searchHouseholdsState.householdMembers
+                              final i = blocWrapper.state.householdMembers
                                   .elementAt(index);
                               final distance = calculateDistance(
                                 Coordinate(
@@ -436,7 +433,7 @@ class _SearchBeneficiaryPageState
                                 margin: const EdgeInsets.only(bottom: spacer2),
                                 child: ViewBeneficiaryCard(
                                   distance: isProximityEnabled ? distance : null,
-                                  householdMember: i,
+                                  householdWrapper: i,
                                   onOpenPressed: () async {
                                     final scannerBloc =
                                     context.read<DigitScannerBloc>();
@@ -453,13 +450,13 @@ class _SearchBeneficiaryPageState
                                       setState(() {
                                         selectedFilters = [];
                                       });
-                                      blocWrapper.clearEvent();
+                                      blocWrapper.add(const RegistrationWrapperEvent.clear());
                                       await context.router.push(
                                         BeneficiaryRegistrationWrapperRoute(
                                           initialState: BeneficiaryRegistrationState
                                               .editHousehold(
                                               householdModel: i.household!,
-                                              individualModel: i.members!,
+                                              individualModel: i.individuals!,
                                               registrationDate: DateTime.now(),
                                               projectBeneficiaryModel:
                                               (i.projectBeneficiaries ?? [])
@@ -480,24 +477,24 @@ class _SearchBeneficiaryPageState
                                         ),
                                       );
                                     } else {
-                                      await context.router.push(
-                                        BeneficiaryWrapperRoute(
-                                          wrapper: i,
-                                        ),
-                                      );
+                                      // await context.router.push(
+                                      //   BeneficiaryWrapperRoute(
+                                      //     wrapper: i,
+                                      //   ),
+                                      // );
                                     }
                                     setState(() {
                                       isProximityEnabled = false;
                                     });
                                     searchController.clear();
                                     selectedFilters.clear();
-                                    blocWrapper.clearEvent();
+                                    // blocWrapper.clearEvent();
                                   },
                                 ),
                               );
                             },
                             childCount:
-                            searchHouseholdsState.householdMembers.length,
+                            blocWrapper.state.householdMembers.length,
                           ),
                         );
                       },
@@ -526,10 +523,10 @@ class _SearchBeneficiaryPageState
                       mainAxisSize: MainAxisSize.max,
                       type: DigitButtonType.primary,
                       size: DigitButtonSize.large,
-                      // isDisabled: searchHouseholdsState.searchQuery != null &&
-                      //     searchHouseholdsState.searchQuery!.isNotEmpty
-                      //     ? false
-                      //     : true,
+                      isDisabled: searchController.text.isNotEmpty &&
+                          searchController.text.length>2
+                          ? false
+                          : true,
                       onPressed: () {
                         FocusManager.instance.primaryFocus?.unfocus();
                         context.read<FormsBloc>().add(const FormsEvent.clearForm());
@@ -549,7 +546,7 @@ class _SearchBeneficiaryPageState
                         } else {
                           context.router.push(FormsRenderRoute(pageName: pageName, defaultValues: {
                             'administrativeArea': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? ''),
-                            'nameOfIndividual' : searchHouseholdsState.searchQuery,
+                            'nameOfIndividual' : searchController.text,
                           }));
                         }
 
@@ -563,7 +560,7 @@ class _SearchBeneficiaryPageState
                         // ));
                         searchController.clear();
                         selectedFilters = [];
-                        blocWrapper.clearEvent();
+                        blocWrapper.add(const RegistrationWrapperEvent.clear());
                       },
                     ),
                     if(searchTemplate
@@ -575,7 +572,7 @@ class _SearchBeneficiaryPageState
                       size: DigitButtonSize.large,
                       mainAxisSize: MainAxisSize.max,
                       onPressed: () {
-                        blocWrapper.clearEvent();
+                        blocWrapper.add(const RegistrationWrapperEvent.clear());
                         selectedFilters = [];
                         searchController.clear();
                         Navigator.of(context).push(
@@ -646,14 +643,14 @@ class _SearchBeneficiaryPageState
       setState(() {
         selectedFilters = [];
       });
-      blocWrapper.clearEvent();
+      blocWrapper.add(const RegistrationWrapperEvent.clear());
       triggerGlobalSearchEvent();
     }
   }
 
   void triggerGlobalSearchEvent({bool isPagination = false}) {
     if (!isPagination) {
-      blocWrapper.clearEvent();
+      blocWrapper.add(const RegistrationWrapperEvent.clear());
     }
     if (RegistrationDeliverySingleton().beneficiaryType ==
         BeneficiaryType.individual) {
