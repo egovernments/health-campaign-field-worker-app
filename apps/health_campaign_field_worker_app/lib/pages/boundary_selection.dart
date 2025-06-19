@@ -491,15 +491,6 @@ class _BoundarySelectionPageState
                                                     await getIsConnected();
 
                                                 if (context.mounted) {
-                                                  if(isOnline){
-                                                    await triggerLocalizationIfUpdated(
-                                                      context: context,
-                                                      locale: AppSharedPreferences()
-                                                          .getSelectedLocale!,
-                                                      moduleKey: 'REGISTRATIONFLOW',
-                                                      projectReferenceId: context.selectedProject.referenceID ?? '',
-                                                    );
-                                                  }
                                                   if (isOnline &&
                                                       isDistributor) {
                                                     context

@@ -607,7 +607,9 @@ Future<void> triggerLocalizationIfUpdated({
 
   final moduleName = 'hcm-${schemaData['name'].toLowerCase()}-$projectReferenceId';
 
-  if (currentVersion != previousVersion) {
+
+  ///TODO; removing check to check current and previous version will refetch localization every time
+  // if (currentVersion != previousVersion) {
      context
         .read<LocalizationBloc>()
         .add(LocalizationEvent.onRemoteLoadLocalization(
@@ -622,7 +624,7 @@ Future<void> triggerLocalizationIfUpdated({
     schemaEntry['previousVersion'] = currentVersion;
     allSchemas[moduleKey] = schemaEntry;
     await prefs.setString('app_config_schemas', json.encode(allSchemas));
-  }
+  // }
 }
 
 
