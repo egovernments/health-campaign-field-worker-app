@@ -41,6 +41,22 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
       child: Scaffold(
         body: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
+            
+            String role = state.maybeMap(
+              authenticated: (value) => value.userModel.roles.firstOrNull?.code ?? '',
+              orElse: () => '',
+            );
+
+          
+            final List<String> tabs = (role == 'DISTRIBUTOR')
+                ? ['INVENTORY', 'ATTENDANCE']
+                : ['INVENTORY'];
+
+          
+            if (selectedIndex >= tabs.length) {
+              selectedIndex = 0;
+            }
+
             return ScrollableContent(
               enableFixedDigitButton: true,
               header: Column(children: [
@@ -53,43 +69,48 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                 ),
               ]),
               footer: DigitCard(
-                  margin: const EdgeInsets.only(top: spacer2),
-                  children: [
-                    DigitButton(
-                      label:
-                          localizations.translate(i18.common.corecommonclose),
-                      size: DigitButtonSize.large,
-                      type: DigitButtonType.primary,
-                      mainAxisSize: MainAxisSize.max,
-                      onPressed: () {
-                        context.router.replaceAll([HomeRoute()]);
-                      },
-                    ),
-                  ]),
+                margin: const EdgeInsets.only(top: spacer2),
+                children: [
+                  DigitButton(
+                    label:
+                        localizations.translate(i18.common.corecommonclose),
+                    size: DigitButtonSize.large,
+                    type: DigitButtonType.primary,
+                    mainAxisSize: MainAxisSize.max,
+                    onPressed: () {
+                      context.router.replaceAll([HomeRoute()]);
+                    },
+                  ),
+                ],
+              ),
               children: [
                 DigitTabBar(
-                    initialIndex: selectedIndex,
-                    tabs: ['INVENTORY', 'ATTENDANCE'],
-                    onTabSelected: (index) {
-                      setState(() {
-                        selectedIndex = index;
-                      });
-                    }),
+                  initialIndex: selectedIndex,
+                  tabs: tabs,
+                  onTabSelected: (index) {
+                    setState(() {
+                      selectedIndex = index;
+                    });
+                  },
+                ),
                 selectedIndex == 0
                     ? state.maybeMap(
                         authenticated: (value) => Column(
                           children: [
                             SizedBox(
-                              width: MediaQuery.of(context).size.width / 1.25,
-                              height: MediaQuery.of(context).size.width / 1.25,
+                              width:
+                                  MediaQuery.of(context).size.width / 1.25,
+                              height:
+                                  MediaQuery.of(context).size.width / 1.25,
                               child: Padding(
                                 padding: const EdgeInsets.all(spacer2),
                                 child: Card(
                                   child: QrImageView(
                                     data: context.loggedInUserUuid,
                                     version: QrVersions.auto,
-                                    size: MediaQuery.of(context).size.width /
-                                        1.25,
+                                    size:
+                                        MediaQuery.of(context).size.width /
+                                            1.25,
                                   ),
                                 ),
                               ),
@@ -100,10 +121,11 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                             Center(
                               child: Text(
                                 value.userModel.name.toString(),
-                                style: DigitTheme.instance.mobileTheme.textTheme
-                                    .headlineMedium
+                                style: DigitTheme.instance.mobileTheme
+                                    .textTheme.headlineMedium
                                     ?.apply(
-                                  color: DigitTheme.instance.colorScheme.shadow,
+                                  color: DigitTheme
+                                      .instance.colorScheme.shadow,
                                 ),
                               ),
                             ),
@@ -114,17 +136,20 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                     : Column(
                         children: [
                           SizedBox(
-                            width: MediaQuery.of(context).size.width / 1.25,
-                            height: MediaQuery.of(context).size.width / 1.25,
+                            width:
+                                MediaQuery.of(context).size.width / 1.25,
+                            height:
+                                MediaQuery.of(context).size.width / 1.25,
                             child: Padding(
                               padding: const EdgeInsets.all(spacer2),
                               child: Card(
                                 child: QrImageView(
-                                  data: DataMapEncryptor().encryptWithRandomKey(
-                                      context.loggedInIndividualId!),
+                                  data: DataMapEncryptor()
+                                      .encryptWithRandomKey(
+                                          context.loggedInIndividualId!),
                                   version: QrVersions.auto,
-                                  size:
-                                      MediaQuery.of(context).size.width / 1.25,
+                                  size: MediaQuery.of(context).size.width /
+                                      1.25,
                                 ),
                               ),
                             ),
@@ -135,10 +160,11 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                           Center(
                             child: Text(
                               context.loggedInUser.name!,
-                              style: DigitTheme
-                                  .instance.mobileTheme.textTheme.headlineMedium
+                              style: DigitTheme.instance.mobileTheme
+                                  .textTheme.headlineMedium
                                   ?.apply(
-                                color: DigitTheme.instance.colorScheme.shadow,
+                                color: DigitTheme
+                                    .instance.colorScheme.shadow,
                               ),
                             ),
                           ),
