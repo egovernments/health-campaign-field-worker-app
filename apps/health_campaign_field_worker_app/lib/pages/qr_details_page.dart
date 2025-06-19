@@ -47,12 +47,10 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
               orElse: () => '',
             );
 
-          
             final List<String> tabs = (role == 'DISTRIBUTOR')
                 ? ['INVENTORY', 'ATTENDANCE']
                 : ['INVENTORY'];
 
-          
             if (selectedIndex >= tabs.length) {
               selectedIndex = 0;
             }
