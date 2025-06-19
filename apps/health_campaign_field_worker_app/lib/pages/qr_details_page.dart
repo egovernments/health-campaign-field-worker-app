@@ -28,11 +28,6 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
   int selectedIndex = 0;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvoked: (didPop) {
@@ -41,6 +36,23 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
       child: Scaffold(
         body: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
+            bool isDistributor = state.maybeMap(
+              authenticated: (value) => value.userModel.roles
+                  .any((role) => role.code == 'DISTRIBUTOR'),
+              orElse: () => false,
+            );
+
+            final List<String> tabs = isDistributor
+                ? [
+                    localizations.translate(i18.common.qrInventory),
+                    localizations.translate(i18.common.qrAttendance),
+                  ]
+                : [];
+
+            if (selectedIndex >= tabs.length && tabs.isNotEmpty) {
+              selectedIndex = 0;
+            }
+
             return ScrollableContent(
               enableFixedDigitButton: true,
               header: Column(children: [
@@ -53,102 +65,105 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                 ),
               ]),
               footer: DigitCard(
-                  margin: const EdgeInsets.only(top: spacer2),
-                  children: [
-                    DigitButton(
-                      label:
-                          localizations.translate(i18.common.corecommonclose),
-                      size: DigitButtonSize.large,
-                      type: DigitButtonType.primary,
-                      mainAxisSize: MainAxisSize.max,
-                      onPressed: () {
-                        context.router.replaceAll([HomeRoute()]);
-                      },
-                    ),
-                  ]),
+                margin: const EdgeInsets.only(top: spacer2),
+                children: [
+                  DigitButton(
+                    label: localizations.translate(i18.common.corecommonclose),
+                    size: DigitButtonSize.large,
+                    type: DigitButtonType.primary,
+                    mainAxisSize: MainAxisSize.max,
+                    onPressed: () {
+                      context.router.replaceAll([HomeRoute()]);
+                    },
+                  ),
+                ],
+              ),
               children: [
-                DigitTabBar(
+                if (isDistributor)
+                  DigitTabBar(
                     initialIndex: selectedIndex,
-                    tabs: ['INVENTORY', 'ATTENDANCE'],
+                    tabs: tabs,
                     onTabSelected: (index) {
                       setState(() {
                         selectedIndex = index;
                       });
-                    }),
-                selectedIndex == 0
-                    ? state.maybeMap(
-                        authenticated: (value) => Column(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 1.25,
-                              height: MediaQuery.of(context).size.width / 1.25,
-                              child: Padding(
-                                padding: const EdgeInsets.all(spacer2),
-                                child: Card(
-                                  child: QrImageView(
-                                    data: context.loggedInUserUuid,
-                                    version: QrVersions.auto,
-                                    size: MediaQuery.of(context).size.width /
-                                        1.25,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            Center(
-                              child: Text(
-                                value.userModel.name.toString(),
-                                style: DigitTheme.instance.mobileTheme.textTheme
-                                    .headlineMedium
-                                    ?.apply(
-                                  color: DigitTheme.instance.colorScheme.shadow,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        orElse: () => const Offstage(),
-                      )
-                    : Column(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 1.25,
-                            height: MediaQuery.of(context).size.width / 1.25,
-                            child: Padding(
-                              padding: const EdgeInsets.all(spacer2),
-                              child: Card(
-                                child: QrImageView(
-                                  data: DataMapEncryptor().encryptWithRandomKey(
-                                      context.loggedInIndividualId!),
-                                  version: QrVersions.auto,
-                                  size:
-                                      MediaQuery.of(context).size.width / 1.25,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Center(
-                            child: Text(
-                              context.loggedInUser.name!,
-                              style: DigitTheme
-                                  .instance.mobileTheme.textTheme.headlineMedium
-                                  ?.apply(
-                                color: DigitTheme.instance.colorScheme.shadow,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    },
+                  ),
+                (isDistributor && selectedIndex == 1)
+                    ? _buildAttendanceQR(context)
+                    : _buildInventoryQR(context, state),
               ],
             );
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildInventoryQR(BuildContext context, AuthState state) {
+    return state.maybeMap(
+      authenticated: (value) => Column(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 1.25,
+            height: MediaQuery.of(context).size.width / 1.25,
+            child: Padding(
+              padding: const EdgeInsets.all(spacer2),
+              child: Card(
+                child: QrImageView(
+                  data: context.loggedInUserUuid,
+                  version: QrVersions.auto,
+                  size: MediaQuery.of(context).size.width / 1.25,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Center(
+            child: Text(
+              value.userModel.name.toString(),
+              style: DigitTheme.instance.mobileTheme.textTheme.headlineMedium
+                  ?.apply(
+                color: DigitTheme.instance.colorScheme.shadow,
+              ),
+            ),
+          ),
+        ],
+      ),
+      orElse: () => const Offstage(),
+    );
+  }
+
+  Widget _buildAttendanceQR(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width / 1.25,
+          height: MediaQuery.of(context).size.width / 1.25,
+          child: Padding(
+            padding: const EdgeInsets.all(spacer2),
+            child: Card(
+              child: QrImageView(
+                data: DataMapEncryptor().encryptWithRandomKey(
+                  context.loggedInIndividualId!,
+                ),
+                version: QrVersions.auto,
+                size: MediaQuery.of(context).size.width / 1.25,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Center(
+          child: Text(
+            context.loggedInUser.name!,
+            style: DigitTheme.instance.mobileTheme.textTheme.headlineMedium
+                ?.apply(
+              color: DigitTheme.instance.colorScheme.shadow,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
