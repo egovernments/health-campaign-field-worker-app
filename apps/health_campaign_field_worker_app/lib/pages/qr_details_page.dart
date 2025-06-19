@@ -28,11 +28,6 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
   int selectedIndex = 0;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvoked: (didPop) {
@@ -41,15 +36,14 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
       child: Scaffold(
         body: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
-            
-            String role = state.maybeMap(
-              authenticated: (value) => value.userModel.roles.firstOrNull?.code ?? '',
-              orElse: () => '',
+            bool isDistributor = state.maybeMap(
+              authenticated: (value) => value.userModel.roles
+                  .any((role) => role.code == 'DISTRIBUTOR'),
+              orElse: () => false,
             );
 
-            final List<String> tabs = (role == 'DISTRIBUTOR')
-                ? ['INVENTORY', 'ATTENDANCE']
-                : ['INVENTORY'];
+            final List<String> tabs =
+                isDistributor ? ['INVENTORY', 'ATTENDANCE'] : ['INVENTORY'];
 
             if (selectedIndex >= tabs.length) {
               selectedIndex = 0;
@@ -70,8 +64,7 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                 margin: const EdgeInsets.only(top: spacer2),
                 children: [
                   DigitButton(
-                    label:
-                        localizations.translate(i18.common.corecommonclose),
+                    label: localizations.translate(i18.common.corecommonclose),
                     size: DigitButtonSize.large,
                     type: DigitButtonType.primary,
                     mainAxisSize: MainAxisSize.max,
@@ -96,34 +89,28 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                         authenticated: (value) => Column(
                           children: [
                             SizedBox(
-                              width:
-                                  MediaQuery.of(context).size.width / 1.25,
-                              height:
-                                  MediaQuery.of(context).size.width / 1.25,
+                              width: MediaQuery.of(context).size.width / 1.25,
+                              height: MediaQuery.of(context).size.width / 1.25,
                               child: Padding(
                                 padding: const EdgeInsets.all(spacer2),
                                 child: Card(
                                   child: QrImageView(
                                     data: context.loggedInUserUuid,
                                     version: QrVersions.auto,
-                                    size:
-                                        MediaQuery.of(context).size.width /
-                                            1.25,
+                                    size: MediaQuery.of(context).size.width /
+                                        1.25,
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 16,
-                            ),
+                            const SizedBox(height: 16),
                             Center(
                               child: Text(
                                 value.userModel.name.toString(),
-                                style: DigitTheme.instance.mobileTheme
-                                    .textTheme.headlineMedium
+                                style: DigitTheme.instance.mobileTheme.textTheme
+                                    .headlineMedium
                                     ?.apply(
-                                  color: DigitTheme
-                                      .instance.colorScheme.shadow,
+                                  color: DigitTheme.instance.colorScheme.shadow,
                                 ),
                               ),
                             ),
@@ -134,35 +121,30 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                     : Column(
                         children: [
                           SizedBox(
-                            width:
-                                MediaQuery.of(context).size.width / 1.25,
-                            height:
-                                MediaQuery.of(context).size.width / 1.25,
+                            width: MediaQuery.of(context).size.width / 1.25,
+                            height: MediaQuery.of(context).size.width / 1.25,
                             child: Padding(
                               padding: const EdgeInsets.all(spacer2),
                               child: Card(
                                 child: QrImageView(
-                                  data: DataMapEncryptor()
-                                      .encryptWithRandomKey(
-                                          context.loggedInIndividualId!),
+                                  data: DataMapEncryptor().encryptWithRandomKey(
+                                    context.loggedInIndividualId!,
+                                  ),
                                   version: QrVersions.auto,
-                                  size: MediaQuery.of(context).size.width /
-                                      1.25,
+                                  size:
+                                      MediaQuery.of(context).size.width / 1.25,
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 16,
-                          ),
+                          const SizedBox(height: 16),
                           Center(
                             child: Text(
                               context.loggedInUser.name!,
-                              style: DigitTheme.instance.mobileTheme
-                                  .textTheme.headlineMedium
+                              style: DigitTheme
+                                  .instance.mobileTheme.textTheme.headlineMedium
                                   ?.apply(
-                                color: DigitTheme
-                                    .instance.colorScheme.shadow,
+                                color: DigitTheme.instance.colorScheme.shadow,
                               ),
                             ),
                           ),
