@@ -73,6 +73,7 @@ abstract class RemoteRepository<D extends EntityModel,
     R query, {
     int? offSet,
     int? limit,
+    int? lastChangedSince,
   }) async {
     Response response;
 
@@ -86,6 +87,8 @@ abstract class RemoteRepository<D extends EntityModel,
               'limit': limit ?? 100,
               'tenantId': DigitDataModelSingleton().tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+              if (lastChangedSince != null)
+                'lastChangedSince': lastChangedSince,
             },
             data: entityName == 'User'
                 ? query.toMap()
