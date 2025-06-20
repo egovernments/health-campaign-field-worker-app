@@ -4,11 +4,15 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
+import 'package:forms_engine/models/property_schema/property_schema.dart';
 import 'package:forms_engine/router/forms_router.gm.dart';
 import 'package:forms_engine/widgets/back_header/back_navigation_help_header.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:forms_engine/json_forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
+import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
+import 'package:registration_delivery/utils/utils.dart';
 import '../../widgets/localized.dart';
 import '../utils/utils.dart';
 
@@ -54,6 +58,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               JsonForms.getFormControls(
                 schema,
                 defaultValues: widget.defaultValues ?? {},
+                count: widget.defaultValues?['count'] ?? 0,
               ),
             ),
             builder: (context, formGroup, child) => ScrollableContent(
@@ -82,11 +87,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       onPressed: () {
                         // 1. Get visible keys only (skip hidden fields)
                         final currentKeys = schema.properties?.entries
-                            .where((entry) => !isHidden(entry.value))
-                            .map((entry) => entry.key)
-                            .toList() ?? [];
-
-
+                                .where((entry) => !isHidden(entry.value))
+                                .map((entry) => entry.key)
+                                .toList() ??
+                            [];
 
 // 2. Mark all visible controls as touched and revalidate
                         for (final key in currentKeys) {
@@ -107,8 +111,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             .every((key) => formGroup.control(key).valid);
 
                         if (!isCurrentPageValid) return;
-
-
 
                         // 4. Proceed with value extraction and state update
                         final values = JsonForms.getFormValues(
@@ -158,8 +160,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           ));
                         } else {
                           context.read<FormsBloc>().add(
-                            FormsSubmitEvent(schemaObject),
-                          );
+                                FormsSubmitEvent(schemaObject),
+                              );
                           // Pop all form pages (FormsRenderRoute) and return to the caller
                           context.router.popUntil((route) {
                             return route.settings.name != FormsRenderRoute.name;
@@ -204,8 +206,21 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ],
                     ],
                     JsonForms(
-                      propertySchema: schema,
-                      childrens: const [],
+                      propertySchema:
+                          schema.properties?.containsKey("resourceCard") ==
+                                  false
+                              ? schema
+                              : cloneAndReplaceResourceCard(
+                                  baseSchema: schema,
+                                  cloneFromKey: "resourceCard",
+                                  newPropertyKeys: List.generate(
+                                      widget.defaultValues?['count'] ?? 0,
+                                      (i) => 'resourceCard_$i').toList()),
+                      childrens: const [
+                        {
+                          "resourceCard": Text("Hello"),
+                        }
+                      ],
                       defaultValues: const {
                         // 'locality': context.boundary.code,
                       },
@@ -231,5 +246,89 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
         },
       ),
     );
+  }
+
+  // PropertySchema cloneAndReplaceResourceCard({
+  //   required PropertySchema baseSchema,
+  //   required List<String> newPropertyKeys,
+  //   required String cloneFromKey, // e.g. 'resourceCard'
+  // }) {
+  //   // Clone the original properties
+  //   final Map<String, PropertySchema> newProperties =
+  //       Map.from(baseSchema.properties ?? {});
+
+  //   // Get the property to clone
+  //   final baseProperty = newProperties[cloneFromKey];
+  //   if (baseProperty == null) {
+  //     throw Exception('Base property "$cloneFromKey" not found in schema.');
+  //   }
+
+  //   // Remove the original property
+  //   newProperties.remove(cloneFromKey);
+
+  //   // Add new cloned fields
+  //   for (final key in newPropertyKeys) {
+  //     newProperties[key] = baseProperty.copyWith();
+  //   }
+
+  //   // Return a new schema with updated properties
+  //   return baseSchema.copyWith(properties: newProperties);
+  // }
+
+  PropertySchema cloneAndReplaceResourceCard({
+    required PropertySchema baseSchema,
+    required List<String> newPropertyKeys,
+    required String cloneFromKey,
+  }) {
+    final originalProps = baseSchema.properties ?? {};
+
+    final newOrderedProps = <String, PropertySchema>{};
+
+    // To track where 'resourceCard' appeared in the order
+    int insertIndex = 0;
+    bool foundResourceCard = false;
+
+    final keys = originalProps.keys.toList();
+
+    for (var i = 0; i < keys.length; i++) {
+      final key = keys[i];
+
+      if (key == cloneFromKey) {
+        insertIndex = newOrderedProps.length;
+        foundResourceCard = true;
+        continue; // Skip adding 'resourceCard'
+      }
+
+      newOrderedProps[key] = originalProps[key]!;
+    }
+
+    if (!foundResourceCard) {
+      throw Exception('Base property "$cloneFromKey" not found in schema.');
+    }
+
+    // Define a new default property for cloning
+    const defaultSelectProperty = PropertySchema(
+      type: PropertySchemaType.productVariant,
+      format: PropertySchemaFormat.select,
+      enums: [],
+      label: null,
+      isMultiSelect: false,
+      validations: [],
+      readOnly: false,
+      hidden: false,
+      displayOnly: false,
+    );
+
+    // Insert new keys at the original resourceCard position
+    final entriesBefore = newOrderedProps.entries.take(insertIndex);
+    final entriesAfter = newOrderedProps.entries.skip(insertIndex);
+
+    final Map<String, PropertySchema> orderedWithClones = {
+      for (final e in entriesBefore) e.key: e.value,
+      for (final key in newPropertyKeys) key: defaultSelectProperty,
+      for (final e in entriesAfter) e.key: e.value,
+    };
+
+    return baseSchema.copyWith(properties: orderedWithClones);
   }
 }

@@ -179,5 +179,78 @@ final jsonConfig = {
         }
       },
     }
+  },
+  "deliveryDetails": {
+    "model": {
+      "TaskModel": {
+        "mappings": {
+          "id": "taskDetails.id",
+          "projectId": "__context:projectId",
+          "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
+          "projectBeneficiaryClientReferenceId":
+              "__ref:ProjectBeneficiaryModel.clientReferenceId",
+          "createdBy": "__context:userId",
+          "status": "taskDetails.status",
+          "nonRecoverableError": "errors.nonRecoverable",
+          "clientReferenceId": "__generate:uuid",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "plannedStartDate": "taskDetails.plannedStartDate",
+          "plannedEndDate": "taskDetails.plannedEndDate",
+          "actualStartDate": "taskDetails.actualStartDate",
+          "actualEndDate": "taskDetails.actualEndDate",
+          "createdDate": "__generate:timestamp",
+          "address": "AddressModel",
+          "additionalFields": "TaskAdditionalFields",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      },
+      "TaskAdditionalFields": {
+        "mappings": {
+          "schema": "__literal:Task",
+          "version": "__context:schemaVersion",
+          "fields": "taskDetails.additionalInfo"
+        }
+      },
+      "AddressModel": {
+        "mappings": {
+          "id": "address.id",
+          "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+          "doorNo": "address.doorNo",
+          "latitude": "address.latLng[0]",
+          "longitude": "address.latLng[1]",
+          "locationAccuracy": "address.locationAccuracy",
+          "addressLine1": "address.addressLine1",
+          "addressLine2": "address.addressLine2",
+          "landmark": "address.landmark",
+          "city": "address.city",
+          "type": "address.type",
+          "pincode": "address.pincode",
+          "buildingName": "address.buildingName",
+          "street": "address.street",
+          "boundaryType": "address.boundaryType",
+          "boundary": "address.boundary",
+          "locality": {
+            "code": "__context:selectedBoundaryCode",
+            "name": "__context:boundary.name",
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion"
+          },
+          "nonRecoverableError": "address.nonRecoverable",
+          "tenantId": "__context:tenantId",
+          "rowVersion": "meta.rowVersion",
+          "clientAuditDetails": "__generate:clientAudit",
+          "auditDetails": "__generate:audit"
+        }
+      },
+      "ProjectBeneficiaryModel": {
+        "mappings": {
+          "clientReferenceId":
+              "__ref:TaskModel.projectBeneficiaryClientReferenceId"
+        }
+      }
+    }
   }
 };

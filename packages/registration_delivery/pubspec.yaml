@@ -38,6 +38,9 @@ dependencies:
   flutter_keyboard_visibility: ^5.4.1
   survey_form: ^1.0.1+3
   group_radio_button: ^1.3.0
+  forms_engine: 0.0.1
+  form_data_transformer: 0.0.1
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:

@@ -99,6 +99,7 @@ const _$PropertySchemaTypeEnumMap = {
   PropertySchemaType.string: 'string',
   PropertySchemaType.integer: 'integer',
   PropertySchemaType.boolean: 'boolean',
+  PropertySchemaType.productVariant: 'productVariant',
 };
 
 const _$PropertySchemaFormatEnumMap = {
@@ -115,6 +116,7 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.scanner: 'scanner',
   PropertySchemaFormat.idPopulator: 'idPopulator',
   PropertySchemaFormat.text: 'text',
+  PropertySchemaFormat.resourceData: 'resourceData',
 };
 
 _$ValidationRuleImpl _$$ValidationRuleImplFromJson(Map<String, dynamic> json) =>

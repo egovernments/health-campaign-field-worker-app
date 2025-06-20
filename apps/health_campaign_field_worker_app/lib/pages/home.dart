@@ -383,14 +383,15 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context
                     .read<FormsBloc>()
                     .add(FormsEvent.load(schema: encodedSchema));
-                final Map<String, dynamic> rawTemplateMap = schemaData['templates'];
+                final Map<String, dynamic> rawTemplateMap =
+                    schemaData['templates'];
                 final templates = {
                   for (final entry in rawTemplateMap.entries)
-                    entry.key: TemplateConfig.fromJson(entry.value as Map<String, dynamic>)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
                 };
 
-                RegistrationDeliverySingleton()
-                    .setTemplateConfigs(templates);
+                RegistrationDeliverySingleton().setTemplateConfigs(templates);
               }
               if (isTriggerLocalisation && schemaData != null) {
                 final moduleName =
@@ -760,12 +761,12 @@ class _HomePageState extends LocalizedState<HomePage> {
               context
                   .read<LocalizationBloc>()
                   .add(LocalizationEvent.onLoadLocalization(
-                module: module ??
-                    "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                tenantId: envConfig.variables.tenantId,
-                locale: selectedLocale!,
-                path: Constants.localizationApiPath,
-              ));
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId,
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
             }
           },
         );

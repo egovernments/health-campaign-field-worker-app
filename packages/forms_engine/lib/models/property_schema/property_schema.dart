@@ -51,12 +51,9 @@ class PropertySchema with _$PropertySchema {
     List<ValidationRule>? validations,
   }) = _PropertySchema;
 
-
-
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
       _$PropertySchemaFromJson(json);
 }
-
 
 @freezed
 class ValidationRule with _$ValidationRule {
@@ -77,8 +74,7 @@ class Option with _$Option {
     required String name,
   }) = _Option;
 
-  factory Option.fromJson(Map<String, dynamic> json) =>
-      _$OptionFromJson(json);
+  factory Option.fromJson(Map<String, dynamic> json) => _$OptionFromJson(json);
 }
 
 @freezed
@@ -108,7 +104,8 @@ enum PropertySchemaFormat {
   dob,
   scanner,
   idPopulator,
-  text;
+  text,
+  resourceData;
 }
 
-enum PropertySchemaType { object, string, integer, boolean }
+enum PropertySchemaType { object, string, integer, boolean, productVariant }

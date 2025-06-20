@@ -5,21 +5,23 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../models/property_schema/property_schema.dart';
 
 FormControl buildFormControl(
-    String name,
-    PropertySchema schema,
-    PropertySchema parentSchema, {
-      String? defaultLatlng,
-      Map<String, dynamic>? defaultValues,
-    }) {
+  String name,
+  PropertySchema schema,
+  PropertySchema parentSchema, {
+  String? defaultLatlng,
+  Map<String, dynamic>? defaultValues,
+}) {
   final validators = buildValidators(schema);
   final format = schema.format;
   final rawValue = schema.value;
 
   switch (schema.type) {
     case PropertySchemaType.integer:
-      if(format == PropertySchemaFormat.date) {
+      if (format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
-          value: schema.systemDate==true ? DateTime.now() : parseDateValue(rawValue),
+          value: schema.systemDate == true
+              ? DateTime.now()
+              : parseDateValue(rawValue),
           validators: validators,
         );
       }
@@ -37,7 +39,9 @@ FormControl buildFormControl(
     case PropertySchemaType.string:
       if (format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
-          value: schema.systemDate==true ? DateTime.now() : parseDateValue(rawValue),
+          value: schema.systemDate == true
+              ? DateTime.now()
+              : parseDateValue(rawValue),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.latLng) {
@@ -57,14 +61,18 @@ FormControl buildFormControl(
         );
       } else {
         return FormControl<String>(
-          value: defaultValues?[name] ?? (rawValue?.toString().isEmpty ?? true ? null : rawValue.toString()),
+          value: defaultValues?[name] ??
+              (rawValue?.toString().isEmpty ?? true
+                  ? null
+                  : rawValue.toString()),
           validators: validators,
         );
       }
 
     default:
       return FormControl<String>(
-        value: defaultValues?[name] ?? (rawValue?.toString().isEmpty ?? true ? null : rawValue.toString()),
+        value: defaultValues?[name] ??
+            (rawValue?.toString().isEmpty ?? true ? null : rawValue.toString()),
         validators: validators,
       );
   }
@@ -78,11 +86,15 @@ int? parseIntValue(dynamic value) {
   return null;
 }
 
-
 bool? parseBoolValue(dynamic value) {
   if (value == null) return null;
   if (value is bool) return value;
-  if (value is String) return value.toLowerCase() == 'true' ? true : value.toLowerCase() == 'false' ? false : null;
+  if (value is String)
+    return value.toLowerCase() == 'true'
+        ? true
+        : value.toLowerCase() == 'false'
+            ? false
+            : null;
   return null;
 }
 
@@ -98,5 +110,3 @@ DateTime? parseDateValue(dynamic value) {
   }
   return null;
 }
-
-

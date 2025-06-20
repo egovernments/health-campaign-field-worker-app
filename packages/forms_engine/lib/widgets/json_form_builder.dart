@@ -14,7 +14,6 @@ class JsonFormBuilder extends LocalizedStatefulWidget {
   });
 
   @override
-
   State<JsonFormBuilder> createState() => _JsonFormBuilderState();
 }
 
@@ -34,7 +33,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
   /// Conditionally hide based on display behavior
   bool _shouldHideField(FormGroup form) {
     final hidden = widget.schema.hidden;
-    if( hidden != null && hidden == true) return true;
+    if (hidden != null && hidden == true) return true;
     final display = widget.schema.displayBehavior;
     if (display == null) return false;
 
@@ -66,6 +65,29 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return _buildBooleanType(form);
       case PropertySchemaType.object:
         return _buildObjectType(form);
+      case PropertySchemaType.productVariant:
+        return _buildProductVariantType(form);
+    }
+  }
+
+  /// Handle `_buildProductVariantType` type formats
+  Widget _buildProductVariantType(FormGroup form) {
+    final format = widget.schema.format;
+
+    switch (format) {
+      case PropertySchemaFormat.select:
+        return JsonSchemaResourceCardBuilder(
+          1,
+          formControlName: widget.formControlName,
+          form: form,
+        );
+
+      default:
+        return JsonSchemaResourceCardBuilder(
+          1,
+          formControlName: widget.formControlName,
+          form: form,
+        );
     }
   }
 
@@ -98,7 +120,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
         );
 
       case PropertySchemaFormat.dropdown:
@@ -133,7 +156,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return JsonSchemaDatePickerBuilder(
           isRequired: hasRequiredValidation(widget.schema.validations),
           readOnly: widget.schema.readOnly ?? false,
-          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           label: translateIfPresent(widget.schema.label, localizations),
           form: form,
@@ -190,7 +214,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
         );
     }
   }
@@ -211,14 +236,15 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           isRequired: hasRequiredValidation(widget.schema.validations),
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
         );
 
       case PropertySchemaFormat.date:
         return JsonSchemaDatePickerBuilder(
           readOnly: widget.schema.readOnly ?? false,
           isRequired: hasRequiredValidation(widget.schema.validations),
-          label:translateIfPresent(widget.schema.label, localizations),
+          label: translateIfPresent(widget.schema.label, localizations),
           form: form,
           formControlName: widget.formControlName,
           start: parseDateValue(widget.schema.startDate),
@@ -233,7 +259,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           form: form,
           value: parseIntValue(widget.schema.value) ?? 0,
           formControlName: widget.formControlName,
-          label:translateIfPresent(widget.schema.label, localizations),
+          label: translateIfPresent(widget.schema.label, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
           minValue: widget.schema.minValue,
           maxValue: widget.schema.maxValue,
@@ -289,7 +315,6 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return _buildCustomComponent() ?? const SizedBox.shrink();
 
       default:
-
         return JsonSchemaStringBuilder(
           form: form,
           label: translateIfPresent(widget.schema.label, localizations),
@@ -299,48 +324,102 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           validations: widget.schema.validations,
           helpText: translateIfPresent(widget.schema.helpText, localizations),
           tooltipText: translateIfPresent(widget.schema.tooltip, localizations),
-          innerLabel: translateIfPresent(widget.schema.innerLabel, localizations),
+          innerLabel:
+              translateIfPresent(widget.schema.innerLabel, localizations),
         );
     }
   }
 
   /// Handle `object` type
+  /// TODO: working code
+  // Widget _buildObjectType(FormGroup form) {
+  //   final entries = widget.schema.properties?.entries.toList() ?? [];
+
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: entries
+  //         .where((entry) {
+  //           final subSchema = entry.value;
+  //           return !shouldHideField(subSchema, form);
+  //         })
+  //         .toList()
+  //         .asMap()
+  //         .entries
+  //         .map((entry) {
+  //           final index = entry.key;
+  //           final mapEntry = entry.value;
+  //           final subSchema = mapEntry.value;
+  //           final subName = mapEntry.key;
+
+  //           final field = JsonFormBuilder(
+  //             formControlName: subName,
+  //             schema: subSchema,
+  //             components: widget.components,
+  //           );
+
+  //           final isLast = index ==
+  //               entries.where((e) => !shouldHideField(e.value, form)).length -
+  //                   1;
+
+  //           return isLast
+  //               ? field
+  //               : Padding(
+  //                   padding: const EdgeInsets.only(bottom: 16.0),
+  //                   child: field,
+  //                 );
+  //         })
+  //         .toList(),
+  //   );
+  // }
+
+// modification by pitabash for handling the resource card
+
   Widget _buildObjectType(FormGroup form) {
     final entries = widget.schema.properties?.entries.toList() ?? [];
+    final widgetEntries = entries
+        .where((entry) {
+          final subSchema = entry.value;
+          return !shouldHideField(subSchema, form);
+        })
+        .toList()
+        .asMap()
+        .entries;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: entries
-          .where((entry) {
-        final subSchema = entry.value;
-        return !shouldHideField(subSchema, form);
-      })
-          .toList()
-          .asMap()
-          .entries
-          .map((entry) {
-        final index = entry.key;
-        final mapEntry = entry.value;
-        final subSchema = mapEntry.value;
-        final subName = mapEntry.key;
+      children: widgetEntries
+          .map<Widget?>((entry) {
+            final index = entry.key;
+            final mapEntry = entry.value;
+            final subSchema = mapEntry.value;
+            String subName = mapEntry.key;
 
-        final field = JsonFormBuilder(
-          formControlName: subName,
-          schema: subSchema,
-          components: widget.components,
-        );
+            if (subName.contains("resourceCard_")) {
+              return null;
+            }
+            if (subName.contains("quantityDistributed_")) {
+              final res_key = widgetEntries.elementAt(index - 1).key;
+              subName = "$res_key,$subName";
+            }
 
-        final isLast = index == entries
-            .where((e) => !shouldHideField(e.value, form))
-            .length - 1;
+            final field = JsonFormBuilder(
+              formControlName: subName,
+              schema: subSchema,
+              components: widget.components,
+            );
 
-        return isLast
-            ? field
-            : Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: field,
-        );
-      })
+            final isLast = index ==
+                entries.where((e) => !shouldHideField(e.value, form)).length -
+                    1;
+
+            return isLast
+                ? field
+                : Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: field,
+                  );
+          })
+          .whereType<Widget>() // <-- removes nulls
           .toList(),
     );
   }
@@ -356,4 +435,3 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
     return null;
   }
 }
-

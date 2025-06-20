@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
@@ -9,10 +12,14 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
+import 'package:forms_engine/router/forms_router.gm.dart';
 import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -210,6 +217,58 @@ class BeneficiaryDetailsPageState
                                                               .household,
                                                           context: context);
 
+// config
+                                                  final prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  final schemaJsonRaw =
+                                                      prefs.getString(
+                                                          'app_config_schemas');
+
+                                                  if (schemaJsonRaw != null) {
+                                                    final allSchemas = json
+                                                            .decode(
+                                                                schemaJsonRaw)
+                                                        as Map<String, dynamic>;
+
+                                                    final registrationSchemaEntry =
+                                                        allSchemas[
+                                                                'DELIVERYFLOW']
+                                                            as Map<String,
+                                                                dynamic>?;
+                                                    final schemaData =
+                                                        registrationSchemaEntry?[
+                                                            'data'];
+
+                                                    if (schemaData != null) {
+                                                      final encodedSchema = json
+                                                          .encode(schemaData);
+                                                      context
+                                                          .read<FormsBloc>()
+                                                          .add(FormsEvent.load(
+                                                              schema:
+                                                                  encodedSchema));
+                                                      final Map<String, dynamic>
+                                                          rawTemplateMap =
+                                                          schemaData[
+                                                              'templates'];
+                                                      final templates = {
+                                                        for (final entry
+                                                            in rawTemplateMap
+                                                                .entries)
+                                                          entry.key: TemplateConfig
+                                                              .fromJson(entry
+                                                                      .value
+                                                                  as Map<String,
+                                                                      dynamic>)
+                                                      };
+
+                                                      RegistrationDeliverySingleton()
+                                                          .setTemplateConfigs(
+                                                              templates);
+                                                    }
+                                                  }
+                                                  //
                                                   if (productVariants[
                                                           'criteria'] ==
                                                       null) {
@@ -286,9 +345,51 @@ class BeneficiaryDetailsPageState
                                                                     rootNavigator:
                                                                         true,
                                                                   ).pop();
-                                                                  router.push(
-                                                                    DeliverInterventionRoute(),
-                                                                  );
+                                                                  // config
+                                                                  context
+                                                                      .read<
+                                                                          FormsBloc>()
+                                                                      .add(const FormsEvent
+                                                                          .clearForm());
+                                                                  final pageName = context
+                                                                      .read<
+                                                                          FormsBloc>()
+                                                                      .state
+                                                                      .schema
+                                                                      ?.pages
+                                                                      .entries
+                                                                      .first
+                                                                      .key;
+
+                                                                  if (pageName ==
+                                                                      null) {
+                                                                    Toast.showToast(
+                                                                        context,
+                                                                        message:
+                                                                            'no form found please check configuration',
+                                                                        type: ToastType
+                                                                            .error);
+                                                                  } else {
+                                                                    context.router.push(FormsRenderRoute(
+                                                                        pageName:
+                                                                            pageName,
+                                                                        defaultValues: {
+                                                                          "dateOfAdministration":
+                                                                              DateTime.now(),
+                                                                          "count":
+                                                                              productVariantCount(deliverState, context, variant, state.selectedIndividual, state.householdMemberWrapper.household).length,
+                                                                          "variants":
+                                                                              variant,
+                                                                          "product": RegistrationDeliverySingleton().selectedProject?.additionalDetails?.projectType?.cycles?.isNotEmpty == true
+                                                                              ? productVariantCount(deliverState, context, variant, state.selectedIndividual, state.householdMemberWrapper.household)
+                                                                              : RegistrationDeliverySingleton().selectedProject?.additionalDetails?.projectType?.resources?.map((r) => DeliveryProductVariant(productVariantId: r.productVariantId)).toList(),
+                                                                        }));
+                                                                  }
+
+//
+                                                                  // router.push(
+                                                                  //   DeliverInterventionRoute(),
+                                                                  // );
                                                                 },
                                                                 type:
                                                                     DigitButtonType
@@ -587,5 +688,46 @@ class BeneficiaryDetailsPageState
         },
       ),
     );
+  }
+
+  //TODO::
+
+  List<dynamic> productVariantCount(
+    DeliverInterventionState deliverInterventionState,
+    BuildContext context,
+    List<ProductVariantModel>? variant,
+    IndividualModel? individualModel,
+    HouseholdModel? householdModel,
+  ) {
+    // Calculate the current cycle. If deliverInterventionState.cycle is negative, set it to 0.
+    final currentCycle = deliverInterventionState.cycle >= 0
+        ? deliverInterventionState.cycle
+        : 0;
+
+    // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
+    final currentDose =
+        deliverInterventionState.dose >= 0 ? deliverInterventionState.dose : 0;
+
+    // Calculate the height of the container based on the number of items in the table
+
+    final ProjectTypeModel projectType =
+        RegistrationDeliverySingleton().projectType!;
+    final item =
+        projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
+
+    return getProductVariant(
+            item, individualModel, householdModel, context)['criteria']
+        .productVariants;
+  }
+
+  getProductVariant(
+      ProjectCycleDelivery? item,
+      IndividualModel? individualModel,
+      HouseholdModel? householdModel,
+      BuildContext context) {
+    var result = (fetchProductVariant(item, individualModel, householdModel,
+        context: context));
+
+    return result;
   }
 }
