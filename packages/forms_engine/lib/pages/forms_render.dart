@@ -86,11 +86,21 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               .translate(schema.actionLabel ?? 'Submit'),
                       onPressed: () {
                         // 1. Get visible keys only (skip hidden fields)
-                        final currentKeys = schema.properties?.entries
-                                .where((entry) => !isHidden(entry.value))
-                                .map((entry) => entry.key)
-                                .toList() ??
-                            [];
+                        final currentKeys = <String>[];
+                        final properties = schema.properties ?? {};
+                        final count =
+                            widget.defaultValues?['count'] as int? ?? 0;
+
+                        properties.forEach((key, value) {
+                          if (key == 'resourceCard' && !isHidden(value)) {
+                            for (int i = 0; i < count; i++) {
+                              currentKeys.add('resourceCard_$i');
+                              currentKeys.add('quantityDistributed_$i');
+                            }
+                          } else if (!isHidden(value)) {
+                            currentKeys.add(key);
+                          }
+                        });
 
 // 2. Mark all visible controls as touched and revalidate
                         for (final key in currentKeys) {
@@ -114,13 +124,38 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                         // 4. Proceed with value extraction and state update
                         final values = JsonForms.getFormValues(
-                          formGroup,
-                          schema,
-                        );
+                            formGroup,
+                            // schema,
+                            properties?.containsKey("resourceCard") == false
+                                ? schema
+                                // old
+                                // : cloneAndReplaceResourceCard(
+                                //     baseSchema: schema,
+                                //     cloneFromKey: "resourceCard",
+                                //     newPropertyKeys: List.generate(
+                                //         widget.defaultValues?['count'] ?? 0,
+                                //         (i) => 'resourceCard_$i').toList()),
 
-                        final updatedPropertySchema = schema.copyWith(
+                                : cloneAndReplaceResourceCard(
+                                    baseSchema: schema,
+                                    cloneFromKey: 'resourceCard',
+                                    count: widget.defaultValues?['count'] ?? 0,
+                                  ));
+
+                        // Use transformed schema only if resourceCard exists
+                        final transformedSchema =
+                            properties?.containsKey("resourceCard") == false
+                                ? schema
+                                : cloneAndReplaceResourceCard(
+                                    baseSchema: schema,
+                                    cloneFromKey: 'resourceCard',
+                                    count: widget.defaultValues?['count'] ?? 0,
+                                  );
+
+                        final updatedPropertySchema =
+                            transformedSchema.copyWith(
                           properties: Map.fromEntries(
-                            schema.properties?.entries.map(
+                            transformedSchema.properties?.entries.map(
                                   (e) => values.containsKey(e.key)
                                       ? MapEntry(
                                           e.key,
@@ -151,6 +186,23 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               ),
                             );
 
+                        final updatedSchemaObject = schemaObject.copyWith(
+                          pages: Map.fromEntries(
+                            schemaObject.pages.entries.map(
+                              (entry) => MapEntry(
+                                entry.key,
+                                entry.key == widget.pageName
+                                    ? updatedPropertySchema
+                                    : entry.value,
+                              ),
+                            ),
+                          ),
+                        );
+
+                        context.read<FormsBloc>().add(
+                              FormsUpdateEvent(updatedSchemaObject),
+                            );
+
                         if ((index) < schemaObject.pages.length - 1) {
                           context.router.push(FormsRenderRoute(
                             pageName: schemaObject.pages.entries
@@ -160,9 +212,9 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           ));
                         } else {
                           context.read<FormsBloc>().add(
-                                FormsSubmitEvent(schemaObject),
+                                FormsSubmitEvent(updatedSchemaObject),
                               );
-                          // Pop all form pages (FormsRenderRoute) and return to the caller
+
                           context.router.popUntil((route) {
                             return route.settings.name != FormsRenderRoute.name;
                           });
