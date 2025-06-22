@@ -1,27 +1,34 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:forms_engine/router/forms_router.gm.dart';
 import 'package:forms_engine/widgets/back_header/back_navigation_help_header.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:forms_engine/json_forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/localized.dart';
+import '../models/property_schema/property_schema.dart';
+import '../models/schema_object/schema_object.dart';
 import '../utils/utils.dart';
 
 @RoutePage()
 class FormsRenderPage extends LocalizedStatefulWidget {
   final String pageName;
   final Map<String, dynamic>? defaultValues;
+  final bool isSummary;
 
   const FormsRenderPage({
     super.key,
     super.appLocalizations,
     @PathParam() required this.pageName,
     this.defaultValues,
+    @QueryParam() this.isSummary = false,
   });
 
   @override
@@ -37,6 +44,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           final schemaObject = state.schema;
           if (schemaObject == null) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          if (widget.isSummary) {
+            return _buildSummaryPage(context, schemaObject);
           }
 
           final schema = schemaObject.pages[widget.pageName];
@@ -157,13 +168,11 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             defaultValues: widget.defaultValues,
                           ));
                         } else {
-                          context.read<FormsBloc>().add(
-                            FormsSubmitEvent(schemaObject),
-                          );
-                          // Pop all form pages (FormsRenderRoute) and return to the caller
-                          context.router.popUntil((route) {
-                            return route.settings.name != FormsRenderRoute.name;
-                          });
+                          context.router.push(FormsRenderRoute(
+                            pageName: '',
+                            isSummary: true,
+                            defaultValues: widget.defaultValues,
+                          ));
                         }
                       },
                       type: DigitButtonType.primary,
@@ -232,4 +241,112 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       ),
     );
   }
+  Widget _buildSummaryPage(BuildContext context, SchemaObject schemaObject) {
+    return ScrollableContent(
+      enableFixedDigitButton: true,
+      header: const Padding(
+        padding: EdgeInsets.all(spacer2),
+        child: BackNavigationHelpHeaderWidget(showBackNavigation: true),
+      ),
+      footer: DigitCard(
+        margin: const EdgeInsets.only(top: spacer2),
+        children: [
+          DigitButton(
+            mainAxisSize: MainAxisSize.max,
+            label: localizations.translate('Submit'),
+            onPressed: () {
+              context.read<FormsBloc>().add(FormsSubmitEvent(schemaObject));
+
+              // Pop all form pages (FormsRenderRoute)
+              context.router.popUntil((route) {
+                return route.settings.name != FormsRenderRoute.name;
+              });
+            },
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
+          ),
+        ],
+      ),
+        children: [
+          for (final entry in schemaObject.pages.entries)
+            DigitCard(
+              margin: const EdgeInsets.all(spacer2),
+              children: [
+                LabelValueSummary(
+                  padding: EdgeInsets.zero,
+                  heading: localizations.translate(entry.value.label ?? entry.key),
+                  headingStyle: Theme.of(context).digitTextTheme(context).headingL.copyWith(
+                    color: Theme.of(context).colorTheme.primary.primary2,
+                  ),
+                  items: _renderSummaryLabelValueItems(entry.value),
+                ),
+              ],
+            ),
+          const SizedBox(height: spacer2),
+          Center(
+            child: Text(
+              'version ${schemaObject.version}',
+              style: Theme.of(context).digitTextTheme(context).bodyXS.copyWith(
+                color: Theme.of(context).colorTheme.text.disabled,
+              ),
+            ),
+          ),
+        ]
+    );
+  }
+
+  List<LabelValueItem> _renderSummaryLabelValueItems(PropertySchema schema) {
+    final properties = schema.properties ?? {};
+    final dateFormatter = DateFormat('dd MMM yyyy');
+
+    return properties.entries.map((entry) {
+      final label = localizations.translate(entry.value.label ?? entry.key);
+      final rawValue = entry.value.value;
+
+      String displayValue;
+
+      if (rawValue is List) {
+        // Translate each item in the list
+        displayValue = rawValue
+            .map((e) => localizations.translate(e.toString()))
+            .join(', ');
+      } else if (rawValue is String && isDotSeparatedKey(rawValue)) {
+        // Split dot-separated string and translate each part
+        displayValue = rawValue
+            .split('.')
+            .map((e) => localizations.translate(e.trim()))
+            .join(', ');
+      } else if (rawValue is DateTime) {
+        // Format DateTime directly
+        displayValue = dateFormatter.format(rawValue);
+      } else if (rawValue is String && isDateTime(rawValue)) {
+        // Parse and format if string is a valid ISO date
+        displayValue = dateFormatter.format(DateTime.parse(rawValue));
+      }
+      else if (rawValue is String && isDateLike(rawValue)) {
+        try {
+          final parsed = parseDate(rawValue);
+          displayValue = dateFormatter.format(parsed);
+        } catch (_) {
+          // Fallback to translated raw value if parsing fails
+          displayValue = localizations.translate(rawValue);
+        }
+      }else {
+        // Fallback translation
+        displayValue = localizations.translate(rawValue?.toString() ?? '-');
+      }
+
+      return LabelValueItem(
+        label: label,
+        value: displayValue,
+        isInline: true,
+        labelFlex: 5,
+        maxLines: 5,
+        padding: const EdgeInsets.symmetric(vertical: spacer1),
+      );
+    }).toList();
+  }
+
 }
+
+

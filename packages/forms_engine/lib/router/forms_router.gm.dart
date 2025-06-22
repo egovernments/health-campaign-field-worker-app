@@ -18,9 +18,15 @@ abstract class $FormsRoute extends _i2.AutoRouterModule {
   final Map<String, _i2.PageFactory> pagesMap = {
     FormsRenderRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
+      final queryParams = routeData.queryParams;
       final args = routeData.argsAs<FormsRenderRouteArgs>(
-          orElse: () =>
-              FormsRenderRouteArgs(pageName: pathParams.getString('pageName')));
+          orElse: () => FormsRenderRouteArgs(
+                pageName: pathParams.getString('pageName'),
+                isSummary: queryParams.getBool(
+                  'isSummary',
+                  false,
+                ),
+              ));
       return _i2.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i1.FormsRenderPage(
@@ -28,6 +34,7 @@ abstract class $FormsRoute extends _i2.AutoRouterModule {
           appLocalizations: args.appLocalizations,
           pageName: args.pageName,
           defaultValues: args.defaultValues,
+          isSummary: args.isSummary,
         ),
       );
     }
@@ -42,6 +49,7 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
     _i4.FormLocalization? appLocalizations,
     required String pageName,
     Map<String, dynamic>? defaultValues,
+    bool isSummary = false,
     List<_i2.PageRouteInfo>? children,
   }) : super(
           FormsRenderRoute.name,
@@ -50,8 +58,10 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
             appLocalizations: appLocalizations,
             pageName: pageName,
             defaultValues: defaultValues,
+            isSummary: isSummary,
           ),
           rawPathParams: {'pageName': pageName},
+          rawQueryParams: {'isSummary': isSummary},
           initialChildren: children,
         );
 
@@ -67,6 +77,7 @@ class FormsRenderRouteArgs {
     this.appLocalizations,
     required this.pageName,
     this.defaultValues,
+    this.isSummary = false,
   });
 
   final _i3.Key? key;
@@ -77,8 +88,10 @@ class FormsRenderRouteArgs {
 
   final Map<String, dynamic>? defaultValues;
 
+  final bool isSummary;
+
   @override
   String toString() {
-    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, pageName: $pageName, defaultValues: $defaultValues}';
+    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, pageName: $pageName, defaultValues: $defaultValues, isSummary: $isSummary}';
   }
 }
