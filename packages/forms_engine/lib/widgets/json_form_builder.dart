@@ -394,12 +394,15 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
             final subSchema = mapEntry.value;
             String subName = mapEntry.key;
 
-            if (subName.contains("resourceCard_")) {
-              return null;
-            }
+            // if (subName.contains("resourceCard_")) {
+            //   return null;
+            // }
+            // if (subName.contains("quantityDistributed_")) {
+            //   final res_key = widgetEntries.elementAt(index - 1).value.key;
+            //   subName = "$res_key,$subName";
+            // }
             if (subName.contains("quantityDistributed_")) {
-              final res_key = widgetEntries.elementAt(index - 1).key;
-              subName = "$res_key,$subName";
+              return null;
             }
 
             final field = JsonFormBuilder(

@@ -49,38 +49,6 @@ class JsonForms extends StatelessWidget {
     // return controls;
 
     final Map<String, AbstractControl<dynamic>> controls = {};
-// my chnage
-    // schema.properties!.forEach((key, value) {
-    //   if (key == 'resourceCard') {
-    //     final variants = defaultValues?['variants'];
-    //     final productVariants = defaultValues?['product'];
-
-    //     for (int i = 0; i < defaultValues?['count']; i++) {
-    //       final dynamicKey = 'resourceCard_$i';
-    //       controls[dynamicKey] = FormControl<dynamic>(
-    //           value: variants != null &&
-    //                   variants.length < defaultValues?['count']
-    //               ? variants.last
-    //               : (variants != null && i < variants.length
-    //                   ? variants.firstWhereOrNull(
-    //                       (element) =>
-    //                           element.id ==
-    //                           productVariants?.elementAt(i).productVariantId,
-    //                     )
-    //                   : null));
-    //     }
-    //   } else {
-    //     if (!isHidden(value)) {
-    //       controls[key] = buildFormControl(
-    //         key,
-    //         value,
-    //         schema,
-    //         defaultLatlng: defaultLatlng,
-    //         defaultValues: defaultValues,
-    //       );
-    //     }
-    //   }
-    // });
 
     // working fine with product_key
 
@@ -145,7 +113,7 @@ class JsonForms extends StatelessWidget {
 
           // Add both resource and quantity controls
           controls[resourceKey] = FormControl<dynamic>(value: matchedVariant);
-          controls[quantityKey] = FormControl<dynamic>(value: 1); // or "0"
+          controls[quantityKey] = FormControl<String>(value: "1"); // or "0"
         }
       }
 

@@ -210,12 +210,19 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           schema.properties?.containsKey("resourceCard") ==
                                   false
                               ? schema
+                              // old
+                              // : cloneAndReplaceResourceCard(
+                              //     baseSchema: schema,
+                              //     cloneFromKey: "resourceCard",
+                              //     newPropertyKeys: List.generate(
+                              //         widget.defaultValues?['count'] ?? 0,
+                              //         (i) => 'resourceCard_$i').toList()),
+
                               : cloneAndReplaceResourceCard(
                                   baseSchema: schema,
-                                  cloneFromKey: "resourceCard",
-                                  newPropertyKeys: List.generate(
-                                      widget.defaultValues?['count'] ?? 0,
-                                      (i) => 'resourceCard_$i').toList()),
+                                  cloneFromKey: 'resourceCard',
+                                  count: widget.defaultValues?['count'] ?? 0,
+                                ),
                       childrens: const [
                         {
                           "resourceCard": Text("Hello"),
@@ -275,28 +282,86 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
   //   return baseSchema.copyWith(properties: newProperties);
   // }
 
+// working code
+  // PropertySchema cloneAndReplaceResourceCard({
+  //   required PropertySchema baseSchema,
+  //   required List<String> newPropertyKeys,
+  //   required String cloneFromKey,
+  // }) {
+  //   final originalProps = baseSchema.properties ?? {};
+
+  //   final newOrderedProps = <String, PropertySchema>{};
+
+  //   // To track where 'resourceCard' appeared in the order
+  //   int insertIndex = 0;
+  //   bool foundResourceCard = false;
+
+  //   final keys = originalProps.keys.toList();
+
+  //   for (var i = 0; i < keys.length; i++) {
+  //     final key = keys[i];
+
+  //     if (key == cloneFromKey) {
+  //       insertIndex = newOrderedProps.length;
+  //       foundResourceCard = true;
+  //       continue; // Skip adding 'resourceCard'
+  //     }
+
+  //     newOrderedProps[key] = originalProps[key]!;
+  //   }
+
+  //   if (!foundResourceCard) {
+  //     throw Exception('Base property "$cloneFromKey" not found in schema.');
+  //   }
+
+  //   // Define a new default property for cloning
+  //   const defaultSelectProperty = PropertySchema(
+  //     type: PropertySchemaType.productVariant,
+  //     format: PropertySchemaFormat.select,
+  //     enums: [],
+  //     label: null,
+  //     isMultiSelect: false,
+  //     validations: [],
+  //     readOnly: false,
+  //     hidden: false,
+  //     displayOnly: false,
+  //   );
+
+  //   // Insert new keys at the original resourceCard position
+  //   final entriesBefore = newOrderedProps.entries.take(insertIndex);
+  //   final entriesAfter = newOrderedProps.entries.skip(insertIndex);
+
+  //   final Map<String, PropertySchema> orderedWithClones = {
+  //     for (final e in entriesBefore) e.key: e.value,
+  //     for (final key in newPropertyKeys) key: defaultSelectProperty,
+  //     for (final e in entriesAfter) e.key: e.value,
+  //   };
+
+  //   return baseSchema.copyWith(properties: orderedWithClones);
+  // }
+
+  // end
+
   PropertySchema cloneAndReplaceResourceCard({
     required PropertySchema baseSchema,
-    required List<String> newPropertyKeys,
+    required int count,
     required String cloneFromKey,
   }) {
     final originalProps = baseSchema.properties ?? {};
-
     final newOrderedProps = <String, PropertySchema>{};
 
-    // To track where 'resourceCard' appeared in the order
     int insertIndex = 0;
     bool foundResourceCard = false;
 
     final keys = originalProps.keys.toList();
 
-    for (var i = 0; i < keys.length; i++) {
+    for (int i = 0; i < keys.length; i++) {
       final key = keys[i];
 
       if (key == cloneFromKey) {
         insertIndex = newOrderedProps.length;
         foundResourceCard = true;
-        continue; // Skip adding 'resourceCard'
+        continue;
       }
 
       newOrderedProps[key] = originalProps[key]!;
@@ -306,8 +371,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       throw Exception('Base property "$cloneFromKey" not found in schema.');
     }
 
-    // Define a new default property for cloning
-    const defaultSelectProperty = PropertySchema(
+    const defaultResourceProperty = PropertySchema(
       type: PropertySchemaType.productVariant,
       format: PropertySchemaFormat.select,
       enums: [],
@@ -319,16 +383,33 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       displayOnly: false,
     );
 
-    // Insert new keys at the original resourceCard position
+    const defaultQuantityProperty = PropertySchema(
+      type: PropertySchemaType.integer,
+      format: PropertySchemaFormat.numeric,
+      label: null,
+      validations: [],
+      readOnly: false,
+      hidden: false,
+      displayOnly: false,
+    );
+
+    // Build the cloned pairs: resourceCard_i and quantityDistributed_i
+    final Map<String, PropertySchema> clonedPairs = {
+      for (int i = 0; i < count; i++) ...{
+        'resourceCard_$i': defaultResourceProperty,
+        'quantityDistributed_$i': defaultQuantityProperty,
+      }
+    };
+
     final entriesBefore = newOrderedProps.entries.take(insertIndex);
     final entriesAfter = newOrderedProps.entries.skip(insertIndex);
 
-    final Map<String, PropertySchema> orderedWithClones = {
+    final Map<String, PropertySchema> finalProps = {
       for (final e in entriesBefore) e.key: e.value,
-      for (final key in newPropertyKeys) key: defaultSelectProperty,
+      ...clonedPairs,
       for (final e in entriesAfter) e.key: e.value,
     };
 
-    return baseSchema.copyWith(properties: orderedWithClones);
+    return baseSchema.copyWith(properties: finalProps);
   }
 }

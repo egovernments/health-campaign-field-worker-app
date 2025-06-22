@@ -28,6 +28,7 @@ class JsonSchemaResourceCardBuilder extends JsonSchemaBuilder<String> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> controls = formControlName.split("_").toList();
     final loc = FormLocalization.of(context);
     final validationMessages = buildValidationMessages(validations, loc);
     return ProductVariantBlocWrapper(
@@ -62,21 +63,23 @@ class JsonSchemaResourceCardBuilder extends JsonSchemaBuilder<String> {
           },
         ),
 
-        // ReactiveWrapperField(
-        //   formControlName: 'quantityDistributed.${cardIndex}',
-        //   builder: (field) => LabeledField(
-        //     label: label,
-        //     child: DigitNumericFormInput(
-        //       minValue: 1,
-        //       step: 1,
-        //       initialValue: "0",
-        //       onChange: (value) {
-        //         form.control('quantityDistributed.${cardIndex}').value =
-        //             int.parse(value);
-        //       },
-        //     ),
-        //   ),
-        // ),
+        ReactiveWrapperField(
+          formControlName: 'quantityDistributed_${controls.last}',
+          builder: (field) => LabeledField(
+            label: label,
+            child: DigitNumericFormInput(
+              minValue: 1,
+              step: 1,
+              initialValue:
+                  form.control('quantityDistributed_${controls.last}').value ??
+                      "0",
+              onChange: (value) {
+                form.control('quantityDistributed_${controls.last}').value =
+                    int.parse(value);
+              },
+            ),
+          ),
+        ),
         // Align(
         //   alignment: Alignment.centerLeft,
         //   child:
