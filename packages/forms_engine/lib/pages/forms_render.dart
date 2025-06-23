@@ -1,12 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:forms_engine/models/property_schema/property_schema.dart';
 import 'package:forms_engine/router/forms_router.gm.dart';
 import 'package:forms_engine/widgets/back_header/back_navigation_help_header.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:forms_engine/json_forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,18 +17,22 @@ import 'package:registration_delivery/blocs/delivery_intervention/deliver_interv
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import '../../widgets/localized.dart';
+import '../models/property_schema/property_schema.dart';
+import '../models/schema_object/schema_object.dart';
 import '../utils/utils.dart';
 
 @RoutePage()
 class FormsRenderPage extends LocalizedStatefulWidget {
   final String pageName;
   final Map<String, dynamic>? defaultValues;
+  final bool isSummary;
 
   const FormsRenderPage({
     super.key,
     super.appLocalizations,
     @PathParam() required this.pageName,
     this.defaultValues,
+    @QueryParam() this.isSummary = false,
   });
 
   @override
@@ -42,6 +49,10 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
           if (schemaObject == null) {
             return const Center(child: CircularProgressIndicator());
           }
+
+          // if (widget.isSummary) {
+          //   return _buildSummaryPage(context, schemaObject);
+          // }
 
           final schema = schemaObject.pages[widget.pageName];
 
@@ -423,17 +434,17 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       throw Exception('Base property "$cloneFromKey" not found in schema.');
     }
 
-    const defaultResourceProperty = PropertySchema(
-      type: PropertySchemaType.productVariant,
-      format: PropertySchemaFormat.select,
-      enums: [],
-      label: null,
-      isMultiSelect: false,
-      validations: [],
-      readOnly: false,
-      hidden: false,
-      displayOnly: false,
-    );
+    // const defaultResourceProperty = PropertySchema(
+    //   type: PropertySchemaType.productVariant,
+    //   format: PropertySchemaFormat.select,
+    //   enums: [],
+    //   label: null,
+    //   isMultiSelect: false,
+    //   validations: [],
+    //   readOnly: false,
+    //   hidden: false,
+    //   displayOnly: false,
+    // );
 
     const defaultQuantityProperty = PropertySchema(
       type: PropertySchemaType.integer,

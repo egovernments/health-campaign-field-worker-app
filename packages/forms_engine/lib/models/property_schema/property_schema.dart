@@ -108,4 +108,4 @@ enum PropertySchemaFormat {
   resourceData;
 }
 
-enum PropertySchemaType { object, string, integer, boolean, productVariant }
+enum PropertySchemaType { object, string, integer, boolean }

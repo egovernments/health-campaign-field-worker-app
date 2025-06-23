@@ -35,6 +35,10 @@ FormControl buildFormControl(
         value: parseBoolValue(rawValue),
         validators: validators,
       );
+    case PropertySchemaType.object:
+      return FormControl<dynamic>(
+        validators: validators,
+      );
 
     case PropertySchemaType.string:
       if (format == PropertySchemaFormat.date) {
