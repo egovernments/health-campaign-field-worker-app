@@ -93,11 +93,13 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       onPressed: () {
                         // 1. Get visible keys only (skip hidden fields)
                         final currentKeys = schema.properties?.entries
-                            .where((entry) => !isHidden(entry.value))
+                            .where((entry) {
+                          final isVisible = !isHidden(entry.value);
+                          final includeInForm = entry.value.includeInForm == true;
+                          return isVisible || includeInForm;
+                        })
                             .map((entry) => entry.key)
                             .toList() ?? [];
-
-
 
 // 2. Mark all visible controls as touched and revalidate
                         for (final key in currentKeys) {
@@ -118,8 +120,6 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             .every((key) => formGroup.control(key).valid);
 
                         if (!isCurrentPageValid) return;
-
-
 
                         // 4. Proceed with value extraction and state update
                         final values = JsonForms.getFormValues(
@@ -168,11 +168,23 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                             defaultValues: widget.defaultValues,
                           ));
                         } else {
-                          context.router.push(FormsRenderRoute(
-                            pageName: '',
-                            isSummary: true,
-                            defaultValues: widget.defaultValues,
-                          ));
+                          if (schemaObject.summary) {
+                            context.router.push(FormsRenderRoute(
+                              pageName: '',
+                              isSummary: true,
+                              defaultValues: widget.defaultValues,
+                            ));
+                          } else {
+                            context
+                                .read<FormsBloc>()
+                                .add(FormsSubmitEvent(schemaObject));
+
+                            // Pop all form pages (FormsRenderRoute)
+                            context.router.popUntil((route) {
+                              return route.settings.name !=
+                                  FormsRenderRoute.name;
+                            });
+                          }
                         }
                       },
                       type: DigitButtonType.primary,
@@ -241,32 +253,33 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       ),
     );
   }
+
   Widget _buildSummaryPage(BuildContext context, SchemaObject schemaObject) {
     return ScrollableContent(
-      enableFixedDigitButton: true,
-      header: const Padding(
-        padding: EdgeInsets.all(spacer2),
-        child: BackNavigationHelpHeaderWidget(showBackNavigation: true),
-      ),
-      footer: DigitCard(
-        margin: const EdgeInsets.only(top: spacer2),
-        children: [
-          DigitButton(
-            mainAxisSize: MainAxisSize.max,
-            label: localizations.translate('Submit'),
-            onPressed: () {
-              context.read<FormsBloc>().add(FormsSubmitEvent(schemaObject));
+        enableFixedDigitButton: true,
+        header: const Padding(
+          padding: EdgeInsets.all(spacer2),
+          child: BackNavigationHelpHeaderWidget(showBackNavigation: true),
+        ),
+        footer: DigitCard(
+          margin: const EdgeInsets.only(top: spacer2),
+          children: [
+            DigitButton(
+              mainAxisSize: MainAxisSize.max,
+              label: localizations.translate('CORE_COMMON_SUBMIT'),
+              onPressed: () {
+                context.read<FormsBloc>().add(FormsSubmitEvent(schemaObject));
 
-              // Pop all form pages (FormsRenderRoute)
-              context.router.popUntil((route) {
-                return route.settings.name != FormsRenderRoute.name;
-              });
-            },
-            type: DigitButtonType.primary,
-            size: DigitButtonSize.large,
-          ),
-        ],
-      ),
+                // Pop all form pages (FormsRenderRoute)
+                context.router.popUntil((route) {
+                  return route.settings.name != FormsRenderRoute.name;
+                });
+              },
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+            ),
+          ],
+        ),
         children: [
           for (final entry in schemaObject.pages.entries)
             DigitCard(
@@ -274,10 +287,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               children: [
                 LabelValueSummary(
                   padding: EdgeInsets.zero,
-                  heading: localizations.translate(entry.value.label ?? entry.key),
-                  headingStyle: Theme.of(context).digitTextTheme(context).headingL.copyWith(
-                    color: Theme.of(context).colorTheme.primary.primary2,
-                  ),
+                  heading:
+                      localizations.translate(entry.value.label ?? entry.key),
+                  headingStyle: Theme.of(context)
+                      .digitTextTheme(context)
+                      .headingL
+                      .copyWith(
+                        color: Theme.of(context).colorTheme.primary.primary2,
+                      ),
                   items: _renderSummaryLabelValueItems(entry.value),
                 ),
               ],
@@ -287,53 +304,52 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
             child: Text(
               'version ${schemaObject.version}',
               style: Theme.of(context).digitTextTheme(context).bodyXS.copyWith(
-                color: Theme.of(context).colorTheme.text.disabled,
-              ),
+                    color: Theme.of(context).colorTheme.text.disabled,
+                  ),
             ),
           ),
-        ]
-    );
+        ]);
   }
 
   List<LabelValueItem> _renderSummaryLabelValueItems(PropertySchema schema) {
     final properties = schema.properties ?? {};
     final dateFormatter = DateFormat('dd MMM yyyy');
 
-    return properties.entries.map((entry) {
+    return properties.entries
+        .where((entry) => entry.value.includeInSummary != false)
+        .map((entry) {
       final label = localizations.translate(entry.value.label ?? entry.key);
       final rawValue = entry.value.value;
 
       String displayValue;
 
       if (rawValue is List) {
-        // Translate each item in the list
         displayValue = rawValue
             .map((e) => localizations.translate(e.toString()))
             .join(', ');
       } else if (rawValue is String && isDotSeparatedKey(rawValue)) {
-        // Split dot-separated string and translate each part
         displayValue = rawValue
             .split('.')
             .map((e) => localizations.translate(e.trim()))
             .join(', ');
       } else if (rawValue is DateTime) {
-        // Format DateTime directly
         displayValue = dateFormatter.format(rawValue);
       } else if (rawValue is String && isDateTime(rawValue)) {
-        // Parse and format if string is a valid ISO date
         displayValue = dateFormatter.format(DateTime.parse(rawValue));
-      }
-      else if (rawValue is String && isDateLike(rawValue)) {
+      } else if (rawValue is String && isDateLike(rawValue)) {
         try {
           final parsed = parseDate(rawValue);
           displayValue = dateFormatter.format(parsed);
         } catch (_) {
-          // Fallback to translated raw value if parsing fails
           displayValue = localizations.translate(rawValue);
         }
-      }else {
-        // Fallback translation
-        displayValue = localizations.translate(rawValue?.toString() ?? '-');
+      } else if (rawValue == null ||
+          (rawValue is String && rawValue.trim().isEmpty) ||
+          (rawValue is List && rawValue.isEmpty)) {
+        // ✅ Null values show "--"
+        displayValue = '--';
+      } else {
+        displayValue = localizations.translate(rawValue.toString());
       }
 
       return LabelValueItem(
@@ -346,7 +362,4 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
       );
     }).toList();
   }
-
 }
-
-

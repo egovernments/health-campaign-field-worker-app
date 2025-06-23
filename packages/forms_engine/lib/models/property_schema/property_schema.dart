@@ -49,6 +49,8 @@ class PropertySchema with _$PropertySchema {
     String? actionLabel,
     String? description,
     List<ValidationRule>? validations,
+    bool? includeInForm,
+    bool? includeInSummary,
   }) = _PropertySchema;
 
 

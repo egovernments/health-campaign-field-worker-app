@@ -526,6 +526,7 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
       'name': inputJson['name'],
       'version': inputJson['version'],
       'pages': <String, dynamic>{},
+      'summary': inputJson['summary'],
       'templates': <String, dynamic>{},
     };
 
@@ -565,6 +566,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'charCount': pageMap['charCount'],
         'systemDate': pageMap['systemDate'],
         'isMultiSelect': pageMap['isMultiSelect'],
+        'includeInForm': pageMap['includeInForm'],
+        'includeInSummary': pageMap['includeInSummary'],
       };
 
       if (type == 'template') {

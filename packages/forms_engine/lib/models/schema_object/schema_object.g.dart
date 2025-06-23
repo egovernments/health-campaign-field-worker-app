@@ -10,6 +10,7 @@ _$SchemaObjectImpl _$$SchemaObjectImplFromJson(Map<String, dynamic> json) =>
     _$SchemaObjectImpl(
       name: json['name'] as String,
       version: json['version'] as int,
+      summary: json['summary'] as bool? ?? false,
       pages: (json['pages'] as Map<String, dynamic>?)?.map(
             (k, e) =>
                 MapEntry(k, PropertySchema.fromJson(e as Map<String, dynamic>)),
@@ -24,6 +25,7 @@ Map<String, dynamic> _$$SchemaObjectImplToJson(_$SchemaObjectImpl instance) {
   final val = <String, dynamic>{
     'name': instance.name,
     'version': instance.version,
+    'summary': instance.summary,
     'pages': instance.pages.map((k, e) => MapEntry(k, e.toJson())),
   };
 

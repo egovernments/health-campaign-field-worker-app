@@ -183,8 +183,11 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
         final key = propEntry.key;
         final value = propEntry.value.value;
 
-        // Skip field if it's hidden
-        if (propEntry.value.hidden == true) continue;
+        // Skip field if it's hidden and not included in the form
+        final isHidden = propEntry.value.hidden == true;
+        final includeInForm = propEntry.value.includeInForm == true;
+
+        if (isHidden && !includeInForm) continue;
 
         /// Normalize empty string to null
         final normalizedValue =

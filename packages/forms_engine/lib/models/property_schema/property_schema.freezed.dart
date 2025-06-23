@@ -51,6 +51,8 @@ mixin _$PropertySchema {
   String? get actionLabel => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   List<ValidationRule>? get validations => throw _privateConstructorUsedError;
+  bool? get includeInForm => throw _privateConstructorUsedError;
+  bool? get includeInSummary => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -94,7 +96,9 @@ abstract class $PropertySchemaCopyWith<$Res> {
       int? order,
       String? actionLabel,
       String? description,
-      List<ValidationRule>? validations});
+      List<ValidationRule>? validations,
+      bool? includeInForm,
+      bool? includeInSummary});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
 }
@@ -140,6 +144,8 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? actionLabel = freezed,
     Object? description = freezed,
     Object? validations = freezed,
+    Object? includeInForm = freezed,
+    Object? includeInSummary = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -254,6 +260,14 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.validations
           : validations // ignore: cast_nullable_to_non_nullable
               as List<ValidationRule>?,
+      includeInForm: freezed == includeInForm
+          ? _value.includeInForm
+          : includeInForm // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      includeInSummary: freezed == includeInSummary
+          ? _value.includeInSummary
+          : includeInSummary // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 
@@ -308,7 +322,9 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       int? order,
       String? actionLabel,
       String? description,
-      List<ValidationRule>? validations});
+      List<ValidationRule>? validations,
+      bool? includeInForm,
+      bool? includeInSummary});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
@@ -353,6 +369,8 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? actionLabel = freezed,
     Object? description = freezed,
     Object? validations = freezed,
+    Object? includeInForm = freezed,
+    Object? includeInSummary = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -467,6 +485,14 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value._validations
           : validations // ignore: cast_nullable_to_non_nullable
               as List<ValidationRule>?,
+      includeInForm: freezed == includeInForm
+          ? _value.includeInForm
+          : includeInForm // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      includeInSummary: freezed == includeInSummary
+          ? _value.includeInSummary
+          : includeInSummary // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -505,7 +531,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.order,
       this.actionLabel,
       this.description,
-      final List<ValidationRule>? validations})
+      final List<ValidationRule>? validations,
+      this.includeInForm,
+      this.includeInSummary})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
@@ -605,8 +633,13 @@ class _$PropertySchemaImpl implements _PropertySchema {
   }
 
   @override
+  final bool? includeInForm;
+  @override
+  final bool? includeInSummary;
+
+  @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary)';
   }
 
   @override
@@ -660,7 +693,11 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.description, description) ||
                 other.description == description) &&
             const DeepCollectionEquality()
-                .equals(other._validations, _validations));
+                .equals(other._validations, _validations) &&
+            (identical(other.includeInForm, includeInForm) ||
+                other.includeInForm == includeInForm) &&
+            (identical(other.includeInSummary, includeInSummary) ||
+                other.includeInSummary == includeInSummary));
   }
 
   @JsonKey(ignore: true)
@@ -694,7 +731,9 @@ class _$PropertySchemaImpl implements _PropertySchema {
         order,
         actionLabel,
         description,
-        const DeepCollectionEquality().hash(_validations)
+        const DeepCollectionEquality().hash(_validations),
+        includeInForm,
+        includeInSummary
       ]);
 
   @JsonKey(ignore: true)
@@ -743,7 +782,9 @@ abstract class _PropertySchema implements PropertySchema {
       final int? order,
       final String? actionLabel,
       final String? description,
-      final List<ValidationRule>? validations}) = _$PropertySchemaImpl;
+      final List<ValidationRule>? validations,
+      final bool? includeInForm,
+      final bool? includeInSummary}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -806,6 +847,10 @@ abstract class _PropertySchema implements PropertySchema {
   String? get description;
   @override
   List<ValidationRule>? get validations;
+  @override
+  bool? get includeInForm;
+  @override
+  bool? get includeInSummary;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
