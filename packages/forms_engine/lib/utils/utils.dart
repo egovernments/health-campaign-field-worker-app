@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
+import 'package:flutter/material.dart';
 import '../blocs/app_localization.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
@@ -146,6 +146,11 @@ bool isDotSeparatedKey(String input) {
 
   // Allow only alphabetic dot-separated keys like "enum.value.type"
   return RegExp(r'^[a-zA-Z]+(\.[a-zA-Z]+)+$').hasMatch(input);
+}
+
+String formatDateLocalized(BuildContext context, DateTime date, String pattern) {
+  final locale = Localizations.localeOf(context).toString();
+  return DateFormat(pattern, locale).format(date);
 }
 
 

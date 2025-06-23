@@ -9,6 +9,7 @@ class JsonSchemaCheckboxBuilder extends JsonSchemaBuilder<bool> {
     super.label,
     super.validations,
     super.readOnly,
+    super.isRequired,
   });
 
   @override
@@ -27,6 +28,7 @@ class JsonSchemaCheckboxBuilder extends JsonSchemaBuilder<bool> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             DigitCheckbox(
+              isRequired: isRequired ?? false,
               readOnly: readOnly,
               label: label ?? 'checkbox label',
               value: (field.value ?? false) as bool,

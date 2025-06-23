@@ -553,7 +553,7 @@ class _SearchBeneficiaryPageState
 
                         if (pageName == null) {
                           Toast.showToast(context,
-                              message: 'no form found please check configuration',
+                              message: localizations.translate('NO_FORM_FOUND_FOR_REGISTRATION'),
                               type: ToastType.error);
                         } else {
                           context.router.push(FormsRenderRoute(pageName: pageName, defaultValues: {

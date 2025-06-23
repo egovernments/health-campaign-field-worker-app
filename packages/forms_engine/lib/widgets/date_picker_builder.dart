@@ -51,8 +51,11 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
               errorMessage: field.errorText,
               innerLabel: innerLabel,
               initialValue: form.control(formControlName).value != null
-                  ? DateFormat(Constants().dateMonthYearFormat)
-                  .format(form.control(formControlName).value as DateTime)
+                  ? formatDateLocalized(
+                context,
+                form.control(formControlName).value as DateTime,
+                Constants().dateMonthYearFormat,
+              )
                   : null,
             ),
           ),
