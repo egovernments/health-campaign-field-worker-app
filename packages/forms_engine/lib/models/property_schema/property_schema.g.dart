@@ -48,6 +48,8 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       validations: (json['validations'] as List<dynamic>?)
           ?.map((e) => ValidationRule.fromJson(e as Map<String, dynamic>))
           .toList(),
+      includeInForm: json['includeInForm'] as bool?,
+      includeInSummary: json['includeInSummary'] as bool?,
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -91,6 +93,8 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('description', instance.description);
   writeNotNull(
       'validations', instance.validations?.map((e) => e.toJson()).toList());
+  writeNotNull('includeInForm', instance.includeInForm);
+  writeNotNull('includeInSummary', instance.includeInSummary);
   return val;
 }
 

@@ -12,6 +12,7 @@ class SchemaObject with _$SchemaObject {
   const factory SchemaObject({
     required String name,
     required int version,
+    @Default(false)bool summary,
     @Default({}) Map<String, PropertySchema> pages,
     List<ActionSchema>? actionSchema,
   }) = _SchemaObject;
