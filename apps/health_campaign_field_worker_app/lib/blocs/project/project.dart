@@ -558,7 +558,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   moduleName: 'HCM-ADMIN-CONSOLE',
                   masterDetails: [
                     MdmsMasterDetailModel('FormConfig',
-                      filter: "[?(@.project=='${event.model.referenceID}')]",
+                      filter: "[?(@.project=='${event.model.referenceID}' && @.isSelected==true)]",
                     ),
                   ],
                 ),
