@@ -181,7 +181,7 @@ final jsonConfig = {
     }
   },
   "deliveryDetails": {
-    "model": {
+    "models": {
       "TaskModel": {
         "mappings": {
           "id": "taskDetails.id",

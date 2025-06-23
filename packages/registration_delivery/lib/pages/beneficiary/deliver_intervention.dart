@@ -158,54 +158,54 @@ class DeliverInterventionPageState
 
     return BlocListener<FormsBloc, FormsState>(
       listener: (context, formState) {
-        if (formState is FormsSubmittedState) {
-          DigitLoaders.overlayLoader(context: context);
+        // if (formState is FormsSubmittedState) {
+        //   DigitLoaders.overlayLoader(context: context);
 
-          final formData = formState.formData;
-          if (formData.isEmpty) return;
+        //   final formData = formState.formData;
+        //   if (formData.isEmpty) return;
 
-          try {
-            final modelsConfig = jsonConfig['deliveryDetails']?['models']
-                as Map<String, dynamic>;
+        //   try {
+        //     final modelsConfig = jsonConfig['deliveryDetails']?['models']
+        //         as Map<String, dynamic>;
 
-            final formEntityMapper = FormEntityMapper(config: jsonConfig);
+        //     final formEntityMapper = FormEntityMapper(config: jsonConfig);
 
-            final entities = formEntityMapper.mapFormToEntities(
-              formValues: formData,
-              modelsConfig: modelsConfig,
-              context: {
-                "projectId":
-                    RegistrationDeliverySingleton().selectedProject?.id,
-                "user": RegistrationDeliverySingleton().loggedInUser,
-                "tenantId":
-                    RegistrationDeliverySingleton().selectedProject?.tenantId,
-                "selectedBoundaryCode": RegistrationDeliverySingleton()
-                    .boundary
-                    ?.code, // converting in json format to match nested object value as passing model will cause issue
-                'userUUID': RegistrationDeliverySingleton().loggedInUser?.uuid,
-                'householdType':
-                    RegistrationDeliverySingleton().householdType?.toValue(),
-                "beneficiaryType":
-                    RegistrationDeliverySingleton().beneficiaryType?.toValue(),
-              },
-              fallbackFormDataString:
-                  jsonConfig['deliveryDetails']?['fallbackModel'] as String?,
-            );
+        //     final entities = formEntityMapper.mapFormToEntities(
+        //       formValues: formData,
+        //       modelsConfig: modelsConfig,
+        //       context: {
+        //         "projectId":
+        //             RegistrationDeliverySingleton().selectedProject?.id,
+        //         "user": RegistrationDeliverySingleton().loggedInUser,
+        //         "tenantId":
+        //             RegistrationDeliverySingleton().selectedProject?.tenantId,
+        //         "selectedBoundaryCode": RegistrationDeliverySingleton()
+        //             .boundary
+        //             ?.code, // converting in json format to match nested object value as passing model will cause issue
+        //         'userUUID': RegistrationDeliverySingleton().loggedInUser?.uuid,
+        //         'householdType':
+        //             RegistrationDeliverySingleton().householdType?.toValue(),
+        //         "beneficiaryType":
+        //             RegistrationDeliverySingleton().beneficiaryType?.toValue(),
+        //       },
+        //       fallbackFormDataString:
+        //           jsonConfig['deliveryDetails']?['fallbackModel'] as String?,
+        //     );
 
-            context.read<EntityCreateBloc>().add(
-                  EntityCreateEvent.create(entities: entities),
-                );
-            // Reset to prevent re-handling
-            context.read<FormsBloc>().add(
-                  const FormsEvent.clearForm(), // or create a FormsResetEvent
-                );
-          } catch (e) {
-            Navigator.of(context, rootNavigator: true).pop();
-            context.router
-                .push(BeneficiaryErrorRoute(enableViewHousehold: false));
-            print('Error: $e');
-          }
-        }
+        //     context.read<EntityCreateBloc>().add(
+        //           EntityCreateEvent.create(entities: entities),
+        //         );
+        //     // Reset to prevent re-handling
+        //     context.read<FormsBloc>().add(
+        //           const FormsEvent.clearForm(), // or create a FormsResetEvent
+        //         );
+        //   } catch (e) {
+        //     Navigator.of(context, rootNavigator: true).pop();
+        //     context.router
+        //         .push(BeneficiaryErrorRoute(enableViewHousehold: false));
+        //     print('Error: $e');
+        //   }
+        // }
       },
       child: ProductVariantBlocWrapper(
         child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(

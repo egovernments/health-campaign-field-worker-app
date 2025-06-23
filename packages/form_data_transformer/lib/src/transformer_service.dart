@@ -1,5 +1,8 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
+import 'package:registration_delivery/models/entities/status.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'model_factory_registory.dart';
 
 class FormEntityMapper {
@@ -171,11 +174,11 @@ class FormEntityMapper {
   }
 
   Map<String, dynamic>? _mapAdditionalFields(
-      Map<String, dynamic> fieldsMap,
-      Map<String, dynamic> formValues,
-      String modelName,
-      Map<String, dynamic> context,
-      ) {
+    Map<String, dynamic> fieldsMap,
+    Map<String, dynamic> formValues,
+    String modelName,
+    Map<String, dynamic> context,
+  ) {
     final fieldsList = <Map<String, dynamic>>[];
 
     fieldsMap.forEach((customKey, path) {
@@ -286,7 +289,8 @@ class FormEntityMapper {
       // Correct way: split before the first `{`
       final braceIndex = switchContent.indexOf('{');
       if (braceIndex == -1) {
-        throw Exception('Invalid __switch format, missing "{" for mapping block.');
+        throw Exception(
+            'Invalid __switch format, missing "{" for mapping block.');
       }
 
       final rawKeyInstruction = switchContent.substring(0, braceIndex).trim();
@@ -296,19 +300,24 @@ class FormEntityMapper {
       final mappingString = switchContent.substring(braceIndex).trim();
 
       // Recursively resolve key — handles __context:, __ref:, etc.
-      final keyValue = getValueFromMapping(keyInstruction, data, currentModel, context);
+      final keyValue =
+          getValueFromMapping(keyInstruction, data, currentModel, context);
       if (keyValue == null) {
-        throw Exception('Key value "$keyInstruction" resolved to null in __switch');
+        throw Exception(
+            'Key value "$keyInstruction" resolved to null in __switch');
       }
 
       final mapping = _parseSwitchMapping(mappingString);
-      final resolvedInstruction = mapping[keyValue.toString()] ?? mapping['default'];
+      final resolvedInstruction =
+          mapping[keyValue.toString()] ?? mapping['default'];
 
       if (resolvedInstruction == null) {
-        throw Exception('No switch case found for "$keyValue" in instruction "$instruction"');
+        throw Exception(
+            'No switch case found for "$keyValue" in instruction "$instruction"');
       }
 
-      return getValueFromMapping(resolvedInstruction, data, currentModel, context);
+      return getValueFromMapping(
+          resolvedInstruction, data, currentModel, context);
     }
 
     if (instruction.startsWith('__context:')) {
@@ -332,7 +341,8 @@ class FormEntityMapper {
     return map;
   }
 
-  dynamic resolveDynamicPath(String path, Map<String, dynamic> data, Map<String, dynamic> context) {
+  dynamic resolveDynamicPath(
+      String path, Map<String, dynamic> data, Map<String, dynamic> context) {
     if (path.startsWith('__context:')) {
       return _getValueFromPath(context, path.replaceFirst('__context:', ''));
     } else if (path.startsWith('formData:')) {
@@ -351,7 +361,9 @@ class FormEntityMapper {
       final key = match.group(1);
       final indexStr = match.group(2);
 
-      if (current is Map<String, dynamic> && key != null && current.containsKey(key)) {
+      if (current is Map<String, dynamic> &&
+          key != null &&
+          current.containsKey(key)) {
         current = current[key];
       } else {
         if (kDebugMode) {
@@ -396,30 +408,29 @@ class FormEntityMapper {
   }
 
   Map<String, dynamic> mergeAdditionalFields(
-      Map<String, dynamic> existingModelData,
-      Map<String, dynamic> newFields,
-      String modelName,
-      ) {
+    Map<String, dynamic> existingModelData,
+    Map<String, dynamic> newFields,
+    String modelName,
+  ) {
     // Clone existing data to avoid mutation
     final mergedData = Map<String, dynamic>.from(existingModelData);
 
     final existingAdditionalFields =
-    mergedData['additionalFields'] as Map<String, dynamic>?;
+        mergedData['additionalFields'] as Map<String, dynamic>?;
 
     // Filter out empty string values
     final filteredNewFields = newFields.entries
         .where((e) => e.value != null && e.value.toString().trim().isNotEmpty)
         .toList();
 
-    final newAdditionalFieldsList = filteredNewFields
-        .map((e) => {'key': e.key, 'value': e.value})
-        .toList();
+    final newAdditionalFieldsList =
+        filteredNewFields.map((e) => {'key': e.key, 'value': e.value}).toList();
 
     if (existingAdditionalFields != null) {
       // Merge existing additional fields list with new ones, avoid duplicate keys
       final existingFieldsList =
-      (existingAdditionalFields['fields'] as List<dynamic>? ?? [])
-          .cast<Map<String, dynamic>>();
+          (existingAdditionalFields['fields'] as List<dynamic>? ?? [])
+              .cast<Map<String, dynamic>>();
 
       final existingKeys = existingFieldsList.map((f) => f['key']).toSet();
 
@@ -444,5 +455,138 @@ class FormEntityMapper {
     }
 
     return mergedData;
+  }
+
+// resource card
+
+  TaskModel buildTaskModelFromFormValues({
+    required Map<String, dynamic> formValues,
+    required Map<String, dynamic> context,
+    AddressModel? address,
+    TaskModel? oldTask,
+    int? cycle,
+    int? dose,
+    String? deliveryStrategy,
+  }) {
+    final deliveryDetails = formValues['DeliveryDetails'] ?? {};
+    final clientReferenceId = oldTask?.clientReferenceId ?? IdGen.i.identifier;
+
+    /// ✅ Extract multiple resources
+    final List<TaskResourceModel> resources = [];
+    final regex = RegExp(r'resourceCard_(\d+)');
+
+    deliveryDetails.forEach((key, value) {
+      final match = regex.firstMatch(key);
+      if (match != null && value is ProductVariantModel) {
+        final index = match.group(1);
+        final quantityKey = 'quantityDistributed_$index';
+        final quantity = deliveryDetails[quantityKey]?.toString();
+
+        resources.add(
+          TaskResourceModel(
+            taskclientReferenceId: clientReferenceId,
+            clientReferenceId: IdGen.i.identifier,
+            productVariantId: value.id,
+            isDelivered: true,
+            taskId: oldTask?.id,
+            tenantId: context['tenantId'],
+            rowVersion: oldTask?.rowVersion ?? 1,
+            quantity: quantity,
+            clientAuditDetails: ClientAuditDetails(
+              createdBy: context['userUUID'],
+              createdTime: DateTime.now().millisecondsSinceEpoch,
+            ),
+            auditDetails: AuditDetails(
+              createdBy: context['userUUID'],
+              createdTime: DateTime.now().millisecondsSinceEpoch,
+            ),
+          ),
+        );
+      }
+    });
+
+    final deliveryComment = deliveryDetails['deliveryComment'];
+    final List<AdditionalField> additionalFields = [
+      AdditionalField(
+        RegistrationDeliveryEnums.name.toValue(),
+        context['userName'],
+      ),
+      AdditionalField(
+        AdditionalFieldsType.dateOfDelivery.toValue(),
+        DateTime.now().millisecondsSinceEpoch.toString(),
+      ),
+      AdditionalField(
+        AdditionalFieldsType.dateOfAdministration.toValue(),
+        DateTime.now().millisecondsSinceEpoch.toString(),
+      ),
+      AdditionalField(
+        AdditionalFieldsType.dateOfVerification.toValue(),
+        DateTime.now().millisecondsSinceEpoch.toString(),
+      ),
+      AdditionalField(
+        AdditionalFieldsType.cycleIndex.toValue(),
+        "0${cycle ?? 1}",
+      ),
+      AdditionalField(
+        AdditionalFieldsType.doseIndex.toValue(),
+        "0${dose ?? 1}",
+      ),
+      AdditionalField(
+        AdditionalFieldsType.deliveryStrategy.toValue(),
+        deliveryStrategy,
+      ),
+    ];
+
+    if (context['latitude'] != null) {
+      additionalFields.add(
+        AdditionalField(
+          AdditionalFieldsType.latitude.toValue(),
+          context['latitude'],
+        ),
+      );
+    }
+
+    if (context['longitude'] != null) {
+      additionalFields.add(
+        AdditionalField(
+          AdditionalFieldsType.longitude.toValue(),
+          context['longitude'],
+        ),
+      );
+    }
+
+    if (deliveryComment != null &&
+        deliveryComment.toString().trim().isNotEmpty) {
+      additionalFields.add(
+        AdditionalField(
+          AdditionalFieldsType.deliveryComment.toValue(),
+          deliveryComment.toString(),
+        ),
+      );
+    }
+
+    return TaskModel(
+      id: oldTask?.id,
+      projectId: context['projectId'],
+      projectBeneficiaryClientReferenceId: null, // You can pass if needed
+      address: address?.copyWith(relatedClientReferenceId: clientReferenceId),
+      clientReferenceId: clientReferenceId,
+      tenantId: context['tenantId'],
+      rowVersion: oldTask?.rowVersion ?? 1,
+      status: Status.administeredSuccess.toValue(),
+      resources: resources,
+      auditDetails: AuditDetails(
+        createdBy: context['userUUID'],
+        createdTime: DateTime.now().millisecondsSinceEpoch,
+      ),
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: context['userUUID'],
+        createdTime: DateTime.now().millisecondsSinceEpoch,
+      ),
+      additionalFields: TaskAdditionalFields(
+        version: 1,
+        fields: additionalFields,
+      ),
+    );
   }
 }
