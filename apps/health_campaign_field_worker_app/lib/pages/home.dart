@@ -393,8 +393,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     .setTemplateConfigs(templates);
               }
               if (isTriggerLocalisation && schemaData != null) {
-                final moduleName =
-                    'hcm-${schemaData['name'].toLowerCase()}-${context.selectedProject.referenceID}';
+                final moduleName = 'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
               }
