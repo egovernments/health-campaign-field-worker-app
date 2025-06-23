@@ -238,11 +238,11 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void navigateToBoundary(String boundary) async {
+    // todo : will change module name later with dynamic keys
     await triggerLocalizationIfUpdated(
       context: context,
-      locale: AppSharedPreferences()
-          .getSelectedLocale!,
-      moduleKey: 'REGISTRATIONFLOW',
+      locale: AppSharedPreferences().getSelectedLocale!,
+      moduleKey: 'REGISTRATIONFLOW,DELIVERYFLOW',
       projectReferenceId: context.selectedProject.referenceID ?? '',
     );
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();

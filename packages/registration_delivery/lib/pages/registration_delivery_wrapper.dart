@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:registration_delivery/blocs/search_households/household_global_seach.dart';
@@ -32,6 +33,9 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (_) => FormsBloc(),
+          ),
           BlocProvider(
             create: (context) {
               return SearchHouseholdsBloc(
