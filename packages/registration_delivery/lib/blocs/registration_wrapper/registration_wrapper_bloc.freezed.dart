@@ -373,6 +373,7 @@ mixin _$RegistrationWrapperState {
   List<HouseholdWrapper> get householdMembers =>
       throw _privateConstructorUsedError;
   IndividualModel? get selectedIndividual => throw _privateConstructorUsedError;
+  DeliveryWrapper? get deliveryWrapper => throw _privateConstructorUsedError;
   int? get offset => throw _privateConstructorUsedError;
   int? get limit => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
@@ -393,10 +394,13 @@ abstract class $RegistrationWrapperStateCopyWith<$Res> {
       {bool loading,
       List<HouseholdWrapper> householdMembers,
       IndividualModel? selectedIndividual,
+      DeliveryWrapper? deliveryWrapper,
       int? offset,
       int? limit,
       String? error,
       int totalCount});
+
+  $DeliveryWrapperCopyWith<$Res>? get deliveryWrapper;
 }
 
 /// @nodoc
@@ -416,6 +420,7 @@ class _$RegistrationWrapperStateCopyWithImpl<$Res,
     Object? loading = null,
     Object? householdMembers = null,
     Object? selectedIndividual = freezed,
+    Object? deliveryWrapper = freezed,
     Object? offset = freezed,
     Object? limit = freezed,
     Object? error = freezed,
@@ -434,6 +439,10 @@ class _$RegistrationWrapperStateCopyWithImpl<$Res,
           ? _value.selectedIndividual
           : selectedIndividual // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
+      deliveryWrapper: freezed == deliveryWrapper
+          ? _value.deliveryWrapper
+          : deliveryWrapper // ignore: cast_nullable_to_non_nullable
+              as DeliveryWrapper?,
       offset: freezed == offset
           ? _value.offset
           : offset // ignore: cast_nullable_to_non_nullable
@@ -452,6 +461,18 @@ class _$RegistrationWrapperStateCopyWithImpl<$Res,
               as int,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $DeliveryWrapperCopyWith<$Res>? get deliveryWrapper {
+    if (_value.deliveryWrapper == null) {
+      return null;
+    }
+
+    return $DeliveryWrapperCopyWith<$Res>(_value.deliveryWrapper!, (value) {
+      return _then(_value.copyWith(deliveryWrapper: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -467,10 +488,14 @@ abstract class _$$RegistrationWrapperStateImplCopyWith<$Res>
       {bool loading,
       List<HouseholdWrapper> householdMembers,
       IndividualModel? selectedIndividual,
+      DeliveryWrapper? deliveryWrapper,
       int? offset,
       int? limit,
       String? error,
       int totalCount});
+
+  @override
+  $DeliveryWrapperCopyWith<$Res>? get deliveryWrapper;
 }
 
 /// @nodoc
@@ -489,6 +514,7 @@ class __$$RegistrationWrapperStateImplCopyWithImpl<$Res>
     Object? loading = null,
     Object? householdMembers = null,
     Object? selectedIndividual = freezed,
+    Object? deliveryWrapper = freezed,
     Object? offset = freezed,
     Object? limit = freezed,
     Object? error = freezed,
@@ -507,6 +533,10 @@ class __$$RegistrationWrapperStateImplCopyWithImpl<$Res>
           ? _value.selectedIndividual
           : selectedIndividual // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
+      deliveryWrapper: freezed == deliveryWrapper
+          ? _value.deliveryWrapper
+          : deliveryWrapper // ignore: cast_nullable_to_non_nullable
+              as DeliveryWrapper?,
       offset: freezed == offset
           ? _value.offset
           : offset // ignore: cast_nullable_to_non_nullable
@@ -534,6 +564,7 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
       {this.loading = false,
       final List<HouseholdWrapper> householdMembers = const [],
       this.selectedIndividual,
+      this.deliveryWrapper,
       this.offset,
       this.limit,
       this.error,
@@ -556,6 +587,8 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
   @override
   final IndividualModel? selectedIndividual;
   @override
+  final DeliveryWrapper? deliveryWrapper;
+  @override
   final int? offset;
   @override
   final int? limit;
@@ -567,7 +600,7 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
 
   @override
   String toString() {
-    return 'RegistrationWrapperState(loading: $loading, householdMembers: $householdMembers, selectedIndividual: $selectedIndividual, offset: $offset, limit: $limit, error: $error, totalCount: $totalCount)';
+    return 'RegistrationWrapperState(loading: $loading, householdMembers: $householdMembers, selectedIndividual: $selectedIndividual, deliveryWrapper: $deliveryWrapper, offset: $offset, limit: $limit, error: $error, totalCount: $totalCount)';
   }
 
   @override
@@ -580,6 +613,8 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
                 .equals(other._householdMembers, _householdMembers) &&
             (identical(other.selectedIndividual, selectedIndividual) ||
                 other.selectedIndividual == selectedIndividual) &&
+            (identical(other.deliveryWrapper, deliveryWrapper) ||
+                other.deliveryWrapper == deliveryWrapper) &&
             (identical(other.offset, offset) || other.offset == offset) &&
             (identical(other.limit, limit) || other.limit == limit) &&
             (identical(other.error, error) || other.error == error) &&
@@ -593,6 +628,7 @@ class _$RegistrationWrapperStateImpl implements _RegistrationWrapperState {
       loading,
       const DeepCollectionEquality().hash(_householdMembers),
       selectedIndividual,
+      deliveryWrapper,
       offset,
       limit,
       error,
@@ -611,6 +647,7 @@ abstract class _RegistrationWrapperState implements RegistrationWrapperState {
       {final bool loading,
       final List<HouseholdWrapper> householdMembers,
       final IndividualModel? selectedIndividual,
+      final DeliveryWrapper? deliveryWrapper,
       final int? offset,
       final int? limit,
       final String? error,
@@ -622,6 +659,8 @@ abstract class _RegistrationWrapperState implements RegistrationWrapperState {
   List<HouseholdWrapper> get householdMembers;
   @override
   IndividualModel? get selectedIndividual;
+  @override
+  DeliveryWrapper? get deliveryWrapper;
   @override
   int? get offset;
   @override
@@ -987,5 +1026,344 @@ abstract class _HouseholdWrapper implements HouseholdWrapper {
   @override
   @JsonKey(ignore: true)
   _$$HouseholdWrapperImplCopyWith<_$HouseholdWrapperImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$DeliveryWrapper {
+  int get cycle => throw _privateConstructorUsedError;
+  int get dose => throw _privateConstructorUsedError;
+  List<ProjectCycle>? get pastCycles => throw _privateConstructorUsedError;
+  bool get hasCycleArrived => throw _privateConstructorUsedError;
+  bool get isLastDoseOfCycle => throw _privateConstructorUsedError;
+  List<TaskModel>? get tasks => throw _privateConstructorUsedError;
+  List<ProjectCycleDelivery>? get futureDeliveries =>
+      throw _privateConstructorUsedError;
+  List<TaskModel>? get futureTask => throw _privateConstructorUsedError;
+  TaskModel? get oldTask => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $DeliveryWrapperCopyWith<DeliveryWrapper> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $DeliveryWrapperCopyWith<$Res> {
+  factory $DeliveryWrapperCopyWith(
+          DeliveryWrapper value, $Res Function(DeliveryWrapper) then) =
+      _$DeliveryWrapperCopyWithImpl<$Res, DeliveryWrapper>;
+  @useResult
+  $Res call(
+      {int cycle,
+      int dose,
+      List<ProjectCycle>? pastCycles,
+      bool hasCycleArrived,
+      bool isLastDoseOfCycle,
+      List<TaskModel>? tasks,
+      List<ProjectCycleDelivery>? futureDeliveries,
+      List<TaskModel>? futureTask,
+      TaskModel? oldTask});
+}
+
+/// @nodoc
+class _$DeliveryWrapperCopyWithImpl<$Res, $Val extends DeliveryWrapper>
+    implements $DeliveryWrapperCopyWith<$Res> {
+  _$DeliveryWrapperCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? cycle = null,
+    Object? dose = null,
+    Object? pastCycles = freezed,
+    Object? hasCycleArrived = null,
+    Object? isLastDoseOfCycle = null,
+    Object? tasks = freezed,
+    Object? futureDeliveries = freezed,
+    Object? futureTask = freezed,
+    Object? oldTask = freezed,
+  }) {
+    return _then(_value.copyWith(
+      cycle: null == cycle
+          ? _value.cycle
+          : cycle // ignore: cast_nullable_to_non_nullable
+              as int,
+      dose: null == dose
+          ? _value.dose
+          : dose // ignore: cast_nullable_to_non_nullable
+              as int,
+      pastCycles: freezed == pastCycles
+          ? _value.pastCycles
+          : pastCycles // ignore: cast_nullable_to_non_nullable
+              as List<ProjectCycle>?,
+      hasCycleArrived: null == hasCycleArrived
+          ? _value.hasCycleArrived
+          : hasCycleArrived // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLastDoseOfCycle: null == isLastDoseOfCycle
+          ? _value.isLastDoseOfCycle
+          : isLastDoseOfCycle // ignore: cast_nullable_to_non_nullable
+              as bool,
+      tasks: freezed == tasks
+          ? _value.tasks
+          : tasks // ignore: cast_nullable_to_non_nullable
+              as List<TaskModel>?,
+      futureDeliveries: freezed == futureDeliveries
+          ? _value.futureDeliveries
+          : futureDeliveries // ignore: cast_nullable_to_non_nullable
+              as List<ProjectCycleDelivery>?,
+      futureTask: freezed == futureTask
+          ? _value.futureTask
+          : futureTask // ignore: cast_nullable_to_non_nullable
+              as List<TaskModel>?,
+      oldTask: freezed == oldTask
+          ? _value.oldTask
+          : oldTask // ignore: cast_nullable_to_non_nullable
+              as TaskModel?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$DeliveryWrapperImplCopyWith<$Res>
+    implements $DeliveryWrapperCopyWith<$Res> {
+  factory _$$DeliveryWrapperImplCopyWith(_$DeliveryWrapperImpl value,
+          $Res Function(_$DeliveryWrapperImpl) then) =
+      __$$DeliveryWrapperImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int cycle,
+      int dose,
+      List<ProjectCycle>? pastCycles,
+      bool hasCycleArrived,
+      bool isLastDoseOfCycle,
+      List<TaskModel>? tasks,
+      List<ProjectCycleDelivery>? futureDeliveries,
+      List<TaskModel>? futureTask,
+      TaskModel? oldTask});
+}
+
+/// @nodoc
+class __$$DeliveryWrapperImplCopyWithImpl<$Res>
+    extends _$DeliveryWrapperCopyWithImpl<$Res, _$DeliveryWrapperImpl>
+    implements _$$DeliveryWrapperImplCopyWith<$Res> {
+  __$$DeliveryWrapperImplCopyWithImpl(
+      _$DeliveryWrapperImpl _value, $Res Function(_$DeliveryWrapperImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? cycle = null,
+    Object? dose = null,
+    Object? pastCycles = freezed,
+    Object? hasCycleArrived = null,
+    Object? isLastDoseOfCycle = null,
+    Object? tasks = freezed,
+    Object? futureDeliveries = freezed,
+    Object? futureTask = freezed,
+    Object? oldTask = freezed,
+  }) {
+    return _then(_$DeliveryWrapperImpl(
+      cycle: null == cycle
+          ? _value.cycle
+          : cycle // ignore: cast_nullable_to_non_nullable
+              as int,
+      dose: null == dose
+          ? _value.dose
+          : dose // ignore: cast_nullable_to_non_nullable
+              as int,
+      pastCycles: freezed == pastCycles
+          ? _value._pastCycles
+          : pastCycles // ignore: cast_nullable_to_non_nullable
+              as List<ProjectCycle>?,
+      hasCycleArrived: null == hasCycleArrived
+          ? _value.hasCycleArrived
+          : hasCycleArrived // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLastDoseOfCycle: null == isLastDoseOfCycle
+          ? _value.isLastDoseOfCycle
+          : isLastDoseOfCycle // ignore: cast_nullable_to_non_nullable
+              as bool,
+      tasks: freezed == tasks
+          ? _value._tasks
+          : tasks // ignore: cast_nullable_to_non_nullable
+              as List<TaskModel>?,
+      futureDeliveries: freezed == futureDeliveries
+          ? _value._futureDeliveries
+          : futureDeliveries // ignore: cast_nullable_to_non_nullable
+              as List<ProjectCycleDelivery>?,
+      futureTask: freezed == futureTask
+          ? _value._futureTask
+          : futureTask // ignore: cast_nullable_to_non_nullable
+              as List<TaskModel>?,
+      oldTask: freezed == oldTask
+          ? _value.oldTask
+          : oldTask // ignore: cast_nullable_to_non_nullable
+              as TaskModel?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$DeliveryWrapperImpl implements _DeliveryWrapper {
+  const _$DeliveryWrapperImpl(
+      {this.cycle = 1,
+      this.dose = 1,
+      final List<ProjectCycle>? pastCycles,
+      this.hasCycleArrived = true,
+      this.isLastDoseOfCycle = false,
+      final List<TaskModel>? tasks,
+      final List<ProjectCycleDelivery>? futureDeliveries,
+      final List<TaskModel>? futureTask,
+      this.oldTask})
+      : _pastCycles = pastCycles,
+        _tasks = tasks,
+        _futureDeliveries = futureDeliveries,
+        _futureTask = futureTask;
+
+  @override
+  @JsonKey()
+  final int cycle;
+  @override
+  @JsonKey()
+  final int dose;
+  final List<ProjectCycle>? _pastCycles;
+  @override
+  List<ProjectCycle>? get pastCycles {
+    final value = _pastCycles;
+    if (value == null) return null;
+    if (_pastCycles is EqualUnmodifiableListView) return _pastCycles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  @JsonKey()
+  final bool hasCycleArrived;
+  @override
+  @JsonKey()
+  final bool isLastDoseOfCycle;
+  final List<TaskModel>? _tasks;
+  @override
+  List<TaskModel>? get tasks {
+    final value = _tasks;
+    if (value == null) return null;
+    if (_tasks is EqualUnmodifiableListView) return _tasks;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<ProjectCycleDelivery>? _futureDeliveries;
+  @override
+  List<ProjectCycleDelivery>? get futureDeliveries {
+    final value = _futureDeliveries;
+    if (value == null) return null;
+    if (_futureDeliveries is EqualUnmodifiableListView)
+      return _futureDeliveries;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<TaskModel>? _futureTask;
+  @override
+  List<TaskModel>? get futureTask {
+    final value = _futureTask;
+    if (value == null) return null;
+    if (_futureTask is EqualUnmodifiableListView) return _futureTask;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final TaskModel? oldTask;
+
+  @override
+  String toString() {
+    return 'DeliveryWrapper(cycle: $cycle, dose: $dose, pastCycles: $pastCycles, hasCycleArrived: $hasCycleArrived, isLastDoseOfCycle: $isLastDoseOfCycle, tasks: $tasks, futureDeliveries: $futureDeliveries, futureTask: $futureTask, oldTask: $oldTask)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DeliveryWrapperImpl &&
+            (identical(other.cycle, cycle) || other.cycle == cycle) &&
+            (identical(other.dose, dose) || other.dose == dose) &&
+            const DeepCollectionEquality()
+                .equals(other._pastCycles, _pastCycles) &&
+            (identical(other.hasCycleArrived, hasCycleArrived) ||
+                other.hasCycleArrived == hasCycleArrived) &&
+            (identical(other.isLastDoseOfCycle, isLastDoseOfCycle) ||
+                other.isLastDoseOfCycle == isLastDoseOfCycle) &&
+            const DeepCollectionEquality().equals(other._tasks, _tasks) &&
+            const DeepCollectionEquality()
+                .equals(other._futureDeliveries, _futureDeliveries) &&
+            const DeepCollectionEquality()
+                .equals(other._futureTask, _futureTask) &&
+            (identical(other.oldTask, oldTask) || other.oldTask == oldTask));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      cycle,
+      dose,
+      const DeepCollectionEquality().hash(_pastCycles),
+      hasCycleArrived,
+      isLastDoseOfCycle,
+      const DeepCollectionEquality().hash(_tasks),
+      const DeepCollectionEquality().hash(_futureDeliveries),
+      const DeepCollectionEquality().hash(_futureTask),
+      oldTask);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DeliveryWrapperImplCopyWith<_$DeliveryWrapperImpl> get copyWith =>
+      __$$DeliveryWrapperImplCopyWithImpl<_$DeliveryWrapperImpl>(
+          this, _$identity);
+}
+
+abstract class _DeliveryWrapper implements DeliveryWrapper {
+  const factory _DeliveryWrapper(
+      {final int cycle,
+      final int dose,
+      final List<ProjectCycle>? pastCycles,
+      final bool hasCycleArrived,
+      final bool isLastDoseOfCycle,
+      final List<TaskModel>? tasks,
+      final List<ProjectCycleDelivery>? futureDeliveries,
+      final List<TaskModel>? futureTask,
+      final TaskModel? oldTask}) = _$DeliveryWrapperImpl;
+
+  @override
+  int get cycle;
+  @override
+  int get dose;
+  @override
+  List<ProjectCycle>? get pastCycles;
+  @override
+  bool get hasCycleArrived;
+  @override
+  bool get isLastDoseOfCycle;
+  @override
+  List<TaskModel>? get tasks;
+  @override
+  List<ProjectCycleDelivery>? get futureDeliveries;
+  @override
+  List<TaskModel>? get futureTask;
+  @override
+  TaskModel? get oldTask;
+  @override
+  @JsonKey(ignore: true)
+  _$$DeliveryWrapperImplCopyWith<_$DeliveryWrapperImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
