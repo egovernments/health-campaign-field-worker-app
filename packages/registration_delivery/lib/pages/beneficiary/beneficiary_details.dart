@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -53,15 +54,15 @@ class BeneficiaryDetailsPageState
     final textTheme = theme.digitTextTheme(context);
 
     return ProductVariantBlocWrapper(
-      child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+      child: BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(
         builder: (context, state) {
-          final householdMemberWrapper = state.householdMemberWrapper;
+          final householdMemberWrapper = state.householdMembers;
           // Filtering project beneficiaries based on the selected individual
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
                       BeneficiaryType.individual
-                  ? [householdMemberWrapper.projectBeneficiaries?.first]
-                  : householdMemberWrapper.projectBeneficiaries
+                  ? [householdMemberWrapper.first.projectBeneficiaries?.first]
+                  : householdMemberWrapper.first.projectBeneficiaries
                       ?.where(
                         (element) =>
                             element.beneficiaryClientReferenceId ==
@@ -71,7 +72,7 @@ class BeneficiaryDetailsPageState
 
           // Extracting task data related to the selected project beneficiary
 
-          final taskData = state.householdMemberWrapper.tasks
+          final taskData = state.householdMembers.first.tasks
               ?.where((element) =>
                   element.projectBeneficiaryClientReferenceId ==
                   projectBeneficiary?.first?.clientReferenceId)
@@ -96,7 +97,7 @@ class BeneficiaryDetailsPageState
                   '1'
               : '1';
 
-          // [TODO] Need to move this to Bloc Lisitner or consumer
+          // [TODO] Need to move this to Bloc listener or consumer
           if (RegistrationDeliverySingleton().projectType != null) {
             bloc.add(
               DeliverInterventionEvent.setActiveCycleDose(
@@ -206,7 +207,7 @@ class BeneficiaryDetailsPageState
                                                           state
                                                               .selectedIndividual,
                                                           state
-                                                              .householdMemberWrapper
+                                                              .householdMembers.first
                                                               .household,
                                                           context: context);
 
@@ -271,7 +272,7 @@ class BeneficiaryDetailsPageState
                                                                 state
                                                                     .selectedIndividual,
                                                                 state
-                                                                    .householdMemberWrapper
+                                                                    .householdMembers.first
                                                                     .household),
                                                           ],
                                                           actions: [
@@ -336,7 +337,7 @@ class BeneficiaryDetailsPageState
                                                 fetchProductVariant(
                                                     items,
                                                     state.selectedIndividual,
-                                                    state.householdMemberWrapper
+                                                    state.householdMembers.first
                                                         .household,
                                                     context: context);
 
@@ -412,7 +413,7 @@ class BeneficiaryDetailsPageState
                                     ): RegistrationDeliverySingleton()
                                                 .beneficiaryType !=
                                             BeneficiaryType.individual
-                                        ? householdMemberWrapper
+                                        ? householdMemberWrapper.first
                                             .headOfHousehold?.name?.givenName
                                         : state.selectedIndividual?.name
                                                 ?.givenName ??
@@ -424,7 +425,7 @@ class BeneficiaryDetailsPageState
                                           RegistrationDeliverySingleton()
                                                       .beneficiaryType !=
                                                   BeneficiaryType.individual
-                                              ? householdMemberWrapper
+                                              ? householdMemberWrapper.first
                                                   .headOfHousehold?.identifiers
                                               : state.selectedIndividual
                                                   ?.identifiers;
@@ -444,7 +445,7 @@ class BeneficiaryDetailsPageState
                                           RegistrationDeliverySingleton()
                                                       .beneficiaryType !=
                                                   BeneficiaryType.individual
-                                              ? householdMemberWrapper
+                                              ? householdMemberWrapper.first
                                                   .headOfHousehold?.identifiers
                                               : state.selectedIndividual
                                                   ?.identifiers;
@@ -464,7 +465,7 @@ class BeneficiaryDetailsPageState
                                           RegistrationDeliverySingleton()
                                                       .beneficiaryType !=
                                                   BeneficiaryType.individual
-                                              ? householdMemberWrapper
+                                              ? householdMemberWrapper.first
                                                   .headOfHousehold?.dateOfBirth
                                               : state.selectedIndividual
                                                   ?.dateOfBirth;
@@ -496,7 +497,7 @@ class BeneficiaryDetailsPageState
                                     ): RegistrationDeliverySingleton()
                                                 .beneficiaryType !=
                                             BeneficiaryType.individual
-                                        ? householdMemberWrapper.headOfHousehold
+                                        ? householdMemberWrapper.first.headOfHousehold
                                             ?.gender?.name.sentenceCase
                                         : state.selectedIndividual?.gender?.name
                                                 .sentenceCase ??
@@ -506,7 +507,7 @@ class BeneficiaryDetailsPageState
                                     ): RegistrationDeliverySingleton()
                                                 .beneficiaryType !=
                                             BeneficiaryType.individual
-                                        ? householdMemberWrapper
+                                        ? householdMemberWrapper.first
                                             .headOfHousehold?.mobileNumber
                                         : state.selectedIndividual
                                                 ?.mobileNumber ??

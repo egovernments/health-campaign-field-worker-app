@@ -25,7 +25,6 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
               AutoRoute(
                 page: HouseholdOverviewRoute.page,
                 path: 'overview',
-                initial: true,
               ),
               AutoRoute(
                 page: BeneficiaryDetailsRoute.page,
@@ -59,15 +58,15 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                 page: BeneficiaryWrapperRoute.page,
                 path: 'beneficiary',
                 children: [
-                  AutoRoute(
-                    page: HouseholdOverviewRoute.page,
-                    path: 'overview',
-                    initial: true,
-                  ),
-                  AutoRoute(
-                    page: BeneficiaryDetailsRoute.page,
-                    path: 'beneficiary-details',
-                  ),
+                  // AutoRoute(
+                  //   page: HouseholdOverviewRoute.page,
+                  //   path: 'overview',
+                  //   initial: true,
+                  // ),
+                  // AutoRoute(
+                  //   page: BeneficiaryDetailsRoute.page,
+                  //   path: 'beneficiary-details',
+                  // ),
                   AutoRoute(
                     page: BeneficiaryChecklistRoute.page,
                     path: 'beneficiary-checklist',
