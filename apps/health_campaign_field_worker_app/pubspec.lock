@@ -1866,6 +1866,13 @@ packages:
       relative: true
     source: path
     version: "1.0.4+2"
+  registration_bloc:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/registration_bloc"
+      relative: true
+    source: path
+    version: "0.0.1"
   registration_delivery:
     dependency: "direct main"
     description:
