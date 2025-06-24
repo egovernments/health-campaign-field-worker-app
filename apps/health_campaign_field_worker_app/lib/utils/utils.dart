@@ -568,6 +568,8 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'isMultiSelect': pageMap['isMultiSelect'],
         'includeInForm': pageMap['includeInForm'],
         'includeInSummary': pageMap['includeInSummary'],
+        'autoEnable' : pageMap['autoEnable'],
+        'navigateTo': pageMap['navigateTo']
       };
 
       if (type == 'template') {

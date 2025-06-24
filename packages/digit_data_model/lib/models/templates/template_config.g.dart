@@ -19,6 +19,7 @@ _$TemplateConfigImpl _$$TemplateConfigImplFromJson(Map<String, dynamic> json) =>
       features: (json['features'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as bool),
       ),
+      navigateTo: json['navigateTo'] as String?,
     );
 
 Map<String, dynamic> _$$TemplateConfigImplToJson(
@@ -30,6 +31,7 @@ Map<String, dynamic> _$$TemplateConfigImplToJson(
       'order': instance.order,
       'properties': instance.properties,
       'features': instance.features,
+      'navigateTo': instance.navigateTo,
     };
 
 _$TemplatePropertyImpl _$$TemplatePropertyImplFromJson(

@@ -12,6 +12,7 @@ class TemplateConfig with _$TemplateConfig {
     required int order,
     Map<String, TemplateProperty>? properties,
     Map<String, bool>? features,
+    String? navigateTo,
   }) = _TemplateConfig;
 
   factory TemplateConfig.fromJson(Map<String, dynamic> json) =>
