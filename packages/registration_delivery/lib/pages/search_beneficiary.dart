@@ -67,6 +67,11 @@ class _SearchBeneficiaryPageState
     // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
     blocWrapper = context.read<SearchBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
+
+    context
+        .read<FormsBloc>()
+        .add(FormsEvent.load(schema: RegistrationDeliverySingleton().regisrationConfig ?? ''));
+
     // Listen to state changes
     blocWrapper.stateChanges.listen((state) {
       if (mounted) {
@@ -88,6 +93,7 @@ class _SearchBeneficiaryPageState
   Widget build(BuildContext context) {
     final pageKey = SearchBeneficiaryRoute.name.replaceAll('Route', '');
     final searchTemplate = RegistrationDeliverySingleton().templateConfigs?[pageKey];
+    final nextPath = searchTemplate?.navigateTo;
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
@@ -108,7 +114,12 @@ class _SearchBeneficiaryPageState
               ),
             );
           }
-          context.router.push( BeneficiaryAcknowledgementRoute(enableViewHousehold: true));
+          if (nextPath != null) {
+            context.router.pushNamed('/$nextPath'); // Prefix with '/'
+          } else {
+            context.router.push( BeneficiaryAcknowledgementRoute(enableViewHousehold: true)); // fallback page
+          }
+
         }else if(createState is EntityCreateErrorState){
           Navigator.of(context, rootNavigator: true).pop();
           context.router.push( BeneficiaryErrorRoute(enableViewHousehold: false));

@@ -468,6 +468,8 @@ class RegistrationDeliverySingleton {
   List<String>? _refusalReasons;
   HouseholdType? _householdType;
   Map<String, TemplateConfig>? _templateConfigs;
+  String? _registrationConfig;
+  String? _deliveryConfig;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -531,6 +533,13 @@ class RegistrationDeliverySingleton {
     _templateConfigs = templateConfigs;
   }
 
+  void setRegistrationConfig(String registrationConfig) {
+    _registrationConfig = registrationConfig;
+  }
+  void setDeliveryConfig(String deliveryConfig) {
+    _deliveryConfig = deliveryConfig;
+  }
+
   String? get tenantId => _tenantId;
 
   String? get loggedInUserUuid => _loggedInUserUuid;
@@ -579,6 +588,8 @@ class RegistrationDeliverySingleton {
   HouseholdType? get householdType => _householdType;
 
   Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
+  String? get regisrationConfig => _registrationConfig;
+  String? get deliveryConfig => _deliveryConfig;
 }
 
 bool allDosesDelivered(

@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-
 import 'registration_delivery_router.gm.dart';
 
 @AutoRouterConfig.module()
@@ -22,6 +21,15 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
               AutoRoute(
                 page: BeneficiaryAcknowledgementRoute.page,
                 path: 'beneficiary-acknowledgement',
+              ),
+              AutoRoute(
+                page: HouseholdOverviewRoute.page,
+                path: 'overview',
+                initial: true,
+              ),
+              AutoRoute(
+                page: BeneficiaryDetailsRoute.page,
+                path: 'beneficiary-details',
               ),
               /// Beneficiary Registration
               AutoRoute(
@@ -111,5 +119,6 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                 ],
               ),
             ]),
+
       ];
 }

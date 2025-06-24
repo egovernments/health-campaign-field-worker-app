@@ -27,6 +27,7 @@ mixin _$TemplateConfig {
   Map<String, TemplateProperty>? get properties =>
       throw _privateConstructorUsedError;
   Map<String, bool>? get features => throw _privateConstructorUsedError;
+  String? get navigateTo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +47,8 @@ abstract class $TemplateConfigCopyWith<$Res> {
       String? description,
       int order,
       Map<String, TemplateProperty>? properties,
-      Map<String, bool>? features});
+      Map<String, bool>? features,
+      String? navigateTo});
 }
 
 /// @nodoc
@@ -68,6 +70,7 @@ class _$TemplateConfigCopyWithImpl<$Res, $Val extends TemplateConfig>
     Object? order = null,
     Object? properties = freezed,
     Object? features = freezed,
+    Object? navigateTo = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -94,6 +97,10 @@ class _$TemplateConfigCopyWithImpl<$Res, $Val extends TemplateConfig>
           ? _value.features
           : features // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>?,
+      navigateTo: freezed == navigateTo
+          ? _value.navigateTo
+          : navigateTo // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -112,7 +119,8 @@ abstract class _$$TemplateConfigImplCopyWith<$Res>
       String? description,
       int order,
       Map<String, TemplateProperty>? properties,
-      Map<String, bool>? features});
+      Map<String, bool>? features,
+      String? navigateTo});
 }
 
 /// @nodoc
@@ -132,6 +140,7 @@ class __$$TemplateConfigImplCopyWithImpl<$Res>
     Object? order = null,
     Object? properties = freezed,
     Object? features = freezed,
+    Object? navigateTo = freezed,
   }) {
     return _then(_$TemplateConfigImpl(
       type: null == type
@@ -158,6 +167,10 @@ class __$$TemplateConfigImplCopyWithImpl<$Res>
           ? _value._features
           : features // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>?,
+      navigateTo: freezed == navigateTo
+          ? _value.navigateTo
+          : navigateTo // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -171,7 +184,8 @@ class _$TemplateConfigImpl implements _TemplateConfig {
       this.description,
       required this.order,
       final Map<String, TemplateProperty>? properties,
-      final Map<String, bool>? features})
+      final Map<String, bool>? features,
+      this.navigateTo})
       : _properties = properties,
         _features = features;
 
@@ -207,8 +221,11 @@ class _$TemplateConfigImpl implements _TemplateConfig {
   }
 
   @override
+  final String? navigateTo;
+
+  @override
   String toString() {
-    return 'TemplateConfig(type: $type, label: $label, description: $description, order: $order, properties: $properties, features: $features)';
+    return 'TemplateConfig(type: $type, label: $label, description: $description, order: $order, properties: $properties, features: $features, navigateTo: $navigateTo)';
   }
 
   @override
@@ -223,7 +240,9 @@ class _$TemplateConfigImpl implements _TemplateConfig {
             (identical(other.order, order) || other.order == order) &&
             const DeepCollectionEquality()
                 .equals(other._properties, _properties) &&
-            const DeepCollectionEquality().equals(other._features, _features));
+            const DeepCollectionEquality().equals(other._features, _features) &&
+            (identical(other.navigateTo, navigateTo) ||
+                other.navigateTo == navigateTo));
   }
 
   @JsonKey(ignore: true)
@@ -235,7 +254,8 @@ class _$TemplateConfigImpl implements _TemplateConfig {
       description,
       order,
       const DeepCollectionEquality().hash(_properties),
-      const DeepCollectionEquality().hash(_features));
+      const DeepCollectionEquality().hash(_features),
+      navigateTo);
 
   @JsonKey(ignore: true)
   @override
@@ -259,7 +279,8 @@ abstract class _TemplateConfig implements TemplateConfig {
       final String? description,
       required final int order,
       final Map<String, TemplateProperty>? properties,
-      final Map<String, bool>? features}) = _$TemplateConfigImpl;
+      final Map<String, bool>? features,
+      final String? navigateTo}) = _$TemplateConfigImpl;
 
   factory _TemplateConfig.fromJson(Map<String, dynamic> json) =
       _$TemplateConfigImpl.fromJson;
@@ -276,6 +297,8 @@ abstract class _TemplateConfig implements TemplateConfig {
   Map<String, TemplateProperty>? get properties;
   @override
   Map<String, bool>? get features;
+  @override
+  String? get navigateTo;
   @override
   @JsonKey(ignore: true)
   _$$TemplateConfigImplCopyWith<_$TemplateConfigImpl> get copyWith =>
