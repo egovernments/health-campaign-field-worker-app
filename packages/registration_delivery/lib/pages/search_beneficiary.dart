@@ -13,14 +13,10 @@ import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/foundation.dart';
-import 'package:registration_bloc/bloc/registration_bloc.dart';
-import 'package:registration_bloc/service/registration_service.dart';
-import 'package:registration_bloc/models/global_search_params.dart' as reg_params;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/blocs/entity_create/entity_create.dart';
-import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/data/transformer_config.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
@@ -52,24 +48,24 @@ class _SearchBeneficiaryPageState
   final TextEditingController searchController = TextEditingController();
   bool isProximityEnabled = false;
   int offset = 0;
-  int limit = 2;
+  int limit = 10;
 
 
   double lat = 0.0;
   double long = 0.0;
   List<String> selectedFilters = [];
 
+  SearchHouseholdsState searchHouseholdsState = const SearchHouseholdsState(
+    loading: false,
+    householdMembers: [],
+  );
 
-  late final RegistrationWrapperBloc blocWrapper; // Declare BlocWrapper
+  late final SearchBlocWrapper blocWrapper; // Declare BlocWrapper
 
   @override
   void initState() {
     // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
-
-    Future.microtask(() {
-      context.read<RegistrationBloc>().add(const RegistrationEvent.initialize());
-    });
-    blocWrapper = context.read<RegistrationWrapperBloc>();
+    blocWrapper = context.read<SearchBlocWrapper>();
     context.read<LocationBloc>().add(const LoadLocationEvent());
 
     context
@@ -77,13 +73,13 @@ class _SearchBeneficiaryPageState
         .add(FormsEvent.load(schema: RegistrationDeliverySingleton().regisrationConfig ?? ''));
 
     // Listen to state changes
-    // blocWrapper.stateChanges.listen((state) {
-    //   if (mounted) {
-    //     setState(() {
-    //       searchHouseholdsState = state;
-    //     });
-    //   }
-    // });
+    blocWrapper.stateChanges.listen((state) {
+      if (mounted) {
+        setState(() {
+          searchHouseholdsState = state;
+        });
+      }
+    });
 
     super.initState();
   }
@@ -274,7 +270,6 @@ class _SearchBeneficiaryPageState
                                       value: isProximityEnabled,
                                       onChanged: (value) {
                                         searchController.clear();
-                                        blocWrapper.add(const RegistrationWrapperEvent.clear());
                                         setState(() {
                                           isProximityEnabled = value;
                                           lat = locationState.latitude!;
@@ -291,8 +286,8 @@ class _SearchBeneficiaryPageState
                                             isProximityEnabled) {
                                           triggerGlobalSearchEvent();
                                         } else {
-                                          blocWrapper.add(const RegistrationWrapperEvent.clear());
-                                          // triggerGlobalSearchEvent();
+                                          blocWrapper.clearEvent();
+                                          triggerGlobalSearchEvent();
                                         }
                                       },
                                     ),
@@ -370,7 +365,7 @@ class _SearchBeneficiaryPageState
                                               child: DigitChip(
                                                 label:
                                                 '${localizations.translate(getStatus(selectedFilters[index]))}'
-                                                    ' (${blocWrapper.state.totalCount})',
+                                                    ' (${searchHouseholdsState.totalResults})',
                                                 capitalizedFirstLetter: false,
                                                 onItemDelete: () {
                                                   setState(() {
@@ -378,8 +373,8 @@ class _SearchBeneficiaryPageState
                                                         selectedFilters[
                                                         index]);
                                                   });
-                                                  blocWrapper.add(const RegistrationWrapperEvent.clear());
-                                                  // triggerGlobalSearchEvent();
+                                                  blocWrapper.clearEvent();
+                                                  triggerGlobalSearchEvent();
                                                 },
                                               ),
                                             );
@@ -391,8 +386,8 @@ class _SearchBeneficiaryPageState
                               );
                             },
                           ),
-                          if (blocWrapper.state.householdMembers.isEmpty &&
-                              !blocWrapper.state.loading)
+                          if (searchHouseholdsState.resultsNotFound &&
+                              !searchHouseholdsState.loading)
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: spacer2, top: spacer2, right: spacer2),
@@ -416,7 +411,7 @@ class _SearchBeneficiaryPageState
                       ),
                     ),
                   ),
-                  if (blocWrapper.state.loading)
+                  if (searchHouseholdsState.loading)
                     const SliverFillRemaining(
                       child: Center(
                         child: CircularProgressIndicator(),
@@ -441,7 +436,7 @@ class _SearchBeneficiaryPageState
                         return SliverList(
                           delegate: SliverChildBuilderDelegate(
                                 (ctx, index) {
-                              final i = blocWrapper.state.householdMembers
+                              final i = searchHouseholdsState.householdMembers
                                   .elementAt(index);
                               final distance = calculateDistance(
                                 Coordinate(
@@ -458,7 +453,7 @@ class _SearchBeneficiaryPageState
                                 margin: const EdgeInsets.only(bottom: spacer2),
                                 child: ViewBeneficiaryCard(
                                   distance: isProximityEnabled ? distance : null,
-                                  householdWrapper: i,
+                                  householdMember: i,
                                   onOpenPressed: () async {
                                     final scannerBloc =
                                     context.read<DigitScannerBloc>();
@@ -475,13 +470,13 @@ class _SearchBeneficiaryPageState
                                       setState(() {
                                         selectedFilters = [];
                                       });
-                                      blocWrapper.add(const RegistrationWrapperEvent.clear());
+                                      blocWrapper.clearEvent();
                                       await context.router.push(
                                         BeneficiaryRegistrationWrapperRoute(
                                           initialState: BeneficiaryRegistrationState
                                               .editHousehold(
                                               householdModel: i.household!,
-                                              individualModel: i.individuals!,
+                                              individualModel: i.members!,
                                               registrationDate: DateTime.now(),
                                               projectBeneficiaryModel:
                                               (i.projectBeneficiaries ?? [])
@@ -502,24 +497,24 @@ class _SearchBeneficiaryPageState
                                         ),
                                       );
                                     } else {
-                                      // await context.router.push(
-                                      //   BeneficiaryWrapperRoute(
-                                      //     wrapper: i,
-                                      //   ),
-                                      // );
+                                      await context.router.push(
+                                        BeneficiaryWrapperRoute(
+                                          wrapper: i,
+                                        ),
+                                      );
                                     }
                                     setState(() {
                                       isProximityEnabled = false;
                                     });
                                     searchController.clear();
                                     selectedFilters.clear();
-                                    // blocWrapper.clearEvent();
+                                    blocWrapper.clearEvent();
                                   },
                                 ),
                               );
                             },
                             childCount:
-                            blocWrapper.state.householdMembers.length,
+                            searchHouseholdsState.householdMembers.length,
                           ),
                         );
                       },
@@ -548,10 +543,13 @@ class _SearchBeneficiaryPageState
                       mainAxisSize: MainAxisSize.max,
                       type: DigitButtonType.primary,
                       size: DigitButtonSize.large,
-                      isDisabled: searchController.text.isNotEmpty &&
-                          searchController.text.length>2
+                      isDisabled: searchHouseholdsState.searchQuery != null &&
+                          searchHouseholdsState.searchQuery!.isNotEmpty
                           ? false
-                          : true,
+                          : searchTemplate
+                  ?.properties?['BeneficiaryRegistrationButton']
+                  ?.autoEnable ==
+                  true ? false : true,
                       onPressed: () {
                         FocusManager.instance.primaryFocus?.unfocus();
                         context.read<FormsBloc>().add(const FormsEvent.clearForm());
@@ -571,7 +569,7 @@ class _SearchBeneficiaryPageState
                         } else {
                           context.router.push(FormsRenderRoute(pageName: pageName, defaultValues: {
                             'administrativeArea': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? ''),
-                            'nameOfIndividual' : searchController.text,
+                            'nameOfIndividual' : searchHouseholdsState.searchQuery,
                           }));
                         }
 
@@ -585,7 +583,7 @@ class _SearchBeneficiaryPageState
                         // ));
                         searchController.clear();
                         selectedFilters = [];
-                        blocWrapper.add(const RegistrationWrapperEvent.clear());
+                        blocWrapper.clearEvent();
                       },
                     ),
                     if(searchTemplate
@@ -597,7 +595,7 @@ class _SearchBeneficiaryPageState
                       size: DigitButtonSize.large,
                       mainAxisSize: MainAxisSize.max,
                       onPressed: () {
-                        blocWrapper.add(const RegistrationWrapperEvent.clear());
+                        blocWrapper.clearEvent();
                         selectedFilters = [];
                         searchController.clear();
                         Navigator.of(context).push(
@@ -668,47 +666,66 @@ class _SearchBeneficiaryPageState
       setState(() {
         selectedFilters = [];
       });
-      blocWrapper.add(const RegistrationWrapperEvent.clear());
+      blocWrapper.clearEvent();
       triggerGlobalSearchEvent();
     }
   }
 
   void triggerGlobalSearchEvent({bool isPagination = false}) {
     if (!isPagination) {
-      blocWrapper.add(const RegistrationWrapperEvent.clear());
+      blocWrapper.clearEvent();
     }
-
-    if (isProximityEnabled ||
-        selectedFilters.isNotEmpty ||
-        searchController.text.isNotEmpty) {
-      final params = reg_params.GlobalSearchParameters(
-        filters: [
-          if(searchController.text.isNotEmpty && searchController.text.length> 2)
-          reg_params.SearchFilter(
-            root: 'name',  // or 'individual', based on what you're searching
-            field: 'givenName',
-            operator: 'contains',
-            value: searchController.text,
-          ),
-          if(isProximityEnabled)
-            reg_params.SearchFilter(
-              root: 'household',
-              field: '',
-              operator: 'within',
-              value: RegistrationDeliverySingleton().maxRadius,
-              coordinates: reg_params.LatLng(
-                latitude: lat,
-                longitude: long,
-              ),
-            ),
-        ], // Optional: if you're resolving linked entities
-        primaryModel: 'individual',
-        select: ['individual', 'household', 'householdMember', 'projectBeneficiary'],  // Optional: which fields to return
-        pagination: isPagination ?  reg_params.PaginationParams(limit: blocWrapper.state.limit ?? limit, offset: (blocWrapper.state.offset ?? offset) + (blocWrapper.state.limit ?? limit)) : reg_params.PaginationParams(limit: limit, offset: offset),
-      );
-      blocWrapper.add(
-          RegistrationWrapperEvent.loadFromGlobal(searchParams: params, beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue())
-      );
+    if (RegistrationDeliverySingleton().beneficiaryType ==
+        BeneficiaryType.individual) {
+      if (isProximityEnabled ||
+          selectedFilters.isNotEmpty ||
+          searchController.text.isNotEmpty) {
+        blocWrapper.individualGlobalSearchBloc
+            .add(SearchHouseholdsEvent.individualGlobalSearch(
+                globalSearchParams: GlobalSearchParameters(
+          isProximityEnabled: isProximityEnabled,
+          latitude: lat,
+          projectId: RegistrationDeliverySingleton().projectId!,
+          longitude: long,
+          maxRadius: RegistrationDeliverySingleton().maxRadius,
+          nameSearch: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+          filter: selectedFilters,
+          offset: isPagination
+              ? blocWrapper.individualGlobalSearchBloc.state.offset
+              : offset,
+          limit: isPagination
+              ? blocWrapper.individualGlobalSearchBloc.state.limit
+              : limit,
+          householdType: RegistrationDeliverySingleton().householdType,
+        )));
+      }
+    } else {
+      if (isProximityEnabled ||
+          selectedFilters.isNotEmpty ||
+          searchController.text.isNotEmpty) {
+        blocWrapper.houseHoldGlobalSearchBloc
+            .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
+                globalSearchParams: GlobalSearchParameters(
+          isProximityEnabled: isProximityEnabled,
+          latitude: lat,
+          longitude: long,
+          projectId: RegistrationDeliverySingleton().projectId!,
+          maxRadius: RegistrationDeliverySingleton().maxRadius,
+          nameSearch: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+          filter: selectedFilters,
+          offset: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              : offset,
+          limit: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              : limit,
+          householdType: RegistrationDeliverySingleton().householdType,
+        )));
+      }
     }
   }
 }

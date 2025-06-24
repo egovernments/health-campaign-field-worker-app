@@ -23,7 +23,6 @@ import 'package:survey_form/survey_form.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
-import 'package:registration_bloc/repositories/local/search_entity_repository.dart';
 import 'blocs/entity_create/entity_create.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
@@ -80,12 +79,6 @@ class MainApplicationState extends State<MainApplication>
           create: (context) => IndividualGlobalSearchRepository(
             widget.sql,
             IndividualOpLogManager(widget.isar),
-          ),
-        ),
-        RepositoryProvider<SearchEntityRepository>(
-          create: (context) => SearchEntityRepository(
-            widget.sql,
-            IndividualOpLogManager(widget.isar), /// todo: need to be changed to make is generic as this won't affect anything right now
           ),
         ),
         RepositoryProvider<HouseHoldGlobalSearchRepository>(
