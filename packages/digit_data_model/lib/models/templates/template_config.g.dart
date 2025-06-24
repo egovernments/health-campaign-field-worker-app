@@ -19,7 +19,10 @@ _$TemplateConfigImpl _$$TemplateConfigImplFromJson(Map<String, dynamic> json) =>
       features: (json['features'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as bool),
       ),
-      navigateTo: json['navigateTo'] as String?,
+      navigateTo: json['navigateTo'] == null
+          ? null
+          : NavigateToConfig.fromJson(
+              json['navigateTo'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$TemplateConfigImplToJson(
@@ -60,4 +63,18 @@ Map<String, dynamic> _$$TemplatePropertyImplToJson(
       'readOnly': instance.readOnly,
       'autoEnable': instance.autoEnable,
       'validations': instance.validations,
+    };
+
+_$NavigateToConfigImpl _$$NavigateToConfigImplFromJson(
+        Map<String, dynamic> json) =>
+    _$NavigateToConfigImpl(
+      type: json['type'] as String,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$$NavigateToConfigImplToJson(
+        _$NavigateToConfigImpl instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'name': instance.name,
     };

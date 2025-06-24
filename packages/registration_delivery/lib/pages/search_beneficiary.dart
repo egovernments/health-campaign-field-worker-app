@@ -97,7 +97,7 @@ class _SearchBeneficiaryPageState
   Widget build(BuildContext context) {
     final pageKey = SearchBeneficiaryRoute.name.replaceAll('Route', '');
     final searchTemplate = RegistrationDeliverySingleton().templateConfigs?[pageKey];
-    final nextPath = searchTemplate?.navigateTo;
+    final nextAction = searchTemplate?.navigateTo;
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
@@ -118,8 +118,19 @@ class _SearchBeneficiaryPageState
               ),
             );
           }
-          if (nextPath != null) {
-            context.router.pushNamed('/$nextPath'); // Prefix with '/'
+          if (nextAction != null) {
+            if(nextAction.type=='template'){
+              final nextPath = routerMap[searchTemplate?.navigateTo?.name];
+              if(nextPath!=null){
+                context.router.push(nextPath);
+              }
+            }else{
+              if(nextAction.name=='REGISTRATIONFLOW'){
+
+              }else{
+
+              }
+            }
           } else {
             context.router.push( BeneficiaryAcknowledgementRoute(enableViewHousehold: true)); // fallback page
           }
@@ -416,209 +427,176 @@ class _SearchBeneficiaryPageState
                       ),
                     ),
                   ),
-                  if (blocWrapper.state.loading)
-                    const SliverFillRemaining(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  BlocListener<DigitScannerBloc, DigitScannerState>(
-                    listener: (context, scannerState) {
-                      if (scannerState.qrCodes.isNotEmpty) {
-                        context.read<SearchBlocWrapper>().tagSearchBloc.add(
-                          SearchHouseholdsEvent.searchByTag(
-                            tag: scannerState.qrCodes.isNotEmpty
-                                ? scannerState.qrCodes.lastOrNull!
-                                : '',
-                            projectId:
-                            RegistrationDeliverySingleton().projectId!,
-                          ),
-                        );
-                      }
-                    },
-                    child: BlocBuilder<LocationBloc, LocationState>(
-                      builder: (context, locationState) {
-                        return SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                                (ctx, index) {
-                              final i = blocWrapper.state.householdMembers
-                                  .elementAt(index);
-                              final distance = calculateDistance(
-                                Coordinate(
-                                  lat,
-                                  long,
-                                ),
-                                Coordinate(
-                                  i.household?.address?.latitude,
-                                  i.household?.address?.longitude,
-                                ),
-                              );
+                  BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(
+                    builder: (context, blocState) {
+                      final items = blocState.householdMembers;
 
-                              return Container(
-                                margin: const EdgeInsets.only(bottom: spacer2),
-                                child: ViewBeneficiaryCard(
-                                  distance: isProximityEnabled ? distance : null,
-                                  householdWrapper: i,
-                                  onOpenPressed: () async {
-                                    final scannerBloc =
-                                    context.read<DigitScannerBloc>();
-
-                                    scannerBloc.add(
-                                      const DigitScannerEvent.handleScanner(),
+                      return BlocListener<DigitScannerBloc, DigitScannerState>(
+                        listener: (context, scannerState) {
+                          if (scannerState.qrCodes.isNotEmpty) {
+                            context.read<SearchBlocWrapper>().tagSearchBloc.add(
+                              SearchHouseholdsEvent.searchByTag(
+                                tag: scannerState.qrCodes.lastOrNull!,
+                                projectId: RegistrationDeliverySingleton().projectId!,
+                              ),
+                            );
+                          }
+                        },
+                        child: BlocBuilder<LocationBloc, LocationState>(
+                          builder: (context, locationState) {
+                            return SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                    (ctx, index) {
+                                  // 👇 If it's the last item and loading is true, show loader
+                                  if (index == items.length) {
+                                    return const Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Center(child: CircularProgressIndicator()),
                                     );
+                                  }
 
-                                    if ((i.tasks != null &&
-                                        i.tasks?.lastOrNull!.status ==
+                                  final i = items[index];
+                                  final distance = calculateDistance(
+                                    Coordinate(lat, long),
+                                    Coordinate(
+                                      i.household?.address?.latitude,
+                                      i.household?.address?.longitude,
+                                    ),
+                                  );
+
+                                  return Container(
+                                    margin: const EdgeInsets.only(bottom: spacer2),
+                                    child: ViewBeneficiaryCard(
+                                      distance: isProximityEnabled ? distance : null,
+                                      householdWrapper: i,
+                                      onOpenPressed: () async {
+                                        context.read<DigitScannerBloc>().add(
+                                            const DigitScannerEvent.handleScanner());
+
+                                        if ((i.tasks?.lastOrNull?.status ==
                                             Status.closeHousehold.toValue() &&
-                                        (i.tasks ?? []).isNotEmpty) ||
-                                        (i.projectBeneficiaries ?? []).isEmpty) {
-                                      setState(() {
-                                        selectedFilters = [];
-                                      });
-                                      blocWrapper.add(const RegistrationWrapperEvent.clear());
-                                      await context.router.push(
-                                        BeneficiaryRegistrationWrapperRoute(
-                                          initialState: BeneficiaryRegistrationState
-                                              .editHousehold(
-                                              householdModel: i.household!,
-                                              individualModel: i.individuals!,
-                                              registrationDate: DateTime.now(),
-                                              projectBeneficiaryModel:
-                                              (i.projectBeneficiaries ?? [])
-                                                  .isNotEmpty
-                                                  ? i.projectBeneficiaries
-                                                  ?.lastOrNull
-                                                  : null,
-                                              addressModel:
-                                              (RegistrationDeliverySingleton()
-                                                  .householdType ==
-                                                  HouseholdType
-                                                      .community)
-                                                  ? i.household!.address!
-                                                  : i.headOfHousehold!
-                                                  .address!.lastOrNull!,
-                                              headOfHousehold:
-                                              i.headOfHousehold),
-                                        ),
-                                      );
-                                    } else {
-                                      // await context.router.push(
-                                      //   BeneficiaryWrapperRoute(
-                                      //     wrapper: i,
-                                      //   ),
-                                      // );
-                                    }
-                                    setState(() {
-                                      isProximityEnabled = false;
-                                    });
-                                    searchController.clear();
-                                    selectedFilters.clear();
-                                    // blocWrapper.clearEvent();
-                                  },
-                                ),
-                              );
-                            },
-                            childCount:
-                            blocWrapper.state.householdMembers.length,
-                          ),
-                        );
-                      },
-                    ),
+                                            (i.tasks ?? []).isNotEmpty) ||
+                                            (i.projectBeneficiaries ?? []).isEmpty) {
+                                          setState(() {
+                                            selectedFilters = [];
+                                          });
+                                          blocWrapper.add(const RegistrationWrapperEvent.clear());
+
+                                          await context.router.push(
+                                            BeneficiaryRegistrationWrapperRoute(
+                                              initialState: BeneficiaryRegistrationState.editHousehold(
+                                                householdModel: i.household!,
+                                                individualModel: i.individuals!,
+                                                registrationDate: DateTime.now(),
+                                                projectBeneficiaryModel:
+                                                i.projectBeneficiaries?.lastOrNull,
+                                                addressModel: RegistrationDeliverySingleton()
+                                                    .householdType ==
+                                                    HouseholdType.community
+                                                    ? i.household!.address!
+                                                    : i.headOfHousehold!.address!.lastOrNull!,
+                                                headOfHousehold: i.headOfHousehold,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        setState(() {
+                                          isProximityEnabled = false;
+                                        });
+                                        searchController.clear();
+                                        selectedFilters.clear();
+                                      },
+                                    ),
+                                  );
+                                },
+                                childCount: items.length + (blocState.loading ? 1 : 0), // 👈 Extra item if loading
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
             ),
-            bottomNavigationBar: Offstage(
-              offstage: RegistrationDeliverySingleton().householdType ==
-                  HouseholdType.community &&
-                  searchController.text.length < 3,
-              child: DigitCard(
-                  margin: const EdgeInsets.only(top: spacer2),
-                  padding: const EdgeInsets.all(spacer4),
-                  children: [
-                    DigitButton(
-                      capitalizeLetters: false,
-                      label: (RegistrationDeliverySingleton().householdType ==
-                          HouseholdType.community)
-                          ? localizations
-                          .translate(i18.searchBeneficiary.clfAddActionLabel)
-                          : localizations.translate(
-                        i18.searchBeneficiary.beneficiaryAddActionLabel,
-                      ),
-                      mainAxisSize: MainAxisSize.max,
-                      type: DigitButtonType.primary,
-                      size: DigitButtonSize.large,
-                      isDisabled: searchController.text.isNotEmpty &&
-                          searchController.text.length>2
-                          ? false
-                          : true,
-                      onPressed: () {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                        context.read<FormsBloc>().add(const FormsEvent.clearForm());
-                        final pageName = context
-                            .read<FormsBloc>()
-                            .state
-                            .schema
-                            ?.pages
-                            .entries
-                            .first
-                            .key;
+            bottomNavigationBar: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: searchController,
+              builder: (context, value, _) {
+                final isCommunity = RegistrationDeliverySingleton().householdType == HouseholdType.community;
+                final isTextShort = value.text.length < 3;
 
-                        if (pageName == null) {
-                          Toast.showToast(context,
+                return Offstage(
+                  offstage: isCommunity && isTextShort,
+                  child: DigitCard(
+                    margin: const EdgeInsets.only(top: spacer2),
+                    padding: const EdgeInsets.all(spacer4),
+                    children: [
+                      DigitButton(
+                        capitalizeLetters: false,
+                        label: isCommunity
+                            ? localizations.translate(i18.searchBeneficiary.clfAddActionLabel)
+                            : localizations.translate(i18.searchBeneficiary.beneficiaryAddActionLabel),
+                        mainAxisSize: MainAxisSize.max,
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
+                        isDisabled: isTextShort,
+                        onPressed: () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          context.read<FormsBloc>().add(const FormsEvent.clearForm());
+
+                          final pageName = context.read<FormsBloc>().state.schema?.pages.entries.first.key;
+
+                          if (pageName == null) {
+                            Toast.showToast(
+                              context,
                               message: localizations.translate('NO_FORM_FOUND_FOR_REGISTRATION'),
-                              type: ToastType.error);
-                        } else {
-                          context.router.push(FormsRenderRoute(pageName: pageName, defaultValues: {
-                            'administrativeArea': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? ''),
-                            'nameOfIndividual' : searchController.text,
-                          }));
-                        }
-
-                        context.read<DigitScannerBloc>().add(
-                              const DigitScannerEvent.handleScanner(),
+                              type: ToastType.error,
                             );
-                        // context.router.push(BeneficiaryRegistrationWrapperRoute(
-                        //   initialState: BeneficiaryRegistrationCreateState(
-                        //     searchQuery: searchHouseholdsState.searchQuery,
-                        //   ),
-                        // ));
-                        searchController.clear();
-                        selectedFilters = [];
-                        blocWrapper.add(const RegistrationWrapperEvent.clear());
-                      },
-                    ),
-                    if(searchTemplate
-                        ?.properties?['qrscanner']
-                        ?.hidden != true)
-                    DigitButton(
-                      capitalizeLetters: false,
-                      type: DigitButtonType.secondary,
-                      size: DigitButtonSize.large,
-                      mainAxisSize: MainAxisSize.max,
-                      onPressed: () {
-                        blocWrapper.add(const RegistrationWrapperEvent.clear());
-                        selectedFilters = [];
-                        searchController.clear();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const DigitScannerPage(
-                              quantity: 1,
-                              isGS1code: false,
-                              singleValue: true,
-                            ),
-                            settings: const RouteSettings(name: '/qr-scanner'),
-                          ),
-                        );
-                      },
-                      prefixIcon: Icons.qr_code,
-                      label: searchTemplate
-                          ?.properties?['qrscanner']
-                          ?.label != null ? localizations.translate(searchTemplate!.properties!['qrscanner']!.label):localizations.translate(
-                        i18.deliverIntervention.scannerLabel,
+                          } else {
+                            context.router.push(FormsRenderRoute(pageName: pageName, defaultValues: {
+                              'administrativeArea':
+                              localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? ''),
+                              'nameOfIndividual': value.text,
+                            }));
+                          }
+
+                          context.read<DigitScannerBloc>().add(const DigitScannerEvent.handleScanner());
+                          searchController.clear();
+                          selectedFilters = [];
+                          blocWrapper.add(const RegistrationWrapperEvent.clear());
+                        },
                       ),
-                    ),
-                  ]),
+                      if (searchTemplate?.properties?['qrscanner']?.hidden != true)
+                        DigitButton(
+                          capitalizeLetters: false,
+                          type: DigitButtonType.secondary,
+                          size: DigitButtonSize.large,
+                          mainAxisSize: MainAxisSize.max,
+                          onPressed: () {
+                            blocWrapper.add(const RegistrationWrapperEvent.clear());
+                            selectedFilters = [];
+                            searchController.clear();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const DigitScannerPage(
+                                  quantity: 1,
+                                  isGS1code: false,
+                                  singleValue: true,
+                                ),
+                                settings: const RouteSettings(name: '/qr-scanner'),
+                              ),
+                            );
+                          },
+                          prefixIcon: Icons.qr_code,
+                          label: searchTemplate?.properties?['qrscanner']?.label != null
+                              ? localizations.translate(searchTemplate!.properties!['qrscanner']!.label)
+                              : localizations.translate(i18.deliverIntervention.scannerLabel),
+                        ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ),

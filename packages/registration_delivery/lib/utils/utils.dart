@@ -1,6 +1,7 @@
 // Importing necessary packages and modules
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';
@@ -693,3 +695,10 @@ String getStatus(String selectedFilter) {
     return selectedFilter;
   }
 }
+
+final Map<String, PageRouteInfo> routerMap = {
+  'beneficiary-details': BeneficiaryDetailsRoute(),
+  'beneficiary-acknowledgement': BeneficiaryAcknowledgementRoute(enableViewHousehold: true),
+  'overview': HouseholdOverviewRoute(),
+  // Add more routes here
+};
