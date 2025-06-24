@@ -1,4 +1,5 @@
 // Importing necessary packages and modules
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
@@ -9,6 +10,7 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 
 import '../models/entities/additional_fields_type.dart';
@@ -591,6 +593,165 @@ class RegistrationDeliverySingleton {
   String? get regisrationConfig => _registrationConfig;
   String? get deliveryConfig => _deliveryConfig;
 }
+
+/// Safely converts HouseholdMemberWrapper into structured map
+Map<String, dynamic>? _asMap(dynamic obj) {
+  if (obj == null) return null;
+
+  if (obj is Map<String, dynamic>) return obj;
+
+  if (obj is HouseholdMemberWrapper) {
+    return {
+      'household'           : obj.household?.toJson(),
+      'individual'          : obj.headOfHousehold?.toJson(),
+      'members'             : obj.members?.map((e) => e.toJson()).toList(),
+      'projectBeneficiaries': obj.projectBeneficiaries?.map((e) => e.toJson()).toList(),
+      'tasks'               : obj.tasks?.map((e) => e.toJson()).toList(),
+      'sideEffects'         : obj.sideEffects?.map((e) => e.toJson()).toList(),
+      'referrals'           : obj.referrals?.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  try {
+    return (obj as dynamic).toJson() as Map<String, dynamic>;
+  } catch (_) {
+    return null;
+  }
+}
+
+
+dynamic _decodeIfString(dynamic v) {
+  if (v is String) {
+    try {
+      return jsonDecode(v);
+    } catch (_) {
+      // not valid JSON → leave it as-is
+    }
+  }
+  return v;
+}
+/// Walk a dotted path like "Household.address[0].locality.code".
+/// Only the *first* segment is lower-cased because rootMap stores
+/// "household/individual/…".  Inner keys keep their original case.
+/// Walks path like address[0].locality.code from the given base map
+dynamic _extractNestedValue(Map<String, dynamic>? base, List<String> path) {
+  if (base == null) return null;
+  dynamic current = base;
+
+  for (final raw in path) {
+    current = _decodeIfString(current);
+    final match = RegExp(r'^([^\[\]]+)(?:\[(\d+)\])?$').firstMatch(raw);
+    if (match == null) return null;
+
+    final key = match.group(1)!;
+    final idx = match.group(2);
+
+    if (current is Map<String, dynamic>) {
+      current = current[key];
+    } else {
+      return null;
+    }
+
+    if (idx != null) {
+      if (current is List && int.parse(idx) < current.length) {
+        current = current[int.parse(idx)];
+      } else {
+        return null;
+      }
+    }
+  }
+  return current;
+}
+
+/// Looks for {additionalFields: {fields: [ {key,value}, … ]}}
+dynamic _extractAdditionalField(Map<String, dynamic>? container, String fieldKey) {
+  if (container == null) return null;
+
+  final fields = (container['additionalFields'] ??
+      container['additionalfields'])?['fields'];
+
+  if (fields is List) {
+    final matched = fields.cast<Map>().firstWhere(
+          (e) => e['key'].toString().contains(fieldKey),
+      orElse: () => {},
+    );
+    return matched['value'];
+  }
+  return null;
+}
+Map<String, dynamic>? _prepareBase(dynamic raw) {
+  if (raw is Map<String, dynamic>) return raw;
+  if (raw is String) {
+    try {
+      final decoded = jsonDecode(raw);
+      return decoded is Map<String, dynamic> ? decoded : null;
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
+}
+
+/// Recursively translate every string key and every string *leaf* value
+/// in [source].  Non-string values (num, bool, Map, List) are left intact.
+/// You pass in `localizations.translate` (or any `String -> String`
+/// function) as [t].
+Map<String, dynamic> translateEnumMap(
+    Map<String, dynamic>? source,
+    String Function(String) t,
+    ) {
+  if (source == null) return const {};
+
+  dynamic walk(dynamic node) {
+    if (node is String)            return t(node);
+    if (node is Map) {
+      return node.map((k, v) => MapEntry(
+        k is String ? t(k) : k, walk(v)));
+    }
+    if (node is List)              return node.map(walk).toList();
+    return node; // int, double, bool, null …
+  }
+
+  return walk(source) as Map<String, dynamic>;
+}
+
+Map<String, dynamic>? buildEnumValueMap(
+    HouseholdMemberWrapper? wrapper,
+    List<Map<String, dynamic>>? enums,
+    )
+{
+  if (wrapper == null || enums == null) return null;
+
+  final rootMap = _asMap(wrapper)!;
+  final result = <String, dynamic>{};
+
+  for (final item in enums) {
+    final code         = item['code']     as String;
+    final jsonPath     = item['jsonPath'] as String;
+    final fieldKey     = item['fieldKey'] as String;
+    final isAdditional = (item['additionalField'] ?? 'false') == 'true';
+
+    final segments = jsonPath.split('.');
+    if (segments.isEmpty) continue;
+
+    final rootKey = segments.first.toLowerCase();
+    final base    = _prepareBase(rootMap[rootKey]);
+
+    final value = isAdditional
+        ? _extractAdditionalField(base, fieldKey)
+        : _extractNestedValue(base, segments.sublist(1));
+
+    if (value != null) {
+      result[code] = value;
+
+    } else {
+      result[code] = 'CORE_COMMON_NA';
+
+    }}
+
+  return result.isEmpty ? null : result;
+}
+
 
 bool allDosesDelivered(
   List<TaskModel>? tasks,

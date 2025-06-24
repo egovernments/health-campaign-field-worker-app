@@ -12,7 +12,7 @@ class TemplateConfig with _$TemplateConfig {
     required int order,
     Map<String, TemplateProperty>? properties,
     Map<String, bool>? features,
-    String? navigateTo,
+    NavigateToConfig? navigateTo,
   }) = _TemplateConfig;
 
   factory TemplateConfig.fromJson(Map<String, dynamic> json) =>
@@ -31,8 +31,20 @@ class TemplateProperty with _$TemplateProperty {
     bool? readOnly,
     bool? autoEnable,
     List<dynamic>? validations,
+    List<Map<String, dynamic>>? enums,
   }) = _TemplateProperty;
 
   factory TemplateProperty.fromJson(Map<String, dynamic> json) =>
       _$TemplatePropertyFromJson(json);
+}
+
+@freezed
+class NavigateToConfig with _$NavigateToConfig {
+  const factory NavigateToConfig({
+    required String type, // "template" or "form"
+    required String name, // route name or form name
+  }) = _NavigateToConfig;
+
+  factory NavigateToConfig.fromJson(Map<String, dynamic> json) =>
+      _$NavigateToConfigFromJson(json);
 }

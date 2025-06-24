@@ -310,12 +310,10 @@ class _HouseholdOverviewPageState
                                     if ((state.householdMemberWrapper
                                                 .projectBeneficiaries ??
                                             [])
-                                        .isNotEmpty)
-                                      Offstage(
-                                        offstage: overviewTemplate
-                                            ?.properties?[registration_keys.householdOverViewKeys.editHouseholdKey]
-                                            ?.hidden ?? true,
-                                        child: Align(
+                                        .isNotEmpty && overviewTemplate
+                                        ?.properties?[registration_keys.householdOverViewKeys.editHouseholdKey]
+                                        ?.hidden != true)
+                                      Align(
                                           alignment: Alignment.centerRight,
                                           child: DigitButton(
                                             onPressed: () {
@@ -447,7 +445,7 @@ class _HouseholdOverviewPageState
                                             capitalizeLetters: false,
                                           ),
                                         ),
-                                      ),
+
 
                                     ///Old UI Format
                                     // BlocBuilder<DeliverInterventionBloc,
@@ -485,13 +483,17 @@ class _HouseholdOverviewPageState
                                               DeliverInterventionState>(
                                           builder:
                                               (ctx, deliverInterventionState) {
+                                            // List<String>? detailsKeys = overviewTemplate
+                                            //     ?.properties?[registration_keys.householdOverViewKeys.detailsCardKey]?['enums'];
+
                                         bool shouldShowStatus =
                                             beneficiaryType ==
                                                 BeneficiaryType.household;
 
                                         if (RegistrationDeliverySingleton()
                                                 .householdType ==
-                                            HouseholdType.community) {
+                                            HouseholdType.community && overviewTemplate
+                                            ?.properties?[registration_keys.householdOverViewKeys.detailsCardKey]?.hidden !=  true) {
                                           return Column(
                                             children: [
                                               DigitTableCard(element: {
@@ -525,10 +527,66 @@ class _HouseholdOverviewPageState
                                           );
                                         }
 
-                                        return Column(
+                                        return overviewTemplate
+                                                    ?.properties?[registration_keys.householdOverViewKeys.detailsCardKey]?.hidden !=  true
+                                                ? Column(
                                           children: [
                                             DigitTableCard(
-                                              element: {
+                                              element:
+                                            buildEnumValueMap(state.householdMemberWrapper, [
+                                          {
+                                            "code": "Individual.givenName",
+                                            "name": "givenName",
+                                            "fieldKey": "givenName",
+                                            "jsonPath": "Individual.name.givenName",
+                                            "mandatory": "true",
+                                          },
+                                          {
+                                            "code": "Household.boundary",
+                                            "name": "boundary",
+                                            "isList": "true",
+                                            "fieldKey": "boundary",
+                                            "jsonPath": "Household.address.locality.code",
+                                            "mandatory": "true"
+                                          },
+                                          {
+                                            "code": "Household.memberCount",
+                                            "name": "memberCount",
+                                            "fieldKey": "memberCount",
+                                            "jsonPath": "Household.memberCount",
+                                            "mandatory": "true"
+                                          },
+                                          {
+                                            "code": "Household.childrenCount",
+                                            "name": "childrenCount",
+                                            "fieldKey": "childrenCount",
+                                            "jsonPath": "Household.additionalFields",
+                                            "additionalField": "true"
+                                          },
+                                          {
+                                            "code": "Individual.gender",
+                                            "name": "gender",
+                                            "fieldKey": "gender",
+                                            "jsonPath": "Individual.gender"
+                                            // "isList": "true"
+                                          },
+                                          {
+                                            "code": "Individual.dateOfBirth",
+                                            "name": "dateOfBirth",
+                                            "fieldKey": "dateOfBirth",
+                                            "jsonPath": "Individual.dateOfBirth"
+                                          },
+                                          {
+                                            "code": "Individual.address",
+                                            "name": "address",
+                                            "fieldKey": "locality",
+                                            "jsonPath": "Individual.address[0].locality.code",
+                                            "isList": "true"
+                                          }
+                                        ])
+                                            ?.map((k, v) => MapEntry(localizations.translate(k), localizations.translate(v.toString())))
+                                                ??
+                                              {
                                                 localizations.translate(i18
                                                     .householdOverView
                                                     .householdOverViewHouseholdHeadNameLabel): state
@@ -566,7 +624,7 @@ class _HouseholdOverviewPageState
                                               },
                                             ),
                                           ],
-                                        );
+                                        ) : const SizedBox.shrink();
                                       }),
                                     ),
                                     if (RegistrationDeliverySingleton()
@@ -797,6 +855,10 @@ class _HouseholdOverviewPageState
                                                 projectBeneficiary ?? [],
                                             tasks: taskData,
                                             sideEffects: sideEffectData,
+                                            primaryButtonProperties: overviewTemplate
+                                                ?.properties?[registration_keys.householdOverViewKeys.individualPrimaryButtonKey],
+                                            secondaryButtonProperties: overviewTemplate
+                                                ?.properties?[registration_keys.householdOverViewKeys.individualSecondaryButtonKey],
                                             editMemberActionProperties: overviewTemplate
                                                 ?.properties?[registration_keys.householdOverViewKeys.editIndividualKey],
                                             editMemberAction: () async {
@@ -1016,10 +1078,9 @@ class _HouseholdOverviewPageState
                                     ),
                                   ],
                                 ),
-                                Offstage(
-                                  offstage: overviewTemplate
-                                      ?.properties?[registration_keys.householdOverViewKeys.addMemberKey]?.hidden ?? true,
-                                  child: DigitButton(
+                                if(overviewTemplate
+                                    ?.properties?[registration_keys.householdOverViewKeys.addMemberKey]?.hidden != true)
+                                  DigitButton(
                                     mainAxisSize: MainAxisSize.max,
                                     onPressed: () => addIndividual(
                                       context,
@@ -1035,7 +1096,7 @@ class _HouseholdOverviewPageState
                                     type: DigitButtonType.tertiary,
                                     size: DigitButtonSize.large,
                                   ),
-                                ),
+
                               ]),
                         ),
                       ],

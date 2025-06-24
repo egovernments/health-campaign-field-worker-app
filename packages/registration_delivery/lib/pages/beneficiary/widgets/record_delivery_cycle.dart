@@ -7,7 +7,9 @@ import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../models/entities/additional_fields_type.dart';
@@ -15,6 +17,8 @@ import '../../../models/entities/deliver_strategy_type.dart';
 import '../../../models/entities/status.dart';
 import '../../../models/entities/task.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/registration_component_keys.dart' as registration_keys;
+
 import '../../../widgets/localized.dart';
 
 class RecordDeliveryCycle extends LocalizedStatefulWidget {
@@ -39,9 +43,16 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
   @override
   Widget build(BuildContext context) {
+    final pageKey = BeneficiaryDetailsRoute.name.replaceAll('Route', '');
+    final beneficiaryDetailsTableConfig = RegistrationDeliverySingleton().templateConfigs?[pageKey]?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey];
     final localizations = RegistrationDeliveryLocalization.of(context);
 
-    final headerList = [
+    final headerList = beneficiaryDetailsTableConfig?.hidden != true && (beneficiaryDetailsTableConfig?.enums ?? []).isNotEmpty
+    ? beneficiaryDetailsTableConfig?.enums?.map((header) => DigitTableColumn(
+      header: localizations.translate(header['code']),
+      cellValue: header['fieldKey'],
+    ),).toList()
+    : [
       DigitTableColumn(
         header:
             localizations.translate(i18.beneficiaryDetails.beneficiaryDoseNo),
@@ -74,7 +85,9 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                   builder: (context, deliverState) {
                     final pastCycles = deliverState.pastCycles;
 
-                    return Column(children: [
+                    return beneficiaryDetailsTableConfig?.hidden == true
+                        ? const SizedBox.shrink()
+                    : Column(children: [
                       deliverState.hasCycleArrived
                           ? buildCycleAndDoseTable(
                               widget.projectCycles
@@ -82,7 +95,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                     (e) => e.id == deliverState.cycle,
                                   )
                                   .toList(),
-                              headerList,
+                              headerList ?? [],
                               deliverState.dose - 1,
                               true,
                             )
@@ -97,7 +110,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   isExpanded
                                       ? buildCycleAndDoseTable(
                                           pastCycles ?? [],
-                                          headerList,
+                                          headerList ?? [],
                                           null,
                                           false,
                                         )
@@ -193,6 +206,8 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
     int? selectedIndex,
     bool isCurrentCycle,
   ) {
+    final pageKey = BeneficiaryDetailsRoute.name.replaceAll('Route', '');
+    final beneficiaryDetailsTableConfig = RegistrationDeliverySingleton().templateConfigs?[pageKey]?.properties?[registration_keys.beneficiaryDetailsKeys.tableCardKey];
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
@@ -212,8 +227,8 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                 child: Text(
                   isCurrentCycle
                       ? localizations
-                          .translate(i18.beneficiaryDetails.currentCycleLabel)
-                      : '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
+                          .translate(beneficiaryDetailsTableConfig?.label ?? i18.beneficiaryDetails.currentCycleLabel)
+                      : '${localizations.translate( beneficiaryDetailsTableConfig?.label ?? i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
                   style: textTheme.headingL.copyWith(
                     color: theme.colorTheme.primary.primary2
                   ),
