@@ -66,6 +66,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return _buildBooleanType(form);
       case PropertySchemaType.object:
         return _buildObjectType(form);
+      case PropertySchemaType.dynamic:
+        return _buildCustomComponent() ?? const SizedBox.shrink();
     }
   }
 

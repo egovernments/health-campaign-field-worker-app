@@ -16,9 +16,9 @@ class CustomText extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: DigitTextFormInput(
         onChange: (value){
-          context.read<FormsBloc>().add(
-             FormsEvent.updateField(key: "customText", value: value),
-          );
+          // context.read<FormsBloc>().add(
+          //    // FormsEvent.updateField(key: "customText", value: value),
+          // );
         },
       )
     );

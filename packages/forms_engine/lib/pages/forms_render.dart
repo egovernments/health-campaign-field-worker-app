@@ -21,12 +21,16 @@ import '../utils/utils.dart';
 class FormsRenderPage extends LocalizedStatefulWidget {
   final String pageName;
   final Map<String, dynamic>? defaultValues;
+  final String currentSchemaKey;
+  final List<Map<String, Widget>>? customComponents;
   final bool isSummary;
 
   const FormsRenderPage({
     super.key,
     super.appLocalizations,
+    @QueryParam() this.currentSchemaKey ='',
     @PathParam() required this.pageName,
+    this.customComponents,
     this.defaultValues,
     @QueryParam() this.isSummary = false,
   });
@@ -41,7 +45,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     return Scaffold(
       body: BlocBuilder<FormsBloc, FormsState>(
         builder: (context, state) {
-          final schemaObject = state.schema;
+          final schemaObject = state.cachedSchemas[widget.currentSchemaKey];
           if (schemaObject == null) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -93,13 +97,15 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       onPressed: () {
                         // 1. Get visible keys only (skip hidden fields)
                         final currentKeys = schema.properties?.entries
-                            .where((entry) {
-                          final isVisible = !isHidden(entry.value);
-                          final includeInForm = entry.value.includeInForm == true;
-                          return isVisible || includeInForm;
-                        })
-                            .map((entry) => entry.key)
-                            .toList() ?? [];
+                                .where((entry) {
+                                  final isVisible = !isHidden(entry.value);
+                                  final includeInForm =
+                                      entry.value.includeInForm == true;
+                                  return isVisible || includeInForm;
+                                })
+                                .map((entry) => entry.key)
+                                .toList() ??
+                            [];
 
 // 2. Mark all visible controls as touched and revalidate
                         for (final key in currentKeys) {
@@ -145,7 +151,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                         context.read<FormsBloc>().add(
                               FormsUpdateEvent(
-                                schemaObject.copyWith(
+                                schemaKey: widget.currentSchemaKey,
+                                schema: schemaObject.copyWith(
                                   pages: Map.fromEntries(
                                     schemaObject.pages.entries.map(
                                       (entry) => MapEntry(
@@ -162,6 +169,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                         if ((index) < schemaObject.pages.length - 1) {
                           context.router.push(FormsRenderRoute(
+                            customComponents: widget.customComponents,
+                            currentSchemaKey: widget.currentSchemaKey,
                             pageName: schemaObject.pages.entries
                                 .elementAt(index + 1)
                                 .key,
@@ -170,6 +179,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                         } else {
                           if (schemaObject.summary) {
                             context.router.push(FormsRenderRoute(
+                              customComponents: widget.customComponents,
+                              currentSchemaKey: widget.currentSchemaKey,
                               pageName: '',
                               isSummary: true,
                               defaultValues: widget.defaultValues,
@@ -177,7 +188,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                           } else {
                             context
                                 .read<FormsBloc>()
-                                .add(FormsSubmitEvent(schemaObject));
+                                .add(FormsSubmitEvent(schemaKey: widget.currentSchemaKey));
 
                             // Pop all form pages (FormsRenderRoute)
                             context.router.popUntil((route) {
@@ -226,7 +237,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                     ],
                     JsonForms(
                       propertySchema: schema,
-                      childrens: const [],
+                      childrens: widget.customComponents,
                       defaultValues: const {
                         // 'locality': context.boundary.code,
                       },
@@ -268,7 +279,7 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               mainAxisSize: MainAxisSize.max,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
               onPressed: () {
-                context.read<FormsBloc>().add(FormsSubmitEvent(schemaObject));
+                context.read<FormsBloc>().add(FormsSubmitEvent(schemaKey: widget.currentSchemaKey));
 
                 // Pop all form pages (FormsRenderRoute)
                 context.router.popUntil((route) {

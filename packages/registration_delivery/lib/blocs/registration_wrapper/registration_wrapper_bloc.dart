@@ -142,6 +142,7 @@ class RegistrationWrapperState with _$RegistrationWrapperState {
     @Default(false) bool loading,
     @Default([]) List<HouseholdWrapper> householdMembers,
     IndividualModel? selectedIndividual,
+    DeliveryWrapper? deliveryWrapper,
     int? offset,
     int? limit,
     String? error,
@@ -163,4 +164,19 @@ class HouseholdWrapper with _$HouseholdWrapper {
     List<SideEffectModel>? sideEffects,
     List<ReferralModel>? referrals,
   }) = _HouseholdWrapper;
+}
+
+@freezed
+class DeliveryWrapper with _$DeliveryWrapper {
+  const factory DeliveryWrapper({
+    @Default(1) int cycle,
+    @Default(1) int dose,
+    List<ProjectCycle>? pastCycles,
+    @Default(true) bool hasCycleArrived,
+    @Default(false) bool isLastDoseOfCycle,
+    List<TaskModel>? tasks,
+    List<ProjectCycleDelivery>? futureDeliveries,
+    List<TaskModel>? futureTask,
+    TaskModel? oldTask,
+  }) = _DeliveryWrapper;
 }
