@@ -34,7 +34,8 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
             alignment: Alignment.topLeft,
             child: Text(
               localizations.translate(i18.dataShare.dataSharingLabel),
-              style: textTheme.headingM,
+              style: textTheme.headingXl
+                  .copyWith(color: theme.colorTheme.primary.primary2),
             ),
           ),
         ),
@@ -56,10 +57,21 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
                       color: DigitTheme.instance.colors.light.primary1),
                 ),
                 Center(
-                  child: Text(
-                    localizations.translate(i18.dataShare.sendAction),
-                    style: textTheme.label.copyWith(
-                        color: DigitTheme.instance.colors.light.primary1),
+                  child: Column(
+                    children: [
+                      Text(
+                        localizations.translate(i18.dataShare.sendAction),
+                        style: textTheme.label.copyWith(
+                            color: DigitTheme.instance.colors.light.primary1),
+                      ),
+                      Text(
+                        localizations
+                            .translate(i18.dataShare.sendActionDescription),
+                        style: textTheme.bodyXS.copyWith(
+                            color:
+                                DigitTheme.instance.colors.light.textSecondary),
+                      ),
+                    ],
                   ),
                 )
               ]),
@@ -82,10 +94,21 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
                       color: DigitTheme.instance.colors.light.primary1),
                 ),
                 Center(
-                  child: Text(
-                    localizations.translate(i18.dataShare.receiveAction),
-                    style: textTheme.label.copyWith(
-                        color: DigitTheme.instance.colors.light.primary1),
+                  child: Column(
+                    children: [
+                      Text(
+                        localizations.translate(i18.dataShare.receiveAction),
+                        style: textTheme.label.copyWith(
+                            color: DigitTheme.instance.colors.light.primary1),
+                      ),
+                      Text(
+                        localizations
+                            .translate(i18.dataShare.receiveActionDescription),
+                        style: textTheme.bodyXS.copyWith(
+                            color:
+                                DigitTheme.instance.colors.light.textSecondary),
+                      ),
+                    ],
                   ),
                 )
               ]),

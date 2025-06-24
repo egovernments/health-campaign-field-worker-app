@@ -9,16 +9,19 @@ class ProgressIndicatorContainer extends StatelessWidget {
   final double value;
   final String? subLabel;
   final Animation<Color?>? valueColor;
+  final double? height;
+  final double? radius;
 
-  const ProgressIndicatorContainer({
-    super.key,
-    required this.label,
-    required this.prefixLabel,
-    required this.suffixLabel,
-    required this.value,
-    this.valueColor,
-    this.subLabel,
-  });
+  const ProgressIndicatorContainer(
+      {super.key,
+      required this.label,
+      required this.prefixLabel,
+      required this.suffixLabel,
+      required this.value,
+      this.valueColor,
+      this.subLabel,
+      this.height,
+      this.radius});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,10 @@ class ProgressIndicatorContainer extends StatelessWidget {
                       theme.colorTheme.primary.primary1,
                     ),
                 value: value,
-                minHeight: 7.0,
+                minHeight: height ?? 7.0,
+                borderRadius: BorderRadius.horizontal(
+                    right: Radius.circular(radius ?? spacer1),
+                    left: Radius.circular(radius ?? spacer1)),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: spacer2 + 4),

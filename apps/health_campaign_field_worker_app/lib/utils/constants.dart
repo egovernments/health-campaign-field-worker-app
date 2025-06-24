@@ -340,6 +340,13 @@ class Modules {
 
 const String noResultSvg = 'assets/icons/svg/no_result.svg';
 const String mySurveyFormSvg = 'assets/icons/svg/mychecklist.svg';
+const String peerSearchSvg = 'assets/icons/svg/search_peers.svg';
+
+const String searchingLottie = 'assets/animated_json/scanning_devices.json';
+const String dataTransfer = 'assets/animated_json/data_transfer.json';
+const String receiveData = 'assets/animated_json/download_animation.json';
+const String downloadSuccess = 'assets/animated_json/download_success.json';
+const String failedLottie = 'assets/animated_json/failed_animation.json';
 
 enum DigitProgressDialogType {
   inProgress,

@@ -1,21 +1,18 @@
-import 'dart:io';
-
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../blocs/peer_to_peer/peer_to_peer.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
-import '../../widgets/peer_to_peer/file_transfer_animation.dart';
+import '../../widgets/progress_indicator/progress_indicator.dart';
 
 @RoutePage()
 class DataTransferPage extends LocalizedStatefulWidget {
@@ -32,7 +29,6 @@ class DataTransferPage extends LocalizedStatefulWidget {
 class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
   late NearbyService nearbyService;
   late PeerToPeerBloc peerToPeerBloc;
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   @override
   void initState() {
@@ -80,15 +76,15 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
             context.router
                 .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
           }
-          if (state is FailedDataTransfer) {
-            Toast.showToast(
-              context,
-              message: localizations.translate(state.error),
-              type: ToastType.error,
-              position: ToastPosition.aboveOneButtonFooter,
-            );
-            context.router.maybePop();
-          }
+          // if (state is FailedDataTransfer) {
+          //   Toast.showToast(
+          //     context,
+          //     message: localizations.translate(state.error),
+          //     type: ToastType.error,
+          //     position: ToastPosition.aboveOneButtonFooter,
+          //   );
+          //   context.router.maybePop();
+          // }
         },
         child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
             builder: (context, state) {
@@ -106,7 +102,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                     onPressed: () {
                       context.router.maybePop();
                     },
-                    label: localizations.translate(i18.common.coreCommonCancel),
+                    label: localizations.translate(i18.common.coreCommonGoback),
                     size: DigitButtonSize.large,
                   ),
                 ]),
@@ -125,7 +121,6 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                       ),
                     ),
                     Container(
-                        height: MediaQuery.of(context).size.height * 0.6,
                         color: DigitTheme.instance.colors.light.paperPrimary,
                         margin: const EdgeInsets.all(spacer2),
                         child: state.maybeWhen(
@@ -134,26 +129,27 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const SizedBox(height: spacer4),
-                                CircularPercentIndicator(
-                                  radius:
-                                      MediaQuery.of(context).size.height * 0.15,
-                                  lineWidth: spacer2 * 1.5,
-                                  animation: false,
-                                  percent: 0,
-                                  // Update this dynamically for progress
-                                  center: const Text(
-                                    '0 %',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  progressBorderColor: DigitTheme
-                                      .instance.colors.light.primary1Bg,
-                                  progressColor: DigitTheme
-                                      .instance.colors.light.alertSuccess,
-                                  backgroundColor: DigitTheme
-                                      .instance.colors.light.primary1Bg,
+                                Lottie.asset(dataTransfer,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.15),
+                                Text(
+                                  localizations.translate(
+                                      i18.dataShare.sendingActionMessage),
+                                  style: textTheme.label.copyWith(
+                                      color: DigitTheme
+                                          .instance.colors.light.primary1),
                                 ),
+                                const SizedBox(height: spacer4),
+                                const Padding(
+                                    padding: EdgeInsets.all(spacer2),
+                                    child: ProgressIndicatorContainer(
+                                      value: 0,
+                                      label: '',
+                                      prefixLabel: '',
+                                      suffixLabel: '',
+                                      height: spacer3,
+                                      radius: spacer4,
+                                    )),
                               ],
                             ),
                           ),
@@ -161,69 +157,58 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                               Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              const SizedBox(height: spacer4),
-                              Text(localizations.translate(
-                                  '${i18.dataShare.transferring} $offset / $totalCount')),
-                              const SizedBox(height: spacer4),
-                              CircularPercentIndicator(
-                                radius:
-                                    MediaQuery.of(context).size.height * 0.15,
-                                lineWidth: spacer2 * 1.5,
-                                animation: false,
-                                percent: progress,
-                                // Update this dynamically for progress
-                                center: Text(
-                                  '${(progress * 100).toStringAsFixed(1)} %',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                progressBorderColor:
-                                    DigitTheme.instance.colors.light.primary1Bg,
-                                progressColor: DigitTheme
-                                    .instance.colors.light.alertSuccess,
-                                backgroundColor:
-                                    DigitTheme.instance.colors.light.primary1Bg,
+                              Lottie.asset(dataTransfer,
+                                  height: MediaQuery.of(context).size.height *
+                                      0.15),
+                              Text(
+                                localizations.translate(
+                                    i18.dataShare.receivingActionMessage),
+                                style: textTheme.headingS.copyWith(
+                                    color: DigitTheme
+                                        .instance.colors.light.primary1),
                               ),
                               const SizedBox(height: spacer4),
-                              FileTransferAnimation(),
-                              Wrap(
-                                  spacing: spacer2,
-                                  runSpacing: spacer1,
-                                  children: [
-                                    // buildDeviceChip(),
-                                    const SizedBox(width: spacer2),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: widget.connectedDevices
-                                          .map((e) => Container(
-                                                padding: const EdgeInsets.all(
-                                                    spacer2),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: DigitTheme
-                                                        .instance
-                                                        .colors
-                                                        .light
-                                                        .primary1Bg,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          spacer2),
-                                                ),
-                                                child: Text(
-                                                  e.deviceName,
-                                                  style: TextStyle(
-                                                    color: DigitTheme.instance
-                                                        .colors.light.primary2,
-                                                  ),
-                                                ),
-                                              ))
-                                          .toList(),
-                                    ),
-                                  ]),
+                              Padding(
+                                  padding: const EdgeInsets.all(spacer4),
+                                  child: ProgressIndicatorContainer(
+                                    value: progress,
+                                    label: '',
+                                    prefixLabel: '',
+                                    suffixLabel: '',
+                                    height: spacer3,
+                                    radius: spacer4,
+                                  )),
+                            ],
+                          ),
+                          failedToTransfer: (message) => Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Lottie.asset(failedLottie),
+                              Text(
+                                localizations
+                                    .translate(i18.dataShare.failedToTransfer),
+                                style: textTheme.headingM.copyWith(
+                                    color: DigitTheme
+                                        .instance.colors.light.alertError),
+                              ),
+                              const SizedBox(height: spacer4),
+                              Text(
+                                localizations
+                                    .translate(i18.dataShare.failedToTransfer),
+                                style: textTheme.bodyS.copyWith(
+                                    color: DigitTheme
+                                        .instance.colors.light.paperSecondary),
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.all(spacer2),
+                                  child: ProgressIndicatorContainer(
+                                    value: 0.7,
+                                    label: '',
+                                    prefixLabel: '',
+                                    suffixLabel: '',
+                                    height: spacer3,
+                                    radius: spacer4,
+                                  )),
                             ],
                           ),
                         )),
@@ -234,56 +219,6 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
           );
         }),
       ),
-    );
-  }
-
-  Future<String> getCurrentDeviceName() async {
-    var deviceId = '';
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      deviceId = androidInfo.model;
-    }
-    if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceId = iosInfo.localizedModel;
-    }
-    return deviceId;
-  }
-
-  Widget buildDeviceChip() {
-    return FutureBuilder<String>(
-      future: getCurrentDeviceName(), // Call your async method here
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while the future is being resolved
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          // Handle error case
-          return Chip(
-            label: Text(localizations.translate(i18.common.coreCommonNA)),
-            backgroundColor: DigitTheme.instance.colors.light.primary1Bg,
-          );
-        } else if (snapshot.hasData) {
-          // Display the device name when available
-          return Container(
-            padding: const EdgeInsets.all(spacer2),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: DigitTheme.instance.colors.light.primary1Bg,
-              ),
-              borderRadius: BorderRadius.circular(spacer2),
-            ),
-            child: Text(
-              snapshot.data!,
-              style: TextStyle(
-                color: DigitTheme.instance.colors.light.primary2,
-              ),
-            ),
-          );
-        } else {
-          return const SizedBox.shrink(); // Handle unexpected case
-        }
-      },
     );
   }
 }

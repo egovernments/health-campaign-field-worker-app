@@ -591,11 +591,29 @@ class DataShare {
 
   String get sendAction => 'SEND_ACTION';
 
+  String get sendActionDescription => 'SEND_ACTION_DESCRIPTION';
+
   String get receiveAction => 'RECEIVE_ACTION';
+
+  String get receiveActionDescription => 'RECEIVE_ACTION_DESCRIPTION';
 
   String get connectedTo => 'CONNECTED_TO';
 
+  String get selectRecipients => 'SELECT_RECIPIENTS';
+
   String get noDevicesConnected => 'NO_DEVICES_CONNECTED';
+
+  String get sendActionMessage => 'SEND_ACTION_MESSAGE';
+
+  String get sendingActionMessage => 'SENDING_ACTION_MESSAGE';
+
+  String get receiveActionMessage => 'RECEIVE_ACTION_MESSAGE';
+
+  String get receivingActionMessage => 'RECEIVING_ACTION_MESSAGE';
+
+  String get receiverDialogTitle => 'RECEIVER_DIALOG_TITLE';
+
+  String get receiverDialogDescription => 'RECEIVER_DIALOG_DESCRIPTION';
 
   String get dataSharingLabel => 'DATA_SHARING_LABEL';
 
@@ -610,6 +628,12 @@ class DataShare {
   String get fileNotFoundError => 'FILE_NOT_FOUND_ERROR';
 
   String get failedToTransfer => 'FAILED_TO_TRANSFER';
+
+  String get failedToTransferDescription => 'FAILED_TO_TRANSFER_DESCRIPTION';
+
+  String get failedToReceive => 'FAILED_TO_RECEIVE';
+
+  String get failedToReceiveDescription => 'FAILED_TO_RECEIVE_DESCRIPTION';
 }
 
 class AcknowledgementSuccess {

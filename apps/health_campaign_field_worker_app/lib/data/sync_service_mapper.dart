@@ -84,10 +84,11 @@ class SyncServiceMapper extends SyncEntityMapperListener {
             .toList();
         await local.bulkCreate(entity);
       case "Services":
-              final entity = entityList
-                  .map((e) => ServiceModelMapper.fromJson(jsonEncode(e)))
-                  .toList();
-              await local.bulkCreate(entity);default:
+        final entity = entityList
+            .map((e) => ServiceModelMapper.fromJson(jsonEncode(e)))
+            .toList();
+        await local.bulkCreate(entity);
+      default:
         final entity = entityList
             .map((e) => EntityModelMapper.fromJson(jsonEncode(e)))
             .toList();

@@ -1,19 +1,18 @@
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../blocs/peer_to_peer/peer_to_peer.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
-import '../../widgets/peer_to_peer/file_transfer_animation.dart';
+import '../../widgets/progress_indicator/progress_indicator.dart';
 
 @RoutePage()
 class DataReceiverPage extends LocalizedStatefulWidget {
@@ -30,7 +29,6 @@ class DataReceiverPage extends LocalizedStatefulWidget {
 class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
   late NearbyService nearbyService;
   late PeerToPeerBloc peerToPeerBloc;
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   @override
   void initState() {
@@ -81,15 +79,15 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
               context.router
                   .popAndPush(AcknowledgementRoute(isDataRecordSuccess: false));
             }
-            if (state is FailedDataTransfer) {
-              Toast.showToast(
-                context,
-                message: localizations.translate(state.error),
-                type: ToastType.error,
-                position: ToastPosition.aboveOneButtonFooter,
-              );
-              context.router.maybePop();
-            }
+            // if (state is FailedDataTransfer) {
+            //   Toast.showToast(
+            //     context,
+            //     message: localizations.translate(state.error),
+            //     type: ToastType.error,
+            //     position: ToastPosition.aboveOneButtonFooter,
+            //   );
+            //   context.router.maybePop();
+            // }
           },
           child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
             builder: (context, state) {
@@ -102,13 +100,13 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                       padding: const EdgeInsets.all(spacer2),
                       children: [
                         DigitButton(
-                          type: DigitButtonType.secondary,
+                          type: DigitButtonType.primary,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () {
                             context.router.maybePop();
                           },
                           label: localizations
-                              .translate(i18.common.coreCommonCancel),
+                              .translate(i18.common.coreCommonGoback),
                           size: DigitButtonSize.large,
                         ),
                       ]),
@@ -127,64 +125,35 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                         ),
                       ),
                       Container(
-                          height: MediaQuery.of(context).size.height * 0.6,
                           color: DigitTheme.instance.colors.light.paperPrimary,
-                          margin: const EdgeInsets.all(spacer2),
+                          margin: const EdgeInsets.all(spacer4),
                           child: state.maybeWhen(
                             orElse: () => Center(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const SizedBox(height: spacer4),
-                                  CircularPercentIndicator(
-                                    radius: MediaQuery.of(context).size.height *
-                                        0.15,
-                                    lineWidth: spacer2 * 1.5,
-                                    animation: false,
-                                    percent: 0,
-                                    // Update this dynamically for progress
-                                    center: const Text(
-                                      '0 %',
-                                      style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-
-                                    progressBorderColor: DigitTheme
-                                        .instance.colors.light.primary1Bg,
-                                    progressColor: DigitTheme
-                                        .instance.colors.light.alertSuccess,
-                                    backgroundColor: DigitTheme
-                                        .instance.colors.light.primary1Bg,
+                                  Lottie.asset(receiveData,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.15),
+                                  Text(
+                                    localizations.translate(
+                                        i18.dataShare.receivingActionMessage),
+                                    style: textTheme.headingM.copyWith(
+                                        color: DigitTheme
+                                            .instance.colors.light.primary2),
                                   ),
-                                  const SizedBox(height: spacer4),
-                                  FileTransferAnimation(),
-                                  Wrap(
-                                      spacing: spacer2,
-                                      runSpacing: spacer1,
-                                      children: [
-                                        // buildDeviceChip(),
-                                        Container(
-                                          padding:
-                                              const EdgeInsets.all(spacer2),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: DigitTheme.instance.colors
-                                                  .light.primary1Bg,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(spacer2),
-                                          ),
-                                          child: Text(
-                                            widget.connectedDevice.deviceName,
-                                            style: TextStyle(
-                                              color: DigitTheme.instance.colors
-                                                  .light.primary2,
-                                            ),
-                                          ),
-                                        ),
-                                      ]),
+                                  const Padding(
+                                      padding: EdgeInsets.all(spacer2),
+                                      child: ProgressIndicatorContainer(
+                                        value: 0,
+                                        label: '',
+                                        prefixLabel: '',
+                                        suffixLabel: '',
+                                        height: spacer3,
+                                        radius: spacer4,
+                                      )),
                                 ],
                               ),
                             ),
@@ -195,60 +164,53 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(localizations.translate(
-                                        '${i18.dataShare.receiving} $offset / $totalCount')),
-                                    const SizedBox(height: spacer4),
-                                    CircularPercentIndicator(
-                                      radius:
-                                          MediaQuery.of(context).size.height *
-                                              0.15,
-                                      lineWidth: spacer2 * 1.5,
-                                      animation: false,
-                                      percent: progress,
-                                      // Update this dynamically for progress
-                                      center: Text(
-                                        '${(progress * 100).toStringAsFixed(1)} %',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      progressBorderColor: DigitTheme
-                                          .instance.colors.light.primary1Bg,
-                                      progressColor: DigitTheme
-                                          .instance.colors.light.alertSuccess,
-                                      backgroundColor: DigitTheme
-                                          .instance.colors.light.primary1Bg,
+                                    Lottie.asset(receiveData,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.15),
+                                    Text(
+                                      localizations.translate(
+                                          i18.dataShare.receivingActionMessage),
+                                      style: textTheme.headingM.copyWith(
+                                          color: DigitTheme
+                                              .instance.colors.light.primary2),
                                     ),
-                                    const SizedBox(height: spacer4),
-                                    FileTransferAnimation(),
-                                    Wrap(
-                                        spacing: spacer2,
-                                        runSpacing: spacer1,
-                                        children: [
-                                          Container(
-                                            padding:
-                                                const EdgeInsets.all(spacer2),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: DigitTheme.instance
-                                                    .colors.light.primary1Bg,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      spacer2),
-                                            ),
-                                            child: Text(
-                                              widget.connectedDevice.deviceName,
-                                              style: TextStyle(
-                                                color: DigitTheme.instance
-                                                    .colors.light.primary2,
-                                              ),
-                                            ),
-                                          ),
-                                        ]),
+                                    Padding(
+                                        padding: const EdgeInsets.all(spacer2),
+                                        child: ProgressIndicatorContainer(
+                                          value: progress,
+                                          label: '',
+                                          prefixLabel: '',
+                                          suffixLabel: '',
+                                          height: spacer3,
+                                          radius: spacer4,
+                                        )),
                                   ],
                                 ),
                               );
                             },
+                            failedToReceive: (message) => Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Lottie.asset(receiveData),
+                                Text(
+                                  localizations
+                                      .translate(i18.dataShare.failedToReceive),
+                                  style: textTheme.headingM.copyWith(
+                                      color: DigitTheme
+                                          .instance.colors.light.alertError),
+                                ),
+                                const SizedBox(height: spacer4),
+                                Text(
+                                  localizations.translate(
+                                      i18.dataShare.failedToTransfer),
+                                  style: textTheme.bodyS.copyWith(
+                                      color: DigitTheme.instance.colors.light
+                                          .paperSecondary),
+                                ),
+                              ],
+                            ),
                           )),
                     ]))
                   ]);
