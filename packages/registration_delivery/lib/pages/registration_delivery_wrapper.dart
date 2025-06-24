@@ -1,14 +1,20 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/household_global_seach.dart';
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:registration_bloc/bloc/registration_bloc.dart';
+import 'package:registration_bloc/service/registration_service.dart';
+import 'package:registration_bloc/repositories/local/search_entity_repository.dart';
+import 'package:registration_bloc/models/global_search_params.dart';
 import '../blocs/entity_create/entity_create.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
@@ -38,6 +44,114 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
           // ),
           BlocProvider(
             create: (context) {
+              return RegistrationBloc(
+                service: RegistrationService(
+                  relationshipMap: [
+                    const RelationshipMapping(
+                        from: 'name',
+                        to: 'individual',
+                        localKey: 'individualClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(
+                        from: 'householdMember',
+                        to: 'individual',
+                        localKey: 'individualClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(
+                        from: 'householdMember',
+                        to: 'household',
+                        localKey: 'householdClientReferenceId',
+                        foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(
+                        from: 'projectBeneficiary',
+                        to: 'task',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'projectBeneficiaryClientReferenceId'),
+                    // Conditional mapping
+                    if (RegistrationDeliverySingleton().beneficiaryType ==
+                        BeneficiaryType.household)
+                      const RelationshipMapping(
+                        from: 'projectBeneficiary',
+                        to: 'household',
+                        localKey: 'beneficiaryClientReferenceId',
+                        foreignKey: 'clientReferenceId',
+                      )
+                    else
+                      const RelationshipMapping(
+                        from: 'projectBeneficiary',
+                        to: 'individual',
+                        localKey: 'beneficiaryClientReferenceId',
+                        foreignKey: 'clientReferenceId',
+                      ),
+                  ],
+                  nestedModelMappings: [
+                    const NestedModelMapping(
+                      rootModel: 'individual',
+                      fields: {
+                        'name': NestedFieldMapping(
+                          table: 'name',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'individualClientReferenceId',
+                          type: NestedMappingType.one,
+                        ),
+                        'address': NestedFieldMapping(
+                          table: 'address',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'relatedClientReferenceId',
+                          type: NestedMappingType.many,
+                        ),
+                        'identifiers': NestedFieldMapping(
+                          table: 'identifier',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'clientReferenceId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                    const NestedModelMapping(
+                      rootModel: 'household',
+                      fields: {
+                        'address': NestedFieldMapping(
+                          table: 'address',
+                          localKey: 'clientReferenceId',
+                          foreignKey: 'relatedClientReferenceId',
+                          type: NestedMappingType.one,
+                        ),
+                      },
+                    ),
+                    const NestedModelMapping(
+                      rootModel: 'task',
+                      fields: {
+                        'resource': NestedFieldMapping(
+                          table: 'resource',
+                          localKey: 'taskclientReferenceId',
+                          foreignKey: 'clientReferenceId',
+                          type: NestedMappingType.many,
+                        ),
+                      },
+                    ),
+                  ],
+                  projectBeneficiaryRepository: context.repository<
+                      ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>(context),
+                  householdMemberRepository: context.repository<
+                      HouseholdMemberModel,
+                      HouseholdMemberSearchModel>(context),
+                  householdRepository:
+                      context.repository<HouseholdModel, HouseholdSearchModel>(
+                          context),
+                  individualRepository: context.repository<IndividualModel,
+                      IndividualSearchModel>(context),
+                  taskDataRepository:
+                      context.repository<TaskModel, TaskSearchModel>(context),
+                  searchEntityRepository:
+                      context.read<SearchEntityRepository>(),
+                ),
+              );
+            },
+          ),
+          BlocProvider(
+            create: (context) {
               return SearchHouseholdsBloc(
                   beneficiaryType:
                       RegistrationDeliverySingleton().beneficiaryType!,
@@ -63,6 +177,12 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                   referralDataRepository: context.repository<ReferralModel, ReferralSearchModel>(context),
                   individualGlobalSearchRepository: context.read<IndividualGlobalSearchRepository>(),
                   houseHoldGlobalSearchRepository: context.read<HouseHoldGlobalSearchRepository>());
+            },
+          ),
+          BlocProvider(
+            create: (context) {
+              return RegistrationWrapperBloc(
+                  globalRegistrationBloc: context.read<RegistrationBloc>());
             },
           ),
           BlocProvider(
@@ -171,16 +291,17 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
           ),
           BlocProvider(
             create: (ctx) => EntityCreateBloc(
-              individualRepository: context.repository<IndividualModel, IndividualSearchModel>(
-                  context),
-              householdRepository: context.repository<HouseholdModel, HouseholdSearchModel>(
-                  context),
-              householdMemberRepository: context.repository<HouseholdMemberModel,
-                  HouseholdMemberSearchModel>(context),
+              individualRepository: context
+                  .repository<IndividualModel, IndividualSearchModel>(context),
+              householdRepository: context
+                  .repository<HouseholdModel, HouseholdSearchModel>(context),
+              householdMemberRepository: context.repository<
+                  HouseholdMemberModel, HouseholdMemberSearchModel>(context),
               projectBeneficiaryRepository: context.repository<
                   ProjectBeneficiaryModel,
                   ProjectBeneficiarySearchModel>(context),
-              taskDataRepository: context.repository<TaskModel, TaskSearchModel>(context),
+              taskDataRepository:
+                  context.repository<TaskModel, TaskSearchModel>(context),
             ),
           ),
         ],

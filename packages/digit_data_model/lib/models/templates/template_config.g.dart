@@ -82,3 +82,17 @@ Map<String, dynamic> _$$NavigateToConfigImplToJson(
       'type': instance.type,
       'name': instance.name,
     };
+
+_$NavigateToConfigImpl _$$NavigateToConfigImplFromJson(
+        Map<String, dynamic> json) =>
+    _$NavigateToConfigImpl(
+      type: json['type'] as String,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$$NavigateToConfigImplToJson(
+        _$NavigateToConfigImpl instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'name': instance.name,
+    };

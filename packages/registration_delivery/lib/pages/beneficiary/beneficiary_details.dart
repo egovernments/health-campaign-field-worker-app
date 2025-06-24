@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.dart';
 import '../../utils/utils.dart';
 
@@ -58,64 +59,64 @@ class BeneficiaryDetailsPageState
     final textTheme = theme.digitTextTheme(context);
 
     return ProductVariantBlocWrapper(
-      child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+      child: BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(
         builder: (context, state) {
-          final householdMemberWrapper = state.householdMemberWrapper;
+          final householdMemberWrapper = state.householdMembers;
           // Filtering project beneficiaries based on the selected individual
           final projectBeneficiary =
-              RegistrationDeliverySingleton().beneficiaryType !=
-                      BeneficiaryType.individual
-                  ? [householdMemberWrapper.projectBeneficiaries?.first]
-                  : householdMemberWrapper.projectBeneficiaries
-                      ?.where(
-                        (element) =>
-                            element.beneficiaryClientReferenceId ==
-                            state.selectedIndividual?.clientReferenceId,
-                      )
-                      .toList();
+          RegistrationDeliverySingleton().beneficiaryType !=
+              BeneficiaryType.individual
+              ? [householdMemberWrapper.first.projectBeneficiaries?.first]
+              : householdMemberWrapper.first.projectBeneficiaries
+              ?.where(
+                (element) =>
+            element.beneficiaryClientReferenceId ==
+                state.selectedIndividual?.clientReferenceId,
+          )
+              .toList();
 
           // Extracting task data related to the selected project beneficiary
 
-          final taskData = state.householdMemberWrapper.tasks
+          final taskData = state.householdMembers.first.tasks
               ?.where((element) =>
-                  element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary?.first?.clientReferenceId)
+          element.projectBeneficiaryClientReferenceId ==
+              projectBeneficiary?.first?.clientReferenceId)
               .toList();
           final bloc = context.read<DeliverInterventionBloc>();
           final lastDose = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
-                      .firstWhereOrNull(
-                        (e) =>
-                            e.key == AdditionalFieldsType.doseIndex.toValue(),
-                      )
-                      ?.value ??
-                  '1'
+              .firstWhereOrNull(
+                (e) =>
+            e.key == AdditionalFieldsType.doseIndex.toValue(),
+          )
+              ?.value ??
+              '1'
               : '0';
           final lastCycle = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
-                      .firstWhereOrNull(
-                        (e) =>
-                            e.key == AdditionalFieldsType.cycleIndex.toValue(),
-                      )
-                      ?.value ??
-                  '1'
+              .firstWhereOrNull(
+                (e) =>
+            e.key == AdditionalFieldsType.cycleIndex.toValue(),
+          )
+              ?.value ??
+              '1'
               : '1';
 
-          // [TODO] Need to move this to Bloc Lisitner or consumer
+          // [TODO] Need to move this to Bloc listener or consumer
           if (RegistrationDeliverySingleton().projectType != null) {
             bloc.add(
               DeliverInterventionEvent.setActiveCycleDose(
                 lastDose: taskData != null && taskData.isNotEmpty
                     ? int.tryParse(
-                          lastDose,
-                        ) ??
-                        1
+                  lastDose,
+                ) ??
+                    1
                     : 0,
                 lastCycle: taskData != null && taskData.isNotEmpty
                     ? int.tryParse(
-                          lastCycle,
-                        ) ??
-                        1
+                  lastCycle,
+                ) ??
+                    1
                     : 1,
                 individualModel: state.selectedIndividual,
                 projectType: RegistrationDeliverySingleton().projectType!,
@@ -150,257 +151,257 @@ class BeneficiaryDetailsPageState
                             final cycles = projectType?.cycles;
 
                             return (beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.hidden == true)
-                            ? const SizedBox.shrink() : cycles != null && cycles.isNotEmpty
+                                ? const SizedBox.shrink() : cycles != null && cycles.isNotEmpty
                                 ? deliverState.hasCycleArrived
-                                    ? DigitCard(
-                                        margin:
-                                            const EdgeInsets.only(top: spacer2),
-                                        children: [
-                                            DigitButton(
-                                              label: (beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '').isNotEmpty
-                                                  ? localizations.translate(beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '')
-                                                  : '${localizations.translate(i18.beneficiaryDetails.recordCycle)} '
-                                                  '${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} '
-                                                  '${(deliverState.dose).toString()}',
-                                              type: DigitButtonType.primary,
-                                              size: DigitButtonSize.large,
-                                              mainAxisSize: MainAxisSize.max,
-                                              onPressed: () async {
-                                                final selectedCycle = cycles
-                                                    .firstWhereOrNull((c) =>
-                                                        c.id ==
-                                                        deliverState.cycle);
-                                                if (selectedCycle != null) {
-                                                  final currentCycle =
-                                                      deliverState.cycle >= 0
-                                                          ? deliverState.cycle
-                                                          : 0;
+                                ? DigitCard(
+                                margin:
+                                const EdgeInsets.only(top: spacer2),
+                                children: [
+                                  DigitButton(
+                                    label: (beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '').isNotEmpty
+                                        ? localizations.translate(beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '')
+                                        : '${localizations.translate(i18.beneficiaryDetails.recordCycle)} '
+                                        '${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} '
+                                        '${(deliverState.dose).toString()}',
+                                    type: DigitButtonType.primary,
+                                    size: DigitButtonSize.large,
+                                    mainAxisSize: MainAxisSize.max,
+                                    onPressed: () async {
+                                      final selectedCycle = cycles
+                                          .firstWhereOrNull((c) =>
+                                      c.id ==
+                                          deliverState.cycle);
+                                      if (selectedCycle != null) {
+                                        final currentCycle =
+                                        deliverState.cycle >= 0
+                                            ? deliverState.cycle
+                                            : 0;
 
-                                                  // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
-                                                  final currentDose =
-                                                      deliverState.dose >= 0
-                                                          ? deliverState.dose
-                                                          : 0;
+                                        // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
+                                        final currentDose =
+                                        deliverState.dose >= 0
+                                            ? deliverState.dose
+                                            : 0;
 
-                                                  final items =
-                                                      RegistrationDeliverySingleton()
-                                                              .projectType!
-                                                              .cycles?[
-                                                                  currentCycle - 1]
-                                                              .deliveries?[
-                                                          currentDose - 1];
+                                        final items =
+                                        RegistrationDeliverySingleton()
+                                            .projectType!
+                                            .cycles?[
+                                        currentCycle - 1]
+                                            .deliveries?[
+                                        currentDose - 1];
 
-                                                  bloc.add(
-                                                    DeliverInterventionEvent
-                                                        .selectFutureCycleDose(
-                                                      dose: deliverState.dose,
-                                                      cycle:
-                                                          RegistrationDeliverySingleton()
-                                                              .projectType!
-                                                              .cycles!
-                                                              .firstWhere((c) =>
-                                                                  c.id ==
-                                                                  deliverState
-                                                                      .cycle),
-                                                      individualModel: state
+                                        bloc.add(
+                                          DeliverInterventionEvent
+                                              .selectFutureCycleDose(
+                                            dose: deliverState.dose,
+                                            cycle:
+                                            RegistrationDeliverySingleton()
+                                                .projectType!
+                                                .cycles!
+                                                .firstWhere((c) =>
+                                            c.id ==
+                                                deliverState
+                                                    .cycle),
+                                            individualModel: state
+                                                .selectedIndividual,
+                                          ),
+                                        );
+
+                                        var productVariants =
+                                        fetchProductVariant(
+                                            items,
+                                            state
+                                                .selectedIndividual,
+                                            state
+                                                .householdMembers.first
+                                                .household,
+                                            context: context);
+
+                                        if (productVariants[
+                                        'criteria'] ==
+                                            null) {
+                                          showCustomPopup(
+                                            context: context,
+                                            builder: (BuildContext context) => Popup(
+                                                title: localizations
+                                                    .translate(i18
+                                                    .common
+                                                    .coreCommonError),
+                                                description: localizations
+                                                    .translate(
+                                                    'CONDITION_FAILED') +
+                                                    productVariants[
+                                                    'errors']
+                                                        .toString()
+                                                        .replaceAll(
+                                                        '[', '')
+                                                        .replaceAll(
+                                                        ']', ''),
+                                                type: PopUpType.alert,
+                                                actions: [
+                                                  DigitButton(
+                                                      label: localizations
+                                                          .translate(i18
+                                                          .common
+                                                          .corecommonclose),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                          context,
+                                                          rootNavigator:
+                                                          true,
+                                                        ).pop();
+                                                      },
+                                                      type: DigitButtonType
+                                                          .secondary,
+                                                      size:
+                                                      DigitButtonSize
+                                                          .large)
+                                                ]),
+                                          );
+                                        } else {
+                                          showCustomPopup(
+                                            context: context,
+                                            builder: (popUpContext) => Popup(
+                                                title: localizations
+                                                    .translate(i18
+                                                    .beneficiaryDetails
+                                                    .resourcesTobeDelivered),
+                                                type:
+                                                PopUpType.simple,
+                                                contentPadding:
+                                                EdgeInsets.zero,
+                                                additionalWidgets: [
+                                                  buildTableContent(
+                                                      deliverState,
+                                                      context,
+                                                      variant,
+                                                      state
                                                           .selectedIndividual,
-                                                    ),
-                                                  );
-
-                                                  var productVariants =
-                                                      fetchProductVariant(
-                                                          items,
-                                                          state
-                                                              .selectedIndividual,
-                                                          state
-                                                              .householdMemberWrapper
-                                                              .household,
-                                                          context: context);
-
-                                                  if (productVariants[
-                                                          'criteria'] ==
-                                                      null) {
-                                                    showCustomPopup(
-                                                      context: context,
-                                                      builder: (BuildContext context) => Popup(
-                                                          title: localizations
-                                                              .translate(i18
-                                                                  .common
-                                                                  .coreCommonError),
-                                                          description: localizations
-                                                                  .translate(
-                                                                      'CONDITION_FAILED') +
-                                                              productVariants[
-                                                                      'errors']
-                                                                  .toString()
-                                                                  .replaceAll(
-                                                                      '[', '')
-                                                                  .replaceAll(
-                                                                      ']', ''),
-                                                          type: PopUpType.alert,
-                                                          actions: [
-                                                            DigitButton(
-                                                                label: localizations
-                                                                    .translate(i18
-                                                                        .common
-                                                                        .corecommonclose),
-                                                                onPressed: () {
-                                                                  Navigator.of(
-                                                                    context,
-                                                                    rootNavigator:
-                                                                        true,
-                                                                  ).pop();
-                                                                },
-                                                                type: DigitButtonType
-                                                                    .secondary,
-                                                                size:
-                                                                    DigitButtonSize
-                                                                        .large)
-                                                          ]),
-                                                    );
-                                                  } else {
-                                                    showCustomPopup(
-                                                      context: context,
-                                                      builder: (popUpContext) => Popup(
-                                                          title: localizations
-                                                              .translate(i18
-                                                                  .beneficiaryDetails
-                                                                  .resourcesTobeDelivered),
-                                                          type:
-                                                              PopUpType.simple,
-                                                          contentPadding:
-                                                              EdgeInsets.zero,
-                                                          additionalWidgets: [
-                                                            buildTableContent(
-                                                                deliverState,
-                                                                context,
-                                                                variant,
-                                                                state
-                                                                    .selectedIndividual,
-                                                                state
-                                                                    .householdMemberWrapper
-                                                                    .household),
-                                                          ],
-                                                          actions: [
-                                                            DigitButton(
-                                                                label: localizations
-                                                                    .translate(i18
-                                                                        .beneficiaryDetails
-                                                                        .ctaProceed),
-                                                                onPressed: () {
-                                                                  Navigator.of(
-                                                                    context,
-                                                                    rootNavigator:
-                                                                        true,
-                                                                  ).pop();
-                                                                  router.push(
-                                                                    DeliverInterventionRoute(),
-                                                                  );
-                                                                },
-                                                                type:
-                                                                    DigitButtonType
-                                                                        .primary,
-                                                                size:
-                                                                    DigitButtonSize
-                                                                        .large),
-                                                          ]),
-                                                    );
-                                                  }
-                                                }
-                                              },
-                                            ),
-                                          ])
-                                    : const SizedBox.shrink()
+                                                      state
+                                                          .householdMembers.first
+                                                          .household),
+                                                ],
+                                                actions: [
+                                                  DigitButton(
+                                                      label: localizations
+                                                          .translate(i18
+                                                          .beneficiaryDetails
+                                                          .ctaProceed),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                          context,
+                                                          rootNavigator:
+                                                          true,
+                                                        ).pop();
+                                                        router.push(
+                                                          DeliverInterventionRoute(),
+                                                        );
+                                                      },
+                                                      type:
+                                                      DigitButtonType
+                                                          .primary,
+                                                      size:
+                                                      DigitButtonSize
+                                                          .large),
+                                                ]),
+                                          );
+                                        }
+                                      }
+                                    },
+                                  ),
+                                ])
+                                : const SizedBox.shrink()
                                 : DigitCard(
-                                    margin: const EdgeInsets.only(top: spacer2),
-                                    children: [
-                                        DigitButton(
-                                          label: (beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '').isNotEmpty
-                                              ? localizations.translate(beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '')
-                                          : localizations.translate(i18
-                                              .householdOverView
-                                              .householdOverViewActionText),
-                                          type: DigitButtonType.primary,
-                                          size: DigitButtonSize.large,
-                                          mainAxisSize: MainAxisSize.max,
-                                          onPressed: () {
-                                            final currentCycle =
-                                                deliverState.cycle >= 0
-                                                    ? deliverState.cycle
-                                                    : 0;
+                                margin: const EdgeInsets.only(top: spacer2),
+                                children: [
+                                  DigitButton(
+                                    label: (beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '').isNotEmpty
+                                        ? localizations.translate(beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '')
+                                        : localizations.translate(i18
+                                        .householdOverView
+                                        .householdOverViewActionText),
+                                    type: DigitButtonType.primary,
+                                    size: DigitButtonSize.large,
+                                    mainAxisSize: MainAxisSize.max,
+                                    onPressed: () {
+                                      final currentCycle =
+                                      deliverState.cycle >= 0
+                                          ? deliverState.cycle
+                                          : 0;
 
-                                            // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
-                                            final currentDose =
-                                                deliverState.dose >= 0
-                                                    ? deliverState.dose
-                                                    : 0;
+                                      // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
+                                      final currentDose =
+                                      deliverState.dose >= 0
+                                          ? deliverState.dose
+                                          : 0;
 
-                                            final items =
-                                                RegistrationDeliverySingleton()
-                                                    .projectType!
-                                                    .cycles?[currentCycle - 1]
-                                                    .deliveries?[currentDose - 1];
+                                      final items =
+                                      RegistrationDeliverySingleton()
+                                          .projectType!
+                                          .cycles?[currentCycle - 1]
+                                          .deliveries?[currentDose - 1];
 
-                                            var productVariants =
-                                                fetchProductVariant(
-                                                    items,
-                                                    state.selectedIndividual,
-                                                    state.householdMemberWrapper
-                                                        .household,
-                                                    context: context);
+                                      var productVariants =
+                                      fetchProductVariant(
+                                          items,
+                                          state.selectedIndividual,
+                                          state.householdMembers.first
+                                              .household,
+                                          context: context);
 
-                                            if (productVariants['criteria'] ==
-                                                null) {
-                                              showCustomPopup(
-                                                context: context,
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    Popup(
-                                                        title: localizations
+                                      if (productVariants['criteria'] ==
+                                          null) {
+                                        showCustomPopup(
+                                          context: context,
+                                          builder: (BuildContext
+                                          context) =>
+                                              Popup(
+                                                  title: localizations
+                                                      .translate(i18
+                                                      .common
+                                                      .coreCommonError),
+                                                  description: localizations
+                                                      .translate(
+                                                      'CONDITION_FAILED') +
+                                                      productVariants[
+                                                      'errors']
+                                                          .toString()
+                                                          .replaceAll(
+                                                          '[', '')
+                                                          .replaceAll(
+                                                          ']', ''),
+                                                  type: PopUpType.alert,
+                                                  actions: [
+                                                    DigitButton(
+                                                        label: localizations
                                                             .translate(i18
-                                                                .common
-                                                                .coreCommonError),
-                                                        description: localizations
-                                                                .translate(
-                                                                    'CONDITION_FAILED') +
-                                                            productVariants[
-                                                                    'errors']
-                                                                .toString()
-                                                                .replaceAll(
-                                                                    '[', '')
-                                                                .replaceAll(
-                                                                    ']', ''),
-                                                        type: PopUpType.alert,
-                                                        actions: [
-                                                      DigitButton(
-                                                          label: localizations
-                                                              .translate(i18
-                                                                  .common
-                                                                  .corecommonclose),
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                              context,
-                                                              rootNavigator:
-                                                                  true,
-                                                            ).pop();
-                                                          },
-                                                          type: DigitButtonType
-                                                              .tertiary,
-                                                          size: DigitButtonSize
-                                                              .large)
-                                                    ]),
-                                              );
-                                            } else {
-                                              context.router.push(
-                                                  DeliverInterventionRoute());
-                                            }
-                                          },
-                                        ),
-                                      ]) ;
+                                                            .common
+                                                            .corecommonclose),
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                            context,
+                                                            rootNavigator:
+                                                            true,
+                                                          ).pop();
+                                                        },
+                                                        type: DigitButtonType
+                                                            .tertiary,
+                                                        size: DigitButtonSize
+                                                            .large)
+                                                  ]),
+                                        );
+                                      } else {
+                                        context.router.push(
+                                            DeliverInterventionRoute());
+                                      }
+                                    },
+                                  ),
+                                ]) ;
                           },
                         ),
                         children: [
-                            DigitCard(
+                          DigitCard(
                               margin: const EdgeInsets.all(spacer2),
                               children: [
                                 Text(
@@ -423,18 +424,21 @@ class BeneficiaryDetailsPageState
                                 if(beneficiaryDetailsTemplate
                                     ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.hidden != true)
                                   DigitTableCard(
-                                  element: buildEnumValueMap(HouseholdMemberWrapper(
-                                      household: householdMemberWrapper.household,
-                                      headOfHousehold: RegistrationDeliverySingleton()
-                                          .beneficiaryType !=
-                                          BeneficiaryType.individual
-                                          ? householdMemberWrapper.headOfHousehold : state.selectedIndividual,
-                                      tasks: householdMemberWrapper.tasks,
-                                      members: householdMemberWrapper.members,
-                                      projectBeneficiaries: householdMemberWrapper.projectBeneficiaries,
-                                      sideEffects: householdMemberWrapper.sideEffects,
-                                      referrals: householdMemberWrapper.referrals,
-                                    ), [
+                                    element: buildEnumValueMap(
+                                    //     HouseholdMemberWrapper(
+                                    //   household: householdMemberWrapper.household,
+                                    //   headOfHousehold: RegistrationDeliverySingleton()
+                                    //       .beneficiaryType !=
+                                    //       BeneficiaryType.individual
+                                    //       ? householdMemberWrapper.headOfHousehold : state.selectedIndividual,
+                                    //   tasks: householdMemberWrapper.tasks,
+                                    //   members: householdMemberWrapper.members,
+                                    //   projectBeneficiaries: householdMemberWrapper.projectBeneficiaries,
+                                    //   sideEffects: householdMemberWrapper.sideEffects,
+                                    //   referrals: householdMemberWrapper.referrals,
+                                    // )
+                                      null
+                                        , [
                                       {
                                         "code": "Individual.givenName",
                                         "name": "givenName",
@@ -484,196 +488,196 @@ class BeneficiaryDetailsPageState
                                         "jsonPath": "Individual.address[0].locality.code",
                                         "isList": "true"
                                       },
-                                    {
-                                      "code": "Individual.identifierType",
-                                      "name": "identifierType",
-                                      "fieldKey": "identifierType",
-                                      "jsonPath": "Individual.identifiers[0].identifierType",
-                                      "isList": "true"
-                                    }
+                                      {
+                                        "code": "Individual.identifierType",
+                                        "name": "identifierType",
+                                        "fieldKey": "identifierType",
+                                        "jsonPath": "Individual.identifiers[0].identifierType",
+                                        "isList": "true"
+                                      }
                                     ])?.map((k, v) => MapEntry(localizations.translate(k), localizations.translate(v.toString())))
                                         ??
-                                    {
-                                      localizations.translate(
-                                      RegistrationDeliverySingleton()
-                                                  .beneficiaryType !=
+                                        {
+                                          localizations.translate(
+                                            RegistrationDeliverySingleton()
+                                                .beneficiaryType !=
+                                                BeneficiaryType.individual
+                                                ? i18.householdOverView
+                                                .householdOverViewHouseholdHeadLabel
+                                                : i18.common.coreCommonName,
+                                          ): RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
                                               BeneficiaryType.individual
-                                          ? i18.householdOverView
-                                              .householdOverViewHouseholdHeadLabel
-                                          : i18.common.coreCommonName,
-                                    ): RegistrationDeliverySingleton()
+                                              ? householdMemberWrapper.first
+                                              .headOfHousehold?.name?.givenName
+                                              : state.selectedIndividual?.name
+                                              ?.givenName ??
+                                              '--',
+                                          localizations.translate(
+                                            i18.deliverIntervention.idTypeText,
+                                          ): () {
+                                            final identifiers =
+                                            RegistrationDeliverySingleton()
                                                 .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper
-                                            .headOfHousehold?.name?.givenName
-                                        : state.selectedIndividual?.name
-                                                ?.givenName ??
-                                            '--',
-                                    localizations.translate(
-                                      i18.deliverIntervention.idTypeText,
-                                    ): () {
-                                      final identifiers =
-                                          RegistrationDeliverySingleton()
-                                                      .beneficiaryType !=
-                                                  BeneficiaryType.individual
-                                              ? householdMemberWrapper
-                                                  .headOfHousehold?.identifiers
-                                              : state.selectedIndividual
-                                                  ?.identifiers;
-                                      if (identifiers == null ||
-                                          identifiers.isEmpty) {
-                                        return '--';
-                                      }
+                                                BeneficiaryType.individual
+                                                ? householdMemberWrapper.first
+                                                .headOfHousehold?.identifiers
+                                                : state.selectedIndividual
+                                                ?.identifiers;
+                                            if (identifiers == null ||
+                                                identifiers.isEmpty) {
+                                              return '--';
+                                            }
 
-                                      return localizations.translate(
-                                          identifiers.first.identifierType ??
-                                              '--');
-                                    }(),
-                                    localizations.translate(
-                                      i18.deliverIntervention.idNumberText,
-                                    ): () {
-                                      final identifiers =
-                                          RegistrationDeliverySingleton()
-                                                      .beneficiaryType !=
-                                                  BeneficiaryType.individual
-                                              ? householdMemberWrapper
-                                                  .headOfHousehold?.identifiers
-                                              : state.selectedIndividual
-                                                  ?.identifiers;
-                                      if (identifiers == null ||
-                                          identifiers.isEmpty) {
-                                        return '--';
-                                      }
-
-                                      return maskString(identifiers
-                                          .first.identifierId
-                                          .toString());
-                                    }(),
-                                    localizations.translate(
-                                      i18.common.coreCommonAge,
-                                    ): () {
-                                      final dob =
-                                          RegistrationDeliverySingleton()
-                                                      .beneficiaryType !=
-                                                  BeneficiaryType.individual
-                                              ? householdMemberWrapper
-                                                  .headOfHousehold?.dateOfBirth
-                                              : state.selectedIndividual
-                                                  ?.dateOfBirth;
-                                      if (dob == null || dob.isEmpty) {
-                                        return '--';
-                                      }
-
-                                      final int years =
-                                          DigitDateUtils.calculateAge(
-                                        DigitDateUtils
-                                                .getFormattedDateToDateTime(
-                                              dob,
-                                            ) ??
-                                            DateTime.now(),
-                                      ).years;
-                                      final int months =
-                                          DigitDateUtils.calculateAge(
-                                        DigitDateUtils
-                                                .getFormattedDateToDateTime(
-                                              dob,
-                                            ) ??
-                                            DateTime.now(),
-                                      ).months;
-
-                                      return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} ${localizations.translate(months.toString().toUpperCase())} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
-                                    }(),
-                                    localizations.translate(
-                                      i18.common.coreCommonGender,
-                                    ): RegistrationDeliverySingleton()
+                                            return localizations.translate(
+                                                identifiers.first.identifierType ??
+                                                    '--');
+                                          }(),
+                                          localizations.translate(
+                                            i18.deliverIntervention.idNumberText,
+                                          ): () {
+                                            final identifiers =
+                                            RegistrationDeliverySingleton()
                                                 .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper.headOfHousehold
-                                            ?.gender?.name.sentenceCase
-                                        : state.selectedIndividual?.gender?.name
-                                                .sentenceCase ??
-                                            '--',
-                                    localizations.translate(
-                                      i18.common.coreCommonMobileNumber,
-                                    ): RegistrationDeliverySingleton()
+                                                BeneficiaryType.individual
+                                                ? householdMemberWrapper.first
+                                                .headOfHousehold?.identifiers
+                                                : state.selectedIndividual
+                                                ?.identifiers;
+                                            if (identifiers == null ||
+                                                identifiers.isEmpty) {
+                                              return '--';
+                                            }
+
+                                            return maskString(identifiers
+                                                .first.identifierId
+                                                .toString());
+                                          }(),
+                                          localizations.translate(
+                                            i18.common.coreCommonAge,
+                                          ): () {
+                                            final dob =
+                                            RegistrationDeliverySingleton()
                                                 .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper
-                                            .headOfHousehold?.mobileNumber
-                                        : state.selectedIndividual
-                                                ?.mobileNumber ??
-                                            '--',
-                                    localizations.translate(i18
-                                        .deliverIntervention
-                                        .dateOfRegistrationLabel): () {
-                                      final date = projectBeneficiary
-                                          ?.first?.dateOfRegistration;
+                                                BeneficiaryType.individual
+                                                ? householdMemberWrapper.first
+                                                .headOfHousehold?.dateOfBirth
+                                                : state.selectedIndividual
+                                                ?.dateOfBirth;
+                                            if (dob == null || dob.isEmpty) {
+                                              return '--';
+                                            }
 
-                                      final registrationDate =
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                        date ??
-                                            DateTime.now()
-                                                .millisecondsSinceEpoch,
-                                      );
+                                            final int years =
+                                                DigitDateUtils.calculateAge(
+                                                  DigitDateUtils
+                                                      .getFormattedDateToDateTime(
+                                                    dob,
+                                                  ) ??
+                                                      DateTime.now(),
+                                                ).years;
+                                            final int months =
+                                                DigitDateUtils.calculateAge(
+                                                  DigitDateUtils
+                                                      .getFormattedDateToDateTime(
+                                                    dob,
+                                                  ) ??
+                                                      DateTime.now(),
+                                                ).months;
 
-                                      return DateFormat('dd MMMM yyyy')
-                                          .format(registrationDate);
-                                    }(),
-                                  },
-                                ),
+                                            return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} ${localizations.translate(months.toString().toUpperCase())} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
+                                          }(),
+                                          localizations.translate(
+                                            i18.common.coreCommonGender,
+                                          ): RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
+                                              BeneficiaryType.individual
+                                              ? householdMemberWrapper.first.headOfHousehold
+                                              ?.gender?.name.sentenceCase
+                                              : state.selectedIndividual?.gender?.name
+                                              .sentenceCase ??
+                                              '--',
+                                          localizations.translate(
+                                            i18.common.coreCommonMobileNumber,
+                                          ): RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
+                                              BeneficiaryType.individual
+                                              ? householdMemberWrapper.first
+                                              .headOfHousehold?.mobileNumber
+                                              : state.selectedIndividual
+                                              ?.mobileNumber ??
+                                              '--',
+                                          localizations.translate(i18
+                                              .deliverIntervention
+                                              .dateOfRegistrationLabel): () {
+                                            final date = projectBeneficiary
+                                                ?.first?.dateOfRegistration;
+
+                                            final registrationDate =
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                              date ??
+                                                  DateTime.now()
+                                                      .millisecondsSinceEpoch,
+                                            );
+
+                                            return DateFormat('dd MMMM yyyy')
+                                                .format(registrationDate);
+                                          }(),
+                                        },
+                                  ),
                               ]),
                           if ((RegistrationDeliverySingleton()
-                                      .projectType
-                                      ?.cycles ??
-                                  [])
+                              .projectType
+                              ?.cycles ??
+                              [])
                               .isNotEmpty)
                             DigitCard(
                                 margin: const EdgeInsets.all(spacer2),
                                 children: RegistrationDeliverySingleton()
-                                            .projectType
-                                            ?.cycles !=
-                                        null
+                                    .projectType
+                                    ?.cycles !=
+                                    null
                                     ? [
-                                        BlocBuilder<DeliverInterventionBloc,
-                                            DeliverInterventionState>(
-                                          builder: (context, deliverState) {
-                                            return Column(
-                                              children: [
-                                                (RegistrationDeliverySingleton()
-                                                                .projectType
-                                                                ?.cycles ??
-                                                            [])
-                                                        .isNotEmpty
-                                                    ? RecordDeliveryCycle(
-                                                        projectCycles:
-                                                            RegistrationDeliverySingleton()
-                                                                    .projectType
-                                                                    ?.cycles ??
-                                                                [],
-                                                        taskData:
-                                                            taskData ?? [],
-                                                        individualModel: state
-                                                            .selectedIndividual,
-                                                      )
-                                                    : const Offstage(),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      ]
+                                  BlocBuilder<DeliverInterventionBloc,
+                                      DeliverInterventionState>(
+                                    builder: (context, deliverState) {
+                                      return Column(
+                                        children: [
+                                          (RegistrationDeliverySingleton()
+                                              .projectType
+                                              ?.cycles ??
+                                              [])
+                                              .isNotEmpty
+                                              ? RecordDeliveryCycle(
+                                            projectCycles:
+                                            RegistrationDeliverySingleton()
+                                                .projectType
+                                                ?.cycles ??
+                                                [],
+                                            taskData:
+                                            taskData ?? [],
+                                            individualModel: state
+                                                .selectedIndividual,
+                                          )
+                                              : const Offstage(),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ]
                                     : [])
                         ],
                       ),
                     );
                   },
                   empty: () => Center(
-                        child: Text(
-                          localizations.translate(
-                            i18.deliverIntervention
-                                .checkForProductVariantsConfig,
-                          ),
-                        ),
-                      ));
+                    child: Text(
+                      localizations.translate(
+                        i18.deliverIntervention
+                            .checkForProductVariantsConfig,
+                      ),
+                    ),
+                  ));
             },
           );
         },
