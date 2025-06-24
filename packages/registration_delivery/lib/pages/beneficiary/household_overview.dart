@@ -525,10 +525,18 @@ class _HouseholdOverviewPageState
                                           );
                                         }
 
-                                        return Column(
+                                        return overviewTemplate
+                                            ?.properties?[registration_keys.householdOverViewKeys.detailsCardKey]?.hidden !=  true
+                                            ? Column(
                                           children: [
                                             DigitTableCard(
-                                              element: {
+                                              element:
+                                              buildEnumValueMap(state.householdMemberWrapper,
+                                                  overviewTemplate
+                                                      ?.properties?[registration_keys.householdOverViewKeys.detailsCardKey]?.enums
+                                              )
+                                                  ?.map((k, v) => MapEntry(localizations.translate(k), localizations.translate(v.toString())))
+                                                  ?? {
                                                 localizations.translate(i18
                                                     .householdOverView
                                                     .householdOverViewHouseholdHeadNameLabel): state
@@ -566,7 +574,7 @@ class _HouseholdOverviewPageState
                                               },
                                             ),
                                           ],
-                                        );
+                                        ) : const SizedBox.shrink();
                                       }),
                                     ),
                                     if (RegistrationDeliverySingleton()
@@ -799,10 +807,13 @@ class _HouseholdOverviewPageState
                                             sideEffects: sideEffectData,
                                             editMemberActionProperties: overviewTemplate
                                                 ?.properties?[registration_keys.householdOverViewKeys.editIndividualKey],
+                                            primaryButtonProperties: overviewTemplate
+                                                ?.properties?[registration_keys.householdOverViewKeys.individualPrimaryButtonKey],
+                                            secondaryButtonProperties: overviewTemplate
+                                                ?.properties?[registration_keys.householdOverViewKeys.individualSecondaryButtonKey],
                                             editMemberAction: () async {
                                               final bloc = ctx.read<
                                                   HouseholdOverviewBloc>();
-
                                               Navigator.of(
                                                 context,
                                                 rootNavigator: true,
@@ -1018,7 +1029,7 @@ class _HouseholdOverviewPageState
                                 ),
                                 Offstage(
                                   offstage: overviewTemplate
-                                      ?.properties?[registration_keys.householdOverViewKeys.addMemberKey]?.hidden ?? true,
+                                      ?.properties?[registration_keys.householdOverViewKeys.addMemberKey]?.hidden ?? false,
                                   child: DigitButton(
                                     mainAxisSize: MainAxisSize.max,
                                     onPressed: () => addIndividual(
