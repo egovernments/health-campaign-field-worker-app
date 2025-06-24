@@ -30,54 +30,75 @@ class BeneficiaryAcknowledgementPageState
     extends LocalizedState<BeneficiaryAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
-    final pageKey = BeneficiaryAcknowledgementRoute.name.replaceAll('Route', '');
-    final beneficiaryAcknowledgementTemplate = RegistrationDeliverySingleton().templateConfigs?[pageKey];
+    final pageKey =
+        BeneficiaryAcknowledgementRoute.name.replaceAll('Route', '');
+    final beneficiaryAcknowledgementTemplate =
+        RegistrationDeliverySingleton().templateConfigs?[pageKey];
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(spacer2),
         child: PanelCard(
           type: PanelType.success,
-          title: localizations
-              .translate(beneficiaryAcknowledgementTemplate
-              ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.label
-              ?? i18.acknowledgementSuccess.acknowledgementLabelText),
+          title: localizations.translate(beneficiaryAcknowledgementTemplate
+                  ?.properties?[registration_keys
+                      .acknowledgementKeys.acknowledgmentTitleKey]
+                  ?.label ??
+              i18.acknowledgementSuccess.acknowledgementLabelText),
           actions: [
-            if((widget.enableViewHousehold ?? false) && (beneficiaryAcknowledgementTemplate
-                ?.properties?[registration_keys.commonKeys.primaryButtonKey]?.hidden !=true))
+            if ((widget.enableViewHousehold ?? false) &&
+                (beneficiaryAcknowledgementTemplate
+                        ?.properties?[
+                            registration_keys.commonKeys.primaryButtonKey]
+                        ?.hidden !=
+                    true))
               DigitButton(
-                label: localizations.translate(
-                  beneficiaryAcknowledgementTemplate
-                      ?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ??
-                  i18.householdDetails.viewHouseHoldDetailsAction,
-                ),
-                onPressed: () {
-                  final bloc = context.read<SearchBlocWrapper>();
+                  label: localizations.translate(
+                    beneficiaryAcknowledgementTemplate
+                            ?.properties?[
+                                registration_keys.commonKeys.primaryButtonKey]
+                            ?.label ??
+                        i18.householdDetails.viewHouseHoldDetailsAction,
+                  ),
+                  onPressed: () {
+                    final bloc = context.read<SearchBlocWrapper>();
 
-                  context.router.popAndPush(
-                    BeneficiaryWrapperRoute(
-                      wrapper: bloc.state.householdMembers.first,
-                    ),
-                  );
-                },
-                type: DigitButtonType.primary,
-                size: DigitButtonSize.large),
-            if((beneficiaryAcknowledgementTemplate
-                ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.hidden !=true))
+                    context.router.popAndPush(
+                      BeneficiaryWrapperRoute(
+                        wrapper: bloc.state.householdMembers.first,
+                      ),
+                    );
+                  },
+                  type: DigitButtonType.primary,
+                  size: DigitButtonSize.large),
+            if ((beneficiaryAcknowledgementTemplate
+                    ?.properties?[
+                        registration_keys.commonKeys.secondaryButtonKey]
+                    ?.hidden !=
+                true))
               DigitButton(
-                label: localizations
-                    .translate(beneficiaryAcknowledgementTemplate
-                    ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.label ?? i18.acknowledgementSuccess.actionLabelText),
-                onPressed: () => context.router.maybePop(),
-                type: DigitButtonType.secondary,
-                size: DigitButtonSize.large),
+                  label: localizations.translate(
+                      beneficiaryAcknowledgementTemplate
+                              ?.properties?[registration_keys
+                                  .commonKeys.secondaryButtonKey]
+                              ?.label ??
+                          i18.acknowledgementSuccess.actionLabelText),
+                  onPressed: () => context.router.maybePop(),
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.large),
           ],
           description: beneficiaryAcknowledgementTemplate
-              ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentTitleKey]?.hidden == true ?
-          "" : localizations.translate(
-            beneficiaryAcknowledgementTemplate
-                ?.properties?[registration_keys.acknowledgementKeys.acknowledgmentDescriptionKey]?.label ??
-            i18.acknowledgementSuccess.acknowledgementDescriptionText,
-          ),
+                      ?.properties?[registration_keys
+                          .acknowledgementKeys.acknowledgmentTitleKey]
+                      ?.hidden ==
+                  true
+              ? ""
+              : localizations.translate(
+                  beneficiaryAcknowledgementTemplate
+                          ?.properties?[registration_keys
+                              .acknowledgementKeys.acknowledgmentDescriptionKey]
+                          ?.label ??
+                      i18.acknowledgementSuccess.acknowledgementDescriptionText,
+                ),
         ),
       ),
     );

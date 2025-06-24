@@ -176,6 +176,10 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       initialSchemas: state.initialSchemas,
       activeSchemaKey: event.schemaKey,
     ));
+
+    emit(FormsState(
+      cachedSchemas: state.cachedSchemas,
+      initialSchemas: state.initialSchemas,)); // Reset after submit
   }
 }
 

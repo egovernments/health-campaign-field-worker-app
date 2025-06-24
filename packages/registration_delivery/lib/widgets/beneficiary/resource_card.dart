@@ -206,8 +206,8 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
           .selectedProject
           ?.additionalDetails
           ?.projectType
-          ?.cycles?[state.deliveryWrapper?.cycle ?? 1 - 1]
-          .deliveries?[state.deliveryWrapper?.dose ?? 1 - 1],
+          ?.cycles?[0]
+          .deliveries?[0],
       state.selectedIndividual,
       state.householdMembers.first.household,
       context: context,

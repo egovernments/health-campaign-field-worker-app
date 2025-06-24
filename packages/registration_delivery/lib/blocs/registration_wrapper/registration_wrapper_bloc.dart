@@ -24,6 +24,7 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
   RegistrationWrapperBloc({required this.globalRegistrationBloc})
       : super(const RegistrationWrapperState()) {
     on<RegistrationWrapperLoadFromGlobal>(_handleLoadFromGlobal);
+    on<FetchDeliveryDetails>(_fetchDeliveryDetails);
     on<RegistrationWrapperClear>(_handleClear);
   }
 
@@ -116,6 +117,81 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
     }
   }
 
+  FutureOr<void> _fetchDeliveryDetails(
+      FetchDeliveryDetails event,
+      RegistrationWrapperEmitter emit,
+      ) async {
+    emit(state.copyWith(loading: true));
+
+    final household = event.householdWrapper.household;
+    final individual = event.selectedIndividual;
+    final projectId = event.projectId;
+
+    final searchParams = GlobalSearchParameters(
+      filters: [
+          SearchFilter(
+            root: 'household',
+            field: 'clientReferenceId',
+            operator: 'equals',
+            value: household?.clientReferenceId,
+          ),
+      ], // Optional: if you're resolving linked entities
+      primaryModel: 'household',
+      select: ['individual', 'household', 'householdMember', 'projectBeneficiary', 'task'],
+      pagination: null,
+    );
+
+    final completer = Completer<RegistrationStateLoaded>();
+    late final StreamSubscription subscription;
+
+    subscription = globalRegistrationBloc.stream.listen((globalState) {
+      if (globalState is RegistrationStateLoaded) {
+        subscription.cancel();
+        if (!completer.isCompleted) completer.complete(globalState);
+      } else if (globalState is RegistrationStateError) {
+        subscription.cancel();
+        if (!completer.isCompleted) {
+          completer.completeError(globalState.message ?? 'Unknown error');
+        }
+      }
+    });
+
+    globalRegistrationBloc.add(RegistrationEvent.search(searchParams));
+
+    try {
+      final globalState = await completer.future;
+
+      final tasks = (globalState.results['task'] ?? []).whereType<TaskModel>().toList();
+      final sideEffects = (globalState.results['sideEffect'] ?? []).whereType<SideEffectModel>().toList();
+      final referrals = (globalState.results['referral'] ?? []).whereType<ReferralModel>().toList();
+      final beneficiaries = (globalState.results['projectBeneficiary'] ?? []).whereType<ProjectBeneficiaryModel>().toList();
+
+      const deliveryState = DeliveryWrapper(
+        cycle: 1,
+        dose: 1,
+      );
+
+      emit(state.copyWith(
+        householdMembers: [
+          event.householdWrapper.copyWith(
+            tasks: tasks,
+            sideEffects: sideEffects,
+            referrals: referrals,
+          )
+        ],
+        deliveryWrapper: deliveryState,
+        loading: false,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        deliveryWrapper: null,
+        householdMembers: [],
+        loading: false,
+        error: e.toString(),
+      ));
+    }
+  }
+
   FutureOr<void> _handleClear(
       RegistrationWrapperClear event,
       RegistrationWrapperEmitter emit,
@@ -131,6 +207,14 @@ class RegistrationWrapperEvent with _$RegistrationWrapperEvent {
     required GlobalSearchParameters searchParams,
     String? beneficiaryType,
   }) = RegistrationWrapperLoadFromGlobal;
+
+  // New event to fetch delivery details
+  const factory RegistrationWrapperEvent.fetchDeliveryDetails({
+    required HouseholdWrapper householdWrapper,
+    required IndividualModel? selectedIndividual,
+    String? beneficiaryType,
+    required String projectId,
+  }) = FetchDeliveryDetails;
 
   const factory RegistrationWrapperEvent.clear() = RegistrationWrapperClear;
 
