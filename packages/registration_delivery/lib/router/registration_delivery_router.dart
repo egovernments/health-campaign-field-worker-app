@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'registration_delivery_router.gm.dart';
+import 'package:forms_engine/router/forms_router.dart';
 
 @AutoRouterConfig.module()
 class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
@@ -10,6 +11,7 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
             page: RegistrationDeliveryWrapperRoute.page,
             path: 'registration-delivery-wrapper',
             children: [
+              ...FormsRoute().routes,
               AutoRoute(
                   initial: true,
                   page: SearchBeneficiaryRoute.page,
