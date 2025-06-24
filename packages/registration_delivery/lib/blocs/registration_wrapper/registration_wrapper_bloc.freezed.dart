@@ -21,6 +21,12 @@ mixin _$RegistrationWrapperEvent {
     required TResult Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)
         loadFromGlobal,
+    required TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)
+        fetchDeliveryDetails,
     required TResult Function() clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -29,6 +35,12 @@ mixin _$RegistrationWrapperEvent {
     TResult? Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)?
         loadFromGlobal,
+    TResult? Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
     TResult? Function()? clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -37,6 +49,12 @@ mixin _$RegistrationWrapperEvent {
     TResult Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)?
         loadFromGlobal,
+    TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
     TResult Function()? clear,
     required TResult orElse(),
   }) =>
@@ -45,18 +63,21 @@ mixin _$RegistrationWrapperEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(RegistrationWrapperLoadFromGlobal value)
         loadFromGlobal,
+    required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) =>
@@ -176,6 +197,12 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     required TResult Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)
         loadFromGlobal,
+    required TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)
+        fetchDeliveryDetails,
     required TResult Function() clear,
   }) {
     return loadFromGlobal(searchParams, beneficiaryType);
@@ -187,6 +214,12 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult? Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)?
         loadFromGlobal,
+    TResult? Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
     TResult? Function()? clear,
   }) {
     return loadFromGlobal?.call(searchParams, beneficiaryType);
@@ -198,6 +231,12 @@ class _$RegistrationWrapperLoadFromGlobalImpl
     TResult Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)?
         loadFromGlobal,
+    TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -212,6 +251,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
   TResult map<TResult extends Object?>({
     required TResult Function(RegistrationWrapperLoadFromGlobal value)
         loadFromGlobal,
+    required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return loadFromGlobal(this);
@@ -221,6 +261,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return loadFromGlobal?.call(this);
@@ -230,6 +271,7 @@ class _$RegistrationWrapperLoadFromGlobalImpl
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {
@@ -251,6 +293,227 @@ abstract class RegistrationWrapperLoadFromGlobal
   @JsonKey(ignore: true)
   _$$RegistrationWrapperLoadFromGlobalImplCopyWith<
           _$RegistrationWrapperLoadFromGlobalImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FetchDeliveryDetailsImplCopyWith<$Res> {
+  factory _$$FetchDeliveryDetailsImplCopyWith(_$FetchDeliveryDetailsImpl value,
+          $Res Function(_$FetchDeliveryDetailsImpl) then) =
+      __$$FetchDeliveryDetailsImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {HouseholdWrapper householdWrapper,
+      IndividualModel? selectedIndividual,
+      String? beneficiaryType,
+      String projectId});
+
+  $HouseholdWrapperCopyWith<$Res> get householdWrapper;
+}
+
+/// @nodoc
+class __$$FetchDeliveryDetailsImplCopyWithImpl<$Res>
+    extends _$RegistrationWrapperEventCopyWithImpl<$Res,
+        _$FetchDeliveryDetailsImpl>
+    implements _$$FetchDeliveryDetailsImplCopyWith<$Res> {
+  __$$FetchDeliveryDetailsImplCopyWithImpl(_$FetchDeliveryDetailsImpl _value,
+      $Res Function(_$FetchDeliveryDetailsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? householdWrapper = null,
+    Object? selectedIndividual = freezed,
+    Object? beneficiaryType = freezed,
+    Object? projectId = null,
+  }) {
+    return _then(_$FetchDeliveryDetailsImpl(
+      householdWrapper: null == householdWrapper
+          ? _value.householdWrapper
+          : householdWrapper // ignore: cast_nullable_to_non_nullable
+              as HouseholdWrapper,
+      selectedIndividual: freezed == selectedIndividual
+          ? _value.selectedIndividual
+          : selectedIndividual // ignore: cast_nullable_to_non_nullable
+              as IndividualModel?,
+      beneficiaryType: freezed == beneficiaryType
+          ? _value.beneficiaryType
+          : beneficiaryType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $HouseholdWrapperCopyWith<$Res> get householdWrapper {
+    return $HouseholdWrapperCopyWith<$Res>(_value.householdWrapper, (value) {
+      return _then(_value.copyWith(householdWrapper: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$FetchDeliveryDetailsImpl implements FetchDeliveryDetails {
+  const _$FetchDeliveryDetailsImpl(
+      {required this.householdWrapper,
+      required this.selectedIndividual,
+      this.beneficiaryType,
+      required this.projectId});
+
+  @override
+  final HouseholdWrapper householdWrapper;
+  @override
+  final IndividualModel? selectedIndividual;
+  @override
+  final String? beneficiaryType;
+  @override
+  final String projectId;
+
+  @override
+  String toString() {
+    return 'RegistrationWrapperEvent.fetchDeliveryDetails(householdWrapper: $householdWrapper, selectedIndividual: $selectedIndividual, beneficiaryType: $beneficiaryType, projectId: $projectId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FetchDeliveryDetailsImpl &&
+            (identical(other.householdWrapper, householdWrapper) ||
+                other.householdWrapper == householdWrapper) &&
+            (identical(other.selectedIndividual, selectedIndividual) ||
+                other.selectedIndividual == selectedIndividual) &&
+            (identical(other.beneficiaryType, beneficiaryType) ||
+                other.beneficiaryType == beneficiaryType) &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, householdWrapper,
+      selectedIndividual, beneficiaryType, projectId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FetchDeliveryDetailsImplCopyWith<_$FetchDeliveryDetailsImpl>
+      get copyWith =>
+          __$$FetchDeliveryDetailsImplCopyWithImpl<_$FetchDeliveryDetailsImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)
+        loadFromGlobal,
+    required TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)
+        fetchDeliveryDetails,
+    required TResult Function() clear,
+  }) {
+    return fetchDeliveryDetails(
+        householdWrapper, selectedIndividual, beneficiaryType, projectId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult? Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult? Function()? clear,
+  }) {
+    return fetchDeliveryDetails?.call(
+        householdWrapper, selectedIndividual, beneficiaryType, projectId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            GlobalSearchParameters searchParams, String? beneficiaryType)?
+        loadFromGlobal,
+    TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    if (fetchDeliveryDetails != null) {
+      return fetchDeliveryDetails(
+          householdWrapper, selectedIndividual, beneficiaryType, projectId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegistrationWrapperLoadFromGlobal value)
+        loadFromGlobal,
+    required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
+    required TResult Function(RegistrationWrapperClear value) clear,
+  }) {
+    return fetchDeliveryDetails(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult? Function(RegistrationWrapperClear value)? clear,
+  }) {
+    return fetchDeliveryDetails?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
+    TResult Function(RegistrationWrapperClear value)? clear,
+    required TResult orElse(),
+  }) {
+    if (fetchDeliveryDetails != null) {
+      return fetchDeliveryDetails(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FetchDeliveryDetails implements RegistrationWrapperEvent {
+  const factory FetchDeliveryDetails(
+      {required final HouseholdWrapper householdWrapper,
+      required final IndividualModel? selectedIndividual,
+      final String? beneficiaryType,
+      required final String projectId}) = _$FetchDeliveryDetailsImpl;
+
+  HouseholdWrapper get householdWrapper;
+  IndividualModel? get selectedIndividual;
+  String? get beneficiaryType;
+  String get projectId;
+  @JsonKey(ignore: true)
+  _$$FetchDeliveryDetailsImplCopyWith<_$FetchDeliveryDetailsImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -299,6 +562,12 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     required TResult Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)
         loadFromGlobal,
+    required TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)
+        fetchDeliveryDetails,
     required TResult Function() clear,
   }) {
     return clear();
@@ -310,6 +579,12 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     TResult? Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)?
         loadFromGlobal,
+    TResult? Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
     TResult? Function()? clear,
   }) {
     return clear?.call();
@@ -321,6 +596,12 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
     TResult Function(
             GlobalSearchParameters searchParams, String? beneficiaryType)?
         loadFromGlobal,
+    TResult Function(
+            HouseholdWrapper householdWrapper,
+            IndividualModel? selectedIndividual,
+            String? beneficiaryType,
+            String projectId)?
+        fetchDeliveryDetails,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -335,6 +616,7 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
   TResult map<TResult extends Object?>({
     required TResult Function(RegistrationWrapperLoadFromGlobal value)
         loadFromGlobal,
+    required TResult Function(FetchDeliveryDetails value) fetchDeliveryDetails,
     required TResult Function(RegistrationWrapperClear value) clear,
   }) {
     return clear(this);
@@ -344,6 +626,7 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult? Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
     TResult? Function(RegistrationWrapperClear value)? clear,
   }) {
     return clear?.call(this);
@@ -353,6 +636,7 @@ class _$RegistrationWrapperClearImpl implements RegistrationWrapperClear {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegistrationWrapperLoadFromGlobal value)? loadFromGlobal,
+    TResult Function(FetchDeliveryDetails value)? fetchDeliveryDetails,
     TResult Function(RegistrationWrapperClear value)? clear,
     required TResult orElse(),
   }) {

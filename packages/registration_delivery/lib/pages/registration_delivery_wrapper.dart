@@ -62,6 +62,11 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                         to: 'household',
                         localKey: 'householdClientReferenceId',
                         foreignKey: 'clientReferenceId'),
+                    const RelationshipMapping(
+                        from: 'projectBeneficiary',
+                        to: 'task',
+                        localKey: 'clientReferenceId',
+                        foreignKey: 'projectBeneficiaryClientReferenceId'),
                     // Conditional mapping
                     if (RegistrationDeliverySingleton().beneficiaryType ==
                         BeneficiaryType.household)
@@ -111,6 +116,17 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                           localKey: 'clientReferenceId',
                           foreignKey: 'relatedClientReferenceId',
                           type: NestedMappingType.one,
+                        ),
+                      },
+                    ),
+                    const NestedModelMapping(
+                      rootModel: 'task',
+                      fields: {
+                        'resource': NestedFieldMapping(
+                          table: 'resource',
+                          localKey: 'taskclientReferenceId',
+                          foreignKey: 'clientReferenceId',
+                          type: NestedMappingType.many,
                         ),
                       },
                     ),

@@ -10,6 +10,7 @@ import 'package:registration_bloc/models/global_search_params.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 class SearchEntityRepository extends LocalRepository {
   SearchEntityRepository(super.sql, super.opLogManager);
@@ -538,6 +539,9 @@ EntityModel dynamicEntityModelFromMap(
       return ProjectBeneficiaryModelMapper.fromMap(map);
     case 'householdMember':
       return HouseholdMemberModelMapper.fromMap(map);
+    case 'task':
+      return TaskModelMapper.fromMap(map);
+
     default:
       throw Exception('Unknown model: $modelName');
   }

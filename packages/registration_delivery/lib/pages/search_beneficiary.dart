@@ -118,21 +118,8 @@ class _SearchBeneficiaryPageState
               .whereType<HouseholdModel>()
               .firstOrNull;
           if (householdModel != null) {
-            final params = reg_params.GlobalSearchParameters(
-              filters: [
-                  reg_params.SearchFilter(
-                    root: 'household',
-                    field: 'clientReferenceId',
-                    operator: 'equals',
-                    value: householdModel.clientReferenceId,
-                  ),
-              ], // Optional: if you're resolving linked entities
-              primaryModel: 'household',
-              select: ['individual', 'household', 'householdMember', 'projectBeneficiary'],  // Optional: which fields to return
-              pagination: null,
-            );
             blocWrapper.add(
-                RegistrationWrapperEvent.loadFromGlobal(searchParams: params, beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue())
+                RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(household: householdModel.copyWith(memberCount: 25)), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue())
             );
           }
           final currentSchema = context.read<FormsBloc>().state.cachedSchemas[context.read<FormsBloc>().state.activeSchemaKey];
@@ -594,7 +581,7 @@ class _SearchBeneficiaryPageState
                         isDisabled: isTextShort,
                         onPressed: () {
                           FocusManager.instance.primaryFocus?.unfocus();
-                          // context.read<FormsBloc>().add(const FormsEvent.clearForm());
+                          context.read<FormsBloc>().add(const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'));
 
                           final pageName = context.read<FormsBloc>().state.cachedSchemas['REGISTRATIONFLOW']?.pages.entries.first.key;
 
