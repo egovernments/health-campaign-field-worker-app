@@ -248,6 +248,21 @@ class FormEntityMapper {
       return uuid;
     }
 
+    if (instruction.startsWith('__value:')) {
+      final valueStr = instruction.replaceFirst('__value:', '').trim();
+
+      // Try to convert to bool, int, double, or null
+      if (valueStr == 'true') return true;
+      if (valueStr == 'false') return false;
+      if (valueStr == 'null') return null;
+      final intVal = int.tryParse(valueStr);
+      if (intVal != null) return intVal;
+      final doubleVal = double.tryParse(valueStr);
+      if (doubleVal != null) return doubleVal;
+
+      return valueStr; // fallback to string
+    }
+
     if (instruction == '__generate:clientAudit') {
       final now = DateTime.now().millisecondsSinceEpoch;
       return {

@@ -191,7 +191,7 @@ final jsonConfig = {
           "projectBeneficiaryClientReferenceId":
           "__context:projectBeneficiaryModel.clientReferenceId",
           "createdBy": "__context:userId",
-          "status": "taskDetails.status",
+          "status": "__value:ADMINISTRATION_SUCCESS",  // todo: need to update later for multiround campaign
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
           "resources": "list:TaskResourceModel",
@@ -244,7 +244,7 @@ final jsonConfig = {
               "taskId": "taskId",
               "productVariantId": "DeliveryDetails.resourceCard[0].resourceDelivered.productId",
               "quantity": "DeliveryDetails.resourceCard[0].quantityDistributed",
-              "isDelivered": "successful",
+              "isDelivered": "__value:true",
               "deliveryComment": "DeliveryDetails.deliveryComment",
               "nonRecoverableError": "error.nonRecoverable",
               "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
