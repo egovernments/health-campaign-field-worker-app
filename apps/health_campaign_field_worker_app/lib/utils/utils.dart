@@ -569,9 +569,7 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
         'includeInForm': pageMap['includeInForm'],
         'includeInSummary': pageMap['includeInSummary'],
         'autoEnable' : pageMap['autoEnable'],
-        'navigateTo': pageMap['navigateTo'] is Map<String, dynamic>
-            ? pageMap['navigateTo']
-            : null,
+        'navigateTo': pageMap['navigateTo']
       };
 
       if (type == 'template') {

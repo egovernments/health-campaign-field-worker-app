@@ -13,233 +13,237 @@ typedef FormsStateEmitter = Emitter<FormsState>;
 
 class FormsBloc extends Bloc<FormsEvent, FormsState> {
   FormsBloc() : super(const FormsState()) {
-    on<FormsLoadEvent>(_onLoad);
-    on<FormsUpdateFieldEvent>(_onUpdateField);
+    on<FormsLoadEvent>(_handleLoadForm);
     on<FormsUpdateEvent>(_handleUpdateForm);
-    on<FormsClearFieldEvent>(_onClearField);
-    on<FormsClearPageEvent>(_onClearPage);
-    on<FormsClearFormEvent>(_onClearForm);
-    on<FormsSubmitEvent>(_onSubmit);
+    on<FormsSubmitEvent>(_handleSubmitForm);
+    on<FormsCreateMappingEvent>(_handleCreateMapping);
+    on<FormsUpdateFieldEvent>(_handleUpdateField);
+    on<FormsClearFieldEvent>(_handleClearField);
+    on<FormsClearPageEvent>(_handleClearPage);
+    on<FormsClearFormEvent>(_handleClearForm);
   }
 
-  /// Load and preprocess schemas from raw JSON strings
-  void _onLoad(FormsLoadEvent event, FormsStateEmitter emit) {
-    final newSchemas = <String, SchemaObject>{};
-    final newInitials = <String, SchemaObject>{};
+  FutureOr<void> _handleLoadForm(FormsLoadEvent event, FormsStateEmitter emit) {
+    final rawSchema = json.decode(event.schema);
+    final schemaObject = SchemaObject.fromJson(rawSchema);
 
-    for (final schemaStr in event.schemas) {
-      final raw = json.decode(schemaStr);
-      final schema = SchemaObject.fromJson(raw);
+    // Step 1: Sort and filter pages
+    final sortedFilteredPages = Map.fromEntries(
+      schemaObject.pages.entries.toList()
+        ..sort((a, b) {
+          if (a.value.order == null || b.value.order == null) return 0;
+          return a.value.order!.compareTo(b.value.order!);
+        }),
+    ).map((pageKey, pageValue) {
+      // Step 2: Sort properties within each page
+      final sortedProperties = pageValue.properties == null
+          ? null
+          : Map.fromEntries(
+              pageValue.properties!.entries.toList()
+                ..sort((a, b) {
+                  if (a.value.order == null || b.value.order == null) return 0;
+                  return a.value.order!.compareTo(b.value.order!);
+                }),
+            );
 
-      final filteredPages = Map.fromEntries(
-        schema.pages.entries.toList()
-          ..sort((a, b) => (a.value.order ?? 0).compareTo(b.value.order ?? 0)),
-      ).map((key, page) {
-        final sortedProperties = page.properties == null
-            ? null
-            : Map.fromEntries(
-          page.properties!.entries.toList()
-            ..sort((a, b) => (a.value.order ?? 0).compareTo(b.value.order ?? 0)),
-        );
-
-        return MapEntry(key, page.copyWith(properties: sortedProperties));
+      return MapEntry(
+        pageKey,
+        pageValue.copyWith(properties: sortedProperties),
+      );
+    })
+      // Step 3: Remove pages where all properties are hidden
+      ..removeWhere((key, page) {
+        final properties = page.properties;
+        if (properties == null || properties.isEmpty) return true;
+        final allHidden =
+            properties.values.every((prop) => prop.hidden == true);
+        return allHidden;
       });
 
-      filteredPages.removeWhere((_, page) {
-        final props = page.properties;
-        return props == null || props.values.every((p) => p.hidden == true);
-      });
-
-      final finalSchema = schema.copyWith(pages: filteredPages);
-      newSchemas[schema.name] = finalSchema;
-      newInitials[schema.name] = finalSchema;
-    }
-
-    emit(state.copyWith(
-      cachedSchemas: newSchemas,
-      initialSchemas: newInitials,
-    ));
-  }
-
-  void _onUpdateField(FormsUpdateFieldEvent event, FormsStateEmitter emit) {
-    final schema = state.cachedSchemas[event.schemaKey];
-    if (schema == null) return;
-
-    final updatedPages = {
-      for (final entry in schema.pages.entries)
-        entry.key: entry.value.copyWith(
-          properties: entry.value.properties == null
-              ? null
-              : {
-            for (final prop in entry.value.properties!.entries)
-              prop.key: prop.key == event.key
-                  ? prop.value.copyWith(value: event.value)
-                  : prop.value,
-          },
-        )
-    };
-
-    final updatedSchema = schema.copyWith(pages: updatedPages);
-
-    final updatedSchemas = Map.of(state.cachedSchemas);
-    updatedSchemas[event.schemaKey] = updatedSchema;
-
-    emit(state.copyWith(
-      cachedSchemas: updatedSchemas,
-    ));
+    // Step 4: Build final schema and emit
+    final sortedSchema = schemaObject.copyWith(pages: sortedFilteredPages);
+    emit(FormsState(schema: sortedSchema, initialSchema: sortedSchema));
   }
 
   void _handleUpdateForm(FormsUpdateEvent event, FormsStateEmitter emit) {
-    final updatedSchemas = Map<String, SchemaObject>.from(state.cachedSchemas);
-    updatedSchemas[event.schemaKey] = event.schema;
-
-    emit(state.copyWith(
-      cachedSchemas: updatedSchemas,
-      initialSchemas: state.initialSchemas,
-    ));
+    emit(FormsState(schema: event.object, initialSchema: state.initialSchema));
   }
 
-  void _onClearField(FormsClearFieldEvent event, FormsStateEmitter emit) {
-    add(FormsUpdateFieldEvent(
-      schemaKey: event.schemaKey,
-      key: event.key,
-      value: null,
-    ));
+  void _handleCreateMapping(
+    FormsCreateMappingEvent event,
+    FormsStateEmitter emit,
+  ) {
+    final propertiesMap = state.schema?.pages.entries
+        .map((e) => e.value)
+        .map((e) => e.properties)
+        .whereNotNull()
+        .expand(
+          (element) =>
+              element.entries.map((e) => MapEntry(e.key, e.value.value)),
+        );
+
+    if (propertiesMap == null || propertiesMap.isEmpty) {
+      throw Exception('Invalid schema output. Data should not be empty');
+    }
+
+    final dataMap = Map.fromEntries(propertiesMap);
+    emit(FormsState(
+        schema: state.schema,
+        formData: dataMap,
+        initialSchema: state.initialSchema));
   }
 
-  void _onClearPage(FormsClearPageEvent event, FormsStateEmitter emit) {
-    final schema = state.cachedSchemas[event.schemaKey];
-    if (schema == null) return;
+  void _handleUpdateField(FormsUpdateFieldEvent event, FormsStateEmitter emit) {
+    final schemaCopy = state.schema;
+    if (schemaCopy == null) return;
 
-    final page = schema.pages[event.pageKey];
+    final updatedPages = {
+      for (final page in schemaCopy.pages.entries)
+        page.key: page.value.copyWith(
+          properties: page.value.properties == null
+              ? null
+              : {
+                  for (final prop in page.value.properties!.entries)
+                    prop.key: prop.key == event.key
+                        ? prop.value.copyWith(value: event.value)
+                        : prop.value,
+                },
+        ),
+    };
+
+    final updatedSchema = schemaCopy.copyWith(pages: updatedPages);
+    emit(FormsState(schema: updatedSchema, initialSchema: state.initialSchema));
+  }
+
+  void _handleClearField(FormsClearFieldEvent event, FormsStateEmitter emit) {
+    final schemaCopy = state.schema;
+    if (schemaCopy == null) return;
+
+    final updatedPages = {
+      for (final page in schemaCopy.pages.entries)
+        page.key: page.value.copyWith(
+          properties: page.value.properties == null
+              ? null
+              : {
+                  for (final prop in page.value.properties!.entries)
+                    prop.key: prop.key == event.key
+                        ? prop.value.copyWith(value: null)
+                        : prop.value,
+                },
+        ),
+    };
+
+    emit(FormsState(
+        schema: schemaCopy.copyWith(pages: updatedPages),
+        initialSchema: state.initialSchema));
+  }
+
+  void _handleClearPage(FormsClearPageEvent event, FormsStateEmitter emit) {
+    final schemaCopy = state.schema;
+    if (schemaCopy == null) return;
+
+    final page = schemaCopy.pages[event.pageKey];
     if (page == null || page.properties == null) return;
 
-    final clearedProps = {
+    final clearedProperties = {
       for (final prop in page.properties!.entries)
         prop.key: prop.value.copyWith(value: null),
     };
 
-    final updatedPages = Map.of(schema.pages);
-    updatedPages[event.pageKey] = page.copyWith(properties: clearedProps);
+    final updatedPages = Map.of(schemaCopy.pages);
+    updatedPages[event.pageKey] = page.copyWith(properties: clearedProperties);
 
-    final updatedSchema = schema.copyWith(pages: updatedPages);
-    final updatedSchemas = Map.of(state.cachedSchemas);
-    updatedSchemas[event.schemaKey] = updatedSchema;
-
-    emit(state.copyWith(
-      cachedSchemas: updatedSchemas,
-    ));
+    emit(FormsState(
+        schema: schemaCopy.copyWith(pages: updatedPages),
+        initialSchema: state.initialSchema));
   }
 
-  void _onClearForm(FormsClearFormEvent event, FormsStateEmitter emit) {
-    final initialSchema = state.initialSchemas[event.schemaKey];
-    if (initialSchema == null) return;
+  void _handleClearForm(FormsClearFormEvent event, FormsStateEmitter emit) {
+    final schemaJson = state.initialSchema;
+    if (schemaJson == null) return;
 
-    final updatedSchemas = Map.of(state.cachedSchemas);
-    updatedSchemas[event.schemaKey] = initialSchema;
-
-    emit(state.copyWith(
-      cachedSchemas: updatedSchemas,
-    ));
+    emit(FormsState(schema: schemaJson, initialSchema: schemaJson));
   }
 
-  void _onSubmit(FormsSubmitEvent event, FormsStateEmitter emit) {
-    final schema = state.cachedSchemas[event.schemaKey];
-    if (schema == null) return;
+  void _handleSubmitForm(FormsSubmitEvent event, FormsStateEmitter emit) {
+    final schemaObject = state.schema;
+    if (schemaObject == null) return;
 
-    final outputData = <String, Map<String, dynamic>>{};
+    final formData = <String, Map<String, dynamic>>{};
 
-    for (final entry in schema.pages.entries) {
-      final props = entry.value.properties;
-      if (props == null) continue;
+    for (final pageEntry in schemaObject.pages.entries) {
+      final pageName = pageEntry.key;
+      final page = pageEntry.value;
+
+      if (page.properties == null) continue;
 
       final pageValues = <String, dynamic>{};
-      for (final propEntry in props.entries) {
-        final prop = propEntry.value;
-        final rawValue = prop.value;
 
-        if (prop.hidden == true && prop.includeInForm != true) continue;
+      for (final propEntry in page.properties!.entries) {
+        final key = propEntry.key;
+        final value = propEntry.value.value;
 
-        pageValues[propEntry.key] =
-        (rawValue is String && rawValue.trim().isEmpty) ? null : rawValue;
+        // Skip field if it's hidden and not included in the form
+        final isHidden = propEntry.value.hidden == true;
+        final includeInForm = propEntry.value.includeInForm == true;
+
+        if (isHidden && !includeInForm) continue;
+
+        /// Normalize empty string to null
+        final normalizedValue =
+            (value is String && value.trim().isEmpty) ? null : value;
+
+        pageValues[key] = normalizedValue;
       }
 
       if (pageValues.isNotEmpty) {
-        outputData[entry.key] = pageValues;
+        formData[pageName] = pageValues;
       }
     }
 
     emit(FormsSubmittedState(
-      schema: schema,
-      formData: outputData,
-      cachedSchemas: state.cachedSchemas,
-      initialSchemas: state.initialSchemas,
-      activeSchemaKey: event.schemaKey,
-    ));
-
+        schema: schemaObject,
+        formData: formData,
+        initialSchema: state.initialSchema));
     emit(FormsState(
-      cachedSchemas: state.cachedSchemas,
-      initialSchemas: state.initialSchemas,)); // Reset after submit
+        schema: schemaObject,
+        initialSchema: state.initialSchema)); // Reset after submit
   }
 }
 
 @freezed
 class FormsEvent with _$FormsEvent {
-  /// Load list of schema JSON strings
-  const factory FormsEvent.load({
-    required List<String> schemas,
-  }) = FormsLoadEvent;
+  const factory FormsEvent.load({required String schema}) = FormsLoadEvent;
 
-  /// Update a single field's value in the schema
-  const factory FormsEvent.updateField({
-    required String schemaKey,
-    required String key,
-    required dynamic value,
-  }) = FormsUpdateFieldEvent;
+  const factory FormsEvent.createMapping() = FormsCreateMappingEvent;
 
-  /// Updates the entire schema directly
-  const factory FormsEvent.update({
-    required SchemaObject schema,
-    required String schemaKey,
-  }) = FormsUpdateEvent;
+  const factory FormsEvent.update(SchemaObject object) = FormsUpdateEvent;
 
-  /// Clear a specific field (sets value to null)
-  const factory FormsEvent.clearField({
-    required String schemaKey,
-    required String key,
-  }) = FormsClearFieldEvent;
+  const factory FormsEvent.updateField(
+      {required String key, required dynamic value}) = FormsUpdateFieldEvent;
 
-  /// Clear all fields on a single page
-  const factory FormsEvent.clearPage({
-    required String schemaKey,
-    required String pageKey,
-  }) = FormsClearPageEvent;
+  const factory FormsEvent.clearField({required String key}) =
+      FormsClearFieldEvent;
 
-  /// Reset the entire form schema to its initial state
-  const factory FormsEvent.clearForm({
-    required String schemaKey,
-  }) = FormsClearFormEvent;
+  const factory FormsEvent.clearPage({required String pageKey}) =
+      FormsClearPageEvent;
 
-  /// Submit the form, emitting a summary output of collected form data
-  const factory FormsEvent.submit({
-    required String schemaKey,
-  }) = FormsSubmitEvent;
+  const factory FormsEvent.clearForm() = FormsClearFormEvent;
+
+  const factory FormsEvent.submit(SchemaObject object) = FormsSubmitEvent;
 }
 
 @freezed
 class FormsState with _$FormsState {
   const factory FormsState({
-    @Default({}) Map<String, SchemaObject> cachedSchemas,
-    @Default({}) Map<String, SchemaObject> initialSchemas,
-    String? activeSchemaKey,
+    SchemaObject? schema,
+    Map<String, dynamic>? formData,
+    SchemaObject? initialSchema, // Default json to reload the form
   }) = _FormsState;
 
   const factory FormsState.formSubmitted({
-    required SchemaObject schema,
-    required Map<String, Map<String, dynamic>> formData,
-    required Map<String, SchemaObject> cachedSchemas,
-    required Map<String, SchemaObject> initialSchemas,
-    String? activeSchemaKey,
+    SchemaObject? schema,
+    required Map<String, dynamic> formData,
+    SchemaObject? initialSchema,
   }) = FormsSubmittedState;
 }
-

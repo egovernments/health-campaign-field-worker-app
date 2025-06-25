@@ -21,10 +21,6 @@ abstract class $FormsRoute extends _i2.AutoRouterModule {
       final queryParams = routeData.queryParams;
       final args = routeData.argsAs<FormsRenderRouteArgs>(
           orElse: () => FormsRenderRouteArgs(
-                currentSchemaKey: queryParams.getString(
-                  'currentSchemaKey',
-                  '',
-                ),
                 pageName: pathParams.getString('pageName'),
                 isSummary: queryParams.getBool(
                   'isSummary',
@@ -36,9 +32,7 @@ abstract class $FormsRoute extends _i2.AutoRouterModule {
         child: _i1.FormsRenderPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-          currentSchemaKey: args.currentSchemaKey,
           pageName: args.pageName,
-          customComponents: args.customComponents,
           defaultValues: args.defaultValues,
           isSummary: args.isSummary,
         ),
@@ -53,9 +47,7 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
   FormsRenderRoute({
     _i3.Key? key,
     _i4.FormLocalization? appLocalizations,
-    String currentSchemaKey = '',
     required String pageName,
-    List<Map<String, _i3.Widget>>? customComponents,
     Map<String, dynamic>? defaultValues,
     bool isSummary = false,
     List<_i2.PageRouteInfo>? children,
@@ -64,17 +56,12 @@ class FormsRenderRoute extends _i2.PageRouteInfo<FormsRenderRouteArgs> {
           args: FormsRenderRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
-            currentSchemaKey: currentSchemaKey,
             pageName: pageName,
-            customComponents: customComponents,
             defaultValues: defaultValues,
             isSummary: isSummary,
           ),
           rawPathParams: {'pageName': pageName},
-          rawQueryParams: {
-            'currentSchemaKey': currentSchemaKey,
-            'isSummary': isSummary,
-          },
+          rawQueryParams: {'isSummary': isSummary},
           initialChildren: children,
         );
 
@@ -88,9 +75,7 @@ class FormsRenderRouteArgs {
   const FormsRenderRouteArgs({
     this.key,
     this.appLocalizations,
-    this.currentSchemaKey = '',
     required this.pageName,
-    this.customComponents,
     this.defaultValues,
     this.isSummary = false,
   });
@@ -99,11 +84,7 @@ class FormsRenderRouteArgs {
 
   final _i4.FormLocalization? appLocalizations;
 
-  final String currentSchemaKey;
-
   final String pageName;
-
-  final List<Map<String, _i3.Widget>>? customComponents;
 
   final Map<String, dynamic>? defaultValues;
 
@@ -111,6 +92,6 @@ class FormsRenderRouteArgs {
 
   @override
   String toString() {
-    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, currentSchemaKey: $currentSchemaKey, pageName: $pageName, customComponents: $customComponents, defaultValues: $defaultValues, isSummary: $isSummary}';
+    return 'FormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, pageName: $pageName, defaultValues: $defaultValues, isSummary: $isSummary}';
   }
 }

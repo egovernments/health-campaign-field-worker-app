@@ -382,14 +382,13 @@ class _HomePageState extends LocalizedState<HomePage> {
 
               if (registrationSchemaData != null || deliverySchemaData !=null) {
                 // Extract templates from both schemas
-                final regTemplatesRaw = registrationSchemaData?['templates'];
-                final delTemplatesRaw = deliverySchemaData?['templates'];
-
                 final Map<String, dynamic> regTemplateMap =
-                regTemplatesRaw is Map<String, dynamic> ? regTemplatesRaw : {};
-
+                (registrationSchemaData?['templates'] ?? {}) as Map<
+                    String,
+                    dynamic>;
                 final Map<String, dynamic> delTemplateMap =
-                delTemplatesRaw is Map<String, dynamic> ? delTemplatesRaw : {};
+                (deliverySchemaData?['templates'] ?? {}) as Map<String,
+                    dynamic>;
 
                 final templates = {
                   for (final entry in {...regTemplateMap, ...delTemplateMap}

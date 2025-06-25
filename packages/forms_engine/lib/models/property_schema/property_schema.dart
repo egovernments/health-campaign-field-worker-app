@@ -51,7 +51,6 @@ class PropertySchema with _$PropertySchema {
     List<ValidationRule>? validations,
     bool? includeInForm,
     bool? includeInSummary,
-    NavigateToConfig? navigateTo,
   }) = _PropertySchema;
 
 
@@ -96,17 +95,6 @@ class DisplayBehavior with _$DisplayBehavior {
       _$DisplayBehaviorFromJson(json);
 }
 
-@freezed
-class NavigateToConfig with _$NavigateToConfig {
-  const factory NavigateToConfig({
-    required String type, // "template" or "form"
-    required String name, // route name or form name
-  }) = _NavigateToConfig;
-
-  factory NavigateToConfig.fromJson(Map<String, dynamic> json) =>
-      _$NavigateToConfigFromJson(json);
-}
-
 enum FormulaBehavior { show, hide }
 
 enum PropertySchemaFormat {
@@ -125,4 +113,4 @@ enum PropertySchemaFormat {
   text;
 }
 
-enum PropertySchemaType { object, string, integer, boolean, dynamic }
+enum PropertySchemaType { object, string, integer, boolean }
