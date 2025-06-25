@@ -112,6 +112,7 @@ class _SearchBeneficiaryPageState
     return BlocListener<EntityCreateBloc, EntityCreateState>(
       listener: (context, createState) {
         if (createState is EntityCreateLoadingState) {
+
         }else if (createState is EntityCreatePersistedState ) {
           Navigator.of(context, rootNavigator: true).pop();
           final householdModel = createState.entities
@@ -123,6 +124,11 @@ class _SearchBeneficiaryPageState
             );
           }
           final currentSchema = context.read<FormsBloc>().state.cachedSchemas[context.read<FormsBloc>().state.activeSchemaKey];
+
+          // Reset to prevent re-handling
+          context.read<FormsBloc>().add(
+            const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'), // or create a FormsResetEvent
+          );
 
           final pages = currentSchema?.pages.entries.toList()
             ?..sort((a, b) => (a.value.order ?? 0).compareTo(b.value.order ?? 0));
@@ -190,8 +196,9 @@ class _SearchBeneficiaryPageState
             if (formData.isEmpty) return;
 
             try {
-              final modelsConfig = jsonConfig['beneficiaryRegistration']
-              ?['models'] as Map<String, dynamic>;
+              final modelsConfig = formState.activeSchemaKey =='DELIVERYFLOW'? (jsonConfig['delivery']
+              ?['models'] as Map<String, dynamic>)
+                  :jsonConfig['beneficiaryRegistration']?['models'] as Map<String, dynamic>;
 
               final formEntityMapper =
               FormEntityMapper(config: jsonConfig);
@@ -214,10 +221,7 @@ class _SearchBeneficiaryPageState
               context.read<EntityCreateBloc>().add(
                 EntityCreateEvent.create(entities: entities),
               );
-              // Reset to prevent re-handling
-              context.read<FormsBloc>().add(
-                const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'), // or create a FormsResetEvent
-              );
+
             } catch (e) {
               Navigator.of(context, rootNavigator: true).pop();
               context.router.push( BeneficiaryErrorRoute(enableViewHousehold: false));

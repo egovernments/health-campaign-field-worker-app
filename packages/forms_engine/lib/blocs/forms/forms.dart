@@ -138,9 +138,10 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
     final updatedSchemas = Map.of(state.cachedSchemas);
     updatedSchemas[event.schemaKey] = initialSchema;
 
-    emit(state.copyWith(
-      cachedSchemas: updatedSchemas,
-    ));
+
+    emit(FormsState(
+      cachedSchemas: state.initialSchemas,
+      initialSchemas: state.initialSchemas,)); // Reset after submit
   }
 
   void _onSubmit(FormsSubmitEvent event, FormsStateEmitter emit) {
@@ -177,9 +178,6 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
       activeSchemaKey: event.schemaKey,
     ));
 
-    emit(FormsState(
-      cachedSchemas: state.cachedSchemas,
-      initialSchemas: state.initialSchemas,)); // Reset after submit
   }
 }
 
