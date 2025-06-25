@@ -31,6 +31,7 @@ class TemplateProperty with _$TemplateProperty {
     bool? readOnly,
     bool? autoEnable,
     List<dynamic>? validations,
+    List<Map<String, dynamic>>? enums,
   }) = _TemplateProperty;
 
   factory TemplateProperty.fromJson(Map<String, dynamic> json) =>

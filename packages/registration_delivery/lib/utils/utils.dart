@@ -1,4 +1,5 @@
 // Importing necessary packages and modules
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
@@ -10,6 +11,7 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
@@ -592,6 +594,138 @@ class RegistrationDeliverySingleton {
   Map<String, TemplateConfig>? get templateConfigs => _templateConfigs;
   String? get regisrationConfig => _registrationConfig;
   String? get deliveryConfig => _deliveryConfig;
+}
+
+/// Safely converts HouseholdMemberWrapper into structured map
+Map<String, dynamic>? _asMap(dynamic obj) {
+  if (obj == null) return null;
+
+  if (obj is Map<String, dynamic>) return obj;
+
+  if (obj is HouseholdMemberWrapper) {
+    return {
+      'HOUSEHOLD'           : obj.household?.toJson(),
+      'INDIVIDUAL'          : obj.headOfHousehold?.toJson(),
+      'TASK'               : obj.tasks?.map((e) => e.toJson()).toList().last,
+      'SIDE_EFFECT'         : obj.sideEffects?.map((e) => e.toJson()).last,
+      'REFERRAL'           : obj.referrals?.map((e) => e.toJson()).toList().last,
+    };
+  }
+
+  try {
+    return (obj as dynamic).toJson() as Map<String, dynamic>;
+  } catch (_) {
+    return null;
+  }
+}
+
+
+dynamic _decodeIfString(dynamic v) {
+  if (v is String) {
+    try {
+      return jsonDecode(v);
+    } catch (_) {
+      // not valid JSON → leave it as-is
+    }
+  }
+  return v;
+}
+/// Walk a dotted path like "Household.address[0].locality.code".
+/// Only the *first* segment is lower-cased because rootMap stores
+/// "household/individual/…".  Inner keys keep their original case.
+/// Walks path like address[0].locality.code from the given base map
+dynamic _extractNestedValue(Map<String, dynamic>? base, List<String> path) {
+  if (base == null) return null;
+  dynamic current = base;
+
+  for (final raw in path) {
+    current = _decodeIfString(current);
+    final match = RegExp(r'^([^\[\]]+)(?:\[(\d+)\])?$').firstMatch(raw);
+    if (match == null) return null;
+
+    final key = match.group(1)!;
+    final idx = match.group(2);
+
+    if (current is Map<String, dynamic>) {
+      current = current[key];
+    } else {
+      return null;
+    }
+
+    if (idx != null) {
+      if (current is List && int.parse(idx) < current.length) {
+        current = current[int.parse(idx)];
+      } else {
+        return null;
+      }
+    }
+  }
+  return current;
+}
+
+/// Looks for {additionalFields: {fields: [ {key,value}, … ]}}
+dynamic _extractAdditionalField(Map<String, dynamic>? container, String fieldKey) {
+  if (container == null) return null;
+
+  final fields = (container['additionalFields']?['fields']);
+
+  if (fields is List) {
+    final matched = fields.cast<Map>().firstWhere(
+          (e) => e['key'].toString().contains(fieldKey),
+      orElse: () => {},
+    );
+    return matched['value'];
+  }
+  return null;
+}
+Map<String, dynamic>? _prepareBase(dynamic raw) {
+  if (raw is Map<String, dynamic>) return raw;
+  if (raw is String) {
+    try {
+      final decoded = jsonDecode(raw);
+      return decoded is Map<String, dynamic> ? decoded : null;
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
+}
+
+Map<String, dynamic>? buildEnumValueMap(
+    HouseholdMemberWrapper? wrapper,
+    List<Map<String, dynamic>>? enums,
+    )
+{
+  if (wrapper == null || enums == null) return null;
+
+  final rootMap = _asMap(wrapper)!;
+  final result = <String, dynamic>{};
+
+  for (final item in enums) {
+    final code         = item['code']     as String;
+    final jsonPath     = item['jsonPath'] as String;
+    final fieldKey     = item['fieldKey'] as String;
+    final isAdditional = (item['additionalField'] ?? 'false') == 'true';
+
+    final segments = jsonPath.split('.');
+    if (segments.isEmpty) continue;
+
+    final rootKey = segments.first.toUpperCase();
+    final base    = _prepareBase(rootMap[rootKey]);
+
+    final value = isAdditional
+        ? _extractAdditionalField(base, fieldKey)
+        : _extractNestedValue(base, segments.sublist(1));
+
+    if (value != null) {
+      result[code] = value;
+
+    } else {
+      result[code] = 'CORE_COMMON_NA';
+
+    }}
+
+  return result.isEmpty ? null : result;
 }
 
 bool allDosesDelivered(
