@@ -7,6 +7,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:registration_delivery/utils/utils.dart';
@@ -80,23 +81,24 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               orElse: () => const Offstage(),
               fetched: (productVariants) {
                 // Calculate current cycle and dose index
-                return BlocBuilder<DeliverInterventionBloc,
-                    DeliverInterventionState>(
-                  builder: (context, deliverState) {
-                    final pastCycles = deliverState.pastCycles;
+                return BlocBuilder<RegistrationWrapperBloc,
+                    RegistrationWrapperState>(
+                  builder: (context, state) {
+                    final deliverState = state.deliveryWrapper;
+                    final pastCycles = deliverState?.pastCycles;
 
                     return beneficiaryDetailsTableConfig?.hidden == true
                         ? const SizedBox.shrink()
                         : Column(children: [
-                      deliverState.hasCycleArrived
+                      deliverState?.hasCycleArrived ?? false /// todo need to check again
                           ? buildCycleAndDoseTable(
                         widget.projectCycles
                             .where(
-                              (e) => e.id == deliverState.cycle,
+                              (e) => e.id == deliverState?.cycle,
                         )
                             .toList(),
                         headerList ?? [],
-                        deliverState.dose - 1,
+                        deliverState?.dose ?? 1 - 1,
                         true,
                       )
                           : const SizedBox.shrink(),

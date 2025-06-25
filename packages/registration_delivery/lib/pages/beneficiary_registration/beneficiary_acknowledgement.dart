@@ -64,12 +64,9 @@ class BeneficiaryAcknowledgementPageState
                   ),
                   onPressed: () {
                     // [TODO: Need to come back, View Household Details on Pressed failing due to no data in SearchBlocWrapper
-                    final bloc = context.read<SearchBlocWrapper>();
 
                     context.router.popAndPush(
-                      BeneficiaryWrapperRoute(
-                        wrapper: bloc.state.householdMembers.first,
-                      ),
+                      HouseholdOverviewRoute()
                     );
                   },
                   type: DigitButtonType.primary,
