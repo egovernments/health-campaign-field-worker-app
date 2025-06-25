@@ -181,6 +181,7 @@ final jsonConfig = {
     }
   },
   "delivery": {
+    "fallbackModel": "TaskModel",
     "models": {
       "TaskModel": {
         "mappings": {
@@ -243,7 +244,7 @@ final jsonConfig = {
               "taskId": "taskId",
               "productVariantId": "DeliveryDetails.resourceCard",
               "quantity" : "DeliveryDetails.resourceCard",
-              "isDelivered": "",
+              "isDelivered": "successful",
               "deliveryComment": "DeliveryDetails.deliveryComment",
               "nonRecoverableError": "error.nonRecoverable",
               "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
