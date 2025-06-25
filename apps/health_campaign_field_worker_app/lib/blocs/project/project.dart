@@ -567,9 +567,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ).toJson(),
         );
 
-        final formConfig = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'][0];
+        final formConfigs = formConfigResult['HCM-ADMIN-CONSOLE']['FormConfig'];
 
-        await enrichFormSchemaWithEnums(formConfig);
+        for (final config in formConfigs) {
+          await enrichFormSchemaWithEnums(config);
+        }
       } catch (e) {
         emit(
           state.copyWith(

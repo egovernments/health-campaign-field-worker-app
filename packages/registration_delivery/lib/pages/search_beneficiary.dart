@@ -557,7 +557,7 @@ class _SearchBeneficiaryPageState
                               type: ToastType.error);
                         } else {
                           context.router.push(FormsRenderRoute(pageName: pageName, defaultValues: {
-                            'administrativeArea': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? ''),
+                            'locality': localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? ''),
                             'nameOfIndividual' : searchHouseholdsState.searchQuery,
                           }));
                         }
