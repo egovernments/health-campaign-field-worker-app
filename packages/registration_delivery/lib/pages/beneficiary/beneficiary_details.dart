@@ -187,6 +187,10 @@ class BeneficiaryDetailsPageState
                                                       );
                                                     } else {
                                                       context.router.push(FormsRenderRoute(currentSchemaKey: 'DELIVERYFLOW', pageName: pageName,
+                                                        defaultValues: {
+                                                          'locality':
+                                                          localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? '')
+                                                        },
                                                         customComponents: const [
                                                           {
                                                             'resourceCard': ResourceCard()
