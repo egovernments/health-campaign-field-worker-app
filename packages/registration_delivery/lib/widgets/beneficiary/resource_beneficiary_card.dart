@@ -32,6 +32,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
 
 class ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
+
   @override
   Widget build(BuildContext context) {
     return DigitCard(cardType: CardType.secondary, children: [
@@ -149,56 +150,6 @@ class ResourceBeneficiaryCardState
                 : const Offstage(),
       ),
     ]);
-  }
-
-  void _handleAutoFormBehavior(BuildContext context) {
-    final resourceControl = widget.form.control('resourceDelivered.${widget.cardIndex}');
-    final quantityControl = widget.form.control('quantityDistributed.${widget.cardIndex}');
-
-    final resource = resourceControl.value;
-    final quantity = quantityControl.value;
-
-    final shouldKeep = resource != null && quantity != null && quantity > 0;
-
-    final formsState = context.read<FormsBloc>().state;
-
-    // // Step 1: Locate the page that has the 'resourceCards' field
-    // final pageKey = formsState.cachedSchemas['DELIVERYFLOW']?.pages.entries
-    //     .firstWhere(
-    //       (entry) => entry.key == ('resourceCards'),
-    //   orElse: () => MapEntry('', PropertySchema()),
-    // )
-    //     .key;
-    //
-    // final currentCards = pageKey.isNotEmpty
-    //     ? (widget.form.control('$pageKey.resourceCards').value as Map<String, dynamic>? ?? {})
-    //     : {};
-
-    final currentCards = {};
-
-    // Step 3: Create a copy for safe mutation
-    final updatedCards = Map<String, dynamic>.from(currentCards);
-
-    if (!shouldKeep) {
-      resourceControl.value = null;
-      quantityControl.value = 0;
-
-      updatedCards.remove('${widget.cardIndex}');
-    } else {
-      updatedCards['${widget.cardIndex}'] = {
-        'resourceDelivered': resource,
-        'quantityDistributed': quantity,
-      };
-    }
-
-    // Step 4: Push updated field into FormsBloc
-    context.read<FormsBloc>().add(
-      FormsEvent.updateField(
-        schemaKey: 'DELIVERYFLOW',
-        key: 'resourceCards',
-        value: updatedCards,
-      ),
-    );
   }
 
 }

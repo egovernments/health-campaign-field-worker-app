@@ -188,11 +188,12 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
           "projectBeneficiaryClientReferenceId":
-          "__ref:ProjectBeneficiaryModel.clientReferenceId",
+          "__context:projectBeneficiaryModel.clientReferenceId",
           "createdBy": "__context:userId",
           "status": "taskDetails.status",
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
+          "resources": "list:TaskResourceModel",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "plannedStartDate": "taskDetails.plannedStartDate",
@@ -233,6 +234,25 @@ final jsonConfig = {
           "additionalFields": "TaskAdditionalFields",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
+        },
+        "listMappings": {
+          "TaskResourceModel": {
+            "mappings": {
+              "id": "id",
+              "clientReferenceId": "__generate:uuid",
+              "taskId": "taskId",
+              "productVariantId": "DeliveryDetails.resourceCard",
+              "quantity" : "DeliveryDetails.resourceCard",
+              "isDelivered": "",
+              "deliveryComment": "DeliveryDetails.deliveryComment",
+              "nonRecoverableError": "error.nonRecoverable",
+              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
+            }
+          }
         }
       }
     }
