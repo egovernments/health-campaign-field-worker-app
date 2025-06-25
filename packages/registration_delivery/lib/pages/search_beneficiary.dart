@@ -464,8 +464,8 @@ class _SearchBeneficiaryPageState
                               );
                             },
                           ),
-                          if (blocWrapper.state.householdMembers.isEmpty &&
-                              !blocWrapper.state.loading)
+                          if ((selectedFilters.isNotEmpty || searchController.text.isNotEmpty) && (blocWrapper.state.householdMembers.isEmpty &&
+                              !blocWrapper.state.loading))
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: spacer2, top: spacer2, right: spacer2),

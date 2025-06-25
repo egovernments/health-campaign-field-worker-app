@@ -601,6 +601,7 @@ class _BoundarySelectionPageState
                                               }
                                             },
                                             builder: (field) => LabeledField(
+                                              capitalizedFirstLetter: false,
                                               label: localizations
                                                   .translate(label),
                                               isRequired: true,
