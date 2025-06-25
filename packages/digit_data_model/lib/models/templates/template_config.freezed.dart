@@ -337,6 +337,7 @@ mixin _$TemplateProperty {
   bool? get readOnly => throw _privateConstructorUsedError;
   bool? get autoEnable => throw _privateConstructorUsedError;
   List<dynamic>? get validations => throw _privateConstructorUsedError;
+  List<Map<String, dynamic>>? get enums => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -359,7 +360,8 @@ abstract class $TemplatePropertyCopyWith<$Res> {
       int? order,
       bool? readOnly,
       bool? autoEnable,
-      List<dynamic>? validations});
+      List<dynamic>? validations,
+      List<Map<String, dynamic>>? enums});
 }
 
 /// @nodoc
@@ -384,6 +386,7 @@ class _$TemplatePropertyCopyWithImpl<$Res, $Val extends TemplateProperty>
     Object? readOnly = freezed,
     Object? autoEnable = freezed,
     Object? validations = freezed,
+    Object? enums = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -422,6 +425,10 @@ class _$TemplatePropertyCopyWithImpl<$Res, $Val extends TemplateProperty>
           ? _value.validations
           : validations // ignore: cast_nullable_to_non_nullable
               as List<dynamic>?,
+      enums: freezed == enums
+          ? _value.enums
+          : enums // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>?,
     ) as $Val);
   }
 }
@@ -443,7 +450,8 @@ abstract class _$$TemplatePropertyImplCopyWith<$Res>
       int? order,
       bool? readOnly,
       bool? autoEnable,
-      List<dynamic>? validations});
+      List<dynamic>? validations,
+      List<Map<String, dynamic>>? enums});
 }
 
 /// @nodoc
@@ -466,6 +474,7 @@ class __$$TemplatePropertyImplCopyWithImpl<$Res>
     Object? readOnly = freezed,
     Object? autoEnable = freezed,
     Object? validations = freezed,
+    Object? enums = freezed,
   }) {
     return _then(_$TemplatePropertyImpl(
       type: null == type
@@ -504,6 +513,10 @@ class __$$TemplatePropertyImplCopyWithImpl<$Res>
           ? _value._validations
           : validations // ignore: cast_nullable_to_non_nullable
               as List<dynamic>?,
+      enums: freezed == enums
+          ? _value._enums
+          : enums // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>?,
     ));
   }
 }
@@ -520,8 +533,10 @@ class _$TemplatePropertyImpl implements _TemplateProperty {
       this.order,
       this.readOnly,
       this.autoEnable,
-      final List<dynamic>? validations})
-      : _validations = validations;
+      final List<dynamic>? validations,
+      final List<Map<String, dynamic>>? enums})
+      : _validations = validations,
+        _enums = enums;
 
   factory _$TemplatePropertyImpl.fromJson(Map<String, dynamic> json) =>
       _$$TemplatePropertyImplFromJson(json);
@@ -552,9 +567,19 @@ class _$TemplatePropertyImpl implements _TemplateProperty {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<Map<String, dynamic>>? _enums;
+  @override
+  List<Map<String, dynamic>>? get enums {
+    final value = _enums;
+    if (value == null) return null;
+    if (_enums is EqualUnmodifiableListView) return _enums;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'TemplateProperty(type: $type, format: $format, label: $label, value: $value, hidden: $hidden, order: $order, readOnly: $readOnly, autoEnable: $autoEnable, validations: $validations)';
+    return 'TemplateProperty(type: $type, format: $format, label: $label, value: $value, hidden: $hidden, order: $order, readOnly: $readOnly, autoEnable: $autoEnable, validations: $validations, enums: $enums)';
   }
 
   @override
@@ -573,7 +598,8 @@ class _$TemplatePropertyImpl implements _TemplateProperty {
             (identical(other.autoEnable, autoEnable) ||
                 other.autoEnable == autoEnable) &&
             const DeepCollectionEquality()
-                .equals(other._validations, _validations));
+                .equals(other._validations, _validations) &&
+            const DeepCollectionEquality().equals(other._enums, _enums));
   }
 
   @JsonKey(ignore: true)
@@ -588,7 +614,8 @@ class _$TemplatePropertyImpl implements _TemplateProperty {
       order,
       readOnly,
       autoEnable,
-      const DeepCollectionEquality().hash(_validations));
+      const DeepCollectionEquality().hash(_validations),
+      const DeepCollectionEquality().hash(_enums));
 
   @JsonKey(ignore: true)
   @override
@@ -615,7 +642,8 @@ abstract class _TemplateProperty implements TemplateProperty {
       final int? order,
       final bool? readOnly,
       final bool? autoEnable,
-      final List<dynamic>? validations}) = _$TemplatePropertyImpl;
+      final List<dynamic>? validations,
+      final List<Map<String, dynamic>>? enums}) = _$TemplatePropertyImpl;
 
   factory _TemplateProperty.fromJson(Map<String, dynamic> json) =
       _$TemplatePropertyImpl.fromJson;
@@ -638,6 +666,8 @@ abstract class _TemplateProperty implements TemplateProperty {
   bool? get autoEnable;
   @override
   List<dynamic>? get validations;
+  @override
+  List<Map<String, dynamic>>? get enums;
   @override
   @JsonKey(ignore: true)
   _$$TemplatePropertyImplCopyWith<_$TemplatePropertyImpl> get copyWith =>

@@ -49,6 +49,9 @@ _$TemplatePropertyImpl _$$TemplatePropertyImplFromJson(
       readOnly: json['readOnly'] as bool?,
       autoEnable: json['autoEnable'] as bool?,
       validations: json['validations'] as List<dynamic>?,
+      enums: (json['enums'] as List<dynamic>?)
+          ?.map((e) => e as Map<String, dynamic>)
+          .toList(),
     );
 
 Map<String, dynamic> _$$TemplatePropertyImplToJson(
@@ -63,6 +66,7 @@ Map<String, dynamic> _$$TemplatePropertyImplToJson(
       'readOnly': instance.readOnly,
       'autoEnable': instance.autoEnable,
       'validations': instance.validations,
+      'enums': instance.enums,
     };
 
 _$NavigateToConfigImpl _$$NavigateToConfigImplFromJson(
