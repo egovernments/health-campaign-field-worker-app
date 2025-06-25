@@ -208,6 +208,9 @@ class _SearchBeneficiaryPageState
               final formEntityMapper =
               FormEntityMapper(config: jsonConfig);
 
+              final householdMember = blocWrapper.state.householdMembers.firstOrNull;
+              final projectBeneficiary = householdMember?.projectBeneficiaries?.firstOrNull?.toMap();
+
               final entities = formEntityMapper.mapFormToEntities(
                 formValues: formData,
                 modelsConfig: modelsConfig,
@@ -219,7 +222,8 @@ class _SearchBeneficiaryPageState
                   'userUUID': RegistrationDeliverySingleton().loggedInUser?.uuid,
                   'householdType': RegistrationDeliverySingleton().householdType?.toValue(),
                   "beneficiaryType": RegistrationDeliverySingleton().beneficiaryType?.toValue(),
-                  "projectBeneficiaryModel": blocWrapper.state.householdMembers.first.projectBeneficiaries?.first.toMap(),
+                  if (projectBeneficiary != null)
+                    "projectBeneficiaryModel": projectBeneficiary,
                 },
                 fallbackFormDataString: jsonConfig['beneficiaryRegistration']?['fallbackModel'] as String?,
               );

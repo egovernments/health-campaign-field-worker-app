@@ -177,6 +177,7 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
             tasks: tasks,
             sideEffects: sideEffects,
             referrals: referrals,
+            projectBeneficiaries: beneficiaries,
           )
         ],
         deliveryWrapper: deliveryState,
