@@ -154,7 +154,10 @@ class _SearchBeneficiaryPageState
                     type: ToastType.error,
                   );
                 } else {
-                  context.router.push(FormsRenderRoute(currentSchemaKey: 'REGISTRATIONFLOW', pageName: pageName, ));
+                  context.router.push(FormsRenderRoute(currentSchemaKey: 'REGISTRATIONFLOW', pageName: pageName, defaultValues: {
+                    'locality':
+                    localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? '')
+                  }));
                 }
               }else{
                 final pageName = context.read<FormsBloc>().state.cachedSchemas['DELIVERYFLOW']?.pages.entries.first.key;
@@ -167,6 +170,10 @@ class _SearchBeneficiaryPageState
                   );
                 } else {
                   context.router.push(FormsRenderRoute(currentSchemaKey: 'DELIVERYFLOW', pageName: pageName,
+                    defaultValues: {
+                      'locality':
+                      localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? '')
+                    },
                     customComponents: const [
                       {
                         'resourceCard': ResourceCard()
@@ -621,7 +628,7 @@ class _SearchBeneficiaryPageState
                             );
                           } else {
                             context.router.push(FormsRenderRoute(currentSchemaKey: 'REGISTRATIONFLOW', pageName: pageName, defaultValues: {
-                              'administrativeArea':
+                              'locality':
                               localizations.translate(RegistrationDeliverySingleton().boundary?.code ?? ''),
                               'nameOfIndividual': value.text,
                             }));
