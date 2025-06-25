@@ -8,16 +8,10 @@ import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/utils/component_utils.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_stepper.dart';
-import 'package:digit_ui_components/widgets/atoms/labelled_fields.dart';
-import 'package:digit_ui_components/widgets/atoms/reactive_fields.dart';
-import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
-import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
+import 'package:forms_engine/blocs/forms/forms.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -43,12 +37,12 @@ class ResourceCard extends LocalizedStatefulWidget {
 class _ResourceCardState extends LocalizedState<ResourceCard> {
   final List<ProductVariantModel?> selectedVariants = [];
   final List<int?> selectedQuantities = [];
-
   final List _controllers = [];
 
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
 
+  bool _listenersAdded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +71,21 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                   return ReactiveFormBuilder(
                     form: () => buildForm(context, productVariants, variant),
                     builder: (context, form, child) {
+                      // Add listeners just once
+                      if (!_listenersAdded) {
+                        _listenersAdded = true;
+
+                        _updateResourceCards(form); // Initial update
+
+                        form.control(_resourceDeliveredKey).valueChanges.listen((_) {
+                          _updateResourceCards(form);
+                        });
+
+                        form.control(_quantityDistributedKey).valueChanges.listen((_) {
+                          _updateResourceCards(form);
+                        });
+                      }
+
                       return Column(
                         children: [
                           Text(
@@ -89,20 +98,20 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                             ),
                           ),
                           ..._controllers.map((e) => ResourceBeneficiaryCard(
-                                form: form,
-                                cardIndex: _controllers.indexOf(e),
-                                totalItems: _controllers.length,
-                                onDelete: (index) {
-                                  (form.control(_resourceDeliveredKey)
-                                          as FormArray)
-                                      .removeAt(index);
-                                  (form.control(_quantityDistributedKey)
-                                          as FormArray)
-                                      .removeAt(index);
-                                  _controllers.removeAt(index);
-                                  setState(() {});
-                                },
-                              )),
+                            form: form,
+                            cardIndex: _controllers.indexOf(e),
+                            totalItems: _controllers.length,
+                            onDelete: (index) {
+                              (form.control(_resourceDeliveredKey)
+                              as FormArray)
+                                  .removeAt(index);
+                              (form.control(_quantityDistributedKey)
+                              as FormArray)
+                                  .removeAt(index);
+                              _controllers.removeAt(index);
+                              setState(() {});
+                            },
+                          )),
                           Center(
                             child: DigitButton(
                               label: localizations.translate(
@@ -111,10 +120,10 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
                               type: DigitButtonType.tertiary,
                               size: DigitButtonSize.medium,
                               isDisabled: ((form.control(_resourceDeliveredKey)
-                                                  as FormArray)
-                                              .value ??
-                                          [])
-                                      .length >=
+                              as FormArray)
+                                  .value ??
+                                  [])
+                                  .length >=
                                   (productVariants ?? []).length,
                               onPressed: () {
                                 addController(form);
@@ -138,8 +147,34 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
     );
   }
 
+  void _updateResourceCards(FormGroup form) {
+    final resourceList = (form.control(_resourceDeliveredKey) as FormArray<ProductVariantModel?>).value;
+    final quantityList = (form.control(_quantityDistributedKey) as FormArray<int?>).value;
 
-  addController(FormGroup form) {
+    final updatedCards = <Map<String, dynamic>>[];
+
+    for (var i = 0; i < (resourceList ?? []).length; i++) {
+      final resource = resourceList?[i];
+      final quantity = quantityList?[i];
+
+      if (resource != null && quantity != null && quantity > 0) {
+        updatedCards.add({
+          'resourceDelivered': resource,
+          'quantityDistributed': quantity,
+        });
+      }
+    }
+
+    context.read<FormsBloc>().add(
+      FormsEvent.updateField(
+        schemaKey: 'DELIVERYFLOW',
+        key: 'resourceCard',
+        value: updatedCards,
+      ),
+    );
+  }
+
+  void addController(FormGroup form) {
     (form.control(_resourceDeliveredKey) as FormArray).add(
       FormControl<ProductVariantModel>(),
     );
@@ -149,20 +184,20 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
   }
 
   FormGroup buildForm(
-    BuildContext context,
-    List<DeliveryProductVariant>? productVariants,
-    List<ProductVariantModel>? variants,
-  ) {
+      BuildContext context,
+      List<DeliveryProductVariant>? productVariants,
+      List<ProductVariantModel>? variants,
+      ) {
     final bloc = context.read<RegistrationWrapperBloc>().state;
 
     _controllers.clear();
 
     final int count = RegistrationDeliverySingleton()
-                .selectedProject
-                ?.additionalDetails
-                ?.projectType
-                ?.cycles ==
-            null
+        .selectedProject
+        ?.additionalDetails
+        ?.projectType
+        ?.cycles ==
+        null
         ? 1
         : getProductVariants(bloc)?['criteria']?.productVariants.length ?? 0;
 
@@ -174,15 +209,16 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
           return FormControl<ProductVariantModel>(
             value: variants != null && variants.length < _controllers.length
                 ? variants.last
-                : (variants != null && _controllers.indexOf(e) < variants.length
-                    ? variants.firstWhereOrNull(
-                        (element) =>
-                            element.id ==
-                            productVariants
-                                ?.elementAt(_controllers.indexOf(e))
-                                .productVariantId,
-                      )
-                    : null),
+                : (variants != null &&
+                _controllers.indexOf(e) < variants.length
+                ? variants.firstWhereOrNull(
+                  (element) =>
+              element.id ==
+                  productVariants
+                      ?.elementAt(_controllers.indexOf(e))
+                      .productVariantId,
+            )
+                : null),
           );
         }).toList(),
       ),
@@ -190,7 +226,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
         _controllers.map((e) {
           return FormControl<int>(
             value: RegistrationDeliverySingleton().beneficiaryType !=
-                    BeneficiaryType.individual
+                BeneficiaryType.individual
                 ? int.tryParse('0')
                 : 0,
             validators: [Validators.min(1)],

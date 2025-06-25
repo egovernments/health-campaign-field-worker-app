@@ -118,6 +118,7 @@ class _SearchBeneficiaryPageState
           final householdModel = createState.entities
               .whereType<HouseholdModel>()
               .firstOrNull;
+
           if (householdModel != null) {
             blocWrapper.add(
                 RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(household: householdModel.copyWith(memberCount: 25)), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue())
@@ -218,6 +219,7 @@ class _SearchBeneficiaryPageState
                   'userUUID': RegistrationDeliverySingleton().loggedInUser?.uuid,
                   'householdType': RegistrationDeliverySingleton().householdType?.toValue(),
                   "beneficiaryType": RegistrationDeliverySingleton().beneficiaryType?.toValue(),
+                  "projectBeneficiaryModel": blocWrapper.state.householdMembers.first.projectBeneficiaries?.first.toMap(),
                 },
                 fallbackFormDataString: jsonConfig['beneficiaryRegistration']?['fallbackModel'] as String?,
               );
