@@ -181,6 +181,10 @@ class _SearchBeneficiaryPageState
 
         }else if(createState is EntityCreateErrorState){
           Navigator.of(context, rootNavigator: true).pop();
+          // Reset to prevent re-handling
+          context.read<FormsBloc>().add(
+            const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'), // or create a FormsResetEvent
+          );
           context.router.push( BeneficiaryErrorRoute(enableViewHousehold: false));
           if (kDebugMode) {
             print(createState.message);
@@ -224,6 +228,10 @@ class _SearchBeneficiaryPageState
 
             } catch (e) {
               Navigator.of(context, rootNavigator: true).pop();
+              // Reset to prevent re-handling
+              context.read<FormsBloc>().add(
+                const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'), // or create a FormsResetEvent
+              );
               context.router.push( BeneficiaryErrorRoute(enableViewHousehold: false));
               print('Error: $e');
             }
