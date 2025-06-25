@@ -273,9 +273,13 @@ class Attendance {
 
   String get userQRTimeExpiredError => 'USER_QR_TIME_EXPIRED_ERROR';
 
+  String get qrAlreadyScanned => 'USER_QR_ALREADY_SCANNED';
+
   String get uniqueCodeLabel => 'UNIQUE_CODE_LABEL';
 
   String get attendeeNotFound => 'ATTENDEE_NOT_FOUND';
+
+  String get failedToScanQR => 'QR_SCANNER_FAILED';
 
   String get markAttendanceManually => 'MARK_ATTENDANCE_MANUALLY';
 

@@ -194,7 +194,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
       var ind = individualList.where((i) => i.id == a.individualId).firstOrNull;
       return a.copyWith(
         name: ind?.name?.givenName,
-        individualId: ind?.individualId,
+        individualId: ind?.id,
         identifierID: ind?.identifiers?.firstOrNull?.identifierId,
         individualNumber: ind?.individualId,
       );

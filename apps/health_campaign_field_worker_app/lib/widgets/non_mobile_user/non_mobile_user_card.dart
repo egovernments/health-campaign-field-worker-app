@@ -39,9 +39,9 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
       margin: const EdgeInsets.all(spacer2),
       padding: const EdgeInsets.all(spacer3),
       children: [
-        _buildCenteredTextBlock(widget.userName, textTheme.headingM),
+        _buildCenteredTextBlock(widget.userName, textTheme.captionS),
         _buildCenteredTextBlock(
-            "${widget.gender}, ${widget.age}", textTheme.bodyL),
+            "${widget.gender}, ${widget.age}", textTheme.bodyXS),
         _buildIdContainer(context, textTheme),
         _buildQRButton(context),
       ],
@@ -63,21 +63,21 @@ class _NonMobileUserCardState extends LocalizedState<NonMobileUserCard> {
     final theme = Theme.of(context);
 
     return Container(
-      alignment: Alignment.center,
-      width: MediaQuery.sizeOf(context).width,
+      padding:
+          const EdgeInsets.symmetric(horizontal: spacer1, vertical: spacer1),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Color(theme.colorTheme.paper.secondary.value),
-          width: 2,
-        ),
-        borderRadius: BorderRadius.circular(10),
-        color: Color(theme.colorTheme.paper.secondary.value),
+        borderRadius: const BorderRadius.all(Radius.circular(spacer1)),
+        border: Border(
+            left: BorderSide(color: theme.colorTheme.generic.divider),
+            right: BorderSide(color: theme.colorTheme.generic.divider),
+            bottom: BorderSide(color: theme.colorTheme.generic.divider),
+            top: BorderSide(color: theme.colorTheme.generic.divider)),
+        color: theme.colorTheme.paper.secondary,
       ),
-      child: DigitTextBlock(
-        spacing: 0,
-        padding: const EdgeInsets.all(spacer1),
-        description: widget.individualId,
-        descriptionStyle: textTheme.label,
+      child: Center(
+        child: Text(widget.individualId,
+            style: textTheme.headingXS
+                .copyWith(color: theme.colorTheme.primary.primary2)),
       ),
     );
   }
