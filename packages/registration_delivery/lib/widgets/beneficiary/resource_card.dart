@@ -159,8 +159,11 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
       if (resource != null && quantity != null && quantity > 0) {
         updatedCards.add({
-          'resourceDelivered': resource,
-          'quantityDistributed': quantity,
+          'resourceDelivered': {
+            'name': resource.sku,
+            'productId': resource.id,
+          },
+          'quantityDistributed': 4
         });
       }
     }

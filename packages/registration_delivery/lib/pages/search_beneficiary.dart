@@ -139,7 +139,7 @@ class _SearchBeneficiaryPageState
           final nextAction = lastPage?.navigateTo;
           if (nextAction != null) {
             if(nextAction.type=='template'){
-              final nextPath = routerMap[searchTemplate?.navigateTo?.name];
+              final nextPath = routerMap[nextAction.name];
               if(nextPath!=null){
                 context.router.push(nextPath);
               }
@@ -205,10 +205,14 @@ class _SearchBeneficiaryPageState
               ?['models'] as Map<String, dynamic>)
                   :jsonConfig['beneficiaryRegistration']?['models'] as Map<String, dynamic>;
 
+              final fallBackModel = formState.activeSchemaKey == 'DELIVERYFLOW' ? (jsonConfig['delivery']?['fallbackModel'] as String?) :
+              jsonConfig['beneficiaryRegistration']?['fallbackModel'] as String?;
+
               final formEntityMapper =
               FormEntityMapper(config: jsonConfig);
 
               final householdMember = blocWrapper.state.householdMembers.firstOrNull;
+              final household = householdMember?.household?.toMap();
               final projectBeneficiary = householdMember?.projectBeneficiaries?.firstOrNull?.toMap();
 
               final entities = formEntityMapper.mapFormToEntities(
@@ -222,10 +226,12 @@ class _SearchBeneficiaryPageState
                   'userUUID': RegistrationDeliverySingleton().loggedInUser?.uuid,
                   'householdType': RegistrationDeliverySingleton().householdType?.toValue(),
                   "beneficiaryType": RegistrationDeliverySingleton().beneficiaryType?.toValue(),
+                  if(household !=null)
+                    'householdModel':household,
                   if (projectBeneficiary != null)
                     "projectBeneficiaryModel": projectBeneficiary,
                 },
-                fallbackFormDataString: jsonConfig['beneficiaryRegistration']?['fallbackModel'] as String?,
+                fallbackFormDataString: fallBackModel,
               );
 
               context.read<EntityCreateBloc>().add(
