@@ -26,6 +26,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
+import '../models/entities/scanned_individual_data.dart';
 import '../router/attendance_router.gm.dart';
 import '../utils/date_util_attendance.dart';
 import '../widgets/attendance_qr_scanner.dart';
@@ -58,7 +59,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   var currentSelectedDate = DateTime.now().toString(), selectedSession = 0;
   bool markManualAttendance = false;
   final colors = const DigitColors();
-
+  ScannedIndividualDataModel? scannedData;
+  
   @override
   void initState() {
     controller = TextEditingController();
@@ -372,6 +374,18 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     : DateTime.now(),
                                 onChange: (String date) {
                                   currentSelectedDate = date;
+                                  if (AttendanceDateTimeManagement.isToday(
+                                      AttendanceDateTimeManagement
+                                          .getFormattedDateToDateTime(
+                                              currentSelectedDate)!)) {
+                                    setState(() {
+                                      markManualAttendance = false;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      markManualAttendance = true;
+                                    });
+                                  }
                                   individualLogBloc!.add(
                                     AttendanceIndividualLogSearchEvent(
                                       attendees: widget.registerModel.attendees!
@@ -804,7 +818,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                     createOplog: type != EnumValues.draft.toValue(),
                     latitude: latitude,
                     longitude: longitude,
-                    comment: form.control(_commentKey).value));
+                    comment: form.control(_commentKey).value,
+                    isManualEntry: markManualAttendance,
+                    qrCreatedTime: scannedData?.qrCreatedTime,
+                    ));
                 Toast.showToast(
                   context,
                   message:
@@ -874,7 +891,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     latitude: latitude,
                                     longitude: longitude,
                                     comment:
-                                        dialogForm.control(_commentKey).value));
+                                        dialogForm.control(_commentKey).value,
+                                        isManualEntry: markManualAttendance,
+                                        qrCreatedTime: scannedData?.qrCreatedTime,
+                                        ));
                                 Navigator.of(
                                   context,
                                   rootNavigator: true,
