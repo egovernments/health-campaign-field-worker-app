@@ -32,6 +32,10 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                 page: BeneficiaryDetailsRoute.page,
                 path: 'beneficiary-details',
               ),
+              AutoRoute(
+                page: HouseholdAcknowledgementRoute.page,
+                path: 'household-acknowledgement',
+              ),
               /// Beneficiary Registration
               AutoRoute(
                 page: BeneficiaryRegistrationWrapperRoute.page,

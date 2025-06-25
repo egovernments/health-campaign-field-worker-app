@@ -181,7 +181,7 @@ class FormEntityMapper {
     fieldsMap.forEach((customKey, path) {
       final value = getValueFromMapping(path, formValues, path, context);
       if (value != null && value.toString().trim().isNotEmpty) {
-        fieldsList.add({'key': customKey, 'value': value});
+        fieldsList.add({'key': customKey, 'value': value.toString()});
       }
     });
 
@@ -353,6 +353,12 @@ class FormEntityMapper {
 
       if (current is Map<String, dynamic> && key != null && current.containsKey(key)) {
         current = current[key];
+      } else if (current is List &&
+          current.length == 1 &&
+          current.first is Map<String, dynamic> &&
+          key != null &&
+          (current.first as Map<String, dynamic>).containsKey(key)) {
+        current = (current.first as Map<String, dynamic>)[key];
       } else {
         if (kDebugMode) {
           print('Warning: Key "$key" not found while resolving path "$path".');
@@ -412,7 +418,7 @@ class FormEntityMapper {
         .toList();
 
     final newAdditionalFieldsList = filteredNewFields
-        .map((e) => {'key': e.key, 'value': e.value})
+        .map((e) => {'key': e.key, 'value': e.value.toString()})
         .toList();
 
     if (existingAdditionalFields != null) {
