@@ -1,8 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -60,6 +63,7 @@ class BeneficiaryAcknowledgementPageState
                         i18.householdDetails.viewHouseHoldDetailsAction,
                   ),
                   onPressed: () {
+                    // [TODO: Need to come back, View Household Details on Pressed failing due to no data in SearchBlocWrapper
                     final bloc = context.read<SearchBlocWrapper>();
 
                     context.router.popAndPush(
@@ -88,7 +92,7 @@ class BeneficiaryAcknowledgementPageState
           ],
           description: beneficiaryAcknowledgementTemplate
                       ?.properties?[registration_keys
-                          .acknowledgementKeys.acknowledgmentTitleKey]
+                          .acknowledgementKeys.acknowledgmentDescriptionKey]
                       ?.hidden ==
                   true
               ? ""

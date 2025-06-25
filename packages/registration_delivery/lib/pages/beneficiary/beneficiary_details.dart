@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -20,6 +21,7 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/registration_component_keys.dart' as registration_keys;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
@@ -48,6 +50,8 @@ class BeneficiaryDetailsPageState
 
   @override
   Widget build(BuildContext context) {
+    final pageKey = BeneficiaryDetailsRoute.name.replaceAll('Route', '');
+    final beneficiaryDetailsTemplate = RegistrationDeliverySingleton().templateConfigs?[pageKey];
     final theme = Theme.of(context);
     final localizations = RegistrationDeliveryLocalization.of(context);
     final router = context.router;
@@ -145,15 +149,18 @@ class BeneficiaryDetailsPageState
                                 RegistrationDeliverySingleton().projectType;
                             final cycles = projectType?.cycles;
 
-                            return cycles != null && cycles.isNotEmpty
+                            return (beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.hidden == true)
+                                ? const SizedBox.shrink()
+                                : cycles != null && cycles.isNotEmpty
                                 ? deliverState.hasCycleArrived
                                     ? DigitCard(
                                         margin:
                                             const EdgeInsets.only(top: spacer2),
                                         children: [
                                             DigitButton(
-                                              label:
-                                                  '${localizations.translate(i18.beneficiaryDetails.recordCycle)} '
+                                              label:(beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '').isNotEmpty
+                                                  ? localizations.translate(beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '')
+                                                  : '${localizations.translate(i18.beneficiaryDetails.recordCycle)} '
                                                   '${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} '
                                                   '${(deliverState.dose).toString()}',
                                               type: DigitButtonType.primary,
@@ -309,7 +316,9 @@ class BeneficiaryDetailsPageState
                                     margin: const EdgeInsets.only(top: spacer2),
                                     children: [
                                         DigitButton(
-                                          label: localizations.translate(i18
+                                          label: (beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '').isNotEmpty
+                                              ? localizations.translate(beneficiaryDetailsTemplate?.properties?[registration_keys.commonKeys.primaryButtonKey]?.label ?? '')
+                                              : localizations.translate(i18
                                               .householdOverView
                                               .householdOverViewActionText),
                                           type: DigitButtonType.primary,
@@ -396,13 +405,100 @@ class BeneficiaryDetailsPageState
                               margin: const EdgeInsets.all(spacer2),
                               children: [
                                 Text(
-                                  localizations.translate(i18.beneficiaryDetails
+                                  localizations.translate(beneficiaryDetailsTemplate
+                                      ?.label ?? i18.beneficiaryDetails
                                       .beneficiarysDetailsLabelText),
                                   style: textTheme.headingXl.copyWith(
                                       color: theme.colorTheme.primary.primary2),
                                 ),
-                                DigitTableCard(
-                                  element: {
+                                if(beneficiaryDetailsTemplate?.description != null && ( beneficiaryDetailsTemplate?.description ?? '').isNotEmpty)
+                                  Text(
+                                    localizations.translate(
+                                        beneficiaryDetailsTemplate?.description ?? ''
+                                    ),
+                                    style: textTheme.bodyS.copyWith(
+                                      color: theme.colorTheme.text.secondary,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                if(beneficiaryDetailsTemplate
+                                    ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.hidden != true)
+                                  DigitTableCard(
+                                  element: buildEnumValueMap(
+                                        HouseholdMemberWrapper(
+                                      household: householdMemberWrapper.first.household,
+                                      headOfHousehold: RegistrationDeliverySingleton()
+                                          .beneficiaryType !=
+                                          BeneficiaryType.individual
+                                          ? householdMemberWrapper.first.headOfHousehold : state.selectedIndividual,
+                                      tasks: householdMemberWrapper.first.tasks,
+                                      projectBeneficiaries: householdMemberWrapper.first.projectBeneficiaries,
+                                      sideEffects: householdMemberWrapper.first.sideEffects,
+                                      referrals: householdMemberWrapper.first.referrals,
+                                    )
+                                      ,
+                                      beneficiaryDetailsTemplate
+                                          ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.enums
+                                  //     [
+                                  //   {
+                                  //     "code": "Individual.givenName",
+                                  //     "name": "givenName",
+                                  //     "fieldKey": "givenName",
+                                  //     "jsonPath": "Individual.name.givenName",
+                                  //     "mandatory": "true",
+                                  //   },
+                                  //   {
+                                  //     "code": "Household.boundary",
+                                  //     "name": "boundary",
+                                  //     "isList": "true",
+                                  //     "fieldKey": "boundary",
+                                  //     "jsonPath": "Household.address.locality.code",
+                                  //     "mandatory": "true"
+                                  //   },
+                                  //   {
+                                  //     "code": "Household.memberCount",
+                                  //     "name": "memberCount",
+                                  //     "fieldKey": "memberCount",
+                                  //     "jsonPath": "Household.memberCount",
+                                  //     "mandatory": "true"
+                                  //   },
+                                  //   {
+                                  //     "code": "Household.childrenCount",
+                                  //     "name": "childrenCount",
+                                  //     "fieldKey": "childrenCount",
+                                  //     "jsonPath": "Household.additionalFields",
+                                  //     "additionalField": "true"
+                                  //   },
+                                  //   {
+                                  //     "code": "Individual.gender",
+                                  //     "name": "gender",
+                                  //     "fieldKey": "gender",
+                                  //     "jsonPath": "Individual.gender"
+                                  //     // "isList": "true"
+                                  //   },
+                                  //   {
+                                  //     "code": "Individual.dateOfBirth",
+                                  //     "name": "dateOfBirth",
+                                  //     "fieldKey": "dateOfBirth",
+                                  //     "jsonPath": "Individual.dateOfBirth"
+                                  //   },
+                                  //   {
+                                  //     "code": "Individual.address",
+                                  //     "name": "address",
+                                  //     "fieldKey": "locality",
+                                  //     "jsonPath": "Individual.address[0].locality.code",
+                                  //     "isList": "true"
+                                  //   },
+                                  //   {
+                                  //     "code": "Individual.identifierType",
+                                  //     "name": "identifierType",
+                                  //     "fieldKey": "identifierType",
+                                  //     "jsonPath": "Individual.identifiers[0].identifierType",
+                                  //     "isList": "true"
+                                  //   }
+                                  // ]
+                                  )?.map((k, v) => MapEntry(localizations.translate(k), localizations.translate(v.toString())))
+                                      ?? {
                                     localizations.translate(
                                       RegistrationDeliverySingleton()
                                                   .beneficiaryType !=
