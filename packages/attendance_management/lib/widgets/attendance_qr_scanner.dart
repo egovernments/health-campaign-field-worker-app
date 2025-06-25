@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_scanner/utils/scanner_utils.dart';
@@ -54,6 +53,11 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   Widget build(BuildContext context) {
     final baseScanner = super.build(context);
     return baseScanner;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -141,7 +145,8 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   @override
   Future<void> storeCodeWrapper(String code) async {
     try {
-      final scannedData = ScannedIndividualDataModelMapper.fromJson(code);
+      final scannedData = ScannedIndividualDataModelMapper.fromMap(
+          DataMapEncryptor.decrypt(code));
 
       if (validateIndividualAttendance(scannedData, registerModel)) {
         showAttendanceSuccessPopup(scannedData);
@@ -169,64 +174,80 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     AttendanceRegisterModel registerModel, {
     int allowedIntervalInMinutes = 2,
   }) {
-    // 1. Extract required IDs from scanned data
-    final String? scannedIndividualId = scannedData.individualId;
+    late bool result;
 
-    final int? qrCreatedTime = scannedData.qrCreatedTime;
-    final int? qrCreatedTimeMillis =
-        qrCreatedTime != null ? qrCreatedTime * 1000 : null;
+    if (scannedData.manualEntry == null && scannedData.manualEntry == false) {
+      // 1. Extract required IDs from scanned data
+      final String? scannedIndividualId = scannedData.individualId;
 
-    // 2. Basic validation: Ensure both IDs are present in scanned data
-    if (scannedIndividualId == null || scannedIndividualId.isEmpty) {
-      if (kDebugMode) {
-        print("Scanned data missing 'individualId' or 'registerId'.");
-      }
-      return false;
-    }
+      final int? qrCreatedTime = scannedData.qrCreatedTime;
+      final int? qrCreatedTimeMillis =
+          qrCreatedTime != null ? qrCreatedTime * 1000 : null;
 
-    final currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
-
-    if (qrCreatedTimeMillis != null) {
-      final timeDifference = (currentTimeMillis - qrCreatedTimeMillis).abs();
-      final allowedTimeInMillis = allowedIntervalInMinutes * 60 * 1000;
-
-      if (timeDifference > allowedTimeInMillis) {
-        if (mounted) {
-          Toast.showToast(
-            context,
-            type: ToastType.error,
-            message:
-                localizations.translate(i18.attendance.userQRTimeExpiredError),
-          );
+      // 2. Basic validation: Ensure both IDs are present in scanned data
+      if (scannedIndividualId == null || scannedIndividualId.isEmpty) {
+        if (kDebugMode) {
+          print("Scanned data missing 'individualId' or 'registerId'.");
         }
-        return false;
+        result = false;
       }
-    }
 
-    // 4. Check if the registerModel has an attendees list and it's not empty
-    if (registerModel.attendees == null || registerModel.attendees!.isEmpty) {
+      final currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
+
+      if (qrCreatedTimeMillis != null) {
+        final timeDifference = (currentTimeMillis - qrCreatedTimeMillis).abs();
+        final allowedTimeInMillis = allowedIntervalInMinutes * 60 * 1000;
+
+        if (timeDifference > allowedTimeInMillis) {
+          if (mounted) {
+            Toast.showToast(
+              context,
+              type: ToastType.error,
+              message: localizations
+                  .translate(i18.attendance.userQRTimeExpiredError),
+            );
+          }
+          result = false;
+        }
+      }
+
+      // 4. Check if the registerModel has an attendees list and it's not empty
+      if (registerModel.attendees == null || registerModel.attendees!.isEmpty) {
+        if (kDebugMode) {
+          print(
+              "AttendanceRegisterModel has no attendees or attendees list is empty.");
+        }
+        result = false;
+      }
+
+      // 5. Iterate through the attendees list to find a match
+      for (AttendeeModel attendee in registerModel.attendees!) {
+        if (attendee.individualId == scannedIndividualId) {
+          if (kDebugMode) {
+            print("Individual (ID: $scannedIndividualId) found in register .");
+          }
+          result = true; // Match found
+        }
+      }
+
       if (kDebugMode) {
         print(
-            "AttendanceRegisterModel has no attendees or attendees list is empty.");
+            "Individual (ID: $scannedIndividualId) not found in register  attendees.");
       }
-      return false;
-    }
-
-    // 5. Iterate through the attendees list to find a match
-    for (AttendeeModel attendee in registerModel.attendees!) {
-      if (attendee.individualId == scannedIndividualId) {
-        if (kDebugMode) {
-          print("Individual (ID: $scannedIndividualId) found in register .");
+      result = false; // No match found after checking all attendees
+    } else {
+      final String? scannedIndividualId = scannedData.individualId;
+      for (AttendeeModel attendee in registerModel.attendees!) {
+        if (attendee.individualId == scannedIndividualId) {
+          if (kDebugMode) {
+            print("Individual (ID: $scannedIndividualId) found in register .");
+          }
+          result = true; // Match found
         }
-        return true; // Match found
       }
     }
 
-    if (kDebugMode) {
-      print(
-          "Individual (ID: $scannedIndividualId) not found in register  attendees.");
-    }
-    return false; // No match found after checking all attendees
+    return result;
   }
 
   void showAttendanceSuccessPopup(ScannedIndividualDataModel scannedData) {
@@ -340,7 +361,12 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                       );
                     } else {
                       final bloc = context.read<DigitScannerBloc>();
-                      codes.add(form.control(_manualCodeFormKey).value);
+                      codes.add(DataMapEncryptor().encryptWithRandomKey(
+                          ScannedIndividualDataModel(
+                                  manualEntry: true,
+                                  individualId:
+                                      form.control(_manualCodeFormKey).value)
+                              .toMap()));
                       bloc.add(
                         DigitScannerEvent.handleScanner(
                           barCode: state.barCodes,

@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/models/entities/scanned_individual_data.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:attendance_management/widgets/custom_attendance_info_card.dart';
 import 'package:attendance_management/widgets/labelled_toggle.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
@@ -57,7 +57,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   var entryTime = 0, exitTime = 0;
   var currentSelectedDate = DateTime.now().toString(), selectedSession = 0;
   bool markManualAttendance = false;
-  final colors = const DigitColors();
 
   @override
   void initState() {
@@ -167,21 +166,28 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                             in state.qrCodes) {
                                           if (AttendanceScannerPageState()
                                               .validateIndividualAttendance(
-                                                  jsonDecode(scannedUsers),
+                                                  ScannedIndividualDataModelMapper
+                                                      .fromMap(DataMapEncryptor
+                                                          .decrypt(
+                                                              scannedUsers)),
                                                   widget.registerModel)) {
-                                            var user = jsonDecode(scannedUsers);
+                                            var user =
+                                                ScannedIndividualDataModelMapper
+                                                    .fromMap(DataMapEncryptor
+                                                        .decrypt(scannedUsers));
                                             context
                                                 .read<
                                                     AttendanceIndividualBloc>()
                                                 .add(
                                                   AttendanceMarkEvent(
-                                                    individualId:
-                                                        user['individualId'],
-                                                    registerId:
-                                                        widget.registerModel.id,
-                                                    status: 1.0,
-                                                    isSingleSession: false,
-                                                  ),
+                                                      individualId:
+                                                          user.individualId!,
+                                                      registerId: widget
+                                                          .registerModel.id,
+                                                      status: 1.0,
+                                                      isSingleSession: false,
+                                                      entryTime: entryTime,
+                                                      exitTime: exitTime),
                                                 );
                                           } else {
                                             Toast.showToast(context,
@@ -212,7 +218,26 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                           currentSelectedDate)!)
                                               ? DigitButton(
                                                   size: DigitButtonSize.large,
-                                                  type: DigitButtonType.primary,
+                                                  type: (((attendanceCollectionModel ?? []).any((a) => a.status == -1 || a.status == null) &&
+                                                              EnumValues.submit
+                                                                      .toValue() !=
+                                                                  EnumValues
+                                                                      .draft
+                                                                      .toValue()) ||
+                                                          ((attendanceCollectionModel ??
+                                                                      [])
+                                                                  .every((a) =>
+                                                                      a.status ==
+                                                                          -1 ||
+                                                                      a.status ==
+                                                                          null) &&
+                                                              EnumValues.submit
+                                                                      .toValue() ==
+                                                                  EnumValues
+                                                                      .draft
+                                                                      .toValue()))
+                                                      ? DigitButtonType.primary
+                                                      : DigitButtonType.secondary,
                                                   mainAxisSize:
                                                       MainAxisSize.max,
                                                   onPressed: () async {
@@ -220,16 +245,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                         context.read<
                                                             DigitScannerBloc>();
 
-                                                    context
-                                                        .read<
-                                                            DigitScannerBloc>()
-                                                        .add(
-                                                          const DigitScannerEvent
-                                                              .handleScanner(
-                                                            barCode: [],
-                                                            qrCode: [],
-                                                          ),
-                                                        );
+                                                    scannerBloc.add(
+                                                      const DigitScannerEvent
+                                                          .handleScanner(
+                                                        barCode: [],
+                                                        qrCode: [],
+                                                      ),
+                                                    );
 
                                                     var manualMode =
                                                         await Navigator.of(
@@ -405,7 +427,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                         context: context,
                                         builder: (ctx) {
                                           return Popup(
-                                            type: PopUpType.alert,
+                                            type: PopUpType.simple,
                                             onCrossTap: () {
                                               Navigator.of(ctx).pop();
                                             },
@@ -452,7 +474,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
+                                        horizontal: spacer2),
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
@@ -472,7 +494,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(width: 8),
+                                        const SizedBox(width: spacer2),
                                         SizedBox(
                                           height: 40,
                                           width: 40,
@@ -480,19 +502,20 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                             builder: (context) {
                                               return Container(
                                                 decoration: BoxDecoration(
-                                                  color:
-                                                      colors.light.paperPrimary,
+                                                  color: theme
+                                                      .colorTheme.paper.primary,
                                                   border: Border.all(
-                                                      color: colors.light
-                                                          .genericInputBorder),
+                                                      color: theme.colorTheme
+                                                          .generic.inputBorder),
                                                   borderRadius:
-                                                      BorderRadius.circular(4),
+                                                      BorderRadius.circular(
+                                                          spacer1),
                                                 ),
                                                 child: IconButton(
                                                   icon: Icon(
                                                     Icons.swap_vert,
-                                                    color: colors
-                                                        .light.textPrimary,
+                                                    color: theme.colorTheme
+                                                        .generic.inputBorder,
                                                   ),
                                                   onPressed: () async {
                                                     final RenderBox button =
@@ -520,8 +543,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                         offset.dx + size.width,
                                                         offset.dy,
                                                       ),
-                                                      color: colors
-                                                          .light.paperPrimary,
+                                                      color: theme.colorTheme
+                                                          .paper.primary,
                                                       items: [
                                                         PopupMenuItem(
                                                           value:
@@ -531,7 +554,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                           child: Row(
                                                             children: [
                                                               const SizedBox(
-                                                                  width: 8),
+                                                                  width:
+                                                                      spacer2),
                                                               Text(localizations
                                                                   .translate(i18
                                                                       .attendance
@@ -547,7 +571,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                           child: Row(
                                                             children: [
                                                               const SizedBox(
-                                                                  width: 8),
+                                                                  width:
+                                                                      spacer2),
                                                               Text(localizations
                                                                   .translate(i18
                                                                       .attendance
@@ -644,13 +669,14 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                       AttendanceIndividualBloc>()
                                                   .add(
                                                     AttendanceMarkEvent(
-                                                      individualId: individual
-                                                          .individualId!,
-                                                      registerId: individual
-                                                          .registerId!,
-                                                      status: 1.0,
-                                                      isSingleSession: false,
-                                                    ),
+                                                        individualId: individual
+                                                            .individualId!,
+                                                        registerId: individual
+                                                            .registerId!,
+                                                        status: 1.0,
+                                                        isSingleSession: false,
+                                                        entryTime: entryTime,
+                                                        exitTime: exitTime),
                                                   );
                                             },
                                             onMarkAbsent: () {
@@ -659,13 +685,14 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                       AttendanceIndividualBloc>()
                                                   .add(
                                                     AttendanceMarkEvent(
-                                                      individualId: individual
-                                                          .individualId!,
-                                                      registerId: individual
-                                                          .registerId!,
-                                                      status: 0.0,
-                                                      isSingleSession: false,
-                                                    ),
+                                                        individualId: individual
+                                                            .individualId!,
+                                                        registerId: individual
+                                                            .registerId!,
+                                                        status: 0.0,
+                                                        isSingleSession: false,
+                                                        entryTime: entryTime,
+                                                        exitTime: exitTime),
                                                   );
                                             },
                                             viewOnly: viewOnly,
@@ -716,8 +743,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                      top: 8.0,
-                      bottom: 8.0,
+                      top: spacer2,
+                      bottom: spacer2,
                     ),
                     child: Text(
                       k.translate(
