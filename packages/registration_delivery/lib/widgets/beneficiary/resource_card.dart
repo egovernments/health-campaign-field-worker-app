@@ -17,6 +17,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -47,9 +48,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
 
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
-  static const _deliveryCommentKey = 'deliveryComment';
-  static const _doseAdministrationKey = 'doseAdministered';
-  static const _dateOfAdministrationKey = 'dateOfAdministration';
+
 
   @override
   Widget build(BuildContext context) {
@@ -138,6 +137,7 @@ class _ResourceCardState extends LocalizedState<ResourceCard> {
       ),
     );
   }
+
 
   addController(FormGroup form) {
     (form.control(_resourceDeliveredKey) as FormArray).add(

@@ -6,7 +6,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
+import 'package:forms_engine/blocs/forms/forms.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
 
@@ -150,4 +150,55 @@ class ResourceBeneficiaryCardState
       ),
     ]);
   }
+
+  void _handleAutoFormBehavior(BuildContext context) {
+    final resourceControl = widget.form.control('resourceDelivered.${widget.cardIndex}');
+    final quantityControl = widget.form.control('quantityDistributed.${widget.cardIndex}');
+
+    final resource = resourceControl.value;
+    final quantity = quantityControl.value;
+
+    final shouldKeep = resource != null && quantity != null && quantity > 0;
+
+    final formsState = context.read<FormsBloc>().state;
+
+    // // Step 1: Locate the page that has the 'resourceCards' field
+    // final pageKey = formsState.cachedSchemas['DELIVERYFLOW']?.pages.entries
+    //     .firstWhere(
+    //       (entry) => entry.key == ('resourceCards'),
+    //   orElse: () => MapEntry('', PropertySchema()),
+    // )
+    //     .key;
+    //
+    // final currentCards = pageKey.isNotEmpty
+    //     ? (widget.form.control('$pageKey.resourceCards').value as Map<String, dynamic>? ?? {})
+    //     : {};
+
+    final currentCards = {};
+
+    // Step 3: Create a copy for safe mutation
+    final updatedCards = Map<String, dynamic>.from(currentCards);
+
+    if (!shouldKeep) {
+      resourceControl.value = null;
+      quantityControl.value = 0;
+
+      updatedCards.remove('${widget.cardIndex}');
+    } else {
+      updatedCards['${widget.cardIndex}'] = {
+        'resourceDelivered': resource,
+        'quantityDistributed': quantity,
+      };
+    }
+
+    // Step 4: Push updated field into FormsBloc
+    context.read<FormsBloc>().add(
+      FormsEvent.updateField(
+        schemaKey: 'DELIVERYFLOW',
+        key: 'resourceCards',
+        value: updatedCards,
+      ),
+    );
+  }
+
 }
