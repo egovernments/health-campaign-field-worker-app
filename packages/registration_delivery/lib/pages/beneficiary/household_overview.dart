@@ -17,6 +17,7 @@ import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '/widgets/status_filter/status_filter.dart';
@@ -71,13 +72,9 @@ class _HouseholdOverviewPageState
 
     return PopScope(
       onPopInvoked: (didPop) async {
-        context
-            .read<SearchBlocWrapper>()
-            .searchHouseholdsBloc
-            .add(const SearchHouseholdsClearEvent());
         context.router.maybePop();
       },
-      child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+      child: BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(
         builder: (ctx, state) {
           return Scaffold(
             body: state.loading
@@ -121,7 +118,7 @@ class _HouseholdOverviewPageState
                                   BlocBuilder<DeliverInterventionBloc,
                                       DeliverInterventionState>(
                                 builder: (ctx, deliverInterventionState) =>
-                                    state.householdMemberWrapper.tasks
+                                    state.householdMembers.first.tasks
                                                 ?.lastOrNull?.status ==
                                             Status.administeredSuccess.toValue()
                                         ? Offstage(
@@ -139,7 +136,7 @@ class _HouseholdOverviewPageState
                                                 ),
                                                 capitalizeLetters: false,
                                                 isDisabled: state
-                                                            .householdMemberWrapper
+                                                            .householdMembers.first
                                                             .tasks
                                                             ?.lastOrNull
                                                             ?.status ==
@@ -171,14 +168,14 @@ class _HouseholdOverviewPageState
                                                           navigateToChecklist(
                                                               ctx,
                                                               state
-                                                                  .householdMemberWrapper
+                                                                  .householdMembers.first
                                                                   .household!
                                                                   .clientReferenceId);
                                                         }
                                                       });
                                                   callReloadEvent(
                                                       offset: state
-                                                          .householdMemberWrapper
+                                                          .householdMembers.first
                                                           .members!
                                                           .length,
                                                       limit: limit);
@@ -201,12 +198,12 @@ class _HouseholdOverviewPageState
                                               type: DigitButtonType.primary,
                                               size: DigitButtonSize.large,
                                               mainAxisSize: MainAxisSize.max,
-                                              isDisabled: (state.householdMemberWrapper
+                                              isDisabled: (state.householdMembers.first
                                                                   .projectBeneficiaries ??
                                                               [])
                                                           .isEmpty ||
                                                       state
-                                                              .householdMemberWrapper
+                                                              .householdMembers.first
                                                               .tasks
                                                               ?.lastOrNull
                                                               ?.status ==
@@ -261,14 +258,14 @@ class _HouseholdOverviewPageState
                                                                     .selectedIndividual!
                                                                     .clientReferenceId
                                                                 : state
-                                                                    .householdMemberWrapper
+                                                                    .householdMembers.first
                                                                     .household!
                                                                     .clientReferenceId);
                                                       }
                                                     });
                                                 callReloadEvent(
                                                     offset: state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .members!
                                                         .length,
                                                     limit: limit);
@@ -307,7 +304,7 @@ class _HouseholdOverviewPageState
                                         ),
                                       ),
                                     ),
-                                    if ((state.householdMemberWrapper
+                                    if ((state.householdMembers.first
                                                 .projectBeneficiaries ??
                                             [])
                                         .isNotEmpty)
@@ -360,9 +357,9 @@ class _HouseholdOverviewPageState
                                                           rootNavigator: true,
                                                         ).pop();
 
-                                                        HouseholdMemberWrapper
+                                                        HouseholdWrapper
                                                             wrapper = state
-                                                                .householdMemberWrapper;
+                                                                .householdMembers.first;
 
                                                         final timestamp = wrapper
                                                             .headOfHousehold
@@ -382,7 +379,7 @@ class _HouseholdOverviewPageState
                                                           return;
 
                                                         final projectBeneficiary = state
-                                                            .householdMemberWrapper
+                                                            .householdMembers.first
                                                             .projectBeneficiaries
                                                             ?.firstWhereOrNull(
                                                           (element) =>
@@ -400,11 +397,11 @@ class _HouseholdOverviewPageState
                                                               addressModel:
                                                                   address,
                                                               individualModel: state
-                                                                      .householdMemberWrapper
-                                                                      .members ??
+                                                                      .householdMembers.first
+                                                                      .individuals ??
                                                                   [],
                                                               householdModel: state
-                                                                  .householdMemberWrapper
+                                                                  .householdMembers.first
                                                                   .household!,
                                                               registrationDate:
                                                                   date,
@@ -498,7 +495,7 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(i18
                                                     .householdOverView
                                                     .instituteNameLabel): state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .household
                                                         ?.address
                                                         ?.buildingName ??
@@ -507,13 +504,13 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(
                                                   i18.deliverIntervention
                                                       .memberCountText,
-                                                ): state.householdMemberWrapper
+                                                ): state.householdMembers.first
                                                     .household?.memberCount,
                                                 localizations.translate(
                                                   i18.householdLocation
                                                       .administrationAreaFormLabel,
                                                 ): localizations.translate(state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .headOfHousehold
                                                         ?.address
                                                         ?.first
@@ -531,7 +528,7 @@ class _HouseholdOverviewPageState
                                           children: [
                                             DigitTableCard(
                                               element:
-                                              buildEnumValueMap(state.householdMemberWrapper,
+                                              buildEnumValueMap(state.householdMembers.first,
                                                   overviewTemplate
                                                       ?.properties?[registration_keys.householdOverViewKeys.detailsCardKey]?.enums
                                               )
@@ -540,7 +537,7 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(i18
                                                     .householdOverView
                                                     .householdOverViewHouseholdHeadNameLabel): state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .headOfHousehold
                                                         ?.name
                                                         ?.givenName ??
@@ -550,7 +547,7 @@ class _HouseholdOverviewPageState
                                                   i18.householdLocation
                                                       .administrationAreaFormLabel,
                                                 ): localizations.translate(state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .headOfHousehold
                                                         ?.address
                                                         ?.first
@@ -560,7 +557,7 @@ class _HouseholdOverviewPageState
                                                 localizations.translate(
                                                   i18.deliverIntervention
                                                       .memberCountText,
-                                                ): state.householdMemberWrapper
+                                                ): state.householdMembers.first
                                                     .household?.memberCount,
                                                 if (shouldShowStatus)
                                                   localizations.translate(i18
@@ -664,7 +661,7 @@ class _HouseholdOverviewPageState
                                                       child: DigitChip(
                                                         label:
                                                             '${localizations.translate(getStatus(selectedFilters[index]))}'
-                                                            ' (${state.householdMemberWrapper.members!.length})',
+                                                            ' (${state.householdMembers.first.members!.length})',
                                                         onItemDelete: () {
                                                           selectedFilters.remove(
                                                               selectedFilters[
@@ -680,18 +677,18 @@ class _HouseholdOverviewPageState
                                           )
                                         : const Offstage(),
                                     Column(
-                                      children: (state.householdMemberWrapper
-                                                  .members ??
+                                      children: (state.householdMembers.first
+                                                  .individuals ??
                                               [])
                                           .map(
                                         (e) {
                                           final isHead = state
-                                                  .householdMemberWrapper
+                                                  .householdMembers.first
                                                   .headOfHousehold
                                                   ?.clientReferenceId ==
                                               e.clientReferenceId;
                                           final projectBeneficiaryId = state
-                                              .householdMemberWrapper
+                                              .householdMembers.first
                                               .projectBeneficiaries
                                               ?.firstWhereOrNull((b) =>
                                                   b.beneficiaryClientReferenceId ==
@@ -699,7 +696,7 @@ class _HouseholdOverviewPageState
                                               ?.clientReferenceId;
 
                                           final projectBeneficiary = state
-                                              .householdMemberWrapper
+                                              .householdMembers.first
                                               .projectBeneficiaries
                                               ?.where(
                                                 (element) =>
@@ -711,7 +708,7 @@ class _HouseholdOverviewPageState
                                                                 .individual
                                                         ? e.clientReferenceId
                                                         : state
-                                                            .householdMemberWrapper
+                                                            .householdMembers.first
                                                             .household
                                                             ?.clientReferenceId),
                                               )
@@ -721,7 +718,7 @@ class _HouseholdOverviewPageState
                                                       [])
                                                   .isNotEmpty
                                               ? state
-                                                  .householdMemberWrapper.tasks
+                                                  .householdMembers.first.tasks
                                                   ?.where((element) =>
                                                       element
                                                           .projectBeneficiaryClientReferenceId ==
@@ -732,7 +729,7 @@ class _HouseholdOverviewPageState
                                           final referralData =
                                               (projectBeneficiary ?? [])
                                                       .isNotEmpty
-                                                  ? state.householdMemberWrapper
+                                                  ? state.householdMembers.first
                                                       .referrals
                                                       ?.where((element) =>
                                                           element
@@ -745,7 +742,7 @@ class _HouseholdOverviewPageState
                                           final sideEffectData = taskData !=
                                                       null &&
                                                   taskData.isNotEmpty
-                                              ? state.householdMemberWrapper
+                                              ? state.householdMembers.first
                                                   .sideEffects
                                                   ?.where((element) =>
                                                       element
@@ -842,11 +839,11 @@ class _HouseholdOverviewPageState
                                                       BeneficiaryRegistrationEditIndividualState(
                                                     individualModel: e,
                                                     householdModel: state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .household!,
                                                     addressModel: address.first,
                                                     projectBeneficiaryModel: state
-                                                        .householdMemberWrapper
+                                                        .householdMembers.first
                                                         .projectBeneficiaries
                                                         ?.firstWhereOrNull(
                                                       (element) =>
@@ -859,7 +856,7 @@ class _HouseholdOverviewPageState
                                                               ? e
                                                                   .clientReferenceId
                                                               : state
-                                                                  .householdMemberWrapper
+                                                                  .householdMembers.first
                                                                   .household
                                                                   ?.clientReferenceId),
                                                     ),
@@ -884,7 +881,7 @@ class _HouseholdOverviewPageState
                                                           RegistrationDeliverySingleton()
                                                               .projectId!,
                                                       householdModel: state
-                                                          .householdMemberWrapper
+                                                          .householdMembers.first
                                                           .household!,
                                                       projectBeneficiaryType:
                                                           beneficiaryType,
@@ -1034,7 +1031,7 @@ class _HouseholdOverviewPageState
                                     mainAxisSize: MainAxisSize.max,
                                     onPressed: () => addIndividual(
                                       context,
-                                      state.householdMemberWrapper.household!,
+                                      state.householdMembers.first.household!,
                                     ),
                                     label: localizations.translate(
                                       overviewTemplate
@@ -1098,31 +1095,31 @@ class _HouseholdOverviewPageState
     return false;
   }
 
-  getStatusAttributes(HouseholdOverviewState state,
+  getStatusAttributes(RegistrationWrapperState state,
       DeliverInterventionState deliverInterventionState) {
     var textLabel =
         i18.householdOverView.householdOverViewNotRegisteredIconLabel;
     var color = DigitTheme.instance.colorScheme.error;
     var icon = Icons.info_rounded;
 
-    if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
-      textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue() ==
+    if ((state.householdMembers.first.projectBeneficiaries ?? []).isNotEmpty) {
+      textLabel = state.householdMembers.first.tasks?.isNotEmpty ?? false
+          ? getTaskStatus(state.householdMembers.first.tasks ?? []).toValue() ==
                   Status.administeredSuccess.toValue()
-              ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()}'
-              : getTaskStatus(state.householdMemberWrapper.tasks ?? [])
+              ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${getTaskStatus(state.householdMembers.first.tasks ?? []).toValue()}'
+              : getTaskStatus(state.householdMembers.first.tasks ?? [])
                   .toValue()
           : Status.registered.toValue();
 
-      color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? (state.householdMemberWrapper.tasks?.lastOrNull?.status ==
+      color = state.householdMembers.first.tasks?.isNotEmpty ?? false
+          ? (state.householdMembers.first.tasks?.lastOrNull?.status ==
                   Status.administeredSuccess.toValue()
               ? DigitTheme.instance.colorScheme.onSurfaceVariant
               : DigitTheme.instance.colorScheme.error)
           : DigitTheme.instance.colorScheme.onSurfaceVariant;
 
-      icon = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? (state.householdMemberWrapper.tasks?.lastOrNull?.status ==
+      icon = state.householdMembers.first.tasks?.isNotEmpty ?? false
+          ? (state.householdMembers.first.tasks?.lastOrNull?.status ==
                   Status.administeredSuccess.toValue()
               ? Icons.check_circle
               : Icons.info_rounded)

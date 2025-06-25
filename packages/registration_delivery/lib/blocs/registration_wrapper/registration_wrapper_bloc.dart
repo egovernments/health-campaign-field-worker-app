@@ -161,6 +161,10 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
     try {
       final globalState = await completer.future;
 
+      final allHouseholds = (globalState.results['household'] ?? []).whereType<HouseholdModel>().toList();
+      final allMembers = (globalState.results['householdMember'] ?? []).whereType<HouseholdMemberModel>().toList();
+      final allIndividuals = (globalState.results['individual'] ?? []).whereType<IndividualModel>().toList();
+
       final tasks = (globalState.results['task'] ?? []).whereType<TaskModel>().toList();
       final sideEffects = (globalState.results['sideEffect'] ?? []).whereType<SideEffectModel>().toList();
       final referrals = (globalState.results['referral'] ?? []).whereType<ReferralModel>().toList();
@@ -178,6 +182,10 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
             sideEffects: sideEffects,
             referrals: referrals,
             projectBeneficiaries: beneficiaries,
+            household: household,
+            members: allMembers,
+            individuals: allIndividuals,
+            headOfHousehold: allIndividuals.first /// todo: need to recheck this logic
           )
         ],
         deliveryWrapper: deliveryState,

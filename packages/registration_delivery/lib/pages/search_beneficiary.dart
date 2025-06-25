@@ -561,6 +561,10 @@ class _SearchBeneficiaryPageState
                                               ),
                                             ),
                                           );
+                                        }else {
+                                          await context.router.push(
+                                            HouseholdOverviewRoute()
+                                          );
                                         }
                                         setState(() {
                                           isProximityEnabled = false;
@@ -629,7 +633,7 @@ class _SearchBeneficiaryPageState
                           blocWrapper.add(const RegistrationWrapperEvent.clear());
                         },
                       ),
-                      if (searchTemplate?.properties?['qrscanner']?.hidden != true)
+                      if (searchTemplate?.properties?['SecondaryButton']?.hidden != true)
                         DigitButton(
                           capitalizeLetters: false,
                           type: DigitButtonType.secondary,
@@ -651,8 +655,8 @@ class _SearchBeneficiaryPageState
                             );
                           },
                           prefixIcon: Icons.qr_code,
-                          label: searchTemplate?.properties?['qrscanner']?.label != null
-                              ? localizations.translate(searchTemplate!.properties!['qrscanner']!.label)
+                          label: searchTemplate?.properties?['SecondaryButton']?.label != null
+                              ? localizations.translate(searchTemplate!.properties!['SecondaryButton']!.label)
                               : localizations.translate(i18.deliverIntervention.scannerLabel),
                         ),
                     ],

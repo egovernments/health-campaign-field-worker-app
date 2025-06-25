@@ -11,6 +11,7 @@ import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
@@ -602,13 +603,13 @@ Map<String, dynamic>? _asMap(dynamic obj) {
 
   if (obj is Map<String, dynamic>) return obj;
 
-  if (obj is HouseholdMemberWrapper) {
+  if (obj is HouseholdWrapper) {
     return {
       'HOUSEHOLD'           : obj.household?.toJson(),
       'INDIVIDUAL'          : obj.headOfHousehold?.toJson(),
-      'TASK'               : obj.tasks?.map((e) => e.toJson()).toList().last,
-      'SIDE_EFFECT'         : obj.sideEffects?.map((e) => e.toJson()).last,
-      'REFERRAL'           : obj.referrals?.map((e) => e.toJson()).toList().last,
+      'TASK': (obj.tasks?.isNotEmpty ?? false) ? obj.tasks!.map((e) => e.toJson()).toList().last : null,
+      'SIDE_EFFECT': (obj.sideEffects?.isNotEmpty ?? false) ? obj.sideEffects!.map((e) => e.toJson()).last : null,
+      'REFERRAL': (obj.referrals?.isNotEmpty ?? false) ? obj.referrals!.map((e) => e.toJson()).toList().last : null,
     };
   }
 
@@ -692,7 +693,7 @@ Map<String, dynamic>? _prepareBase(dynamic raw) {
 }
 
 Map<String, dynamic>? buildEnumValueMap(
-    HouseholdMemberWrapper? wrapper,
+    HouseholdWrapper? wrapper,
     List<Map<String, dynamic>>? enums,
     )
 {
