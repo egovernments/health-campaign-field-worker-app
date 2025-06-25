@@ -13,7 +13,6 @@ import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/infinite_date_scroll.dart';
@@ -51,7 +50,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   bool isMorning = true;
   static const _commentKey = 'comment';
   Timer? _debounce;
-  late TextEditingController controller;
+  late TextEditingController controller, dateController;
   AttendanceIndividualBloc? individualLogBloc;
   late FormGroup form;
   var entryTime = 0, exitTime = 0;
@@ -61,6 +60,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   @override
   void initState() {
     controller = TextEditingController();
+    dateController = TextEditingController();
     controller.addListener(searchByName);
     individualLogBloc = AttendanceIndividualBloc(
       const AttendanceIndividualState.loading(),
@@ -164,13 +164,16 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                       if (state.qrCodes.isNotEmpty) {
                                         for (var scannedUsers
                                             in state.qrCodes) {
-                                          if (AttendanceScannerPageState()
-                                              .validateIndividualAttendance(
-                                                  ScannedIndividualDataModelMapper
-                                                      .fromMap(DataMapEncryptor
-                                                          .decrypt(
-                                                              scannedUsers)),
-                                                  widget.registerModel)) {
+                                          var isScannedValid =
+                                              AttendanceScannerPageState()
+                                                  .validateIndividualAttendance(
+                                                      ScannedIndividualDataModelMapper
+                                                          .fromMap(DataMapEncryptor
+                                                              .decrypt(
+                                                                  scannedUsers)),
+                                                      widget.registerModel,
+                                                      context: context);
+                                          if (isScannedValid.isValid) {
                                             var user =
                                                 ScannedIndividualDataModelMapper
                                                     .fromMap(DataMapEncryptor
@@ -180,8 +183,14 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                     AttendanceIndividualBloc>()
                                                 .add(
                                                   AttendanceMarkEvent(
-                                                      individualId:
-                                                          user.individualId!,
+                                                      individualId: widget
+                                                          .registerModel
+                                                          .attendees!
+                                                          .firstWhere((e) =>
+                                                              e.individualNumber ==
+                                                              user
+                                                                  .individualId!)
+                                                          .id!,
                                                       registerId: widget
                                                           .registerModel.id,
                                                       status: 1.0,
@@ -193,18 +202,19 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                             Toast.showToast(context,
                                                 message:
                                                     localizations.translate(
-                                                  i18.attendance
-                                                      .attendeeNotFound,
+                                                  isScannedValid.errorMessage!,
                                                 ),
                                                 type: ToastType.error);
+                                            context
+                                                .read<DigitScannerBloc>()
+                                                .add(
+                                                  const DigitScannerEvent
+                                                      .handleScanner(
+                                                    barCode: [],
+                                                    qrCode: [],
+                                                  ),
+                                                );
                                           }
-                                          context.read<DigitScannerBloc>().add(
-                                                const DigitScannerEvent
-                                                    .handleScanner(
-                                                  barCode: [],
-                                                  qrCode: [],
-                                                ),
-                                              );
                                         }
                                       }
                                     },
@@ -362,8 +372,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               showHelp: true,
                             ),
                             children: [
-                              SizedBox(
+                              Container(
                                 width: MediaQuery.of(context).size.width,
+                                padding: const EdgeInsets.all(spacer2),
                                 child: Text(
                                   localizations.translate(
                                     i18.attendance.markAttendanceLabel,
@@ -373,6 +384,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ),
                               ),
                               InfiniteDateScrollInput(
+                                controller: dateController,
                                 initialValue: DateTime.now().isAfter(
                                         DateTime.fromMillisecondsSinceEpoch(
                                             widget.registerModel.endDate!))
@@ -438,6 +450,37 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                 size: DigitButtonSize.large,
                                                 mainAxisSize: MainAxisSize.max,
                                                 onPressed: () {
+                                                  currentSelectedDate = date;
+                                                  individualLogBloc!.add(
+                                                    AttendanceIndividualLogSearchEvent(
+                                                      attendees: widget
+                                                              .registerModel
+                                                              .attendees!
+                                                              .isNotEmpty
+                                                          ? widget.registerModel
+                                                              .attendees!
+                                                          : [],
+                                                      limit: 10,
+                                                      offset: 0,
+                                                      currentDate: AttendanceDateTimeManagement
+                                                          .getMillisecondEpoch(
+                                                              AttendanceDateTimeManagement
+                                                                  .getFormattedDateToDateTime(
+                                                                      currentSelectedDate)!,
+                                                              selectedSession,
+                                                              'entryTime'),
+                                                      entryTime: entryTime,
+                                                      isSingleSession: false,
+                                                      exitTime: exitTime,
+                                                      registerId: widget
+                                                          .registerModel.id,
+                                                      tenantId: widget
+                                                          .registerModel
+                                                          .tenantId
+                                                          .toString(),
+                                                    ),
+                                                  );
+                                                  setRegisterData();
                                                   Navigator.of(ctx).pop();
                                                 },
                                                 label: localizations.translate(
@@ -460,7 +503,17 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                             ],
                                             title: localizations.translate(
                                                 i18.attendance.actionRequired),
-                                            description: getMissedDays(context),
+                                            additionalWidgets: [
+                                              InfoCard(
+                                                  title: localizations
+                                                      .translate(i18.attendance
+                                                          .missedAttendanceInfo),
+                                                  type: InfoType.info,
+                                                  capitalizedLetter: false,
+                                                  description:
+                                                      getMissedDays(context))
+                                            ],
+                                            description: '',
                                           );
                                         });
                                   }
@@ -483,14 +536,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                           flex: 3,
                                           child: SizedBox(
                                             height: 44,
-                                            child: DigitSearchBar(
+                                            child: DigitSearchFormInput(
                                               controller: controller,
-                                              hintText: localizations.translate(
-                                                  i18.common.searchByNameOrID),
-                                              borderRadius: 0,
-                                              margin: const EdgeInsets.all(0),
-                                              textCapitalization:
-                                                  TextCapitalization.words,
+                                              innerLabel:
+                                                  localizations.translate(i18
+                                                      .common.searchByNameOrID),
                                             ),
                                           ),
                                         ),
@@ -862,11 +912,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     i18.attendance.validationRequiredError),
                               },
                               builder: (field) => LabeledField(
+                                capitalizedFirstLetter: false,
                                 label: localizations
                                     .translate(i18.common.commentKey),
                                 isRequired: true,
-                                child: DigitTextFormInput(
+                                child: DigitTextAreaFormInput(
                                   errorMessage: field.errorText,
+                                  maxLine: 3,
                                   onChange: (value) {
                                     dialogForm.control(_commentKey).value =
                                         value;
@@ -1069,6 +1121,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     }
 
     // Return missed attendance days with description
-    return "$missedDays${AttendanceLocalization.of(context).translate(i18.attendance.missedAttendanceDescription)}";
+    return "${AttendanceLocalization.of(context).translate(i18.attendance.missedAttendanceDescription)}\n$missedDays";
   }
 }

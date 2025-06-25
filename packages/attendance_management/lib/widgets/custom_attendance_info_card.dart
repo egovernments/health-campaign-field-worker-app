@@ -49,8 +49,8 @@ class CustomAttendanceInfoCard extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      padding: const EdgeInsets.all(12.0),
+      margin: const EdgeInsets.only(bottom: spacer4),
+      padding: const EdgeInsets.all(spacer3),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(),
         color: const DigitColors().light.paperSecondary,
@@ -59,7 +59,7 @@ class CustomAttendanceInfoCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(name, style: textTheme.captionS),
-          const SizedBox(height: spacer2),
+          const SizedBox(height: spacer1),
           if (viewOnly || markManualAttendance || status != null) ...[
             Text(
               getStatusText(),
@@ -82,9 +82,12 @@ class CustomAttendanceInfoCard extends StatelessWidget {
               color: theme.colorTheme.paper.secondary,
             ),
             child: Center(
-              child: Text(individualNumber, style: textTheme.bodyS),
+              child: Text(individualNumber,
+                  style: textTheme.headingXS
+                      .copyWith(color: theme.colorTheme.primary.primary2)),
             ),
           ),
+          const SizedBox(height: spacer4),
           if (!viewOnly && markManualAttendance)
             Row(
               children: [
@@ -110,13 +113,12 @@ class CustomAttendanceInfoCard extends StatelessWidget {
                       disabledColor:
                           theme.colorTheme.alert.success.withOpacity(0.4),
                       borderWidth: 1.2,
-                      radius: BorderRadius.circular(6),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 10),
+                      radius: BorderRadius.circular(spacer1),
+                      padding: const EdgeInsets.all(spacer3),
                     ),
                   ),
                 ),
-                const SizedBox(width: spacer2),
+                const SizedBox(width: spacer3),
                 Expanded(
                   child: DigitButton(
                     prefixIcon: Icons.cancel,
@@ -135,16 +137,17 @@ class CustomAttendanceInfoCard extends StatelessWidget {
                         : DigitButtonType.secondary,
                     size: DigitButtonSize.small,
                     digitButtonThemeData: DigitButtonThemeData(
-                        DigitButtonColor: theme.colorTheme.alert.error,
-                        disabledColor:
-                            theme.colorTheme.alert.error.withOpacity(0.4),
-                        radius: BorderRadius.circular(spacer2),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: spacer2, vertical: spacer2)),
+                      DigitButtonColor: theme.colorTheme.alert.error,
+                      disabledColor:
+                          theme.colorTheme.alert.error.withOpacity(0.4),
+                      radius: BorderRadius.circular(spacer1),
+                      padding: const EdgeInsets.all(spacer3),
+                    ),
                   ),
                 ),
               ],
-            )
+            ),
+          const SizedBox(height: spacer2),
         ],
       ),
     );
