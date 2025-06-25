@@ -599,7 +599,8 @@ class BeneficiaryDetailsPageState
                                       .projectType
                                       ?.cycles ??
                                   [])
-                              .isNotEmpty)
+                              .isNotEmpty && (beneficiaryDetailsTemplate
+                        ?.properties?[registration_keys.beneficiaryDetailsKeys.detailsCardKey]?.hidden != true))
                             DigitCard(
                                 margin: const EdgeInsets.all(spacer2),
                                 children: RegistrationDeliverySingleton()
