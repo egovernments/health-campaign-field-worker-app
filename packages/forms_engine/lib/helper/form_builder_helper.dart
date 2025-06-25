@@ -43,6 +43,12 @@ FormControl buildFormControl(
           value: schema.systemDate==true ? DateTime.now() : parseDateValue(rawValue),
           validators: validators,
         );
+      } else if (format == PropertySchemaFormat.idPopulator) {
+        final idNumber = IdGen.i.identifier.toString();
+        return FormControl<String>(
+          value: schema.hidden==true ? "DEFAULT, $idNumber": rawValue?.toString(),
+          validators: validators,
+        );
       } else if (format == PropertySchemaFormat.latLng) {
         return FormControl<String>(
           value: defaultLatlng ?? (rawValue?.toString()),
