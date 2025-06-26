@@ -65,6 +65,8 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
         return _buildBooleanType(form);
       case PropertySchemaType.object:
         return _buildObjectType(form);
+      case PropertySchemaType.dynamic:
+        return _buildCustomComponent() ?? const SizedBox.shrink();
     }
   }
 
@@ -295,6 +297,7 @@ class _JsonFormBuilderState extends LocalizedState<JsonFormBuilder> {
           label: translateIfPresent(widget.schema.label, localizations),
           validations: widget.schema.validations,
           readOnly: widget.schema.readOnly ?? false,
+          isRequired: hasRequiredValidation(widget.schema.validations),
         );
 
       case PropertySchemaFormat.radio:

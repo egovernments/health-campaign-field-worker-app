@@ -180,7 +180,8 @@ final jsonConfig = {
       },
     }
   },
-  "deliveryDetails": {
+  "delivery": {
+    "fallbackModel": "TaskModel",
     "models": {
       "TaskModel": {
         "mappings": {
@@ -188,11 +189,13 @@ final jsonConfig = {
           "projectId": "__context:projectId",
           "projectBeneficiaryId": "taskDetails.projectBeneficiaryId",
           "projectBeneficiaryClientReferenceId":
-              "__ref:ProjectBeneficiaryModel.clientReferenceId",
+              "__context:projectBeneficiaryModel.clientReferenceId",
           "createdBy": "__context:userId",
-          "status": "taskDetails.status",
+          "status":
+              "__value:ADMINISTRATION_SUCCESS", // todo: need to update later for multiround campaign
           "nonRecoverableError": "errors.nonRecoverable",
           "clientReferenceId": "__generate:uuid",
+          "resources": "list:TaskResourceModel",
           "tenantId": "__context:tenantId",
           "rowVersion": "meta.rowVersion",
           "plannedStartDate": "taskDetails.plannedStartDate",
@@ -200,55 +203,59 @@ final jsonConfig = {
           "actualStartDate": "taskDetails.actualStartDate",
           "actualEndDate": "taskDetails.actualEndDate",
           "createdDate": "__generate:timestamp",
-          "address": "AddressModel",
+          "address": {
+            "id": "address.id",
+            "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
+            "doorNo": "address.doorNo",
+            "latitude": "address.latLng[0]",
+            "longitude": "address.latLng[1]",
+            "locationAccuracy": "address.locationAccuracy",
+            "addressLine1": "address.addressLine1",
+            "addressLine2": "address.addressLine2",
+            "landmark": "address.landmark",
+            "city": "address.city",
+            "type": "__context:householdModel.address.type",
+            "pincode": "address.pincode",
+            "buildingName": "address.buildingName",
+            "street": "address.street",
+            "boundaryType": "address.boundaryType",
+            "boundary": "address.boundary",
+            "locality": {
+              "code": "__context:selectedBoundaryCode",
+              "name": "__context:boundary.name",
+              "nonRecoverableError": "address.nonRecoverable",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion"
+            },
+            "nonRecoverableError": "address.nonRecoverable",
+            "tenantId": "__context:tenantId",
+            "rowVersion": "meta.rowVersion",
+            "clientAuditDetails": "__generate:clientAudit",
+            "auditDetails": "__generate:audit"
+          },
           "additionalFields": "TaskAdditionalFields",
           "clientAuditDetails": "__generate:clientAudit",
           "auditDetails": "__generate:audit"
-        }
-      },
-      "TaskAdditionalFields": {
-        "mappings": {
-          "schema": "__literal:Task",
-          "version": "__context:schemaVersion",
-          "fields": "taskDetails.additionalInfo"
-        }
-      },
-      "AddressModel": {
-        "mappings": {
-          "id": "address.id",
-          "relatedClientReferenceId": "__ref:TaskModel.clientReferenceId",
-          "doorNo": "address.doorNo",
-          "latitude": "address.latLng[0]",
-          "longitude": "address.latLng[1]",
-          "locationAccuracy": "address.locationAccuracy",
-          "addressLine1": "address.addressLine1",
-          "addressLine2": "address.addressLine2",
-          "landmark": "address.landmark",
-          "city": "address.city",
-          "type": "address.type",
-          "pincode": "address.pincode",
-          "buildingName": "address.buildingName",
-          "street": "address.street",
-          "boundaryType": "address.boundaryType",
-          "boundary": "address.boundary",
-          "locality": {
-            "code": "__context:selectedBoundaryCode",
-            "name": "__context:boundary.name",
-            "nonRecoverableError": "address.nonRecoverable",
-            "tenantId": "__context:tenantId",
-            "rowVersion": "meta.rowVersion"
-          },
-          "nonRecoverableError": "address.nonRecoverable",
-          "tenantId": "__context:tenantId",
-          "rowVersion": "meta.rowVersion",
-          "clientAuditDetails": "__generate:clientAudit",
-          "auditDetails": "__generate:audit"
-        }
-      },
-      "ProjectBeneficiaryModel": {
-        "mappings": {
-          "clientReferenceId":
-              "__ref:TaskModel.projectBeneficiaryClientReferenceId"
+        },
+        "listMappings": {
+          "TaskResourceModel": {
+            "mappings": {
+              "id": "id",
+              "clientReferenceId": "__generate:uuid",
+              "taskId": "taskId",
+              "productVariantId":
+                  "DeliveryDetails.resourceCard[0].resourceDelivered.productId",
+              "quantity": "DeliveryDetails.resourceCard[0].quantityDistributed",
+              "isDelivered": "__value:true",
+              "deliveryComment": "DeliveryDetails.deliveryComment",
+              "nonRecoverableError": "error.nonRecoverable",
+              "taskclientReferenceId": "__ref:TaskModel.clientReferenceId",
+              "tenantId": "__context:tenantId",
+              "rowVersion": "meta.rowVersion",
+              "clientAuditDetails": "__generate:clientAudit",
+              "auditDetails": "__generate:audit",
+            }
+          }
         }
       }
     }

@@ -27,6 +27,7 @@ mixin _$TemplateConfig {
   Map<String, TemplateProperty>? get properties =>
       throw _privateConstructorUsedError;
   Map<String, bool>? get features => throw _privateConstructorUsedError;
+  NavigateToConfig? get navigateTo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +47,10 @@ abstract class $TemplateConfigCopyWith<$Res> {
       String? description,
       int order,
       Map<String, TemplateProperty>? properties,
-      Map<String, bool>? features});
+      Map<String, bool>? features,
+      NavigateToConfig? navigateTo});
+
+  $NavigateToConfigCopyWith<$Res>? get navigateTo;
 }
 
 /// @nodoc
@@ -68,6 +72,7 @@ class _$TemplateConfigCopyWithImpl<$Res, $Val extends TemplateConfig>
     Object? order = null,
     Object? properties = freezed,
     Object? features = freezed,
+    Object? navigateTo = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -94,7 +99,23 @@ class _$TemplateConfigCopyWithImpl<$Res, $Val extends TemplateConfig>
           ? _value.features
           : features // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>?,
+      navigateTo: freezed == navigateTo
+          ? _value.navigateTo
+          : navigateTo // ignore: cast_nullable_to_non_nullable
+              as NavigateToConfig?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $NavigateToConfigCopyWith<$Res>? get navigateTo {
+    if (_value.navigateTo == null) {
+      return null;
+    }
+
+    return $NavigateToConfigCopyWith<$Res>(_value.navigateTo!, (value) {
+      return _then(_value.copyWith(navigateTo: value) as $Val);
+    });
   }
 }
 
@@ -112,7 +133,11 @@ abstract class _$$TemplateConfigImplCopyWith<$Res>
       String? description,
       int order,
       Map<String, TemplateProperty>? properties,
-      Map<String, bool>? features});
+      Map<String, bool>? features,
+      NavigateToConfig? navigateTo});
+
+  @override
+  $NavigateToConfigCopyWith<$Res>? get navigateTo;
 }
 
 /// @nodoc
@@ -132,6 +157,7 @@ class __$$TemplateConfigImplCopyWithImpl<$Res>
     Object? order = null,
     Object? properties = freezed,
     Object? features = freezed,
+    Object? navigateTo = freezed,
   }) {
     return _then(_$TemplateConfigImpl(
       type: null == type
@@ -158,6 +184,10 @@ class __$$TemplateConfigImplCopyWithImpl<$Res>
           ? _value._features
           : features // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>?,
+      navigateTo: freezed == navigateTo
+          ? _value.navigateTo
+          : navigateTo // ignore: cast_nullable_to_non_nullable
+              as NavigateToConfig?,
     ));
   }
 }
@@ -171,7 +201,8 @@ class _$TemplateConfigImpl implements _TemplateConfig {
       this.description,
       required this.order,
       final Map<String, TemplateProperty>? properties,
-      final Map<String, bool>? features})
+      final Map<String, bool>? features,
+      this.navigateTo})
       : _properties = properties,
         _features = features;
 
@@ -207,8 +238,11 @@ class _$TemplateConfigImpl implements _TemplateConfig {
   }
 
   @override
+  final NavigateToConfig? navigateTo;
+
+  @override
   String toString() {
-    return 'TemplateConfig(type: $type, label: $label, description: $description, order: $order, properties: $properties, features: $features)';
+    return 'TemplateConfig(type: $type, label: $label, description: $description, order: $order, properties: $properties, features: $features, navigateTo: $navigateTo)';
   }
 
   @override
@@ -223,7 +257,9 @@ class _$TemplateConfigImpl implements _TemplateConfig {
             (identical(other.order, order) || other.order == order) &&
             const DeepCollectionEquality()
                 .equals(other._properties, _properties) &&
-            const DeepCollectionEquality().equals(other._features, _features));
+            const DeepCollectionEquality().equals(other._features, _features) &&
+            (identical(other.navigateTo, navigateTo) ||
+                other.navigateTo == navigateTo));
   }
 
   @JsonKey(ignore: true)
@@ -235,7 +271,8 @@ class _$TemplateConfigImpl implements _TemplateConfig {
       description,
       order,
       const DeepCollectionEquality().hash(_properties),
-      const DeepCollectionEquality().hash(_features));
+      const DeepCollectionEquality().hash(_features),
+      navigateTo);
 
   @JsonKey(ignore: true)
   @override
@@ -259,7 +296,8 @@ abstract class _TemplateConfig implements TemplateConfig {
       final String? description,
       required final int order,
       final Map<String, TemplateProperty>? properties,
-      final Map<String, bool>? features}) = _$TemplateConfigImpl;
+      final Map<String, bool>? features,
+      final NavigateToConfig? navigateTo}) = _$TemplateConfigImpl;
 
   factory _TemplateConfig.fromJson(Map<String, dynamic> json) =
       _$TemplateConfigImpl.fromJson;
@@ -276,6 +314,8 @@ abstract class _TemplateConfig implements TemplateConfig {
   Map<String, TemplateProperty>? get properties;
   @override
   Map<String, bool>? get features;
+  @override
+  NavigateToConfig? get navigateTo;
   @override
   @JsonKey(ignore: true)
   _$$TemplateConfigImplCopyWith<_$TemplateConfigImpl> get copyWith =>
@@ -297,6 +337,7 @@ mixin _$TemplateProperty {
   bool? get readOnly => throw _privateConstructorUsedError;
   bool? get autoEnable => throw _privateConstructorUsedError;
   List<dynamic>? get validations => throw _privateConstructorUsedError;
+  List<Map<String, dynamic>>? get enums => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -319,7 +360,8 @@ abstract class $TemplatePropertyCopyWith<$Res> {
       int? order,
       bool? readOnly,
       bool? autoEnable,
-      List<dynamic>? validations});
+      List<dynamic>? validations,
+      List<Map<String, dynamic>>? enums});
 }
 
 /// @nodoc
@@ -344,6 +386,7 @@ class _$TemplatePropertyCopyWithImpl<$Res, $Val extends TemplateProperty>
     Object? readOnly = freezed,
     Object? autoEnable = freezed,
     Object? validations = freezed,
+    Object? enums = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -382,6 +425,10 @@ class _$TemplatePropertyCopyWithImpl<$Res, $Val extends TemplateProperty>
           ? _value.validations
           : validations // ignore: cast_nullable_to_non_nullable
               as List<dynamic>?,
+      enums: freezed == enums
+          ? _value.enums
+          : enums // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>?,
     ) as $Val);
   }
 }
@@ -403,7 +450,8 @@ abstract class _$$TemplatePropertyImplCopyWith<$Res>
       int? order,
       bool? readOnly,
       bool? autoEnable,
-      List<dynamic>? validations});
+      List<dynamic>? validations,
+      List<Map<String, dynamic>>? enums});
 }
 
 /// @nodoc
@@ -426,6 +474,7 @@ class __$$TemplatePropertyImplCopyWithImpl<$Res>
     Object? readOnly = freezed,
     Object? autoEnable = freezed,
     Object? validations = freezed,
+    Object? enums = freezed,
   }) {
     return _then(_$TemplatePropertyImpl(
       type: null == type
@@ -464,6 +513,10 @@ class __$$TemplatePropertyImplCopyWithImpl<$Res>
           ? _value._validations
           : validations // ignore: cast_nullable_to_non_nullable
               as List<dynamic>?,
+      enums: freezed == enums
+          ? _value._enums
+          : enums // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>?,
     ));
   }
 }
@@ -480,8 +533,10 @@ class _$TemplatePropertyImpl implements _TemplateProperty {
       this.order,
       this.readOnly,
       this.autoEnable,
-      final List<dynamic>? validations})
-      : _validations = validations;
+      final List<dynamic>? validations,
+      final List<Map<String, dynamic>>? enums})
+      : _validations = validations,
+        _enums = enums;
 
   factory _$TemplatePropertyImpl.fromJson(Map<String, dynamic> json) =>
       _$$TemplatePropertyImplFromJson(json);
@@ -512,9 +567,19 @@ class _$TemplatePropertyImpl implements _TemplateProperty {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<Map<String, dynamic>>? _enums;
+  @override
+  List<Map<String, dynamic>>? get enums {
+    final value = _enums;
+    if (value == null) return null;
+    if (_enums is EqualUnmodifiableListView) return _enums;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'TemplateProperty(type: $type, format: $format, label: $label, value: $value, hidden: $hidden, order: $order, readOnly: $readOnly, autoEnable: $autoEnable, validations: $validations)';
+    return 'TemplateProperty(type: $type, format: $format, label: $label, value: $value, hidden: $hidden, order: $order, readOnly: $readOnly, autoEnable: $autoEnable, validations: $validations, enums: $enums)';
   }
 
   @override
@@ -533,7 +598,8 @@ class _$TemplatePropertyImpl implements _TemplateProperty {
             (identical(other.autoEnable, autoEnable) ||
                 other.autoEnable == autoEnable) &&
             const DeepCollectionEquality()
-                .equals(other._validations, _validations));
+                .equals(other._validations, _validations) &&
+            const DeepCollectionEquality().equals(other._enums, _enums));
   }
 
   @JsonKey(ignore: true)
@@ -548,7 +614,8 @@ class _$TemplatePropertyImpl implements _TemplateProperty {
       order,
       readOnly,
       autoEnable,
-      const DeepCollectionEquality().hash(_validations));
+      const DeepCollectionEquality().hash(_validations),
+      const DeepCollectionEquality().hash(_enums));
 
   @JsonKey(ignore: true)
   @override
@@ -575,7 +642,8 @@ abstract class _TemplateProperty implements TemplateProperty {
       final int? order,
       final bool? readOnly,
       final bool? autoEnable,
-      final List<dynamic>? validations}) = _$TemplatePropertyImpl;
+      final List<dynamic>? validations,
+      final List<Map<String, dynamic>>? enums}) = _$TemplatePropertyImpl;
 
   factory _TemplateProperty.fromJson(Map<String, dynamic> json) =
       _$TemplatePropertyImpl.fromJson;
@@ -599,7 +667,165 @@ abstract class _TemplateProperty implements TemplateProperty {
   @override
   List<dynamic>? get validations;
   @override
+  List<Map<String, dynamic>>? get enums;
+  @override
   @JsonKey(ignore: true)
   _$$TemplatePropertyImplCopyWith<_$TemplatePropertyImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+NavigateToConfig _$NavigateToConfigFromJson(Map<String, dynamic> json) {
+  return _NavigateToConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$NavigateToConfig {
+  String get type => throw _privateConstructorUsedError; // "template" or "form"
+  String get name => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $NavigateToConfigCopyWith<NavigateToConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $NavigateToConfigCopyWith<$Res> {
+  factory $NavigateToConfigCopyWith(
+          NavigateToConfig value, $Res Function(NavigateToConfig) then) =
+      _$NavigateToConfigCopyWithImpl<$Res, NavigateToConfig>;
+  @useResult
+  $Res call({String type, String name});
+}
+
+/// @nodoc
+class _$NavigateToConfigCopyWithImpl<$Res, $Val extends NavigateToConfig>
+    implements $NavigateToConfigCopyWith<$Res> {
+  _$NavigateToConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? name = null,
+  }) {
+    return _then(_value.copyWith(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$NavigateToConfigImplCopyWith<$Res>
+    implements $NavigateToConfigCopyWith<$Res> {
+  factory _$$NavigateToConfigImplCopyWith(_$NavigateToConfigImpl value,
+          $Res Function(_$NavigateToConfigImpl) then) =
+      __$$NavigateToConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String type, String name});
+}
+
+/// @nodoc
+class __$$NavigateToConfigImplCopyWithImpl<$Res>
+    extends _$NavigateToConfigCopyWithImpl<$Res, _$NavigateToConfigImpl>
+    implements _$$NavigateToConfigImplCopyWith<$Res> {
+  __$$NavigateToConfigImplCopyWithImpl(_$NavigateToConfigImpl _value,
+      $Res Function(_$NavigateToConfigImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? name = null,
+  }) {
+    return _then(_$NavigateToConfigImpl(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$NavigateToConfigImpl implements _NavigateToConfig {
+  const _$NavigateToConfigImpl({required this.type, required this.name});
+
+  factory _$NavigateToConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NavigateToConfigImplFromJson(json);
+
+  @override
+  final String type;
+// "template" or "form"
+  @override
+  final String name;
+
+  @override
+  String toString() {
+    return 'NavigateToConfig(type: $type, name: $name)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$NavigateToConfigImpl &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, type, name);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$NavigateToConfigImplCopyWith<_$NavigateToConfigImpl> get copyWith =>
+      __$$NavigateToConfigImplCopyWithImpl<_$NavigateToConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$NavigateToConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _NavigateToConfig implements NavigateToConfig {
+  const factory _NavigateToConfig(
+      {required final String type,
+      required final String name}) = _$NavigateToConfigImpl;
+
+  factory _NavigateToConfig.fromJson(Map<String, dynamic> json) =
+      _$NavigateToConfigImpl.fromJson;
+
+  @override
+  String get type;
+  @override // "template" or "form"
+  String get name;
+  @override
+  @JsonKey(ignore: true)
+  _$$NavigateToConfigImplCopyWith<_$NavigateToConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

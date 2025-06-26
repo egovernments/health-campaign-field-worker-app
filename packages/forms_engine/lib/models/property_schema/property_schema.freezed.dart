@@ -51,6 +51,9 @@ mixin _$PropertySchema {
   String? get actionLabel => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   List<ValidationRule>? get validations => throw _privateConstructorUsedError;
+  bool? get includeInForm => throw _privateConstructorUsedError;
+  bool? get includeInSummary => throw _privateConstructorUsedError;
+  NavigateToConfig? get navigateTo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -94,9 +97,13 @@ abstract class $PropertySchemaCopyWith<$Res> {
       int? order,
       String? actionLabel,
       String? description,
-      List<ValidationRule>? validations});
+      List<ValidationRule>? validations,
+      bool? includeInForm,
+      bool? includeInSummary,
+      NavigateToConfig? navigateTo});
 
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
+  $NavigateToConfigCopyWith<$Res>? get navigateTo;
 }
 
 /// @nodoc
@@ -140,6 +147,9 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? actionLabel = freezed,
     Object? description = freezed,
     Object? validations = freezed,
+    Object? includeInForm = freezed,
+    Object? includeInSummary = freezed,
+    Object? navigateTo = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -254,6 +264,18 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.validations
           : validations // ignore: cast_nullable_to_non_nullable
               as List<ValidationRule>?,
+      includeInForm: freezed == includeInForm
+          ? _value.includeInForm
+          : includeInForm // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      includeInSummary: freezed == includeInSummary
+          ? _value.includeInSummary
+          : includeInSummary // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      navigateTo: freezed == navigateTo
+          ? _value.navigateTo
+          : navigateTo // ignore: cast_nullable_to_non_nullable
+              as NavigateToConfig?,
     ) as $Val);
   }
 
@@ -266,6 +288,18 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
 
     return $DisplayBehaviorCopyWith<$Res>(_value.displayBehavior!, (value) {
       return _then(_value.copyWith(displayBehavior: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $NavigateToConfigCopyWith<$Res>? get navigateTo {
+    if (_value.navigateTo == null) {
+      return null;
+    }
+
+    return $NavigateToConfigCopyWith<$Res>(_value.navigateTo!, (value) {
+      return _then(_value.copyWith(navigateTo: value) as $Val);
     });
   }
 }
@@ -308,10 +342,15 @@ abstract class _$$PropertySchemaImplCopyWith<$Res>
       int? order,
       String? actionLabel,
       String? description,
-      List<ValidationRule>? validations});
+      List<ValidationRule>? validations,
+      bool? includeInForm,
+      bool? includeInSummary,
+      NavigateToConfig? navigateTo});
 
   @override
   $DisplayBehaviorCopyWith<$Res>? get displayBehavior;
+  @override
+  $NavigateToConfigCopyWith<$Res>? get navigateTo;
 }
 
 /// @nodoc
@@ -353,6 +392,9 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
     Object? actionLabel = freezed,
     Object? description = freezed,
     Object? validations = freezed,
+    Object? includeInForm = freezed,
+    Object? includeInSummary = freezed,
+    Object? navigateTo = freezed,
   }) {
     return _then(_$PropertySchemaImpl(
       type: null == type
@@ -467,6 +509,18 @@ class __$$PropertySchemaImplCopyWithImpl<$Res>
           ? _value._validations
           : validations // ignore: cast_nullable_to_non_nullable
               as List<ValidationRule>?,
+      includeInForm: freezed == includeInForm
+          ? _value.includeInForm
+          : includeInForm // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      includeInSummary: freezed == includeInSummary
+          ? _value.includeInSummary
+          : includeInSummary // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      navigateTo: freezed == navigateTo
+          ? _value.navigateTo
+          : navigateTo // ignore: cast_nullable_to_non_nullable
+              as NavigateToConfig?,
     ));
   }
 }
@@ -505,7 +559,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
       this.order,
       this.actionLabel,
       this.description,
-      final List<ValidationRule>? validations})
+      final List<ValidationRule>? validations,
+      this.includeInForm,
+      this.includeInSummary,
+      this.navigateTo})
       : _properties = properties,
         _enums = enums,
         _conditions = conditions,
@@ -605,8 +662,15 @@ class _$PropertySchemaImpl implements _PropertySchema {
   }
 
   @override
+  final bool? includeInForm;
+  @override
+  final bool? includeInSummary;
+  @override
+  final NavigateToConfig? navigateTo;
+
+  @override
   String toString() {
-    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations)';
+    return 'PropertySchema(type: $type, readOnly: $readOnly, displayOnly: $displayOnly, hidden: $hidden, properties: $properties, enums: $enums, schemaCode: $schemaCode, systemDate: $systemDate, charCount: $charCount, format: $format, startDate: $startDate, endDate: $endDate, minValue: $minValue, maxValue: $maxValue, minLength: $minLength, maxLength: $maxLength, helpText: $helpText, tooltip: $tooltip, innerLabel: $innerLabel, label: $label, isMultiSelect: $isMultiSelect, value: $value, displayBehavior: $displayBehavior, conditions: $conditions, order: $order, actionLabel: $actionLabel, description: $description, validations: $validations, includeInForm: $includeInForm, includeInSummary: $includeInSummary, navigateTo: $navigateTo)';
   }
 
   @override
@@ -660,7 +724,13 @@ class _$PropertySchemaImpl implements _PropertySchema {
             (identical(other.description, description) ||
                 other.description == description) &&
             const DeepCollectionEquality()
-                .equals(other._validations, _validations));
+                .equals(other._validations, _validations) &&
+            (identical(other.includeInForm, includeInForm) ||
+                other.includeInForm == includeInForm) &&
+            (identical(other.includeInSummary, includeInSummary) ||
+                other.includeInSummary == includeInSummary) &&
+            (identical(other.navigateTo, navigateTo) ||
+                other.navigateTo == navigateTo));
   }
 
   @JsonKey(ignore: true)
@@ -694,7 +764,10 @@ class _$PropertySchemaImpl implements _PropertySchema {
         order,
         actionLabel,
         description,
-        const DeepCollectionEquality().hash(_validations)
+        const DeepCollectionEquality().hash(_validations),
+        includeInForm,
+        includeInSummary,
+        navigateTo
       ]);
 
   @JsonKey(ignore: true)
@@ -743,7 +816,10 @@ abstract class _PropertySchema implements PropertySchema {
       final int? order,
       final String? actionLabel,
       final String? description,
-      final List<ValidationRule>? validations}) = _$PropertySchemaImpl;
+      final List<ValidationRule>? validations,
+      final bool? includeInForm,
+      final bool? includeInSummary,
+      final NavigateToConfig? navigateTo}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
       _$PropertySchemaImpl.fromJson;
@@ -806,6 +882,12 @@ abstract class _PropertySchema implements PropertySchema {
   String? get description;
   @override
   List<ValidationRule>? get validations;
+  @override
+  bool? get includeInForm;
+  @override
+  bool? get includeInSummary;
+  @override
+  NavigateToConfig? get navigateTo;
   @override
   @JsonKey(ignore: true)
   _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
@@ -1330,5 +1412,161 @@ abstract class _DisplayBehavior implements DisplayBehavior {
   @override
   @JsonKey(ignore: true)
   _$$DisplayBehaviorImplCopyWith<_$DisplayBehaviorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+NavigateToConfig _$NavigateToConfigFromJson(Map<String, dynamic> json) {
+  return _NavigateToConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$NavigateToConfig {
+  String get type => throw _privateConstructorUsedError; // "template" or "form"
+  String get name => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $NavigateToConfigCopyWith<NavigateToConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $NavigateToConfigCopyWith<$Res> {
+  factory $NavigateToConfigCopyWith(
+          NavigateToConfig value, $Res Function(NavigateToConfig) then) =
+      _$NavigateToConfigCopyWithImpl<$Res, NavigateToConfig>;
+  @useResult
+  $Res call({String type, String name});
+}
+
+/// @nodoc
+class _$NavigateToConfigCopyWithImpl<$Res, $Val extends NavigateToConfig>
+    implements $NavigateToConfigCopyWith<$Res> {
+  _$NavigateToConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? name = null,
+  }) {
+    return _then(_value.copyWith(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$NavigateToConfigImplCopyWith<$Res>
+    implements $NavigateToConfigCopyWith<$Res> {
+  factory _$$NavigateToConfigImplCopyWith(_$NavigateToConfigImpl value,
+          $Res Function(_$NavigateToConfigImpl) then) =
+      __$$NavigateToConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String type, String name});
+}
+
+/// @nodoc
+class __$$NavigateToConfigImplCopyWithImpl<$Res>
+    extends _$NavigateToConfigCopyWithImpl<$Res, _$NavigateToConfigImpl>
+    implements _$$NavigateToConfigImplCopyWith<$Res> {
+  __$$NavigateToConfigImplCopyWithImpl(_$NavigateToConfigImpl _value,
+      $Res Function(_$NavigateToConfigImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? name = null,
+  }) {
+    return _then(_$NavigateToConfigImpl(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$NavigateToConfigImpl implements _NavigateToConfig {
+  const _$NavigateToConfigImpl({required this.type, required this.name});
+
+  factory _$NavigateToConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NavigateToConfigImplFromJson(json);
+
+  @override
+  final String type;
+// "template" or "form"
+  @override
+  final String name;
+
+  @override
+  String toString() {
+    return 'NavigateToConfig(type: $type, name: $name)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$NavigateToConfigImpl &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, type, name);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$NavigateToConfigImplCopyWith<_$NavigateToConfigImpl> get copyWith =>
+      __$$NavigateToConfigImplCopyWithImpl<_$NavigateToConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$NavigateToConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _NavigateToConfig implements NavigateToConfig {
+  const factory _NavigateToConfig(
+      {required final String type,
+      required final String name}) = _$NavigateToConfigImpl;
+
+  factory _NavigateToConfig.fromJson(Map<String, dynamic> json) =
+      _$NavigateToConfigImpl.fromJson;
+
+  @override
+  String get type;
+  @override // "template" or "form"
+  String get name;
+  @override
+  @JsonKey(ignore: true)
+  _$$NavigateToConfigImplCopyWith<_$NavigateToConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

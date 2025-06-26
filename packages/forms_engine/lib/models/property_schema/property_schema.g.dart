@@ -48,6 +48,12 @@ _$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
       validations: (json['validations'] as List<dynamic>?)
           ?.map((e) => ValidationRule.fromJson(e as Map<String, dynamic>))
           .toList(),
+      includeInForm: json['includeInForm'] as bool?,
+      includeInSummary: json['includeInSummary'] as bool?,
+      navigateTo: json['navigateTo'] == null
+          ? null
+          : NavigateToConfig.fromJson(
+              json['navigateTo'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$PropertySchemaImplToJson(
@@ -91,6 +97,9 @@ Map<String, dynamic> _$$PropertySchemaImplToJson(
   writeNotNull('description', instance.description);
   writeNotNull(
       'validations', instance.validations?.map((e) => e.toJson()).toList());
+  writeNotNull('includeInForm', instance.includeInForm);
+  writeNotNull('includeInSummary', instance.includeInSummary);
+  writeNotNull('navigateTo', instance.navigateTo?.toJson());
   return val;
 }
 
@@ -99,7 +108,7 @@ const _$PropertySchemaTypeEnumMap = {
   PropertySchemaType.string: 'string',
   PropertySchemaType.integer: 'integer',
   PropertySchemaType.boolean: 'boolean',
-  PropertySchemaType.productVariant: 'productVariant',
+  PropertySchemaType.dynamic: 'dynamic',
 };
 
 const _$PropertySchemaFormatEnumMap = {
@@ -167,3 +176,17 @@ const _$FormulaBehaviorEnumMap = {
   FormulaBehavior.show: 'show',
   FormulaBehavior.hide: 'hide',
 };
+
+_$NavigateToConfigImpl _$$NavigateToConfigImplFromJson(
+        Map<String, dynamic> json) =>
+    _$NavigateToConfigImpl(
+      type: json['type'] as String,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$$NavigateToConfigImplToJson(
+        _$NavigateToConfigImpl instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'name': instance.name,
+    };

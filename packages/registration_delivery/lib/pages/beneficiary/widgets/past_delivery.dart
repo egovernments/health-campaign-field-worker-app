@@ -6,6 +6,7 @@ import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -14,19 +15,21 @@ import '../../../widgets/table_card/table_card.dart';
 
 // This function builds a table with the given data and headers
 Widget buildTableContent(
-    DeliverInterventionState deliverInterventionState,
+    RegistrationWrapperState state,
     BuildContext context,
     List<ProductVariantModel>? variant,
     IndividualModel? individualModel,
     HouseholdModel? householdModel,
     ) {
+
+  final deliverInterventionState = state.deliveryWrapper;
   // Calculate the current cycle. If deliverInterventionState.cycle is negative, set it to 0.
   final currentCycle =
-  deliverInterventionState.cycle >= 0 ? deliverInterventionState.cycle : 0;
+  ( deliverInterventionState?.cycle ??0) >= 0 ? deliverInterventionState?.cycle : 0;
 
   // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
   final currentDose =
-  deliverInterventionState.dose >= 0 ? deliverInterventionState.dose : 0;
+  (deliverInterventionState?.dose??0) >= 0 ? deliverInterventionState?.dose : 0;
   final localizations = RegistrationDeliveryLocalization.of(context);
 
   // Defining a list of table headers for resource popup
@@ -47,7 +50,7 @@ Widget buildTableContent(
   final ProjectTypeModel projectType =
   RegistrationDeliverySingleton().projectType!;
   final item =
-  projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
+  projectType.cycles?[currentCycle ?? 1 - 1].deliveries?[currentDose?? 1 - 1];  //todo: need to check again for cycles
 
   return Container(
     padding: const EdgeInsets.only(
@@ -120,7 +123,7 @@ Widget buildTableContent(
                         ?.indexOf(e) ==
                         0
                         ? DigitTableData(
-                      '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState.dose}',
+                      '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState?.dose}',
                       cellKey: 'dose',
                     )
                         : DigitTableData('', cellKey: ''),

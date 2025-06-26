@@ -13,9 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:forms_engine/json_forms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
-import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
-import 'package:registration_delivery/utils/utils.dart';
+
 import '../../widgets/localized.dart';
 import '../models/property_schema/property_schema.dart';
 import '../models/schema_object/schema_object.dart';
@@ -25,12 +23,16 @@ import '../utils/utils.dart';
 class FormsRenderPage extends LocalizedStatefulWidget {
   final String pageName;
   final Map<String, dynamic>? defaultValues;
+  final String currentSchemaKey;
+  final List<Map<String, Widget>>? customComponents;
   final bool isSummary;
 
   const FormsRenderPage({
     super.key,
     super.appLocalizations,
+    @QueryParam() this.currentSchemaKey = '',
     @PathParam() required this.pageName,
+    this.customComponents,
     this.defaultValues,
     @QueryParam() this.isSummary = false,
   });
@@ -45,14 +47,14 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     return Scaffold(
       body: BlocBuilder<FormsBloc, FormsState>(
         builder: (context, state) {
-          final schemaObject = state.schema;
+          final schemaObject = state.cachedSchemas[widget.currentSchemaKey];
           if (schemaObject == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // if (widget.isSummary) {
-          //   return _buildSummaryPage(context, schemaObject);
-          // }
+          if (widget.isSummary) {
+            return _buildSummaryPage(context, schemaObject);
+          }
 
           final schema = schemaObject.pages[widget.pageName];
 
@@ -97,21 +99,16 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               .translate(schema.actionLabel ?? 'Submit'),
                       onPressed: () {
                         // 1. Get visible keys only (skip hidden fields)
-                        final currentKeys = <String>[];
-                        final properties = schema.properties ?? {};
-                        final count =
-                            widget.defaultValues?['count'] as int? ?? 0;
-
-                        properties.forEach((key, value) {
-                          if (key == 'resourceCard' && !isHidden(value)) {
-                            for (int i = 0; i < count; i++) {
-                              currentKeys.add('resourceCard_$i');
-                              currentKeys.add('quantityDistributed_$i');
-                            }
-                          } else if (!isHidden(value)) {
-                            currentKeys.add(key);
-                          }
-                        });
+                        final currentKeys = schema.properties?.entries
+                                .where((entry) {
+                                  final isVisible = !isHidden(entry.value);
+                                  final includeInForm =
+                                      entry.value.includeInForm == true;
+                                  return isVisible || includeInForm;
+                                })
+                                .map((entry) => entry.key)
+                                .toList() ??
+                            [];
 
 // 2. Mark all visible controls as touched and revalidate
                         for (final key in currentKeys) {
@@ -182,7 +179,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                         context.read<FormsBloc>().add(
                               FormsUpdateEvent(
-                                schemaObject.copyWith(
+                                schemaKey: widget.currentSchemaKey,
+                                schema: schemaObject.copyWith(
                                   pages: Map.fromEntries(
                                     schemaObject.pages.entries.map(
                                       (entry) => MapEntry(
@@ -216,19 +214,32 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
 
                         if ((index) < schemaObject.pages.length - 1) {
                           context.router.push(FormsRenderRoute(
+                            customComponents: widget.customComponents,
+                            currentSchemaKey: widget.currentSchemaKey,
                             pageName: schemaObject.pages.entries
                                 .elementAt(index + 1)
                                 .key,
                             defaultValues: widget.defaultValues,
                           ));
                         } else {
-                          context.read<FormsBloc>().add(
-                                FormsSubmitEvent(updatedSchemaObject),
-                              );
+                          if (schemaObject.summary) {
+                            context.router.push(FormsRenderRoute(
+                              customComponents: widget.customComponents,
+                              currentSchemaKey: widget.currentSchemaKey,
+                              pageName: '',
+                              isSummary: true,
+                              defaultValues: widget.defaultValues,
+                            ));
+                          } else {
+                            context.read<FormsBloc>().add(FormsSubmitEvent(
+                                schemaKey: widget.currentSchemaKey));
 
-                          context.router.popUntil((route) {
-                            return route.settings.name != FormsRenderRoute.name;
-                          });
+                            // Pop all form pages (FormsRenderRoute)
+                            context.router.popUntil((route) {
+                              return route.settings.name !=
+                                  FormsRenderRoute.name;
+                            });
+                          }
                         }
                       },
                       type: DigitButtonType.primary,
@@ -269,28 +280,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                       ],
                     ],
                     JsonForms(
-                      propertySchema:
-                          schema.properties?.containsKey("resourceCard") ==
-                                  false
-                              ? schema
-                              // old
-                              // : cloneAndReplaceResourceCard(
-                              //     baseSchema: schema,
-                              //     cloneFromKey: "resourceCard",
-                              //     newPropertyKeys: List.generate(
-                              //         widget.defaultValues?['count'] ?? 0,
-                              //         (i) => 'resourceCard_$i').toList()),
-
-                              : cloneAndReplaceResourceCard(
-                                  baseSchema: schema,
-                                  cloneFromKey: 'resourceCard',
-                                  count: widget.defaultValues?['count'] ?? 0,
-                                ),
-                      childrens: const [
-                        {
-                          "resourceCard": Text("Hello"),
-                        }
-                      ],
+                      propertySchema: schema,
+                      childrens: widget.customComponents,
                       defaultValues: const {
                         // 'locality': context.boundary.code,
                       },
@@ -318,161 +309,114 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     );
   }
 
-  // PropertySchema cloneAndReplaceResourceCard({
-  //   required PropertySchema baseSchema,
-  //   required List<String> newPropertyKeys,
-  //   required String cloneFromKey, // e.g. 'resourceCard'
-  // }) {
-  //   // Clone the original properties
-  //   final Map<String, PropertySchema> newProperties =
-  //       Map.from(baseSchema.properties ?? {});
+  Widget _buildSummaryPage(BuildContext context, SchemaObject schemaObject) {
+    return ScrollableContent(
+        enableFixedDigitButton: true,
+        header: const Padding(
+          padding: EdgeInsets.all(spacer2),
+          child: BackNavigationHelpHeaderWidget(showBackNavigation: true),
+        ),
+        footer: DigitCard(
+          margin: const EdgeInsets.only(top: spacer2),
+          children: [
+            DigitButton(
+              mainAxisSize: MainAxisSize.max,
+              label: localizations.translate('CORE_COMMON_SUBMIT'),
+              onPressed: () {
+                context
+                    .read<FormsBloc>()
+                    .add(FormsSubmitEvent(schemaKey: widget.currentSchemaKey));
 
-  //   // Get the property to clone
-  //   final baseProperty = newProperties[cloneFromKey];
-  //   if (baseProperty == null) {
-  //     throw Exception('Base property "$cloneFromKey" not found in schema.');
-  //   }
+                // Pop all form pages (FormsRenderRoute)
+                context.router.popUntil((route) {
+                  return route.settings.name != FormsRenderRoute.name;
+                });
+              },
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+            ),
+          ],
+        ),
+        children: [
+          for (final entry in schemaObject.pages.entries)
+            DigitCard(
+              margin: const EdgeInsets.all(spacer2),
+              children: [
+                LabelValueSummary(
+                  padding: EdgeInsets.zero,
+                  heading:
+                      localizations.translate(entry.value.label ?? entry.key),
+                  headingStyle: Theme.of(context)
+                      .digitTextTheme(context)
+                      .headingL
+                      .copyWith(
+                        color: Theme.of(context).colorTheme.primary.primary2,
+                      ),
+                  items: _renderSummaryLabelValueItems(entry.value),
+                ),
+              ],
+            ),
+          const SizedBox(height: spacer2),
+          Center(
+            child: Text(
+              'version ${schemaObject.version}',
+              style: Theme.of(context).digitTextTheme(context).bodyXS.copyWith(
+                    color: Theme.of(context).colorTheme.text.disabled,
+                  ),
+            ),
+          ),
+        ]);
+  }
 
-  //   // Remove the original property
-  //   newProperties.remove(cloneFromKey);
+  List<LabelValueItem> _renderSummaryLabelValueItems(PropertySchema schema) {
+    final properties = schema.properties ?? {};
+    final dateFormatter = DateFormat('dd MMM yyyy');
 
-  //   // Add new cloned fields
-  //   for (final key in newPropertyKeys) {
-  //     newProperties[key] = baseProperty.copyWith();
-  //   }
+    return properties.entries
+        .where((entry) => entry.value.includeInSummary != false)
+        .map((entry) {
+      final label = localizations.translate(entry.value.label ?? entry.key);
+      final rawValue = entry.value.value;
 
-  //   // Return a new schema with updated properties
-  //   return baseSchema.copyWith(properties: newProperties);
-  // }
+      String displayValue;
 
-// working code
-  // PropertySchema cloneAndReplaceResourceCard({
-  //   required PropertySchema baseSchema,
-  //   required List<String> newPropertyKeys,
-  //   required String cloneFromKey,
-  // }) {
-  //   final originalProps = baseSchema.properties ?? {};
-
-  //   final newOrderedProps = <String, PropertySchema>{};
-
-  //   // To track where 'resourceCard' appeared in the order
-  //   int insertIndex = 0;
-  //   bool foundResourceCard = false;
-
-  //   final keys = originalProps.keys.toList();
-
-  //   for (var i = 0; i < keys.length; i++) {
-  //     final key = keys[i];
-
-  //     if (key == cloneFromKey) {
-  //       insertIndex = newOrderedProps.length;
-  //       foundResourceCard = true;
-  //       continue; // Skip adding 'resourceCard'
-  //     }
-
-  //     newOrderedProps[key] = originalProps[key]!;
-  //   }
-
-  //   if (!foundResourceCard) {
-  //     throw Exception('Base property "$cloneFromKey" not found in schema.');
-  //   }
-
-  //   // Define a new default property for cloning
-  //   const defaultSelectProperty = PropertySchema(
-  //     type: PropertySchemaType.productVariant,
-  //     format: PropertySchemaFormat.select,
-  //     enums: [],
-  //     label: null,
-  //     isMultiSelect: false,
-  //     validations: [],
-  //     readOnly: false,
-  //     hidden: false,
-  //     displayOnly: false,
-  //   );
-
-  //   // Insert new keys at the original resourceCard position
-  //   final entriesBefore = newOrderedProps.entries.take(insertIndex);
-  //   final entriesAfter = newOrderedProps.entries.skip(insertIndex);
-
-  //   final Map<String, PropertySchema> orderedWithClones = {
-  //     for (final e in entriesBefore) e.key: e.value,
-  //     for (final key in newPropertyKeys) key: defaultSelectProperty,
-  //     for (final e in entriesAfter) e.key: e.value,
-  //   };
-
-  //   return baseSchema.copyWith(properties: orderedWithClones);
-  // }
-
-  // end
-
-  PropertySchema cloneAndReplaceResourceCard({
-    required PropertySchema baseSchema,
-    required int count,
-    required String cloneFromKey,
-  }) {
-    final originalProps = baseSchema.properties ?? {};
-    final newOrderedProps = <String, PropertySchema>{};
-
-    int insertIndex = 0;
-    bool foundResourceCard = false;
-
-    final keys = originalProps.keys.toList();
-
-    for (int i = 0; i < keys.length; i++) {
-      final key = keys[i];
-
-      if (key == cloneFromKey) {
-        insertIndex = newOrderedProps.length;
-        foundResourceCard = true;
-        continue;
+      if (rawValue is List) {
+        displayValue = rawValue
+            .map((e) => localizations.translate(e.toString()))
+            .join(', ');
+      } else if (rawValue is String && isDotSeparatedKey(rawValue)) {
+        displayValue = rawValue
+            .split('.')
+            .map((e) => localizations.translate(e.trim()))
+            .join(', ');
+      } else if (rawValue is DateTime) {
+        displayValue = dateFormatter.format(rawValue);
+      } else if (rawValue is String && isDateTime(rawValue)) {
+        displayValue = dateFormatter.format(DateTime.parse(rawValue));
+      } else if (rawValue is String && isDateLike(rawValue)) {
+        try {
+          final parsed = parseDate(rawValue);
+          displayValue = dateFormatter.format(parsed);
+        } catch (_) {
+          displayValue = localizations.translate(rawValue);
+        }
+      } else if (rawValue == null ||
+          (rawValue is String && rawValue.trim().isEmpty) ||
+          (rawValue is List && rawValue.isEmpty)) {
+        // ✅ Null values show "--"
+        displayValue = '--';
+      } else {
+        displayValue = localizations.translate(rawValue.toString());
       }
 
-      newOrderedProps[key] = originalProps[key]!;
-    }
-
-    if (!foundResourceCard) {
-      throw Exception('Base property "$cloneFromKey" not found in schema.');
-    }
-
-    // const defaultResourceProperty = PropertySchema(
-    //   type: PropertySchemaType.productVariant,
-    //   format: PropertySchemaFormat.select,
-    //   enums: [],
-    //   label: null,
-    //   isMultiSelect: false,
-    //   validations: [],
-    //   readOnly: false,
-    //   hidden: false,
-    //   displayOnly: false,
-    // );
-
-    const defaultQuantityProperty = PropertySchema(
-      type: PropertySchemaType.integer,
-      format: PropertySchemaFormat.numeric,
-      label: null,
-      validations: [],
-      readOnly: false,
-      hidden: false,
-      displayOnly: false,
-    );
-
-    // Build the cloned pairs: resourceCard_i and quantityDistributed_i
-    final Map<String, PropertySchema> clonedPairs = {
-      for (int i = 0; i < count; i++) ...{
-        'resourceCard_$i': defaultResourceProperty,
-        'quantityDistributed_$i': defaultQuantityProperty,
-      }
-    };
-
-    final entriesBefore = newOrderedProps.entries.take(insertIndex);
-    final entriesAfter = newOrderedProps.entries.skip(insertIndex);
-
-    final Map<String, PropertySchema> finalProps = {
-      for (final e in entriesBefore) e.key: e.value,
-      ...clonedPairs,
-      for (final e in entriesAfter) e.key: e.value,
-    };
-
-    return baseSchema.copyWith(properties: finalProps);
+      return LabelValueItem(
+        label: label,
+        value: displayValue,
+        isInline: true,
+        labelFlex: 5,
+        maxLines: 5,
+        padding: const EdgeInsets.symmetric(vertical: spacer1),
+      );
+    }).toList();
   }
 }

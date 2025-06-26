@@ -184,7 +184,7 @@ class FormEntityMapper {
     fieldsMap.forEach((customKey, path) {
       final value = getValueFromMapping(path, formValues, path, context);
       if (value != null && value.toString().trim().isNotEmpty) {
-        fieldsList.add({'key': customKey, 'value': value});
+        fieldsList.add({'key': customKey, 'value': value.toString()});
       }
     });
 
@@ -249,6 +249,21 @@ class FormEntityMapper {
       generatedValues.putIfAbsent(currentModel, () => {})['clientReferenceId'] =
           uuid;
       return uuid;
+    }
+
+    if (instruction.startsWith('__value:')) {
+      final valueStr = instruction.replaceFirst('__value:', '').trim();
+
+      // Try to convert to bool, int, double, or null
+      if (valueStr == 'true') return true;
+      if (valueStr == 'false') return false;
+      if (valueStr == 'null') return null;
+      final intVal = int.tryParse(valueStr);
+      if (intVal != null) return intVal;
+      final doubleVal = double.tryParse(valueStr);
+      if (doubleVal != null) return doubleVal;
+
+      return valueStr; // fallback to string
     }
 
     if (instruction == '__generate:clientAudit') {
@@ -365,6 +380,12 @@ class FormEntityMapper {
           key != null &&
           current.containsKey(key)) {
         current = current[key];
+      } else if (current is List &&
+          current.length == 1 &&
+          current.first is Map<String, dynamic> &&
+          key != null &&
+          (current.first as Map<String, dynamic>).containsKey(key)) {
+        current = (current.first as Map<String, dynamic>)[key];
       } else {
         if (kDebugMode) {
           print('Warning: Key "$key" not found while resolving path "$path".');
@@ -423,8 +444,9 @@ class FormEntityMapper {
         .where((e) => e.value != null && e.value.toString().trim().isNotEmpty)
         .toList();
 
-    final newAdditionalFieldsList =
-        filteredNewFields.map((e) => {'key': e.key, 'value': e.value}).toList();
+    final newAdditionalFieldsList = filteredNewFields
+        .map((e) => {'key': e.key, 'value': e.value.toString()})
+        .toList();
 
     if (existingAdditionalFields != null) {
       // Merge existing additional fields list with new ones, avoid duplicate keys

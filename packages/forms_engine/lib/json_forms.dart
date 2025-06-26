@@ -6,9 +6,6 @@ import 'package:forms_engine/utils/utils.dart';
 import 'package:forms_engine/widgets/product_variant_builder.dart';
 import 'package:forms_engine/widgets/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
-import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
-import 'package:registration_delivery/utils/utils.dart';
 
 import 'helper/form_builder_helper.dart';
 import 'models/property_schema/property_schema.dart';
@@ -33,100 +30,17 @@ class JsonForms extends StatelessWidget {
   }) {
     assert(schema.properties != null);
 
-// old stable one
-    // final Map<String, AbstractControl<dynamic>> controls = {
-    //   for (final entry in schema.properties!.entries)
-    //     if (!isHidden(entry.value))
-    //       entry.key: buildFormControl(
-    //         entry.key,
-    //         entry.value,
-    //         schema,
-    //         defaultLatlng: defaultLatlng,
-    //         defaultValues: defaultValues,
-    //       ),
-    // };
-
-    // return controls;
-
-    final Map<String, AbstractControl<dynamic>> controls = {};
-
-    // working fine with product_key
-
-    // schema.properties!.forEach((key, value) {
-    //   if (key == 'resourceCard') {
-    //     final variants = defaultValues?['variants'] as List<dynamic>? ?? [];
-    //     final productVariants =
-    //         defaultValues?['product'] as List<dynamic>? ?? [];
-    //     final count = defaultValues?['count'] as int? ?? 0;
-
-    //     for (int i = 0; i < count; i++) {
-    //       final dynamicKey = 'resourceCard_$i';
-
-    //       dynamic matchedVariant;
-
-    //       if (i < productVariants.length) {
-    //         final productVariantId = productVariants[i].productVariantId;
-    //         matchedVariant = variants.firstWhereOrNull(
-    //           (v) => v.id == productVariantId,
-    //         );
-    //       }
-
-    //       matchedVariant ??= (variants.isNotEmpty ? variants.last : null);
-
-    //       controls[dynamicKey] = FormControl<dynamic>(value: matchedVariant);
-    //     }
-    //   }
-
-    //   // Skip this block if it's resourceCard
-    //   if (key != 'resourceCard' && !isHidden(value)) {
-    //     controls[key] = buildFormControl(
-    //       key,
-    //       value,
-    //       schema,
-    //       defaultLatlng: defaultLatlng,
-    //       defaultValues: defaultValues,
-    //     );
-    //   }
-    // });
-
-    schema.properties!.forEach((key, value) {
-      if (key == 'resourceCard') {
-        final variants = defaultValues?['variants'] as List<dynamic>? ?? [];
-        final productVariants =
-            defaultValues?['product'] as List<dynamic>? ?? [];
-        final count = defaultValues?['count'] as int? ?? 0;
-
-        for (int i = 0; i < count; i++) {
-          final resourceKey = 'resourceCard_$i';
-          final quantityKey = 'quantityDistributed_$i';
-
-          dynamic matchedVariant;
-
-          if (i < productVariants.length) {
-            final productVariantId = productVariants[i].productVariantId;
-            matchedVariant = variants.firstWhereOrNull(
-              (v) => v.id == productVariantId,
-            );
-          }
-
-          matchedVariant ??= (variants.isNotEmpty ? variants.last : null);
-
-          // Add both resource and quantity controls
-          controls[resourceKey] = FormControl<dynamic>(value: matchedVariant);
-          controls[quantityKey] = FormControl<String>(value: "1"); // or "0"
-        }
-      }
-
-      if (key != 'resourceCard' && !isHidden(value)) {
-        controls[key] = buildFormControl(
-          key,
-          value,
-          schema,
-          defaultLatlng: defaultLatlng,
-          defaultValues: defaultValues,
-        );
-      }
-    });
+    final Map<String, AbstractControl<dynamic>> controls = {
+      for (final entry in schema.properties!.entries)
+        if (!isHidden(entry.value) || entry.value.includeInForm == true)
+          entry.key: buildFormControl(
+            entry.key,
+            entry.value,
+            schema,
+            defaultLatlng: defaultLatlng,
+            defaultValues: defaultValues,
+          ),
+    };
 
     return controls;
   }

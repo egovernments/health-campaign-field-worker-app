@@ -20,6 +20,7 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/localized.dart';
@@ -601,6 +602,7 @@ class _BoundarySelectionPageState
                                               }
                                             },
                                             builder: (field) => LabeledField(
+                                              // capitalizedFirstLetter: false,
                                               label: localizations
                                                   .translate(label),
                                               isRequired: true,

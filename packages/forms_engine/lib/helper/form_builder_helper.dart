@@ -40,12 +40,21 @@ FormControl buildFormControl(
         validators: validators,
       );
 
+    case PropertySchemaType.dynamic:
+      return FormControl<dynamic>();
+
     case PropertySchemaType.string:
       if (format == PropertySchemaFormat.date) {
         return FormControl<DateTime>(
           value: schema.systemDate == true
               ? DateTime.now()
               : parseDateValue(rawValue),
+          validators: validators,
+        );
+      } else if (format == PropertySchemaFormat.idPopulator) {
+        final idNumber = IdGen.i.identifier.toString();
+        return FormControl<String>(
+          value: schema.hidden==true ? "DEFAULT, $idNumber": rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.latLng) {
@@ -55,7 +64,7 @@ FormControl buildFormControl(
         );
       } else if (format == PropertySchemaFormat.locality) {
         return FormControl<String>(
-          value: defaultValues?[name] ?? rawValue?.toString(),
+          value: defaultValues?['locality'] ?? rawValue?.toString(),
           validators: validators,
         );
       } else if (format == PropertySchemaFormat.numeric) {

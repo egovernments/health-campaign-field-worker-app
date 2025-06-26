@@ -376,26 +376,48 @@ class _HomePageState extends LocalizedState<HomePage> {
 
               final registrationSchemaEntry =
                   allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
-              final schemaData = registrationSchemaEntry?['data'];
+              final deliverySchemaEntry =
+                  allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
 
-              if (schemaData != null) {
-                final encodedSchema = json.encode(schemaData);
-                context
-                    .read<FormsBloc>()
-                    .add(FormsEvent.load(schema: encodedSchema));
-                final Map<String, dynamic> rawTemplateMap =
-                    schemaData['templates'];
+              final registrationSchemaData = registrationSchemaEntry?['data'];
+              final deliverySchemaData = deliverySchemaEntry?['data'];
+
+              if (registrationSchemaData != null ||
+                  deliverySchemaData != null) {
+                // Extract templates from both schemas
+                final regTemplatesRaw = registrationSchemaData?['templates'];
+                final delTemplatesRaw = deliverySchemaData?['templates'];
+
+                final Map<String, dynamic> regTemplateMap =
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
+
+                final Map<String, dynamic> delTemplateMap =
+                    delTemplatesRaw is Map<String, dynamic>
+                        ? delTemplatesRaw
+                        : {};
+
                 final templates = {
-                  for (final entry in rawTemplateMap.entries)
+                  for (final entry
+                      in {...regTemplateMap, ...delTemplateMap}.entries)
                     entry.key: TemplateConfig.fromJson(
                         entry.value as Map<String, dynamic>)
                 };
 
+                final registrationConfig = json.encode(registrationSchemaData);
+                final deliveryConfig = json.encode(deliverySchemaData);
+
                 RegistrationDeliverySingleton().setTemplateConfigs(templates);
+                RegistrationDeliverySingleton()
+                    .setRegistrationConfig(registrationConfig);
+                RegistrationDeliverySingleton()
+                    .setDeliveryConfig(deliveryConfig);
               }
-              if (isTriggerLocalisation && schemaData != null) {
+
+              if (isTriggerLocalisation) {
                 final moduleName =
-                    'hcm-${schemaData['name'].toLowerCase()}-${context.selectedProject.referenceID}';
+                    'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
                 triggerLocalization(module: moduleName);
                 isTriggerLocalisation = false;
               }
