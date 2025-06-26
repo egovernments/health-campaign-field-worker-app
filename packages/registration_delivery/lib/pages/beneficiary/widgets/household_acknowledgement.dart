@@ -66,7 +66,7 @@ class HouseholdAcknowledgementPageState
                       ),
                       isDisabled: !(widget.enableViewHousehold ?? false),
                       onPressed: () {
-                        RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(household: householdState.householdMembers.first.household), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue());
+
                         context.router.popUntil((route) => route.settings.name == 'SearchBeneficiaryRoute');
                         context.router.push(HouseholdOverviewRoute());
                       },
@@ -81,12 +81,8 @@ class HouseholdAcknowledgementPageState
                               ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.label ??
                           i18.acknowledgementSuccess.actionLabelText),
                       onPressed: () {
-                        context
-                            .read<SearchHouseholdsBloc>()
-                            .add(const SearchHouseholdsEvent.clear());
-                        final parent = context.router.parent() as StackRouter;
-                        // Pop twice to navigate back to the previous screen
-                        parent.popUntilRoot();
+                        context.read<RegistrationWrapperBloc>().add(const RegistrationWrapperEvent.clear());
+                        context.router.popUntil((route) => route.settings.name == 'SearchBeneficiaryRoute');
                       },
                       type: DigitButtonType.secondary,
                       size: DigitButtonSize.large),

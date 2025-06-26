@@ -127,7 +127,16 @@ class _SearchBeneficiaryPageState
                 projectId: RegistrationDeliverySingleton().selectedProject!.id,
                 selectedIndividual: null,
                 householdWrapper: HouseholdWrapper(
-                    household: householdModel.copyWith(memberCount: 25)),
+                    household: householdModel),
+                beneficiaryType: RegistrationDeliverySingleton()
+                    .beneficiaryType
+                    ?.toValue()));
+          }else{
+            blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
+                projectId: RegistrationDeliverySingleton().selectedProject!.id,
+                selectedIndividual: null,
+                householdWrapper: HouseholdWrapper(
+                    household: blocWrapper.state.householdMembers.first.household),
                 beneficiaryType: RegistrationDeliverySingleton()
                     .beneficiaryType
                     ?.toValue()));
