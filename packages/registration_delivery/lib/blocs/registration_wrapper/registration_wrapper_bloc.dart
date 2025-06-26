@@ -195,13 +195,13 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
           ?.value ?? 1 : 0;
 
       List<ProjectCycle>? campaignCycles = RegistrationDeliverySingleton().selectedProject?.additionalDetails?.projectType?.cycles;
-      ProjectCycle? currentCycle = campaignCycles?.where((c) =>  DateTime.now().millisecondsSinceEpoch <= c.endDate && DateTime.now().millisecondsSinceEpoch >= c.startDate).first;
+      ProjectCycle? currentCycle = campaignCycles?.where((c) =>  DateTime.now().millisecondsSinceEpoch <= c.endDate && DateTime.now().millisecondsSinceEpoch >= c.startDate).firstOrNull;
 
       DeliveryWrapper deliveryState = DeliveryWrapper(
         cycle: lastCycleIndex,
         dose: lastDeliveryIndex,
       );
-      final currentRunningCycle = (campaignCycles?.firstWhere(
+      final currentRunningCycle = (campaignCycles?.firstWhereOrNull(
             (e) =>
         (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
             (e.endDate) > DateTime.now().millisecondsSinceEpoch,
