@@ -85,6 +85,7 @@ class AppConfiguration {
   late List<SearchCLFFilters>? searchCLFFilters;
 
   late List<ReferralReasons>? referralReasons;
+  late List<ManualAttendanceReasons>? manualAttendanceReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
   late PrivacyPolicy? privacyPolicyConfig;
@@ -237,6 +238,12 @@ class SymptomsTypes {
 
 @embedded
 class ReferralReasons {
+  late String code;
+  late String name;
+  late bool active;
+}
+@embedded
+class ManualAttendanceReasons{
   late String code;
   late String name;
   late bool active;

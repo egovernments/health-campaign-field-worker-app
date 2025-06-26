@@ -57,6 +57,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   var entryTime = 0, exitTime = 0;
   var currentSelectedDate = DateTime.now().toString(), selectedSession = 0;
   bool markManualAttendance = false;
+  String? manualAttendanceReason;
+  String? manualAttendanceComment;
 
   @override
   void initState() {
@@ -244,14 +246,15 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                     final scannerBloc =
                                                         context.read<
                                                             DigitScannerBloc>();
-
-                                                    scannerBloc.add(
-                                                      const DigitScannerEvent
-                                                          .handleScanner(
-                                                        barCode: [],
-                                                        qrCode: [],
-                                                      ),
-                                                    );
+                                                    context
+                                                        .read<
+                                                            DigitScannerBloc>()
+                                                        .add(
+                                                          const DigitScannerEvent
+                                                              .handleScanner(
+                                                              barCode: [],
+                                                              qrCode: []),
+                                                        );
 
                                                     var manualMode =
                                                         await Navigator.of(
@@ -275,11 +278,64 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                                     '/qr-scanner'),
                                                       ),
                                                     );
-                                                    if (manualMode != null) {
-                                                      setState(() {
-                                                        markManualAttendance =
-                                                            manualMode;
-                                                      });
+
+                                                    if (manualMode != null &&
+                                                        manualMode == true) {
+                                                      final reasonList =
+                                                          AttendanceSingleton()
+                                                              .manualAttendanceReasons;
+
+                                                      if (reasonList.isEmpty) {
+                                                        await showDialog(
+                                                          context: context,
+                                                          barrierDismissible:
+                                                              false,
+                                                          builder: (ctx) =>
+                                                              Popup(
+                                                            type: PopUpType
+                                                                .simple,
+                                                            title: 'Error',
+                                                            description:
+                                                                'No reasons found. Please sync again.',
+                                                            actions: [
+                                                              DigitButton(
+                                                                label: 'OK',
+                                                                type:
+                                                                    DigitButtonType
+                                                                        .primary,
+                                                                size:
+                                                                    DigitButtonSize
+                                                                        .large,
+                                                                onPressed: () =>
+                                                                    Navigator.of(
+                                                                            ctx)
+                                                                        .pop(),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                        return;
+                                                      }
+
+                                                      final reasonResult =
+                                                          await showManualAttendanceReasonDialog(
+                                                        context: context,
+                                                        reasonList: reasonList,
+                                                      );
+
+                                                      if (reasonResult !=
+                                                          null) {
+                                                        setState(() {
+                                                          markManualAttendance =
+                                                              true;
+                                                          manualAttendanceReason =
+                                                              reasonResult[
+                                                                  'reason'];
+                                                          manualAttendanceComment =
+                                                              reasonResult[
+                                                                  'comment'];
+                                                        });
+                                                      }
                                                     }
                                                   },
                                                   prefixIcon: Icons
@@ -394,6 +450,15 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     : DateTime.now(),
                                 onChange: (String date) {
                                   currentSelectedDate = date;
+                                    final DateTime selectedDate = AttendanceDateTimeManagement.getFormattedDateToDateTime(date)!;
+                                  // ✅ Reset only if selected date is today
+                                  if (AttendanceDateTimeManagement.isToday(
+                                      selectedDate)) {
+                                    markManualAttendance = false;
+                                    manualAttendanceReason = null;
+                                    manualAttendanceComment = null;
+                                  }
+
                                   individualLogBloc!.add(
                                     AttendanceIndividualLogSearchEvent(
                                       attendees: widget.registerModel.attendees!
@@ -1070,5 +1135,112 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
 
     // Return missed attendance days with description
     return "$missedDays${AttendanceLocalization.of(context).translate(i18.attendance.missedAttendanceDescription)}";
+  }
+
+  Future<Map<String, String>?> showManualAttendanceReasonDialog({
+    required BuildContext context,
+    required List<DropdownItem> reasonList,
+  }) async {
+    final form = fb.group(<String, Object>{
+      'reason': FormControl<String>(validators: [Validators.required]),
+      'comment': FormControl<String>(),
+    });
+
+    DropdownItem? selectedReason;
+    bool isOthers = false;
+
+    return showDialog<Map<String, String>>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return StatefulBuilder(builder: (ctx, setState) {
+          final isFormValid = form.valid &&
+              (!isOthers ||
+                  form.control('comment').value?.toString().isNotEmpty == true);
+
+          return Popup(
+            type: PopUpType.simple,
+            title: "Reason for Marking Attendance Manually",
+            description: "Please select the reason for skipping QR scan.",
+            additionalWidgets: [
+              ReactiveForm(
+                formGroup: form,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DigitDropdown(
+                      items: reasonList,
+                      selectedOption: selectedReason,
+                      isSearchable: false,
+                      onSelect: (DropdownItem item) {
+                        setState(() {
+                          selectedReason = item;
+                          form.control('reason').value = item.code;
+                          isOthers = item.name.toLowerCase() == 'others';
+
+                          if (isOthers) {
+                            form
+                                .control('comment')
+                                .setValidators([Validators.required]);
+                          } else {
+                            form.control('comment').clearValidators();
+                          }
+
+                          form.control('comment').updateValueAndValidity();
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    if (isOthers)
+                      DigitTextFormInput(
+                        innerLabel: 'Comment',
+                        isRequired: true,
+                        initialValue: '',
+                        errorMessage: form.control('comment').invalid
+                            ? 'Comment is required'
+                            : null,
+                        onChange: (value) {
+                          form.control('comment').value = value;
+                          setState(() {});
+                        },
+                        maxLength: 250,
+                      ),
+                  ],
+                ),
+              ),
+            ],
+            actions: [
+              DigitButton(
+                label: "Mark Attendance Manually",
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large,
+                isDisabled: !isFormValid,
+                onPressed: () {
+                  form.markAllAsTouched();
+                  if (isFormValid) {
+                    Future.delayed(Duration.zero, () {
+                      Navigator.of(ctx).pop(<String, String>{
+                        'reason': selectedReason?.name ?? '',
+                        'comment': isOthers
+                            ? (form.control('comment').value?.toString() ?? '')
+                            : '',
+                      });
+                    });
+                  }
+                },
+              ),
+              DigitButton(
+                label: "Go Back",
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large,
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              ),
+            ],
+          );
+        });
+      },
+    );
   }
 }
