@@ -67,9 +67,8 @@ class HouseholdAcknowledgementPageState
                       isDisabled: !(widget.enableViewHousehold ?? false),
                       onPressed: () {
                         RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(household: householdState.householdMembers.first.household), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue());
-
-                         context.router
-                            .push(HouseholdOverviewRoute());
+                        context.router.popUntil((route) => route.settings.name == 'SearchBeneficiaryRoute');
+                        context.router.push(HouseholdOverviewRoute());
                       },
                       type: DigitButtonType.primary,
                       size: DigitButtonSize.large),
