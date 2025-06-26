@@ -192,7 +192,7 @@ class RegistrationWrapperBloc extends Bloc<RegistrationWrapperEvent, Registratio
           .where(
               (h) => h.key == AdditionalFieldsType.doseIndex.toValue())
           .firstOrNull
-          ?.value ?? 1 : 1;
+          ?.value ?? 1 : 0;
 
       List<ProjectCycle>? campaignCycles = RegistrationDeliverySingleton().selectedProject?.additionalDetails?.projectType?.cycles;
       ProjectCycle? currentCycle = campaignCycles?.where((c) =>  DateTime.now().millisecondsSinceEpoch <= c.endDate && DateTime.now().millisecondsSinceEpoch >= c.startDate).first;
