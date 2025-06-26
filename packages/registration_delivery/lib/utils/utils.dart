@@ -834,7 +834,7 @@ String getStatus(String selectedFilter) {
 final Map<String, PageRouteInfo> routerMap = {
   'beneficiary-details': BeneficiaryDetailsRoute(),
   'beneficiary-acknowledgement': BeneficiaryAcknowledgementRoute(enableViewHousehold: true),
-  'household-acknowledgement': HouseholdAcknowledgementRoute(),
+  'household-acknowledgement': HouseholdAcknowledgementRoute(enableViewHousehold: true),
   'overview': HouseholdOverviewRoute(),
   // Add more routes here
 };
