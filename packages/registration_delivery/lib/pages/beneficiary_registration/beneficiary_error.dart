@@ -32,6 +32,7 @@ class BeneficiaryErrorPageState extends LocalizedState<BeneficiaryErrorPage> {
         child: PanelCard(
           type: PanelType.error,
           title: localizations.translate('FAILED_TO_REGISTER_BENEFICIARY'),
+          description: localizations.translate('FAILED_TO_REGISTER_BENEFICIARY_DESCRIPTION'),
           actions: [
             DigitButton(
                 label: localizations

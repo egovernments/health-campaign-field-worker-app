@@ -39,8 +39,11 @@ class IdGen {
 }
 
 String? translateIfPresent(String? key, FormLocalization localizations) {
-  if (key == null || key == "") return null;
-  return localizations.translate(key);
+  if (key == null || key == "" || key.trim().isEmpty) return null;
+
+  final value = localizations.translate(key);
+  if(value =="" || value.trim().isEmpty) return null;
+  return value.trim();
 }
 
 TextInputFormatter? getPatternFormatter(List<ValidationRule>? validations) {
