@@ -47,45 +47,32 @@ class _NonMobileUserListPageState
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
     return Scaffold(
-      bottomNavigationBar:
-          DigitCard(margin: const EdgeInsets.only(top: spacer2), children: [
-        DigitButton(
-          mainAxisSize: MainAxisSize.max,
-          label: localizations.translate(
-            i18.common.coreCommonGoback,
-          ),
-          type: DigitButtonType.primary,
-          size: DigitButtonSize.large,
-          onPressed: () {
-            context.router.replace(HomeRoute());
-          },
-        ),
-      ]),
       body: BlocProvider<AttendanceBloc>(
         create: (context) =>
             attendanceBloc!..add(const AttendanceEvents.fetchNonMobileUsers()),
         child: BlocBuilder<AttendanceBloc, AttendanceStates>(
           builder: (context, state) {
             return ScrollableContent(
+              enableFixedDigitButton: true,
               header: const BackNavigationHelpHeaderWidget(
                 showHelp: false,
               ),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(spacer2),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      localizations.translate(
-                        //TODO: TO append the total count of non- system users
-                        i18.nonMobileUser.nonMobileUserLabel,
+              footer: DigitCard(
+                  margin: const EdgeInsets.only(top: spacer2),
+                  children: [
+                    DigitButton(
+                      mainAxisSize: MainAxisSize.max,
+                      label: localizations.translate(
+                        i18.common.coreCommonGoback,
                       ),
-                      style: textTheme.headingXl
-                          ?.copyWith(color: theme.colorScheme.primary),
-                      overflow: TextOverflow.ellipsis,
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large,
+                      onPressed: () {
+                        context.router.replace(HomeRoute());
+                      },
                     ),
-                  ),
-                ),
+                  ]),
+              children: [
                 BlocBuilder<AttendanceBloc, AttendanceStates>(
                     builder: (context, attendanceState) {
                   return attendanceState.maybeWhen(
@@ -94,6 +81,18 @@ class _NonMobileUserListPageState
                         return registers.isNotEmpty
                             ? Column(
                                 children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(spacer2),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        '${localizations.translate(i18.nonMobileUser.nonMobileUserLabel)} (${registers.first.attendees!.length.toString()})',
+                                        style: textTheme.headingXl.copyWith(
+                                            color: theme.colorScheme.primary),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
                                   ...List.generate(
                                       registers.first.attendees!.length, (x) {
                                     return NonMobileUserCard(
@@ -129,8 +128,9 @@ class _NonMobileUserListPageState
                                             localizations: localizations,
                                             textTheme: textTheme);
                                       },
-                                      gender: registers.first.individualList![x]
-                                          .gender!.name,
+                                      gender: localizations.translate(registers
+                                          .first.individualList![x].gender!.name
+                                          .toUpperCase()),
                                       individualId: registers.first
                                           .individualList![x].individualId!,
                                     );
@@ -166,6 +166,6 @@ class _NonMobileUserListPageState
           ).months
         : 0;
 
-    return '$ageInYears YEARS $ageInMonths MONTHS';
+    return '$ageInYears ${localizations.translate('YEARS')} $ageInMonths ${localizations.translate('MONTHS')}';
   }
 }

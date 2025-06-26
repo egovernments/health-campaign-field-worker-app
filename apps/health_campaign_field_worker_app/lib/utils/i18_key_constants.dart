@@ -142,7 +142,7 @@ class Common {
 
   String get qrInventory => 'QR_INVENTORY';
 
-   String get qrAttendance => 'QR_ATTENDANCE';
+  String get qrAttendance => 'QR_ATTENDANCE';
 }
 
 class HomeShowcase {
@@ -1101,7 +1101,8 @@ class NonMobileUser {
   const NonMobileUser();
 
   String get nonMobileUserLabel => 'NON_MOBILE_USER_LABEL';
+
   String get showQrCodeBtnLabel => 'NON_MOBILE_USER_QR_BTN_LABEL';
+
   String get showQrCodeLabel => 'NON_MOBILE_USER_QR_LABEL';
-  String get nonSystemUserDrawerLabel => 'NON_SYSTEM_USER_DRAWER_LABEL';
 }

@@ -55,7 +55,8 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
   ) async {
     emit(const RegisterLoading());
     // Getting attendance registers using a singleton instance
-    final registers = await fetchNonMobileUsers(offSet: 0, limit: 10);
+    final registers = await fetchNonMobileUsers(
+        offSet: 0, limit: 10, fetchOnlyMobileUser: event.fetchOnlyMobileUser);
     add(AttendanceEvents.loadAttendanceRegisters(
         registers: registers!, limit: 10, offset: 0));
   }
@@ -194,7 +195,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
       var ind = individualList.where((i) => i.id == a.individualId).firstOrNull;
       return a.copyWith(
         name: ind?.name?.givenName,
-        individualId: ind?.individualId,
+        individualId: ind?.id,
         identifierID: ind?.identifiers?.firstOrNull?.identifierId,
         individualNumber: ind?.individualId,
       );
@@ -265,7 +266,11 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
         .any((element) => element.time == logTime && element.type == type);
   }
 
-  fetchNonMobileUsers({required int offSet, required int limit}) async {
+  Future<List<AttendanceRegisterModel>> fetchNonMobileUsers({
+    required int offSet,
+    required int limit,
+    bool? fetchOnlyMobileUser,
+  }) async {
     final registers = await attendanceDataRepository?.search(
       AttendanceRegisterSearchModel(
         limit: limit,
@@ -277,40 +282,75 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     final List<AttendanceRegisterModel> nonMobileUserRegister = [];
 
     for (var register in registers!) {
+      final allEligibleAttendees = register.attendees
+          ?.where((att) =>
+              att.denrollmentDate == null ||
+              (att.denrollmentDate ?? DateTime.now().millisecondsSinceEpoch) >=
+                  DateTime.now().millisecondsSinceEpoch)
+          .toList();
+
+      final filteredAttendeeIds =
+          allEligibleAttendees?.map((a) => a.individualId!).toList();
+
       final individualList = await individualDataRepository?.search(
-            IndividualSearchModel(
-              id: register.attendees
-                  ?.where((att) => (att.denrollmentDate == null ||
-                      (att.denrollmentDate ??
-                              DateTime.now().millisecondsSinceEpoch) >=
-                          DateTime.now().millisecondsSinceEpoch))
-                  .map((a) => a.individualId!)
-                  .toList(),
-            ),
+            IndividualSearchModel(id: filteredAttendeeIds),
           ) ??
           [];
 
-      // Map attendees
-      final attendeeList = register.attendees
-          ?.where((att) => (att.denrollmentDate == null ||
-              (att.denrollmentDate ?? DateTime.now().millisecondsSinceEpoch) >=
-                  DateTime.now().millisecondsSinceEpoch))
-          .map((a) {
-        var ind =
-            individualList.where((i) => i.id == a.individualId).firstOrNull;
+      // Filter individual & attendee lists based on `fetchOnlyMobileUser`
+      List<IndividualModel> filteredIndividuals;
+      List<AttendeeModel> filteredAttendees;
+
+      if (fetchOnlyMobileUser == true) {
+        // Keep only logged-in individual
+        filteredIndividuals = individualList
+            .where(
+                (ind) => ind.id == AttendanceSingleton().loggedInIndividualId)
+            .toList();
+
+        filteredAttendees = allEligibleAttendees
+                ?.where((att) =>
+                    att.individualId ==
+                    AttendanceSingleton().loggedInIndividualId)
+                .toList() ??
+            [];
+      } else {
+        // Exclude logged-in individual
+        filteredIndividuals = individualList
+            .where(
+                (ind) => ind.id != AttendanceSingleton().loggedInIndividualId)
+            .toList();
+
+        filteredAttendees = allEligibleAttendees
+                ?.where((att) =>
+                    att.individualId !=
+                    AttendanceSingleton().loggedInIndividualId)
+                .toList() ??
+            [];
+      }
+
+      // Map filtered attendees with individual info
+      final enrichedAttendees = filteredAttendees.map((a) {
+        var ind = filteredIndividuals.firstWhere(
+          (i) => i.id == a.individualId,
+        );
         return a.copyWith(
-          name: ind?.name?.givenName,
-          individualId: ind?.id,
-          identifierID: ind?.identifiers?.firstOrNull?.identifierId,
-          individualNumber: ind?.individualId,
+          name: ind.name?.givenName,
+          individualId: ind.id,
+          identifierID: ind.identifiers?.firstOrNull?.identifierId,
+          individualNumber: ind.individualId,
         );
       }).toList();
 
-      nonMobileUserRegister.add(register.copyWith(
-          attendees: attendeeList, individualList: individualList));
+      nonMobileUserRegister.add(
+        register.copyWith(
+          attendees: enrichedAttendees,
+          individualList: filteredIndividuals,
+        ),
+      );
     }
 
-    return nonMobileUserRegister ?? [];
+    return nonMobileUserRegister;
   }
 }
 
@@ -319,7 +359,8 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 class AttendanceEvents with _$AttendanceEvents {
   const factory AttendanceEvents.initial() = InitialAttendance;
 
-  const factory AttendanceEvents.fetchNonMobileUsers() = FetchNonMobileUsers;
+  const factory AttendanceEvents.fetchNonMobileUsers(
+      {bool? fetchOnlyMobileUser}) = FetchNonMobileUsers;
 
   const factory AttendanceEvents.loadAttendanceRegisters(
       {required List<AttendanceRegisterModel> registers,

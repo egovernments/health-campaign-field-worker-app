@@ -81,10 +81,6 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
             sql.attendanceRegister.referenceId.equals(
               query.referenceId!,
             ),
-          if (query.attendeeId != null &&
-              targetTag !=
-                  null) // If tag is null query should return the searched attendeeId
-            sql.attendee.individualId.isNotIn([query.attendeeId!]),
           if (targetTag != null) sql.attendee.tag.equals(targetTag),
         ]));
 
