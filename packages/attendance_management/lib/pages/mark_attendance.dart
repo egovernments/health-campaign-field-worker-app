@@ -6,7 +6,6 @@ import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:attendance_management/widgets/custom_attendance_info_card.dart';
 import 'package:attendance_management/widgets/labelled_toggle.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -50,8 +49,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   bool isDialogOpen = false;
   bool isMorning = true;
   static const _commentKey = 'comment';
-  static const _reasonKey = 'reason';
-  static const _reasonCommentKey = 'reason_comment';
   Timer? _debounce;
   late TextEditingController controller, dateController;
   AttendanceIndividualBloc? individualLogBloc;
@@ -157,7 +154,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                           viewOnly,
                           sortType,
                         ) {
-                          final attendees = attendanceCollectionModel ?? [];
+                          final attendees =
+                              attendanceSearchModelList?.isNotEmpty == true
+                                  ? attendanceSearchModelList!
+                                  : attendanceCollectionModel ?? [];
 
                           return ScrollableContent(
                             enableFixedDigitButton: true,
@@ -238,7 +238,18 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                                     entryTime:
                                                                         entryTime,
                                                                     exitTime:
-                                                                        exitTime),
+                                                                        exitTime,
+                                                                    additionalFields: AttendeeAdditionalFields(
+                                                                        version:
+                                                                            1,
+                                                                        fields: [
+                                                                          if (scannedData.manualEntry != null ||
+                                                                              markManualAttendance == true)
+                                                                            AdditionalField('isMarkedManually', scannedData.manualEntry),
+                                                                          if (scannedData.manualEntry == null &&
+                                                                              scannedData.manualEntry == false)
+                                                                            AdditionalField('qrCreatedTime', scannedData.qrCreatedTime)
+                                                                        ])),
                                                               );
                                                         } else {
                                                           Toast.showToast(
@@ -269,10 +280,21 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                           widget.registerModel,
                                                     ),
                                                   ));
-                                                  if (manualMode != null) {
+                                                  if (manualMode != null &&
+                                                      manualMode[
+                                                              'isManualScan'] ==
+                                                          'true') {
                                                     setState(() {
                                                       markManualAttendance =
-                                                          manualMode;
+                                                          manualMode['isManualScan'] ==
+                                                                  'true'
+                                                              ? true
+                                                              : false;
+                                                      manualAttendanceReason =
+                                                          manualMode['reason'];
+                                                      manualAttendanceComment =
+                                                          manualMode[
+                                                              'reasonComment'];
                                                     });
                                                   }
                                                 },
@@ -389,28 +411,19 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     : DateTime.now(),
                                 onChange: (String date) {
                                   currentSelectedDate = date;
-                                  // if (AttendanceDateTimeManagement.isToday(
-                                  //     AttendanceDateTimeManagement
-                                  //         .getFormattedDateToDateTime(
-                                  //             currentSelectedDate)!)) {
-                                  //   setState(() {
-                                  //     markManualAttendance = false;
-                                  //   });
-                                  // } else {
-                                  //   setState(() {
-                                  //     markManualAttendance = true;
-                                  //   });
-                                  // }
-                                  final DateTime selectedDate =
-                                      AttendanceDateTimeManagement
-                                          .getFormattedDateToDateTime(date)!;
-                                  // ✅ Reset only if selected date is today
                                   if (AttendanceDateTimeManagement.isToday(
-                                      selectedDate)) {
-                                    markManualAttendance = false;
-                                    manualAttendanceReason = null;
-                                    manualAttendanceComment = null;
+                                      AttendanceDateTimeManagement
+                                          .getFormattedDateToDateTime(
+                                              currentSelectedDate)!)) {
+                                    setState(() {
+                                      markManualAttendance = false;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      markManualAttendance = true;
+                                    });
                                   }
+
                                   individualLogBloc!.add(
                                     AttendanceIndividualLogSearchEvent(
                                       attendees: widget.registerModel.attendees!
@@ -731,7 +744,15 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                         status: 1.0,
                                                         isSingleSession: false,
                                                         entryTime: entryTime,
-                                                        exitTime: exitTime),
+                                                        exitTime: exitTime,
+                                                        additionalFields:
+                                                            AttendeeAdditionalFields(
+                                                                version: 1,
+                                                                fields: [
+                                                              const AdditionalField(
+                                                                  'isMarkedManually',
+                                                                  true),
+                                                            ])),
                                                   );
                                             },
                                             onMarkAbsent: () {
@@ -747,7 +768,15 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                         status: 0.0,
                                                         isSingleSession: false,
                                                         entryTime: entryTime,
-                                                        exitTime: exitTime),
+                                                        exitTime: exitTime,
+                                                        additionalFields:
+                                                            AttendeeAdditionalFields(
+                                                                version: 1,
+                                                                fields: [
+                                                              const AdditionalField(
+                                                                  'isMarkedManually',
+                                                                  true),
+                                                            ])),
                                                   );
                                             },
                                             viewOnly: viewOnly,
@@ -877,17 +906,26 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             } else {
               if (type == EnumValues.draft.toValue()) {
                 individualLogBloc?.add(SaveAsDraftEvent(
-                  entryTime: entryTime,
-                  exitTime: exitTime,
-                  selectedDate:
-                      AttendanceDateTimeManagement.getFormattedDateToDateTime(
-                          currentSelectedDate)!,
-                  isSingleSession: false,
-                  createOplog: type != EnumValues.draft.toValue(),
-                  latitude: latitude,
-                  longitude: longitude,
-                  comment: form.control(_commentKey).value,
-                ));
+                    entryTime: entryTime,
+                    exitTime: exitTime,
+                    selectedDate:
+                        AttendanceDateTimeManagement.getFormattedDateToDateTime(
+                            currentSelectedDate)!,
+                    isSingleSession: false,
+                    createOplog: type != EnumValues.draft.toValue(),
+                    latitude: latitude,
+                    longitude: longitude,
+                    comment: form.control(_commentKey).value,
+                    additionalDetails: {
+                      if (markManualAttendance)
+                        'isMarkedManually': markManualAttendance,
+                      if (manualAttendanceReason != null &&
+                          manualAttendanceReason!.isNotEmpty)
+                        'manualMarkingReason': manualAttendanceReason,
+                      if (manualAttendanceComment != null &&
+                          manualAttendanceComment!.isNotEmpty)
+                        'manualMarkingComment': manualAttendanceComment
+                    }));
                 Toast.showToast(
                   context,
                   message:
@@ -1137,156 +1175,5 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         .individualId!;
 
     return id;
-  }
-
-  Future<Map<String, String>?> showManualAttendanceReasonDialog({
-    required BuildContext context,
-    required List<DropdownItem> reasonList,
-  }) async {
-    final localizations = AttendanceLocalization.of(context);
-
-    final form = fb.group(<String, Object>{
-      _reasonKey: FormControl<String>(validators: [Validators.required]),
-      _reasonCommentKey: FormControl<String>(),
-    });
-
-    DropdownItem? selectedReason;
-    bool isOthers = false;
-
-    return showDialog<Map<String, String>>(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) {
-        return StatefulBuilder(
-          builder: (ctx, setState) {
-            // Always update selectedReason to match form's current value
-            final selectedCode = form.control(_reasonKey).value;
-            if (selectedCode != null &&
-                (selectedReason == null ||
-                    selectedReason!.code != selectedCode)) {
-              selectedReason =
-                  reasonList.firstWhereOrNull((e) => e.code == selectedCode);
-              isOthers = selectedReason?.name.toLowerCase() == 'others';
-            }
-
-            final isFormValid = form.valid &&
-                (!isOthers ||
-                    form
-                            .control(_reasonCommentKey)
-                            .value
-                            ?.toString()
-                            .isNotEmpty ==
-                        true);
-
-            return ReactiveForm(
-              formGroup: form,
-              child: Popup(
-                title: localizations
-                    .translate(i18.attendance.reasonForManualAttendance),
-                type: PopUpType.simple,
-                titleIcon: Icon(
-                  Icons.warning,
-                  color: Theme.of(context).colorTheme.alert.error,
-                ),
-                description: localizations.translate(
-                  i18.attendance.reasonForManualAttendanceDesc,
-                ),
-                additionalWidgets: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DigitDropdown(
-                        items: reasonList,
-                        selectedOption: selectedReason,
-                        isSearchable: false,
-                        helpText: localizations
-                            .translate(i18.attendance.selectReason),
-                        onSelect: (DropdownItem item) {
-                          // Always update and trigger state change
-                          setState(() {
-                            selectedReason = item;
-                            form.control(_reasonKey).value = item.code;
-
-                            isOthers = item.name.toLowerCase() == 'others';
-
-                            if (isOthers) {
-                              form
-                                  .control(_reasonCommentKey)
-                                  .setValidators([Validators.required]);
-                            } else {
-                              form.control(_reasonCommentKey).clearValidators();
-                            }
-
-                            form
-                                .control(_reasonCommentKey)
-                                .updateValueAndValidity();
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      if (isOthers) ...[
-                        Text(
-                          localizations.translate(i18.attendance.addComment),
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                        ),
-                        const SizedBox(height: 8),
-                        ReactiveTextField<String>(
-                          formControlName: _reasonCommentKey,
-                          maxLength: 250,
-                          onChanged: (_) => setState(() {}),
-                          decoration: InputDecoration(
-                            labelText:
-                                localizations.translate(i18.common.commentKey),
-                            errorText: form.control(_reasonCommentKey).invalid
-                                ? localizations.translate(
-                                    i18.attendance.validationRequiredError)
-                                : null,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
-                actions: [
-                  DigitButton(
-                    label: localizations
-                        .translate(i18.attendance.markAttendanceManually),
-                    type: DigitButtonType.primary,
-                    size: DigitButtonSize.large,
-                    isDisabled: !isFormValid,
-                    onPressed: () {
-                      form.markAllAsTouched();
-                      if (isFormValid) {
-                        Navigator.of(ctx).pop(<String, String>{
-                          _reasonKey: selectedReason?.name ?? '',
-                          _reasonCommentKey: isOthers
-                              ? (form
-                                      .control(_reasonCommentKey)
-                                      .value
-                                      ?.toString() ??
-                                  '')
-                              : '',
-                        });
-                      }
-                    },
-                  ),
-                  DigitButton(
-                    label: localizations.translate(i18.common.coreCommonBack),
-                    type: DigitButtonType.link,
-                    size: DigitButtonSize.large,
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 }
