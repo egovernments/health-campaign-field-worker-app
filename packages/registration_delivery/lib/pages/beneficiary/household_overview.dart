@@ -16,6 +16,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
+import 'package:registration_bloc/models/global_search_params.dart' as reg_params;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:survey_form/survey_form.dart';
@@ -115,8 +116,8 @@ class _HouseholdOverviewPageState
                             child: BlocBuilder<ServiceDefinitionBloc,
                                 ServiceDefinitionState>(
                               builder: (context, serviceDefinitionState) =>
-                                  BlocBuilder<DeliverInterventionBloc,
-                                      DeliverInterventionState>(
+                                  BlocBuilder<RegistrationWrapperBloc,
+                                      RegistrationWrapperState>(
                                 builder: (ctx, deliverInterventionState) =>
                                     state.householdMembers.first.tasks
                                                 ?.lastOrNull?.status ==
@@ -478,8 +479,8 @@ class _HouseholdOverviewPageState
                                         right: spacer2,
                                       ),
                                       child: BlocBuilder<
-                                              DeliverInterventionBloc,
-                                              DeliverInterventionState>(
+                                              RegistrationWrapperBloc,
+                                              RegistrationWrapperState>(
                                           builder:
                                               (ctx, deliverInterventionState) {
                                         bool shouldShowStatus =
@@ -564,8 +565,7 @@ class _HouseholdOverviewPageState
                                                           .beneficiaryDetails
                                                           .status):
                                                       localizations.translate(
-                                                    getStatusAttributes(state,
-                                                            deliverInterventionState)[
+                                                    getStatusAttributes(state)[
                                                         'textLabel'],
                                                   )
                                               },
@@ -1095,8 +1095,7 @@ class _HouseholdOverviewPageState
     return false;
   }
 
-  getStatusAttributes(RegistrationWrapperState state,
-      DeliverInterventionState deliverInterventionState) {
+  getStatusAttributes(RegistrationWrapperState state) {
     var textLabel =
         i18.householdOverView.householdOverViewNotRegisteredIconLabel;
     var color = DigitTheme.instance.colorScheme.error;
@@ -1144,21 +1143,9 @@ class _HouseholdOverviewPageState
     required int limit,
   }) {
     if (mounted) {
-      final bloc = context.read<HouseholdOverviewBloc>();
+      final bloc = context.read<RegistrationWrapperBloc>();
 
-      bloc.add(
-        HouseholdOverviewReloadEvent(
-          projectId: RegistrationDeliverySingleton().projectId!,
-          projectBeneficiaryType:
-              RegistrationDeliverySingleton().beneficiaryType!,
-          offset: offset,
-          limit: limit,
-          searchByName: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : null,
-          selectedFilter: selectedFilters,
-        ),
-      );
+      RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(household: bloc.state.householdMembers.first.household), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue());
     }
   }
 
