@@ -38,6 +38,8 @@ mixin _$AttendanceIndividualEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)
@@ -68,6 +70,8 @@ mixin _$AttendanceIndividualEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -98,6 +102,8 @@ mixin _$AttendanceIndividualEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -357,6 +363,8 @@ class _$AttendanceIndividualLogSearchEventImpl
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)
@@ -391,6 +399,8 @@ class _$AttendanceIndividualLogSearchEventImpl
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -425,6 +435,8 @@ class _$AttendanceIndividualLogSearchEventImpl
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -664,6 +676,8 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)
@@ -698,6 +712,8 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -732,6 +748,8 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -824,6 +842,8 @@ abstract class _$$SaveAsDraftEventImplCopyWith<$Res> {
       DateTime selectedDate,
       bool isSingleSession,
       bool? createOplog,
+      bool isManualEntry,
+      int? qrCreatedTime,
       double? latitude,
       double? longitude,
       String? comment});
@@ -846,6 +866,8 @@ class __$$SaveAsDraftEventImplCopyWithImpl<$Res>
     Object? selectedDate = null,
     Object? isSingleSession = null,
     Object? createOplog = freezed,
+    Object? isManualEntry = null,
+    Object? qrCreatedTime = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? comment = freezed,
@@ -871,6 +893,14 @@ class __$$SaveAsDraftEventImplCopyWithImpl<$Res>
           ? _value.createOplog
           : createOplog // ignore: cast_nullable_to_non_nullable
               as bool?,
+      isManualEntry: null == isManualEntry
+          ? _value.isManualEntry
+          : isManualEntry // ignore: cast_nullable_to_non_nullable
+              as bool,
+      qrCreatedTime: freezed == qrCreatedTime
+          ? _value.qrCreatedTime
+          : qrCreatedTime // ignore: cast_nullable_to_non_nullable
+              as int?,
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -896,6 +926,8 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
       required this.selectedDate,
       this.isSingleSession = false,
       this.createOplog = false,
+      this.isManualEntry = false,
+      this.qrCreatedTime,
       this.latitude,
       this.longitude,
       this.comment});
@@ -913,6 +945,11 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
   @JsonKey()
   final bool? createOplog;
   @override
+  @JsonKey()
+  final bool isManualEntry;
+  @override
+  final int? qrCreatedTime;
+  @override
   final double? latitude;
   @override
   final double? longitude;
@@ -921,7 +958,7 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
 
   @override
   String toString() {
-    return 'AttendanceIndividualEvent.saveAsDraft(entryTime: $entryTime, exitTime: $exitTime, selectedDate: $selectedDate, isSingleSession: $isSingleSession, createOplog: $createOplog, latitude: $latitude, longitude: $longitude, comment: $comment)';
+    return 'AttendanceIndividualEvent.saveAsDraft(entryTime: $entryTime, exitTime: $exitTime, selectedDate: $selectedDate, isSingleSession: $isSingleSession, createOplog: $createOplog, isManualEntry: $isManualEntry, qrCreatedTime: $qrCreatedTime, latitude: $latitude, longitude: $longitude, comment: $comment)';
   }
 
   @override
@@ -939,6 +976,10 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
                 other.isSingleSession == isSingleSession) &&
             (identical(other.createOplog, createOplog) ||
                 other.createOplog == createOplog) &&
+            (identical(other.isManualEntry, isManualEntry) ||
+                other.isManualEntry == isManualEntry) &&
+            (identical(other.qrCreatedTime, qrCreatedTime) ||
+                other.qrCreatedTime == qrCreatedTime) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -947,8 +988,18 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, entryTime, exitTime,
-      selectedDate, isSingleSession, createOplog, latitude, longitude, comment);
+  int get hashCode => Object.hash(
+      runtimeType,
+      entryTime,
+      exitTime,
+      selectedDate,
+      isSingleSession,
+      createOplog,
+      isManualEntry,
+      qrCreatedTime,
+      latitude,
+      longitude,
+      comment);
 
   @JsonKey(ignore: true)
   @override
@@ -980,6 +1031,8 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)
@@ -987,8 +1040,17 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
     required TResult Function(String name) searchAttendees,
     required TResult Function(AttendanceSortType sortType) toggleSort,
   }) {
-    return saveAsDraft(entryTime, exitTime, selectedDate, isSingleSession,
-        createOplog, latitude, longitude, comment);
+    return saveAsDraft(
+        entryTime,
+        exitTime,
+        selectedDate,
+        isSingleSession,
+        createOplog,
+        isManualEntry,
+        qrCreatedTime,
+        latitude,
+        longitude,
+        comment);
   }
 
   @override
@@ -1014,6 +1076,8 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -1021,8 +1085,17 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
     TResult? Function(String name)? searchAttendees,
     TResult? Function(AttendanceSortType sortType)? toggleSort,
   }) {
-    return saveAsDraft?.call(entryTime, exitTime, selectedDate, isSingleSession,
-        createOplog, latitude, longitude, comment);
+    return saveAsDraft?.call(
+        entryTime,
+        exitTime,
+        selectedDate,
+        isSingleSession,
+        createOplog,
+        isManualEntry,
+        qrCreatedTime,
+        latitude,
+        longitude,
+        comment);
   }
 
   @override
@@ -1048,6 +1121,8 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -1057,8 +1132,17 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
     required TResult orElse(),
   }) {
     if (saveAsDraft != null) {
-      return saveAsDraft(entryTime, exitTime, selectedDate, isSingleSession,
-          createOplog, latitude, longitude, comment);
+      return saveAsDraft(
+          entryTime,
+          exitTime,
+          selectedDate,
+          isSingleSession,
+          createOplog,
+          isManualEntry,
+          qrCreatedTime,
+          latitude,
+          longitude,
+          comment);
     }
     return orElse();
   }
@@ -1115,6 +1199,8 @@ abstract class SaveAsDraftEvent implements AttendanceIndividualEvent {
       required final DateTime selectedDate,
       final bool isSingleSession,
       final bool? createOplog,
+      final bool isManualEntry,
+      final int? qrCreatedTime,
       final double? latitude,
       final double? longitude,
       final String? comment}) = _$SaveAsDraftEventImpl;
@@ -1124,6 +1210,8 @@ abstract class SaveAsDraftEvent implements AttendanceIndividualEvent {
   DateTime get selectedDate;
   bool get isSingleSession;
   bool? get createOplog;
+  bool get isManualEntry;
+  int? get qrCreatedTime;
   double? get latitude;
   double? get longitude;
   String? get comment;
@@ -1219,6 +1307,8 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)
@@ -1252,6 +1342,8 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -1285,6 +1377,8 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -1441,6 +1535,8 @@ class _$ToggleSortTypeEventImpl implements ToggleSortTypeEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)
@@ -1474,6 +1570,8 @@ class _$ToggleSortTypeEventImpl implements ToggleSortTypeEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
@@ -1507,6 +1605,8 @@ class _$ToggleSortTypeEventImpl implements ToggleSortTypeEvent {
             DateTime selectedDate,
             bool isSingleSession,
             bool? createOplog,
+            bool isManualEntry,
+            int? qrCreatedTime,
             double? latitude,
             double? longitude,
             String? comment)?
