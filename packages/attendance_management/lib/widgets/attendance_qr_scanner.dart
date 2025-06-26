@@ -1,4 +1,5 @@
 import 'package:attendance_management/utils/date_util_attendance.dart';
+import 'package:attendance_management/utils/utils.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
+import '../blocs/app_localization.dart';
 import '../models/entities/attendance_register.dart';
 import '../models/entities/attendee.dart';
 import '../models/entities/scanned_individual_data.dart';
@@ -46,6 +48,8 @@ class AttendanceDigitScannerPage extends DigitScannerPage {
 class AttendanceScannerPageState extends DigitScannerPageState {
   static const _manualCodeFormKey = 'manualCode';
   late final AttendanceRegisterModel registerModel;
+  static const _reasonKey = 'reason';
+  static const _reasonCommentKey = 'reasonComment';
 
   @override
   void initState() {
@@ -116,7 +120,10 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                   i18.attendance.markAttendanceManually,
                 ),
                 onPressed: () {
-                  Navigator.pop(context, true);
+                  showManualAttendanceReasonDialog(
+                      context: context,
+                      reasonList:
+                          AttendanceSingleton().manualAttendanceReasons);
                 },
                 type: DigitButtonType.link,
                 size: DigitButtonSize.large),
@@ -290,6 +297,165 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     }
 
     return found;
+  }
+
+  Future<Map<String, String>?> showManualAttendanceReasonDialog({
+    required BuildContext context,
+    required List<DropdownItem> reasonList,
+  }) async {
+    final localizations = AttendanceLocalization.of(context);
+
+    final form = fb.group(<String, Object>{
+      _reasonKey: FormControl<String>(validators: [Validators.required]),
+      _reasonCommentKey: FormControl<String>(),
+    });
+
+    return showDialog<Map<String, String>>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setState) {
+            return ReactiveForm(
+              formGroup: form,
+              child: Popup(
+                title: localizations
+                    .translate(i18.attendance.reasonForManualAttendance),
+                type: PopUpType.alert,
+                description: localizations.translate(
+                  i18.attendance.reasonForManualAttendanceDesc,
+                ),
+                additionalWidgets: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ReactiveWrapperField(
+                        formControlName: _reasonKey,
+                        validationMessages: {
+                          'required': (_) => localizations.translate(
+                                i18.common.corecommonRequired,
+                              ),
+                        },
+                        builder: (field) => LabeledField(
+                          label: localizations
+                              .translate(i18.attendance.selectReason),
+                          capitalizedFirstLetter: false,
+                          isRequired: true,
+                          child: DigitDropdown<String>(
+                            selectedOption:
+                                (form.control(_reasonKey).value != null)
+                                    ? DropdownItem(
+                                        name: localizations.translate(
+                                            form.control(_reasonKey).value),
+                                        code: form.control(_reasonKey).value)
+                                    : const DropdownItem(name: '', code: ''),
+                            items: reasonList,
+                            onSelect: (value) {
+                              form.control(_reasonKey).value = value.code;
+                              setState(() {
+                                form.control(_reasonKey).value = value.code;
+
+                                if (form.control(_reasonKey).value ==
+                                    'OTHERS') {
+                                  form
+                                      .control(_reasonCommentKey)
+                                      .setValidators([Validators.required]);
+                                } else {
+                                  form
+                                      .control(_reasonCommentKey)
+                                      .clearValidators();
+                                }
+                                form
+                                    .control(_reasonCommentKey)
+                                    .updateValueAndValidity();
+                              });
+                            },
+                            emptyItemText: localizations
+                                .translate(i18.common.noMatchFound),
+                            errorMessage: form.control(_reasonKey).hasErrors
+                                ? localizations.translate(
+                                    i18.common.corecommonRequired,
+                                  )
+                                : null,
+                          ),
+                        ),
+                      ),
+                      if (form.control(_reasonKey).value == 'OTHERS') ...[
+                        ReactiveWrapperField(
+                          formControlName: _reasonCommentKey,
+                          validationMessages: {
+                            'required': (object) => localizations.translate(
+                                i18.attendance.validationRequiredError),
+                          },
+                          builder: (field) => LabeledField(
+                            capitalizedFirstLetter: false,
+                            label:
+                                localizations.translate(i18.common.commentKey),
+                            isRequired: true,
+                            child: DigitTextAreaFormInput(
+                              errorMessage: field.errorText,
+                              maxLine: 3,
+                              onChange: (value) {
+                                form.control(_reasonCommentKey).value = value;
+                              },
+                              initialValue:
+                                  form.control(_reasonCommentKey).value,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+                actions: [
+                  DigitButton(
+                    label: localizations
+                        .translate(i18.attendance.markAttendanceManually),
+                    type: DigitButtonType.primary,
+                    size: DigitButtonSize.large,
+                    isDisabled: !form.valid,
+                    onPressed: () {
+                      form.markAllAsTouched();
+                      if (form.valid) {
+                        final reason =
+                            form.control(_reasonKey).value?.toString() ?? '';
+                        final reasonComment = reason == 'OTHERS'
+                            ? form
+                                    .control(_reasonCommentKey)
+                                    .value
+                                    ?.toString() ??
+                                ''
+                            : null;
+
+                        final Map<String, String> result = {
+                          'isManualScan': 'true',
+                          _reasonKey: reason,
+                          if (reason == 'OTHERS' && reasonComment != null)
+                            _reasonCommentKey: reasonComment,
+                        };
+                        Navigator.of(ctx).pop();
+
+                        Navigator.of(context).pop(result);
+                      } else {
+                        form.control(_reasonCommentKey).markAllAsTouched();
+                      }
+                    },
+                  ),
+                  DigitButton(
+                    label: localizations.translate(i18.common.coreCommonBack),
+                    type: DigitButtonType.link,
+                    size: DigitButtonSize.large,
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   void showAttendanceSuccessPopup(ScannedIndividualDataModel scannedData) {

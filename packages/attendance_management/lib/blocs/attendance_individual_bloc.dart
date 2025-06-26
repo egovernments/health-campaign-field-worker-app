@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:intl/intl.dart';
 
 import '../utils/typedefs.dart';
 
@@ -155,19 +154,17 @@ class AttendanceIndividualBloc
         if (value.attendanceCollectionModel != null) {
           value.attendanceCollectionModel?.forEach((e) {
             if (e.status != -1) {
-              final Map<String, dynamic> entryDetails = {
-                if (event.latitude != null) "latitude": event.latitude!,
-                if (event.longitude != null) "longitude": event.longitude!,
+              final Map<String, dynamic> entryAdditionalDetails = {
+                if (event.latitude != null)
+                  EnumValues.latitude.toValue(): event.latitude!,
+                if (event.longitude != null)
+                  EnumValues.longitude.toValue(): event.longitude!,
                 if (event.comment != null && event.comment!.isNotEmpty)
                   "comment": event.comment!,
-                "markedBy": event.isManualEntry ? "manual" : "qr",
-                if (!event.isManualEntry && event.qrCreatedTime != null)
-                  "qrCreationTime": DateFormat('dd-MM-yyyy hh:mm a').format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                              event.qrCreatedTime! * 1000)
-                          .toLocal()),
+                EnumValues.boundaryCode.toValue():
+                    AttendanceSingleton().boundary?.code ?? '',
               };
-              final Map<String, dynamic> exitDetails = {
+              final Map<String, dynamic> exitAdditionalDetails = {
                 if (event.latitude != null)
                   EnumValues.latitude.toValue(): event.latitude!,
                 if (event.longitude != null)
@@ -176,13 +173,13 @@ class AttendanceIndividualBloc
                     AttendanceSingleton().boundary?.code ?? '',
                 if (event.comment != null && event.comment!.isNotEmpty)
                   "comment": event.comment!,
-                "markedBy": event.isManualEntry ? "manual" : "qr",
-                if (!event.isManualEntry && event.qrCreatedTime != null)
-                  "qrCreationTime": DateFormat('dd-MM-yyyy hh:mm a').format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                              event.qrCreatedTime! * 1000)
-                          .toLocal()),
               };
+
+              if (event.additionalDetails != null) {
+                entryAdditionalDetails.addAll(event.additionalDetails!);
+                exitAdditionalDetails.addAll(event.additionalDetails!);
+              }
+
               list.addAll([
                 AttendanceLogModel(
                   individualId: e.individualId,
@@ -194,7 +191,7 @@ class AttendanceIndividualBloc
                       : EnumValues.active.toValue(),
                   time: event.entryTime,
                   uploadToServer: (event.createOplog ?? false),
-                  additionalDetails: entryDetails,
+                  additionalDetails: entryAdditionalDetails,
                 ),
                 AttendanceLogModel(
                   individualId: e.individualId,
@@ -206,7 +203,7 @@ class AttendanceIndividualBloc
                       : EnumValues.active.toValue(),
                   time: e.status == 0 ? event.exitTime : event.exitTime,
                   uploadToServer: (event.createOplog ?? false),
-                  additionalDetails: exitDetails,
+                  additionalDetails: exitAdditionalDetails,
                 )
               ]);
             }
@@ -241,7 +238,8 @@ class AttendanceIndividualBloc
         if (event.name.isNotEmpty && event.name.trim().length >= 2) {
           final List<AttendeeModel> result = value.attendanceCollectionModel!
               .where((item) =>
-                  item.name!.toLowerCase().contains(event.name.toLowerCase()))
+                  item.name!.toLowerCase().contains(event.name.toLowerCase()) ||
+                  item.individualNumber!.contains(event.name))
               .toList();
 
           emit(value.copyWith(attendanceSearchModelList: result));
@@ -463,21 +461,20 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
     @Default(false) bool isSingleSession,
     required String individualId,
     required String registerId,
+    AttendeeAdditionalFields? additionalFields,
   }) = AttendanceMarkEvent;
 
   // Event for saving attendance as draft
-  const factory AttendanceIndividualEvent.saveAsDraft({
-    required int entryTime,
-    required int exitTime,
-    required DateTime selectedDate,
-    @Default(false) bool isSingleSession,
-    @Default(false) bool? createOplog,
-    @Default(false) bool isManualEntry,
-    int? qrCreatedTime,
-    double? latitude,
-    double? longitude,
-    String? comment,
-  }) = SaveAsDraftEvent;
+  const factory AttendanceIndividualEvent.saveAsDraft(
+      {required int entryTime,
+      required int exitTime,
+      required DateTime selectedDate,
+      @Default(false) bool isSingleSession,
+      @Default(false) bool? createOplog,
+      double? latitude,
+      double? longitude,
+      String? comment,
+      Map<String, dynamic>? additionalDetails}) = SaveAsDraftEvent;
 
   // Event for searching attendees by name
   const factory AttendanceIndividualEvent.searchAttendees({
