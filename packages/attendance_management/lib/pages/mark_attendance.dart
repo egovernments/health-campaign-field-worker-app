@@ -1119,12 +1119,9 @@ Future<Map<String, String>?> showManualAttendanceReasonDialog({
   final localizations = AttendanceLocalization.of(context);
 
   final form = fb.group(<String, Object>{
-    _reasonKey: FormControl<String>(validators: [Validators.required]),
+    _reasonKey: FormControl<DropdownItem>(validators: [Validators.required]),
     _reasonCommentKey: FormControl<String>(),
   });
-
-  DropdownItem? selectedReason;
-  bool isOthers = false;
 
   return showDialog<Map<String, String>>(
     context: context,
@@ -1132,18 +1129,12 @@ Future<Map<String, String>?> showManualAttendanceReasonDialog({
     builder: (ctx) {
       return StatefulBuilder(
         builder: (ctx, setState) {
-          // Always update selectedReason to match form's current value
-          final selectedCode = form.control(_reasonKey).value;
-          if (selectedCode != null &&
-              (selectedReason == null || selectedReason!.code != selectedCode)) {
-            selectedReason =
-                reasonList.firstWhereOrNull((e) => e.code == selectedCode);
-            isOthers = selectedReason?.name.toLowerCase() == 'others';
-          }
+          final selectedItem = form.control(_reasonKey).value;
+          final bool isOthers = selectedItem?.name.toLowerCase() == 'others';
 
           final isFormValid = form.valid &&
               (!isOthers ||
-                  form.control(_reasonCommentKey).value?.toString().isNotEmpty == true);
+                  (form.control(_reasonCommentKey).value?.toString().isNotEmpty ?? false));
 
           return ReactiveForm(
             formGroup: form,
@@ -1152,7 +1143,7 @@ Future<Map<String, String>?> showManualAttendanceReasonDialog({
               type: PopUpType.simple,
               titleIcon: Icon(
                 Icons.warning,
-                color: Theme.of(context).colorTheme.alert.error,
+                color: Theme.of(context).colorScheme.error,
               ),
               description: localizations.translate(
                 i18.attendance.reasonForManualAttendanceDesc,
@@ -1161,27 +1152,37 @@ Future<Map<String, String>?> showManualAttendanceReasonDialog({
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    DigitDropdown(
-                      items: reasonList,
-                      selectedOption: selectedReason,
-                      isSearchable: false,
-                      helpText: localizations.translate(i18.attendance.selectReason),
-                      onSelect: (DropdownItem item) {
-                        // Always update and trigger state change
-                        setState(() {
-                          selectedReason = item;
-                          form.control(_reasonKey).value = item.code;
+                    ReactiveWrapperField<DropdownItem>(
+                      formControlName: _reasonKey,
+                      validationMessages: {
+                        'required': (_) => localizations.translate(
+                            i18.attendance.validationRequiredError),
+                      },
+                      builder: (field) {
+                        return DigitDropdown(
+                          errorMessage: field.errorText,
+                          items: reasonList,
+                          selectedOption: field.value,
+                          isSearchable: false,
+                          helpText: localizations.translate(i18.attendance.selectReason),
+                          onSelect: (DropdownItem item) {
+                            // Only update if the selected item is different
+                            if (field.value != item) {
+                              field.control.value = item;
 
-                          isOthers = item.name.toLowerCase() == 'others';
+                              if (item.name.toLowerCase() == 'others') {
+                                form.control(_reasonCommentKey)
+                                    .setValidators([Validators.required]);
+                              } else {
+                                form.control(_reasonCommentKey).clearValidators();
+                                form.control(_reasonCommentKey).reset();
+                              }
 
-                          if (isOthers) {
-                            form.control(_reasonCommentKey).setValidators([Validators.required]);
-                          } else {
-                            form.control(_reasonCommentKey).clearValidators();
-                          }
-
-                          form.control(_reasonCommentKey).updateValueAndValidity();
-                        });
+                              form.control(_reasonCommentKey).updateValueAndValidity();
+                              setState(() {});
+                            }
+                          },
+                        );
                       },
                     ),
                     const SizedBox(height: 16),
@@ -1196,12 +1197,15 @@ Future<Map<String, String>?> showManualAttendanceReasonDialog({
                       ReactiveTextField<String>(
                         formControlName: _reasonCommentKey,
                         maxLength: 250,
-                        onChanged: (_) => setState(() {}),
+                        // Removed onChanged to prevent unnecessary rebuilds
                         decoration: InputDecoration(
                           labelText: localizations.translate(i18.common.commentKey),
                           errorText: form.control(_reasonCommentKey).invalid
-                              ? localizations.translate(i18.attendance.validationRequiredError)
+                              ? localizations.translate(
+                                  i18.attendance.validationRequiredError)
                               : null,
+                          border: const OutlineInputBorder(),
+                          isDense: true,
                         ),
                       ),
                     ],
@@ -1217,11 +1221,12 @@ Future<Map<String, String>?> showManualAttendanceReasonDialog({
                   onPressed: () {
                     form.markAllAsTouched();
                     if (isFormValid) {
+                      final selected = form.control(_reasonKey).value as DropdownItem;
+                      final comment = form.control(_reasonCommentKey).value?.toString() ?? '';
+
                       Navigator.of(ctx).pop(<String, String>{
-                        _reasonKey: selectedReason?.name ?? '',
-                        _reasonCommentKey: isOthers
-                            ? (form.control(_reasonCommentKey).value?.toString() ?? '')
-                            : '',
+                        'reason': selected.name,
+                        'comment': isOthers ? comment : '',
                       });
                     }
                   },
@@ -1230,9 +1235,7 @@ Future<Map<String, String>?> showManualAttendanceReasonDialog({
                   label: localizations.translate(i18.common.coreCommonBack),
                   type: DigitButtonType.link,
                   size: DigitButtonSize.large,
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                  },
+                  onPressed: () => Navigator.of(ctx).pop(),
                 ),
               ],
             ),
