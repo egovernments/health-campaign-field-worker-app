@@ -28,7 +28,7 @@ class FormsRenderPage extends LocalizedStatefulWidget {
   const FormsRenderPage({
     super.key,
     super.appLocalizations,
-    @QueryParam() this.currentSchemaKey ='',
+    @QueryParam() this.currentSchemaKey = '',
     @PathParam() required this.pageName,
     this.customComponents,
     this.defaultValues,
@@ -186,9 +186,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                               defaultValues: widget.defaultValues,
                             ));
                           } else {
-                            context
-                                .read<FormsBloc>()
-                                .add(FormsSubmitEvent(schemaKey: widget.currentSchemaKey));
+                            context.read<FormsBloc>().add(FormsSubmitEvent(
+                                schemaKey: widget.currentSchemaKey));
 
                             // Pop all form pages (FormsRenderRoute)
                             context.router.popUntil((route) {
@@ -221,7 +220,12 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
                                     .primary
                                     .primary2),
                       ),
-                      if (schema.description != null && translateIfPresent(schema.description, localizations) !=null && translateIfPresent(schema.description, localizations)!.isNotEmpty) ...[
+                      if (schema.description != null &&
+                          translateIfPresent(
+                                  schema.description, localizations) !=
+                              null &&
+                          translateIfPresent(schema.description, localizations)!
+                              .isNotEmpty) ...[
                         Text(
                           localizations.translate(schema.description!),
                           style: Theme.of(context)
@@ -279,7 +283,9 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
               mainAxisSize: MainAxisSize.max,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
               onPressed: () {
-                context.read<FormsBloc>().add(FormsSubmitEvent(schemaKey: widget.currentSchemaKey));
+                context
+                    .read<FormsBloc>()
+                    .add(FormsSubmitEvent(schemaKey: widget.currentSchemaKey));
 
                 // Pop all form pages (FormsRenderRoute)
                 context.router.popUntil((route) {
@@ -327,7 +333,8 @@ class _FormsRenderPageState extends LocalizedState<FormsRenderPage> {
     final dateFormatter = DateFormat('dd MMM yyyy');
 
     return properties.entries
-        .where((entry) => entry.value.includeInSummary != false)
+        .where((entry) =>
+            entry.value.includeInSummary != false && entry.value.hidden != true)
         .map((entry) {
       final label = localizations.translate(entry.value.label ?? entry.key);
       final rawValue = entry.value.value;
