@@ -1,5 +1,10 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/models/entities/scanned_individual_data.dart';
+import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tab.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../blocs/auth/auth.dart';
+import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
@@ -26,6 +32,21 @@ class UserQRDetailsPage extends LocalizedStatefulWidget {
 
 class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
   int selectedIndex = 0;
+  AttendanceBloc? attendanceBloc;
+
+  @override
+  void initState() {
+    attendanceBloc = AttendanceBloc(
+      const RegisterLoading(),
+      attendanceDataRepository: context
+          .repository<AttendanceRegisterModel, AttendanceRegisterSearchModel>(),
+      attendanceLogDataRepository:
+          context.repository<AttendanceLogModel, AttendanceLogSearchModel>(),
+      individualDataRepository:
+          context.repository<IndividualModel, IndividualSearchModel>(),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +59,7 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
           builder: (context, state) {
             bool isDistributor = state.maybeMap(
               authenticated: (value) => value.userModel.roles
-                  .any((role) => role.code == 'DISTRIBUTOR'),
+                  .any((role) => role.code == RolesType.distributor.toValue()),
               orElse: () => false,
             );
 
@@ -89,9 +110,18 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                       });
                     },
                   ),
-                (isDistributor && selectedIndex == 1)
-                    ? _buildAttendanceQR(context)
-                    : _buildInventoryQR(context, state),
+                IndexedStack(
+                  index: selectedIndex,
+                  children: [
+                    _buildInventoryQR(context, state),
+                    BlocProvider<AttendanceBloc>(
+                      create: (_) => attendanceBloc!
+                        ..add(const AttendanceEvents.fetchNonMobileUsers(
+                            fetchOnlyMobileUser: true)),
+                      child: _buildAttendanceQR(context),
+                    ),
+                  ],
+                ),
               ],
             );
           },
@@ -135,35 +165,103 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
   }
 
   Widget _buildAttendanceQR(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width / 1.25,
-          height: MediaQuery.of(context).size.width / 1.25,
-          child: Padding(
-            padding: const EdgeInsets.all(spacer2),
-            child: Card(
-              child: QrImageView(
-                data: DataMapEncryptor().encryptWithRandomKey(
-                  context.loggedInIndividualId!,
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+
+    return BlocBuilder<AttendanceBloc, AttendanceStates>(
+        builder: (context, attendanceState) {
+      return attendanceState.maybeWhen(
+          orElse: () => const SizedBox.shrink(),
+          registerLoaded: (registers, offset, limit) {
+            return Column(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 1.25,
+                  height: MediaQuery.of(context).size.width / 1.25,
+                  child: Padding(
+                    padding: const EdgeInsets.all(spacer2),
+                    child: Card(
+                      child: QrImageView(
+                        data: DataMapEncryptor().encryptWithRandomKey(
+                            ScannedIndividualDataModel(
+                                    name: registers.first.individualList!.first
+                                        .name!.givenName!,
+                                    individualId: registers.first
+                                        .individualList!.first.individualId,
+                                    age: getAge(registers.first.individualList!
+                                        .first.dateOfBirth),
+                                    locality: registers.first.individualList!
+                                        .first.boundaryCode,
+                                    qrCreatedTime:
+                                        DateTime.now().millisecondsSinceEpoch)
+                                .toMap()),
+                        version: QrVersions.auto,
+                        size: MediaQuery.of(context).size.width / 1.25,
+                      ),
+                    ),
+                  ),
                 ),
-                version: QrVersions.auto,
-                size: MediaQuery.of(context).size.width / 1.25,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Center(
-          child: Text(
-            context.loggedInUser.name!,
-            style: DigitTheme.instance.mobileTheme.textTheme.headlineMedium
-                ?.apply(
-              color: DigitTheme.instance.colorScheme.shadow,
-            ),
-          ),
-        ),
-      ],
-    );
+                const SizedBox(height: 16),
+                Center(
+                  child: Text(
+                    registers.first.individualList!.first.name!.givenName!,
+                    style: DigitTheme
+                        .instance.mobileTheme.textTheme.headlineMedium
+                        ?.apply(
+                      color: DigitTheme.instance.colorScheme.shadow,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: spacer1, vertical: spacer1),
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(spacer1)),
+                      border: Border(
+                          left: BorderSide(
+                              color: theme.colorTheme.generic.divider),
+                          right: BorderSide(
+                              color: theme.colorTheme.generic.divider),
+                          bottom: BorderSide(
+                              color: theme.colorTheme.generic.divider),
+                          top: BorderSide(
+                              color: theme.colorTheme.generic.divider)),
+                      color: theme.colorTheme.paper.secondary,
+                    ),
+                    child: Center(
+                      child: Text(
+                          registers.first.individualList!.first.individualId!,
+                          style: textTheme.headingXS.copyWith(
+                              color: theme.colorTheme.primary.primary2)),
+                    ),
+                  ),
+                )
+              ],
+            );
+          });
+    });
+  }
+
+  getAge(String? dateOfBirth) {
+    final ageInYears = dateOfBirth != null
+        ? DigitDateUtils.calculateAge(
+            DigitDateUtils.getFormattedDateToDateTime(
+                  dateOfBirth,
+                ) ??
+                DateTime.now(),
+          ).years
+        : 0;
+    final ageInMonths = dateOfBirth != null
+        ? DigitDateUtils.calculateAge(
+            DigitDateUtils.getFormattedDateToDateTime(
+                  dateOfBirth,
+                ) ??
+                DateTime.now(),
+          ).months
+        : 0;
+
+    return '$ageInYears ${localizations.translate('YEARS')} $ageInMonths ${localizations.translate('MONTHS')}';
   }
 }

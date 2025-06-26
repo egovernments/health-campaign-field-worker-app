@@ -8,10 +8,12 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:attendance_management/attendance_management.dart' as _i11;
+import 'package:attendance_management/attendance_management.dart' as _i12;
 import 'package:attendance_management/blocs/app_localization.dart' as _i8;
 import 'package:attendance_management/models/entities/attendance_register.dart'
     as _i9;
+import 'package:attendance_management/models/entities/scanned_individual_data.dart'
+    as _i11;
 import 'package:attendance_management/pages/manage_attendance.dart' as _i4;
 import 'package:attendance_management/pages/mark_attendance.dart' as _i5;
 import 'package:attendance_management/pages/session_select.dart' as _i2;
@@ -64,6 +66,7 @@ abstract class $AttendanceRoute extends _i6.AutoRouterModule {
         child: _i3.AttendanceDigitScannerPage(
           key: args.key,
           registerModel: args.registerModel,
+          onScanResult: args.onScanResult,
           quantity: args.quantity,
           singleValue: args.singleValue,
           isGS1code: args.isGS1code,
@@ -230,6 +233,10 @@ class AttendanceDigitScannerRoute
   AttendanceDigitScannerRoute({
     _i10.Key? key,
     required _i9.AttendanceRegisterModel registerModel,
+    required void Function(
+      _i11.ScannedIndividualDataModel,
+      _i3.AttendanceValidationResult,
+    ) onScanResult,
     required int quantity,
     bool singleValue = false,
     required bool isGS1code,
@@ -239,6 +246,7 @@ class AttendanceDigitScannerRoute
           args: AttendanceDigitScannerRouteArgs(
             key: key,
             registerModel: registerModel,
+            onScanResult: onScanResult,
             quantity: quantity,
             singleValue: singleValue,
             isGS1code: isGS1code,
@@ -256,6 +264,7 @@ class AttendanceDigitScannerRouteArgs {
   const AttendanceDigitScannerRouteArgs({
     this.key,
     required this.registerModel,
+    required this.onScanResult,
     required this.quantity,
     this.singleValue = false,
     required this.isGS1code,
@@ -265,6 +274,11 @@ class AttendanceDigitScannerRouteArgs {
 
   final _i9.AttendanceRegisterModel registerModel;
 
+  final void Function(
+    _i11.ScannedIndividualDataModel,
+    _i3.AttendanceValidationResult,
+  ) onScanResult;
+
   final int quantity;
 
   final bool singleValue;
@@ -273,7 +287,7 @@ class AttendanceDigitScannerRouteArgs {
 
   @override
   String toString() {
-    return 'AttendanceDigitScannerRouteArgs{key: $key, registerModel: $registerModel, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code}';
+    return 'AttendanceDigitScannerRouteArgs{key: $key, registerModel: $registerModel, onScanResult: $onScanResult, quantity: $quantity, singleValue: $singleValue, isGS1code: $isGS1code}';
   }
 }
 
@@ -295,9 +309,9 @@ class ManageAttendanceRoute extends _i6.PageRouteInfo<void> {
 /// [_i5.MarkAttendancePage]
 class MarkAttendanceRoute extends _i6.PageRouteInfo<MarkAttendanceRouteArgs> {
   MarkAttendanceRoute({
-    required _i11.AttendanceRegisterModel registerModel,
+    required _i12.AttendanceRegisterModel registerModel,
     _i7.Key? key,
-    _i11.AttendanceLocalization? appLocalizations,
+    _i12.AttendanceLocalization? appLocalizations,
     List<_i6.PageRouteInfo>? children,
   }) : super(
           MarkAttendanceRoute.name,
@@ -322,11 +336,11 @@ class MarkAttendanceRouteArgs {
     this.appLocalizations,
   });
 
-  final _i11.AttendanceRegisterModel registerModel;
+  final _i12.AttendanceRegisterModel registerModel;
 
   final _i7.Key? key;
 
-  final _i11.AttendanceLocalization? appLocalizations;
+  final _i12.AttendanceLocalization? appLocalizations;
 
   @override
   String toString() {

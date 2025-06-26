@@ -26,10 +26,15 @@ import '../models/entities/scanned_individual_data.dart';
 @RoutePage()
 class AttendanceDigitScannerPage extends DigitScannerPage {
   final AttendanceRegisterModel registerModel;
+  final void Function(
+    ScannedIndividualDataModel scannedUser,
+    AttendanceValidationResult result,
+  ) onScanResult;
 
   const AttendanceDigitScannerPage(
       {super.key,
       required this.registerModel,
+      required this.onScanResult,
       required super.quantity,
       super.singleValue,
       required super.isGS1code});
@@ -142,7 +147,10 @@ class AttendanceScannerPageState extends DigitScannerPageState {
           DataMapEncryptor.decrypt(code));
 
       if (validateIndividualAttendance(scannedData, registerModel).isValid) {
-        showAttendanceSuccessPopup(scannedData);
+        if (scannedData.manualEntry == null ||
+            scannedData.manualEntry == false) {
+          showAttendanceSuccessPopup(scannedData);
+        }
       } else {
         if (mounted) {
           context.read<DigitScannerBloc>().add(
@@ -154,9 +162,16 @@ class AttendanceScannerPageState extends DigitScannerPageState {
         }
       }
     } catch (e) {
+      context.read<DigitScannerBloc>().add(
+            const DigitScannerEvent.handleScanner(
+              barCode: [],
+              qrCode: [],
+            ),
+          );
       if (kDebugMode) {
         print("Error decoding QR code: $e");
       }
+      rethrow;
     }
 
     return super.storeCodeWrapper(code);
@@ -168,21 +183,35 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     int allowedIntervalInMinutes = 2,
     BuildContext? context,
   }) {
-    final String? scannedIndividualId = scannedData.individualId;
-    final int? qrCreatedTimeMillis = scannedData.qrCreatedTime;
+    var callBack = widget as AttendanceDigitScannerPage;
 
     // Manual entry: only check attendee presence
     if (scannedData.manualEntry == true) {
-      final found =
-          _isAttendeeInRegister(scannedIndividualId, registerModel.attendees);
+      final found = _isAttendeeInRegister(scannedData, registerModel.attendees);
+      if (found) {
+        var callBack = widget as AttendanceDigitScannerPage;
+
+        callBack.onScanResult(
+            scannedData,
+            AttendanceValidationResult(
+              isValid: found,
+              errorMessage: found ? null : i18.attendance.attendeeNotFound,
+            ));
+      }
       return AttendanceValidationResult(
         isValid: found,
         errorMessage: found ? null : i18.attendance.attendeeNotFound,
       );
     }
 
-    // QR code time check
+    final int? qrCreatedTimeMillis = scannedData.qrCreatedTime;
     if (qrCreatedTimeMillis == null) {
+      callBack.onScanResult(
+          scannedData,
+          AttendanceValidationResult(
+            isValid: false,
+            errorMessage: i18.attendance.userQRTimeExpiredError,
+          ));
       return AttendanceValidationResult(
         isValid: false,
         errorMessage: i18.attendance.userQRTimeExpiredError,
@@ -190,16 +219,27 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     }
 
     final int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
-    final int timeDifference = (currentTimeMillis - qrCreatedTimeMillis).abs();
+    final Duration timeDifference = Duration(
+      milliseconds: (currentTimeMillis - qrCreatedTimeMillis).abs(),
+    );
+
     final int allowedTimeInMillis = allowedIntervalInMinutes * 60 * 1000;
 
     if (kDebugMode) {
-      print('Time Difference: $timeDifference ms');
-      print('Allowed Time: $allowedTimeInMillis ms');
+      print("Now (ms): $currentTimeMillis");
+      print("QR (ms): $qrCreatedTimeMillis");
+      print(
+          "Time Difference: ${timeDifference.inMinutes} min ${timeDifference.inSeconds % 60} sec");
+      print("Allowed Time: ${allowedTimeInMillis ~/ 60000} min");
     }
 
-    if (timeDifference > allowedTimeInMillis) {
-      // _showError(i18.attendance.userQRTimeExpiredError, context);
+    if (timeDifference.inMilliseconds > allowedTimeInMillis) {
+      callBack.onScanResult(
+          scannedData,
+          AttendanceValidationResult(
+            isValid: false,
+            errorMessage: i18.attendance.userQRTimeExpiredError,
+          ));
       return AttendanceValidationResult(
         isValid: false,
         errorMessage: i18.attendance.userQRTimeExpiredError,
@@ -207,10 +247,14 @@ class AttendanceScannerPageState extends DigitScannerPageState {
     }
 
     // Attendee validation
-    final found =
-        _isAttendeeInRegister(scannedIndividualId, registerModel.attendees);
+    final found = _isAttendeeInRegister(scannedData, registerModel.attendees);
     if (!found) {
-      // _showError(i18.attendance.attendeeNotFound, context);
+      callBack.onScanResult(
+          scannedData,
+          AttendanceValidationResult(
+            isValid: false,
+            errorMessage: i18.attendance.attendeeNotFound,
+          ));
       return AttendanceValidationResult(
         isValid: false,
         errorMessage: i18.attendance.attendeeNotFound,
@@ -221,30 +265,31 @@ class AttendanceScannerPageState extends DigitScannerPageState {
   }
 
 // Helper: Check if individual exists in attendees list
-  bool _isAttendeeInRegister(String? id, List<AttendeeModel>? attendees) {
-    if (id == null || id.isEmpty || attendees == null || attendees.isEmpty) {
+  bool _isAttendeeInRegister(
+      ScannedIndividualDataModel ind, List<AttendeeModel>? attendees) {
+    if (ind.individualId == null ||
+        ind.individualId!.isEmpty ||
+        attendees == null ||
+        attendees.isEmpty) {
       return false;
     }
 
-    final found = attendees.any((a) => a.individualId == id);
+    final found = attendees.any((a) => a.individualNumber == ind.individualId);
     if (found) {
+      var callBack = widget as AttendanceDigitScannerPage;
+
+      callBack.onScanResult(
+          ind,
+          AttendanceValidationResult(
+            isValid: found,
+            errorMessage: found ? null : i18.attendance.attendeeNotFound,
+          ));
       if (kDebugMode) {
-        print("Individual (ID: $id) found in register.");
+        print("Individual (ID: ${ind.individualId}) found in register.");
       }
     }
 
     return found;
-  }
-
-// Helper: Show localized error toast
-  void _showError(String messageKey, contextFrom) {
-    if (mounted) {
-      Toast.showToast(
-        contextFrom ?? context,
-        type: ToastType.error,
-        message: localizations.translate(messageKey),
-      );
-    }
   }
 
   void showAttendanceSuccessPopup(ScannedIndividualDataModel scannedData) {
@@ -259,6 +304,7 @@ class AttendanceScannerPageState extends DigitScannerPageState {
         type: PopUpType.alert,
         titleIcon: Icon(
           Icons.check_circle,
+          size: spacer12,
           color: const DigitColors().light.alertSuccess,
         ),
         onCrossTap: () => Navigator.of(ctx).pop(),
@@ -361,6 +407,12 @@ class AttendanceScannerPageState extends DigitScannerPageState {
                     } else {
                       final bloc = context.read<DigitScannerBloc>();
                       codes.add(DataMapEncryptor().encryptWithRandomKey(
+                          ScannedIndividualDataModel(
+                                  manualEntry: true,
+                                  individualId:
+                                      form.control(_manualCodeFormKey).value)
+                              .toMap()));
+                      storeCodeWrapper(DataMapEncryptor().encryptWithRandomKey(
                           ScannedIndividualDataModel(
                                   manualEntry: true,
                                   individualId:
