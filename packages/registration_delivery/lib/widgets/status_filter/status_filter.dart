@@ -153,7 +153,7 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                               isLoading = true;
                             });
                             var selected =
-                                selectedButtons.map((e) => e.name).toList();
+                                selectedButtons.map((e) => e.toValue().toString()).toList();
 
                             Future.delayed(const Duration(seconds: 1), () {
                               Navigator.pop(context, selected);

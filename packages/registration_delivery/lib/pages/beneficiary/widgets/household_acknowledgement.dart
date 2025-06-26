@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class HouseholdAcknowledgementPageState
                 ),
                 actions: [
                   if((householdAcknowledgementTemplate
-                      ?.properties?[registration_keys.commonKeys.primaryButtonKey]?.hidden ?? false == false))
+                      ?.properties?[registration_keys.commonKeys.primaryButtonKey]?.hidden  != true))
                     DigitButton(
                       label: localizations.translate(
                         householdAcknowledgementTemplate
@@ -65,19 +66,15 @@ class HouseholdAcknowledgementPageState
                       ),
                       isDisabled: !(widget.enableViewHousehold ?? false),
                       onPressed: () {
-                        // final wrapper = context
-                        //     .read<HouseholdOverviewBloc>()
-                        //     .state
-                        //     .householdMemberWrapper;
-                        //
-                        // context.router.popAndPush(
-                        //   BeneficiaryWrapperRoute(wrapper: wrapper),
-                        // );
+                        RegistrationWrapperEvent.fetchDeliveryDetails(projectId: RegistrationDeliverySingleton().selectedProject!.id,selectedIndividual: null, householdWrapper: HouseholdWrapper(household: householdState.householdMembers.first.household), beneficiaryType: RegistrationDeliverySingleton().beneficiaryType?.toValue());
+
+                         context.router
+                            .push(HouseholdOverviewRoute());
                       },
                       type: DigitButtonType.primary,
                       size: DigitButtonSize.large),
                   if((householdAcknowledgementTemplate
-                      ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.hidden ?? false == false))
+                      ?.properties?[registration_keys.commonKeys.secondaryButtonKey]?.hidden != true))
                     DigitButton(
                       label: localizations
                           .translate(

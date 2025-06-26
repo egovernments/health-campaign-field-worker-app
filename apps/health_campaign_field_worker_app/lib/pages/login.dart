@@ -232,27 +232,27 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                             size: DigitButtonSize.large,
                             mainAxisSize: MainAxisSize.max,
                           ),
-                          DigitButton(
-                            capitalizeLetters: false,
-                            size: DigitButtonSize.large,
-                            label: localizations.translate(
-                              i18.login.qrLogin,
-                            ),
-                            onPressed: () async {
-                              context.read<DigitScannerBloc>().add(
-                                    const DigitScannerEvent.handleScanner(
-                                        barCode: [], qrCode: []),
-                                  );
-                              context.router.push(DigitScannerRoute(
-                                quantity: 1,
-                                isGS1code: false,
-                                singleValue: true,
-                              ));
-                            },
-                            type: DigitButtonType.secondary,
-                            prefixIcon: Icons.qr_code,
-                            mainAxisSize: MainAxisSize.max,
-                          ),
+                          // DigitButton(
+                          //   capitalizeLetters: false,
+                          //   size: DigitButtonSize.large,
+                          //   label: localizations.translate(
+                          //     i18.login.qrLogin,
+                          //   ),
+                          //   onPressed: () async {
+                          //     context.read<DigitScannerBloc>().add(
+                          //           const DigitScannerEvent.handleScanner(
+                          //               barCode: [], qrCode: []),
+                          //         );
+                          //     context.router.push(DigitScannerRoute(
+                          //       quantity: 1,
+                          //       isGS1code: false,
+                          //       singleValue: true,
+                          //     ));
+                          //   },
+                          //   type: DigitButtonType.secondary,
+                          //   prefixIcon: Icons.qr_code,
+                          //   mainAxisSize: MainAxisSize.max,
+                          // ),
                           DigitButton(
                             label: localizations.translate(
                               i18.forgotPassword.actionLabel,
