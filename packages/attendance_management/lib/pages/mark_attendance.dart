@@ -158,214 +158,199 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             enableFixedDigitButton: true,
                             footer: viewOnly
                                 ? const SizedBox.shrink()
-                                : BlocListener<DigitScannerBloc,
-                                    DigitScannerState>(
-                                    listener: (bloc, state) {
-                                      if (state.qrCodes.isNotEmpty) {
-                                        for (var scannedUsers
-                                            in state.qrCodes) {
-                                          var isScannedValid =
-                                              AttendanceScannerPageState()
-                                                  .validateIndividualAttendance(
-                                                      ScannedIndividualDataModelMapper
-                                                          .fromMap(DataMapEncryptor
-                                                              .decrypt(
-                                                                  scannedUsers)),
-                                                      widget.registerModel,
-                                                      context: context);
-                                          if (isScannedValid.isValid) {
-                                            var user =
-                                                ScannedIndividualDataModelMapper
-                                                    .fromMap(DataMapEncryptor
-                                                        .decrypt(scannedUsers));
-                                            context
-                                                .read<
-                                                    AttendanceIndividualBloc>()
-                                                .add(
-                                                  AttendanceMarkEvent(
-                                                      individualId: widget
-                                                          .registerModel
-                                                          .attendees!
-                                                          .firstWhere((e) =>
-                                                              e.individualNumber ==
-                                                              user
-                                                                  .individualId!)
-                                                          .id!,
-                                                      registerId: widget
-                                                          .registerModel.id,
-                                                      status: 1.0,
-                                                      isSingleSession: false,
-                                                      entryTime: entryTime,
-                                                      exitTime: exitTime),
-                                                );
-                                          } else {
-                                            Toast.showToast(context,
-                                                message:
-                                                    localizations.translate(
-                                                  isScannedValid.errorMessage!,
-                                                ),
-                                                type: ToastType.error);
-                                            context
-                                                .read<DigitScannerBloc>()
-                                                .add(
-                                                  const DigitScannerEvent
-                                                      .handleScanner(
-                                                    barCode: [],
-                                                    qrCode: [],
-                                                  ),
-                                                );
-                                          }
-                                        }
-                                      }
-                                    },
-                                    child: DigitCard(
-                                        margin: EdgeInsets.only(
-                                            top: theme.spacerTheme.spacer4),
-                                        children: [
-                                          AttendanceDateTimeManagement.isToday(
-                                                  AttendanceDateTimeManagement
-                                                      .getFormattedDateToDateTime(
-                                                          currentSelectedDate)!)
-                                              ? DigitButton(
-                                                  size: DigitButtonSize.large,
-                                                  type: (((attendanceCollectionModel ?? []).any((a) => a.status == -1 || a.status == null) &&
-                                                              EnumValues.submit
-                                                                      .toValue() !=
-                                                                  EnumValues
-                                                                      .draft
-                                                                      .toValue()) ||
-                                                          ((attendanceCollectionModel ??
-                                                                      [])
-                                                                  .every((a) =>
-                                                                      a.status ==
-                                                                          -1 ||
-                                                                      a.status ==
-                                                                          null) &&
-                                                              EnumValues.submit
-                                                                      .toValue() ==
-                                                                  EnumValues
-                                                                      .draft
-                                                                      .toValue()))
-                                                      ? DigitButtonType.primary
-                                                      : DigitButtonType.secondary,
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  onPressed: () async {
-                                                    final scannerBloc =
-                                                        context.read<
-                                                            DigitScannerBloc>();
+                                : DigitCard(
+                                    margin: EdgeInsets.only(
+                                        top: theme.spacerTheme.spacer4),
+                                    children: [
+                                        AttendanceDateTimeManagement.isToday(
+                                                AttendanceDateTimeManagement
+                                                    .getFormattedDateToDateTime(
+                                                        currentSelectedDate)!)
+                                            ? DigitButton(
+                                                size: DigitButtonSize.large,
+                                                type: (((attendanceCollectionModel ?? [])
+                                                                .any((a) =>
+                                                                    a.status == -1 ||
+                                                                    a.status ==
+                                                                        null) &&
+                                                            EnumValues.submit.toValue() !=
+                                                                EnumValues.draft
+                                                                    .toValue()) ||
+                                                        ((attendanceCollectionModel ?? [])
+                                                                .every((a) =>
+                                                                    a.status == -1 ||
+                                                                    a.status ==
+                                                                        null) &&
+                                                            EnumValues.submit.toValue() ==
+                                                                EnumValues.draft
+                                                                    .toValue()))
+                                                    ? DigitButtonType.primary
+                                                    : DigitButtonType.secondary,
+                                                mainAxisSize: MainAxisSize.max,
+                                                onPressed: () async {
+                                                  final scannerBloc = context
+                                                      .read<DigitScannerBloc>();
 
-                                                    scannerBloc.add(
-                                                      const DigitScannerEvent
-                                                          .handleScanner(
-                                                        barCode: [],
-                                                        qrCode: [],
-                                                      ),
-                                                    );
+                                                  scannerBloc.add(
+                                                    const DigitScannerEvent
+                                                        .handleScanner(
+                                                      barCode: [],
+                                                      qrCode: [],
+                                                    ),
+                                                  );
 
-                                                    var manualMode =
-                                                        await Navigator.of(
-                                                                context)
-                                                            .push(
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            AttendanceDigitScannerPage(
-                                                          quantity: widget
-                                                              .registerModel
-                                                              .attendees!
-                                                              .length,
-                                                          isGS1code: false,
-                                                          singleValue: false,
-                                                          registerModel: widget
-                                                              .registerModel,
-                                                        ),
-                                                        settings:
-                                                            const RouteSettings(
-                                                                name:
-                                                                    '/qr-scanner'),
+                                                  var manualMode =
+                                                      await Navigator.of(
+                                                              context)
+                                                          .push(
+                                                    MaterialPageRoute(
+                                                      builder: (scanContext) =>
+                                                          AttendanceDigitScannerPage(
+                                                        quantity: widget
+                                                            .registerModel
+                                                            .attendees!
+                                                            .length,
+                                                        onScanResult:
+                                                            (scannedData,
+                                                                result) {
+                                                          if (result.isValid) {
+                                                            var user =
+                                                                scannedData;
+                                                            context
+                                                                .read<
+                                                                    AttendanceIndividualBloc>()
+                                                                .add(
+                                                                  AttendanceMarkEvent(
+                                                                      individualId:
+                                                                          getIndividualId(
+                                                                              user),
+                                                                      registerId:
+                                                                          widget
+                                                                              .registerModel
+                                                                              .id,
+                                                                      status:
+                                                                          1.0,
+                                                                      isSingleSession:
+                                                                          false,
+                                                                      entryTime:
+                                                                          entryTime,
+                                                                      exitTime:
+                                                                          exitTime),
+                                                                );
+                                                          } else {
+                                                            Toast.showToast(
+                                                                context,
+                                                                message:
+                                                                    localizations
+                                                                        .translate(
+                                                                  result
+                                                                      .errorMessage!,
+                                                                ),
+                                                                type: ToastType
+                                                                    .error);
+                                                            context
+                                                                .read<
+                                                                    DigitScannerBloc>()
+                                                                .add(
+                                                                  const DigitScannerEvent
+                                                                      .handleScanner(
+                                                                    barCode: [],
+                                                                    qrCode: [],
+                                                                  ),
+                                                                );
+                                                          }
+                                                        },
+                                                        isGS1code: false,
+                                                        singleValue: false,
+                                                        registerModel: widget
+                                                            .registerModel,
                                                       ),
-                                                    );
-                                                    if (manualMode != null) {
-                                                      setState(() {
-                                                        markManualAttendance =
-                                                            manualMode;
-                                                      });
-                                                    }
-                                                  },
-                                                  prefixIcon: Icons
-                                                      .document_scanner_outlined,
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.attendance
-                                                        .markAttendance,
-                                                  ),
-                                                )
-                                              : const Offstage(),
-                                          DigitButton(
-                                            size: DigitButtonSize.large,
-                                            type: DigitButtonType.secondary,
-                                            mainAxisSize: MainAxisSize.max,
-                                            onPressed: () {
-                                              checkIfAllAttendeesMarked(
-                                                state,
-                                                localizations,
-                                                theme,
-                                                EnumValues.draft.toValue(),
-                                                locationState.latitude,
-                                                locationState.longitude,
-                                                context,
-                                              );
-                                            },
-                                            prefixIcon: Icons.drafts_outlined,
-                                            label: localizations.translate(
-                                              i18.attendance
-                                                  .saveAndMarkLaterLabel,
-                                            ),
-                                          ),
-                                          DigitButton(
-                                            size: DigitButtonSize.large,
-                                            type: DigitButtonType.primary,
-                                            mainAxisSize: MainAxisSize.max,
-                                            isDisabled: (((attendanceCollectionModel ??
-                                                            [])
-                                                        .any((a) =>
-                                                            a.status == -1 ||
-                                                            a.status == null) &&
-                                                    EnumValues.submit
-                                                            .toValue() !=
-                                                        EnumValues.draft
-                                                            .toValue()) ||
-                                                ((attendanceCollectionModel ??
-                                                            [])
-                                                        .every((a) =>
-                                                            a.status == -1 ||
-                                                            a.status == null) &&
-                                                    EnumValues.submit
-                                                            .toValue() ==
-                                                        EnumValues.draft
-                                                            .toValue())),
-                                            onPressed: !viewOnly
-                                                ? () {
-                                                    checkIfAllAttendeesMarked(
-                                                      state,
-                                                      localizations,
-                                                      theme,
-                                                      EnumValues.submit
-                                                          .toValue(),
-                                                      locationState.latitude,
-                                                      locationState.longitude,
-                                                      context,
-                                                    );
+                                                      settings:
+                                                          const RouteSettings(
+                                                              name:
+                                                                  '/qr-scanner'),
+                                                    ),
+                                                  );
+                                                  if (manualMode != null) {
+                                                    setState(() {
+                                                      markManualAttendance =
+                                                          manualMode;
+                                                    });
                                                   }
-                                                : () {},
-                                            label: localizations.translate(
-                                              (!viewOnly)
-                                                  ? i18.common.coreCommonSubmit
-                                                  : i18.attendance.closeButton,
-                                            ),
+                                                },
+                                                prefixIcon: Icons
+                                                    .document_scanner_outlined,
+                                                label: localizations.translate(
+                                                  i18.attendance.markAttendance,
+                                                ),
+                                              )
+                                            : const Offstage(),
+                                        DigitButton(
+                                          size: DigitButtonSize.large,
+                                          type: DigitButtonType.secondary,
+                                          mainAxisSize: MainAxisSize.max,
+                                          onPressed: () {
+                                            checkIfAllAttendeesMarked(
+                                              state,
+                                              localizations,
+                                              theme,
+                                              EnumValues.draft.toValue(),
+                                              locationState.latitude,
+                                              locationState.longitude,
+                                              context,
+                                            );
+                                          },
+                                          prefixIcon: Icons.drafts_outlined,
+                                          label: localizations.translate(
+                                            i18.attendance
+                                                .saveAndMarkLaterLabel,
                                           ),
-                                        ]),
-                                  ),
+                                        ),
+                                        DigitButton(
+                                          size: DigitButtonSize.large,
+                                          type: DigitButtonType.primary,
+                                          mainAxisSize: MainAxisSize.max,
+                                          isDisabled:
+                                              (((attendanceCollectionModel ??
+                                                              [])
+                                                          .any((a) =>
+                                                              a.status == -1 ||
+                                                              a.status ==
+                                                                  null) &&
+                                                      EnumValues.submit
+                                                              .toValue() !=
+                                                          EnumValues.draft
+                                                              .toValue()) ||
+                                                  ((attendanceCollectionModel ??
+                                                              [])
+                                                          .every((a) =>
+                                                              a.status == -1 ||
+                                                              a.status ==
+                                                                  null) &&
+                                                      EnumValues.submit
+                                                              .toValue() ==
+                                                          EnumValues.draft
+                                                              .toValue())),
+                                          onPressed: !viewOnly
+                                              ? () {
+                                                  checkIfAllAttendeesMarked(
+                                                    state,
+                                                    localizations,
+                                                    theme,
+                                                    EnumValues.submit.toValue(),
+                                                    locationState.latitude,
+                                                    locationState.longitude,
+                                                    context,
+                                                  );
+                                                }
+                                              : () {},
+                                          label: localizations.translate(
+                                            (!viewOnly)
+                                                ? i18.common.coreCommonSubmit
+                                                : i18.attendance.closeButton,
+                                          ),
+                                        ),
+                                      ]),
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             header: const BackNavigationHelpHeaderWidget(
@@ -1122,5 +1107,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
 
     // Return missed attendance days with description
     return "${AttendanceLocalization.of(context).translate(i18.attendance.missedAttendanceDescription)}\n$missedDays";
+  }
+
+  getIndividualId(ScannedIndividualDataModel user) {
+    var id = widget.registerModel.attendees!
+        .firstWhere((e) => e.individualNumber == user.individualId!)
+        .individualId!;
+
+    return id;
   }
 }
