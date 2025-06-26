@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 
 import '../utils/typedefs.dart';
 
@@ -154,6 +155,34 @@ class AttendanceIndividualBloc
         if (value.attendanceCollectionModel != null) {
           value.attendanceCollectionModel?.forEach((e) {
             if (e.status != -1) {
+              final Map<String, dynamic> entryDetails = {
+                if (event.latitude != null) "latitude": event.latitude!,
+                if (event.longitude != null) "longitude": event.longitude!,
+                if (event.comment != null && event.comment!.isNotEmpty)
+                  "comment": event.comment!,
+                "markedBy": event.isManualEntry ? "manual" : "qr",
+                if (!event.isManualEntry && event.qrCreatedTime != null)
+                  "qrCreationTime": DateFormat('dd-MM-yyyy hh:mm a').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                              event.qrCreatedTime! * 1000)
+                          .toLocal()),
+              };
+              final Map<String, dynamic> exitDetails = {
+                if (event.latitude != null)
+                  EnumValues.latitude.toValue(): event.latitude!,
+                if (event.longitude != null)
+                  EnumValues.longitude.toValue(): event.longitude!,
+                EnumValues.boundaryCode.toValue():
+                    AttendanceSingleton().boundary?.code ?? '',
+                if (event.comment != null && event.comment!.isNotEmpty)
+                  "comment": event.comment!,
+                "markedBy": event.isManualEntry ? "manual" : "qr",
+                if (!event.isManualEntry && event.qrCreatedTime != null)
+                  "qrCreationTime": DateFormat('dd-MM-yyyy hh:mm a').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                              event.qrCreatedTime! * 1000)
+                          .toLocal()),
+              };
               list.addAll([
                 AttendanceLogModel(
                   individualId: e.individualId,
@@ -165,50 +194,20 @@ class AttendanceIndividualBloc
                       : EnumValues.active.toValue(),
                   time: event.entryTime,
                   uploadToServer: (event.createOplog ?? false),
-                  additionalDetails:
-                      event.latitude != null && event.longitude != null
-                          ? {
-                              "latitude": event.latitude,
-                              "longitude": event.longitude,
-                              if (event.comment != null &&
-                                  event.comment!.isNotEmpty)
-                                "comment": event.comment,
-                            }
-                          : {
-                              EnumValues.boundaryCode.toValue():
-                                  AttendanceSingleton().boundary?.code,
-                              if (event.comment!.isNotEmpty)
-                                "comment": event.comment,
-                            },
+                  additionalDetails: entryDetails,
                 ),
                 AttendanceLogModel(
-                    individualId: e.individualId,
-                    registerId: e.registerId,
-                    tenantId: e.tenantId,
-                    type: EnumValues.exit.toValue(),
-                    status: e.status == 0
-                        ? EnumValues.inactive.toValue()
-                        : EnumValues.active.toValue(),
-                    time: e.status == 0 ? event.exitTime : event.exitTime,
-                    uploadToServer: (event.createOplog ?? false),
-                    additionalDetails:
-                        event.latitude != null && event.longitude != null
-                            ? {
-                                EnumValues.latitude.toValue(): event.latitude,
-                                EnumValues.longitude.toValue(): event.longitude,
-                                EnumValues.boundaryCode.toValue():
-                                    AttendanceSingleton().boundary?.code,
-                                if (event.comment != null &&
-                                    event.comment!.isNotEmpty)
-                                  "comment": event.comment,
-                              }
-                            : {
-                                EnumValues.boundaryCode.toValue():
-                                    AttendanceSingleton().boundary?.code,
-                                if (event.comment != null &&
-                                    event.comment!.isNotEmpty)
-                                  "comment": event.comment,
-                              })
+                  individualId: e.individualId,
+                  registerId: e.registerId,
+                  tenantId: e.tenantId,
+                  type: EnumValues.exit.toValue(),
+                  status: e.status == 0
+                      ? EnumValues.inactive.toValue()
+                      : EnumValues.active.toValue(),
+                  time: e.status == 0 ? event.exitTime : event.exitTime,
+                  uploadToServer: (event.createOplog ?? false),
+                  additionalDetails: exitDetails,
+                )
               ]);
             }
           });
@@ -473,6 +472,8 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
     required DateTime selectedDate,
     @Default(false) bool isSingleSession,
     @Default(false) bool? createOplog,
+    @Default(false) bool isManualEntry,
+    int? qrCreatedTime,
     double? latitude,
     double? longitude,
     String? comment,
