@@ -6,6 +6,7 @@ import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:attendance_management/widgets/custom_attendance_info_card.dart';
 import 'package:attendance_management/widgets/labelled_toggle.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -25,7 +26,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
-import '../models/entities/scanned_individual_data.dart';
 import '../router/attendance_router.gm.dart';
 import '../utils/date_util_attendance.dart';
 import '../widgets/attendance_qr_scanner.dart';
@@ -50,6 +50,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   bool isDialogOpen = false;
   bool isMorning = true;
   static const _commentKey = 'comment';
+  static const _reasonKey = 'reason';
+  static const _reasonCommentKey = 'reason_comment';
   Timer? _debounce;
   late TextEditingController controller, dateController;
   AttendanceIndividualBloc? individualLogBloc;
@@ -57,9 +59,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   var entryTime = 0, exitTime = 0;
   var currentSelectedDate = DateTime.now().toString(), selectedSession = 0;
   bool markManualAttendance = false;
-  final colors = const DigitColors();
-  ScannedIndividualDataModel? scannedData;
-  
+  String? manualAttendanceReason;
+  String? manualAttendanceComment;
+
   @override
   void initState() {
     controller = TextEditingController();
@@ -201,79 +203,72 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                       qrCode: [],
                                                     ),
                                                   );
-
                                                   var manualMode =
                                                       await Navigator.of(
                                                               context)
                                                           .push(
-                                                    MaterialPageRoute(
-                                                      builder: (scanContext) =>
-                                                          AttendanceDigitScannerPage(
-                                                        quantity: widget
-                                                            .registerModel
-                                                            .attendees!
-                                                            .length,
-                                                        onScanResult:
-                                                            (scannedData,
-                                                                result) {
-                                                          if (result.isValid) {
-                                                            var user =
-                                                                scannedData;
-                                                            context
-                                                                .read<
-                                                                    AttendanceIndividualBloc>()
-                                                                .add(
-                                                                  AttendanceMarkEvent(
-                                                                      individualId:
-                                                                          getIndividualId(
-                                                                              user),
-                                                                      registerId:
-                                                                          widget
-                                                                              .registerModel
-                                                                              .id,
-                                                                      status:
-                                                                          1.0,
-                                                                      isSingleSession:
-                                                                          false,
-                                                                      entryTime:
-                                                                          entryTime,
-                                                                      exitTime:
-                                                                          exitTime),
-                                                                );
-                                                          } else {
-                                                            Toast.showToast(
-                                                                context,
-                                                                message:
-                                                                    localizations
-                                                                        .translate(
-                                                                  result
-                                                                      .errorMessage!,
+                                                              MaterialPageRoute(
+                                                    builder: (scanContext) =>
+                                                        AttendanceDigitScannerPage(
+                                                      quantity: widget
+                                                          .registerModel
+                                                          .attendees!
+                                                          .length,
+                                                      onScanResult:
+                                                          (scannedData,
+                                                              result) {
+                                                        if (result.isValid) {
+                                                          var user =
+                                                              scannedData;
+                                                          context
+                                                              .read<
+                                                                  AttendanceIndividualBloc>()
+                                                              .add(
+                                                                AttendanceMarkEvent(
+                                                                    individualId:
+                                                                        getIndividualId(
+                                                                            user),
+                                                                    registerId:
+                                                                        widget
+                                                                            .registerModel
+                                                                            .id,
+                                                                    status: 1.0,
+                                                                    isSingleSession:
+                                                                        false,
+                                                                    entryTime:
+                                                                        entryTime,
+                                                                    exitTime:
+                                                                        exitTime),
+                                                              );
+                                                        } else {
+                                                          Toast.showToast(
+                                                              context,
+                                                              message:
+                                                                  localizations
+                                                                      .translate(
+                                                                result
+                                                                    .errorMessage!,
+                                                              ),
+                                                              type: ToastType
+                                                                  .error);
+                                                          context
+                                                              .read<
+                                                                  DigitScannerBloc>()
+                                                              .add(
+                                                                const DigitScannerEvent
+                                                                    .handleScanner(
+                                                                  barCode: [],
+                                                                  qrCode: [],
                                                                 ),
-                                                                type: ToastType
-                                                                    .error);
-                                                            context
-                                                                .read<
-                                                                    DigitScannerBloc>()
-                                                                .add(
-                                                                  const DigitScannerEvent
-                                                                      .handleScanner(
-                                                                    barCode: [],
-                                                                    qrCode: [],
-                                                                  ),
-                                                                );
-                                                          }
-                                                        },
-                                                        isGS1code: false,
-                                                        singleValue: false,
-                                                        registerModel: widget
-                                                            .registerModel,
-                                                      ),
-                                                      settings:
-                                                          const RouteSettings(
-                                                              name:
-                                                                  '/qr-scanner'),
+                                                              );
+                                                        }
+                                                      },
+                                                      isGS1code: false,
+                                                      singleValue: false,
+                                                      registerModel:
+                                                          widget.registerModel,
                                                     ),
-                                                  );
+                                                  ));
                                                   if (manualMode != null) {
                                                     setState(() {
                                                       markManualAttendance =
@@ -394,17 +389,27 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     : DateTime.now(),
                                 onChange: (String date) {
                                   currentSelectedDate = date;
-                                  if (AttendanceDateTimeManagement.isToday(
+                                  // if (AttendanceDateTimeManagement.isToday(
+                                  //     AttendanceDateTimeManagement
+                                  //         .getFormattedDateToDateTime(
+                                  //             currentSelectedDate)!)) {
+                                  //   setState(() {
+                                  //     markManualAttendance = false;
+                                  //   });
+                                  // } else {
+                                  //   setState(() {
+                                  //     markManualAttendance = true;
+                                  //   });
+                                  // }
+                                  final DateTime selectedDate =
                                       AttendanceDateTimeManagement
-                                          .getFormattedDateToDateTime(
-                                              currentSelectedDate)!)) {
-                                    setState(() {
-                                      markManualAttendance = false;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      markManualAttendance = true;
-                                    });
+                                          .getFormattedDateToDateTime(date)!;
+                                  // ✅ Reset only if selected date is today
+                                  if (AttendanceDateTimeManagement.isToday(
+                                      selectedDate)) {
+                                    markManualAttendance = false;
+                                    manualAttendanceReason = null;
+                                    manualAttendanceComment = null;
                                   }
                                   individualLogBloc!.add(
                                     AttendanceIndividualLogSearchEvent(
@@ -872,19 +877,17 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             } else {
               if (type == EnumValues.draft.toValue()) {
                 individualLogBloc?.add(SaveAsDraftEvent(
-                    entryTime: entryTime,
-                    exitTime: exitTime,
-                    selectedDate:
-                        AttendanceDateTimeManagement.getFormattedDateToDateTime(
-                            currentSelectedDate)!,
-                    isSingleSession: false,
-                    createOplog: type != EnumValues.draft.toValue(),
-                    latitude: latitude,
-                    longitude: longitude,
-                    comment: form.control(_commentKey).value,
-                    isManualEntry: markManualAttendance,
-                    qrCreatedTime: scannedData?.qrCreatedTime,
-                    ));
+                  entryTime: entryTime,
+                  exitTime: exitTime,
+                  selectedDate:
+                      AttendanceDateTimeManagement.getFormattedDateToDateTime(
+                          currentSelectedDate)!,
+                  isSingleSession: false,
+                  createOplog: type != EnumValues.draft.toValue(),
+                  latitude: latitude,
+                  longitude: longitude,
+                  comment: form.control(_commentKey).value,
+                ));
                 Toast.showToast(
                   context,
                   message:
@@ -945,21 +948,19 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
 
                               if (dialogForm.valid) {
                                 individualLogBloc?.add(SaveAsDraftEvent(
-                                    entryTime: entryTime,
-                                    exitTime: exitTime,
-                                    selectedDate: AttendanceDateTimeManagement
-                                        .getFormattedDateToDateTime(
-                                            currentSelectedDate)!,
-                                    isSingleSession: false,
-                                    createOplog:
-                                        type != EnumValues.draft.toValue(),
-                                    latitude: latitude,
-                                    longitude: longitude,
-                                    comment:
-                                        dialogForm.control(_commentKey).value,
-                                        isManualEntry: markManualAttendance,
-                                        qrCreatedTime: scannedData?.qrCreatedTime,
-                                        ));
+                                  entryTime: entryTime,
+                                  exitTime: exitTime,
+                                  selectedDate: AttendanceDateTimeManagement
+                                      .getFormattedDateToDateTime(
+                                          currentSelectedDate)!,
+                                  isSingleSession: false,
+                                  createOplog:
+                                      type != EnumValues.draft.toValue(),
+                                  latitude: latitude,
+                                  longitude: longitude,
+                                  comment:
+                                      dialogForm.control(_commentKey).value,
+                                ));
                                 Navigator.of(
                                   context,
                                   rootNavigator: true,
@@ -1136,5 +1137,156 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         .individualId!;
 
     return id;
+  }
+
+  Future<Map<String, String>?> showManualAttendanceReasonDialog({
+    required BuildContext context,
+    required List<DropdownItem> reasonList,
+  }) async {
+    final localizations = AttendanceLocalization.of(context);
+
+    final form = fb.group(<String, Object>{
+      _reasonKey: FormControl<String>(validators: [Validators.required]),
+      _reasonCommentKey: FormControl<String>(),
+    });
+
+    DropdownItem? selectedReason;
+    bool isOthers = false;
+
+    return showDialog<Map<String, String>>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setState) {
+            // Always update selectedReason to match form's current value
+            final selectedCode = form.control(_reasonKey).value;
+            if (selectedCode != null &&
+                (selectedReason == null ||
+                    selectedReason!.code != selectedCode)) {
+              selectedReason =
+                  reasonList.firstWhereOrNull((e) => e.code == selectedCode);
+              isOthers = selectedReason?.name.toLowerCase() == 'others';
+            }
+
+            final isFormValid = form.valid &&
+                (!isOthers ||
+                    form
+                            .control(_reasonCommentKey)
+                            .value
+                            ?.toString()
+                            .isNotEmpty ==
+                        true);
+
+            return ReactiveForm(
+              formGroup: form,
+              child: Popup(
+                title: localizations
+                    .translate(i18.attendance.reasonForManualAttendance),
+                type: PopUpType.simple,
+                titleIcon: Icon(
+                  Icons.warning,
+                  color: Theme.of(context).colorTheme.alert.error,
+                ),
+                description: localizations.translate(
+                  i18.attendance.reasonForManualAttendanceDesc,
+                ),
+                additionalWidgets: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DigitDropdown(
+                        items: reasonList,
+                        selectedOption: selectedReason,
+                        isSearchable: false,
+                        helpText: localizations
+                            .translate(i18.attendance.selectReason),
+                        onSelect: (DropdownItem item) {
+                          // Always update and trigger state change
+                          setState(() {
+                            selectedReason = item;
+                            form.control(_reasonKey).value = item.code;
+
+                            isOthers = item.name.toLowerCase() == 'others';
+
+                            if (isOthers) {
+                              form
+                                  .control(_reasonCommentKey)
+                                  .setValidators([Validators.required]);
+                            } else {
+                              form.control(_reasonCommentKey).clearValidators();
+                            }
+
+                            form
+                                .control(_reasonCommentKey)
+                                .updateValueAndValidity();
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      if (isOthers) ...[
+                        Text(
+                          localizations.translate(i18.attendance.addComment),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                        ),
+                        const SizedBox(height: 8),
+                        ReactiveTextField<String>(
+                          formControlName: _reasonCommentKey,
+                          maxLength: 250,
+                          onChanged: (_) => setState(() {}),
+                          decoration: InputDecoration(
+                            labelText:
+                                localizations.translate(i18.common.commentKey),
+                            errorText: form.control(_reasonCommentKey).invalid
+                                ? localizations.translate(
+                                    i18.attendance.validationRequiredError)
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+                actions: [
+                  DigitButton(
+                    label: localizations
+                        .translate(i18.attendance.markAttendanceManually),
+                    type: DigitButtonType.primary,
+                    size: DigitButtonSize.large,
+                    isDisabled: !isFormValid,
+                    onPressed: () {
+                      form.markAllAsTouched();
+                      if (isFormValid) {
+                        Navigator.of(ctx).pop(<String, String>{
+                          _reasonKey: selectedReason?.name ?? '',
+                          _reasonCommentKey: isOthers
+                              ? (form
+                                      .control(_reasonCommentKey)
+                                      .value
+                                      ?.toString() ??
+                                  '')
+                              : '',
+                        });
+                      }
+                    },
+                  ),
+                  DigitButton(
+                    label: localizations.translate(i18.common.coreCommonBack),
+                    type: DigitButtonType.link,
+                    size: DigitButtonSize.large,
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

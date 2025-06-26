@@ -844,6 +844,11 @@ void setPackagesSingleton(BuildContext context) {
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
+          manualAttendanceReasons: appConfiguration.manualAttendanceReasons
+          ?.where((e) => e.active)
+          .map((e) => DropdownItem(name: e.name, code: e.code)) 
+          .toList() ??
+      [],
         );
 
         SurveyFormSingleton().setInitialData(
